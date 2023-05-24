@@ -60,9 +60,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
+        this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
-        this.rules = new GipfRules(GipfState);
+        this.rules = GipfRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new GipfMinimax(this.rules, 'GipfMinimax'),
         ];
@@ -76,14 +77,12 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                          FlatHexaOrientation.INSTANCE);
     }
     public updateBoard(): void {
-        this.showLastMove();
         this.cancelMoveAttempt();
     }
-    public showLastMove(): void {
+    public override showLastMove(move: GipfMove): void {
         this.inserted = MGPOptional.empty();
-        const lastMove: MGPOptional<GipfMove> = this.rules.node.move;
-        if (lastMove.isPresent() && lastMove.get().placement.direction.isPresent()) {
-            const lastPlacement: GipfPlacement = lastMove.get().placement;
+        if (move.placement.direction.isPresent()) {
+            const lastPlacement: GipfPlacement = move.placement;
             this.inserted = MGPOptional.of(this.arrowTowards(lastPlacement.coord, lastPlacement.direction.get()));
         }
         this.cancelMoveAttempt();
@@ -255,15 +254,15 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         const validity: MGPValidation = await this.chooseMove(move, this.getState(), this.scores.get());
         return validity;
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.constructedState = this.getState();
         this.captured = [];
         this.moved = [];
 
-        const moveOptional: MGPOptional<GipfMove> = this.rules.node.move;
+        const moveOptional: MGPOptional<GipfMove> = this.node.move;
         if (moveOptional.isPresent()) {
             const move: GipfMove = moveOptional.get();
-            const previousState: GipfState = this.rules.node.mother.get().gameState;
+            const previousState: GipfState = this.getPreviousState();
             move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c));
             move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c));
             this.moved = this.rules.getPiecesMoved(previousState, move.initialCaptures, move.placement);

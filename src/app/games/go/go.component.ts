@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
@@ -12,13 +11,14 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
+import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityInformation> {
+export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityInformation> {
 
     public static VERBOSE: boolean = false;
 
@@ -28,22 +28,26 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public last: MGPOptional<Coord> = MGPOptional.empty();
 
-    public canPass: boolean;
-
     public captures: Coord[]= [];
 
     public GoPiece: typeof GoPiece = GoPiece;
 
+    public boardHeight: number = GoState.HEIGHT;
+    public boardWidth: number = GoState.WIDTH;
+
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
-        this.rules = new GoRules(GoState);
+        this.rules = GoRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),
         ];
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
+        this.boardHeight = this.getState().board.length;
+        this.boardWidth = this.getState().board[0].length;
         this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -60,7 +64,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         display(GoComponent.VERBOSE, 'updateBoard');
 
         const state: GoState = this.getState();
-        const move: MGPOptional<GoMove> = this.rules.node.move;
+        const move: MGPOptional<GoMove> = this.node.move;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();
@@ -74,9 +78,10 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         }
         this.last = move.map((move: GoMove) => move.coord);
         this.canPass = phase !== Phase.FINISHED;
+        this.createHoshis();
     }
     private showCaptures(): void {
-        const previousState: GoState = this.rules.node.mother.get().gameState;
+        const previousState: GoState = this.getPreviousState();
         this.captures = [];
         for (let y: number = 0; y < this.board.length; y++) {
             for (let x: number = 0; x < this.board[0].length; x++) {
@@ -90,7 +95,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
             }
         }
     }
-    public async pass(): Promise<MGPValidation> {
+    public override async pass(): Promise<MGPValidation> {
         const phase: Phase = this.getState().phase;
         if (phase === Phase.PLAYING || phase === Phase.PASSED) {
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);

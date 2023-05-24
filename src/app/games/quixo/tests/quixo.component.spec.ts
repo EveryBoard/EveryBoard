@@ -22,8 +22,7 @@ describe('QuixoComponent', () => {
         testUtils = await ComponentTestUtils.forGame<QuixoComponent>('Quixo');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('first click', () => {
         it('should cancel move when trying to select opponent piece', fakeAsync(async() => {

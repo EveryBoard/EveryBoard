@@ -1,4 +1,4 @@
-import { GameStatus, Rules } from '../../jscaip/Rules';
+import { Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
@@ -10,6 +10,8 @@ import { assert } from 'src/app/utils/assert';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 
 export type ReversiLegalityInformation = Coord[];
@@ -27,6 +29,17 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
 
     public static VERBOSE: boolean = false;
 
+    private static singleton: MGPOptional<ReversiRules> = MGPOptional.empty();
+
+    public static get(): ReversiRules {
+        if (ReversiRules.singleton.isAbsent()) {
+            ReversiRules.singleton = MGPOptional.of(new ReversiRules());
+        }
+        return ReversiRules.singleton.get();
+    }
+    private constructor() {
+        super(ReversiState);
+    }
     public static getGameStatus(node: ReversiNode): GameStatus {
         const state: ReversiState = node.gameState;
         const gameIsEnded: boolean = ReversiRules.isGameEnded(state);
@@ -172,7 +185,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
             if (ReversiRules.playerCanOnlyPass(state)) {
                 return MGPFallible.success([]);
             } else {
-                return MGPFallible.failure(RulesFailure.MUST_PASS());
+                return MGPFallible.failure(RulesFailure.CANNOT_PASS());
             }
         }
         if (state.getPieceAt(move.coord).isPlayer()) {

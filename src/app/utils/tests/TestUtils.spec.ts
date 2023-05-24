@@ -45,6 +45,7 @@ import { Comparable } from '../Comparable';
 import { Subscription } from 'rxjs';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 
 @Component({})
 export class BlankComponent {}
@@ -197,6 +198,11 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
+        const gameInfo: MGPOptional<GameInfo> =
+            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === game));
+        if (gameInfo.isAbsent()) {
+            throw new Error(game + ' is not a game developped on MGP, check if its name is in the second param of GameInfo');
+        }
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,
                                                      AuthUser.NOT_CONNECTED,
@@ -288,22 +294,32 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                       previousMove?: Move)
     : void
     {
-        this.gameComponent.rules.node = new MGPNode(
+        this.gameComponent.node = new MGPNode(
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
                 new MGPNode(previousState)),
             MGPOptional.ofNullable(previousMove),
         );
         this.gameComponent.updateBoard();
+        if (previousMove !== undefined) {
+            this.gameComponent.showLastMove(previousMove);
+        }
         this.forceChangeDetection();
     }
     public getComponent(): T {
         return (this.gameComponent as unknown) as T;
     }
-    public async expectClickSuccess(elementName: string): Promise<void> {
-        await this.expectInterfaceClickSuccess(elementName);
-        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+    /**
+     * @param nameInHtml The real name (id) of the element in the XML
+     * @param nameInFunction Its name inside the code
+     */
+    public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
+        await this.expectInterfaceClickSuccess(nameInHtml);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
+    }
+    public async expectClickSuccess(elementName: string): Promise<void> {
+        return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
     }
     public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
@@ -326,16 +342,20 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             .withContext(context)
             .toHaveBeenCalledWith();
     }
-    public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
+    public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
+                                                        nameInFunction: string,
+                                                        reason?: string)
+    : Promise<void>
+    {
+        const element: DebugElement = this.findElement(nameInHtml);
+        expect(element).withContext('Element "' + nameInHtml + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             if (reason == null) {
@@ -347,6 +367,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             tick(3000); // needs to be >2999
         }
     }
+    public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
+        return this.expectClickFailureWithAsymmetricNaming(elementName, elementName, reason);
+    }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
@@ -354,7 +377,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             return;
         } else {
             const clickValidity: MGPValidation = this.gameComponent.canUserPlay(elementName);
-            expect(clickValidity.reason).toBe(reason);
+            expect(clickValidity.getReason()).toBe(reason);
             this.canUserPlaySpy.calls.reset();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
@@ -362,7 +385,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
-            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
+            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.getReason());
             tick(3000); // needs to be > 2999
         }
     }
@@ -539,7 +562,7 @@ function getComponentClassName(component: Type<any>): string {
 }
 
 /**
- * Tests that we routes are used as expected. The router.navigate method should
+ * Tests that the routes are used as expected. The router.navigate method should
  * be spyed on. This function will match the route that is navigated to with
  * the declared routes of the application, and ensure that the component that is
  * routed to matches `component`. In case multiple router.navigate calls happen,

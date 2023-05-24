@@ -19,8 +19,7 @@ describe('ReversiComponent', () => {
         testUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     it('should show last move and captures', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [

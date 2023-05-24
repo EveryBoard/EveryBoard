@@ -49,8 +49,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
-        this.rules = new PylosRules(PylosState);
+        this.hasAsymmetricBoard = true;
+        this.rules = PylosRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),
             new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
@@ -191,7 +192,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.cancelMove();
         return this.chooseMove(move, state);
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.constructedState = this.state;
         this.chosenStartingCoord = MGPOptional.empty();
         this.chosenLandingCoord = MGPOptional.empty();
@@ -298,23 +299,18 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public updateBoard(): void {
         this.state = this.getState();
         this.constructedState = this.state;
-        this.lastMove = this.rules.node.move;
+        this.lastMove = this.node.move;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
         this.highCapture = MGPOptional.empty();
         this.cancelMoveAttempt();
-        if (this.lastMove.isPresent()) {
-            this.showLastMove();
-        } else {
-            this.hideLastMove();
-        }
+        this.hideLastMove();
     }
-    private showLastMove(): void {
-        const lastMove: PylosMove = this.lastMove.get();
-        this.lastLandingCoord = MGPOptional.of(lastMove.landingCoord);
-        this.lastStartingCoord = lastMove.startingCoord;
-        this.lastFirstCapture = lastMove.firstCapture;
-        this.lastSecondCapture = lastMove.secondCapture;
+    public override showLastMove(move: PylosMove): void {
+        this.lastLandingCoord = MGPOptional.of(move.landingCoord);
+        this.lastStartingCoord = move.startingCoord;
+        this.lastFirstCapture = move.firstCapture;
+        this.lastSecondCapture = move.secondCapture;
         if (this.lastFirstCapture.isPresent() &&
             this.mustDrawCoord(this.lastFirstCapture.get()) === false)
         {

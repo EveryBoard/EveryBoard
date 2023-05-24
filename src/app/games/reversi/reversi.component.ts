@@ -28,12 +28,13 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public lastMove: Coord = new Coord(-2, -2);
 
-    private captureds: Coord[] = [];
+    private capturedCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([2, 2]);
-        this.rules = new ReversiRules(ReversiState);
+        this.rules = ReversiRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new ReversiMinimax(this.rules, 'ReversiMinimax'),
         ];
@@ -54,35 +55,32 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         const state: ReversiState = this.getState();
 
         this.board = state.getCopiedBoard();
-        this.captureds = [];
+        this.capturedCoords = [];
 
-        if (this.rules.node.move.isPresent()) {
-            this.showPreviousMove();
-        } else {
-            this.lastMove = new Coord(-2, -2);
-        }
+        // Will be set to the real value in showLastMove if there is a last move
+        this.lastMove = new Coord(-2, -2);
 
         this.scores = MGPOptional.of(state.countScore());
         this.canPass = ReversiRules.playerCanOnlyPass(state);
     }
-    private showPreviousMove(): void {
-        this.lastMove = this.rules.node.move.get().coord;
+    public override showLastMove(move: ReversiMove): void {
+        this.lastMove = move.coord;
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const dir of Direction.DIRECTIONS) {
             let captured: Coord = this.lastMove.getNext(dir, 1);
             while (captured.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT) &&
                    this.getState().getPieceAt(captured) === opponent &&
-                   this.rules.node.mother.get().gameState.getPieceAt(captured) === player)
+                   this.getPreviousState().getPieceAt(captured) === player)
             {
-                this.captureds.push(captured);
+                this.capturedCoords.push(captured);
                 captured = captured.getNext(dir, 1);
             }
         }
     }
     public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.captureds.some((c: Coord) => c.equals(coord))) {
+        if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             return ['captured-fill'];
         } else if (coord.equals(this.lastMove)) {
             return ['moved-fill'];
@@ -93,7 +91,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
     public getPieceClass(x: number, y: number): string {
         return this.getPlayerClass(this.board[y][x]);
     }
-    public async pass(): Promise<MGPValidation> {
+    public override async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'ReversiComponent: pass() can only be called if canPass is true');
         return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
     }

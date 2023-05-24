@@ -3,12 +3,15 @@ import { MGPNode } from '../MGPNode';
 import { Minimax } from '../Minimax';
 import { Move } from '../Move';
 import { Player } from '../Player';
-import { GameStatus, Rules } from '../Rules';
+import { Rules } from '../Rules';
 import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SCORE } from '../SCORE';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { GameStatus } from '../GameStatus';
 
 export class RulesUtils {
 
@@ -24,7 +27,7 @@ export class RulesUtils {
             const resultingState: S = rules.applyLegalMove(move, state, legality.get());
             if (isComparableObject(resultingState)) {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
-                expect(equals).withContext('states should be equal').toBeTrue();
+                expect(equals).withContext('comparable states should be equal').toBeTrue();
             } else {
                 expect(resultingState).withContext('states should be equal').toEqual(expectedState);
             }
@@ -89,19 +92,36 @@ export class RulesUtils {
                 .toBe(0);
         }
     }
+    public static expectStatesToBeOfEqualValue<M extends Move, S extends GameState, L>(
+        minimax: Minimax<M, S, L>,
+        leftState: S,
+        rightState: S)
+    : void {
+        const leftNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(leftState,
+                                                                       MGPOptional.empty(),
+                                                                       MGPOptional.empty(),
+                                                                       minimax);
+        const leftValue: number = minimax.getBoardValue(leftNode).value;
+        const rightNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(rightState,
+                                                                        MGPOptional.empty(),
+                                                                        MGPOptional.empty(),
+                                                                        minimax);
+        const rightValue: number = minimax.getBoardValue(rightNode).value;
+        expect(leftValue).withContext('both value should be equal').toEqual(rightValue);
+    }
     public static expectSecondStateToBeBetterThanFirstFor<M extends Move, S extends GameState, L>(
         minimax: Minimax<M, S, L>,
-        weakerState: S,
+        weakState: S,
         weakMove: MGPOptional<M>,
-        strongerState: S,
+        strongState: S,
         strongMove: MGPOptional<M>,
         player: Player)
     : void
     {
-        const weakValue: number =
-            minimax.getBoardValue(new MGPNode(weakerState, MGPOptional.empty(), weakMove)).value;
-        const strongValue: number =
-            minimax.getBoardValue(new MGPNode(strongerState, MGPOptional.empty(), strongMove)).value;
+        const weakNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(weakState, MGPOptional.empty(), weakMove);
+        const weakValue: number = minimax.getBoardValue(weakNode).value;
+        const strongNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(strongState, MGPOptional.empty(), strongMove);
+        const strongValue: number = minimax.getBoardValue(strongNode).value;
         if (player === Player.ZERO) {
             expect(weakValue).toBeGreaterThan(strongValue);
         } else {
@@ -124,5 +144,10 @@ export class RulesUtils {
             expect(MGPNode.getScoreStatus(value)).toBe(SCORE.PRE_VICTORY);
             expect(value).toBe(expectedValue);
         }
+    }
+    public static expectToThrowAndLog(func: () => void, error: string): void {
+        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        expect(func).toThrowError('Assertion failure: ' + error);
+        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
     }
 }

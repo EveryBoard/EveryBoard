@@ -1,19 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import { QuartoRules } from '../QuartoRules';
+import { QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoMinimax } from '../QuartoMinimax';
 import { QuartoMove } from '../QuartoMove';
-import { QuartoState } from '../QuartoState';
 import { QuartoPiece } from '../QuartoPiece';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('QuartoMove', () => {
 
     it('should have a bijective encoder', () => {
-        const rules: QuartoRules = new QuartoRules(QuartoState);
+        const rules: QuartoRules = QuartoRules.get();
         const minimax: QuartoMinimax = new QuartoMinimax(rules, 'QuartoMinimax');
-        const firstTurnMoves: QuartoMove[] = minimax.getListMoves(rules.node);
+        const node: QuartoNode = rules.getInitialNode();
+        const firstTurnMoves: QuartoMove[] = minimax.getListMoves(node);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeBijective(QuartoMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(QuartoMove.encoder, move);
         }
     });
     it('should override toString and equals correctly', () => {

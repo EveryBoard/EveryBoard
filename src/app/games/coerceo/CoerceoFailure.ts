@@ -9,6 +9,4 @@ export class CoerceoFailure {
     public static FIRST_CLICK_SHOULD_NOT_BE_NULL: Localized = () => $localize`Your first click must be on the piece that you want to move, or on a piece of your opponent that you want to exchange against two tiles.`;
 
     public static CANNOT_CAPTURE_FROM_EMPTY: Localized = () => $localize`You cannot capture from an empty space.`;
-
-    public static CANNOT_CAPTURE_OWN_PIECES: Localized = () => $localize`You cannot capture your own pieces.`;
 }

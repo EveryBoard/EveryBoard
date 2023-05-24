@@ -1,18 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleRules } from '../AwaleRules';
+import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
-import { AwaleState } from '../AwaleState';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('AwaleMove', () => {
 
     it('should have a bijective encoder', () => {
-        const rules: AwaleRules = new AwaleRules(AwaleState);
+        const rules: AwaleRules = AwaleRules.get();
         const minimax: AwaleMinimax = new AwaleMinimax(rules, 'AwaleMinimax');
-        const firstTurnMoves: AwaleMove[] = minimax.getListMoves(rules.node);
+        const node: AwaleNode = rules.getInitialNode();
+        const firstTurnMoves: AwaleMove[] = minimax.getListMoves(node);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeBijective(AwaleMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(AwaleMove.encoder, move);
         }
     });
     it('should override equals correctly', () => {

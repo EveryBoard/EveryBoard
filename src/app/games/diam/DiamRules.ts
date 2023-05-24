@@ -1,33 +1,33 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class DiamNode extends MGPNode<DiamRules, DiamMove, DiamState> {}
 
 export class DiamRules extends Rules<DiamMove, DiamState> {
 
     private static singleton: MGPOptional<DiamRules> = MGPOptional.empty();
+
     public static get(): DiamRules {
         if (DiamRules.singleton.isAbsent()) {
             DiamRules.singleton = MGPOptional.of(new DiamRules());
         }
         return DiamRules.singleton.get();
     }
-
     private constructor() {
         super(DiamState);
     }
-
     public applyLegalMove(move: DiamMove, state: DiamState, _info: void): DiamState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
@@ -56,42 +56,42 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         }
         return new DiamState(newBoard, state.remainingPieces, state.turn + 1);
     }
-    public isLegal(move: DiamMove, state: DiamState): MGPFallible<void> {
+    public isLegal(move: DiamMove, state: DiamState): MGPValidation {
         if (move.isDrop()) {
             return this.isDropLegal(move, state);
         } else {
             return this.isShiftLegal(move, state);
         }
     }
-    private isDropLegal(drop: DiamMoveDrop, state: DiamState): MGPFallible<void> {
+    private isDropLegal(drop: DiamMoveDrop, state: DiamState): MGPValidation {
         // DiamMoveDrop can only be created on a space on the board, so we don't have to check that
         if (drop.piece.owner !== state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (state.getRemainingPiecesOf(drop.piece) === 0) {
-            return MGPFallible.failure(DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE());
+            return MGPValidation.failure(DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE());
         }
         return this.dropHeightValidity(drop, state);
     }
-    public dropHeightValidity(drop: DiamMoveDrop, state: DiamState): MGPFallible<void> {
+    public dropHeightValidity(drop: DiamMoveDrop, state: DiamState): MGPValidation {
         if (state.getStackHeight(drop.target) === DiamState.HEIGHT) {
-            return MGPFallible.failure(DiamFailure.SPACE_IS_FULL());
+            return MGPValidation.failure(DiamFailure.SPACE_IS_FULL());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
-    private isShiftLegal(shift: DiamMoveShift, state: DiamState): MGPFallible<void> {
+    private isShiftLegal(shift: DiamMoveShift, state: DiamState): MGPValidation {
         if (state.getPieceAt(shift.start).owner !== state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         return this.shiftHeightValidity(shift, state);
     }
-    public shiftHeightValidity(shift: DiamMoveShift, state: DiamState): MGPFallible<void> {
+    public shiftHeightValidity(shift: DiamMoveShift, state: DiamState): MGPValidation {
         const movedHeight: number = state.getStackHeight(shift.start.x) - shift.start.y;
         const resultingHeight: number = state.getStackHeight(shift.getTarget()) + movedHeight;
         if (resultingHeight > DiamState.HEIGHT) {
-            return MGPFallible.failure(DiamFailure.TARGET_STACK_TOO_HIGH());
+            return MGPValidation.failure(DiamFailure.TARGET_STACK_TOO_HIGH());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     public getGameStatus(node: DiamNode): GameStatus {
         const highestAlignment: MGPOptional<Coord> = this.findHighestAlignment(node.gameState);

@@ -2,7 +2,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { DvonnState } from './DvonnState';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
@@ -12,11 +12,24 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
 
 export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 
+    private static singleton: MGPOptional<DvonnRules> = MGPOptional.empty();
+
+    public static get(): DvonnRules {
+        if (DvonnRules.singleton.isAbsent()) {
+            DvonnRules.singleton = MGPOptional.of(new DvonnRules());
+        }
+        return DvonnRules.singleton.get();
+    }
+    private constructor() {
+        super(DvonnState);
+    }
     public static getGameStatus(node: DvonnNode): GameStatus {
         const state: DvonnState = node.gameState;
         const scores: number[] = DvonnRules.getScores(state);
@@ -124,7 +137,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         });
         return newState;
     }
-    public applyLegalMove(move: DvonnMove, state: DvonnState, _status: void): DvonnState {
+    public applyLegalMove(move: DvonnMove, state: DvonnState, _info: void): DvonnState {
         if (move === DvonnMove.PASS) {
             return new DvonnState(state.board, state.turn + 1, true);
         } else {
@@ -140,22 +153,22 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return resultingState;
         }
     }
-    public isLegal(move: DvonnMove, state: DvonnState): MGPFallible<void> {
+    public isLegal(move: DvonnMove, state: DvonnState): MGPValidation {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself
             if (move === DvonnMove.PASS && !state.alreadyPassed) {
-                return MGPFallible.success(undefined);
+                return MGPValidation.SUCCESS;
             } else {
-                return MGPFallible.failure(RulesFailure.MUST_PASS());
+                return MGPValidation.failure(RulesFailure.MUST_PASS());
             }
         } else if (move === DvonnMove.PASS) {
-            return MGPFallible.failure(RulesFailure.CANNOT_PASS());
+            return MGPValidation.failure(RulesFailure.CANNOT_PASS());
         }
 
         const pieceMovable: MGPValidation = this.isMovablePiece(state, move.getStart());
         if (pieceMovable.isFailure()) {
-            return pieceMovable.toFailedFallible();
+            return pieceMovable;
         }
 
         const stack: DvonnPieceStack = state.getPieceAt(move.getStart());

@@ -1,20 +1,20 @@
 /* eslint-disable max-lines-per-function */
-import { GoRules } from '../GoRules';
+import { GoNode, GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
-import { GoState } from '../GoState';
 import { GoMove } from '../GoMove';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('GoMove', () => {
 
     it('should have a bijective encoder', () => {
-        const rules: GoRules = new GoRules(GoState);
+        const rules: GoRules = GoRules.get();
         const minimax: GoMinimax = new GoMinimax(rules, 'GoMinimax');
-        const firstTurnMoves: GoMove[] = minimax.getListMoves(rules.node);
+        const node: GoNode = rules.getInitialNode();
+        const firstTurnMoves: GoMove[] = minimax.getListMoves(node);
         firstTurnMoves.push(GoMove.PASS);
         firstTurnMoves.push(GoMove.ACCEPT);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeBijective(GoMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(GoMove.encoder, move);
         }
     });
     it('should stringify nicely', () => {

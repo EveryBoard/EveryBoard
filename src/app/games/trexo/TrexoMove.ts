@@ -11,7 +11,7 @@ import { TrexoState } from './TrexoState';
  */
 export class TrexoMove extends MoveWithTwoCoords {
 
-    public static encoder: MoveEncoder<TrexoMove> = MoveWithTwoCoords.getEncoder(TrexoMove.from);
+    public static encoder: MoveEncoder<TrexoMove> = MoveWithTwoCoords.getFallibleEncoder(TrexoMove.from);
 
     public static from(zero: Coord, one: Coord): MGPFallible<TrexoMove> {
         assert(zero.isInRange(TrexoState.SIZE, TrexoState.SIZE), `${ zero.toString() } is out of the TrexoBoard!`);
@@ -26,7 +26,7 @@ export class TrexoMove extends MoveWithTwoCoords {
     private constructor(first: Coord, second: Coord) {
         super(first, second);
     }
-    public toString(): string {
+    public override toString(): string {
         return this.getFirst().toString() + ' && ' + this.getSecond().toString();
     }
     public equals(other: TrexoMove): boolean {

@@ -34,7 +34,8 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new LinesOfActionRules(LinesOfActionState);
+        this.rules = LinesOfActionRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new LinesOfActionMinimax(this.rules, 'LinesOfActionMinimax'),
         ];
@@ -66,7 +67,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         const move: MGPFallible<LinesOfActionMove> =
             LinesOfActionMove.from(this.selected.get(), coord);
         if (move.isSuccess()) {
-            return this.chooseMove(move.get(), this.rules.node.gameState);
+            return this.chooseMove(move.get(), this.node.gameState);
         } else {
             return this.cancelMove(move.getReason());
         }
@@ -85,17 +86,16 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     public updateBoard(): void {
         this.cancelMoveAttempt();
         this.board = this.getState().board;
-        this.lastMove = this.rules.node.move;
-        if (this.lastMove.isPresent()) {
-            const lastMove: LinesOfActionMove = this.lastMove.get();
-            if (this.getPreviousState().getPieceAt(lastMove.getEnd()).isPlayer()) {
-                this.captured = MGPOptional.of(lastMove.getEnd());
-            } else {
-                this.captured = MGPOptional.empty();
-            }
+        this.lastMove = this.node.move;
+    }
+    public override showLastMove(move: LinesOfActionMove): void {
+        if (this.getPreviousState().getPieceAt(move.getEnd()).isPlayer()) {
+            this.captured = MGPOptional.of(move.getEnd());
+        } else {
+            this.captured = MGPOptional.empty();
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selected = MGPOptional.empty();
         this.targets = [];
     }

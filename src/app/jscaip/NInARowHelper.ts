@@ -1,20 +1,32 @@
 import { assert } from '../utils/assert';
 import { MGPMap } from '../utils/MGPMap';
+import { BoardValue } from './BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { GameStateWithTable } from './GameStateWithTable';
+import { MGPNode } from './MGPNode';
 import { Player, PlayerOrNone } from './Player';
+import { SCORE } from './SCORE';
 
 export class NInARowHelper<T> {
 
-    public constructor(public isInRange: (coord: Coord) => boolean,
-                       public getOwner: (piece: T) => PlayerOrNone,
-                       public N: number)
+    public constructor(private readonly isInRange: (coord: Coord) => boolean,
+                       private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
+                       private readonly N: number)
     {
+    }
+    public getBoardValue(state: GameStateWithTable<T>): BoardValue {
+        let score: number = 0;
+        state.forEachCoord((coord: Coord, piece: T) => {
+            if (this.getOwner(piece, state).isPlayer()) {
+                score += this.getSquareScore(state, coord);
+            }
+        });
+        return new BoardValue(score);
     }
     public getSquareScore(state: GameStateWithTable<T>, coord: Coord): number {
         const piece: T = state.getPieceAt(coord);
-        const ally: Player = this.getOwner(piece) as Player;
+        const ally: Player = this.getOwner(piece, state) as Player;
         assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
 
         const freeSpaceByDirs: MGPMap<Direction, number> = new MGPMap();
@@ -70,10 +82,10 @@ export class NInARowHelper<T> {
         while (this.isInRange(coord) && testedCoords < this.N) {
             // while we're on the board
             const currentSpace: T = state.getPieceAt(coord);
-            if (this.getOwner(currentSpace) === opponent) {
+            if (this.getOwner(currentSpace, state) === opponent) {
                 return [freeSpaces, allies];
             }
-            if (this.getOwner(currentSpace) === ally && allAlliesAreSideBySide) {
+            if (this.getOwner(currentSpace, state) === ally && allAlliesAreSideBySide) {
                 allies++;
             } else {
                 allAlliesAreSideBySide = false; // we stop counting the allies on this line
@@ -86,5 +98,22 @@ export class NInARowHelper<T> {
             testedCoords++;
         }
         return [freeSpaces, allies];
+    }
+    public getVictoriousCoord(state: GameStateWithTable<T>): Coord[] {
+        const coords: Coord[] = [];
+        for (const coordAndContents of state.getCoordsAndContents()) {
+            if (this.getOwner(coordAndContents.content, state).isPlayer()) {
+                const coord: Coord = coordAndContents.coord;
+                const squareScore: number = this.getSquareScore(state, coord);
+                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                    if (squareScore === Player.ZERO.getVictoryValue() ||
+                        squareScore === Player.ONE.getVictoryValue())
+                    {
+                        coords.push(coord);
+                    }
+                }
+            }
+        }
+        return coords;
     }
 }

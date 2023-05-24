@@ -49,7 +49,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new AbaloneRules(AbaloneState);
+        this.rules = AbaloneRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new AbaloneDummyMinimax(this.rules, 'Dummy'),
         ];
@@ -66,21 +67,17 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     public updateBoard(): void {
         this.cancelMoveAttempt();
         this.hidePreviousMove();
-        if (this.rules.node.move.isPresent()) {
-            this.showPreviousMove();
-        }
         this.hexaBoard = this.getState().getCopiedBoard();
         this.scores = MGPOptional.of(this.getState().getScores());
     }
     private hidePreviousMove(): void {
         this.moveds = [];
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.directions = [];
         this.selecteds = [];
     }
-    private showPreviousMove(): void {
-        const move: AbaloneMove = this.rules.node.move.get();
+    public override showLastMove(move: AbaloneMove): void {
         if (move.isSingleCoord()) {
             this.showPushingMove(move);
         } else {
@@ -88,7 +85,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
     private showPushingMove(move: AbaloneMove): void {
-        const previousState: AbaloneState = this.rules.node.mother.get().gameState;
+        const previousState: AbaloneState = this.getPreviousState();
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);

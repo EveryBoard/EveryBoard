@@ -11,7 +11,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { TaflPieceAndInfluenceMinimax } from '../../TaflPieceAndInfluenceMinimax';
-import { TaflEscapeThenPieceAndControlMinimax } from '../../TaflEscapeThenPieceThenControl';
+import { TaflEscapeThenPieceThenControlMinimax } from '../../TaflEscapeThenPieceThenControlMinimax';
 import { TaflFailure } from '../../TaflFailure';
 import { TaflPieceAndControlMinimax } from '../../TaflPieceAndControlMinimax';
 
@@ -30,7 +30,7 @@ describe('HnefataflRules', () => {
             new TaflMinimax(rules, 'DummyBot'),
             new TaflPieceAndInfluenceMinimax(rules, 'Piece > Influence'),
             new TaflPieceAndControlMinimax(rules, 'Piece > Control'),
-            new TaflEscapeThenPieceAndControlMinimax(rules, 'Escape > Piece > Control'),
+            new TaflEscapeThenPieceThenControlMinimax(rules, 'Escape > Piece > Control'),
         ];
     });
     it('should be created', () => {
@@ -196,6 +196,7 @@ describe('HnefataflRules', () => {
         const expectedState: HnefataflState = new HnefataflState(expectedBoard, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: HnefataflNode = new HnefataflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('Sandwiching king against a throne should not work', () => {
@@ -235,6 +236,7 @@ describe('HnefataflRules', () => {
         const expectedState: HnefataflState = new HnefataflState(expectedBoard, 1);
         const node: HnefataflNode = new HnefataflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('Capturing king against a throne with 3 soldier should not work', () => {
@@ -257,7 +259,7 @@ describe('HnefataflRules', () => {
         // When attempting to surround him
         const move: HnefataflMove = HnefataflMove.of(new Coord(2, 2), new Coord(4, 2));
 
-        // Then the move should be legal but the king not captured, hence the part ongoing
+        // Then the move should be legal but the king not captured, and the part ongoing
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],

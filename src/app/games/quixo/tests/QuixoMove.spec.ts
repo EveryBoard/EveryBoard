@@ -6,11 +6,11 @@ import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMinimax } from '../QuixoMinimax';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('QuixoMove:', () => {
+describe('QuixoMove', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -44,11 +44,11 @@ describe('QuixoMove:', () => {
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const state: QuixoState = new QuixoState(board, 0);
         const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        const rules: QuixoRules = new QuixoRules(QuixoState);
+        const rules: QuixoRules = QuixoRules.get();
         const minimax: QuixoMinimax = new QuixoMinimax(rules, 'QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeBijective(QuixoMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(QuixoMove.encoder, move);
         }
     });
     it('should override correctly equals and toString', () => {

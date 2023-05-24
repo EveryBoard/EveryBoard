@@ -4,12 +4,13 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { DvonnState } from './DvonnState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { DvonnFailure } from './DvonnFailure';
 
 export class DvonnMove extends MoveCoordToCoord {
 
     public static PASS: DvonnMove = new DvonnMove(new Coord(-1, -1), new Coord(-2, -2));
 
-    public static encoder: MoveEncoder<DvonnMove> = MoveWithTwoCoords.getEncoder(DvonnMove.from);
+    public static encoder: MoveEncoder<DvonnMove> = MoveWithTwoCoords.getFallibleEncoder(DvonnMove.from);
 
     private constructor(start: Coord, end: Coord) {
         super(start, end);
@@ -37,15 +38,7 @@ export class DvonnMove extends MoveCoordToCoord {
             // diagonal move, allowed
             return MGPFallible.success(new DvonnMove(start, end));
         } else {
-            return MGPFallible.failure('Invalid move');
-        }
-    }
-    public static of(start: Coord, end: Coord): DvonnMove {
-        const result: MGPFallible<DvonnMove> = DvonnMove.from(start, end);
-        if (result.isSuccess()) {
-            return result.get();
-        } else {
-            throw new Error(result.getReason());
+            return MGPFallible.failure(DvonnFailure.MUST_MOVE_IN_STRAIGHT_LINE());
         }
     }
     public toString(): string {
@@ -54,7 +47,7 @@ export class DvonnMove extends MoveCoordToCoord {
         }
         return 'DvonnMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
-    public length(): number {
+    public override length(): number {
         if (this.getStart().y === this.getEnd().y) {
             return Math.abs(this.getStart().x - this.getEnd().x);
         } else if (this.getStart().x === this.getEnd().x) {

@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -83,10 +83,10 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public doMovementCaptures(move: CoerceoMove): CoerceoState {
         display(CoerceoState.VERBOSE, { coerceoState_doMovementCaptures: { object: this, move } });
-        const captureds: Coord[] = this.getCapturedNeighbors(move.landingCoord.get());
+        const capturedCoords: Coord[] = this.getCapturedNeighbors(move.landingCoord.get());
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
-        for (const captured of captureds) {
+        for (const captured of capturedCoords) {
             resultingState = resultingState.capture(captured);
         }
         return resultingState;

@@ -2,20 +2,32 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class LinesOfActionNode extends MGPNode<LinesOfActionRules, LinesOfActionMove, LinesOfActionState> {}
 
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 
+    private static singleton: MGPOptional<LinesOfActionRules> = MGPOptional.empty();
+
+    public static get(): LinesOfActionRules {
+        if (LinesOfActionRules.singleton.isAbsent()) {
+            LinesOfActionRules.singleton = MGPOptional.of(new LinesOfActionRules());
+        }
+        return LinesOfActionRules.singleton.get();
+    }
+    private constructor() {
+        super(LinesOfActionState);
+    }
     public static getListMovesFromState(state: LinesOfActionState): LinesOfActionMove[] {
         const moves: LinesOfActionMove[] = [];
 
@@ -76,34 +88,30 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             }
         }
     }
-    public applyLegalMove(move: LinesOfActionMove,
-                          state: LinesOfActionState,
-                          _status: void)
-    : LinesOfActionState
-    {
+    public applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _info: void): LinesOfActionState {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         board[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
         board[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();
 
         return new LinesOfActionState(board, state.turn + 1);
     }
-    public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPFallible<void> {
+    public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
         if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.getStart(), move.direction)) {
-            return MGPFallible.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());
+            return MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());
         }
         if (move.getStart().getCoordsToward(move.getEnd()).some((c: Coord) =>
             state.getPieceAt(c) === state.getCurrentOpponent())) {
-            return MGPFallible.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());
+            return MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());
         }
         if (state.getPieceAt(move.getEnd()) === state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.CANNOT_SELF_CAPTURE());
+            return MGPValidation.failure(RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
-    public isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPFallible<void> {
+    public isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
         return LinesOfActionRules.isLegal(move, state);
     }
     private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Direction): number {
@@ -165,7 +173,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             const target: Coord = start.getNext(dir, numberOfPiecesOnLine);
             if (state.isOnBoard(target)) {
                 const move: LinesOfActionMove = LinesOfActionMove.from(start, target).get();
-                const legality: MGPFallible<void> = LinesOfActionRules.isLegal(move, state);
+                const legality: MGPValidation = LinesOfActionRules.isLegal(move, state);
                 if (legality.isSuccess()) {
                     targets.push(target);
                 }

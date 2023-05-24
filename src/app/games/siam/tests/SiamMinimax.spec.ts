@@ -10,7 +10,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { SiamMinimax } from '../../siam/SiamMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('SiamMinimax:', () => {
+describe('SiamMinimax', () => {
 
     let rules: SiamRules;
     let minimax: SiamMinimax;
@@ -418,7 +418,7 @@ describe('SiamMinimax:', () => {
         const currentPlayer: Player = Player.ZERO;
         const T: number = currentPlayer === Player.ZERO ? -1 : 1;
         const expectedValues: (number | null)[][] = [
-        // 0:  won     1     2     3     4     5  nothing
+        // 0: won     1     2     3     4     5 nothing
             [null, null, null, null, null, null, null], // 1 has won
             [null, T, 55, 56, 57, 58, 59], // 1 has 1
             [null, -55, T, 46, 47, 48, 49], // 1 has 2

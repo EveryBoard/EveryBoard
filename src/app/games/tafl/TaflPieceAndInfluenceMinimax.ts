@@ -2,7 +2,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
@@ -13,6 +12,7 @@ import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { assert } from 'src/app/utils/assert';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 
@@ -31,10 +31,10 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
         this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
     }
-    public getBoardValue(node: TaflNode): BoardValue {
+    public override getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
-            return new BoardValue(gameStatus.toBoardValue());
+            return gameStatus.toBoardValue();
         }
         const state: TaflState = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
@@ -166,8 +166,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
             return false;
         }
     }
-    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>,
-                           state: TaflState)
+    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: TaflState)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();

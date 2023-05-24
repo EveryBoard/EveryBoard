@@ -15,7 +15,7 @@ describe('AwaleRules', () => {
     let minimaxes: AwaleMinimax[];
 
     beforeEach(() => {
-        rules = new AwaleRules(AwaleState);
+        rules = AwaleRules.get();
         minimaxes = [
             new AwaleMinimax(rules, 'AwaleMinimax'),
         ];
@@ -165,7 +165,8 @@ describe('AwaleRules', () => {
         const move: AwaleMove = AwaleMove.ZERO;
 
         // Then the move should be illegal
-        RulesUtils.expectMoveFailure(rules, state, move, AwaleFailure.SHOULD_DISTRIBUTE());
+        const reason: string = AwaleFailure.SHOULD_DISTRIBUTE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should allow feeding move', () => {
         // Given a state where the player could and should feed its opponent

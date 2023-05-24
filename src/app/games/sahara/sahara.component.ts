@@ -38,7 +38,8 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new SaharaRules(SaharaState);
+        this.rules = SaharaRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new SaharaMinimax(this.rules, 'SaharaMinimax'),
         ];
@@ -46,7 +47,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.tutorial = new SaharaTutorial().tutorial;
         this.updateBoard();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.possibleLandings = [];
         this.chosenCoord = MGPOptional.empty();
     }
@@ -92,7 +93,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         return await this.chooseMove(newMove.get(), this.getState());
     }
     public updateBoard(): void {
-        const move: MGPOptional<SaharaMove> = this.rules.node.move;
+        const move: MGPOptional<SaharaMove> = this.node.move;
         this.lastCoord = move.map((move: SaharaMove) => move.getStart());
         this.lastMoved = move.map((move: SaharaMove) => move.getEnd());
         this.board = this.getState().board;

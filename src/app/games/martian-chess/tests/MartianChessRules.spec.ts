@@ -11,7 +11,8 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
-import { MartianChessMoveResult, MartianChessNode, MartianChessRules, MartianChessRulesFailure } from '../MartianChessRules';
+import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from '../MartianChessRules';
+import { MartianChessFailure } from '../MartianChessFailure';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 
@@ -51,7 +52,7 @@ describe('MartianChessRules', () => {
     ];
 
     beforeEach(() => {
-        rules = new MartianChessRules(MartianChessState);
+        rules = MartianChessRules.get();
         minimaxes = [
             new MartianChessDummyMinimax(rules, 'MartianChessDummyMinimax'),
         ];
@@ -64,7 +65,7 @@ describe('MartianChessRules', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
 
         // Then the move should be illegal
-        const reason: string = MartianChessRulesFailure.MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY();
+        const reason: string = MartianChessFailure.MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should be illegal to choose an empty square', () => {
@@ -119,7 +120,7 @@ describe('MartianChessRules', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(2, 6), new Coord(1, 5)).get();
 
         // Then the move should be illegal
-        const reason: string = MartianChessRulesFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
+        const reason: string = MartianChessFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should be illegal to move a pawn like a bishop for further than one step', () => {
@@ -366,7 +367,7 @@ describe('MartianChessRules', () => {
             const move: MartianChessMove = MartianChessMove.from(b, a).get();
 
             // Then it should be deemed illegal
-            const reason: string = MartianChessRulesFailure.CANNOT_UNDO_LAST_MOVE();
+            const reason: string = MartianChessFailure.CANNOT_UNDO_LAST_MOVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid to put the last moved piece right where it was even if calling the clock', () => {
@@ -381,7 +382,7 @@ describe('MartianChessRules', () => {
             const move: MartianChessMove = MartianChessMove.from(b, a, true).get();
 
             // Then it should be deemed illegal
-            const reason: string = MartianChessRulesFailure.CANNOT_UNDO_LAST_MOVE();
+            const reason: string = MartianChessFailure.CANNOT_UNDO_LAST_MOVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });
@@ -466,7 +467,7 @@ describe('MartianChessRules', () => {
             const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(2, 6)).get();
 
             // Then the move should be legal and a queen created
-            const reason: string = MartianChessRulesFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
+            const reason: string = MartianChessFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should be illegal to merge two pawns in a drone when a drone is present', () => {
@@ -487,7 +488,7 @@ describe('MartianChessRules', () => {
             const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(2, 6)).get();
 
             // Then the move should be legal and a queen created
-            const reason: string = MartianChessRulesFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
+            const reason: string = MartianChessFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });

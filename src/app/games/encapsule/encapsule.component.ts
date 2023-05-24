@@ -39,7 +39,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new EncapsuleRules(EncapsuleState);
+        this.rules = EncapsuleRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new EncapsuleMinimax(this.rules, 'EncapsuleMinimax'),
         ];
@@ -50,7 +51,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public updateBoard(): void {
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
-        const move: MGPOptional<EncapsuleMove> = this.rules.node.move;
+        const move: MGPOptional<EncapsuleMove> = this.node.move;
         this.calculateLeftPieceCoords();
 
         if (move.isPresent()) {
@@ -98,7 +99,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             }
         }
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.chosenPiece = MGPOptional.empty();
         this.chosenPieceIndex = MGPOptional.empty();

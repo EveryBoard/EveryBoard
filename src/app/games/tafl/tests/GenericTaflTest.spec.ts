@@ -3,7 +3,6 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MoveEncoder } from 'src/app/utils/Encoder';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
@@ -47,8 +46,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);
         }));
         it('should create', () => {
-            expect(testUtils.wrapper).withContext('Wrapper should be created').toBeDefined();
-            expect(testUtils.getComponent()).withContext('Component should be created').toBeDefined();
+            testUtils.expectToBeCreated();
         });
         describe('First click', () => {
             it('should cancel move when clicking on opponent piece', fakeAsync( async() => {
@@ -159,12 +157,10 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
         });
         it('should have a bijective encoder', () => {
             const rules: R = testUtils.getComponent().rules;
-            MGPNode.ruler = rules;
             const encoder: MoveEncoder<M> = testUtils.getComponent().encoder;
-            rules.setInitialBoard();
             const minimax: TaflMinimax = new TaflMinimax(rules, 'TaflMinimax');
             const firstTurnMoves: M[] = minimax
-                .getListMoves(rules.node)
+                .getListMoves(rules.getInitialNode())
                 .map((move: TaflMove) => {
                     return entries.moveProvider(move.getStart(), move.getEnd());
                 });
@@ -172,5 +168,21 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 EncoderTestUtils.expectToBeBijective(encoder, move);
             }
         });
+        it('should hide first move when taking back', fakeAsync(async() => {
+            // Given a state with a first move done
+            const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
+            await testUtils.expectClickSuccess('#click_' + playersCoord);
+            const move: M = entries.moveProvider(entries.validFirstCoord, entries.validSecondCoord);
+            const landingCoord: string = entries.validSecondCoord.x + '_' + entries.validSecondCoord.y;
+            const landingSpace: string = '#click_' + landingCoord;
+            await testUtils.expectMoveSuccess(landingSpace, move);
+
+            // When taking it back
+            await testUtils.expectInterfaceClickSuccess('#takeBack');
+
+            // Then no highlight should be found
+            testUtils.expectElementNotToHaveClass('#space_' + playersCoord, 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#space_' + landingCoord, 'moved-fill');
+        }));
     });
 }

@@ -2,7 +2,7 @@
 import { PylosCoord } from '../PylosCoord';
 import { PylosState } from '../PylosState';
 
-describe('PylosState:', () => {
+describe('PylosState', () => {
 
     describe('isSupporting', () => {
         it('should always tell that level 3 space are not supporting', () => {

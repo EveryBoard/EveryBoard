@@ -9,6 +9,7 @@ type SettingOption = { value: string, name: string }
     templateUrl: './settings.component.html',
 })
 export class SettingsComponent {
+
     public readonly availableLanguages: SettingOption[] = [
         { value: 'fr', name: 'Français' },
         { value: 'en', name: 'English' },
@@ -17,7 +18,6 @@ export class SettingsComponent {
         { value: 'light', name: $localize`Light` },
         { value: 'dark', name: $localize`Dark` },
     ];
-
     public currentTheme: string;
     public currentLanguage: string;
 

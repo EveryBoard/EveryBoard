@@ -3,7 +3,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from '../../../utils/MGPValidation';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HivePieceRules, HiveSpiderRules } from '../HivePieceRules';
@@ -80,7 +80,7 @@ describe('HivePieceRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 4);
         // When checking the legality of a legal move prefix
         const prefix: Coord[] = [new Coord(2, 0), new Coord(1, 0)];
-        const legality: MGPFallible<void> = HiveSpiderRules.get().prefixLegality(prefix, state);
+        const legality: MGPValidation = HiveSpiderRules.get().prefixLegality(prefix, state);
         // Then it should have taken the offset into account and produce the expected result
         expect(legality.isSuccess()).toBeTrue();
     });
@@ -99,7 +99,7 @@ describe('HivePieceRules', () => {
         expect(moves.length).toBe(2);
         // and they should both be legal (hence, without the offset)
         for (const move of moves) {
-            const legality: MGPFallible<void> = HiveRules.get().isLegal(move, state);
+            const legality: MGPValidation = HiveRules.get().isLegal(move, state);
             expect(legality.isSuccess()).toBeTrue();
         }
     });

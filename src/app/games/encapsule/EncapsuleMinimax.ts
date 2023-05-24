@@ -5,17 +5,15 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
+export class EncapsuleMinimax
+    extends PlayerMetricsMinimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
 
-    public getBoardValue(node: EncapsuleNode): BoardValue {
-        const gameStatus: GameStatus = EncapsuleRules.getGameStatus(node);
-        return new BoardValue(gameStatus.toBoardValue());
+    public getMetrics(_node: EncapsuleNode): [number, number] {
+        return [0, 0];
     }
     public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];

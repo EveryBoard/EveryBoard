@@ -4,7 +4,6 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
@@ -12,6 +11,7 @@ import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 describe('AbaloneRules', () => {
 
@@ -23,7 +23,7 @@ describe('AbaloneRules', () => {
     let minimaxes: Minimax<AbaloneMove, AbaloneState, AbaloneLegalityInformation>[];
 
     beforeEach(() => {
-        rules = new AbaloneRules(AbaloneState);
+        rules = AbaloneRules.get();
         minimaxes = [
             new AbaloneDummyMinimax(rules, 'Dummy'),
         ];
@@ -63,7 +63,8 @@ describe('AbaloneRules', () => {
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(8, 1), HexaDirection.DOWN).get();
 
         // Then the movement should be refused
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should refuse move starting by empty space', () => {
         // Given an initial board (for simplicity)
@@ -73,7 +74,8 @@ describe('AbaloneRules', () => {
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.DOWN).get();
 
         // Then the movement should be refused
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should move group of piece in provided direction', () => {
         // Given an initial board (for simplicity)
@@ -116,7 +118,8 @@ describe('AbaloneRules', () => {
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT).get();
 
         // Then the move should be forbidden
-        RulesUtils.expectMoveFailure(rules, state, move, AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
+        const reason: string = AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it(`should refuse moving group of piece smaller than the opponent's group`, () => {
         // Given a board with 4 piece aligned
@@ -137,7 +140,8 @@ describe('AbaloneRules', () => {
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT).get();
 
         // Then the move should be forbidden
-        RulesUtils.expectMoveFailure(rules, state, move, AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
+        const reason: string = AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should refuse moving a group of piece of equal size to the opponent', () => {
         // Given a board with 4 piece aligned
@@ -158,7 +162,8 @@ describe('AbaloneRules', () => {
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT).get();
 
         // Then the move should be forbidden
-        RulesUtils.expectMoveFailure(rules, state, move, AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
+        const reason: string = AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should refuse moving a group of piece when first piece after the opponent group is not empty', () => {
         // Given a board with possible push that is self-blocked
@@ -179,7 +184,8 @@ describe('AbaloneRules', () => {
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT).get();
 
         // Then the move should be forbidden
-        RulesUtils.expectMoveFailure(rules, state, move, AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES());
+        const reason: string = AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should make pushed piece get of the board', () => {
         // Given an board where 3 can push 1 out of 2 aligned pieces out of the board
@@ -289,7 +295,8 @@ describe('AbaloneRules', () => {
                                                               HexaDirection.DOWN).get();
 
         // Then the move should be forbidden
-        RulesUtils.expectMoveFailure(rules, state, move, AbaloneFailure.TRANSLATION_IMPOSSIBLE());
+        const reason: string = AbaloneFailure.TRANSLATION_IMPOSSIBLE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should refuse to translate a group containing non player piece', () => {
         // Given a board with 2 aligned piece separated by a hole
@@ -312,7 +319,8 @@ describe('AbaloneRules', () => {
                                                               HexaDirection.DOWN).get();
 
         // Then the move should be forbidden
-        RulesUtils.expectMoveFailure(rules, state, move, AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES());
+        const reason: string = AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should push on UNREACHABLE the same way as outside the array board', () => {
         // Given the initial state

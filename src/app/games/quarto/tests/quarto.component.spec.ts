@@ -89,7 +89,7 @@ describe('QuartoComponent', () => {
             const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
             await testUtils.expectMoveSuccess('#chooseCoord_3_3', move);
         }));
-        it('should deselect piece when clicking on it again', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given any board with remaining piece selected
             await testUtils.expectClickSuccess('#choosePiece_1');
 

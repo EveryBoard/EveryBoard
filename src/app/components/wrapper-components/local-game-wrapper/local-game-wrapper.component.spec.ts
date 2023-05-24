@@ -17,7 +17,6 @@ import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -29,6 +28,7 @@ import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -197,7 +197,7 @@ describe('LocalGameWrapperComponent', () => {
         });
         it('should rotate the board when selecting AI as player zero', async() => {
             // Given a board of a reversible component
-            testUtils.getComponent().hasAsymetricBoard = true;
+            testUtils.getComponent().hasAsymmetricBoard = true;
 
             // When chosing the AI as player zero
             await selectAIPlayer(Player.ZERO);
@@ -208,7 +208,7 @@ describe('LocalGameWrapperComponent', () => {
         });
         it('should de-rotate the board when selecting human as player zero again', async() => {
             // Given a board of a reversible component, where AI is player zero
-            testUtils.getComponent().hasAsymetricBoard = true;
+            testUtils.getComponent().hasAsymmetricBoard = true;
             await selectAIPlayer(Player.ZERO);
 
             // When chosing the human as player zero again
@@ -291,11 +291,11 @@ describe('LocalGameWrapperComponent', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board on which some illegal move are possible from the AI
             const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
-            spyOn(testUtils.getComponent().rules, 'choose').and.returnValue(false);
-            spyOn(testUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);
+            spyOn(testUtils.getComponent().rules, 'choose').and.returnValue(MGPOptional.empty());
+            spyOn(testUtils.getComponent().node, 'findBestMove').and.returnValue(P4Move.ZERO);
 
             // When it is the turn of the bugged AI (that performs an illegal move)
-            const minimax: P4Minimax = new P4Minimax(new P4Rules(P4State), 'P4');
+            const minimax: P4Minimax = new P4Minimax(P4Rules.get(), 'P4');
             const result: MGPValidation = await localGameWrapper.doAIMove(minimax);
 
             // Then it should fail and an error should be logged
@@ -423,4 +423,40 @@ describe('LocalGameWrapperComponent', () => {
             expect(winnerTag).toBe('P4Minimax (Player 2) won');
         }));
     });
+    describe('onCancelMove', () => {
+        it('should showLastMove when there is one', fakeAsync(async() => {
+            // Given a component with a last move
+            const component: P4Component = testUtils.getComponent();
+            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should have been called
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.FOUR);
+        }));
+        it('should not showLastMove when there is none', fakeAsync(async() => {
+            // Given a component with a last move
+            const component: P4Component = testUtils.getComponent();
+            spyOn(component, 'showLastMove').and.callThrough();
+
+            // When calling onCancelMove
+            testUtils.wrapper.onCancelMove();
+
+            // Then showLastMove should not have been called
+            expect(component.showLastMove).not.toHaveBeenCalled();
+        }));
+    });
+    it('should display AI metrics when parameter is set to true', fakeAsync(async() => {
+        // Given a component where we want to show the AI metrics in the middle of a part
+        (testUtils.wrapper as LocalGameWrapperComponent).displayAIMetrics = true;
+        await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then the AI metrics are shown
+        testUtils.expectElementToExist('#AIMetrics');
+    }));
 });

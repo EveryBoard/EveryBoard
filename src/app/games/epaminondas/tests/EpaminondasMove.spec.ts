@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
-import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('EpaminondasMove: ', () => {
 
@@ -23,15 +22,13 @@ describe('EpaminondasMove: ', () => {
             .toThrowError('Step size must be minimum one (got 0).');
     });
     it('should have a bijective encoder', () => {
-        const rules: EpaminondasRules = new EpaminondasRules(EpaminondasState);
+        const rules: EpaminondasRules = EpaminondasRules.get();
         const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
-        const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
+        const node: EpaminondasNode = rules.getInitialNode();
+        const moves: EpaminondasMove[] = minimax.getListMoves(node);
         for (const move of moves) {
-            NumberEncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
         }
-    });
-    it('should forbid non integer number to decode', () => {
-        expect(() => EpaminondasMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
     });
     it('should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);

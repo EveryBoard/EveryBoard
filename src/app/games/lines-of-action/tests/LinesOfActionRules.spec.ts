@@ -21,7 +21,7 @@ describe('LinesOfActionRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new LinesOfActionRules(LinesOfActionState);
+        rules = LinesOfActionRules.get();
         minimaxes = [
             new LinesOfActionMinimax(rules, 'LinesOfActionMinimax'),
         ];
@@ -32,7 +32,8 @@ describe('LinesOfActionRules', () => {
     it('should forbid moving a piece of the opponent', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(0, 2), new Coord(2, 2)).get();
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going down', () => {
         const expectedBoard: Table<PlayerOrNone> = [
@@ -153,7 +154,8 @@ describe('LinesOfActionRules', () => {
     it('should forbid to move a piece by a different number of spaces than the number of pieces on the same line', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 1)).get();
-        RulesUtils.expectMoveFailure(rules, state, move, LinesOfActionFailure.INVALID_MOVE_LENGTH());
+        const reason: string = LinesOfActionFailure.INVALID_MOVE_LENGTH();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it(`should forbid to land on one of the player's pieces`, () => {
         const board: Table<PlayerOrNone> = [
@@ -168,7 +170,8 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_SELF_CAPTURE());
+        const reason: string = RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it(`should forbid to jump over an opponent's piece`, () => {
         const board: Table<PlayerOrNone> = [
@@ -183,7 +186,8 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 2), new Coord(0, 2)).get();
-        RulesUtils.expectMoveFailure(rules, state, move, LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());
+        const reason: string = LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should allow to jump over its own pieces', () => {
         const expectedBoard: Table<PlayerOrNone> = [

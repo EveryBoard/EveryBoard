@@ -83,9 +83,9 @@ export enum Phase {
 }
 export class GoState extends GameStateWithTable<GoPiece> {
 
-    public static WIDTH: number = 13;
+    public static WIDTH: number = 19;
 
-    public static HEIGHT: number = 13;
+    public static HEIGHT: number = 19;
 
     public readonly koCoord: MGPOptional<Coord>;
 

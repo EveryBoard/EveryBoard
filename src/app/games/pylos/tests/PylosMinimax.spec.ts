@@ -7,7 +7,7 @@ import { PylosNode, PylosRules } from '../PylosRules';
 import { PylosMinimax } from '../PylosMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('PylosMinimax:', () => {
+describe('PylosMinimax', () => {
 
     let rules: PylosRules;
     let minimax: PylosMinimax;
@@ -17,11 +17,12 @@ describe('PylosMinimax:', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new PylosRules(PylosState);
+        rules = PylosRules.get();
         minimax = new PylosMinimax(rules, 'PylosMinimax');
     });
     it('should provide 16 drops at first turn', () => {
-        expect(minimax.getListMoves(rules.node).length).toBe(16);
+        const node: PylosNode = rules.getInitialNode();
+        expect(minimax.getListMoves(node).length).toBe(16);
     });
     it('should provide drops without capture, drops with one capture, drops with two captures and climbings', () => {
         // Given a board on which all kind of moves are possible

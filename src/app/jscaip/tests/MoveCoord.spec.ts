@@ -1,20 +1,20 @@
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Coord } from '../Coord';
-import { MoveCoord, MoveCoordEncoder } from '../MoveCoord';
+import { MoveCoord } from '../MoveCoord';
 
 class MyMoveCoord extends MoveCoord {
     public toString(): string {
         return 'MyMoveCoord';
     }
-    public equals(other: MyMoveCoord): boolean {
-        throw new Error('Not implemented!');
-    }
 }
 
-describe('MoveCoordEncoder', () => {
-    it('should define the correct maxValue', () => {
-        const encoder: NumberEncoder<MyMoveCoord> =
-            MoveCoordEncoder.getEncoder(3, 3, (coord: Coord) => new MyMoveCoord(coord.x, coord.y));
-        expect(encoder.encodeNumber(new MyMoveCoord(2, 2))).toBe(encoder.maxValue());
+describe('MoveCoord', () => {
+    describe('encoder', () => {
+        it('should be bijective', () => {
+            const encoder: MoveEncoder<MyMoveCoord> =
+                MoveCoord.getEncoder((coord: Coord) => new MyMoveCoord(coord.x, coord.y));
+            EncoderTestUtils.expectToBeBijective(encoder, new MyMoveCoord(2, 2));
+        });
     });
 });

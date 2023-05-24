@@ -1,25 +1,17 @@
-import { JSONValue, Utils } from 'src/app/utils/utils';
+import { JSONValue } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
 import { Localized } from '../utils/LocaleUtils';
-import { Encoder, NumberEncoder } from '../utils/Encoder';
-
-export class Vector implements ComparableObject {
-    public equals(other: Vector): boolean {
-        return this.x === other.x && this.y === other.y;
-    }
-    public constructor(public readonly x: number,
-                       public readonly y: number) {}
-    public toString(): string {
-        return '(' + this.x + ',' + this.y + ')';
-    }
-}
+import { Encoder } from '../utils/Encoder';
+import { Vector } from './Vector';
 
 export abstract class BaseDirection extends Vector {
-    public readonly x: 0|1|-1;
-    public readonly y: 0|1|-1;
+
+    public override readonly x: 0|1|-1;
+
+    public override readonly y: 0|1|-1;
+
     public isDown(): boolean {
         return this.y === 1;
     }
@@ -42,7 +34,7 @@ export abstract class BaseDirection extends Vector {
         if (this.x === -1 && this.y === 1) return 6;
         else return 7;
     }
-    public toString(): string {
+    public override toString(): string {
         if (this.x === 0 && this.y === -1) return 'UP';
         if (this.x === 1 && this.y === 0) return 'RIGHT';
         if (this.x === 0 && this.y === 1) return 'DOWN';
@@ -195,7 +187,7 @@ export class Orthogonal extends BaseDirection {
                 Orthogonal.LEFT,
             ];
 
-            public of(x: number, y: number): MGPFallible<Orthogonal> {
+            public override of(x: number, y: number): MGPFallible<Orthogonal> {
                 if (x === 0 && y === -1) return MGPFallible.success(Orthogonal.UP);
                 if (x === 1 && y === 0) return MGPFallible.success(Orthogonal.RIGHT);
                 if (x === 0 && y === 1) return MGPFallible.success(Orthogonal.DOWN);
@@ -217,29 +209,6 @@ export class Orthogonal extends BaseDirection {
     public rotateClockwise(): Orthogonal {
         const rotated: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.y, this.x);
         return rotated.get();
-    }
-}
-
-export class OrthogonalNumberEncoder extends NumberEncoder<Orthogonal> {
-
-    public maxValue(): number {
-        return 3;
-    }
-    public encodeNumber(orthogonal: Orthogonal): number {
-        if (orthogonal === Orthogonal.UP) return 0;
-        if (orthogonal === Orthogonal.RIGHT) return 1;
-        if (orthogonal === Orthogonal.DOWN) return 2;
-        return 3;
-    }
-    public decodeNumber(encoded: number): Orthogonal {
-        switch (encoded) {
-            case 0: return Orthogonal.UP;
-            case 1: return Orthogonal.RIGHT;
-            case 2: return Orthogonal.DOWN;
-            default:
-                Utils.expectToBe(encoded, 3, `Encoded orthogonal should be 3 for LEFT but got ${encoded} instead`);
-                return Orthogonal.LEFT;
-        }
     }
 }
 

@@ -14,11 +14,13 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('KamisadoRules:', () => {
+describe('KamisadoRules', () => {
 
     let rules: KamisadoRules;
 
     let minimaxes: Minimax<KamisadoMove, KamisadoState>[];
+
+    let node: KamisadoNode;
 
     const _: KamisadoPiece = KamisadoPiece.EMPTY;
     const R: KamisadoPiece = KamisadoPiece.ZERO.RED;
@@ -32,14 +34,15 @@ describe('KamisadoRules:', () => {
     const p: KamisadoPiece = KamisadoPiece.ONE.PURPLE;
 
     beforeEach(() => {
-        rules = new KamisadoRules(KamisadoState);
+        rules = KamisadoRules.get();
         minimaxes = [
             new KamisadoMinimax(rules, 'KamisadoMinimax'),
         ];
+        node = rules.getInitialNode();
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
+        expect(node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
     });
     describe('Allowed moves', () => {
         it('should allow vertical moves without obstacles', () => {
@@ -264,7 +267,7 @@ describe('KamisadoRules:', () => {
             // When user pass
             const move: KamisadoMove = KamisadoMove.PASS;
 
-            // Then the move should be refused!
+            // Then the move should be forbidden
             const reason: string = RulesFailure.CANNOT_PASS();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });

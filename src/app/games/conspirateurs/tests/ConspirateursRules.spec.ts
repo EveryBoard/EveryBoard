@@ -27,13 +27,13 @@ describe('ConspirateursRules', () => {
     });
 
     function drop(coord: Coord): ConspirateursMove {
-        return ConspirateursMoveDrop.of(coord).get();
+        return ConspirateursMoveDrop.from(coord).get();
     }
     function simpleMove(start: Coord, end: Coord): ConspirateursMove {
         return ConspirateursMoveSimple.from(start, end).get();
     }
     function jump(coords: Coord[]): ConspirateursMove {
-        return ConspirateursMoveJump.of(coords).get();
+        return ConspirateursMoveJump.from(coords).get();
     }
     describe('drop moves', () => {
         it('should allow drops within the center zone', () => {
@@ -460,7 +460,7 @@ describe('ConspirateursRules', () => {
             // Given a state with no victory
             const state: ConspirateursState = ConspirateursState.getInitialState();
             const node: ConspirateursNode = new ConspirateursNode(state);
-            // Then no victory should be detected
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should consider game won if a player has put all its pieces in shelters (Player.ZERO)', () => {

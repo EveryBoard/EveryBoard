@@ -1,36 +1,14 @@
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+import { Coord } from 'src/app/jscaip/Coord';
 
 export class GoMove extends MoveCoord {
     public static readonly PASS: GoMove = new GoMove(-1, 0);
     public static readonly ACCEPT: GoMove = new GoMove(-2, 0);
 
-    public static readonly PASS_NUMBER: number = -1;
-    public static readonly ACCEPT_NUMBER: number = -2;
+    public static encoder: MoveEncoder<GoMove> =
+        MoveCoord.getEncoder((c: Coord) => new GoMove(c.x, c.y));
 
-    public static encoder: NumberEncoder<GoMove> = new class extends NumberEncoder<GoMove> {
-        public maxValue(): number {
-            return 18*19 + 18;
-        }
-        public encodeNumber(move: GoMove): number {
-            // A go move goes on x from 0 to 18
-            // and y from 0 to 18
-            // encoded as y*19 + x
-            return (move.coord.y * 19) + move.coord.x;
-        }
-        public decodeNumber(encodedMove: number): GoMove {
-            if (encodedMove === GoMove.PASS_NUMBER) {
-                return GoMove.PASS;
-            }
-            const x: number = encodedMove % 19;
-            const y: number = (encodedMove - x) / 19;
-            return new GoMove(x, y);
-        }
-    };
-    public equals(other: GoMove): boolean {
-        if (this === other) return true;
-        return this.coord.equals(other.coord);
-    }
     public toString(): string {
         if (this === GoMove.PASS) {
             return 'GoMove.PASS';

@@ -1,11 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoState } from '../CoerceoState';
-import { CoerceoRules } from '../CoerceoRules';
+import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
-import { NumberEncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('CoerceoMove', () => {
 
@@ -36,7 +35,7 @@ describe('CoerceoMove', () => {
         });
     });
     describe('Overrides', () => {
-        it('should have functionnal equals', () => {
+        it('should have functional equals', () => {
             const a: Coord = new Coord(0, 0);
             const b: Coord = new Coord(2, 0);
             const c: Coord = new Coord(4, 0);
@@ -54,9 +53,6 @@ describe('CoerceoMove', () => {
             expect(movement.equals(differentEnd)).toBeFalse();
             expect(movement.equals(movement)).toBeTrue();
         });
-        it('should forbid non integer number to decode', () => {
-            expect(() => CoerceoMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
-        });
         it('should stringify nicely', () => {
             const tileExchange: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 5));
             const movement: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(5, 5), new Coord(7, 5));
@@ -65,16 +61,17 @@ describe('CoerceoMove', () => {
         });
         describe('encoder', () => {
             it('should be bijective with first turn moves', () => {
-                const rules: CoerceoRules = new CoerceoRules(CoerceoState);
+                const rules: CoerceoRules = CoerceoRules.get();
                 const minimax: CoerceoMinimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
-                const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
+                const node: CoerceoNode = rules.getInitialNode();
+                const moves: CoerceoMove[] = minimax.getListMoves(node);
                 for (const move of moves) {
-                    NumberEncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
+                    EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
                 }
             });
             it('should be bijective with tiles exchanges', () => {
                 const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 7));
-                NumberEncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
+                EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
             });
         });
     });

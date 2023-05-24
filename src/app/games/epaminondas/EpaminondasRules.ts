@@ -2,13 +2,15 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
@@ -20,6 +22,17 @@ export class EpaminondasNode extends MGPNode<EpaminondasRules,
 
 export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
 
+    private static singleton: MGPOptional<EpaminondasRules> = MGPOptional.empty();
+
+    public static get(): EpaminondasRules {
+        if (EpaminondasRules.singleton.isAbsent()) {
+            EpaminondasRules.singleton = MGPOptional.of(new EpaminondasRules());
+        }
+        return EpaminondasRules.singleton.get();
+    }
+    private constructor() {
+        super(EpaminondasState);
+    }
     public static isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {
         const phalanxValidity: MGPValidation = this.getPhalanxValidity(state, move);
         if (phalanxValidity.isFailure()) {
@@ -61,13 +74,13 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
     public static getLandingStatus(state: EpaminondasState, move: EpaminondasMove)
     : MGPFallible<EpaminondasLegalityInformation> {
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
-        const CURRENT_PLAYER: Player = state.getCurrentPlayer();
+        const currentPlayer: Player = state.getCurrentPlayer();
         let emptied: Coord = move.coord;
         let landingCoord: Coord = move.coord.getNext(move.direction, move.movedPieces);
         let landingIndex: number = 0;
         while (landingIndex + 1 < move.stepSize) {
             newBoard[emptied.y][emptied.x] = PlayerOrNone.NONE;
-            newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;
+            newBoard[landingCoord.y][landingCoord.x] = currentPlayer;
             if (landingCoord.isNotInRange(14, 12)) {
                 return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
             }
@@ -81,11 +94,11 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         if (landingCoord.isNotInRange(14, 12)) {
             return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
         }
-        if (state.getPieceAt(landingCoord) === CURRENT_PLAYER) {
-            return MGPFallible.failure(RulesFailure.CANNOT_SELF_CAPTURE());
+        if (state.getPieceAt(landingCoord) === currentPlayer) {
+            return MGPFallible.failure(RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE());
         }
         newBoard[emptied.y][emptied.x] = PlayerOrNone.NONE;
-        newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;
+        newBoard[landingCoord.y][landingCoord.x] = currentPlayer;
         return MGPFallible.success(newBoard);
     }
     public static getCaptureValidity(oldState: EpaminondasState,

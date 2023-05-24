@@ -44,12 +44,13 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     private moveds: Coord[] = [];
 
-    private captureds: Coord[] = [];
+    private capturedCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymetricBoard = true;
-        this.rules = new EpaminondasRules(EpaminondasState);
+        this.hasAsymmetricBoard = true;
+        this.rules = EpaminondasRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),
             new PositionalEpaminondasMinimax(this.rules, 'Positional'),
@@ -63,24 +64,20 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.firstPiece = MGPOptional.empty();
         this.lastPiece = MGPOptional.empty();
         this.hidePreviousMove();
-        if (this.rules.node.move.isPresent()) {
-            this.showPreviousMove();
-        }
         this.board = this.getState().getCopiedBoard();
     }
-    private showPreviousMove(): void {
-        const move: EpaminondasMove = this.rules.node.move.get();
+    public override showLastMove(move: EpaminondasMove): void {
         let moved: Coord = move.coord;
         this.moveds = [moved];
         for (let i: number = 1; i < (move.stepSize + move.movedPieces); i++) {
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
-        const previousNode: EpaminondasNode = this.rules.node.mother.get();
+        const previousNode: EpaminondasNode = this.node.mother.get();
         const PREVIOUS_OPPONENT: Player = previousNode.gameState.getCurrentOpponent();
         while (moved.isInRange(14, 12) &&
                previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT) {
-            this.captureds.push(moved);
+            this.capturedCoords.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
     }
@@ -114,7 +111,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
     }
     private hidePreviousMove(): void {
-        this.captureds = [];
+        this.capturedCoords = [];
         this.moveds = [];
     }
     private getValidExtensions(PLAYER: Player): Coord[] {
@@ -215,7 +212,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return length;
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.firstPiece = MGPOptional.empty();
         this.validExtensions = [];
         this.phalanxValidLandings = [];
@@ -317,7 +314,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                                     phalanxSize,
                                                                     1,
                                                                     phalanxDirection);
-        const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(this.rules.node.gameState,
+        const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(this.node.gameState,
                                                                                    incompleteMove);
         if (phalanxValidity.isFailure()) {
             return this.cancelMove(phalanxValidity.getReason());
@@ -386,7 +383,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     public getRectClasses(x: number, y: number): string[] {
         const clicked: Coord = new Coord(x, y);
-        if (this.captureds.some((c: Coord) => c.equals(clicked))) {
+        if (this.capturedCoords.some((c: Coord) => c.equals(clicked))) {
             return ['captured-fill'];
         } else if (this.moveds.some((c: Coord) => c.equals(clicked))) {
             return ['moved-fill'];

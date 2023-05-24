@@ -9,6 +9,10 @@ import { BrandhubState } from '../BrandhubState';
 import { TaflFailure } from '../../TaflFailure';
 import { BrandhubMove } from '../BrandhubMove';
 import { TaflPawn } from '../../TaflPawn';
+import { TaflMinimax } from '../../TaflMinimax';
+import { TaflPieceAndInfluenceMinimax } from '../../TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndControlMinimax } from '../../TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceThenControlMinimax } from '../../TaflEscapeThenPieceThenControlMinimax';
 
 describe('BrandhubRules', () => {
 
@@ -23,8 +27,11 @@ describe('BrandhubRules', () => {
 
     beforeEach(() => {
         rules = BrandhubRules.get();
-        rules.setInitialBoard();
         minimaxes = [
+            new TaflMinimax(rules, 'DummyBot'),
+            new TaflPieceAndInfluenceMinimax(rules, 'Piece > Influence'),
+            new TaflPieceAndControlMinimax(rules, 'Piece > Control'),
+            new TaflEscapeThenPieceThenControlMinimax(rules, 'Escape > Piece > Control'),
         ];
     });
     it('should allow first move by invader', () => {

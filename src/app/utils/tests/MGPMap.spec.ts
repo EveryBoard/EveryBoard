@@ -54,13 +54,6 @@ describe('MGPMap', () => {
             expect(() => map.delete('second')).toThrowError('No Value to delete for key "second"!');
         });
     });
-    it('GetByIndex should give them by order of input', () => {
-        const map: MGPMap<string, number> = new MGPMap();
-        map.set('first', 0);
-        map.set('second', 1);
-        map.set('third', 2);
-        expect(map.getByIndex(1).value).toBe(1);
-    });
     it('should throw when calling set after making immutable', () => {
         const map: MGPMap<string, number> = new MGPMap();
         map.set('first', 0);
@@ -148,6 +141,19 @@ describe('MGPMap', () => {
 
             // Then all elements should have been iterated over
             expect(sum).toBe(3);
+        });
+    });
+    describe('getAnyPair', () => {
+        it('should return an element from the map', () => {
+            const map: MGPMap<string, number> = new MGPMap();
+            map.set('salut', 5);
+
+            const element: number = map.getAnyPair().get().value;
+            expect(element).toBe(5);
+        });
+        it('should not return anything if the map is empty', () => {
+            const emptyMap: MGPMap<string, number> = new MGPMap();
+            expect(emptyMap.getAnyPair().isAbsent()).toBeTrue();
         });
     });
 });

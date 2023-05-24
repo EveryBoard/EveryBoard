@@ -1,8 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
+import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { Combinatorics } from 'src/app/utils/Combinatorics';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfMinimax } from '../gipf/GipfMinimax';
@@ -13,23 +10,17 @@ import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshNode, YinshRules } from './YinshRules';
 
 export class YinshMinimax
-    extends Minimax<YinshMove, YinshState, YinshLegalityInformation, BoardValue, YinshRules> {
+    extends PlayerMetricsMinimax<YinshMove, YinshState, YinshLegalityInformation, YinshRules> {
 
-    public getBoardValue(node: YinshNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return BoardValue.fromWinner(gameStatus.winner);
-        } else {
-            return new BoardValue(node.gameState.sideRings[0] * Player.ZERO.getScoreModifier() +
-                node.gameState.sideRings[1] * Player.ONE.getScoreModifier());
-        }
+    public getMetrics(node: YinshNode): [number, number] {
+        return node.gameState.sideRings;
     }
     public getListMoves(node: YinshNode): YinshMove[] {
         const moves: YinshMove[] = [];
         const state: YinshState = node.gameState;
 
         if (state.isInitialPlacementPhase()) {
-            for (const [coord, content] of state.getCoordsAndContents()) {
+            for (const { coord, content } of state.getCoordsAndContents()) {
                 if (content === YinshPiece.EMPTY) {
                     moves.push(new YinshMove([], coord, MGPOptional.empty(), []));
                 }

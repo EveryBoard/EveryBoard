@@ -11,11 +11,11 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
     public static EXCLUDED_SPACES: ReadonlyArray<number> = [2, 1];
 
     /* Returns the following board:
-     *   W B B B W W B D B
-     *  B B W W W B B W B B
-     * B B B B W D B W W W W
-     *  W W B W W B B B W W
-     *   W D W B B W W W B
+     *     W B B B W W B D B
+     *    B B W W W B B W B B
+     *   B B B B W D B W W W W
+     *    W W B W W B B B W W
+     *     W D W B B W W W B
      */
     public static balancedBoard(): Table<DvonnPieceStack> {
         const _: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
@@ -69,7 +69,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         newBoard[coord.y][coord.x] = value;
         return new DvonnState(newBoard, this.turn, this.alreadyPassed) as this;
     }
-    public isOnBoard(coord: Coord): boolean {
+    public override isOnBoard(coord: Coord): boolean {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
         }

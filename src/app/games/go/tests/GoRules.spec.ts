@@ -11,7 +11,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 
-describe('GoRules:', () => {
+describe('GoRules', () => {
 
     let rules: GoRules;
     let minimaxes: Minimax<GoMove, GoState, GoLegalityInformation>[];
@@ -29,7 +29,7 @@ describe('GoRules:', () => {
         GoState.WIDTH = 5;
     });
     beforeEach(() => {
-        rules = new GoRules(GoState);
+        rules = GoRules.get();
         minimaxes = [
             new GoMinimax(rules, 'GoMinimax'),
         ];
@@ -44,7 +44,7 @@ describe('GoRules:', () => {
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
-            // Then it should be ongoing
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should allow simple capture', () => {
@@ -208,13 +208,19 @@ describe('GoRules:', () => {
         });
         it('Phase.PLAYING + GoMove.PASS = Phase.PASSED', () => {
             // Given initial board (so, playing phase)
-            expect(rules.node.gameState.phase).toBe(Phase.PLAYING);
+            const state: GoState = GoState.getInitialState();
+            expect(state.phase).toBe(Phase.PLAYING);
 
             // When passing
-            expect(rules.choose(GoMove.PASS)).toBeTrue();
+            const move: GoMove = GoMove.PASS;
 
             // Then we should be in passed phase
-            expect(rules.node.gameState.phase).toBe(Phase.PASSED);
+            const expectedState: GoState = new GoState(state.board,
+                                                       [0, 0],
+                                                       1,
+                                                       MGPOptional.empty(),
+                                                       Phase.PASSED);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('Phase.PLAYING Should forbid accepting', () => {
             // Given a board in playing phase
@@ -230,7 +236,7 @@ describe('GoRules:', () => {
             // When accepting
             const move: GoMove = GoMove.ACCEPT;
 
-            // Then the move should be refused
+            // Then the move should be forbidden
             const reason: string = GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -362,7 +368,7 @@ describe('GoRules:', () => {
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
-            // Then it should be ongoing
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should attribute shared territory to surviving group', () => {
@@ -635,20 +641,18 @@ describe('GoRules:', () => {
         expect(score).withContext('Score should be 7 vs 3').toEqual(expectedScore);
     });
     it('should calculate correctly board with dead stones', () => {
+        // Given a board where the territory and capture is simply and equally divided
         const board: Table<GoPiece> = [
-            [_, _, X, O, _],
-            [_, _, X, O, _],
-            [_, _, X, O, X],
-            [X, X, X, O, _],
-            [_, O, O, O, _],
+            [w, w, X, O, b],
+            [w, w, X, O, b],
+            [w, w, X, O, u],
+            [X, X, X, O, b],
+            [_, O, O, O, b],
         ];
-        const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PASSED);
-        rules.node = new GoNode(state);
-        expect(rules.choose(GoMove.PASS)).toBeTrue();
-        expect(rules.node.gameState.phase).toBe(Phase.COUNTING);
-        expect(rules.choose(new GoMove(4, 2))).toBeTrue();
-        expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
-        expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
-        RulesUtils.expectToBeDraw(rules, rules.node, minimaxes);
+        const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.FINISHED);
+        const node: GoNode = new GoNode(state);
+        // When evaluating the board
+        // Then it should be a draw
+        RulesUtils.expectToBeDraw(rules, node, minimaxes);
     });
 });

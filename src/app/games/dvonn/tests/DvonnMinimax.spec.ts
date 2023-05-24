@@ -15,11 +15,12 @@ describe('DvonnMinimax', () => {
     const X2: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 
     beforeEach(() => {
-        rules = new DvonnRules(DvonnState);
+        rules = DvonnRules.get();
         minimax = new DvonnMinimax(rules, 'DvonnMinimax');
     });
     it('should propose 41 moves at first turn', () => {
-        expect(minimax.getListMoves(rules.node).length).toBe(41);
+        const node: DvonnNode = rules.getInitialNode();
+        expect(minimax.getListMoves(node).length).toBe(41);
     });
     it('should compute board value as the score difference', () => {
         // Given a board
@@ -35,7 +36,7 @@ describe('DvonnMinimax', () => {
         // When computing the board value
         const value: number = minimax.getBoardValue(new DvonnNode(state)).value;
 
-        // Then it should be 1 - 2 = -1
-        expect(value).toBe(-1);
+        // Then it should be 2 - 1 = 1
+        expect(value).toBe(1);
     });
 });

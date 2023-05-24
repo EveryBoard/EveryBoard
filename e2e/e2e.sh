@@ -12,5 +12,6 @@ python ./e2e/e2e.py
 status=$?
 echo "Return value was: $status"
 echo 'Killing processes and exiting'
-kill $(pgrep "ng serve")
+pkill "ng serve"
+pkill launch-and-watch
 exit $status

@@ -1,5 +1,5 @@
 import { Orthogonal, Direction } from '../../jscaip/Direction';
-import { GameStatus, Rules } from '../../jscaip/Rules';
+import { Rules } from '../../jscaip/Rules';
 import { Coord } from '../../jscaip/Coord';
 import { TaflMove } from './TaflMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -14,7 +14,7 @@ import { TaflConfig } from './TaflConfig';
 import { Type } from '@angular/core';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TaflState } from './TaflState';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
@@ -28,15 +28,15 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     {
         super(stateType);
     }
-    public isLegal(move: TaflMove, state: S): MGPFallible<void> {
+    public isLegal(move: TaflMove, state: S): MGPValidation {
         display(TaflRules.VERBOSE, { tablutRules_isLegal: { move, state } });
 
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
         if (validity.isFailure()) {
-            return MGPFallible.failure(validity.getReason());
+            return MGPValidation.failure(validity.getReason());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     private getMoveValidity(player: Player, move: TaflMove, state: S): MGPValidation {
         const owner: RelativePlayer = state.getRelativeOwner(player, move.getStart());
@@ -216,26 +216,26 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             if (this.isThrone(state, backCoord) === false) {
                 display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                         'cannot capture a pawn without an ally; ' +
-                        threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
+                        threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
                         ' coming from this direction (' + direction.x + ', ' + direction.y + ')' +
                         'cannot capture a pawn without an ally behind');
                 return MGPOptional.empty();
             } // here, back is an empty throne
             display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                     'pawn captured by 1 opponent and 1 throne; ' +
-                    threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
+                    threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
                     ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by 1 opponent and 1 throne
         }
         if (back === RelativePlayer.PLAYER) {
             display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                     'pawn captured by 2 opponents; ' + threatenedPieceCoord +
-                    'threatened by ' + player + `'s pawn in  ` + coord +
+                    'threatened by ' + player + `'s pawn in ` + coord +
                     ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by two opponents
         }
         display(TaflRules.VERBOSE || LOCAL_VERBOSE,
-                'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
+                'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
                 ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
         return MGPOptional.empty();
     }
@@ -268,7 +268,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         const centralThrone: Coord = state.getCentralThrone();
         return kingCoord.getOrthogonalDistance(centralThrone) <= 1;
     }
-    public applyLegalMove(move: TaflMove, state: S): S {
+    public applyLegalMove(move: TaflMove, state: S, _info: void): S {
         display(TaflRules.VERBOSE, { TablutRules_applyLegalMove: { move, state } });
         const turn: number = state.turn;
 

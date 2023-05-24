@@ -4,7 +4,7 @@ import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -13,6 +13,7 @@ import { GipfState } from './GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type GipfLegalityInformation = GipfState
 
@@ -20,6 +21,17 @@ export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, GipfLegali
 
 export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformation> {
 
+    private static singleton: MGPOptional<GipfRules> = MGPOptional.empty();
+
+    public static get(): GipfRules {
+        if (GipfRules.singleton.isAbsent()) {
+            GipfRules.singleton = MGPOptional.of(new GipfRules());
+        }
+        return GipfRules.singleton.get();
+    }
+    private constructor() {
+        super(GipfState);
+    }
     public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
         return new GipfState(computedState.board,
                              computedState.turn + 1,
@@ -157,19 +169,19 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
     public isLegal(move: GipfMove, state: GipfState): MGPFallible<GipfLegalityInformation> {
         const initialCapturesValidity: MGPValidation = this.capturesValidity(state, move.initialCaptures);
         if (initialCapturesValidity.isFailure()) {
-            return initialCapturesValidity.toFailedFallible();
+            return initialCapturesValidity.toOtherFallible();
         }
         const stateAfterInitialCaptures: GipfState = GipfRules.applyCaptures(move.initialCaptures, state);
 
         const noMoreCaptureAfterInitialValidity: MGPValidation = this.noMoreCapturesValidity(stateAfterInitialCaptures);
         if (noMoreCaptureAfterInitialValidity.isFailure()) {
-            return noMoreCaptureAfterInitialValidity.toFailedFallible();
+            return noMoreCaptureAfterInitialValidity.toOtherFallible();
         }
 
         const placementValidity: MGPValidation =
             this.placementValidity(stateAfterInitialCaptures, move.placement);
         if (placementValidity.isFailure()) {
-            return placementValidity.toFailedFallible();
+            return placementValidity.toOtherFallible();
         }
         const stateAfterPlacement: GipfState =
             GipfRules.applyPlacement(move.placement, stateAfterInitialCaptures);
@@ -177,7 +189,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         const finalCapturesValidity: MGPValidation =
             this.capturesValidity(stateAfterPlacement, move.finalCaptures);
         if (finalCapturesValidity.isFailure()) {
-            return finalCapturesValidity.toFailedFallible();
+            return finalCapturesValidity.toOtherFallible();
         }
 
         const stateAfterFinalCaptures: GipfState =
@@ -185,7 +197,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         const noMoreCaptureAfterFinalValidity: MGPValidation =
             this.noMoreCapturesValidity(stateAfterFinalCaptures);
         if (noMoreCaptureAfterFinalValidity.isFailure()) {
-            return noMoreCaptureAfterFinalValidity.toFailedFallible();
+            return noMoreCaptureAfterFinalValidity.toOtherFallible();
         }
 
         return MGPFallible.success(stateAfterFinalCaptures);

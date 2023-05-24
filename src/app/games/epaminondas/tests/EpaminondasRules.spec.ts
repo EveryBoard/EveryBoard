@@ -14,7 +14,7 @@ import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('EpaminondasRules:', () => {
+describe('EpaminondasRules', () => {
 
     let rules: EpaminondasRules;
     let minimaxes: Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation>[];
@@ -23,7 +23,7 @@ describe('EpaminondasRules:', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new EpaminondasRules(EpaminondasState);
+        rules = EpaminondasRules.get();
         minimaxes = [
             new AttackEpaminondasMinimax(rules, 'Attack'),
             new EpaminondasMinimax(rules, 'Epaminondas'),
@@ -47,10 +47,13 @@ describe('EpaminondasRules:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
+
         // When trying to move a phalanx outside of the board
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 1, 1, Direction.DOWN);
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
+        const reason: string = EpaminondasFailure.PHALANX_IS_LEAVING_BOARD();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid phalanx to go outside the board (head)', () => {
         // Given a board
@@ -69,10 +72,13 @@ describe('EpaminondasRules:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
+
         // When trying to move a phalanx (but only its head) outside of the board
         const move: EpaminondasMove = new EpaminondasMove(1, 11, 2, 2, Direction.UP_LEFT);
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
+        const reason: string = EpaminondasFailure.PHALANX_IS_LEAVING_BOARD();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid invalid phalanx (phalanx containing coord outside the board)', () => {
         // Given a board
@@ -91,11 +97,13 @@ describe('EpaminondasRules:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
+
         // When trying to move a phalanx that contains pieces outside of the board
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 1, Direction.DOWN);
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move,
-                                     EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
+        const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid phalanx to pass through other pieces', () => {
         // Given a board with a phalanx next to an opponent's piece
@@ -117,7 +125,8 @@ describe('EpaminondasRules:', () => {
         // When trying to move over the opponent's piece
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 3, Direction.UP);
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, EpaminondasFailure.SOMETHING_IN_PHALANX_WAY());
+        const reason: string = EpaminondasFailure.SOMETHING_IN_PHALANX_WAY();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid to capture greater phalanx', () => {
         // Given a board with two phalanx in opposition to each other
@@ -136,10 +145,13 @@ describe('EpaminondasRules:', () => {
             [_, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
+
         // When trying to capture a greater phalanx
         const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.UP);
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE());
+        const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid to capture same sized phalanx', () => {
         // Given a board with two phalanx of the same size
@@ -158,10 +170,13 @@ describe('EpaminondasRules:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
+
         // When trying to capture a phalanx of the same size
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE());
+        const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid to capture your own pieces phalanx', () => {
         // Given a board
@@ -180,10 +195,13 @@ describe('EpaminondasRules:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
+
         // When trying to capture one of its own
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_SELF_CAPTURE());
+        const reason: string = RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid moving opponent pieces', () => {
         // Given a board
@@ -202,10 +220,13 @@ describe('EpaminondasRules:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
+
         // When trying to move a piece of the opponent
         const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.UP);
+
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());
+        const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should allow legal move', () => {
         // Given a board
@@ -345,7 +366,7 @@ describe('EpaminondasRules:', () => {
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should not be a win for anyone
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should declare player zero winner when last soldier of opponent has been captured', () => {

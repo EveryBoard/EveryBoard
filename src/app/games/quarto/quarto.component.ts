@@ -35,7 +35,9 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new QuartoRules(QuartoState);
+        this.rules = QuartoRules.get();
+        this.node = this.rules.getInitialNode();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new QuartoMinimax(this.rules, 'QuartoMinimax'),
         ];
@@ -46,7 +48,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
     public updateBoard(): void {
         const state: QuartoState = this.getState();
-        const move: MGPOptional<QuartoMove> = this.rules.node.move;
+        const move: MGPOptional<QuartoMove> = this.node.move;
         this.board = state.getCopiedBoard();
         this.chosen = MGPOptional.empty();
         this.pieceInHand = state.pieceInHand;
@@ -101,13 +103,13 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             // the user has chosen the coord before the piece
             const chosen: Coord = this.chosen.get();
             const chosenMove: QuartoMove = new QuartoMove(chosen.x, chosen.y, this.pieceToGive.get());
-            return this.chooseMove(chosenMove, this.rules.node.gameState);
+            return this.chooseMove(chosenMove, this.node.gameState);
         }
     }
     private hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.hideLastMove();
         this.pieceToGive = MGPOptional.empty();
         this.chosen = MGPOptional.empty();

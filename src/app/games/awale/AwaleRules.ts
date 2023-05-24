@@ -1,4 +1,4 @@
-import { GameStatus, Rules } from '../../jscaip/Rules';
+import { Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
@@ -7,8 +7,10 @@ import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AwaleFailure } from './AwaleFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState> {}
 
@@ -25,7 +27,18 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
 
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: AwaleMove, state: AwaleState, infos: void): AwaleState {
+    private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
+
+    public static get(): AwaleRules {
+        if (AwaleRules.singleton.isAbsent()) {
+            AwaleRules.singleton = MGPOptional.of(new AwaleRules());
+        }
+        return AwaleRules.singleton.get();
+    }
+    private constructor() {
+        super(AwaleState);
+    }
+    public applyLegalMove(move: AwaleMove, state: AwaleState, _info: void): AwaleState {
         display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, state });
         const x: number = move.x;
         const player: Player = state.getCurrentPlayer();
@@ -99,22 +112,22 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
      * Returns -1 if it is not legal, if so, the board should not be affected
      * Returns the number captured otherwise
      */
-    public static isLegal(move: AwaleMove, state: AwaleState): MGPFallible<void> {
+    public static isLegal(move: AwaleMove, state: AwaleState): MGPValidation {
         const opponent: Player = state.getCurrentOpponent();
         const playerY: number = opponent.value; // So player 0 is in row 1
 
         const x: number = move.x;
         if (state.getPieceAtXY(x, playerY) === 0) {
-            return MGPFallible.failure(AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
+            return MGPValidation.failure(AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
         const opponentIsStarving: boolean = AwaleRules.isStarving(opponent, state.board);
         const playerDoesNotDistribute: boolean = AwaleRules.doesDistribute(x, playerY, state.board) === false;
         if (opponentIsStarving && playerDoesNotDistribute) {
-            return MGPFallible.failure(AwaleFailure.SHOULD_DISTRIBUTE());
+            return MGPValidation.failure(AwaleFailure.SHOULD_DISTRIBUTE());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
-    public isLegal(move: AwaleMove, state: AwaleState): MGPFallible<void> {
+    public isLegal(move: AwaleMove, state: AwaleState): MGPValidation {
         return AwaleRules.isLegal(move, state);
     }
     public static doesDistribute(x: number, y: number, board: Table<number>): boolean {

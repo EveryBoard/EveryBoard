@@ -35,7 +35,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new QuixoRules(QuixoState);
+        this.rules = QuixoRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new QuixoMinimax(this.rules, 'QuixoMinimax'),
         ];
@@ -46,10 +47,10 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     public updateBoard(): void {
         this.state = this.getState();
         this.board = this.state.board;
-        this.lastMoveCoord = this.rules.node.move.map((move: QuixoMove) => move.coord);
+        this.lastMoveCoord = this.node.move.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
     }
     public getPieceClasses(x: number, y: number): string[] {

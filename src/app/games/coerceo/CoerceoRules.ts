@@ -1,13 +1,15 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { display } from 'src/app/utils/utils';
+import { Utils, display } from 'src/app/utils/utils';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoFailure } from './CoerceoFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
 
@@ -15,6 +17,17 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 
     public static VERBOSE: boolean = false;
 
+    private static singleton: MGPOptional<CoerceoRules> = MGPOptional.empty();
+
+    public static get(): CoerceoRules {
+        if (CoerceoRules.singleton.isAbsent()) {
+            CoerceoRules.singleton = MGPOptional.of(new CoerceoRules());
+        }
+        return CoerceoRules.singleton.get();
+    }
+    private constructor() {
+        super(CoerceoState);
+    }
     public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState
     {
         if (move.isTileExchange()) {
@@ -66,50 +79,45 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             resultingState });
         return resultingState;
     }
-    public isLegal(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
+    public isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
         if (move.isTileExchange()) {
             return this.isLegalTileExchange(move, state);
         } else {
             return this.isLegalMovement(move, state);
         }
     }
-    public isLegalTileExchange(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
+    public isLegalTileExchange(move: CoerceoMove, state: CoerceoState): MGPValidation {
         if (state.tiles[state.getCurrentPlayer().value] < 2) {
-            return MGPFallible.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
+            return MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
         }
         const captured: FourStatePiece = state.getPieceAt(move.capture.get());
         if (captured === FourStatePiece.UNREACHABLE ||
             captured === FourStatePiece.EMPTY)
         {
-            return MGPFallible.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
+            return MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
         }
         if (captured.is(state.getCurrentPlayer())) {
-            return MGPFallible.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES());
+            return MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
-    public isLegalMovement(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
-        if (state.getPieceAt(move.start.get()) === FourStatePiece.UNREACHABLE) {
-            const reason: string = 'Cannot start with a coord outside the board ' + move.start.get().toString() + '.';
-            return MGPFallible.failure(reason);
-        }
-        if (state.getPieceAt(move.landingCoord.get()) === FourStatePiece.UNREACHABLE) {
-            const reason: string =
-                'Cannot end with a coord outside the board ' + move.landingCoord.get().toString() + '.';
-            return MGPFallible.failure(reason);
-        }
+    public isLegalMovement(move: CoerceoMove, state: CoerceoState): MGPValidation {
+        Utils.assert(state.getPieceAt(move.start.get()) !== FourStatePiece.UNREACHABLE,
+                     'Cannot start with a coord outside the board ' + move.start.get().toString() + '.');
+        Utils.assert(state.getPieceAt(move.landingCoord.get()) !== FourStatePiece.UNREACHABLE,
+                     'Cannot end with a coord outside the board ' + move.landingCoord.get().toString() + '.');
         const starter: FourStatePiece = state.getPieceAt(move.start.get());
         if (starter === FourStatePiece.EMPTY) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (starter.is(state.getCurrentOpponent())) {
-            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         const lander: FourStatePiece = state.getPieceAt(move.landingCoord.get());
         if (lander.is(state.getCurrentPlayer())) {
-            return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        return MGPFallible.success(undefined);
+        return MGPValidation.SUCCESS;
     }
     public static getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;

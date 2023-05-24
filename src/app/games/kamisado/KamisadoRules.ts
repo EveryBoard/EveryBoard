@@ -8,16 +8,29 @@ import { KamisadoPiece } from './KamisadoPiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { KamisadoFailure } from './KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoState> { }
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
 
+    private static singleton: MGPOptional<KamisadoRules> = MGPOptional.empty();
+
+    public static get(): KamisadoRules {
+        if (KamisadoRules.singleton.isAbsent()) {
+            KamisadoRules.singleton = MGPOptional.of(new KamisadoRules());
+        }
+        return KamisadoRules.singleton.get();
+    }
+    private constructor() {
+        super(KamisadoState);
+    }
     public static getColorMatchingPiece(state: KamisadoState): Array<Coord> {
         if (state.coordToPlay.isPresent()) {
             // Only one piece can move, and its coord is stored in state.coordToPlay
@@ -121,56 +134,56 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         });
         return [furthest0, furthest1];
     }
-    public static isLegal(move: KamisadoMove, state: KamisadoState): MGPFallible<void> {
+    public static isLegal(move: KamisadoMove, state: KamisadoState): MGPValidation {
         if (move.isPieceMove()) {
             const start: Coord = move.getStart();
             const end: Coord = move.getEnd();
             const colorToPlay: KamisadoColor = state.colorToPlay;
 
             // A move is legal if:
-            //   - the move is within the board (this has been checked when constructing the move)
-            //   - start piece should be owned by the current player
+            //    - the move is within the board (this has been checked when constructing the move)
+            //    - start piece should be owned by the current player
             const piece: KamisadoPiece = state.getPieceAt(start);
             if (!piece.belongsTo(state.getCurrentPlayer())) {
-                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
-            //  - start space should contain a piece of the right color (or any color can be played)
+            //    - start space should contain a piece of the right color (or any color can be played)
             if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {
-                return MGPFallible.failure(KamisadoFailure.NOT_RIGHT_COLOR());
+                return MGPValidation.failure(KamisadoFailure.NOT_RIGHT_COLOR());
             }
-            //  - end space should be empty
+            //    - end space should be empty
             const endPiece: KamisadoPiece = state.getPieceAt(end);
             if (!endPiece.isEmpty()) {
-                return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+                return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             }
-            //  - move direction is linear
+            //    - move direction is linear
             const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
             if (directionOptional.isFailure()) {
-                return MGPFallible.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
+                return MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
             }
-            //  - move direction is toward the opponent's line
+            //    - move direction is toward the opponent's line
             const dir: Direction = directionOptional.get();
             if (!KamisadoRules.directionAllowedForPlayer(dir, state.getCurrentPlayer())) {
-                return MGPFallible.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
+                return MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
             }
-            //  - there is no piece between starting and landing coord
+            //    - there is no piece between starting and landing coord
             let currentCoord: Coord = start;
             while (!currentCoord.equals(end)) {
                 currentCoord = currentCoord.getNext(dir);
                 if (!state.getPieceAt(currentCoord).isEmpty()) {
-                    return MGPFallible.failure(KamisadoFailure.MOVE_BLOCKED());
+                    return MGPValidation.failure(KamisadoFailure.MOVE_BLOCKED());
                 }
             }
-            return MGPFallible.success(undefined);
+            return MGPValidation.SUCCESS;
         } else {
             return this.isLegalPass(state);
         }
     }
-    private static isLegalPass(state: KamisadoState): MGPFallible<void> {
+    private static isLegalPass(state: KamisadoState): MGPValidation {
         if (this.mustPass(state) && !state.alreadyPassed) {
-            return MGPFallible.success(undefined);
+            return MGPValidation.SUCCESS;
         } else {
-            return MGPFallible.failure(RulesFailure.CANNOT_PASS());
+            return MGPValidation.failure(RulesFailure.CANNOT_PASS());
         }
     }
     // Returns the next coord that plays
@@ -181,7 +194,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         }));
     }
     // Apply the move by only relying on tryMove
-    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _status: void): KamisadoState {
+    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _info: void): KamisadoState {
         if (move.isPieceMove()) {
             const start: Coord = move.getStart();
             const end: Coord = move.getEnd();
@@ -206,7 +219,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return resultingState;
         }
     }
-    public isLegal(move: KamisadoMove, state: KamisadoState): MGPFallible<void> {
+    public isLegal(move: KamisadoMove, state: KamisadoState): MGPValidation {
         return KamisadoRules.isLegal(move, state);
     }
     public getGameStatus(node: KamisadoNode): GameStatus {

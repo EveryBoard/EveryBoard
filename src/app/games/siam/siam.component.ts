@@ -51,6 +51,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = SiamRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new SiamMinimax(this.rules, 'SiamMinimax'),
         ];
@@ -62,15 +63,14 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         display(SiamComponent.VERBOSE, 'updateBoard');
         const state: SiamState = this.getState();
         this.board = state.board;
-        this.lastMove = this.rules.node.move;
-        if (this.lastMove.isPresent()) {
-            const previousGameState: SiamState = this.rules.node.mother.get().gameState;
-            this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState).get().moved;
-        } else {
-            this.movedPieces = [];
-        }
+        this.movedPieces = [];
     }
-    public cancelMoveAttempt(): void {
+    public override showLastMove(move: SiamMove): void {
+        this.lastMove = MGPOptional.of(move);
+        const previousGameState: SiamState = this.getPreviousState();
+        this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState).get().moved;
+    }
+    public override cancelMoveAttempt(): void {
         this.insertingPiece = false;
         this.selectedPiece = MGPOptional.empty();
         this.selectedLanding = MGPOptional.empty();

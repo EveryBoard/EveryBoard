@@ -75,7 +75,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = ApagosRules.get();
-        this.hasAsymetricBoard = true;
+        this.node = this.rules.getInitialNode();
+        this.hasAsymmetricBoard = true;
         this.availableMinimaxes = [
             new ApagosDummyMinimax(this.rules, 'ApagosDummyMinimax'),
         ];
@@ -84,7 +85,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
         this.updateBoard();
     }
-    public cancelMoveAttempt(): void {
+    public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.showPossibleDrops();
     }
@@ -95,9 +96,6 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.remainingOne = state.remaining.get(Player.ONE).get();
 
         this.hideLastMove();
-        if (this.rules.node.move.isPresent()) {
-            this.showLastMove();
-        }
         this.showPossibleDrops();
     }
     public hideLastMove(): void {
@@ -106,12 +104,11 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.leftPiece = MGPOptional.empty();
         this.selectedPiece = MGPOptional.empty();
     }
-    private showLastMove(): void {
-        const lastMove: ApagosMove = this.rules.node.move.get();
-        if (lastMove.isDrop()) {
-            this.showLastDrop(lastMove);
+    public override showLastMove(move: ApagosMove): void {
+        if (move.isDrop()) {
+            this.showLastDrop(move);
         } else {
-            this.showLastTransfer(lastMove);
+            this.showLastTransfer(move);
         }
     }
     public showLastDrop(lastMove: ApagosMove): void {
@@ -139,7 +136,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         }
     }
     public showLastTransfer(lastMove: ApagosMove): void {
-        const previousState: ApagosState = this.rules.node.mother.get().gameState;
+        const previousState: ApagosState = this.getPreviousState();
         const previousPlayer: Player = previousState.getCurrentPlayer();
         const leftSquare: number = lastMove.starting.get().x;
         const previousSquare: ApagosSquare = previousState.board[leftSquare];

@@ -20,6 +20,7 @@ import { WelcomeComponent } from './components/normal-component/welcome/welcome.
 import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
+import { AccountComponent } from './components/normal-component/account/account.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
@@ -45,6 +46,7 @@ import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { ConnectSixComponent } from './games/connect-six/connect-six.component';
 import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
@@ -55,6 +57,7 @@ import { GoComponent } from './games/go/go.component';
 import { HiveComponent } from './games/hive/hive.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
+import { LascaComponent } from './games/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
 import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
@@ -63,6 +66,7 @@ import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-
 import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
+import { PenteComponent } from './games/pente/pente.component';
 import { PylosComponent } from './games/pylos/pylos.component';
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
@@ -98,6 +102,7 @@ import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { GameEventService } from './services/GameEventService';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
 
 registerLocaleData(localeFr);
@@ -105,9 +110,10 @@ registerLocaleData(localeFr);
 export const routes: Route[] = [
     { path: 'login', component: LoginComponent },
     { path: 'lobby', component: LobbyComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'account', component: AccountComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'settings', component: SettingsComponent },
     { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
-    { path: 'reset-password', component: ResetPasswordComponent, canActivate: [NotConnectedGuard] },
+    { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'notFound/:message', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
@@ -124,6 +130,7 @@ export const routes: Route[] = [
 ];
 
 export class FirebaseProviders {
+
     public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
         return Firebase.provideFirebaseApp(() => {
             return Firebase.initializeApp(environment.firebaseConfig);
@@ -175,6 +182,7 @@ export class FirebaseProviders {
         VerifyAccountComponent,
         ResetPasswordComponent,
         SettingsComponent,
+        AccountComponent,
         DemoCardWrapperComponent,
         DemoPageComponent,
 
@@ -183,6 +191,7 @@ export class FirebaseProviders {
         AwaleComponent,
         BrandhubComponent,
         CoerceoComponent,
+        ConnectSixComponent,
         ConspirateursComponent,
         DiamComponent,
         DvonnComponent,
@@ -193,11 +202,13 @@ export class FirebaseProviders {
         HiveComponent, HivePieceComponent,
         HnefataflComponent,
         KamisadoComponent,
+        LascaComponent,
         LinesOfActionComponent,
         LodestoneComponent,
         MartianChessComponent, MartianChessQueenComponent, MartianChessDroneComponent, MartianChessPawnComponent,
         P4Component,
         PentagoComponent,
+        PenteComponent,
         PylosComponent,
         QuartoComponent,
         QuixoComponent,
@@ -229,6 +240,7 @@ export class FirebaseProviders {
     providers: [
         ConnectedUserService,
         GameService,
+        GameEventService,
         ConfigRoomService,
         UserService,
         ChatService,

@@ -6,7 +6,7 @@ import { AwaleComponent } from 'src/app/games/awale/awale.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
+import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
 
 describe('OnlineGameWrapperComponent of Reversable Game:', () => {
 
@@ -14,7 +14,9 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
 
     it('should have a rotation not applied for player zero', fakeAsync(async() => {
         // Given a game started for opponent (Player.ZERO)
-        testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.CREATOR_AUTH_USER, 'Awale', false, false)).testUtils;
+        testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.CREATOR_AUTH_USER,
+                                                                 'Awale',
+                                                                 PreparationOptions.dontWait)).testUtils;
 
         // When displaying the component
         tick(2);
@@ -27,7 +29,7 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
     }));
     it('should have a rotation applied for player one', fakeAsync(async() => {
         // Given a game started for opponent (Player.ONE)
-        testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.OPPONENT_AUTH_USER, 'Awale', false, false)).testUtils;
+        testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.OPPONENT_AUTH_USER, 'Awale', PreparationOptions.dontWait)).testUtils;
 
         // When displaying the component
         tick(2);
@@ -39,3 +41,4 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
 });
+

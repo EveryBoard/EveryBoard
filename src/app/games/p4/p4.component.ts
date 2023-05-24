@@ -26,7 +26,8 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new P4Rules(P4State);
+        this.rules = P4Rules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),
         ];
@@ -44,21 +45,15 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     }
     public updateBoard(): void {
         const state: P4State = this.getState();
-        const lastMove: MGPOptional<P4Move> = this.rules.node.move;
 
         this.victoryCoords = P4Rules.getVictoriousCoords(state);
         this.board = state.board;
-        if (lastMove.isPresent()) {
-            this.showLastMove();
-        } else {
-            this.hideLastMove();
-        }
+        this.hideLastMove();
     }
-    private showLastMove(): void {
+    public override showLastMove(move: P4Move): void {
         const state: P4State = this.getState();
-        const lastMove: MGPOptional<P4Move> = this.rules.node.move;
-        const y: number = P4Rules.getLowestUnoccupiedSpace(state.board, lastMove.get().x) + 1;
-        this.last = MGPOptional.of(new Coord(lastMove.get().x, y));
+        const y: number = P4Rules.getLowestUnoccupiedSpace(state.board, move.x) + 1;
+        this.last = MGPOptional.of(new Coord(move.x, y));
     }
     private hideLastMove(): void {
         this.last = MGPOptional.empty();

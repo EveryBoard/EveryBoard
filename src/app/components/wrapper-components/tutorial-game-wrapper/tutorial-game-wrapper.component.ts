@@ -1,9 +1,9 @@
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ComponentFactoryResolver } from '@angular/core';
+    Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode, MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { display, Utils } from 'src/app/utils/utils';
@@ -15,7 +15,6 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
 
 type TutorialPlayer = 'tutorial-player';
 @Component({
@@ -25,7 +24,7 @@ type TutorialPlayer = 'tutorial-player';
 })
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
 
-    public static VERBOSE: boolean = false;
+    public static override VERBOSE: boolean = false;
 
     public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Congratulations, you completed the tutorial.`;
 
@@ -38,14 +37,13 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public stepFinished: boolean[] = [];
     public tutorialOver: boolean = false;
 
-    constructor(componentFactoryResolver: ComponentFactoryResolver,
-                actRoute: ActivatedRoute,
+    constructor(actRoute: ActivatedRoute,
                 router: Router,
                 messageDisplayer: MessageDisplayer,
                 public cdr: ChangeDetectorRef,
-                protected connectedUserService: ConnectedUserService)
+                connectedUserService: ConnectedUserService)
     {
-        super(componentFactoryResolver, actRoute, connectedUserService, router, messageDisplayer);
+        super(actRoute, connectedUserService, router, messageDisplayer);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
         this.role = Player.ZERO; // The user is playing, not observing
     }
@@ -97,28 +95,21 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        let motherOpt: MGPOptional<MGPNode<Rules<Move, GameState>, Move, GameState>>;
-        if (currentStep.previousState.isPresent()) {
-            const mother: MGPNode<Rules<Move, GameState>, Move, GameState> =
-                new MGPNode(currentStep.previousState.get());
-            motherOpt = MGPOptional.of(mother);
-        } else {
-            motherOpt = MGPOptional.empty();
-        }
-        this.gameComponent.rules.node = new MGPNode(currentStep.state,
-                                                    motherOpt,
-                                                    currentStep.previousMove);
-        this.gameComponent.updateBoard();
+        this.gameComponent.node = new MGPNode(currentStep.state,
+                                              MGPOptional.empty(),
+                                              currentStep.previousMove);
+        // Set role will update view with updateBoardAndShowLastMove
         this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, { tutorialGameWrapper_onLegalUserMove: { move } });
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        const isLegalMove: boolean = this.gameComponent.rules.choose(move);
-        assert(isLegalMove, 'It should be impossible to call onLegalUserMove with an illegal move');
+        const node: MGPOptional<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
+        assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
+        this.gameComponent.node = node.get();
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: legal move');
-        this.gameComponent.updateBoard();
+        this.updateBoardAndShowLastMove();
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const previousState: GameState = this.gameComponent.getPreviousState();
@@ -153,7 +144,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.moveAttemptMade = false;
         this.showStep(this.stepIndex);
     }
-    public onUserClick(elementName: string): MGPValidation {
+    public override onUserClick(elementName: string): MGPValidation {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
@@ -161,7 +152,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
-            this.gameComponent.updateBoard();
+            this.updateBoardAndShowLastMove();
             this.moveAttemptMade = true;
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess(currentStep.getSuccessMessage());
@@ -226,8 +217,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const solution: Move | Click = solutionStep.getSolution();
         if (solution instanceof Move) {
             this.showStep(this.stepIndex);
-            this.gameComponent.rules.choose(solution);
-            this.gameComponent.updateBoard();
+            this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution).get();
+            this.updateBoardAndShowLastMove();
         } else {
             this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;

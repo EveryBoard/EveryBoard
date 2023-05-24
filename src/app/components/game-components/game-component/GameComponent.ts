@@ -12,6 +12,8 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -45,10 +47,11 @@ export abstract class BaseGameComponent {
     template: '',
     styleUrls: ['./game-component.scss'],
 })
-export abstract class GameComponent<R extends Rules<M, S, L>,
+export abstract class GameComponent<R extends Rules<M, S, L, B>,
                                     M extends Move,
                                     S extends GameState,
-                                    L = void>
+                                    L = void,
+                                    B extends BoardValue = BoardValue>
     extends BaseGameComponent
 {
     public encoder: MoveEncoder<M>;
@@ -63,6 +66,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public rules: R;
 
+    public node: MGPNode<R, M, S, L, B>;
+
     public availableMinimaxes: Minimax<M, S, L>[];
 
     public canPass: boolean;
@@ -71,7 +76,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public imagesLocation: string = 'assets/images/';
 
-    public hasAsymetricBoard: boolean = false;
+    public hasAsymmetricBoard: boolean = false;
 
     // Will contain, once the wrapper change the userRole, the valid orientation (180° when you play Player.ONE)
     public rotation: string = '';
@@ -92,8 +97,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     /* all game rules should be able to call the game-wrapper
      * the aim is that the game-wrapper will take care of manage what follow
-     * ie:  - if it's online, he'll tell the game-component when the remote opponent has played
-     *      - if it's offline, he'll tell the game-component what the bot have done
+     * ie: - if it's online, he'll tell the game-component when the remote opponent has played
+     *     - if it's offline, he'll tell the game-component what the bot have done
      */
 
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
@@ -123,16 +128,19 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
         return ErrorLoggerService.logError('GameComponent', error, { gameName });
     }
     public getTurn(): number {
-        return this.rules.node.gameState.turn;
+        return this.node.gameState.turn;
     }
     public getCurrentPlayer(): Player {
-        return this.rules.node.gameState.getCurrentPlayer();
+        return this.node.gameState.getCurrentPlayer();
     }
     public getState(): S {
-        return this.rules.node.gameState;
+        return this.node.gameState;
     }
     public getPreviousState(): S {
-        return this.rules.node.mother.get().gameState;
+        return this.node.mother.get().gameState;
+    }
+    public showLastMove(move: M): void {
+        // Not needed by default
     }
 }
 
