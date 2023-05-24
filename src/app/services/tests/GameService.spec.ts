@@ -352,7 +352,7 @@ describe('GameService', () => {
             // Given a part during our turn
             const part: Part = { ...PartMocks.STARTED, turn: 2 };
             // When accepting the take back
-            await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
+            await gameService.acceptTakeBack('configRoomId', part.turn, Player.ZERO);
             // Then it should decrease the turn by one
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
         }));
@@ -361,7 +361,7 @@ describe('GameService', () => {
             // Given a part during the opponent's turn
             const part: Part = { ...PartMocks.STARTED, turn: 3 };
             // When accepting the take back
-            await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
+            await gameService.acceptTakeBack('configRoomId', part.turn, Player.ZERO);
             // Then it should decrease the turn by 2
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
                 turn: 1,

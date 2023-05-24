@@ -407,7 +407,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onLegalUserMove');
         if (this.mustReply()) {
-            this.gameComponent.message('You must answer to take back request');
+            this.gameComponent.message(GameWrapperMessages.MUST_ANSWER_REQUEST());
         } else {
             // We will update the part with new scores and game status (if needed)
             // We have to compute the game status before adding the move to avoid

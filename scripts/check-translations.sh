@@ -1,4 +1,7 @@
 #!/bin/sh
+if [ "$0" != "skip-update" ]; then
+    ./scripts/update-translations.sh
+fi
 python ./scripts/check-translations.py script
 if [ "$?" -eq 0 ]; then
     echo 'Translations are OK!'

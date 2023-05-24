@@ -27,22 +27,22 @@ export class OGWCRequestManagerService {
     public static requestInfos: Record<RequestType, RequestInfo> = {
         'TakeBack': {
             requestType: 'TakeBack',
-            textForRequest: () => $localize`Ask take back`,
-            textForReply: () => $localize`Your opponent is asking for a`,
+            textForRequest: () => $localize`Ask to take back one move`,
+            textForReply: () => $localize`Your opponent is asking for a take back.`,
             name: () => $localize`take back`,
             icon: faBackwardStep,
         },
         'Draw': {
             requestType: 'Draw',
-            textForRequest: () => $localize`Propose a`,
-            textForReply: () => $localize`Your opponent is proposing a`,
+            textForRequest: () => $localize`Propose a draw`,
+            textForReply: () => $localize`Your opponent is proposing a draw.`,
             name: () => $localize`draw`,
             icon: faFlag,
         },
         'Rematch': {
             requestType: `Rematch`,
-            textForRequest: () => $localize`Propose a`,
-            textForReply: () => $localize`Your opponent is proposing a`,
+            textForRequest: () => $localize`Propose a rematch`,
+            textForReply: () => $localize`Your opponent is proposing a rematch.`,
             name: () => $localize`rematch`,
             icon: faRepeat,
         },
