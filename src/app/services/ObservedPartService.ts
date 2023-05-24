@@ -40,28 +40,35 @@ export class ObservedPartService implements OnDestroy {
             this.onUserUpdate(user);
         });
     }
-    private onUserUpdate(user: AuthUser): void {
+    private async onUserUpdate(user: AuthUser): Promise<void> {
         if (user === AuthUser.NOT_CONNECTED) { // user logged out
-            this.authSubscription.unsubscribe();
+            this.userSubscription.unsubscribe();
             this.observedPartRS.next(MGPOptional.empty());
         } else { // new user logged in
+            console.log('user logged in')
+            // First we need to get the current observed part
+            const observedPart: MGPOptional<User> = await this.userDAO.read(user.id);
+            console.log('observed part is: ' + observedPart.get().observedPart)
+            this.onObservedPartUpdate(observedPart.get().observedPart)
+            // And then we subscribe to any change to the user's observed part
             this.userSubscription =
                 this.userDAO.subscribeToChanges(user.id, (docOpt: MGPOptional<User>) => {
-                    assert(docOpt.isPresent(), 'When observing part service, user was expected to already have a document!');
+                    assert(docOpt.isPresent(), 'Observing part service expected user to already have a document!');
                     const doc: User = docOpt.get();
-                    this.updateObservedPartWithDoc(doc.observedPart);
+                    this.onObservedPartUpdate(doc.observedPart);
                 });
         }
     }
-    private updateObservedPartWithDoc(newObservedPart: FocusedPart | null | undefined): void {
+    private onObservedPartUpdate(newObservedPart: FocusedPart | null | undefined): void {
         // Undefined if the user had no observedPart, null if it has been removed
         const previousObservedPart: MGPOptional<FocusedPart> = this.observedPart;
         const stayedNull: boolean = newObservedPart == null && previousObservedPart.isAbsent();
         const stayedItselfAsNonNull: boolean = newObservedPart != null &&
                                                previousObservedPart.equalsValue(newObservedPart);
         const valueChanged: boolean = stayedNull === false && stayedItselfAsNonNull === false;
+        console.log({valueChanged, stayedNull, stayedItselfAsNonNull})
         if (valueChanged || this.observedPartLoading) {
-            this.observedPartLoading = false;
+            // this.observedPartLoading = false;
             this.observedPart = MGPOptional.ofNullable(newObservedPart);
             this.observedPartRS.next(this.observedPart);
         }
@@ -88,6 +95,7 @@ export class ObservedPartService implements OnDestroy {
     }
     public removeObservedPart(): Promise<void> {
         assert(this.connectedUserService.user.isPresent(), 'Should not call removeObservedPart when not connected');
+        console.log('REMOVING')
         return this.userDAO.update(this.connectedUserService.user.get().id, { observedPart: null });
     }
     public subscribeToObservedPart(callback: (optFocusedPart: MGPOptional<FocusedPart>) => void): Subscription {
@@ -95,16 +103,18 @@ export class ObservedPartService implements OnDestroy {
     }
     public canUserCreate(): MGPValidation {
         if (this.observedPart.isAbsent()) {
+            console.log('canCreate: YES')
             return MGPValidation.SUCCESS;
         } else {
+            console.log('canCreate: NO')
             const message: string = ObservedPartService.roleToMessage.get(this.observedPart.get().role).get()();
             return MGPValidation.failure(message);
         }
     }
     public canUserJoin(partId: string, gameStarted: boolean): MGPValidation {
         if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
-            // If user is in no part, he can join one
-            // If he is onne part and want to join it again, he can
+            // Users can join game if they are not in any game
+            // Or they can join a game if they are already in this specific game
             return MGPValidation.SUCCESS;
         } else {
             if (gameStarted && this.observedPart.get().role === 'Observer') {

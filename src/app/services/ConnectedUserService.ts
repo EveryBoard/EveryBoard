@@ -132,6 +132,7 @@ export class ConnectedUserService implements OnDestroy {
                     this.user = MGPOptional.empty();
                 } else { // new user logged in
                     assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
+                    console.log('LOG IN')
                     this.userSubscription =
                         this.userDAO.subscribeToChanges(user.uid, (docOpt: MGPOptional<User>) => {
                             if (docOpt.isPresent()) {
@@ -150,8 +151,11 @@ export class ConnectedUserService implements OnDestroy {
                                                                         MGPOptional.ofNullable(username),
                                                                         userHasFinalizedVerification);
                                 if (this.user.equalsValue(authUser) === false) {
+                                    console.log('UPDATE USER')
                                     this.user = MGPOptional.of(authUser);
                                     this.userRS.next(authUser);
+                                } else {
+                                    console.log('NOT UPDATING USER')
                                 }
                             }
                         });

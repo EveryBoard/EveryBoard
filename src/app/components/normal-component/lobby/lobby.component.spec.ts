@@ -344,6 +344,18 @@ describe('LobbyComponent', () => {
         // Then it should have unsubscrbed from active users
         expectUnsubscribeToHaveBeenCalled();
     }));
+    it('should unsubscribe from observed part when destroying component', fakeAsync(async() => {
+        // Given an initialized lobby
+        const expectUnsubscribeToHaveBeenCalled: () => void =
+            prepareUnsubscribeCheck(TestBed.inject(ObservedPartService), 'subscribeToActiveUsers');
+        testUtils.detectChanges();
+
+        // When it is destroyed
+        component.ngOnDestroy();
+
+        // Then it should have unsubscrbed from active users
+        expectUnsubscribeToHaveBeenCalled();
+    }));
     it('should display firebase time HH:mm:ss', fakeAsync(async() => {
         // Given a lobby in which we observe tab chat, and where one user is here
         const HH: number = 11 * 3600;

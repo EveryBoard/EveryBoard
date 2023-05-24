@@ -43,6 +43,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
             }});
         this.observedPartSubscription =
             this.observedPartService.subscribeToObservedPart((focusedPart: MGPOptional<FocusedPart>) => {
+                console.log('HEADER sees focused part');
+                console.log(focusedPart)
                 this.observedPart = focusedPart;
             });
     }
@@ -55,6 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
+        console.log('remove subscription to observed part')
         this.observedPartSubscription.unsubscribe();
     }
 }

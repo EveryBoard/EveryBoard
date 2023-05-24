@@ -12,8 +12,6 @@ import { MGPOptional } from '../utils/MGPOptional';
 })
 export class ExclusiveOnlineGameGuard implements CanActivate {
 
-    protected userSubscription!: Subscription; // always bound in canActivate
-
     protected observedPartSubscription: MGPOptional<Subscription> = MGPOptional.empty();
 
     public constructor(private readonly observedPartService: ObservedPartService,

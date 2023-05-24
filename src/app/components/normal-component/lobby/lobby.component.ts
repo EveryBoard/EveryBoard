@@ -29,6 +29,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     private activePartsSubscription!: Subscription; // initialized in ngOnInit
 
+    private observedPartSubscription!: Subscription; // initialized in ngOnInit
+
     public currentTab: Tab = 'games';
     public createTabClasses: string[] = [];
 
@@ -49,17 +51,21 @@ export class LobbyComponent implements OnInit, OnDestroy {
             (activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
-        this.observedPartService.subscribeToObservedPart((observed: MGPOptional<FocusedPart>) => {
-            this.createTabClasses = [];
-            if (observed.isPresent()) {
-                this.createTabClasses = ['disabled-tab'];
-            }
-        });
+
+        console.log('subscribe to observed part')
+        this.observedPartSubscription = this.observedPartService.subscribeToObservedPart
+            ((observed: MGPOptional<FocusedPart>) => {
+                this.createTabClasses = [];
+                if (observed.isPresent()) {
+                    this.createTabClasses = ['disabled-tab'];
+                }
+            });
     }
     public ngOnDestroy(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnDestroy');
         this.activeUsersSubscription.unsubscribe();
         this.activePartsSubscription.unsubscribe();
+        this.observedPartSubscription.unsubscribe();
     }
     public async joinGame(part: PartDocument): Promise<void> {
         const partId: string = part.id;
