@@ -65,8 +65,6 @@ export class MGPResult {
 
     public static readonly RESIGN: MGPResult = new MGPResult(1);
 
-    public static readonly ESCAPE: MGPResult = new MGPResult(2);
-
     public static readonly VICTORY: MGPResult = new MGPResult(3);
 
     public static readonly TIMEOUT: MGPResult = new MGPResult(4);
@@ -76,6 +74,8 @@ export class MGPResult {
     public static readonly AGREED_DRAW_BY_ZERO: MGPResult = new MGPResult(6);
 
     public static readonly AGREED_DRAW_BY_ONE: MGPResult = new MGPResult(7);
+
+    public static readonly PRE_FINISHED: MGPResult = new MGPResult(8);
 
     private constructor(public readonly value: IMGPResult) {}
 }

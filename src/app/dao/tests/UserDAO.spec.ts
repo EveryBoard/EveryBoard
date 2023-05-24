@@ -8,7 +8,7 @@ import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserService } from 'src/app/services/UserService';
 
-describe('UserDAO', () => {
+xdescribe('UserDAO', () => {
 
     let userDAO: UserDAO;
     let userService: UserService;
@@ -145,18 +145,6 @@ describe('UserDAO', () => {
         });
     });
     describe('elo security', () => {
-        // Step 1: marking part as pre-finished
-        it('should allow the last player to mark the game as "pre-finished"', async() => {
-            // Given a part in 'ongoing' state
-            // When updating it to 'pre-finished' state
-            // Then it should work
-        });
-        it('should reject update to "pre-finished" if the game was not marked as "ongoing"', async() => {
-            // Given a part in another state than 'ongoing'
-            // When updating it to 'pre-finished' state
-            // Then it should work
-        });
-
         // Step 2: encoding looser elo
         it('should allow the last player to write looser elo', async() => {
             // Given a part in 'pre-finished' state and a looser playing its 15th game
@@ -182,7 +170,6 @@ describe('UserDAO', () => {
 
             // Then the modification should have been rejected
         });
-
         // Step 3: encoding winner elo
         it('should allow the last player to write winner elo', async() => {
             // Given

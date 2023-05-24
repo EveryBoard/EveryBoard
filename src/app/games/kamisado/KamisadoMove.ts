@@ -4,6 +4,7 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { KamisadoBoard } from './KamisadoBoard';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { Utils } from 'src/app/utils/utils';
 
 export type KamisadoMove = KamisadoPieceMove | KamisadoPassMove
 
@@ -29,16 +30,15 @@ class KamisadoPassMove extends Move {
 }
 
 export class KamisadoPieceMove extends MoveCoordToCoord {
+
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
     public static of(start: Coord, end: Coord): KamisadoPieceMove {
-        if (start.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
-            throw new Error('Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
-        }
-        if (end.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
-            throw new Error('End coord of KamisadoMove must be on the board, not at ' + end.toString());
-        }
+        Utils.assert(start.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE),
+                     'Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
+        Utils.assert(end.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE),
+                     'End coord of KamisadoMove must be on the board, not at ' + end.toString());
         return new KamisadoPieceMove(start, end);
     }
     public isPieceMove(): this is KamisadoPieceMove {

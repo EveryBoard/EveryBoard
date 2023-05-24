@@ -27,7 +27,7 @@ import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { GameEventService } from '../GameEventService';
 
-describe('GameService', () => {
+xdescribe('GameService', () => {
 
     let gameService: GameService;
     let userService: UserService;

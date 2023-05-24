@@ -31,7 +31,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),
         ];
-        this.encoder = P4Move.encoder;
+        // this.encoder = P4Move.encoder;
         this.tutorial = new P4Tutorial().tutorial;
         this.updateBoard();
     }

@@ -6,6 +6,8 @@ import { Move } from 'src/app/jscaip/Move';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoFailure } from './CoerceoFailure';
+import { Utils } from 'src/app/utils/utils';
+import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class CoerceoStep implements ComparableObject {
 
@@ -49,14 +51,12 @@ export class CoerceoStep implements ComparableObject {
     }
 }
 
-export class CoerceoMove extends Move {
+export class CoerceoMove extends MoveCoord {
 
-    private static tileExchangeEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
-        [Coord.encoder],
-        (m: CoerceoMove): [Coord] => [m.capture.get()],
-        (fields: [Coord]): CoerceoMove => CoerceoMove.fromTilesExchange(fields[0]));
+    private static readonly tileExchangeEncoder: MoveEncoder<CoerceoMove> =
+        MoveCoord.getEncoder(CoerceoMove.fromTilesExchange);
 
-    private static movementEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
+    private static readonly movementEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
         [Coord.encoder, Coord.encoder],
         (m: CoerceoMove): [Coord, Coord] => [m.start.get(), m.landingCoord.get()],
         (fields: [Coord, Coord]): CoerceoMove => CoerceoMove.fromCoordToCoord(fields[0], fields[1]));
@@ -69,22 +69,16 @@ export class CoerceoMove extends Move {
     public static fromMovement(start: Coord,
                                step: CoerceoStep): CoerceoMove
     {
-        if (start.isNotInRange(15, 10)) {
-            throw new Error('Starting coord cannot be out of range (width: 15, height: 10).');
-        }
+        Utils.assert(start.isInRange(15, 10), 'Starting coord cannot be out of range (width: 15, height: 10).');
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
-        if (landingCoord.isNotInRange(15, 10)) {
-            throw new Error('Landing coord cannot be out of range (width: 15, height: 10).');
-        }
+        Utils.assert(landingCoord.isInRange(15, 10), 'Landing coord cannot be out of range (width: 15, height: 10).');
         return new CoerceoMove(MGPOptional.of(start),
                                MGPOptional.of(step),
                                MGPOptional.of(landingCoord),
                                MGPOptional.empty());
     }
     public static fromTilesExchange(capture: Coord): CoerceoMove {
-        if (capture.isNotInRange(15, 10)) {
-            throw new Error('Captured coord cannot be out of range (width: 15, height: 10).');
-        }
+        Utils.assert(capture.isInRange(15, 10), 'Captured coord cannot be out of range (width: 15, height: 10).');
         return new CoerceoMove(MGPOptional.empty(),
                                MGPOptional.empty(),
                                MGPOptional.empty(),

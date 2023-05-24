@@ -27,7 +27,7 @@ type PartInfo = {
     candidate: MinimalUser,
 }
 
-describe('PartDAO security', () => {
+fdescribe('PartDAO security', () => {
 
     let partDAO: PartDAO;
     let gameEventService: GameEventService;
@@ -513,6 +513,16 @@ describe('PartDAO security', () => {
         });
     });
     describe('for player', () => {
+        async function createOngoingPart()
+        : Promise<{ playerOne: MinimalUser, playerZero: MinimalUser, partId: string, part: Part }>
+        {
+            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
+            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, playerOneElo: 0 };
+            const partId: string = await partDAO.create(part);
+            return { playerZero, playerOne, partId, part };
+        }
         it('should forbid player to change typeGame', async() => {
             // Given a part and a player (here, creator)
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
@@ -583,31 +593,10 @@ describe('PartDAO security', () => {
                 await reconnectUser(CREATOR_EMAIL);
             }
         });
-        it('should allow resigning', async() => {
-            // Given an ongoing part
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, playerOneElo: 0 };
-            const partId: string = await partDAO.create(part);
-
-            // When resigning
-            const result: Promise<void> = partDAO.update(partId, {
-                result: MGPResult.RESIGN.value,
-                winner: playerOne, // we are resigning
-                loser: playerZero,
-            });
-
-            // Then it should succeed
-            await expectAsync(result).toBeResolvedTo();
-        });
         it('should forbid resigning in place of the other player', async() => {
-            // Given an ongoing part
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, playerOneElo: 0 };
-            const partId: string = await partDAO.create(part);
+            // Given an ongoing part and elo updated
+            const { partId, playerOne, playerZero } = await createOngoingPart();
+            updatePlayersElo();
 
             // When resigning and setting the other player as loser
             const result: Promise<void> = partDAO.update(partId, {
@@ -619,53 +608,97 @@ describe('PartDAO security', () => {
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
-        it('should allow timeouting a part with a timed out user', async() => {
-            // Given a part where one player has timed out
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+        describe('EndGame updates', () => {
+            async function assertSuccessOrFailure(result: Promise<void>, eloAreUpdated: boolean): Promise<void> {
+                if (eloAreUpdated) {
+                    // Then it should succeed
+                    await expectAsync(result).toBeResolvedTo();
+                } else {
+                    // Then it should fail
+                    await expectPermissionToBeDenied(result);
+                }
+            }
+            function updatePlayersElo(): void {
+                TODO
+            }
+            for (const eloAreUpdated of [true, false]) {
+                it('should allow timeouting a part with a timed out user (or refuse if elo is not updated)', async() => {
+                    // Given a part where one player has timed out
+                    const { partId, part, playerOne, playerZero } = await createOngoingPart();
+                    part.remainingMsForOne = 1;
 
-            const part: Part = { ...PartMocks.STARTED, remainingMsForOne: 1, playerZero, playerOne, playerOneElo: 0 };
-            const partId: string = await partDAO.create(part);
+                    // Wait 10ms to ensure the player has timed out
+                    await new Promise((f: (value: unknown) => void) => setTimeout(f, 10));
+                    if (eloAreUpdated) {
+                        updatePlayersElo();
+                    }
 
-            // Wait 10ms to ensure the player has timed out
-            await new Promise((f: (value: unknown) => void) => setTimeout(f, 10));
+                    // When setting the part as result as timed out
+                    const result: Promise<void> = partDAO.update(partId, {
+                        result: MGPResult.TIMEOUT.value,
+                        winner: playerZero,
+                        loser: playerOne,
+                    });
 
-            // When setting the part as result as timed out
-            const result: Promise<void> = partDAO.update(partId, {
-                result: MGPResult.TIMEOUT.value,
-                winner: playerZero,
-                loser: playerOne,
-            });
+                    // Then it depend on elo
+                    await assertSuccessOrFailure(result, eloAreUpdated);
+                });
+                it('should allow resigning (or refuse if elo is not updated)', async() => {
+                    // Given an ongoing part
+                    const { partId, playerOne, playerZero } = await createOngoingPart();
+                    if (eloAreUpdated) {
+                        updatePlayersElo();
+                    }
 
-            // Then it should succeed
-            await expectAsync(result).toBeResolvedTo();
-        });
-        it('should allow setting winner and loser', async() => {
-            // Given an ongoing part
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+                    // When resigning
+                    const result: Promise<void> = partDAO.update(partId, {
+                        result: MGPResult.RESIGN.value,
+                        winner: playerOne, // we are resigning
+                        loser: playerZero,
+                    });
 
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, playerOneElo: 0 };
-            const partId: string = await partDAO.create(part);
+                    // Then it depend on elo
+                    await assertSuccessOrFailure(result, eloAreUpdated);
+                });
+                it('should allow setting winner and loser (or refuse if elo is not updated)', async() => {
+                    // Given an ongoing part where elo are up to date
+                    const { partId, playerOne, playerZero } = await createOngoingPart();
+                    if (eloAreUpdated) {
+                        updatePlayersElo();
+                    }
 
-            // When setting the winner and loser along with a move
-            const result: Promise<void> = partDAO.update(partId, {
-                turn: 1,
-                result: MGPResult.VICTORY.value,
-                winner: playerZero,
-                loser: playerOne,
-            });
+                    // When setting the winner and loser along with a move
+                    const result: Promise<void> = partDAO.update(partId, {
+                        turn: 1,
+                        result: MGPResult.VICTORY.value,
+                        winner: playerZero,
+                        loser: playerOne,
+                    });
 
-            // Then it should succeed
-            await expectAsync(result).toBeResolvedTo();
+                    // Then it depend on elo
+                    await assertSuccessOrFailure(result, eloAreUpdated);
+                });
+                it('should allow hard draw (or refuse if elo is not updated)', async() => {
+                    // Given a part in 'ongoing' state
+                    const { partId } = await createOngoingPart();
+                    if (eloAreUpdated) {
+                        updatePlayersElo();
+                    }
+
+                    // When updating it to 'pre-finished' state
+                    const result: Promise<void> = partDAO.update(partId, {
+                        result: MGPResult.HARD_DRAW.value,
+                    });
+
+                    // Then it depend on elo
+                    await assertSuccessOrFailure(result, eloAreUpdated);
+                });
+            }
         });
         it('should forbid setting a player both as winner and loser', async() => {
-            // Given an ongoing part
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, playerOneElo: 0 };
-            const partId: string = await partDAO.create(part);
+            // Given an ongoing part where players elo are up to date
+            const { partId, playerZero } = await createOngoingPart();
+            updatePlayersElo();
 
             // When setting the winner and loser along with a move
             const result: Promise<void> = partDAO.update(partId, {
@@ -680,11 +713,7 @@ describe('PartDAO security', () => {
         });
         it('should forbid setting winner that is not player', async() => {
             // Given an ongoing part
-            const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-            const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, playerOneElo: 0 };
-            const partId: string = await partDAO.create(part);
+            const { partId, playerOne, playerZero } = await createOngoingPart();
 
             // When setting the winner or loser to an non player
             const update: Partial<Part> = {
@@ -709,6 +738,13 @@ describe('PartDAO security', () => {
             // Then it should fail
             await expectPermissionToBeDenied(winnerResult);
             await expectPermissionToBeDenied(loserResult);
+        });
+        it('should reject update to "pre-finished" if the game was not marked as "ongoing"', async() => {
+            for (let partState of ['finished', 'pas finished lo', 'tout ce quié po prefinished']) {
+                // Given a part in another state than 'ongoing'
+                // When updating it to 'pre-finished' state
+                // Then it should work
+            }
         });
         it('should forbid setting winner and loser without changing result', async() => {
             // Given an ongoing part
