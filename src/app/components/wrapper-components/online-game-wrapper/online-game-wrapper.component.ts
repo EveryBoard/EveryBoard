@@ -1,4 +1,4 @@
-import { Mutex } from 'async-mutex';
+import { Mutex } from 'async-mutex'
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -100,25 +100,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
-    }
-    // Gets the server time by relying on the presence token of the user.
-    private async getServerTime(): Promise<Timestamp> {
-        const userId: string = this.connectedUserService.user.get().id;
-        // We force the presence token update, and once we receive it, check the time written by firebase
-        return new Promise((resolve: (result: Timestamp) => void) => {
-            let updateSent: boolean = false;
-            const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>): void => {
-                if (user.get().lastUpdateTime == null) {
-                    // We know that the update has been sent when we actually see a null here
-                    updateSent = true;
-                } else if (updateSent) {
-                    subscription.unsubscribe();
-                    resolve(user.get().lastUpdateTime as Timestamp);
-                }
-            };
-            const subscription: Subscription = this.userService.observeUser(userId, callback);
-            void this.userService.updatePresenceToken(userId);
-        });
     }
     private extractPartIdFromURL(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
@@ -350,7 +331,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async afterEventsBatch(): Promise<void> {
         const player: Player = Player.fromTurn(this.gameComponent.getTurn());
-        this.timeManager.afterEventsBatch(this.endGame, player, await this.getServerTime());
+        console.log('getting server time')
+        const serverTime = await this.connectedUserService.getServerTime();
+        console.log('got server time')
+        this.timeManager.afterEventsBatch(this.endGame, player, serverTime);
     }
     public async notifyDraw(scores?: [number, number]): Promise<void> {
         const player: Player = this.role as Player;
@@ -479,7 +463,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 assert(user.isPresent(), 'opponent was deleted, what sorcery is this');
                 this.opponent = opponent.get();
             };
-            this.opponentSubscription = this.userService.observeUser(opponent.get().id, callback);
+            this.opponentSubscription = this.userService.observeUserOnServer(opponent.get().id, callback);
         }
     }
     public async setRealObserverRole(): Promise<MGPOptional<MinimalUser>> {

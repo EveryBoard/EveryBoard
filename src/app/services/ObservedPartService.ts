@@ -9,6 +9,7 @@ import { MGPValidation } from '../utils/MGPValidation';
 import { assert } from '../utils/assert';
 import { MGPMap } from '../utils/MGPMap';
 import { Localized } from '../utils/LocaleUtils';
+import { UserService } from './UserService';
 
 @Injectable({
     providedIn: 'root',
@@ -32,6 +33,7 @@ export class ObservedPartService implements OnDestroy {
     private readonly observedPartObs: Observable<MGPOptional<FocusedPart>>;
 
     public constructor(private readonly userDAO: UserDAO,
+                       private readonly userService: UserService,
                        private readonly connectedUserService: ConnectedUserService)
     {
         this.observedPartRS = new ReplaySubject<MGPOptional<FocusedPart>>(1);
@@ -52,7 +54,7 @@ export class ObservedPartService implements OnDestroy {
             this.onObservedPartUpdate(observedPart.get().observedPart)
             // And then we subscribe to any change to the user's observed part
             this.userSubscription =
-                this.userDAO.subscribeToChanges(user.id, (docOpt: MGPOptional<User>) => {
+                this.userService.observeUserOnServer(user.id, (docOpt: MGPOptional<User>) => {
                     assert(docOpt.isPresent(), 'Observing part service expected user to already have a document!');
                     const doc: User = docOpt.get();
                     this.onObservedPartUpdate(doc.observedPart);

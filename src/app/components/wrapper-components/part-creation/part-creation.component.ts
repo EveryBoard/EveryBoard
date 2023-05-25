@@ -476,12 +476,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.connectedUserService.sendPresenceToken();
         }, PartCreationComponent.TOKEN_INTERVAL));
         const userId: string = this.connectedUserService.user.get().id;
-        this.selfSubscription = this.userService.observeUser(userId, (userOpt: MGPOptional<User>) => {
-            assert(userOpt.isPresent(), 'connected user should exist');
-            const user: User = userOpt.get();
-            if (user.lastUpdateTime != null) {
-                this.lastToken = user.lastUpdateTime as Timestamp;
-            }
+        this.selfSubscription = this.userService.observeUserOnServer(userId, (user: MGPOptional<User>) => {
+            assert(user.isPresent(), 'connected user should exist');
+            this.lastToken = user.get().lastUpdateTime as Timestamp;
         });
     }
     public stopSendingPresenceTokensAndObservingUsersIfNeeded(): void {

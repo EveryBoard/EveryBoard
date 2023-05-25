@@ -33,8 +33,18 @@ export class UserService {
     public async markAsVerified(uid: string): Promise<void> {
         await this.userDAO.update(uid, { verified: true });
     }
-    public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Subscription {
-        return this.userDAO.subscribeToChanges(userId, callback);
+    /**
+     * Observes an user, ignoring local updates.
+     */
+    public observeUserOnServer(userId: string, callback: (user: MGPOptional<User>) => void): Subscription {
+        return this.userDAO.subscribeToChanges(userId, (user: MGPOptional<User>): void => {
+            if (user.isPresent() && user.get().lastUpdateTime === null) {
+                // Ignore this update as it does not come from firebase but from ourselves
+                // We will get the firebase update later.
+                return;
+            }
+            callback(user);
+        });
     }
     public async getUserLastUpdateTime(id: string): Promise<MGPOptional<FirestoreTime>> {
         const user: MGPOptional<User> = await this.userDAO.read(id);
