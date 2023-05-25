@@ -1,37 +1,20 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+
+type SixMoveFields = [MGPOptional<Coord>, Coord, MGPOptional<Coord>];
 
 export class SixMove extends Move {
 
-    public static encoder: MoveEncoder<SixMove> = new class extends MoveEncoder<SixMove> {
-        public encodeMove(move: SixMove): JSONValueWithoutArray {
-            return {
-                start: move.start.isPresent() ? Coord.encoder.encode(move.start.get()) : null,
-                landing: Coord.encoder.encode(move.landing),
-                keep: move.keep.isPresent() ? Coord.encoder.encode(move.keep.get()) : null,
-            };
-        }
-        public decodeMove(encoded: JSONValueWithoutArray): SixMove {
-            const casted: JSONObject = encoded as JSONObject;
-            if (typeof encoded !== 'object') {
-                throw new Error('Invalid encodedMove of type ' + typeof encoded + '!');
-            }
-            const decodedLanding: Coord = Coord.encoder.decode(casted.landing);
-            if (casted.start == null) {
-                return SixMove.fromDrop(decodedLanding);
-            }
-            const decodedStart: Coord = Coord.encoder.decode(casted.start);
-            if (casted.keep == null) {
-                return SixMove.fromMovement(decodedStart, decodedLanding);
-            } else {
-                const decodedKeep: Coord = Coord.encoder.decode(casted.keep);
-                return SixMove.fromCut(decodedStart, decodedLanding, decodedKeep);
-            }
-        }
-    };
+    public static encoder: Encoder<SixMove> = Encoder.tuple(
+        [MGPOptional.getEncoder(Coord.encoder), Coord.encoder, MGPOptional.getEncoder(Coord.encoder)],
+        (move: SixMove): SixMoveFields => [move.start, move.landing, move.keep],
+        (fields: SixMoveFields): SixMove => SixMove.of(fields[0], fields[1], fields[2]),
+    );
+    private static of(start: MGPOptional<Coord>, landing: Coord, keep: MGPOptional<Coord>): SixMove {
+        return new SixMove(start, landing, keep);
+    }
     public static fromDrop(landing: Coord): SixMove {
         return new SixMove(MGPOptional.empty(), landing, MGPOptional.empty());
     }

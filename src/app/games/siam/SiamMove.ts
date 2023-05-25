@@ -1,27 +1,27 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 type SiamMoveFields = [number, number, MGPOptional<Orthogonal>, Orthogonal];
 
 export class SiamMove extends MoveCoord {
-    public static encoder: MoveEncoder<SiamMove> = MoveEncoder.tuple(
+
+    public static encoder: Encoder<SiamMove> = Encoder.tuple(
         [
-            MoveEncoder.identity<number>(), // x
-            MoveEncoder.identity<number>(), // y
+            Encoder.identity<number>(), // x
+            Encoder.identity<number>(), // y
             MGPOptional.getEncoder(Orthogonal.encoder), // direction
             Orthogonal.encoder, // orientation
         ],
         (m: SiamMove): SiamMoveFields => [m.x, m.y, m.direction, m.landingOrientation],
         (fields: SiamMoveFields): SiamMove => SiamMove.of(fields[0], fields[1], fields[2], fields[3]).get());
 
-    private constructor(
-        readonly x: number,
-        readonly y: number,
-        public readonly direction: MGPOptional<Orthogonal>,
-        public readonly landingOrientation: Orthogonal)
+    private constructor(readonly x: number,
+                        readonly y: number,
+                        public readonly direction: MGPOptional<Orthogonal>,
+                        public readonly landingOrientation: Orthogonal)
     {
         super(x, y);
     }

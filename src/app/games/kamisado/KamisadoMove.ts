@@ -1,9 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { KamisadoBoard } from './KamisadoBoard';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { Utils } from 'src/app/utils/utils';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export type KamisadoMove = KamisadoPieceMove | KamisadoPassMove
 
@@ -29,22 +31,21 @@ class KamisadoPassMove extends Move {
 }
 
 export class KamisadoPieceMove extends MoveCoordToCoord {
+
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
-    public static of(start: Coord, end: Coord): KamisadoPieceMove {
-        if (start.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
-            throw new Error('Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
-        }
-        if (end.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
-            throw new Error('End coord of KamisadoMove must be on the board, not at ' + end.toString());
-        }
-        return new KamisadoPieceMove(start, end);
+    public static from(start: Coord, end: Coord): MGPFallible<KamisadoPieceMove> {
+        Utils.assert(start.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE),
+                     'Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
+        Utils.assert(end.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE),
+                     'End coord of KamisadoMove must be on the board, not at ' + end.toString());
+        return MGPFallible.success(new KamisadoPieceMove(start, end));
     }
     public isPieceMove(): this is KamisadoPieceMove {
         return true;
     }
-    public equals(other: KamisadoMove): boolean {
+    public override equals(other: KamisadoMove): boolean {
         if (other === this) return true;
         if (other.isPieceMove()) {
             if (other.getStart().equals(this.getStart()) === false) return false;
@@ -60,16 +61,18 @@ export class KamisadoPieceMove extends MoveCoordToCoord {
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace KamisadoMove {
+
     export const PASS: KamisadoPassMove = KamisadoPassMove.PASS;
 
-    export function of(start: Coord, end: Coord): KamisadoPieceMove {
-        return KamisadoPieceMove.of(start, end);
+    export function from(start: Coord, end: Coord): MGPFallible<KamisadoPieceMove> {
+        return KamisadoPieceMove.from(start, end);
     }
+    const passEncoder: Encoder<KamisadoPassMove> = Encoder.constant('PASS', KamisadoMove.PASS);
 
-    const passEncoder: MoveEncoder<KamisadoPassMove> = MoveEncoder.constant('PASS', KamisadoMove.PASS);
-    const pieceMoveEncoder: MoveEncoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.of);
-    export const encoder: MoveEncoder<KamisadoMove> =
-        MoveEncoder.disjunction(pieceMoveEncoder,
-                                passEncoder,
-                                (m: KamisadoMove): m is KamisadoPieceMove => m.isPieceMove());
+    const pieceMoveEncoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.from);
+
+    export const encoder: Encoder<KamisadoMove> =
+        Encoder.disjunction(pieceMoveEncoder,
+                            passEncoder,
+                            (m: KamisadoMove): m is KamisadoPieceMove => m.isPieceMove());
 }

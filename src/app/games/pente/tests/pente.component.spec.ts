@@ -25,20 +25,20 @@ describe('PenteComponent', () => {
         // Given a state
         // When clicking on an empty state
         // Then a move should be done
-        const move: PenteMove = PenteMove.of(new Coord(4, 2));
+        const move: PenteMove = PenteMove.from(new Coord(4, 2));
         await testUtils.expectMoveSuccess('#click_4_2', move);
     }));
     it('should forbid dropping on a piece already on the board', fakeAsync(async() => {
         // Given a state
         // When clicking on square with a piece
         // Then the move should fail
-        const move: PenteMove = PenteMove.of(new Coord(9, 9));
+        const move: PenteMove = PenteMove.from(new Coord(9, 9));
         await testUtils.expectMoveFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
     }));
     it('should show last move', fakeAsync(async() => {
         // Given a state
         // When doing a move
-        const move: PenteMove = PenteMove.of(new Coord(4, 2));
+        const move: PenteMove = PenteMove.from(new Coord(4, 2));
         await testUtils.expectMoveSuccess('#click_4_2', move);
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#piece_4_2', 'last-move-stroke');
@@ -69,7 +69,7 @@ describe('PenteComponent', () => {
         testUtils.setupState(state);
 
         // When doing the capture
-        const move: PenteMove = PenteMove.of(new Coord(9, 6));
+        const move: PenteMove = PenteMove.from(new Coord(9, 6));
         await testUtils.expectMoveSuccess('#click_9_6', move);
 
         // Then it should show it

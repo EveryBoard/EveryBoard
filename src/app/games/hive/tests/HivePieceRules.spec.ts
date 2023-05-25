@@ -26,7 +26,7 @@ describe('HivePieceRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 2);
 
         // When computing the possible moves for the queen bee
-        const moves: HiveMove[] = HivePieceRules.from(Q).getPotentialMoves(new Coord(0, 0), state);
+        const moves: HiveMove[] = HivePieceRules.of(Q).getPotentialMoves(new Coord(0, 0), state);
         // Then we should have exactly 5, as one neighbor is occupied
         expect(moves.length).toBe(5);
     });
@@ -38,7 +38,7 @@ describe('HivePieceRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 2);
 
         // When computing the possible moves for the beetle
-        const moves: HiveMove[] = HivePieceRules.from(B).getPotentialMoves(new Coord(2, 0), state);
+        const moves: HiveMove[] = HivePieceRules.of(B).getPotentialMoves(new Coord(2, 0), state);
         // Then we should have exactly 6 as the beetle can climb on its neighbor
         expect(moves.length).toBe(6);
     });
@@ -51,7 +51,7 @@ describe('HivePieceRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 2);
 
         // When computing the possible moves for the grasshopper
-        const moves: HiveMove[] = HivePieceRules.from(G).getPotentialMoves(new Coord(2, 0), state);
+        const moves: HiveMove[] = HivePieceRules.of(G).getPotentialMoves(new Coord(2, 0), state);
         // Then we should have exactly 3 moves
         expect(moves.length).toBe(3);
     });
@@ -65,7 +65,7 @@ describe('HivePieceRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 4);
 
         // When computing the possible moves for the spider
-        const moves: HiveMove[] = HivePieceRules.from(S).getPotentialMoves(new Coord(1, 0), state);
+        const moves: HiveMove[] = HivePieceRules.of(S).getPotentialMoves(new Coord(1, 0), state);
         // Then we should have exactly 2 moves
         expect(moves.length).toBe(2);
     });
@@ -94,7 +94,7 @@ describe('HivePieceRules', () => {
         ];
         const state: HiveState = HiveState.fromRepresentation(board, 4);
         // When computing the possible moves for that spider
-        const moves: HiveMove[] = HivePieceRules.from(S).getPotentialMoves(new Coord(2, 0), state);
+        const moves: HiveMove[] = HivePieceRules.of(S).getPotentialMoves(new Coord(2, 0), state);
         // Then it should compute the expected moves (here, 2)
         expect(moves.length).toBe(2);
         // and they should both be legal (hence, without the offset)
@@ -111,7 +111,7 @@ describe('HivePieceRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 4);
 
         // When computing the possible moves for the soldier ant
-        const moves: HiveMove[] = HivePieceRules.from(A).getPotentialMoves(new Coord(0, 0), state);
+        const moves: HiveMove[] = HivePieceRules.of(A).getPotentialMoves(new Coord(0, 0), state);
         // Then we should have exactly 7 moves
         expect(moves.length).toBe(7);
     });

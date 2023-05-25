@@ -12,14 +12,15 @@ import { SCORE } from '../SCORE';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { GameStatus } from '../GameStatus';
+import { BoardValue } from '../BoardValue';
 
 export class RulesUtils {
 
-    public static expectMoveSuccess<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
-        rules: R,
-        state: S,
-        move: M,
-        expectedState: S)
+    public static expectMoveSuccess<R extends Rules<M, S, L, B>,
+                                    M extends Move,
+                                    S extends GameState,
+                                    L,
+                                    B extends BoardValue>(rules: R, state: S, move: M, expectedState: S)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state);

@@ -3,35 +3,35 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
-import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
+import { CoerceoMove, CoerceoMoveEncoder, CoerceoNormalMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('CoerceoMove', () => {
 
     it('should distinguish move and capture based on presence or not of capture', () => {
-        const move: CoerceoMove = CoerceoMove.fromMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
+        const move: CoerceoMove = CoerceoNormalMove.fromMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
         expect(move.isTileExchange()).toBeFalse();
-        const capture: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 4));
+        const capture: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 4));
         expect(capture.isTileExchange()).toBeTrue();
     });
     describe('fromMove', () => {
         it('should not create move of invalid distance', () => {
-            expect(() => CoerceoMove.fromCoordToCoord(new Coord(2, 2), new Coord(9, 9)))
+            expect(() => CoerceoNormalMove.from(new Coord(2, 2), new Coord(9, 9)))
                 .toThrowError(CoerceoFailure.INVALID_DISTANCE());
         });
         it('should not allow out of range starting coord', () => {
-            expect(() => CoerceoMove.fromMovement(new Coord(-1, 0), CoerceoStep.LEFT))
+            expect(() => CoerceoNormalMove.fromMovement(new Coord(-1, 0), CoerceoStep.LEFT))
                 .toThrowError('Starting coord cannot be out of range (width: 15, height: 10).');
         });
         it('should not allow out of range landing coord', () => {
-            expect(() => CoerceoMove.fromMovement(new Coord(0, 0), CoerceoStep.LEFT))
+            expect(() => CoerceoNormalMove.fromMovement(new Coord(0, 0), CoerceoStep.LEFT))
                 .toThrowError('Landing coord cannot be out of range (width: 15, height: 10).');
         });
     });
     describe('fromTilesExchange', () => {
         it('should not allow out of range capture coord', () => {
             const reason: string = 'Captured coord cannot be out of range (width: 15, height: 10).';
-            expect(() => CoerceoMove.fromTilesExchange(new Coord(-1, 16))).toThrowError(reason);
+            expect(() => CoerceoTileExchangeMove.from(new Coord(-1, 16))).toThrowError(reason);
         });
     });
     describe('Overrides', () => {
@@ -40,11 +40,11 @@ describe('CoerceoMove', () => {
             const b: Coord = new Coord(2, 0);
             const c: Coord = new Coord(4, 0);
             const d: Coord = new Coord(1, 1);
-            const tileExchange: CoerceoMove = CoerceoMove.fromTilesExchange(a);
-            const differentCapture: CoerceoMove = CoerceoMove.fromTilesExchange(b);
-            const movement: CoerceoMove = CoerceoMove.fromCoordToCoord(a, b);
-            const differentStart: CoerceoMove = CoerceoMove.fromCoordToCoord(c, b);
-            const differentEnd: CoerceoMove = CoerceoMove.fromCoordToCoord(a, d);
+            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.from(a);
+            const differentCapture: CoerceoMove = CoerceoTileExchangeMove.from(b);
+            const movement: CoerceoMove = CoerceoNormalMove.from(a, b);
+            const differentStart: CoerceoMove = CoerceoNormalMove.from(c, b);
+            const differentEnd: CoerceoMove = CoerceoNormalMove.from(a, d);
 
             expect(tileExchange.equals(differentCapture)).toBeFalse();
             expect(tileExchange.equals(tileExchange)).toBeTrue();
@@ -54,8 +54,8 @@ describe('CoerceoMove', () => {
             expect(movement.equals(movement)).toBeTrue();
         });
         it('should stringify nicely', () => {
-            const tileExchange: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 5));
-            const movement: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(5, 5), new Coord(7, 5));
+            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(5, 5));
+            const movement: CoerceoMove = CoerceoNormalMove.from(new Coord(5, 5), new Coord(7, 5));
             expect(tileExchange.toString()).toBe('CoerceoMove((5, 5))');
             expect(movement.toString()).toBe('CoerceoMove((5, 5) > RIGHT > (7, 5))');
         });
@@ -66,12 +66,12 @@ describe('CoerceoMove', () => {
                 const node: CoerceoNode = rules.getInitialNode();
                 const moves: CoerceoMove[] = minimax.getListMoves(node);
                 for (const move of moves) {
-                    EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
+                    EncoderTestUtils.expectToBeBijective(CoerceoMoveEncoder, move);
                 }
             });
             it('should be bijective with tiles exchanges', () => {
-                const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 7));
-                EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
+                const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(5, 7));
+                EncoderTestUtils.expectToBeBijective(CoerceoMoveEncoder, move);
             });
         });
     });

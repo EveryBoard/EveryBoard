@@ -1,6 +1,6 @@
 import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { MoveEncoder } from '../utils/Encoder';
+import { Encoder } from '../utils/Encoder';
 
 class PlayerNone implements ComparableObject {
 
@@ -23,11 +23,11 @@ class PlayerNone implements ComparableObject {
 
 export class Player implements ComparableObject {
 
-    public static encoder: MoveEncoder<Player> = new class extends MoveEncoder<Player> {
-        public encodeMove(player: Player): JSONValueWithoutArray {
+    public static encoder: Encoder<Player> = new class extends Encoder<Player> {
+        public encode(player: Player): JSONValueWithoutArray {
             return player.value;
         }
-        public decodeMove(encoded: JSONValueWithoutArray): Player {
+        public decode(encoded: JSONValueWithoutArray): Player {
             Utils.assert(encoded === 0 || encoded === 1, 'Invalid encoded player: ' + encoded);
             return Player.of(encoded as 0|1);
         }
@@ -102,11 +102,11 @@ export namespace PlayerOrNone {
     export const ONE: Player = Player.ONE;
     export const NONE: PlayerNone = PlayerNone.NONE;
 
-    export const encoder: MoveEncoder<PlayerOrNone> = new class extends MoveEncoder<PlayerOrNone> {
-        public encodeMove(player: PlayerOrNone): JSONValueWithoutArray {
+    export const encoder: Encoder<PlayerOrNone> = new class extends Encoder<PlayerOrNone> {
+        public encode(player: PlayerOrNone): JSONValueWithoutArray {
             return player.value;
         }
-        public decodeMove(encoded: JSONValueWithoutArray): PlayerOrNone {
+        public decode(encoded: JSONValueWithoutArray): PlayerOrNone {
             if (encoded === 2) return PlayerOrNone.NONE;
             Utils.assert(encoded === 0 || encoded === 1, 'Invalid encoded player: ' + encoded);
             return Player.of(encoded as 0|1);

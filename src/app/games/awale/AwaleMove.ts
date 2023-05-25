@@ -1,7 +1,6 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { assert } from 'src/app/utils/assert';
-import { JSONValueWithoutArray } from 'src/app/utils/utils';
+import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
 export class AwaleMove extends Move {
 
@@ -17,16 +16,16 @@ export class AwaleMove extends Move {
 
     public static readonly FIVE: AwaleMove = new AwaleMove(5);
 
-    public static encoder: MoveEncoder<AwaleMove> = new class extends MoveEncoder<AwaleMove> {
-        public encodeMove(move: AwaleMove): JSONValueWithoutArray {
+    public static encoder: Encoder<AwaleMove> = new class extends Encoder<AwaleMove> {
+        public encode(move: AwaleMove): JSONValueWithoutArray {
             return move.x;
         }
-        public decodeMove(encoded: JSONValueWithoutArray): AwaleMove {
-            return AwaleMove.from(encoded as number);
+        public decode(encoded: JSONValueWithoutArray): AwaleMove {
+            return AwaleMove.of(encoded as number);
         }
     };
 
-    public static from(x: number): AwaleMove {
+    public static of(x: number): AwaleMove {
         switch (x) {
             case 0: return AwaleMove.ZERO;
             case 1: return AwaleMove.ONE;
@@ -34,7 +33,7 @@ export class AwaleMove extends Move {
             case 3: return AwaleMove.THREE;
             case 4: return AwaleMove.FOUR;
             default:
-                assert(x === 5, 'Invalid x for AwaleMove: ' + x);
+                Utils.assert(x === 5, 'Invalid x for AwaleMove: ' + x);
                 return AwaleMove.FIVE;
         }
     }

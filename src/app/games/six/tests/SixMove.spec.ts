@@ -42,7 +42,7 @@ describe('SixMove', () => {
             expect(movement.equals(cuttingDeplacement)).toBeFalse();
         });
         it('should forbid non object to decode', () => {
-            expect(() => SixMove.encoder.decode(0.5)).toThrowError('Invalid encodedMove of type number!');
+            expect(() => SixMove.encoder.decodeValue(0.5)).toThrowError('Invalid encodedMove of type number!');
         });
         it('should stringify nicely', () => {
             expect(drop.toString()).toEqual('SixMove((5, 5))');

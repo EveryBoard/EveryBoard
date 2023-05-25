@@ -199,11 +199,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const THIRD_MOVE: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
 
-    const FIRST_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(FIRST_MOVE);
+    const FIRST_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encode(FIRST_MOVE);
 
-    const SECOND_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(SECOND_MOVE);
+    const SECOND_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encode(SECOND_MOVE);
 
-    const THIRD_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(THIRD_MOVE);
+    const THIRD_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encode(THIRD_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const state: QuartoState = wrapper.gameComponent.getState() as QuartoState;
@@ -294,7 +294,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         if (player === Player.ONE) {
             offset = 1;
             const firstMove: QuartoMove = moves[0];
-            const encodedMove: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(firstMove);
+            const encodedMove: JSONValueWithoutArray = QuartoMove.encoder.encode(firstMove);
             await receiveNewMoves(turn, [encodedMove]);
             turn += 1;
         }
@@ -302,8 +302,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             const move: QuartoMove = moves[i];
             await doMove(moves[i], true);
             const newMoves: JSONValueWithoutArray[] = [
-                QuartoMove.encoder.encodeMove(move),
-                QuartoMove.encoder.encodeMove(moves[i+1]),
+                QuartoMove.encoder.encode(move),
+                QuartoMove.encoder.encode(moves[i+1]),
             ];
             await receiveNewMoves(turn, newMoves);
             turn += 2;
@@ -927,7 +927,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(partDAO, 'update').and.callThrough();
                 spyOn(gameEventService, 'addMove').and.callThrough();
                 const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(alternativeMove);
+                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encode(alternativeMove);
                 await doMove(alternativeMove, true);
 
                 // Then partDAO should be updated, and move should be sent
@@ -979,7 +979,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(partDAO, 'update').and.callThrough();
                 spyOn(gameEventService, 'addMove').and.callThrough();
                 const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(alternativeMove);
+                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encode(alternativeMove);
                 await doMove(alternativeMove, true);
 
                 // Then partDAO should be updated, and move should be sent

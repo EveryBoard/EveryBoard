@@ -10,14 +10,11 @@ class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
     public toString(): string {
         return 'lel';
     }
-    public equals(other: ConcreteMoveCoordToCoord): boolean {
-        return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
-    }
 }
 
 describe('MoveCoordToCoord', () => {
-    function myMoveConstructor(start: Coord, end: Coord): ConcreteMoveCoordToCoord {
-        return new ConcreteMoveCoordToCoord(start, end);
+    function myMoveConstructor(start: Coord, end: Coord): MGPFallible<ConcreteMoveCoordToCoord> {
+        return MGPFallible.success(new ConcreteMoveCoordToCoord(start, end));
     }
 
     describe('getDirection', () => {

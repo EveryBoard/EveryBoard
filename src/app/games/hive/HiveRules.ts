@@ -83,7 +83,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
 
-        const moveValidity: MGPValidation = HivePieceRules.from(movedPiece).moveValidity(move, state);
+        const moveValidity: MGPValidation = HivePieceRules.of(movedPiece).moveValidity(move, state);
         if (moveValidity.isFailure()) {
             return moveValidity;
         }
@@ -168,7 +168,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         for (const coord of state.occupiedSpaces()) {
             if (state.getAt(coord).topPiece().owner === player) {
                 for (const neighbor of state.emptyNeighbors(coord)) {
-                    const move: HiveMoveDrop = HiveMoveDrop.from(remainingPiece, neighbor);
+                    const move: HiveMoveDrop = HiveMoveDrop.of(remainingPiece, neighbor);
                     if (this.isLegalDrop(move, state).isSuccess()) {
                         locations.add(neighbor);
                     }
@@ -182,7 +182,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         const moves: MGPSet<HiveMoveCoordToCoord> = new MGPSet();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
         if (topPiece.owner === player) {
-            for (const move of HivePieceRules.from(topPiece).getPotentialMoves(coord, state)) {
+            for (const move of HivePieceRules.of(topPiece).getPotentialMoves(coord, state)) {
                 if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
                     moves.add(move);
                 }

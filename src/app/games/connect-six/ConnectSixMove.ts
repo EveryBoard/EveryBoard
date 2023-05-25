@@ -1,4 +1,4 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -11,23 +11,22 @@ export class ConnectSixFirstMove extends MoveCoord {
     public static isInRange(coord: Coord): boolean {
         return coord.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH);
     }
-    public static from(coord: Coord): ConnectSixFirstMove {
+    public static from(coord: Coord): MGPFallible<ConnectSixFirstMove> {
         Utils.assert(ConnectSixFirstMove.isInRange(coord), 'FIRST_COORD_IS_OUT_OF_RANGE');
-        return new ConnectSixFirstMove(coord.x, coord.y);
+        return MGPFallible.success(new ConnectSixFirstMove(coord.x, coord.y));
     }
-    public static encoder: MoveEncoder<ConnectSixFirstMove> = MoveCoord.getEncoder(ConnectSixFirstMove.from);
+    public static encoder: Encoder<ConnectSixFirstMove> = MoveCoord.getEncoder(ConnectSixFirstMove.from);
 
     private constructor(x: number, y: number) {
         super(x, y);
     }
-
     public toString(): string {
         return 'ConnectSixFirstMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }
 }
 export class ConnectSixDrops extends MoveWithTwoCoords {
 
-    public static encoder: MoveEncoder<ConnectSixDrops> = MoveWithTwoCoords.getFallibleEncoder(ConnectSixDrops.from);
+    public static encoder: Encoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.from);
 
     public static from(first: Coord, second: Coord): MGPFallible<ConnectSixDrops> {
         Utils.assert(first.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH), 'FIRST_COORD_IS_OUT_OF_RANGE');
@@ -55,9 +54,9 @@ export class ConnectSixDrops extends MoveWithTwoCoords {
 
 export type ConnectSixMove = ConnectSixFirstMove | ConnectSixDrops;
 
-export const ConnectSixMoveEncoder: MoveEncoder<ConnectSixMove> =
-    MoveEncoder.disjunction(ConnectSixFirstMove.encoder,
-                            ConnectSixDrops.encoder,
-                            (value: ConnectSixFirstMove): value is ConnectSixFirstMove => {
-                                return value instanceof ConnectSixFirstMove;
-                            });
+export const ConnectSixMoveEncoder: Encoder<ConnectSixMove> =
+    Encoder.disjunction(ConnectSixFirstMove.encoder,
+                        ConnectSixDrops.encoder,
+                        (value: ConnectSixFirstMove): value is ConnectSixFirstMove => {
+                            return value instanceof ConnectSixFirstMove;
+                        });

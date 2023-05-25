@@ -135,11 +135,11 @@ describe('Direction', () => {
     describe('Encoder', () => {
         it('should encode by calling Direction.toString', () => {
             const dir: Direction = Direction.DOWN;
-            expect(Direction.encoder.encode(dir)).toEqual(dir.toString());
+            expect(Direction.encoder.encodeValue(dir)).toEqual(dir.toString());
         });
         it('should decode by calling Direction.factory.fromString', () => {
             const dir: string = Direction.DOWN.toString();
-            expect(Direction.encoder.decode(dir)).toEqual(Direction.factory.fromString(dir).get());
+            expect(Direction.encoder.decodeValue(dir)).toEqual(Direction.factory.fromString(dir).get());
         });
     });
 });
@@ -166,11 +166,11 @@ describe('Orthogonal', () => {
     describe('Encoder', () => {
         it('should encode by calling Orthogonal.toString', () => {
             const dir: Orthogonal = Orthogonal.DOWN;
-            expect(Orthogonal.encoder.encode(dir)).toEqual(dir.toString());
+            expect(Orthogonal.encoder.encodeValue(dir)).toEqual(dir.toString());
         });
         it('should decode by calling Orthogonal.factory.fromString', () => {
             const dir: string = Orthogonal.DOWN.toString();
-            expect(Orthogonal.encoder.decode(dir)).toEqual(Orthogonal.factory.fromString(dir).get());
+            expect(Orthogonal.encoder.decodeValue(dir)).toEqual(Orthogonal.factory.fromString(dir).get());
         });
     });
     describe('rotateClockwise', () => {

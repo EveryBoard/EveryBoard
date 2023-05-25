@@ -3,7 +3,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
+import { AbstractEncoder, Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { HivePiece } from './HivePiece';
@@ -11,12 +11,12 @@ import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class HiveMoveDrop extends MoveCoord {
 
-    public static encoder: Encoder<HiveMoveDrop> = MoveEncoder.tuple(
+    public static encoder: AbstractEncoder<HiveMoveDrop> = Encoder.tuple(
         [HivePiece.encoder, Coord.encoder],
         (move: HiveMoveDrop): [HivePiece, Coord] => [move.piece, move.coord],
         (fields: [HivePiece, Coord]): HiveMoveDrop => new HiveMoveDrop(fields[0], fields[1].x, fields[1].y),
     );
-    public static from(piece: HivePiece, coord: Coord): HiveMoveDrop {
+    public static of(piece: HivePiece, coord: Coord): HiveMoveDrop {
         return new HiveMoveDrop(piece, coord.x, coord.y);
     }
     private constructor(public readonly piece: HivePiece, x: number, y: number) {
@@ -35,8 +35,8 @@ export class HiveMoveDrop extends MoveCoord {
 
 export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
-    public static encoder: Encoder<HiveMoveCoordToCoord> =
-        MoveWithTwoCoords.getFallibleEncoder(HiveMoveCoordToCoord.from);
+    public static encoder: AbstractEncoder<HiveMoveCoordToCoord> =
+        MoveWithTwoCoords.getEncoder(HiveMoveCoordToCoord.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {
         if (start.equals(end)) {
@@ -64,7 +64,7 @@ export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
 export class HiveMoveSpider extends HiveMoveCoordToCoord {
 
-    public static override encoder: Encoder<HiveMoveSpider> = MoveEncoder.tuple(
+    public static override encoder: AbstractEncoder<HiveMoveSpider> = Encoder.tuple(
         [Coord.encoder, Coord.encoder, Coord.encoder, Coord.encoder],
         (move: HiveMoveSpider): [Coord, Coord, Coord, Coord] => move.coords,
         (fields: [Coord, Coord, Coord, Coord]): HiveMoveSpider => new HiveMoveSpider(fields),
@@ -105,7 +105,7 @@ export namespace HiveMove {
     export const PASS: HiveMove = new HiveMovePass();
 
     export function drop(piece: HivePiece, coord: Coord): HiveMove {
-        return HiveMoveDrop.from(piece, coord);
+        return HiveMoveDrop.of(piece, coord);
     }
     export function move(start: Coord, end: Coord): MGPFallible<HiveMove> {
         return HiveMoveCoordToCoord.from(start, end);
@@ -113,22 +113,22 @@ export namespace HiveMove {
     export function spiderMove(coords: [Coord, Coord, Coord, Coord]): HiveMove {
         return HiveMoveSpider.fromCoords(coords);
     }
-    export const encoder: MoveEncoder<HiveMove> = new class extends MoveEncoder<HiveMove> {
-        public encodeMove(value: HiveMove): JSONValueWithoutArray {
+    export const encoder: Encoder<HiveMove> = new class extends Encoder<HiveMove> {
+        public encode(value: HiveMove): JSONValueWithoutArray {
             if (value instanceof HiveMoveDrop) {
                 return {
                     moveType: 'Drop',
-                    encoded: HiveMoveDrop.encoder.encode(value),
+                    encoded: HiveMoveDrop.encoder.encodeValue(value),
                 };
             } else if (value instanceof HiveMoveSpider) {
                 return {
                     moveType: 'Spider',
-                    encoded: HiveMoveSpider.encoder.encode(value),
+                    encoded: HiveMoveSpider.encoder.encodeValue(value),
                 };
             } else if (value instanceof HiveMoveCoordToCoord) {
                 return {
                     moveType: 'CoordToCoord',
-                    encoded: HiveMoveCoordToCoord.encoder.encode(value),
+                    encoded: HiveMoveCoordToCoord.encoder.encodeValue(value),
                 };
             } else {
                 return {
@@ -136,17 +136,17 @@ export namespace HiveMove {
                 };
             }
         }
-        public decodeMove(encoded: JSONValueWithoutArray): HiveMove {
+        public decode(encoded: JSONValueWithoutArray): HiveMove {
             // eslint-disable-next-line dot-notation
             const moveType: string = Utils.getNonNullable(encoded)['moveType'];
             // eslint-disable-next-line dot-notation
             const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
             if (moveType === 'Drop') {
-                return HiveMoveDrop.encoder.decode(content);
+                return HiveMoveDrop.encoder.decodeValue(content);
             } else if (moveType === 'Spider') {
-                return HiveMoveSpider.encoder.decode(content);
+                return HiveMoveSpider.encoder.decodeValue(content);
             } else if (moveType === 'CoordToCoord') {
-                return HiveMoveCoordToCoord.encoder.decode(content);
+                return HiveMoveCoordToCoord.encoder.decodeValue(content);
             } else {
                 return HiveMove.PASS;
             }

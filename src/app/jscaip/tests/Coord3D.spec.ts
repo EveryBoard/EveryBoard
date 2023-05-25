@@ -2,7 +2,7 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord3D } from '../Coord3D';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { Encoder } from 'src/app/utils/Encoder';
+import { AbstractEncoder } from 'src/app/utils/Encoder';
 
 describe('Coord3D', () => {
 
@@ -12,7 +12,8 @@ describe('Coord3D', () => {
             MGPOptional.empty(),
             MGPOptional.of(new Coord3D(0, 0, 0)),
         ];
-        const encoder: Encoder<MGPOptional<Coord3D>> = MGPOptional.getEncoder(Coord3D.getEncoder(Coord3D.of));
+        const encoder: AbstractEncoder<MGPOptional<Coord3D>> =
+            MGPOptional.getEncoder(Coord3D.getCoord3DEncoder(Coord3D.from));
         for (const value of values) {
             EncoderTestUtils.expectToBeBijective(encoder, value);
         }
@@ -32,8 +33,8 @@ describe('Coord3D', () => {
     });
 
     it('should implement toString and toShortString', () => {
-        expect(Coord3D.of(0, 0, 0).toString()).toBe('Coord3D(0, 0, 0)');
-        expect(Coord3D.of(0, 0, 0).toShortString()).toBe('(0, 0, 0)');
+        expect(Coord3D.from(0, 0, 0).get().toString()).toBe('Coord3D(0, 0, 0)');
+        expect(Coord3D.from(0, 0, 0).get().toShortString()).toBe('(0, 0, 0)');
     });
 
     it('should compare Z correctly', () => {

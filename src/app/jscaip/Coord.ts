@@ -1,8 +1,6 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
-import { MoveEncoder } from '../utils/Encoder';
+import { Encoder } from '../utils/Encoder';
 import { Vector } from './Vector';
 
 export class CoordFailure {
@@ -11,17 +9,15 @@ export class CoordFailure {
 
 export class Coord extends Vector {
 
-    public static encoder: MoveEncoder<Coord> = new class extends MoveEncoder<Coord> {
-        public encodeMove(coord: Coord): JSONValueWithoutArray {
-            return { x: coord.x, y: coord.y };
-        }
-        public decodeMove(encoded: JSONValueWithoutArray): Coord {
-            const casted: JSONObject = encoded as JSONObject;
-            assert(casted.x != null && typeof casted.x === 'number' &&
-                   casted.y != null && typeof casted.y === 'number', 'Invalid encoded coord');
-            return new Coord(casted.x as number, casted.y as number);
-        }
-    };
+    public static getEncoder<T extends Coord>(generator: (x: number, y: number) => T): Encoder<T> {
+        return Encoder.tuple(
+            [Encoder.identity<number>(), Encoder.identity<number>()],
+            (coord: T): [number, number] => [coord.x, coord.y],
+            (fields: [number, number]): T => generator(fields[0], fields[1]),
+        );
+    }
+    public static encoder: Encoder<Coord> = Coord.getEncoder((x: number, y: number): Coord => new Coord(x, y));
+
     public constructor(x: number, y: number) {
         super(x, y);
     }

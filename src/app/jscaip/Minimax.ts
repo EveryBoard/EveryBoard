@@ -55,7 +55,7 @@ export abstract class PlayerMetricsMinimax<M extends Move,
           return BoardValue.fromWinner(gameStatus.winner);
       } else {
           const metrics: [number, number] = this.getMetrics(node);
-          return BoardValue.from(metrics[0], metrics[1]);
+          return BoardValue.of(metrics[0], metrics[1]);
       }
   }
 }

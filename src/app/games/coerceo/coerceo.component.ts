@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TriangularGameComponent }
     from 'src/app/components/game-components/game-component/TriangularGameComponent';
-import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
+import { CoerceoMove, CoerceoMoveEncoder, CoerceoNormalMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -46,7 +46,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             new CoerceoMinimax(this.rules, 'Normal'),
             new CoerceoPiecesThreatTilesMinimax(this.rules, 'Piece > Threat > Tiles'),
         ];
-        this.encoder = CoerceoMove.encoder;
+        this.encoder = CoerceoMoveEncoder;
         this.tutorial = new CoerceoTutorial().tutorial;
         this.SPACE_SIZE = 70;
         this.updateBoard();
@@ -56,10 +56,13 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.state = this.getState();
         this.scores = MGPOptional.of(this.state.captures);
         this.tiles = this.state.tiles;
-        const move: MGPOptional<CoerceoMove> = this.node.move;
-        if (move.isPresent()) {
-            this.lastStart = move.get().start;
-            this.lastEnd = move.get().landingCoord;
+        const moveOpt: MGPOptional<CoerceoMove> = this.node.move;
+        if (moveOpt.isPresent()) {
+            const move: CoerceoMove = moveOpt.get();
+            if (move instanceof CoerceoNormalMove) {
+                this.lastStart = MGPOptional.of(move.getStart());
+                this.lastEnd = MGPOptional.of(move.getEnd());
+            }
         } else {
             this.lastStart = MGPOptional.empty();
             this.lastEnd = MGPOptional.empty();
@@ -95,7 +98,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     private async firstClick(coord: Coord): Promise<MGPValidation> {
         const clickedPiece: FourStatePiece = this.state.getPieceAt(coord);
         if (clickedPiece.is(this.state.getCurrentOpponent())) {
-            const move: CoerceoMove = CoerceoMove.fromTilesExchange(coord);
+            const move: CoerceoMove = CoerceoTileExchangeMove.from(coord);
             return this.chooseMove(move, this.state, this.state.captures);
         } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
             this.chosenCoord = MGPOptional.of(coord);
@@ -107,7 +110,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
     private async secondClick(coord: Coord): Promise<MGPValidation> {
         if (this.possibleLandings.some((c: Coord) => c.equals(coord))) {
-            const move: CoerceoMove = CoerceoMove.fromCoordToCoord(this.chosenCoord.get(), coord);
+            const move: CoerceoMove = CoerceoNormalMove.from(this.chosenCoord.get(), coord);
             return this.chooseMove(move, this.state, this.state.captures);
         } else {
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE());

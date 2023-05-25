@@ -47,7 +47,7 @@ describe('LinesOfActionMove', () => {
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(6, 4)).get();
             move.encode();
 
-            expect(LinesOfActionMove.encoder.encode).toHaveBeenCalledTimes(1);
+            expect(LinesOfActionMove.encoder.encodeValue).toHaveBeenCalledTimes(1);
         });
         it('should delegate decoding to encoder', () => {
             spyOn(LinesOfActionMove.encoder, 'decode').and.callThrough();
@@ -55,7 +55,7 @@ describe('LinesOfActionMove', () => {
             const encoded: JSONValue = move.encode();
             move.decode(encoded);
 
-            expect(LinesOfActionMove.encoder.decode).toHaveBeenCalledTimes(1);
+            expect(LinesOfActionMove.encoder.decodeValue).toHaveBeenCalledTimes(1);
         });
     });
 });

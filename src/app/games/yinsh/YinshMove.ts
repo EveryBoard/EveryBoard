@@ -1,6 +1,6 @@
 import { GipfCapture } from 'src/app/games/gipf/GipfMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder, MoveEncoder } from 'src/app/utils/Encoder';
+import { AbstractEncoder, Encoder } from 'src/app/utils/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -11,23 +11,23 @@ import { assert } from 'src/app/utils/assert';
 // A capture at Yinsh is just like a capture at Gipf, with the only difference
 // that it needs to be of length 5 rather than 4, and it contains a ring taken
 export class YinshCapture extends GipfCapture {
-    public static override encoder: Encoder<YinshCapture> = new class extends Encoder<YinshCapture> {
-        public encode(capture: YinshCapture): JSONValue {
+    public static override encoder: AbstractEncoder<YinshCapture> = new class extends AbstractEncoder<YinshCapture> {
+        public encodeValue(capture: YinshCapture): JSONValue {
             return {
                 captured: capture.capturedSpaces.map((coord: Coord): JSONValueWithoutArray => {
-                    return Coord.encoder.encode(coord) as JSONValueWithoutArray;
+                    return Coord.encoder.encodeValue(coord) as JSONValueWithoutArray;
                 }),
-                ringTaken: Coord.encoder.encode(capture.ringTaken.get()),
+                ringTaken: Coord.encoder.encodeValue(capture.ringTaken.get()),
             };
         }
-        public decode(encoded: JSONValue): YinshCapture {
+        public decodeValue(encoded: JSONValue): YinshCapture {
             const casted: JSONObject = encoded as JSONObject;
             assert(casted.captured != null && casted.ringTaken != null, 'Invalid encoded YinshCapture');
             return new YinshCapture(
                 (casted.captured as Array<JSONValueWithoutArray>).map((c: JSONValueWithoutArray): Coord => {
-                    return Coord.encoder.decode(c);
+                    return Coord.encoder.decodeValue(c);
                 }),
-                Coord.encoder.decode(casted.ringTaken));
+                Coord.encoder.decodeValue(casted.ringTaken));
         }
     };
     public static of(start: Coord, end: Coord, ringTaken?: Coord): YinshCapture {
@@ -60,30 +60,32 @@ export class YinshCapture extends GipfCapture {
 }
 
 export class YinshMove extends Move {
+
     private static readonly coordOptionalEncoder: Encoder<MGPOptional<Coord>> = MGPOptional.getEncoder(Coord.encoder);
-    public static encoder: MoveEncoder<YinshMove> = new class extends MoveEncoder<YinshMove> {
-        public encodeMove(move: YinshMove): JSONValueWithoutArray {
+
+    public static encoder: Encoder<YinshMove> = new class extends Encoder<YinshMove> {
+        public encode(move: YinshMove): JSONValueWithoutArray {
             const encoded: JSONValue = {
-                moveStart: Coord.encoder.encode(move.start),
-                moveEnd: YinshMove.coordOptionalEncoder.encode(move.end),
+                moveStart: Coord.encoder.encodeValue(move.start),
+                moveEnd: YinshMove.coordOptionalEncoder.encodeValue(move.end),
             };
             move.initialCaptures.map((c: YinshCapture, i: number) => {
-                encoded['initialCapture' + i] = YinshCapture.encoder.encode(c);
+                encoded['initialCapture' + i] = YinshCapture.encoder.encodeValue(c);
             });
             move.finalCaptures.map((c: YinshCapture, i: number) => {
-                encoded['finalCapture' + i] = YinshCapture.encoder.encode(c);
+                encoded['finalCapture' + i] = YinshCapture.encoder.encodeValue(c);
             });
 
             return encoded;
         }
-        public decodeMove(encoded: JSONValueWithoutArray): YinshMove {
+        public decode(encoded: JSONValueWithoutArray): YinshMove {
             const casted: JSONObject = encoded as JSONObject;
             assert(casted.moveStart != null, 'Invalid encoded YinshMove');
 
-            return new YinshMove(this.decodeArray(casted, 'initialCapture', YinshCapture.encoder.decode),
-                                 Coord.encoder.decode(casted.moveStart),
-                                 YinshMove.coordOptionalEncoder.decode(casted.moveEnd),
-                                 this.decodeArray(casted, 'finalCapture', YinshCapture.encoder.decode));
+            return new YinshMove(this.decodeArray(casted, 'initialCapture', YinshCapture.encoder.decodeValue),
+                                 Coord.encoder.decodeValue(casted.moveStart),
+                                 YinshMove.coordOptionalEncoder.decodeValue(casted.moveEnd),
+                                 this.decodeArray(casted, 'finalCapture', YinshCapture.encoder.decodeValue));
         }
         private decodeArray<T>(v: JSONObject, name: string, decode: (v: JSONValue) => T): T[] {
             const array: T[] = [];
@@ -96,7 +98,8 @@ export class YinshMove extends Move {
     public constructor(public readonly initialCaptures: ReadonlyArray<YinshCapture>,
                        public readonly start: Coord,
                        public readonly end: MGPOptional<Coord>,
-                       public readonly finalCaptures: ReadonlyArray<YinshCapture>) {
+                       public readonly finalCaptures: ReadonlyArray<YinshCapture>)
+    {
         super();
     }
     public isInitialPlacement(): boolean {

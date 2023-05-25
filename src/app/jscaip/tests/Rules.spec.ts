@@ -67,7 +67,7 @@ describe('Rules', () => {
         const encodedMoveList: number[] = [0, 1, 2, 3];
 
         // When calling applyMoves
-        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeMove);
+        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decode);
 
         // Then last move should be the last one encoded and state should be adapted
         expect(state.board).toEqual([encodedMoveList]);

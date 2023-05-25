@@ -14,7 +14,7 @@ export class BoardValue {
      * @param playerZeroScore the positive score of player zero
      * @param playerOneScore the positive score of player one
      */
-    public static from(playerZeroScore: number, playerOneScore: number): BoardValue {
+    public static of(playerZeroScore: number, playerOneScore: number): BoardValue {
         playerZeroScore = playerZeroScore * Player.ZERO.getScoreModifier();
         playerOneScore = playerOneScore * Player.ONE.getScoreModifier();
         return new BoardValue(playerZeroScore + playerOneScore);

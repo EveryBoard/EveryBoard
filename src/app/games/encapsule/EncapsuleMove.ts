@@ -2,11 +2,13 @@ import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsulePiece } from './EncapsulePiece';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 
 type EncapsuleMoveFields = [MGPOptional<Coord>, Coord, MGPOptional<EncapsulePiece>];
+
 export class EncapsuleMove extends Move {
-    public static encoder: MoveEncoder<EncapsuleMove> = MoveEncoder.tuple(
+
+    public static encoder: Encoder<EncapsuleMove> = Encoder.tuple(
         [MGPOptional.getEncoder(Coord.encoder), Coord.encoder, MGPOptional.getEncoder(EncapsulePiece.encoder)],
         (move: EncapsuleMove): EncapsuleMoveFields => [move.startingCoord, move.landingCoord, move.piece],
         (fields: EncapsuleMoveFields): EncapsuleMove => new EncapsuleMove(fields[0], fields[1], fields[2]));

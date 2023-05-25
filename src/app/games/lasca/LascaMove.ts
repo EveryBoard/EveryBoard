@@ -3,7 +3,7 @@ import { Vector } from 'src/app/jscaip/Vector';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -58,22 +58,22 @@ export class LascaMove extends Move {
         }
         return MGPFallible.success(new LascaMove([start, end], true));
     }
-    public static encoder: MoveEncoder<LascaMove> = new class extends MoveEncoder<LascaMove> {
-        public encodeMove(move: LascaMove): JSONValueWithoutArray {
+    public static encoder: Encoder<LascaMove> = new class extends Encoder<LascaMove> {
+        public encode(move: LascaMove): JSONValueWithoutArray {
             return {
                 coords: move.coords.toList().map((coord: Coord): JSONValueWithoutArray => {
-                    return Coord.encoder.encode(coord) as JSONValueWithoutArray;
+                    return Coord.encoder.encodeValue(coord) as JSONValueWithoutArray;
                 }),
                 isStep: move.isStep,
             };
         }
-        public decodeMove(encoded: JSONValueWithoutArray): LascaMove {
+        public decode(encoded: JSONValueWithoutArray): LascaMove {
             const casted: JSONObject = encoded as JSONObject;
             assert(casted.coords != null, 'Encoded LascaMove should have a coords field');
             assert(casted.isStep != null, 'Encoded LascaMove should have a isStep field');
             const encodedCoords: JSONValueWithoutArray[] =
                 Utils.getNonNullable(casted.coords) as JSONValueWithoutArray[];
-            const coords: Coord[] = encodedCoords.map((x: JSONValue) => Coord.encoder.decode(x));
+            const coords: Coord[] = encodedCoords.map((x: JSONValue) => Coord.encoder.decodeValue(x));
             return new LascaMove(coords, casted.isStep as boolean);
         }
     };
@@ -82,7 +82,7 @@ export class LascaMove extends Move {
     private constructor(coords: Coord[], public readonly isStep: boolean) {
         super();
         this.coords = new MGPUniqueList(coords);
-    }
+    } // TODO: CoordListEncoder
     public override toString(): string {
         const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());
         const coordString: string = coordStrings.join(', ');

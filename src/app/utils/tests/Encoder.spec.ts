@@ -4,12 +4,12 @@ import { Move } from 'src/app/jscaip/Move';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { comparableEquals } from 'src/app/utils/Comparable';
 import { JSONValue, Utils } from 'src/app/utils/utils';
-import { Encoder, MoveEncoder } from '../Encoder';
+import { AbstractEncoder, Encoder } from '../Encoder';
 
 export class EncoderTestUtils {
-    public static expectToBeBijective<T>(encoder: Encoder<T>, value: T): void {
-        const encoded: JSONValue = encoder.encode(value);
-        const decoded: T = encoder.decode(encoded);
+    public static expectToBeBijective<T>(encoder: AbstractEncoder<T>, value: T): void {
+        const encoded: JSONValue = encoder.encodeValue(value);
+        const decoded: T = encoder.decodeValue(encoded);
         expect(comparableEquals(decoded, value)).withContext(`Expected decoded value (${decoded}) to be ${value}`).toBeTrue();
     }
 }
@@ -20,11 +20,8 @@ describe('MoveEncoder', () => {
             public toString(): string {
                 return `${this.getStart().toString()} -> ${this.getEnd().toString()}`;
             }
-            public equals(other: this): boolean {
-                return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
-            }
         }
-        const myMoveEncoder: MoveEncoder<MyMove> = MoveEncoder.tuple<MyMove, [Coord, Coord]>(
+        const myMoveEncoder: Encoder<MyMove> = Encoder.tuple<MyMove, [Coord, Coord]>(
             [Coord.encoder, Coord.encoder],
             (move: MyMove): [Coord, Coord] => [move.getStart(), move.getEnd()],
             (fields: [Coord, Coord]): MyMove => new MyMove(fields[0], fields[1]));
@@ -47,8 +44,8 @@ describe('MoveEncoder', () => {
             }
         }
 
-        const myComplexMoveEncoder: MoveEncoder<MyComplexMove> =
-            MoveEncoder.tuple<MyComplexMove, [Coord, Coord, Coord]>(
+        const myComplexMoveEncoder: Encoder<MyComplexMove> =
+            Encoder.tuple<MyComplexMove, [Coord, Coord, Coord]>(
                 [Coord.encoder, Coord.encoder, Coord.encoder],
                 (move: MyComplexMove): [Coord, Coord, Coord] => move.coords,
                 (fields: [Coord, Coord, Coord]): MyComplexMove => new MyComplexMove(fields));
@@ -60,14 +57,14 @@ describe('MoveEncoder', () => {
         });
     });
     describe('disjunction', () => {
-        const encoder1: Encoder<number> = MoveEncoder.identity<number>();
-        const encoder2: Encoder<boolean> = MoveEncoder.identity<boolean>();
-        const encoder: MoveEncoder<number | boolean> =
-            MoveEncoder.disjunction(encoder1,
-                                    encoder2,
-                                    (value : number | boolean): value is number => {
-                                        return typeof(value) === 'number';
-                                    });
+        const encoder1: AbstractEncoder<number> = Encoder.identity<number>();
+        const encoder2: AbstractEncoder<boolean> = Encoder.identity<boolean>();
+        const encoder: Encoder<number | boolean> =
+            Encoder.disjunction(encoder1,
+                                encoder2,
+                                (value : number | boolean): value is number => {
+                                    return typeof(value) === 'number';
+                                });
         it('should have a bijective encoder', () => {
             EncoderTestUtils.expectToBeBijective(encoder, 0 as number | boolean);
             EncoderTestUtils.expectToBeBijective(encoder, 1 as number | boolean);

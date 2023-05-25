@@ -29,7 +29,7 @@ describe('PenteRules', () => {
         const state: PenteState = PenteState.getInitialState();
 
         // When doing a drop on an empty space
-        const move: PenteMove = PenteMove.of(new Coord(9, 8));
+        const move: PenteMove = PenteMove.from(new Coord(9, 8));
 
         // Then it should succeed
         const expectedState: PenteState = new PenteState([
@@ -60,7 +60,7 @@ describe('PenteRules', () => {
         const state: PenteState = PenteState.getInitialState();
 
         // When doing a drop on an occupied space
-        const move: PenteMove = PenteMove.of(new Coord(9, 9));
+        const move: PenteMove = PenteMove.from(new Coord(9, 9));
 
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
@@ -90,7 +90,7 @@ describe('PenteRules', () => {
         ], [0, 0], 3);
 
         // When doing a drop to make a sandwich
-        const move: PenteMove = PenteMove.of(new Coord(9, 6));
+        const move: PenteMove = PenteMove.from(new Coord(9, 6));
 
         // Then it should make a delicious sandwich
         const expectedState: PenteState = new PenteState([
@@ -141,7 +141,7 @@ describe('PenteRules', () => {
         ], [0, 0], 3);
 
         // When doing a drop to sandwich twice
-        const move: PenteMove = PenteMove.of(new Coord(9, 6));
+        const move: PenteMove = PenteMove.from(new Coord(9, 6));
 
         // Then it should make the triplette
         const expectedState: PenteState = new PenteState([

@@ -15,7 +15,7 @@ export abstract class HivePieceRules {
 
     private static INSTANCES: MGPOptional<Record<HivePieceKind, HivePieceRules>> = MGPOptional.empty();
 
-    public static from(piece: HivePiece): HivePieceRules {
+    public static of(piece: HivePiece): HivePieceRules {
         if (HivePieceRules.INSTANCES.isAbsent()) {
             HivePieceRules.INSTANCES = MGPOptional.of({
                 'QueenBee': HiveQueenBeeRules.get(),

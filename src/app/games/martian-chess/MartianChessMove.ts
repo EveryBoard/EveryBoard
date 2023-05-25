@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -21,8 +21,8 @@ export class MartianChessMoveFailure {
 
 export class MartianChessMove extends MoveCoordToCoord {
 
-    public static encoder: MoveEncoder<MartianChessMove> = MoveEncoder.tuple(
-        [Coord.encoder, Coord.encoder, MoveEncoder.identity<boolean>()],
+    public static encoder: Encoder<MartianChessMove> = Encoder.tuple(
+        [Coord.encoder, Coord.encoder, Encoder.identity<boolean>()],
         (move: MartianChessMove): [Coord, Coord, boolean] => [move.getStart(), move.getEnd(), move.calledTheClock],
         (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
     );
@@ -51,7 +51,7 @@ export class MartianChessMove extends MoveCoordToCoord {
                                       this.getEnd().x + ', ' + this.getEnd().y + ')' +
                                       ending + ')';
     }
-    public equals(other: MartianChessMove): boolean {
+    public override equals(other: MartianChessMove): boolean {
         if (this.getStart().equals(other.getStart()) === false) return false;
         if (this.getEnd().equals(other.getEnd()) === false) return false;
         return this.calledTheClock === other.calledTheClock;

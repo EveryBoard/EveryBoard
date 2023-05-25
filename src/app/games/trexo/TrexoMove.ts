@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { assert } from 'src/app/utils/assert';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoState } from './TrexoState';
@@ -11,7 +11,7 @@ import { TrexoState } from './TrexoState';
  */
 export class TrexoMove extends MoveWithTwoCoords {
 
-    public static encoder: MoveEncoder<TrexoMove> = MoveWithTwoCoords.getFallibleEncoder(TrexoMove.from);
+    public static encoder: Encoder<TrexoMove> = MoveWithTwoCoords.getEncoder(TrexoMove.from);
 
     public static from(zero: Coord, one: Coord): MGPFallible<TrexoMove> {
         assert(zero.isInRange(TrexoState.SIZE, TrexoState.SIZE), `${ zero.toString() } is out of the TrexoBoard!`);

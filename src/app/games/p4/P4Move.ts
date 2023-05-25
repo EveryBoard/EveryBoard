@@ -1,4 +1,4 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { JSONValueWithoutArray } from 'src/app/utils/utils';
 
@@ -11,11 +11,11 @@ export class P4Move extends Move {
     public static FIVE: P4Move = new P4Move(5);
     public static SIX: P4Move = new P4Move(6);
 
-    public static encoder: MoveEncoder<P4Move> = new class extends MoveEncoder<P4Move> {
-        public encodeMove(move: P4Move): JSONValueWithoutArray {
+    public static encoder: Encoder<P4Move> = new class extends Encoder<P4Move> {
+        public encode(move: P4Move): JSONValueWithoutArray {
             return move.x;
         }
-        public decodeMove(encodedMove: JSONValueWithoutArray): P4Move {
+        public decode(encodedMove: JSONValueWithoutArray): P4Move {
             return P4Move.of(encodedMove as number);
         }
     };

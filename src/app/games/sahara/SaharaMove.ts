@@ -2,7 +2,7 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { SaharaFailure } from './SaharaFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -10,7 +10,8 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class SaharaMove extends MoveCoordToCoord {
-    public static encoder: MoveEncoder<SaharaMove> = MoveWithTwoCoords.getFallibleEncoder(SaharaMove.from);
+
+    public static encoder: Encoder<SaharaMove> = MoveWithTwoCoords.getEncoder(SaharaMove.from);
 
     public static checkDistanceAndLocation(start: Coord, end: Coord): MGPValidation {
         const distance: number = start.getOrthogonalDistance(end);
@@ -54,11 +55,6 @@ export class SaharaMove extends MoveCoordToCoord {
         const dx: number = Math.abs(this.getStart().x - this.getEnd().x);
         const dy: number = Math.abs(this.getStart().y - this.getEnd().y);
         return dx + dy === 1;
-    }
-    public equals(other: SaharaMove): boolean {
-        if (other === this) return true;
-        if (other.getStart().equals(this.getStart()) === false) return false;
-        return other.getEnd().equals(this.getEnd());
     }
     public toString(): string {
         return 'SaharaMove(' + this.getStart() + '->' + this.getEnd() + ')';

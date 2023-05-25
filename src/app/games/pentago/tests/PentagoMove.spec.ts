@@ -44,8 +44,8 @@ describe('PentagoMove', () => {
             PentagoMove.withRotation(2, 3, 0, false),
         ];
         for (const move of moves) {
-            const encodedMove: JSONValue = PentagoMove.encoder.encode(move);
-            const decodedMove: PentagoMove = PentagoMove.encoder.decode(encodedMove);
+            const encodedMove: JSONValue = PentagoMove.encoder.encodeValue(move);
+            const decodedMove: PentagoMove = PentagoMove.encoder.decodeValue(encodedMove);
             expect(move.equals(decodedMove)).toBeTrue();
         }
     });

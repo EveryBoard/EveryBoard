@@ -88,8 +88,8 @@ describe('LascaMove', () => {
             const move: LascaMove = LascaMove.fromStep(new Coord(0, 0), new Coord(1, 1)).get();
 
             // When encoding it then decoding the result
-            const encoded: JSONValue = LascaMove.encoder.encode(move);
-            const decoded: LascaMove = LascaMove.encoder.decode(encoded);
+            const encoded: JSONValue = LascaMove.encoder.encodeValue(move);
+            const decoded: LascaMove = LascaMove.encoder.decodeValue(encoded);
 
             // Then the decoded value should be the original value
             expect(decoded).toEqual(move);
@@ -100,8 +100,8 @@ describe('LascaMove', () => {
             const move: LascaMove = LascaMove.fromCapture(steppedCoords).get();
 
             // When encoding it then decoding the result
-            const encoded: JSONValue = LascaMove.encoder.encode(move);
-            const decoded: LascaMove = LascaMove.encoder.decode(encoded);
+            const encoded: JSONValue = LascaMove.encoder.encodeValue(move);
+            const decoded: LascaMove = LascaMove.encoder.decodeValue(encoded);
 
             // Then the decoded value should be the original value
             expect(decoded).toEqual(move);

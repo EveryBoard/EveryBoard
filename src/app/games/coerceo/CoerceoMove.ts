@@ -1,11 +1,13 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Vector } from 'src/app/jscaip/Vector';
-import { MoveEncoder } from 'src/app/utils/Encoder';
-import { Move } from 'src/app/jscaip/Move';
+import { Encoder } from 'src/app/utils/Encoder';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoFailure } from './CoerceoFailure';
+import { Utils } from 'src/app/utils/utils';
+import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class CoerceoStep implements ComparableObject {
 
@@ -49,74 +51,55 @@ export class CoerceoStep implements ComparableObject {
     }
 }
 
-export class CoerceoMove extends Move {
+export class CoerceoNormalMove extends MoveCoordToCoord {
 
-    private static tileExchangeEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
-        [Coord.encoder],
-        (m: CoerceoMove): [Coord] => [m.capture.get()],
-        (fields: [Coord]): CoerceoMove => CoerceoMove.fromTilesExchange(fields[0]));
+    public static readonly encoder: Encoder<CoerceoNormalMove> = MoveCoordToCoord.getEncoder(CoerceoNormalMove.from);
 
-    private static movementEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
-        [Coord.encoder, Coord.encoder],
-        (m: CoerceoMove): [Coord, Coord] => [m.start.get(), m.landingCoord.get()],
-        (fields: [Coord, Coord]): CoerceoMove => CoerceoMove.fromCoordToCoord(fields[0], fields[1]));
-
-    public static encoder: MoveEncoder<CoerceoMove> = MoveEncoder.disjunction(
-        CoerceoMove.tileExchangeEncoder,
-        CoerceoMove.movementEncoder,
-        (m: CoerceoMove): m is CoerceoMove => m.isTileExchange());
-
-    public static fromMovement(start: Coord,
-                               step: CoerceoStep): CoerceoMove
-    {
-        if (start.isNotInRange(15, 10)) {
-            throw new Error('Starting coord cannot be out of range (width: 15, height: 10).');
-        }
-        const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
-        if (landingCoord.isNotInRange(15, 10)) {
-            throw new Error('Landing coord cannot be out of range (width: 15, height: 10).');
-        }
-        return new CoerceoMove(MGPOptional.of(start),
-                               MGPOptional.of(step),
-                               MGPOptional.of(landingCoord),
-                               MGPOptional.empty());
-    }
-    public static fromTilesExchange(capture: Coord): CoerceoMove {
-        if (capture.isNotInRange(15, 10)) {
-            throw new Error('Captured coord cannot be out of range (width: 15, height: 10).');
-        }
-        return new CoerceoMove(MGPOptional.empty(),
-                               MGPOptional.empty(),
-                               MGPOptional.empty(),
-                               MGPOptional.of(capture));
-    }
-    public static fromCoordToCoord(start: Coord, end: Coord): CoerceoMove {
+    public static from(start: Coord, end: Coord): MGPFallible<CoerceoNormalMove> {
         const step: CoerceoStep = CoerceoStep.fromCoords(start, end);
-        return CoerceoMove.fromMovement(start, step);
+        return MGPFallible.success(CoerceoNormalMove.fromMovement(start, step));
     }
-    private constructor(public readonly start: MGPOptional<Coord>,
-                        public readonly step: MGPOptional<CoerceoStep>,
-                        public readonly landingCoord: MGPOptional<Coord>,
-                        public readonly capture: MGPOptional<Coord>)
-    {
-        super();
+    public static fromMovement(start: Coord, step: CoerceoStep): CoerceoNormalMove {
+        Utils.assert(start.isInRange(15, 10), 'Starting coord cannot be out of range (width: 15, height: 10).');
+        const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
+        Utils.assert(landingCoord.isInRange(15, 10), 'Landing coord cannot be out of range (width: 15, height: 10).');
+        return new CoerceoNormalMove(start, landingCoord);
     }
-    public isTileExchange(): boolean {
-        return this.capture.isPresent();
+    private constructor(start: Coord, end: Coord) {
+        super(start, end);
     }
-    public toString(): string {
-        if (this.isTileExchange()) {
-            return 'CoerceoMove(' + this.capture.get().toString() + ')';
-        } else {
-            return 'CoerceoMove(' + this.start.get().toString() + ' > ' +
-                   this.step.get().toString() + ' > ' +
-                   this.landingCoord.get().toString() + ')';
-        }
+    public isTileExchange(): this is CoerceoTileExchangeMove {
+        return false;
     }
-    public equals(other: CoerceoMove): boolean {
-        if (!this.capture.equals(other.capture)) return false;
-        if (!this.start.equals(other.start)) return false;
-        if (!this.step.equals(other.step)) return false;
+    public override toString(): string {
+        return 'CoerceoNormalMove(' + this.getStart().toString() + ' > ' + this.getEnd().toString() + ')';
+    }
+}
+
+export class CoerceoTileExchangeMove extends MoveCoord {
+
+    public override toString(): string {
+        throw new Error('Method not implemented.');
+    }
+    public static encoder: Encoder<CoerceoTileExchangeMove> = MoveCoord.getEncoder(CoerceoTileExchangeMove.from);
+
+    public static from(capture: Coord): MGPFallible<CoerceoTileExchangeMove> {
+        Utils.assert(capture.isInRange(15, 10), 'Captured coord cannot be out of range (width: 15, height: 10).');
+        return MGPFallible.success(new CoerceoTileExchangeMove(capture));
+    }
+    private constructor(capture: Coord) {
+        super(capture.x, capture.y);
+    }
+    public isTileExchange(): this is CoerceoTileExchangeMove {
         return true;
     }
 }
+
+export type CoerceoMove = CoerceoTileExchangeMove | CoerceoNormalMove;
+
+export const CoerceoMoveEncoder: Encoder<CoerceoMove> =
+    Encoder.disjunction(CoerceoNormalMove.encoder,
+                        CoerceoTileExchangeMove.encoder,
+                        (move: CoerceoNormalMove): move is CoerceoNormalMove => {
+                            return move instanceof CoerceoNormalMove;
+                        });

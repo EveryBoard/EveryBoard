@@ -10,20 +10,20 @@ import { TrexoMove } from '../TrexoMove';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 
 const _____: TrexoPieceStack = TrexoPieceStack.EMPTY;
-const O1_T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 0)]);
-const O1_T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1)]);
-const O2_T2: TrexoPieceStack = TrexoPieceStack.from([
+const O1_T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);
+const O1_T1: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 1)]);
+const O2_T2: TrexoPieceStack = TrexoPieceStack.of([
     new TrexoPiece(Player.ZERO, 0),
     new TrexoPiece(Player.ZERO, 2),
 ]);
-const O1_T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 3)]);
-const X1_T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 0)]);
-const X1_T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1)]);
-const X2_T2: TrexoPieceStack = TrexoPieceStack.from([
+const O1_T3: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 3)]);
+const X1_T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
+const X1_T1: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 1)]);
+const X2_T2: TrexoPieceStack = TrexoPieceStack.of([
     new TrexoPiece(Player.ONE, 0),
     new TrexoPiece(Player.ONE, 2),
 ]);
-const X1_T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 3)]);
+const X1_T3: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 3)]);
 
 describe('TrexoComponent', () => {
 
@@ -46,19 +46,19 @@ describe('TrexoComponent', () => {
 
                 it('should create a third level', fakeAsync(async() => {
                     // Given a board with two level
-                    const X0_X2: TrexoPieceStack = TrexoPieceStack.from([
+                    const X0_X2: TrexoPieceStack = TrexoPieceStack.of([
                         new TrexoPiece(Player.ZERO, 0),
                         new TrexoPiece(Player.ZERO, 2),
                     ]);
-                    const X0_O3: TrexoPieceStack = TrexoPieceStack.from([
+                    const X0_O3: TrexoPieceStack = TrexoPieceStack.of([
                         new TrexoPiece(Player.ONE, 0),
                         new TrexoPiece(Player.ZERO, 3),
                     ]);
-                    const O1_X2: TrexoPieceStack = TrexoPieceStack.from([
+                    const O1_X2: TrexoPieceStack = TrexoPieceStack.of([
                         new TrexoPiece(Player.ZERO, 1),
                         new TrexoPiece(Player.ONE, 2),
                     ]);
-                    const O1_X3: TrexoPieceStack = TrexoPieceStack.from([
+                    const O1_X3: TrexoPieceStack = TrexoPieceStack.of([
                         new TrexoPiece(Player.ONE, 1),
                         new TrexoPiece(Player.ONE, 3),
                     ]);
@@ -305,11 +305,11 @@ describe('TrexoComponent', () => {
         }));
         it('should not transfer upper piece style to lower piece', fakeAsync(async() => {
             // Given one 3D display with one Stack in two color
-            const O0_X2: TrexoPieceStack = TrexoPieceStack.from([
+            const O0_X2: TrexoPieceStack = TrexoPieceStack.of([
                 new TrexoPiece(Player.ZERO, 0),
                 new TrexoPiece(Player.ONE, 2),
             ]);
-            const O1_X2: TrexoPieceStack = TrexoPieceStack.from([
+            const O1_X2: TrexoPieceStack = TrexoPieceStack.of([
                 new TrexoPiece(Player.ZERO, 1),
                 new TrexoPiece(Player.ONE, 2),
             ]);

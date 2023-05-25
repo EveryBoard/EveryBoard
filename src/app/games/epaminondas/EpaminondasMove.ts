@@ -1,13 +1,14 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 
 type EpaminondasMoveFields = [Coord, number, number, Direction];
 
 export class EpaminondasMove extends MoveCoord {
-    public static encoder: MoveEncoder<EpaminondasMove> = MoveEncoder.tuple(
-        [Coord.encoder, MoveEncoder.identity<number>(), MoveEncoder.identity<number>(), Direction.encoder],
+
+    public static encoder: Encoder<EpaminondasMove> = Encoder.tuple(
+        [Coord.encoder, Encoder.identity<number>(), Encoder.identity<number>(), Direction.encoder],
         (m: EpaminondasMove): EpaminondasMoveFields => [m.coord, m.movedPieces, m.stepSize, m.direction],
         (fields: EpaminondasMoveFields): EpaminondasMove =>
             new EpaminondasMove(fields[0].x, fields[0].y, fields[1], fields[2], fields[3]));

@@ -1,7 +1,8 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Coord } from '../Coord';
 import { MoveCoord } from '../MoveCoord';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 class MyMoveCoord extends MoveCoord {
     public toString(): string {
@@ -12,8 +13,8 @@ class MyMoveCoord extends MoveCoord {
 describe('MoveCoord', () => {
     describe('encoder', () => {
         it('should be bijective', () => {
-            const encoder: MoveEncoder<MyMoveCoord> =
-                MoveCoord.getEncoder((coord: Coord) => new MyMoveCoord(coord.x, coord.y));
+            const encoder: Encoder<MyMoveCoord> =
+                MoveCoord.getEncoder((coord: Coord) => MGPFallible.success(new MyMoveCoord(coord.x, coord.y)));
             EncoderTestUtils.expectToBeBijective(encoder, new MyMoveCoord(2, 2));
         });
     });

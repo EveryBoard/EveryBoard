@@ -1,6 +1,6 @@
 import { comparableEquals } from './Comparable';
 import { Encoder } from './Encoder';
-import { JSONValue } from './utils';
+import { JSONValue, JSONValueWithoutArray } from './utils';
 
 export class MGPOptional<T> {
 
@@ -20,9 +20,10 @@ export class MGPOptional<T> {
      */
     public static getEncoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
         return new class extends Encoder<MGPOptional<T>> {
-            public encode(opt: MGPOptional<T>): JSONValue {
+            public encode(opt: MGPOptional<T>): JSONValueWithoutArray {
                 if (opt.isPresent()) {
-                    return encoderT.encode(opt.get());
+                    // TODO: HALP, j'fais de la merde là je crois
+                    return encoderT.encodeValue(opt.get()) as JSONValueWithoutArray;
                 } else {
                     return null;
                 }
@@ -31,7 +32,7 @@ export class MGPOptional<T> {
                 if (encoded === null) {
                     return MGPOptional.empty();
                 } else {
-                    return MGPOptional.of(encoderT.decode(encoded));
+                    return MGPOptional.of(encoderT.decodeValue(encoded));
                 }
             }
         };

@@ -5,7 +5,7 @@ import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
-import { CoerceoMove, CoerceoStep } from './CoerceoMove';
+import { CoerceoNormalMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -71,19 +71,19 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     {
         super(board, turn);
     }
-    public applyLegalMovement(move: CoerceoMove): CoerceoState {
+    public applyLegalMovement(move: CoerceoNormalMove): CoerceoState {
         display(CoerceoState.VERBOSE, { coerceoState_applyLegalMovement: { object: this, move } });
-        const start: Coord = move.start.get();
-        const landing: Coord = move.landingCoord.get();
+        const start: Coord = move.getStart();
+        const landing: Coord = move.getEnd();
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
         newBoard[landing.y][landing.x] = FourStatePiece.ofPlayer(this.getCurrentPlayer());
         newBoard[start.y][start.x] = FourStatePiece.EMPTY;
 
         return new CoerceoState(newBoard, this.turn, this.tiles, this.captures);
     }
-    public doMovementCaptures(move: CoerceoMove): CoerceoState {
+    public doMovementCaptures(move: CoerceoNormalMove): CoerceoState {
         display(CoerceoState.VERBOSE, { coerceoState_doMovementCaptures: { object: this, move } });
-        const capturedCoords: Coord[] = this.getCapturedNeighbors(move.landingCoord.get());
+        const capturedCoords: Coord[] = this.getCapturedNeighbors(move.getEnd());
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
         for (const captured of capturedCoords) {

@@ -4,7 +4,7 @@ import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TaflComponent } from '../tafl.component';
@@ -157,7 +157,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
         });
         it('should have a bijective encoder', () => {
             const rules: R = testUtils.getComponent().rules;
-            const encoder: MoveEncoder<M> = testUtils.getComponent().encoder;
+            const encoder: Encoder<M> = testUtils.getComponent().encoder;
             const minimax: TaflMinimax = new TaflMinimax(rules, 'TaflMinimax');
             const firstTurnMoves: M[] = minimax
                 .getListMoves(rules.getInitialNode())

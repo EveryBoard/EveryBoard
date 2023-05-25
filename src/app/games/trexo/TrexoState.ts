@@ -24,9 +24,9 @@ export class TrexoPiece {
 
 export class TrexoPieceStack {
 
-    public static EMPTY: TrexoPieceStack = TrexoPieceStack.from([]);
+    public static EMPTY: TrexoPieceStack = TrexoPieceStack.of([]);
 
-    public static from(pieces: ReadonlyArray<TrexoPiece>): TrexoPieceStack {
+    public static of(pieces: ReadonlyArray<TrexoPiece>): TrexoPieceStack {
         let previousTurn: number = -1;
         for (const piece of pieces) {
             assert(previousTurn < piece.tileId, 'TrexoPieceStack: dropped turn should be ascending');
@@ -58,7 +58,7 @@ export class TrexoPieceStack {
         }
     }
     public add(piece: TrexoPiece): TrexoPieceStack {
-        return TrexoPieceStack.from(this.pieces.concat(piece));
+        return TrexoPieceStack.of(this.pieces.concat(piece));
     }
     public getPieceAt(z: number): TrexoPiece {
         assert(z < this.pieces.length, 'no element ' + z + 'in piece!');
