@@ -53,11 +53,14 @@ export class CoerceoStep implements ComparableObject {
 
 export class CoerceoNormalMove extends MoveCoordToCoord {
 
-    public static readonly encoder: Encoder<CoerceoNormalMove> = MoveCoordToCoord.getEncoder(CoerceoNormalMove.from);
+    public static readonly encoder: Encoder<CoerceoNormalMove> = MoveCoordToCoord.getEncoder(CoerceoNormalMove.strictFrom);
 
-    public static from(start: Coord, end: Coord): MGPFallible<CoerceoNormalMove> {
+    private static strictFrom(start: Coord, end: Coord): MGPFallible<CoerceoNormalMove> {
         const step: CoerceoStep = CoerceoStep.fromCoords(start, end);
         return MGPFallible.success(CoerceoNormalMove.fromMovement(start, step));
+    }
+    public static from(start: Coord, end: Coord): MGPFallible<CoerceoMove> {
+        return CoerceoNormalMove.strictFrom(start, end);
     }
     public static fromMovement(start: Coord, step: CoerceoStep): CoerceoNormalMove {
         Utils.assert(start.isInRange(15, 10), 'Starting coord cannot be out of range (width: 15, height: 10).');
@@ -81,11 +84,14 @@ export class CoerceoTileExchangeMove extends MoveCoord {
     public override toString(): string {
         throw new Error('Method not implemented.');
     }
-    public static encoder: Encoder<CoerceoTileExchangeMove> = MoveCoord.getEncoder(CoerceoTileExchangeMove.from);
+    public static encoder: Encoder<CoerceoTileExchangeMove> = MoveCoord.getEncoder(CoerceoTileExchangeMove.strictFrom);
 
-    public static from(capture: Coord): MGPFallible<CoerceoTileExchangeMove> {
+    private static strictFrom(capture: Coord): MGPFallible<CoerceoTileExchangeMove> {
         Utils.assert(capture.isInRange(15, 10), 'Captured coord cannot be out of range (width: 15, height: 10).');
         return MGPFallible.success(new CoerceoTileExchangeMove(capture));
+    }
+    public static from(capture: Coord): MGPFallible<CoerceoMove> {
+        return CoerceoTileExchangeMove.strictFrom(capture);
     }
     private constructor(capture: Coord) {
         super(capture.x, capture.y);

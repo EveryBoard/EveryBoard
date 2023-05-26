@@ -13,8 +13,11 @@ export class Coord3D extends Coord {
             (fields: [number, number, number]): T => generate(fields[0], fields[1], fields[2]).get(),
         );
     }
+    public static of(x: number, y: number, z: number): Coord3D {
+        return new Coord3D(x, y, z);
+    }
     public static from(x: number, y: number, z: number): MGPFallible<Coord3D> {
-        return MGPFallible.success(new Coord3D(x, y, z));
+        return MGPFallible.success(Coord3D.of(x, y,z));
     }
     public constructor(x: number, y: number, public readonly z: number) {
         super(x, y);

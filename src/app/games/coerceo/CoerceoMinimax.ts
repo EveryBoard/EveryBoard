@@ -26,7 +26,7 @@ export class CoerceoMinimax extends PlayerMetricsMinimax<CoerceoMove, CoerceoSta
             for (let x: number = 0; x < 15; x++) {
                 const captured: Coord = new Coord(x, y);
                 if (state.getPieceAt(captured) === OPPONENT) {
-                    const move: CoerceoMove = CoerceoTileExchangeMove.from(captured);
+                    const move: CoerceoMove = CoerceoTileExchangeMove.from(captured).get();
                     exchanges.push(move);
                 }
             }
