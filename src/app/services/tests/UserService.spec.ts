@@ -49,4 +49,7 @@ describe('UserService', () => {
             expect(userDAO.update).toHaveBeenCalledOnceWith('joserId', { lastUpdateTime: serverTimestamp() });
         });
     });
+    describe('getServerTime', () => {
+        it('should TODO')
+    });
 });

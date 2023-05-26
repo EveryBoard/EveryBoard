@@ -4,7 +4,7 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
 import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';

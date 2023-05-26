@@ -16,6 +16,7 @@ import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { Part } from 'src/app/domain/Part';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
+import { UserService } from '../UserService';
 
 export class ObservedPartServiceMock {
 
@@ -75,6 +76,7 @@ describe('ObservedPartService', () => {
     let observedPartService: ObservedPartService;
     let connectedUserService: ConnectedUserService;
     let userDAO: UserDAO;
+    let userService: UserService;
     const opponentId: string = UserMocks.OPPONENT_AUTH_USER.id;
     let alreadyDestroyed: boolean;
 
@@ -89,11 +91,13 @@ describe('ObservedPartService', () => {
         }).compileComponents();
 
         userDAO = TestBed.inject(UserDAO);
-        await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
-        await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
+        userService = TestBed.inject(UserService);
         connectedUserService = TestBed.inject(ConnectedUserService);
         observedPartService = TestBed.inject(ObservedPartService) //TestBed.inject(ObservedPartService) //  new ObservedPartService(userDAO, connectedUserService);
         alreadyDestroyed = false;
+
+        await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
+        await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
     });
     describe('login/logout', () => {
         it('should forget the observedPart when user is disconnected', fakeAsync(async() => {
@@ -102,17 +106,19 @@ describe('ObservedPartService', () => {
             let observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
             const subscription: Subscription =
                 observedPartService.subscribeToObservedPart((newValue: MGPOptional<FocusedPart>) => {
+                    console.log('>>>> OBSERVING: ' + JSON.stringify(newValue))
                     observedPart = newValue;
                 });
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
             expect(observedPart.isPresent()).toBeTrue();
 
-            // When connected user logs out
-            ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+           // When connected user logs out
+           console.log('>>>>> logging out')
+           ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
 
-            // Then the service does not have an observed part anymore
-            expect(observedPart.isAbsent()).toBeTrue();
-            subscription.unsubscribe();
+           // Then the service does not have an observed part anymore
+           expect(observedPart.isAbsent()).toBeTrue();
+           subscription.unsubscribe();
         }));
         it('should remember the observedPart when user logs in', fakeAsync(async() => {
             // Given a registered and disconnected user observing a game
@@ -150,7 +156,7 @@ describe('ObservedPartService', () => {
             const subscription: Subscription =
                 observedPartService.subscribeToObservedPart((observedPart: MGPOptional<FocusedPart>) => {
                     lastValue = observedPart;
-                    window.setTimeout(resolvePromise, 2000);
+                    resolvePromise();
                 });
             // When the UserDAO modify observedPart in the user document
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
@@ -266,6 +272,7 @@ describe('ObservedPartService', () => {
         beforeEach(() => {
             // Given a service observing a player
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            userDAO.update(opponentId, { lastUpdateTime: 1234 });//TODO: should already been done?!
         });
         it('should return SUCCESS if user do not observe any part', fakeAsync(async() => {
             // Given a ConnectedUserService where user don't observe any part
@@ -278,9 +285,12 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already playing', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
+            console.log('userDAO.update')
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
+            tick(1000);
 
             // When asking if you can create
+            console.log('checking now')
             const validation: MGPValidation = observedPartService.canUserCreate();
 
             // Then it's should be refused
@@ -447,12 +457,12 @@ describe('ObservedPartService', () => {
         }));
     });
     describe('unsubscriptions', () => {
-        it('should unsubscribe from userDAO when destroying service', fakeAsync(async() => {
+        it('should unsubscribe from userService when destroying service', fakeAsync(async() => {
             // Given a service on which user is logged in
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(userDAO, 'subscribeToChanges');
+            const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(userService, 'observeUserOnServer');
             // Since the subscription is done in the constructor, we need to spy it before
-            observedPartService = TestBed.inject(ObservedPartService); // new ObservedPartService(userDAO, connectedUserService);
+            observedPartService = new ObservedPartService(userDAO, userService, connectedUserService);
 
             // When the service is destroyed
             observedPartService.ngOnDestroy();
@@ -465,7 +475,7 @@ describe('ObservedPartService', () => {
             // Given a service
             const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(connectedUserService, 'subscribeToUser');
             // Since the subscription is done in the constructor, we need to spy it before
-            observedPartService = TestBed.inject(ObservedPartService); // new ObservedPartService(userDAO, connectedUserService);
+            observedPartService = new ObservedPartService(userDAO, userService, connectedUserService);
 
             // When the service is destroyed
             observedPartService.ngOnDestroy();
@@ -497,6 +507,7 @@ describe('ObservedPartService', () => {
 
     afterEach(async() => {
         if (alreadyDestroyed === false) {
+            console.log('destroying')
             observedPartService.ngOnDestroy();
         }
     });

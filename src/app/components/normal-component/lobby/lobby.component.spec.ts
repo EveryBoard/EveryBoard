@@ -347,7 +347,7 @@ describe('LobbyComponent', () => {
     it('should unsubscribe from observed part when destroying component', fakeAsync(async() => {
         // Given an initialized lobby
         const expectUnsubscribeToHaveBeenCalled: () => void =
-            prepareUnsubscribeCheck(TestBed.inject(ObservedPartService), 'subscribeToActiveUsers');
+            prepareUnsubscribeCheck(TestBed.inject(ObservedPartService), 'subscribeToObservedPart');
         testUtils.detectChanges();
 
         // When it is destroyed

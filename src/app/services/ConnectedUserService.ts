@@ -159,31 +159,6 @@ export class ConnectedUserService implements OnDestroy {
                 }
             }));
     }
-    /**
-     * Gets the server time by relying on the presence token of the user.
-     * Can only be called if there is a logged in user.
-     * @returns the "current" time of the server
-     */
-    // TODO: test it
-    public async getServerTime(): Promise<Timestamp> {
-        assert(this.user.isPresent(), 'ConnectedUserService.getUserTime must be called for logged in users');
-        const userId: string = this.user.get().id;
-        // We force the presence token update, and once we receive it, check the time written by firebase
-        return new Promise((resolve: (result: Timestamp) => void) => {
-            let updateSent: boolean = false;
-            const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>): void => {
-                if (user.get().lastUpdateTime == null) {
-                    // We know that the update has been sent when we actually see a null here
-                    updateSent = true;
-                } else if (updateSent) {
-                    subscription.unsubscribe();
-                    resolve(user.get().lastUpdateTime as Timestamp);
-                }
-            };
-            const subscription: Subscription = this.userDAO.subscribeToChanges(userId, callback);
-            void this.userService.updatePresenceToken(userId);
-        });
-    }
     public emailVerified(user: FireAuth.User): boolean {
         // Only needed for mocking purposes
         return user.emailVerified;
