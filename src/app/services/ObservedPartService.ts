@@ -49,9 +49,8 @@ export class ObservedPartService implements OnDestroy {
         } else { // new user logged in
             console.log('user logged in')
             // First we need to get the current observed part
-            const observedPart: MGPOptional<User> = await this.userDAO.read(user.id);
-            console.log('observed part is: ' + observedPart.get().observedPart)
-            this.onObservedPartUpdate(observedPart.get().observedPart)
+            const userInDB: MGPOptional<User> = await this.userDAO.read(user.id);
+            this.onObservedPartUpdate(userInDB.get().observedPart)
             // And then we subscribe to any change to the user's observed part
             this.userSubscription =
                 this.userService.observeUserOnServer(user.id, (docOpt: MGPOptional<User>) => {
@@ -63,13 +62,15 @@ export class ObservedPartService implements OnDestroy {
     }
     private onObservedPartUpdate(newObservedPart: FocusedPart | null | undefined): void {
         // Undefined if the user had no observedPart, null if it has been removed
+        console.log('observed part is: ' + JSON.stringify(newObservedPart))
         const previousObservedPart: MGPOptional<FocusedPart> = this.observedPart;
         const stayedNull: boolean = newObservedPart == null && previousObservedPart.isAbsent();
         const stayedItselfAsNonNull: boolean = newObservedPart != null &&
                                                previousObservedPart.equalsValue(newObservedPart);
         const valueChanged: boolean = stayedNull === false && stayedItselfAsNonNull === false;
         console.log({valueChanged, stayedNull, stayedItselfAsNonNull})
-        if (valueChanged || this.observedPartLoading) {
+        if (valueChanged) { //  || this.observedPartLoading) {
+            console.log('pushing')
             // this.observedPartLoading = false;
             this.observedPart = MGPOptional.ofNullable(newObservedPart);
             this.observedPartRS.next(this.observedPart);
@@ -97,7 +98,6 @@ export class ObservedPartService implements OnDestroy {
     }
     public removeObservedPart(): Promise<void> {
         assert(this.connectedUserService.user.isPresent(), 'Should not call removeObservedPart when not connected');
-        console.log('REMOVING')
         return this.userDAO.update(this.connectedUserService.user.get().id, { observedPart: null });
     }
     public subscribeToObservedPart(callback: (optFocusedPart: MGPOptional<FocusedPart>) => void): Subscription {
@@ -105,10 +105,8 @@ export class ObservedPartService implements OnDestroy {
     }
     public canUserCreate(): MGPValidation {
         if (this.observedPart.isAbsent()) {
-            console.log('canCreate: YES')
             return MGPValidation.SUCCESS;
         } else {
-            console.log('canCreate: NO')
             const message: string = ObservedPartService.roleToMessage.get(this.observedPart.get().role).get()();
             return MGPValidation.failure(message);
         }

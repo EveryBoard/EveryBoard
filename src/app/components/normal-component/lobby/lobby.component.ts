@@ -52,7 +52,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
                 this.activeParts = activeParts;
             });
 
-        console.log('subscribe to observed part')
         this.observedPartSubscription = this.observedPartService.subscribeToObservedPart
             ((observed: MGPOptional<FocusedPart>) => {
                 this.createTabClasses = [];
