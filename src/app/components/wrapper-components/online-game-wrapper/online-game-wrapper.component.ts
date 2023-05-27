@@ -351,10 +351,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public mustReply(): boolean {
-        return this.requestAwaitingReply().isPresent();
+        return this.requestAwaitingReplyFromUs().isPresent();
     }
-    public requestAwaitingReply(): MGPOptional<RequestType> {
-        return this.requestManager.getOpenRequest(this.role as Player);
+    public requestAwaitingReplyFromUs(): MGPOptional<RequestType> {
+        if (this.role.isPlayer() === false) return MGPOptional.empty();
+        return this.requestManager.getRequestAwaitingReplyFrom(this.role as Player);
+    }
+    public requestAwaitingReplyFromOpponent(): MGPOptional<RequestType> {
+        if (this.role.isPlayer() === false) return MGPOptional.empty();
+        return this.requestManager.getRequestAwaitingReplyFrom((this.role as Player).getOpponent());
     }
     public deniedRequest(): MGPOptional<RequestType> {
         return this.requestManager.deniedRequest();
