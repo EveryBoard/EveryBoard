@@ -11,6 +11,7 @@ import { MGPMap } from '../utils/MGPMap';
 import { Localized } from '../utils/LocaleUtils';
 import { UserService } from './UserService';
 
+// TODO: still a bug (that was there already): when part in creation, if you log out, it crashes
 @Injectable({
     providedIn: 'root',
 })
@@ -48,19 +49,20 @@ export class ObservedPartService implements OnDestroy {
             this.observedPartRS.next(MGPOptional.empty());
         } else { // new user logged in
             console.log('OPS: LOG IN')
-            // We need subscribe to any change to the user's observed part
+            // We need to subscribe to any change to the user's observed part
             this.userSubscription =
                 this.userService.observeUserOnServer(user.id, (docOpt: MGPOptional<User>) => {
                     assert(docOpt.isPresent(), 'Observing part service expected user to already have a document!');
-                    const doc: User = docOpt.get();
-                    console.log('RECEIVING in callback')
-                    this.onObservedPartUpdate(doc.observedPart);
+                        const doc: User = docOpt.get();
+                        console.log('RECEIVING in callback')
+                        this.onObservedPartUpdate(doc.observedPart);
                 });
             // Then we can get the current observed part.
             // This must be done after subscribing, otherwise we risk missing an update.
-           // TODO const userInDB: MGPOptional<User> = await this.userDAO.read(user.id);
-           // TODO console.log('RECEIVING out of callback')
-           // TODO this.onObservedPartUpdate(userInDB.get().observedPart)
+            // (impossible in practice, but possible in the tests)
+            const userInDB: MGPOptional<User> = await this.userDAO.read(user.id);
+            console.log('RECEIVING out of callback')
+            this.onObservedPartUpdate(userInDB.get().observedPart)
         }
     }
     private onObservedPartUpdate(newObservedPart: FocusedPart | null | undefined): void {
@@ -71,9 +73,9 @@ export class ObservedPartService implements OnDestroy {
         const stayedItselfAsNonNull: boolean = newObservedPart != null &&
                                                previousObservedPart.equalsValue(newObservedPart);
         const valueChanged: boolean = stayedNull === false && stayedItselfAsNonNull === false;
-        if (valueChanged) { //  || this.observedPartLoading) {
+        if (valueChanged) { // || this.observedPartLoading) {
             console.log('OPS.onUpdate: pushing update')
-            // this.observedPartLoading = false;
+            this.observedPartLoading = false;
             this.observedPart = MGPOptional.ofNullable(newObservedPart);
             this.observedPartRS.next(this.observedPart);
         }

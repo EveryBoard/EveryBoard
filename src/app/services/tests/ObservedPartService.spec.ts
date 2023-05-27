@@ -71,7 +71,7 @@ export class ObservedPartServiceMock {
     }
 }
 
-describe('ObservedPartService', () => {
+fdescribe('ObservedPartService', () => {
 
     let observedPartService: ObservedPartService;
     let connectedUserService: ConnectedUserService;
@@ -117,6 +117,7 @@ describe('ObservedPartService', () => {
            ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
 
            // Then the service does not have an observed part anymore
+            console.log('CHECKING')
            expect(observedPart.isAbsent()).toBeTrue();
            subscription.unsubscribe();
         }));
@@ -142,6 +143,25 @@ describe('ObservedPartService', () => {
             expect(observedPart.isPresent()).toBeTrue();
             subscription.unsubscribe();
         }));
+    it('should keep observing users even when they are not logged in yet', fakeAsync(async() => {
+        // This caused the infamous "part creation after login" bug
+        // Given an observed part service with a disconnected user
+        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        let observedPartSeen: boolean = false;
+        const subscription: Subscription =
+            observedPartService.subscribeToObservedPart((value: MGPOptional<FocusedPart>) => {
+                observedPartSeen = value.isPresent();
+            });
+
+        // When the user logs in and sets an observed part
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        await userDAO.update(UserMocks.CONNECTED_AUTH_USER.id, { observedPart: { id: '1234', typeGame: 'P4' } });
+
+        // Then the service should know about it
+        expect(observedPartSeen).toBeTrue();
+
+        subscription.unsubscribe();
+    }));
     });
     describe('observed part', () => {
         it('should update observedPart observable when UserDAO touches it', fakeAsync(async() => {
@@ -272,7 +292,6 @@ describe('ObservedPartService', () => {
         beforeEach(() => {
             // Given a service observing a player
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            userDAO.update(opponentId, { lastUpdateTime: 1234 });//TODO: should already been done?!
         });
         it('should return SUCCESS if user do not observe any part', fakeAsync(async() => {
             // Given a ConnectedUserService where user don't observe any part
@@ -287,7 +306,6 @@ describe('ObservedPartService', () => {
             // Given a ConnectedUserService where user observe a part
             console.log('userDAO.update')
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
-            tick(1000);
 
             // When asking if you can create
             console.log('checking now')
@@ -485,25 +503,6 @@ describe('ObservedPartService', () => {
             expectUnsubscribeToHaveBeenCalled();
         }));
     });
-    it('should keep observing users even when they are not logged in yet', fakeAsync(async() => {
-        // This caused the infamous "part creation after login" bug
-        // Given an observed part service with a disconnected user
-        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
-        let observedPartSeen: boolean = false;
-        const subscription: Subscription =
-            observedPartService.subscribeToObservedPart((value: MGPOptional<FocusedPart>) => {
-                observedPartSeen = value.isPresent();
-            });
-
-        // When the user logs in and sets an observed part
-        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        await userDAO.update(UserMocks.CONNECTED_AUTH_USER.id, { observedPart: { id: '1234', typeGame: 'P4' } });
-
-        // Then the service should know about it
-        expect(observedPartSeen).toBeTrue();
-
-        subscription.unsubscribe();
-    }));
 
     afterEach(async() => {
         if (alreadyDestroyed === false) {
