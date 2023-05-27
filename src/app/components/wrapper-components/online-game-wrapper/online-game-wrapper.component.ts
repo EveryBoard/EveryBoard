@@ -91,7 +91,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     // Gets the server time by relying on the presence token of the user.
     private async getServerTime(): Promise<Timestamp> {
-        // TODO FOR REVIEW: connais-tu un meilleur endroit où cette fonction pourrait aller ?  Dans connectedUserService ?
         const userId: string = this.connectedUserService.user.get().id;
         // We force the presence token update, and once we receive it, check the time written by firebase
         return new Promise((resolve: (result: Timestamp) => void) => {
@@ -334,20 +333,21 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.endGame === true) {
             return false;
         }
-        return this.opponent != null;
+        const hasOpponent: boolean = this.opponent != null;
+        return hasOpponent;
     }
     public requestsAvailable(): RequestInfo[] {
         const requests: RequestType[] = [];
         if (this.canAskTakeBack()) requests.push('TakeBack');
         if (this.canProposeDraw()) requests.push('Draw');
         if (this.endGame) requests.push('Rematch');
-        return requests.map((r: RequestType) =>OGWCRequestManagerService.requestInfos[r]);
+        return requests.map((r: RequestType) => OGWCRequestManagerService.requestInfos[r]);
     }
     public mustReply(): boolean {
         return this.requestAwaitingReply().isPresent();
     }
     public requestAwaitingReply(): MGPOptional<RequestInfo> {
-        return this.requestManager.mustReply(this.role as Player);
+        return this.requestManager.getOpenRequest(this.role as Player);
     }
     public deniedRequest(): MGPOptional<RequestInfo> {
         return this.requestManager.deniedRequest();

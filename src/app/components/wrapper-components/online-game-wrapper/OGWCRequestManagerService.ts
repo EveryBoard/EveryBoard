@@ -94,7 +94,7 @@ export class OGWCRequestManagerService {
         if (this.forbiddenRequests.contains(request)) return false;
         return true;
     }
-    public mustReply(player: Player): MGPOptional<RequestInfo> {
+    public getOpenRequest(player: Player): MGPOptional<RequestInfo> {
         // Different from canMakeRequest, as we can play if our requests have not been answered for example.
         if (this.requestAwaitingReply.isPresent() &&
             this.requestAwaitingReply.get().player === player.getOpponent().value)
