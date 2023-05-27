@@ -520,17 +520,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
     it('should allow player to pass when gameComponent allows it', fakeAsync(async() => {
+        // Given a game where it is possible to pass
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-        testUtils.expectElementNotToExist('#pass');
+        testUtils.expectElementToBeDisabled('#pass');
 
         wrapper.gameComponent.canPass = true;
-        wrapper.gameComponent.pass = async(): Promise<MGPValidation> => {
-            return MGPValidation.SUCCESS;
-        };
+        spyOn(wrapper.gameComponent, 'pass').and.resolveTo(MGPValidation.SUCCESS);
         testUtils.detectChanges();
 
+        // When clicking on the pass button
+        testUtils.expectElementToBeEnabled('#pass');
         await testUtils.clickElement('#pass');
 
+        // Then it should pass
+        expect(wrapper.gameComponent.pass).toHaveBeenCalledOnceWith();
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
     describe('ObservedPart Change', () => {
@@ -722,14 +725,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 testUtils.detectChanges();
 
                 // Then it should not be possible to ask a second time
-                testUtils.expectElementNotToExist('#askTakeBack');
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
             }));
             it('should not propose to Player.ONE to take back before any move', fakeAsync(async() => {
                 // Given a board where nobody already played
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
                 // When displaying the page
                 // Then the take back button should not be there
-                testUtils.expectElementNotToExist('#askTakeBack');
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
             }));
             it('should not propose to Player.ONE to take back before their first move', fakeAsync(async() => {
                 // Given a board where nobody already played
@@ -737,7 +740,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When receiving a new move
                 await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
                 // Then the take back button should not be there
-                testUtils.expectElementNotToExist('#askTakeBack');
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
             }));
             it('should only propose to accept take back when opponent asked', fakeAsync(async() => {
                 // Given a board where opponent did not ask to take back and where both player could have ask
@@ -810,7 +813,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await askTakeBack();
                 await receiveReply(Player.ONE, 'Reject', 'TakeBack');
 
-                testUtils.expectElementNotToExist('#askTakeBack');
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
@@ -1009,7 +1012,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // Then it should not allow us to propose a second draw
-            testUtils.expectElementNotToExist('#proposeDraw');
+            testUtils.expectElementToBeDisabled('#proposeDraw');
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
@@ -1038,7 +1041,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveReply(Player.ONE, 'Reject', 'Draw');
 
             // Then we cannot request to draw anymore
-            testUtils.expectElementNotToExist('#proposeDraw');
+            testUtils.expectElementToBeDisabled('#proposeDraw');
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
@@ -1423,13 +1426,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should show propose button only when game is ended', fakeAsync(async() => {
             // Given a game that is not finished
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-            testUtils.expectElementNotToExist('#proposeRematch');
+            testUtils.expectElementToBeDisabled('#proposeRematch');
 
             // When it is finished
             await testUtils.expectInterfaceClickSuccess('#resign', true);
 
             // Then it should allow to propose rematch
-            testUtils.expectElementToExist('#proposeRematch');
+            testUtils.expectElementToBeEnabled('#proposeRematch');
         }));
         it('should send proposal request when proposing', fakeAsync(async() => {
             // Given an ended game

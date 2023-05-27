@@ -354,11 +354,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.requestAwaitingReplyFromUs().isPresent();
     }
     public requestAwaitingReplyFromUs(): MGPOptional<RequestType> {
-        if (this.role.isPlayer() === false) return MGPOptional.empty();
+        Utils.assert(this.role.isPlayer(), 'User should be playing');
         return this.requestManager.getRequestAwaitingReplyFrom(this.role as Player);
     }
     public requestAwaitingReplyFromOpponent(): MGPOptional<RequestType> {
-        if (this.role.isPlayer() === false) return MGPOptional.empty();
+        Utils.assert(this.role.isPlayer(), 'User should be playing');
         return this.requestManager.getRequestAwaitingReplyFrom((this.role as Player).getOpponent());
     }
     public deniedRequest(): MGPOptional<RequestType> {
