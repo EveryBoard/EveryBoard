@@ -13,7 +13,7 @@ export interface RequestInfo {
     textForReply: Localized,
     name: Localized,
     icon: IconDefinition,
-};
+}
 
 /**
  * The request manager manages the requests and replies.

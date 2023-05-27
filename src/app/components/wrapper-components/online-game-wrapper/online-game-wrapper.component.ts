@@ -509,7 +509,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'Draw':
                 return this.gameService.proposeDraw(this.currentPartId, player);
             default:
-                Utils.expectToBe(request, 'TakeBack')
+                Utils.expectToBe(request, 'TakeBack');
                 return this.gameService.askTakeBack(this.currentPartId, player);
         }
     }
@@ -525,7 +525,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'Draw':
                 return this.gameService.acceptDraw(part.id, player);
             default:
-                Utils.expectToBe(request, 'TakeBack')
+                Utils.expectToBe(request, 'TakeBack');
                 return this.gameService.acceptTakeBack(part.id, part.data.turn, player);
         }
     }
@@ -540,7 +540,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'Draw':
                 return this.gameService.refuseDraw(this.currentPartId, player);
             default:
-                Utils.expectToBe(request, 'TakeBack')
+                Utils.expectToBe(request, 'TakeBack');
                 return this.gameService.refuseTakeBack(this.currentPartId, player);
         }
     }

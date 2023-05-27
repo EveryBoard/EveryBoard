@@ -175,11 +175,11 @@ export class SimpleComponentTestUtils<T> {
     }
     public expectElementToBeEnabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy()
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
     }
     public expectElementToBeDisabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy()
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
     }
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
@@ -528,11 +528,11 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public expectElementToBeEnabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy()
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
     }
     public expectElementToBeDisabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy()
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
     }
     public findElement(elementName: string): DebugElement {
         return this.debugElement.query(By.css(elementName));

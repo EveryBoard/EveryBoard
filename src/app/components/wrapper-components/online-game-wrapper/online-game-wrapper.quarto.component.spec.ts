@@ -29,9 +29,7 @@ import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
@@ -120,7 +118,6 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     if (preparationOptions.runClocks === false) {
         spyOn(TestBed.inject(OGWCTimeManagerService), 'resumeClocks').and.callFake(async() => {});
     }
-    const wrapper: OnlineGameWrapperComponent = testUtils.wrapper as OnlineGameWrapperComponent;
     testUtils.detectChanges();
     tick(1);
 
