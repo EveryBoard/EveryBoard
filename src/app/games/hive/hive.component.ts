@@ -17,7 +17,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveFailure } from './HiveFailure';
 import { HiveMinimax } from './HiveMinimax';
-import { HiveMove, HiveMoveCoordToCoord, HiveMoveDrop, HiveMoveSpider } from './HiveMove';
+import { HiveMove, HiveMoveCoordToCoord, HiveDropMove, HiveMoveSpider } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
@@ -251,7 +251,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
     private getLastMoveCoords(move: HiveMove): Coord[] {
         let lastMove: Coord[] = [];
-        if (move instanceof HiveMoveDrop) {
+        if (move instanceof HiveDropMove) {
             lastMove = [move.coord];
         } else if (move instanceof HiveMoveCoordToCoord) {
             lastMove = [move.getStart(), move.getEnd()];

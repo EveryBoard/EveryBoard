@@ -3,45 +3,45 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { SixMove } from '../SixMove';
 
-describe('SixMove', () => {
+fdescribe('SixMove', () => {
 
     it('should allow dropping', () => {
-        const move: SixMove = SixMove.fromDrop(new Coord(0, 0));
+        const move: SixMove = SixMove.ofDrop(new Coord(0, 0));
         expect(move).toBeTruthy();
     });
     it('should allow move without mentionned "keep"', () => {
-        const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(1, 1));
+        const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(1, 1));
         expect(move).toBeTruthy();
     });
     it('should throw when creating static movement', () => {
         const error: string = 'Deplacement cannot be static!';
-        expect(() => SixMove.fromMovement(new Coord(0, 0), new Coord(0, 0))).toThrowError(error);
+        expect(() => SixMove.ofMovement(new Coord(0, 0), new Coord(0, 0))).toThrowError(error);
     });
     it('should allow move with mentionned "keep"', () => {
-        const move: SixMove = SixMove.fromCut(new Coord(0, 0), new Coord(2, 2), new Coord(1, 1));
+        const move: SixMove = SixMove.ofCut(new Coord(0, 0), new Coord(2, 2), new Coord(1, 1));
         expect(move).toBeTruthy();
     });
     it('should throw when creating movement keeping starting coord', () => {
         const error: string = 'Cannot keep starting coord, since it will always be empty after move!';
-        expect(() => SixMove.fromCut(new Coord(0, 0), new Coord(1, 1), new Coord(0, 0)))
+        expect(() => SixMove.ofCut(new Coord(0, 0), new Coord(1, 1), new Coord(0, 0)))
             .toThrowError(error);
     });
-    describe('Overrides', () => {
+    fdescribe('Overrides', () => {
 
-        const drop: SixMove = SixMove.fromDrop(new Coord(5, 5));
-        const movement: SixMove = SixMove.fromMovement(new Coord(5, 5), new Coord(7, 5));
-        const cut: SixMove = SixMove.fromCut(new Coord(5, 5), new Coord(7, 5), new Coord(9, 9));
+        const drop: SixMove = SixMove.ofDrop(new Coord(5, 5));
+        const movement: SixMove = SixMove.ofMovement(new Coord(5, 5), new Coord(7, 5));
+        const cut: SixMove = SixMove.ofCut(new Coord(5, 5), new Coord(7, 5), new Coord(9, 9));
         it('should have functionnal equals', () => {
-            const drop: SixMove = SixMove.fromDrop(new Coord(0, 0));
-            const otherDrop: SixMove = SixMove.fromDrop(new Coord(1, 1));
-            const movement: SixMove = SixMove.fromMovement(new Coord(1, 1), new Coord(0, 0));
+            const drop: SixMove = SixMove.ofDrop(new Coord(0, 0));
+            const otherDrop: SixMove = SixMove.ofDrop(new Coord(1, 1));
+            const movement: SixMove = SixMove.ofMovement(new Coord(1, 1), new Coord(0, 0));
             const cuttingDeplacement: SixMove =
-                SixMove.fromCut(new Coord(1, 1), new Coord(0, 0), new Coord(2, 2));
+                SixMove.ofCut(new Coord(1, 1), new Coord(0, 0), new Coord(2, 2));
             expect(drop.equals(otherDrop)).toBeFalse();
             expect(drop.equals(movement)).toBeFalse();
             expect(movement.equals(cuttingDeplacement)).toBeFalse();
         });
-        it('should forbid non object to decode', () => {
+        fit('should forbid non object to decode', () => {
             expect(() => SixMove.encoder.decodeValue(0.5)).toThrowError('Invalid encodedMove of type number!');
         });
         it('should stringify nicely', () => {

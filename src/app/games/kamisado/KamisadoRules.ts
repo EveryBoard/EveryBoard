@@ -105,7 +105,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
                     if (state.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(state.board, endCoord)) {
                         // Check if the move can be done, and if so,
                         // add the resulting state to the map to be returned
-                        const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);
+                        const move: KamisadoMove = KamisadoMove.from(startCoord, endCoord).get();
                         moves.push(move);
                     } else {
                         break;

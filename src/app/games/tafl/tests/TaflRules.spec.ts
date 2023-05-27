@@ -60,7 +60,7 @@ describe('TaflRules', () => {
         const state: MyTaflState = MyTaflState.getInitialState();
 
         // When trying to move an empty square
-        const move: MyTaflMove = MyTaflMove.of(new Coord(0, 1), new Coord(1, 1));
+        const move: MyTaflMove = MyTaflMove.from(new Coord(0, 1), new Coord(1, 1)).get();
 
         // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
@@ -71,7 +71,7 @@ describe('TaflRules', () => {
         const state: MyTaflState = MyTaflState.getInitialState();
 
         // When trying to move an opponent pawn
-        const move: MyTaflMove = MyTaflMove.of(new Coord(4, 2), new Coord(4, 3));
+        const move: MyTaflMove = MyTaflMove.from(new Coord(4, 2), new Coord(4, 3)).get();
 
         // Then the move should be deemed illegal
         const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
@@ -82,7 +82,7 @@ describe('TaflRules', () => {
         const state: MyTaflState = MyTaflState.getInitialState();
 
         // When doing a move landing on the opponent
-        const move: MyTaflMove = MyTaflMove.of(new Coord(1, 0), new Coord(1, 3));
+        const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 3)).get();
 
         // Then the move should be illegal
         const reason: string = TaflFailure.LANDING_ON_OCCUPIED_SQUARE();
@@ -93,7 +93,7 @@ describe('TaflRules', () => {
         const state: MyTaflState = MyTaflState.getInitialState();
 
         // When doing a move passing through a piece
-        const move: MyTaflMove = MyTaflMove.of(new Coord(1, 0), new Coord(1, 4));
+        const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 4)).get();
 
         // Then the move should be illegal
         const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
@@ -115,7 +115,7 @@ describe('TaflRules', () => {
         const state: MyTaflState = new MyTaflState(board, 23);
 
         // When sacrificing him
-        const move: MyTaflMove = MyTaflMove.of(new Coord(3, 0), new Coord(2, 0));
+        const move: MyTaflMove = MyTaflMove.from(new Coord(3, 0), new Coord(2, 0)).get();
 
         // Then the move should be a success and the part a victory of Odin's Kin.
         const expectedBoard: Table<TaflPawn> = [
@@ -150,7 +150,7 @@ describe('TaflRules', () => {
         const state: MyTaflState = new MyTaflState(board, 24);
 
         // When sacrificing him
-        const move: MyTaflMove = MyTaflMove.of(new Coord(8, 4), new Coord(1, 4));
+        const move: MyTaflMove = MyTaflMove.from(new Coord(8, 4), new Coord(1, 4)).get();
 
         // Then the move should be a success and the part a victory of Odin's Kin.
         const expectedBoard: Table<TaflPawn> = [

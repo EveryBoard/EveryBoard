@@ -29,7 +29,7 @@ describe('ConnectSixRules', () => {
             const state: ConnectSixState = ConnectSixState.getInitialState();
 
             // When dropping one piece
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)).get() as ConnectSixMove;
             const expectedState: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -207,7 +207,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             // When dropping only one piece
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)).get() as ConnectSixMove;
 
             // Then the move should be forbidden
             function trySingleDropAfterFirstTurn(): void {

@@ -21,7 +21,7 @@ export class ConnectSixTutorial extends Tutorial {
             $localize`First turn`,
             $localize`On the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
             ConnectSixState.getInitialState(),
-            ConnectSixFirstMove.from(new Coord(9, 9)),
+            ConnectSixFirstMove.from(new Coord(9, 9)).get(),
             $localize`Congratulations!`,
         ),
         // Next turn: you must place six, try to win

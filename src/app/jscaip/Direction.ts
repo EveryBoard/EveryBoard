@@ -50,7 +50,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
 
     public abstract all: ReadonlyArray<T>;
 
-    public of(x: number, y: number): MGPFallible<T> {
+    public from(x: number, y: number): MGPFallible<T> {
         for (const dir of this.all) {
             if (dir.x === x && dir.y === y) return MGPFallible.success(dir);
         }
@@ -63,7 +63,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
                    dx === 0 ||
                    dy === 0)
         {
-            return this.of(Math.sign(dx), Math.sign(dy));
+            return this.from(Math.sign(dx), Math.sign(dy));
         }
         return MGPFallible.failure(DirectionFailure.DIRECTION_MUST_BE_LINEAR());
     }
@@ -72,27 +72,27 @@ export abstract class DirectionFactory<T extends BaseDirection> {
     }
     public fromString(str: string): MGPFallible<T> {
         switch (str) {
-            case 'UP': return this.of(0, -1);
-            case 'RIGHT': return this.of(1, 0);
-            case 'DOWN': return this.of(0, 1);
-            case 'LEFT': return this.of(-1, 0);
-            case 'UP_LEFT': return this.of(-1, -1);
-            case 'UP_RIGHT': return this.of(1, -1);
-            case 'DOWN_LEFT': return this.of(-1, 1);
-            case 'DOWN_RIGHT': return this.of(1, 1);
+            case 'UP': return this.from(0, -1);
+            case 'RIGHT': return this.from(1, 0);
+            case 'DOWN': return this.from(0, 1);
+            case 'LEFT': return this.from(-1, 0);
+            case 'UP_LEFT': return this.from(-1, -1);
+            case 'UP_RIGHT': return this.from(1, -1);
+            case 'DOWN_LEFT': return this.from(-1, 1);
+            case 'DOWN_RIGHT': return this.from(1, 1);
             default: return MGPFallible.failure(`Invalid direction string ${str}`);
         }
     }
     public fromInt(int: number): MGPFallible<T> {
         switch (int) {
-            case 0: return this.of(0, -1);
-            case 1: return this.of(1, 0);
-            case 2: return this.of(0, 1);
-            case 3: return this.of(-1, 0);
-            case 4: return this.of(-1, -1);
-            case 5: return this.of(1, -1);
-            case 6: return this.of(-1, 1);
-            case 7: return this.of(1, 1);
+            case 0: return this.from(0, -1);
+            case 1: return this.from(1, 0);
+            case 2: return this.from(0, 1);
+            case 3: return this.from(-1, 0);
+            case 4: return this.from(-1, -1);
+            case 5: return this.from(1, -1);
+            case 6: return this.from(-1, 1);
+            case 7: return this.from(1, 1);
             default: return MGPFallible.failure(`Invalid int direction: ${int}`);
         }
     }
@@ -158,7 +158,7 @@ export class Direction extends BaseDirection {
         return (this.x !== 0) && (this.y !== 0);
     }
     public getOpposite(): Direction {
-        const opposite: MGPFallible<Direction> = Direction.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<Direction> = Direction.factory.from(-this.x, -this.y);
         return opposite.get();
     }
 }
@@ -187,7 +187,7 @@ export class Orthogonal extends BaseDirection {
                 Orthogonal.LEFT,
             ];
 
-            public override of(x: number, y: number): MGPFallible<Orthogonal> {
+            public override from(x: number, y: number): MGPFallible<Orthogonal> {
                 if (x === 0 && y === -1) return MGPFallible.success(Orthogonal.UP);
                 if (x === 1 && y === 0) return MGPFallible.success(Orthogonal.RIGHT);
                 if (x === 0 && y === 1) return MGPFallible.success(Orthogonal.DOWN);
@@ -203,11 +203,11 @@ export class Orthogonal extends BaseDirection {
         super(x, y);
     }
     public getOpposite(): Orthogonal {
-        const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.from(-this.x, -this.y);
         return opposite.get();
     }
     public rotateClockwise(): Orthogonal {
-        const rotated: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.y, this.x);
+        const rotated: MGPFallible<Orthogonal> = Orthogonal.factory.from(-this.y, this.x);
         return rotated.get();
     }
 }

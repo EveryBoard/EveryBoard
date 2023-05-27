@@ -35,7 +35,7 @@ describe('SixMinimax', () => {
                 [_, X, _, _, _, _, _],
             ];
             const state: SixState = SixState.fromRepresentation(board, 11);
-            const lastMove: SixMove = SixMove.fromDrop(new Coord(1, 5));
+            const lastMove: SixMove = SixMove.ofDrop(new Coord(1, 5));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(lastMove));
 
             // When evaluating the board value
@@ -56,13 +56,13 @@ describe('SixMinimax', () => {
                 [_, X, _, _, _, _, _],
             ];
             const state: SixState = SixState.fromRepresentation(board, 11);
-            const lastMove: SixMove = SixMove.fromDrop(new Coord(1, 5));
+            const lastMove: SixMove = SixMove.ofDrop(new Coord(1, 5));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(lastMove));
             minimax.getBoardValue(node);
 
             // When calculating its children, there should only be one
             const chosenMove: SixMove = node.findBestMove(1, minimax);
-            expect(chosenMove).toEqual(SixMove.fromDrop(new Coord(0, 6)));
+            expect(chosenMove).toEqual(SixMove.ofDrop(new Coord(0, 6)));
             expect(node.countDescendants()).toBe(1);
         });
         it('should only count one preVictory when one coord is a forcing move for two lines', () => {
@@ -76,7 +76,7 @@ describe('SixMinimax', () => {
                 [O, _, O, O, X, X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 9);
-            const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
+            const move: SixMove = SixMove.ofDrop(new Coord(2, 3));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
 
             // When evaluation its value
@@ -93,7 +93,7 @@ describe('SixMinimax', () => {
                 [O, O, _, _],
             ];
             const state: SixState = SixState.fromRepresentation(board, 9);
-            const move: SixMove = SixMove.fromDrop(new Coord(1, 0));
+            const move: SixMove = SixMove.ofDrop(new Coord(1, 0));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
             const boardValue: SixBoardValue = minimax.getBoardValue(node);
             expect(boardValue.preVictory.equalsValue(new Coord(2, 0))).toBeTrue();
@@ -101,7 +101,7 @@ describe('SixMinimax', () => {
     });
     describe('4 pieces aligned is better than 3 pieces aligned', () => {
         it('should be true with lines', () => {
-            const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
+            const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
             const weakerState: SixState = SixState.fromRepresentation([
                 [O, O, _, _, _],
                 [X, X, X, _, _],
@@ -119,7 +119,7 @@ describe('SixMinimax', () => {
                                                                Player.ONE);
         });
         it('should be true with triangle', () => {
-            const move: SixMove = SixMove.fromDrop(new Coord(1, 3));
+            const move: SixMove = SixMove.ofDrop(new Coord(1, 3));
             const weakerState: SixState = SixState.fromRepresentation([
                 [_, _, _],
                 [X, _, _],
@@ -138,7 +138,7 @@ describe('SixMinimax', () => {
                                                                Player.ONE);
         });
         it('should be true with circle', () => {
-            const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
+            const move: SixMove = SixMove.ofDrop(new Coord(2, 1));
             const weakerState: SixState = SixState.fromRepresentation([
                 [_, X, X],
                 [_, O, X],
@@ -157,7 +157,7 @@ describe('SixMinimax', () => {
     });
     describe('4 pieces aligned with two spaces should be better than 4 aligned with two opponents', () => {
         it('should be true with lines', () => {
-            const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
+            const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
             const weakerState: SixState = SixState.fromRepresentation([
                 [O, O, O, O, O, O],
                 [O, X, X, X, X, O],
@@ -221,7 +221,7 @@ describe('SixMinimax', () => {
             const state: SixState = SixState.fromRepresentation(board, 42);
             const parentNode: SixNode = new SixNode(state);
             // (2. getting the child from it)
-            const forcingMove: SixMove = SixMove.fromMovement(new Coord(8, 0), new Coord(-1, 0));
+            const forcingMove: SixMove = SixMove.ofMovement(new Coord(8, 0), new Coord(-1, 0));
             const node: SixNode = rules.choose(parentNode, forcingMove).get();
 
             // When getting the list of move
@@ -235,7 +235,7 @@ describe('SixMinimax', () => {
                 [X, X, X, X, O, O, O, O, O],
                 [X, X, X, X, O, O, O, O, O],
             ], 40);
-            const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
+            const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
             expect(minimax.getBoardValue(node).value).toBe(2);
         });
@@ -281,7 +281,7 @@ describe('SixMinimax', () => {
             const listMoves: SixMove[] = minimax.getListMoves(node);
 
             // Then the list should have all the possible deplacements and only them
-            const cuttingMove: SixMove = SixMove.fromCut(new Coord(4, 0), new Coord(8, 0), new Coord(0, 0));
+            const cuttingMove: SixMove = SixMove.ofCut(new Coord(4, 0), new Coord(8, 0), new Coord(0, 0));
             expect(listMoves.some((move: SixMove) => move.equals(cuttingMove))).toBeTrue();
         });
     });

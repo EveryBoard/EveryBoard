@@ -16,7 +16,7 @@ export class SiamMove extends MoveCoord {
             Orthogonal.encoder, // orientation
         ],
         (m: SiamMove): SiamMoveFields => [m.x, m.y, m.direction, m.landingOrientation],
-        (fields: SiamMoveFields): SiamMove => SiamMove.of(fields[0], fields[1], fields[2], fields[3]).get());
+        (fields: SiamMoveFields): SiamMove => SiamMove.from(fields[0], fields[1], fields[2], fields[3]).get());
 
     private constructor(readonly x: number,
                         readonly y: number,
@@ -25,10 +25,10 @@ export class SiamMove extends MoveCoord {
     {
         super(x, y);
     }
-    public static of(x: number,
-                     y: number,
-                     direction: MGPOptional<Orthogonal>,
-                     landingOrientation: Orthogonal)
+    public static from(x: number,
+                       y: number,
+                       direction: MGPOptional<Orthogonal>,
+                       landingOrientation: Orthogonal)
     : MGPFallible<SiamMove>
     {
         const move: SiamMove = new SiamMove(x, y, direction, landingOrientation);

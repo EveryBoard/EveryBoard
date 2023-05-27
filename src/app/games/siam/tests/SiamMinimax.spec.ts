@@ -109,7 +109,7 @@ describe('SiamMinimax', () => {
             // When computing the best move
             const chosenMove: SiamMove = node.findBestMove(1, minimax);
             // Then it should go for victory
-            const bestMove: SiamMove = SiamMove.of(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+            const bestMove: SiamMove = SiamMove.from(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             expect(chosenMove).toEqual(bestMove);
         });
         it('should consider pushing as the best option', () => {
@@ -126,7 +126,7 @@ describe('SiamMinimax', () => {
             // When computing the best move
             const chosenMove: SiamMove = node.findBestMove(1, minimax);
             // Then it should push
-            const bestMove: SiamMove = SiamMove.of(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+            const bestMove: SiamMove = SiamMove.from(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             expect(chosenMove).toEqual(bestMove);
         });
         it('should consider pushing from outside to be the best option', () => {
@@ -143,7 +143,7 @@ describe('SiamMinimax', () => {
             // When computing the best move
             const chosenMove: SiamMove = node.findBestMove(1, minimax);
             // Then the best move should push from outside
-            const bestMove: SiamMove = SiamMove.of(3, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+            const bestMove: SiamMove = SiamMove.from(3, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             expect(chosenMove).toEqual(bestMove);
         });
     });
@@ -158,7 +158,7 @@ describe('SiamMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const move: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+            const move: SiamMove = SiamMove.from(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             // When computing the value of the board
             // Then it should consider player zero as closer to victory
             expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
@@ -175,7 +175,7 @@ describe('SiamMinimax', () => {
                 [_, _, U, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const move: SiamMove = SiamMove.of(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+            const move: SiamMove = SiamMove.from(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             // When computing the value of the board
             // Then it should consider player zero as closer to victory
             expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
@@ -192,7 +192,7 @@ describe('SiamMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const move: SiamMove = SiamMove.of(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
+            const move: SiamMove = SiamMove.from(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
             const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // When computing the board value
             // Then player zero should have a higher score because it is their turn
@@ -208,7 +208,7 @@ describe('SiamMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const move: SiamMove = SiamMove.of(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
+            const move: SiamMove = SiamMove.from(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
             const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
             const boardValue: number = minimax.getBoardValue(node).value;
 

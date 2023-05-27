@@ -125,7 +125,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
-        const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
+        const move: KamisadoMove = KamisadoMove.from(chosenPiece, chosenDestination).get();
         return this.chooseMove(move, this.getState());
     }
     public override cancelMoveAttempt(): void {

@@ -11,7 +11,7 @@ describe('CoerceoMove', () => {
     it('should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoNormalMove.fromMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
         expect(move.isTileExchange()).toBeFalse();
-        const capture: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 4));
+        const capture: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 4)).get();
         expect(capture.isTileExchange()).toBeTrue();
     });
     describe('fromMove', () => {
@@ -40,11 +40,11 @@ describe('CoerceoMove', () => {
             const b: Coord = new Coord(2, 0);
             const c: Coord = new Coord(4, 0);
             const d: Coord = new Coord(1, 1);
-            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.from(a);
-            const differentCapture: CoerceoMove = CoerceoTileExchangeMove.from(b);
-            const movement: CoerceoMove = CoerceoNormalMove.from(a, b);
-            const differentStart: CoerceoMove = CoerceoNormalMove.from(c, b);
-            const differentEnd: CoerceoMove = CoerceoNormalMove.from(a, d);
+            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.from(a).get();
+            const differentCapture: CoerceoMove = CoerceoTileExchangeMove.from(b).get();
+            const movement: CoerceoMove = CoerceoNormalMove.from(a, b).get();
+            const differentStart: CoerceoMove = CoerceoNormalMove.from(c, b).get();
+            const differentEnd: CoerceoMove = CoerceoNormalMove.from(a, d).get();
 
             expect(tileExchange.equals(differentCapture)).toBeFalse();
             expect(tileExchange.equals(tileExchange)).toBeTrue();
@@ -54,8 +54,8 @@ describe('CoerceoMove', () => {
             expect(movement.equals(movement)).toBeTrue();
         });
         it('should stringify nicely', () => {
-            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(5, 5));
-            const movement: CoerceoMove = CoerceoNormalMove.from(new Coord(5, 5), new Coord(7, 5));
+            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(5, 5)).get();
+            const movement: CoerceoMove = CoerceoNormalMove.from(new Coord(5, 5), new Coord(7, 5)).get();
             expect(tileExchange.toString()).toBe('CoerceoMove((5, 5))');
             expect(movement.toString()).toBe('CoerceoMove((5, 5) > RIGHT > (7, 5))');
         });
@@ -70,7 +70,7 @@ describe('CoerceoMove', () => {
                 }
             });
             it('should be bijective with tiles exchanges', () => {
-                const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(5, 7));
+                const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(5, 7)).get();
                 EncoderTestUtils.expectToBeBijective(CoerceoMoveEncoder, move);
             });
         });

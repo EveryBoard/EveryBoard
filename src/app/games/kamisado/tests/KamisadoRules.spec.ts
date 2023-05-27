@@ -61,7 +61,7 @@ describe('KamisadoRules', () => {
                 new KamisadoState(0, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
             // When moving one piece up vertically
-            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
+            const move: KamisadoMove = KamisadoMove.from(new Coord(0, 7), new Coord(0, 6)).get();
 
             // Then the move should be legal
             const expectedBoard: Table<KamisadoPiece> = [
@@ -94,7 +94,7 @@ describe('KamisadoRules', () => {
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
             // When moving diagonally without obstacles
-            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(1, 6));
+            const move: KamisadoMove = KamisadoMove.from(new Coord(0, 7), new Coord(1, 6)).get();
 
             // Then the move should be deemed legal
             const expectedBoard: Table<KamisadoPiece> = [
@@ -152,7 +152,7 @@ describe('KamisadoRules', () => {
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
             // When moving a piece on another one
-            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
+            const move: KamisadoMove = KamisadoMove.from(new Coord(0, 7), new Coord(0, 6)).get();
 
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SPACE();
@@ -174,7 +174,7 @@ describe('KamisadoRules', () => {
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
             // When trying to move a piece over another one
-            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 5));
+            const move: KamisadoMove = KamisadoMove.from(new Coord(0, 7), new Coord(0, 5)).get();
 
             // Then the move should be illegal
             const reason: string = KamisadoFailure.MOVE_BLOCKED();
@@ -196,8 +196,8 @@ describe('KamisadoRules', () => {
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 6)), false, board);
 
             // When moving backward
-            const verticalBackwardMove: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(0, 7));
-            const diagonalyBackwardMove: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(1, 7));
+            const verticalBackwardMove: KamisadoMove = KamisadoMove.from(new Coord(0, 6), new Coord(0, 7)).get();
+            const diagonalyBackwardMove: KamisadoMove = KamisadoMove.from(new Coord(0, 6), new Coord(1, 7)).get();
             const reason: string = KamisadoFailure.DIRECTION_NOT_ALLOWED();
 
             // Then the move should be illegal
@@ -220,7 +220,7 @@ describe('KamisadoRules', () => {
                 new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(0, 6)), false, board);
 
             // When moving backward
-            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(7, 6));
+            const move: KamisadoMove = KamisadoMove.from(new Coord(0, 6), new Coord(7, 6)).get();
 
             // Then the move should be illegal
             const reason: string = KamisadoFailure.DIRECTION_NOT_ALLOWED();
@@ -242,8 +242,8 @@ describe('KamisadoRules', () => {
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
             // When landing on a piece or passing over it
-            const illegalLandingMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(1, 6));
-            const illegalJumpOverMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(7, 0));
+            const illegalLandingMove: KamisadoMove = KamisadoMove.from(new Coord(0, 7), new Coord(1, 6)).get();
+            const illegalJumpOverMove: KamisadoMove = KamisadoMove.from(new Coord(0, 7), new Coord(7, 0)).get();
 
             // Then the move should be illegal
             RulesUtils.expectMoveFailure(rules, state, illegalLandingMove, RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
@@ -287,7 +287,7 @@ describe('KamisadoRules', () => {
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
             // When moving the wrong piece (but still yours)
-            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
+            const move: KamisadoMove = KamisadoMove.from(new Coord(0, 2), new Coord(0, 0)).get();
 
             // Then the move should be illegal
             const reason: string = KamisadoFailure.NOT_RIGHT_COLOR();
@@ -309,7 +309,7 @@ describe('KamisadoRules', () => {
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
             // When moving a piece not lineary
-            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(3, 5));
+            const move: KamisadoMove = KamisadoMove.from(new Coord(0, 7), new Coord(3, 5)).get();
 
             // Then the move should be illegal
             const reason: string = KamisadoFailure.DIRECTION_NOT_ALLOWED();
@@ -331,7 +331,7 @@ describe('KamisadoRules', () => {
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
             // When moving opponent's piece
-            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
+            const move: KamisadoMove = KamisadoMove.from(new Coord(0, 2), new Coord(0, 0)).get();
 
             // Then move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
@@ -383,7 +383,7 @@ describe('KamisadoRules', () => {
             // Then there should only be that one legal move
             expect(moves.length).toEqual(1);
             const move: KamisadoMove = moves[0];
-            expect(move).toEqual(KamisadoMove.of(new Coord(1, 6), new Coord(2, 7)));
+            expect(move).toEqual(KamisadoMove.from(new Coord(1, 6), new Coord(2, 7)).get());
         });
     });
     describe('Endgames', () => {

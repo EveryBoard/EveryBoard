@@ -38,7 +38,7 @@ export class SixTutorial extends Tutorial {
                 [_, O, _, _, _, _],
                 [O, _, _, _, _, _],
             ], 0),
-            [SixMove.fromDrop(new Coord(3, 2))],
+            [SixMove.ofDrop(new Coord(3, 2))],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
         ),
@@ -52,7 +52,7 @@ export class SixTutorial extends Tutorial {
                 [_, X, _, O, X, _],
                 [X, O, O, O, O, X],
             ], 0),
-            [SixMove.fromDrop(new Coord(5, 2))],
+            [SixMove.ofDrop(new Coord(5, 2))],
             $localize`Congratulations! Note that if a piece is inside the circle, it does not change anything.`,
             $localize`Failed. Try again.`,
         ),
@@ -66,7 +66,7 @@ export class SixTutorial extends Tutorial {
                 [_, O, _, O, O, _],
                 [X, X, X, _, X, _],
             ], 0),
-            [SixMove.fromDrop(new Coord(3, 3))],
+            [SixMove.ofDrop(new Coord(3, 3))],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
         ),
@@ -88,7 +88,7 @@ export class SixTutorial extends Tutorial {
                 [X, X, X, X, _, _, _, _, _],
                 [_, O, _, X, _, _, _, _, _],
             ], 40),
-            SixMove.fromMovement(new Coord(6, 1), new Coord(5, 1)),
+            SixMove.ofMovement(new Coord(6, 1), new Coord(5, 1)),
             (_move: SixMove, _previousState: SixState, resultingState: SixState) => {
                 const pieces: [number, number] = resultingState.countPieces();
                 if (pieces[0] === 19) {
@@ -118,7 +118,7 @@ export class SixTutorial extends Tutorial {
                 [O, X, _, _, _, _],
                 [O, _, _, _, _, _],
             ], 40),
-            SixMove.fromMovement(new Coord(2, 3), new Coord(3, 3)),
+            SixMove.ofMovement(new Coord(2, 3), new Coord(3, 3)),
             (move: SixMove, _previousState: SixState, _resultingState: SixState) => {
                 if (move.start.equalsValue(new Coord(2, 3))) {
                     return MGPValidation.SUCCESS;
@@ -142,7 +142,7 @@ export class SixTutorial extends Tutorial {
                 [O, O, _, _, _, _],
                 [O, _, _, _, _, _],
             ], 40),
-            SixMove.fromCut(new Coord(2, 3), new Coord(2, 5), new Coord(2, 5)),
+            SixMove.ofCut(new Coord(2, 3), new Coord(2, 5), new Coord(2, 5)),
             (move: SixMove, _previousState: SixState, resultingState: SixState) => {
                 if (move.keep.isAbsent()) {
                     return MGPValidation.failure($localize`This move has not cut the board in two equal halves.`);

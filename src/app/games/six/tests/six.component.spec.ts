@@ -35,7 +35,7 @@ describe('SixComponent', () => {
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));
         it('should drop before 40th turn', fakeAsync(async() => {
-            const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
+            const move: SixMove = SixMove.ofDrop(new Coord(0, 2));
             await testUtils.expectMoveSuccess('#neighbor_0_2', move);
         }));
         it('should cancel move when clicking on empty space as first click after 40th turn', fakeAsync(async() => {
@@ -91,7 +91,7 @@ describe('SixComponent', () => {
             const gameComponent: SixComponent = testUtils.getComponent();
             await testUtils.expectClickSuccess('#piece_0_0');
             testUtils.expectElementToExist('#selectedPiece_0_0');
-            const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(0, 6));
+            const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(0, 6));
             await testUtils.expectMoveSuccess('#neighbor_0_6', move);
 
             testUtils.expectElementToExist('#leftCoord_0_0');
@@ -151,7 +151,7 @@ describe('SixComponent', () => {
             testUtils.expectElementToExist('#cuttable_2_1');
             testUtils.expectElementToExist('#cuttable_2_2');
             testUtils.expectElementToExist('#cuttable_2_3');
-            const move: SixMove = SixMove.fromCut(new Coord(1, 2), new Coord(2, 3), new Coord(2, 0));
+            const move: SixMove = SixMove.ofCut(new Coord(1, 2), new Coord(2, 3), new Coord(2, 0));
             await testUtils.expectMoveSuccess('#piece_2_0', move);
             testUtils.expectElementToExist('#disconnected_0_0');
             testUtils.expectElementToExist('#disconnected_0_1');
@@ -173,7 +173,7 @@ describe('SixComponent', () => {
 
             // Choosing landing space
             await testUtils.expectClickSuccess('#neighbor_2_3');
-            const move: SixMove = SixMove.fromCut(new Coord(1, 2), new Coord(2, 3), new Coord(0, 0));
+            const move: SixMove = SixMove.ofCut(new Coord(1, 2), new Coord(2, 3), new Coord(0, 0));
             await testUtils.expectMoveSuccess('#piece_0_0', move);
             testUtils.expectElementToExist('#disconnected_2_0');
             testUtils.expectElementToExist('#disconnected_2_1');
@@ -213,7 +213,7 @@ describe('SixComponent', () => {
 
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
-            const move: SixMove = SixMove.fromCut(new Coord(0, 2), new Coord(0, -1), new Coord(0, 1));
+            const move: SixMove = SixMove.ofCut(new Coord(0, 2), new Coord(0, -1), new Coord(0, 1));
             await testUtils.expectMoveSuccess('#piece_0_1', move);
         }));
     });
@@ -228,7 +228,7 @@ describe('SixComponent', () => {
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece_0_0');
-            const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(-1, 1));
+            const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(-1, 1));
             await testUtils.expectMoveSuccess('#neighbor_-1_1', move);
             testUtils.expectElementToHaveClass('#victoryCoord_-1_1', 'victory-stroke');
             testUtils.expectElementToHaveClass('#victoryCoord_4_1', 'victory-stroke');

@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Utils } from 'src/app/utils/utils';
 
 type SixMoveFields = [MGPOptional<Coord>, Coord, MGPOptional<Coord>];
 
@@ -15,13 +16,13 @@ export class SixMove extends Move {
     private static of(start: MGPOptional<Coord>, landing: Coord, keep: MGPOptional<Coord>): SixMove {
         return new SixMove(start, landing, keep);
     }
-    public static fromDrop(landing: Coord): SixMove {
+    public static ofDrop(landing: Coord): SixMove {
         return new SixMove(MGPOptional.empty(), landing, MGPOptional.empty());
     }
-    public static fromMovement(start: Coord, landing: Coord): SixMove {
+    public static ofMovement(start: Coord, landing: Coord): SixMove {
         return new SixMove(MGPOptional.of(start), landing, MGPOptional.empty());
     }
-    public static fromCut(start: Coord, landing: Coord, keep: Coord): SixMove {
+    public static ofCut(start: Coord, landing: Coord, keep: Coord): SixMove {
         return new SixMove(MGPOptional.of(start), landing, MGPOptional.of(keep));
     }
     private constructor(public readonly start: MGPOptional<Coord>,
@@ -29,12 +30,9 @@ export class SixMove extends Move {
                         public readonly keep: MGPOptional<Coord>)
     {
         super();
-        if (start.equalsValue(landing)) {
-            throw new Error('Deplacement cannot be static!');
-        }
-        if (start.isPresent() && start.equals(keep)) {
-            throw new Error('Cannot keep starting coord, since it will always be empty after move!');
-        }
+        Utils.assert(start.equalsValue(landing) === false ,'Deplacement cannot be static!');
+        Utils.assert(start.isAbsent() || start.equals(keep) === false,
+                     'Cannot keep starting coord, since it will always be empty after move!');
     }
     public isDrop(): boolean {
         return this.start.isAbsent();

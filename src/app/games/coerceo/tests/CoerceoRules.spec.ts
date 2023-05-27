@@ -231,7 +231,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 6));
+            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 6)).get();
             const reason: string = CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -249,7 +249,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
-            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 6));
+            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 6)).get();
             const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -267,7 +267,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
-            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(7, 7));
+            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(7, 7)).get();
             const reason: string = CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -285,7 +285,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
-            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(0, 0));
+            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(0, 0)).get();
             const reason: string = CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -315,7 +315,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
-            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(10, 7));
+            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(10, 7)).get();
             const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
@@ -346,7 +346,7 @@ describe('CoerceoRules', () => {
             [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
         ];
         const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
-        const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(10, 7));
+        const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(10, 7)).get();
         const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });

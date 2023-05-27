@@ -9,15 +9,15 @@ import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { HivePiece } from './HivePiece';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
-export class HiveMoveDrop extends MoveCoord {
+export class HiveDropMove extends MoveCoord {
 
-    public static encoder: AbstractEncoder<HiveMoveDrop> = Encoder.tuple(
+    public static encoder: AbstractEncoder<HiveDropMove> = Encoder.tuple(
         [HivePiece.encoder, Coord.encoder],
-        (move: HiveMoveDrop): [HivePiece, Coord] => [move.piece, move.coord],
-        (fields: [HivePiece, Coord]): HiveMoveDrop => new HiveMoveDrop(fields[0], fields[1].x, fields[1].y),
+        (move: HiveDropMove): [HivePiece, Coord] => [move.piece, move.coord],
+        (fields: [HivePiece, Coord]): HiveDropMove => new HiveDropMove(fields[0], fields[1].x, fields[1].y),
     );
-    public static of(piece: HivePiece, coord: Coord): HiveMoveDrop {
-        return new HiveMoveDrop(piece, coord.x, coord.y);
+    public static of(piece: HivePiece, coord: Coord): HiveDropMove {
+        return new HiveDropMove(piece, coord.x, coord.y);
     }
     private constructor(public readonly piece: HivePiece, x: number, y: number) {
         super(x, y);
@@ -26,7 +26,7 @@ export class HiveMoveDrop extends MoveCoord {
         return `HiveDrop(${this.piece.toString()}, ${this.coord.toString()})`;
     }
     public override equals(other: HiveMove): boolean {
-        if (other instanceof HiveMoveDrop) {
+        if (other instanceof HiveDropMove) {
             return this.piece.equals(other.piece) && this.coord.equals(other.coord);
         }
         return false;
@@ -97,7 +97,7 @@ export class HiveMovePass extends Move {
     }
 }
 
-export type HiveMove = HiveMoveDrop | HiveMoveCoordToCoord | HiveMoveSpider | HiveMovePass;
+export type HiveMove = HiveDropMove | HiveMoveCoordToCoord | HiveMoveSpider | HiveMovePass;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace HiveMove {
@@ -105,7 +105,7 @@ export namespace HiveMove {
     export const PASS: HiveMove = new HiveMovePass();
 
     export function drop(piece: HivePiece, coord: Coord): HiveMove {
-        return HiveMoveDrop.of(piece, coord);
+        return HiveDropMove.of(piece, coord);
     }
     export function move(start: Coord, end: Coord): MGPFallible<HiveMove> {
         return HiveMoveCoordToCoord.from(start, end);
@@ -115,10 +115,10 @@ export namespace HiveMove {
     }
     export const encoder: Encoder<HiveMove> = new class extends Encoder<HiveMove> {
         public encode(value: HiveMove): JSONValueWithoutArray {
-            if (value instanceof HiveMoveDrop) {
+            if (value instanceof HiveDropMove) {
                 return {
                     moveType: 'Drop',
-                    encoded: HiveMoveDrop.encoder.encodeValue(value),
+                    encoded: HiveDropMove.encoder.encodeValue(value),
                 };
             } else if (value instanceof HiveMoveSpider) {
                 return {
@@ -142,7 +142,7 @@ export namespace HiveMove {
             // eslint-disable-next-line dot-notation
             const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
             if (moveType === 'Drop') {
-                return HiveMoveDrop.encoder.decodeValue(content);
+                return HiveDropMove.encoder.decodeValue(content);
             } else if (moveType === 'Spider') {
                 return HiveMoveSpider.encoder.decodeValue(content);
             } else if (moveType === 'CoordToCoord') {

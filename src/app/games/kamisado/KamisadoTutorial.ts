@@ -44,7 +44,7 @@ export class KamisadoTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [__, gr, re, ye, pi, pu, bl, or],
             ]),
-        ).withPreviousMove(KamisadoMove.of(new Coord(0, 7), new Coord(0, 0))),
+        ).withPreviousMove(KamisadoMove.from(new Coord(0, 7), new Coord(0, 0)).get()),
         TutorialStep.anyMove(
             $localize`Initial board and initial move`,
             $localize`Here is the initial board.
@@ -52,7 +52,7 @@ export class KamisadoTutorial extends Tutorial {
         You're playing first, with dark pieces, you can make your first move.<br/><br/>
         You're playing Dark, click on the piece of your choice and click on a landing square.`,
             KamisadoState.getInitialState(),
-            KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
+            KamisadoMove.from(new Coord(7, 7), new Coord(3, 3)).get(),
             $localize`Perfect! Note that each of your piece has a different color.`,
         ),
         TutorialStep.fromMove(
@@ -74,12 +74,12 @@ export class KamisadoTutorial extends Tutorial {
                 [br, gr, re, ye, pi, pu, __, or],
             ]),
             [
-                KamisadoMove.of(new Coord(3, 0), new Coord(3, 6)),
-                KamisadoMove.of(new Coord(3, 0), new Coord(4, 1)),
+                KamisadoMove.from(new Coord(3, 0), new Coord(3, 6)).get(),
+                KamisadoMove.from(new Coord(3, 0), new Coord(4, 1)).get(),
             ],
             $localize`Congratulations!`,
             $localize`You have not moved your pink piece on a blue square!`,
-        ).withPreviousMove(KamisadoMove.of(new Coord(6, 7), new Coord(6, 5))),
+        ).withPreviousMove(KamisadoMove.from(new Coord(6, 7), new Coord(6, 5)).get()),
         TutorialStep.informational(
             $localize`Stuck situation`,
             $localize`Dark moved to another pink square, hence you have to move your pink piece again.
@@ -95,7 +95,7 @@ export class KamisadoTutorial extends Tutorial {
                 [__, __, __, Pi, __, __, __, __],
                 [br, gr, re, ye, pi, pu, __, or],
             ]),
-        ).withPreviousMove(KamisadoMove.of(new Coord(6, 5), new Coord(7, 4))),
+        ).withPreviousMove(KamisadoMove.from(new Coord(6, 5), new Coord(7, 4)).get()),
         TutorialStep.fromMove(
             $localize`Victory by blocking`,
             $localize`At any time, if a player blocks the entire game, that player loses.
@@ -113,7 +113,7 @@ export class KamisadoTutorial extends Tutorial {
                 [Or, __, __, __, __, pi, __, Br],
                 [br, gr, __, __, __, __, bl, or],
             ]),
-            [KamisadoMove.of(new Coord(2, 4), new Coord(0, 2))],
+            [KamisadoMove.from(new Coord(2, 4), new Coord(0, 2)).get()],
             $localize`Perfect!
          Your opponent must move its green piece on the orange square, forcing you to play with your orange piece.
          Your orange piece will be stuck and you will have to pass your turn.
@@ -121,6 +121,6 @@ export class KamisadoTutorial extends Tutorial {
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!`,
             $localize`Failed. Try again.`,
-        ).withPreviousMove(KamisadoMove.of(new Coord(4, 0), new Coord(3, 1))),
+        ).withPreviousMove(KamisadoMove.from(new Coord(4, 0), new Coord(3, 1)).get()),
     ];
 }

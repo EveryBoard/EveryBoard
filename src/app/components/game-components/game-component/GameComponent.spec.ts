@@ -125,13 +125,13 @@ describe('GameComponent', () => {
             Sahara: { onClick: [0, 0] },
             Siam: {
                 selectPieceForInsertion: [Player.ZERO, 0],
-                selectOrientation: [SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
+                selectOrientation: [SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
                 clickSquare: [0, 0],
                 clickArrow: [{
                     source: MGPOptional.empty(),
                     target: new Coord(0, 0),
                     direction: Orthogonal.DOWN,
-                    move: SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
+                    move: SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
                 }],
             },
             Six: {

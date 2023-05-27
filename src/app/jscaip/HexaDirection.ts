@@ -65,7 +65,7 @@ export class HexaDirection extends BaseDirection {
         super(x, y);
     }
     public getOpposite(): HexaDirection {
-        const opposite: MGPFallible<HexaDirection> = HexaDirection.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<HexaDirection> = HexaDirection.factory.from(-this.x, -this.y);
         return opposite.get();
     }
 }

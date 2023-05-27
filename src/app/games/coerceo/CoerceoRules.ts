@@ -28,16 +28,14 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
     private constructor() {
         super(CoerceoState);
     }
-    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState
-    {
+    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState {
         if (move.isTileExchange()) {
             return this.applyLegalTileExchange(move, state);
         } else {
             return this.applyLegalMovement(move, state);
         }
     }
-    public applyLegalTileExchange(move: CoerceoTileExchangeMove, state: CoerceoState): CoerceoState
-    {
+    public applyLegalTileExchange(move: CoerceoTileExchangeMove, state: CoerceoState): CoerceoState {
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
         const captured: Coord = move.coord;
         newBoard[captured.y][captured.x] = FourStatePiece.EMPTY;
@@ -59,8 +57,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                     { a_initialState: state, afterCapture, afterTileRemoval, resultingState } });
         return resultingState;
     }
-    public applyLegalMovement(move: CoerceoNormalMove, state: CoerceoState): CoerceoState
-    {
+    public applyLegalMovement(move: CoerceoNormalMove, state: CoerceoState): CoerceoState {
         // Move the piece
         const afterMovement: CoerceoState = state.applyLegalMovement(move);
         // removes emptied tiles

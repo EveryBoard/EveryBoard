@@ -13,7 +13,7 @@ export class PenteAlignmentMinimax extends Minimax<PenteMove, PenteState> {
         const moves: PenteMove[] = [];
         state.forEachCoord((coord: Coord, content: PlayerOrNone): void => {
             if (content.isPlayer() === false) {
-                moves.push(PenteMove.from(coord));
+                moves.push(PenteMove.from(coord).get());
             }
         });
         return moves;

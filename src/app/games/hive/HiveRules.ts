@@ -8,7 +8,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveFailure } from './HiveFailure';
-import { HiveMoveDrop, HiveMove, HiveMoveCoordToCoord } from './HiveMove';
+import { HiveDropMove, HiveMove, HiveMoveCoordToCoord } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
@@ -30,7 +30,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         super(HiveState);
     }
     public applyLegalMove(move: HiveMove, state: HiveState, _info: void): HiveState {
-        if (move instanceof HiveMoveDrop) {
+        if (move instanceof HiveDropMove) {
             return this.applyLegalDrop(move, state);
         } else if (move instanceof HiveMoveCoordToCoord) {
             return this.applyLegalMoveCoordToCoord(move, state);
@@ -39,7 +39,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return state.update().increaseTurnAndFinalizeUpdate();
         }
     }
-    private applyLegalDrop(drop: HiveMoveDrop, state: HiveState): HiveState {
+    private applyLegalDrop(drop: HiveDropMove, state: HiveState): HiveState {
         // Put the piece where it is dropped, possibly on top of other pieces
         const pieceStack: HivePieceStack = state.getAt(drop.coord);
         return state.update()
@@ -57,7 +57,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             .increaseTurnAndFinalizeUpdate();
     }
     public isLegal(move: HiveMove, state: HiveState): MGPValidation {
-        if (move instanceof HiveMoveDrop) {
+        if (move instanceof HiveDropMove) {
             return this.isLegalDrop(move, state);
         } else if (move instanceof HiveMoveCoordToCoord) {
             return this.isLegalMoveCoordToCoord(move, state);
@@ -104,7 +104,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     public mustPlaceQueenBee(state: HiveState): boolean {
         return state.turn >= 6 && state.hasQueenBeeOnBoard(state.getCurrentPlayer()) === false;
     }
-    public isLegalDrop(move: HiveMoveDrop, state: HiveState): MGPValidation {
+    public isLegalDrop(move: HiveDropMove, state: HiveState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         // This should be a piece of the player
         if (move.piece.owner === player.getOpponent()) {
@@ -130,7 +130,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return MGPValidation.SUCCESS;
     }
-    private checkNeighborValidity(move: HiveMoveDrop, state: HiveState): MGPValidation {
+    private checkNeighborValidity(move: HiveDropMove, state: HiveState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         let hasNeighbor: boolean = false;
         for (const neighbor of HexagonalUtils.getNeighbors(move.coord)) {
@@ -168,7 +168,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         for (const coord of state.occupiedSpaces()) {
             if (state.getAt(coord).topPiece().owner === player) {
                 for (const neighbor of state.emptyNeighbors(coord)) {
-                    const move: HiveMoveDrop = HiveMoveDrop.of(remainingPiece, neighbor);
+                    const move: HiveDropMove = HiveDropMove.of(remainingPiece, neighbor);
                     if (this.isLegalDrop(move, state).isSuccess()) {
                         locations.add(neighbor);
                     }

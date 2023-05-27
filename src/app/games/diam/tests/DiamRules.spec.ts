@@ -28,14 +28,12 @@ describe('DiamRules', () => {
             new DiamDummyMinimax(rules, 'DiamDummyMinimax'),
         ];
     });
-
     function drop(target: number, piece: DiamPiece): DiamMove {
         return new DiamMoveDrop(target, piece);
     }
     function shift(start: Coord, direction: 'clockwise' | 'counterclockwise'): DiamMove {
         return DiamMoveShift.fromRepresentation(start, direction);
     }
-
     describe('drop moves', () => {
         it('should allow a simple drop on the empty board', () => {
             // Given the initial state

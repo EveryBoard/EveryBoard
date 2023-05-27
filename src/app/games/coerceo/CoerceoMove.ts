@@ -53,16 +53,18 @@ export class CoerceoStep implements ComparableObject {
 
 export class CoerceoNormalMove extends MoveCoordToCoord {
 
-    public static readonly encoder: Encoder<CoerceoNormalMove> = MoveCoordToCoord.getEncoder(CoerceoNormalMove.strictFrom);
+    public static readonly encoder: Encoder<CoerceoNormalMove> =
+        MoveCoordToCoord.getEncoder(CoerceoNormalMove.strictFrom);
 
     private static strictFrom(start: Coord, end: Coord): MGPFallible<CoerceoNormalMove> {
         const step: CoerceoStep = CoerceoStep.fromCoords(start, end);
-        return MGPFallible.success(CoerceoNormalMove.fromMovement(start, step));
+        const move: CoerceoNormalMove = CoerceoNormalMove.fromMovement(start, step) as CoerceoNormalMove;
+        return MGPFallible.success(move);
     }
     public static from(start: Coord, end: Coord): MGPFallible<CoerceoMove> {
         return CoerceoNormalMove.strictFrom(start, end);
     }
-    public static fromMovement(start: Coord, step: CoerceoStep): CoerceoNormalMove {
+    public static fromMovement(start: Coord, step: CoerceoStep): CoerceoMove {
         Utils.assert(start.isInRange(15, 10), 'Starting coord cannot be out of range (width: 15, height: 10).');
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
         Utils.assert(landingCoord.isInRange(15, 10), 'Landing coord cannot be out of range (width: 15, height: 10).');
@@ -77,13 +79,17 @@ export class CoerceoNormalMove extends MoveCoordToCoord {
     public override toString(): string {
         return 'CoerceoNormalMove(' + this.getStart().toString() + ' > ' + this.getEnd().toString() + ')';
     }
+    public override equals(other: CoerceoMove): boolean {
+        if (other.isTileExchange()) {
+            return false;
+        } else {
+            return MoveCoordToCoord.equals(this, other);
+        }
+    }
 }
 
 export class CoerceoTileExchangeMove extends MoveCoord {
 
-    public override toString(): string {
-        throw new Error('Method not implemented.');
-    }
     public static encoder: Encoder<CoerceoTileExchangeMove> = MoveCoord.getEncoder(CoerceoTileExchangeMove.strictFrom);
 
     private static strictFrom(capture: Coord): MGPFallible<CoerceoTileExchangeMove> {
@@ -98,6 +104,16 @@ export class CoerceoTileExchangeMove extends MoveCoord {
     }
     public isTileExchange(): this is CoerceoTileExchangeMove {
         return true;
+    }
+    public override toString(): string {
+        throw new Error('Method not implemented.');
+    }
+    public override equals(other: CoerceoMove): boolean {
+        if (other.isTileExchange()) {
+            return other.coord.equals(this.coord);
+        } else {
+            return false;
+        }
     }
 }
 

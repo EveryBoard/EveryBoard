@@ -33,7 +33,7 @@ export class CoerceoTutorial extends Tutorial {
         You're playing first, hence you're playing Dark.
         Perform any move.`,
             CoerceoState.getInitialState(),
-            CoerceoNormalMove.from(new Coord(3, 5), new Coord(5, 5)),
+            CoerceoNormalMove.from(new Coord(3, 5), new Coord(5, 5)).get(),
             $localize`Congratulations! Let's see captures now.`,
         ),
         TutorialStep.fromMove(
@@ -55,8 +55,8 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
             ], 3, [0, 0], [0, 0]),
             [
-                CoerceoNormalMove.from(new Coord(5, 2), new Coord(4, 1)),
-                CoerceoNormalMove.from(new Coord(3, 4), new Coord(4, 3)),
+                CoerceoNormalMove.from(new Coord(5, 2), new Coord(4, 1)).get(),
+                CoerceoNormalMove.from(new Coord(3, 4), new Coord(4, 3)).get(),
             ],
             $localize`Congratulations!`,
             $localize`Failed, you have not captured any piece.`,
@@ -82,9 +82,9 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
             ], 2, [0, 0], [0, 0]),
             [
-                CoerceoNormalMove.from(new Coord(2, 6), new Coord(4, 6)),
-                CoerceoNormalMove.from(new Coord(2, 6), new Coord(3, 5)),
-                CoerceoNormalMove.from(new Coord(2, 6), new Coord(3, 7)),
+                CoerceoNormalMove.from(new Coord(2, 6), new Coord(4, 6)).get(),
+                CoerceoNormalMove.from(new Coord(2, 6), new Coord(3, 5)).get(),
+                CoerceoNormalMove.from(new Coord(2, 6), new Coord(3, 7)).get(),
             ],
             $localize`Congratulations!`,
             $localize`Failed, you have not gained the two tiles that you could, try again!`,
@@ -109,7 +109,7 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
             ], 1, [0, 2], [0, 0]),
             [
-                CoerceoTileExchangeMove.from(new Coord(5, 5)),
+                CoerceoTileExchangeMove.from(new Coord(5, 5)).get(),
             ],
             $localize`Congratulations!`,
             $localize`It's nice to move a piece, but you could have had the opponent's piece immediately by clicking on it!`,
@@ -132,8 +132,8 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ], 1, [0, 0], [0, 0]),
             [
-                CoerceoNormalMove.from(new Coord(7, 6), new Coord(6, 5)),
-                CoerceoNormalMove.from(new Coord(7, 6), new Coord(8, 5)),
+                CoerceoNormalMove.from(new Coord(7, 6), new Coord(6, 5)).get(),
+                CoerceoNormalMove.from(new Coord(7, 6), new Coord(8, 5)).get(),
             ],
             $localize`Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent's piece has disappeared because the tile's capture has removed its last empty neighboring space.`,

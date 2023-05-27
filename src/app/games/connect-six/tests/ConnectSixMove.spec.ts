@@ -69,14 +69,14 @@ describe('ConnectSixMove', () => {
             RulesUtils.expectToThrowAndLog(tryingOutOfRangeCoord, 'FIRST_COORD_IS_OUT_OF_RANGE');
         });
         it('should create move when coord is in the board', () => {
-            const move: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(0, 0));
+            const move: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(0, 0)).get();
             expect(move).toBeTruthy();
         });
         describe('equals', () => {
             it('should be equal when coords are equal', () => {
                 // Given two move with equal coord
-                const first: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(0, 0));
-                const second: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(0, 0));
+                const first: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(0, 0)).get();
+                const second: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(0, 0)).get();
 
                 // When comparing them
                 // Then they should be considered equal
@@ -84,8 +84,8 @@ describe('ConnectSixMove', () => {
             });
             it('should be different when coords are different', () => {
                 // Given two move with different coord
-                const first: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(0, 0));
-                const second: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(1, 1));
+                const first: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(0, 0)).get();
+                const second: ConnectSixFirstMove = ConnectSixFirstMove.from(new Coord(1, 1)).get();
 
                 // When comparing them
                 // Then they should be considered different
@@ -96,7 +96,7 @@ describe('ConnectSixMove', () => {
     describe('encoder', () => {
         it('should be bijective', () => {
             const moves: ConnectSixMove[] = [
-                ConnectSixFirstMove.from(new Coord(0, 0)),
+                ConnectSixFirstMove.from(new Coord(0, 0)).get(),
                 ConnectSixDrops.from(new Coord(0, 0), new Coord(1, 1)).get(),
             ];
             for (const move of moves) {

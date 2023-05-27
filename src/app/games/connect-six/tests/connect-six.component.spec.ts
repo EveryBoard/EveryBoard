@@ -27,7 +27,7 @@ describe('ConnectSixComponent', () => {
             // Given the initial state of the component
             // When clicking anywhere
             // Then a first move should be done
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9));
+            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)).get();
             await testUtils.expectMoveSuccess('#click_9_9', move);
         }));
         it('should cancel move when clicking on occupied stone from previous turns', fakeAsync(async() => {
@@ -220,7 +220,7 @@ describe('ConnectSixComponent', () => {
             ], 1);
 
             // When displaying it
-            testUtils.setupState(state, undefined, ConnectSixFirstMove.from(new Coord(9, 9)));
+            testUtils.setupState(state, undefined, ConnectSixFirstMove.from(new Coord(9, 9)).get());
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece_9_9', 'last-move-stroke');

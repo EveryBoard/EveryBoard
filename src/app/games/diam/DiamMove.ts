@@ -39,6 +39,7 @@ export class DiamMoveDrop extends Move {
 type DiamShiftDirection = 'clockwise' | 'counterclockwise';
 
 export class DiamMoveShift extends Move {
+
     public static encoder: Encoder<DiamMoveShift> = Encoder.tuple(
         [Coord.encoder, Encoder.identity<boolean>()],
         (shift: DiamMoveShift): [Coord, boolean] => [shift.start, shift.moveDirection === 'clockwise'],
