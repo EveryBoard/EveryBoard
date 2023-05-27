@@ -94,12 +94,12 @@ export class OGWCRequestManagerService {
         if (this.forbiddenRequests.contains(request)) return false;
         return true;
     }
-    public getOpenRequest(player: Player): MGPOptional<RequestInfo> {
+    public getOpenRequest(player: Player): MGPOptional<RequestType> {
         // Different from canMakeRequest, as we can play if our requests have not been answered for example.
         if (this.requestAwaitingReply.isPresent() &&
             this.requestAwaitingReply.get().player === player.getOpponent().value)
         {
-            return MGPOptional.of(OGWCRequestManagerService.requestInfos[this.requestAwaitingReply.get().requestType]);
+            return MGPOptional.of(this.requestAwaitingReply.get().requestType);
         } else {
             return MGPOptional.empty();
         }
@@ -107,7 +107,7 @@ export class OGWCRequestManagerService {
     public getCurrentRequest(): MGPOptional<GameEventRequest> {
         return this.requestAwaitingReply;
     }
-    public deniedRequest(): MGPOptional<RequestInfo> {
-        return this.lastDeniedRequest.map((r: RequestType) => OGWCRequestManagerService.requestInfos[r]);
+    public deniedRequest(): MGPOptional<RequestType> {
+        return this.lastDeniedRequest;
     }
 }

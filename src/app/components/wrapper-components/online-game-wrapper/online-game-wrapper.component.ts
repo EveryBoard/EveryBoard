@@ -75,6 +75,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public readonly globalTimeMessage: string = $localize`5 minutes`;
     public readonly turnTimeMessage: string = $localize`30 seconds`;
 
+    public readonly requestInfos: Record<RequestType, RequestInfo> = OGWCRequestManagerService.requestInfos;
+    public readonly allRequests: RequestType[] = ['TakeBack', 'Draw', 'Rematch'];
+
     public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
@@ -336,20 +339,24 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const hasOpponent: boolean = this.opponent != null;
         return hasOpponent;
     }
-    public requestsAvailable(): RequestInfo[] {
-        const requests: RequestType[] = [];
-        if (this.canAskTakeBack()) requests.push('TakeBack');
-        if (this.canProposeDraw()) requests.push('Draw');
-        if (this.endGame) requests.push('Rematch');
-        return requests.map((r: RequestType) => OGWCRequestManagerService.requestInfos[r]);
+    public requestAvailable(request: RequestType): boolean {
+        switch (request) {
+            case 'TakeBack':
+                return this.canAskTakeBack();
+            case 'Draw':
+                return this.canProposeDraw();
+            default:
+                Utils.expectToBe(request, 'Rematch');
+                return this.endGame;
+        }
     }
     public mustReply(): boolean {
         return this.requestAwaitingReply().isPresent();
     }
-    public requestAwaitingReply(): MGPOptional<RequestInfo> {
+    public requestAwaitingReply(): MGPOptional<RequestType> {
         return this.requestManager.getOpenRequest(this.role as Player);
     }
-    public deniedRequest(): MGPOptional<RequestInfo> {
+    public deniedRequest(): MGPOptional<RequestType> {
         return this.requestManager.deniedRequest();
     }
     private canAskTakeBack(): boolean {
