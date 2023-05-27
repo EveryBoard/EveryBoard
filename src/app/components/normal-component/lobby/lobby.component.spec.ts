@@ -353,7 +353,8 @@ describe('LobbyComponent', () => {
         const userWithLastUpdateTime: User = {
             ...UserMocks.CREATOR,
             lastUpdateTime: new Timestamp(timeStampInSecond, 0),
-        };
+            state: 'online', // does not exist anymore, so we need to cast to enforce it
+        } as User;
         await TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.id, userWithLastUpdateTime);
         tick();
         await testUtils.clickElement('#tab-chat');

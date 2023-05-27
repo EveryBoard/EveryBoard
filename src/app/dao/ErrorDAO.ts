@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FirestoreTime } from '../domain/Time';
-import { FirestoreJSONObject, JSONValue } from '../utils/utils';
+import { JSONValue } from '../utils/utils';
 import { FirestoreDocument, FirestoreDAO } from './FirestoreDAO';
 
-export interface MGPError extends FirestoreJSONObject {
+export type MGPError = {
     // The component in which the error occured
     component: string,
     // Route on which the error occured

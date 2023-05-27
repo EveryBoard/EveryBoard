@@ -33,9 +33,9 @@ describe('ActiveUsersService', () => {
     it('should update list of users when one change', fakeAsync(async() => {
         await activeUsersService.userDAO.set('playerDocId', {
             username: 'premier',
-            state: 'online',
             verified: true,
-        });
+            state: 'online', // does not exist anymore, so we need to cast to enforce it
+        } as User);
         let observerCalls: number = 0;
         const subscription: Subscription = activeUsersService.subscribeToActiveUsers((users: UserDocument[]) => {
             if (observerCalls === 1) {
@@ -43,9 +43,9 @@ describe('ActiveUsersService', () => {
                     id: 'playerDocId',
                     data: {
                         username: 'nouveau',
-                        state: 'online',
                         verified: true,
-                    },
+                        state: 'online', // does not exist anymore, so we need to cast to enforce it
+                    } as User,
                 }]);
             }
             observerCalls++;
@@ -113,9 +113,9 @@ describe('ActiveUsersService', () => {
             // Given an active users service where we subscribed in the past
             await userDAO.set('userId', {
                 username: 'premier',
-                state: 'online',
                 verified: true,
-            });
+                state: 'online', // does not exist anymore, so we need to cast to enforce it
+            } as User);
             let seenActiveUsers: UserDocument[] = [];
             let activeUsersSubscription: Subscription = activeUsersService.subscribeToActiveUsers(
                 (activeUsers: UserDocument[]) => {

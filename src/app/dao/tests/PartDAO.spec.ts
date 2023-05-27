@@ -617,7 +617,7 @@ describe('PartDAO security', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTED, remainingMsForOne: 1, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // Wait 10ms to ensure the player has timed out
@@ -732,7 +732,7 @@ describe('PartDAO security', () => {
                     eventType: 'Invalid' as 'Move',
                     time: serverTimestamp(),
                     player: 0,
-                };
+                } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
@@ -749,7 +749,7 @@ describe('PartDAO security', () => {
                     eventType: 'Action',
                     time: serverTimestamp(),
                     player: 1,
-                };
+                } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
@@ -863,7 +863,7 @@ describe('PartDAO security', () => {
                 it('should forbid creating StartGame action at non-0 turn', async() => {
                     // Given an ongoing part mid-game
                     const partId: string = await setupStartedPartAsPlayerZero();
-                    await expectAsync(partDAO.update(partId, { turn: 1 }));
+                    await expectAsync(partDAO.update(partId, { turn: 1 })).toBeResolved();
 
                     // When creating a StartGame action at turn > 0
                     const result: Promise<string> = gameEventService.startGame(partId, Player.ZERO);
@@ -926,7 +926,7 @@ describe('PartDAO security', () => {
                 it('should allow requesting take back in in-progress game', async() => {
                     // Given a part at turn >= 1
                     const partId: string = await setupStartedPartAsPlayerZero();
-                    await expectAsync(partDAO.update(partId, { turn: 1 }));
+                    await expectAsync(partDAO.update(partId, { turn: 1 })).toBeResolvedTo();
 
                     // When requesting a take back in-game
                     const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'TakeBack');

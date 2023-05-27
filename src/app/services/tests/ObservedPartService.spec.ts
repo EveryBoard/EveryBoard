@@ -13,7 +13,6 @@ import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { Part } from 'src/app/domain/Part';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 
@@ -157,7 +156,7 @@ describe('ObservedPartService', () => {
                 ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
 
                 // When asking to update observedPart
-                spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+                spyOn(userDAO, 'update').and.resolveTo();
                 const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITHOUT_OPPONENT;
                 await observedPartService.updateObservedPart(observedPart);
 
@@ -175,7 +174,7 @@ describe('ObservedPartService', () => {
                 await observedPartService.updateObservedPart(oldValue);
 
                 // When updating it with another value
-                spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+                spyOn(userDAO, 'update').and.resolveTo();
                 const newValue: Partial<FocusedPart> = {
                     id: 'new',
                 };
@@ -235,7 +234,7 @@ describe('ObservedPartService', () => {
                 ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
 
                 // When asking to update observedPart
-                spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+                spyOn(userDAO, 'update').and.resolveTo();
                 await observedPartService.removeObservedPart();
 
                 // Then the userDAO should update the connected user doc
