@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ "$0" != "skip-update" ]; then
+if [ "$1" != "skip" ]; then
     ./scripts/update-translations.sh
 fi
 python ./scripts/check-translations.py script
