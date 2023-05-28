@@ -12,6 +12,7 @@ import { Localized } from '../utils/LocaleUtils';
 import { UserService } from './UserService';
 
 // TODO: still a bug (that was there already): when part in creation, if you log out, it crashes
+// TODO: other bug: log out, then log in again without reloading the page: observed part is incorrect
 @Injectable({
     providedIn: 'root',
 })
@@ -131,6 +132,9 @@ export class ObservedPartService implements OnDestroy {
                 return MGPValidation.failure(message);
             }
         }
+    }
+    public getObservedPart(): MGPOptional<FocusedPart> {
+        return this.observedPart;
     }
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();

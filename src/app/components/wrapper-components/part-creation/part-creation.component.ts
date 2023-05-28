@@ -326,6 +326,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                     totalPartDuration);
     }
     public async cancelGameCreation(): Promise<void> {
+        console.log('PartCreation.cancelGameCreation')
         this.allDocDeleted = true;
         await this.observedPartService.removeObservedPart();
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
@@ -498,7 +499,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.gameService.acceptConfig(this.partId, Utils.getNonNullable(this.currentConfigRoom));
     }
     public async ngOnDestroy(): Promise<void> {
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnDestroy');
+        display(PartCreationComponent.VERBOSE || true, 'PartCreationComponent.ngOnDestroy');
 
         // This will unsubscribe from all observables
         this.ngUnsubscribe.next();
@@ -509,6 +510,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.candidatesSubscription.unsubscribe();
 
         this.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+        if (this.connectedUserService.user.isAbsent()) {
+            // User disconnected, there's not much we can do at this point
+            // We could instead remove parts in creation when doing the log out,
+            // but this is an unlikely event and just ignoring log outs here
+            // treats this similar to a "tab closed" event, so it is more consistent behavior.
+            return;
+        }
         const authUser: AuthUser = this.connectedUserService.user.get();
 
         if (this.gameStarted === true) {

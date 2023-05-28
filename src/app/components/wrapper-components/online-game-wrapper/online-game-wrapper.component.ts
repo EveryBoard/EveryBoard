@@ -624,7 +624,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.routerEventsSubscription.unsubscribe();
         this.userSubscription.unsubscribe();
         this.observedPartSubscription.unsubscribe();
-        if (this.isPlaying() === false && this.userLinkedToThisPart) {
+        if (this.isPlaying() === false && this.userLinkedToThisPart && this.connectedUserService.user.isPresent()) {
             await this.observedPartService.removeObservedPart();
         }
         if (this.gameStarted === true) {
