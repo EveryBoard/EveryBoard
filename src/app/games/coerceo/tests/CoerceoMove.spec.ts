@@ -60,6 +60,7 @@ describe('CoerceoMove', () => {
 
             expect(tileExchange.equals(differentCapture)).toBeFalse();
             expect(tileExchange.equals(tileExchange)).toBeTrue();
+            expect(tileExchange.equals(movement)).toBeFalse();
 
             expect(movement.equals(differentStart)).toBeFalse();
             expect(movement.equals(differentEnd)).toBeFalse();

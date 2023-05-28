@@ -30,7 +30,7 @@ export class SixMove extends Move {
                         public readonly keep: MGPOptional<Coord>)
     {
         super();
-        Utils.assert(start.equalsValue(landing) === false ,'Deplacement cannot be static!');
+        Utils.assert(start.equalsValue(landing) === false, 'Deplacement cannot be static!');
         Utils.assert(start.isAbsent() || start.equals(keep) === false,
                      'Cannot keep starting coord, since it will always be empty after move!');
     }

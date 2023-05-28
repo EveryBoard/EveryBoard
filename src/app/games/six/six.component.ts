@@ -150,8 +150,8 @@ export class SixComponent
             return MGPValidation.SUCCESS;
         } else {
             const cuttingMove: SixMove = SixMove.ofCut(this.selectedPiece.get(),
-                                                         this.chosenLanding.get(),
-                                                         piece);
+                                                       this.chosenLanding.get(),
+                                                       piece);
             return this.chooseMove(cuttingMove, this.state);
         }
     }

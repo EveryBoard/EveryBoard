@@ -17,7 +17,7 @@ export class Coord3D extends Coord {
         return new Coord3D(x, y, z);
     }
     public static from(x: number, y: number, z: number): MGPFallible<Coord3D> {
-        return MGPFallible.success(Coord3D.of(x, y,z));
+        return MGPFallible.success(Coord3D.of(x, y, z));
     }
     public constructor(x: number, y: number, public readonly z: number) {
         super(x, y);

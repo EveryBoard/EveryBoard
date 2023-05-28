@@ -2,7 +2,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Encoder } from 'src/app/utils/Encoder';
-import { ComparableObject } from 'src/app/utils/Comparable';
 import { CoerceoFailure } from './CoerceoFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
