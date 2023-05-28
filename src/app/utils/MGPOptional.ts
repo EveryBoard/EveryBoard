@@ -22,7 +22,7 @@ export class MGPOptional<T> {
         return new class extends Encoder<MGPOptional<T>> {
             public encode(opt: MGPOptional<T>): JSONValueWithoutArray {
                 if (opt.isPresent()) {
-                    // TODO: HALP, j'fais de la merde là je crois
+                    // TODO FOR REVIEW: c'est-ce-tu correct lo ?
                     return encoderT.encodeValue(opt.get()) as JSONValueWithoutArray;
                 } else {
                     return null;

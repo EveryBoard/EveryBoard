@@ -3,7 +3,7 @@ import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
 import { Localized } from '../utils/LocaleUtils';
-import { AbstractEncoder, Encoder } from '../utils/Encoder';
+import { Encoder } from '../utils/Encoder';
 import { Vector } from './Vector';
 
 export abstract class BaseDirection extends Vector {
@@ -98,17 +98,16 @@ export abstract class DirectionFactory<T extends BaseDirection> {
     }
 }
 
-export class DirectionEncoder extends AbstractEncoder<Direction> {
-
-    public encodeValue(dir: Direction): string {
+export const DirectionEncoder: Encoder<Direction> = Encoder.fromFunctions(
+    (dir: Direction): string => {
         return dir.toString();
-    }
-    public decodeValue(encoded: JSONValue): Direction {
+    },
+    (encoded: JSONValue): Direction => {
         assert(typeof encoded === 'string', 'Invalid encoded direction');
         const fromString: MGPFallible<Direction> = Direction.factory.fromString(encoded as string);
         return fromString.get();
-    }
-}
+    },
+);
 
 export class Direction extends BaseDirection {
 
@@ -149,7 +148,7 @@ export class Direction extends BaseDirection {
         Direction.LEFT,
     ];
 
-    public static readonly encoder: AbstractEncoder<Direction> = new DirectionEncoder();
+    public static readonly encoder: Encoder<Direction> = DirectionEncoder;
 
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);

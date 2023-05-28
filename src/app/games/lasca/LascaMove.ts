@@ -82,7 +82,7 @@ export class LascaMove extends Move {
     private constructor(coords: Coord[], public readonly isStep: boolean) {
         super();
         this.coords = new MGPUniqueList(coords);
-    } // TODO: CoordListEncoder
+    }
     public override toString(): string {
         const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());
         const coordString: string = coordStrings.join(', ');

@@ -16,7 +16,7 @@ export class GipfCapture {
                 return Coord.encoder.encode(coord);
             });
         }
-        public decodeValue(encoded: JSONValue): GipfCapture { // TODO: Implement CoordListEncoder
+        public decodeValue(encoded: JSONValue): GipfCapture {
             const casted: Array<JSONValue> = encoded as Array<JSONValue>;
             return new GipfCapture(casted.map(Coord.encoder.decode));
         }
@@ -90,7 +90,7 @@ type GipfPlacementFields = [Coord, MGPOptional<HexaDirection>];
 
 export class GipfPlacement {
 
-    public static encoder: AbstractEncoder<GipfPlacement> = Encoder.tuple(
+    public static encoder: Encoder<GipfPlacement> = Encoder.tuple(
         [Coord.encoder, MGPOptional.getEncoder(HexaDirection.encoder)],
         (placement: GipfPlacement): GipfPlacementFields => [placement.coord, placement.direction],
         (fields: GipfPlacementFields): GipfPlacement => new GipfPlacement(fields[0], fields[1]),

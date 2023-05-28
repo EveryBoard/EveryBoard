@@ -8,7 +8,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 describe('KamisadoMove', () => {
 
     it('should toString in a readable way', () => {
-        expect((KamisadoMove.from(new Coord(0, 0), new Coord(1, 5))).toString()).toEqual('KamisadoMove((0, 0)->(1, 5))');
+        expect(KamisadoMove.from(new Coord(0, 0), new Coord(1, 5)).get().toString()).toEqual('KamisadoMove((0, 0)->(1, 5))');
         expect(KamisadoMove.PASS.toString()).toEqual('KamisadoMove(PASS)');
     });
     it('should have a bijective encoder', () => {

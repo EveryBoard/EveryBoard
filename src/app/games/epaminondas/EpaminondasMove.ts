@@ -2,6 +2,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Coord } from 'src/app/jscaip/Coord';
+import { Utils } from 'src/app/utils/utils';
 
 type EpaminondasMoveFields = [Coord, number, number, Direction];
 
@@ -20,18 +21,10 @@ export class EpaminondasMove extends MoveCoord {
                        public readonly direction: Direction)
     {
         super(x, y);
-        if (this.coord.isNotInRange(14, 12)) {
-            throw new Error('Illegal coord outside of board ' + this.coord.toString() + '.');
-        }
-        if (movedPieces < 1) {
-            throw new Error('Must select minimum one piece (got ' + movedPieces + ').');
-        }
-        if (stepSize < 1) {
-            throw new Error('Step size must be minimum one (got ' + stepSize + ').');
-        }
-        if (stepSize > movedPieces) {
-            throw new Error('Cannot move a phalanx further than its size (got step size ' + stepSize + ' for ' + movedPieces+ ' pieces).');
-        }
+        Utils.assert(this.coord.isInRange(14, 12), 'Illegal coord outside of board ' + this.coord.toString() + '.');
+        Utils.assert(movedPieces > 0, 'Must select minimum one piece (got ' + movedPieces + ').');
+        Utils.assert(stepSize > 0, 'Step size must be minimum one (got ' + stepSize + ').');
+        Utils.assert(stepSize <= movedPieces, 'Cannot move a phalanx further than its size (got step size ' + stepSize + ' for ' + movedPieces+ ' pieces).');
     }
     public toString(): string {
         return 'EpaminondasMove(' + this.coord.toString() + ', m:' +

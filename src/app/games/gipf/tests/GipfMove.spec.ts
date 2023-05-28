@@ -205,7 +205,7 @@ describe('GipfMove', () => {
     });
     describe('encode', () => {
         it('should delegate encoding to encoder', () => {
-            spyOn(GipfMove.encoder, 'encode').and.callThrough();
+            spyOn(GipfMove.encoder, 'encodeValue').and.callThrough();
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
                                                                MGPOptional.of(HexaDirection.DOWN));
             const move: GipfMove = new GipfMove(placement, [], []);
@@ -216,7 +216,7 @@ describe('GipfMove', () => {
     });
     describe('decode', () => {
         it('should delegate decoding to encoder', () => {
-            spyOn(GipfMove.encoder, 'decode').and.callThrough();
+            spyOn(GipfMove.encoder, 'decodeValue').and.callThrough();
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
                                                                MGPOptional.of(HexaDirection.DOWN));
             const move: GipfMove = new GipfMove(placement, [], []);

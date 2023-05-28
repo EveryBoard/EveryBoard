@@ -9,7 +9,7 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class CoerceoStep implements ComparableObject {
+export class CoerceoStep {
 
     public static LEFT: CoerceoStep = new CoerceoStep(new Vector(-2, 0), 'LEFT');
 
@@ -34,21 +34,11 @@ export class CoerceoStep implements ComparableObject {
     public static fromCoords(a: Coord, b: Coord): CoerceoStep {
         const vector: Vector = a.getVectorToward(b);
         const stepIndex: number = CoerceoStep.STEPS.findIndex((s: CoerceoStep) => s.direction.equals(vector));
-        if (stepIndex === -1) {
-            throw new Error(CoerceoFailure.INVALID_DISTANCE());
-        } else {
-            return CoerceoStep.STEPS[stepIndex];
-        }
+        Utils.assert(stepIndex !== -1, CoerceoFailure.INVALID_DISTANCE());
+        return CoerceoStep.STEPS[stepIndex];
     }
 
     private constructor(public readonly direction: Vector, public readonly str: string) {}
-
-    public equals(other: CoerceoStep): boolean {
-        return this === other;
-    }
-    public toString(): string {
-        return this.str;
-    }
 }
 
 export class CoerceoNormalMove extends MoveCoordToCoord {
@@ -106,7 +96,7 @@ export class CoerceoTileExchangeMove extends MoveCoord {
         return true;
     }
     public override toString(): string {
-        throw new Error('Method not implemented.');
+        return 'CoerceoTileExchangeMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }
     public override equals(other: CoerceoMove): boolean {
         if (other.isTileExchange()) {

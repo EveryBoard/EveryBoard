@@ -43,14 +43,14 @@ describe('LinesOfActionMove', () => {
     });
     describe('encode/decode', () => {
         it('should delegate encoding to encoder', () => {
-            spyOn(LinesOfActionMove.encoder, 'encode').and.callThrough();
+            spyOn(LinesOfActionMove.encoder, 'encodeValue').and.callThrough();
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(6, 4)).get();
             move.encode();
 
             expect(LinesOfActionMove.encoder.encodeValue).toHaveBeenCalledTimes(1);
         });
         it('should delegate decoding to encoder', () => {
-            spyOn(LinesOfActionMove.encoder, 'decode').and.callThrough();
+            spyOn(LinesOfActionMove.encoder, 'decodeValue').and.callThrough();
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(6, 4)).get();
             const encoded: JSONValue = move.encode();
             move.decode(encoded);

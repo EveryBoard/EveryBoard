@@ -2,7 +2,7 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord3D } from '../Coord3D';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { AbstractEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 
 describe('Coord3D', () => {
 
@@ -12,7 +12,7 @@ describe('Coord3D', () => {
             MGPOptional.empty(),
             MGPOptional.of(new Coord3D(0, 0, 0)),
         ];
-        const encoder: AbstractEncoder<MGPOptional<Coord3D>> =
+        const encoder: Encoder<MGPOptional<Coord3D>> =
             MGPOptional.getEncoder(Coord3D.getCoord3DEncoder(Coord3D.from));
         for (const value of values) {
             EncoderTestUtils.expectToBeBijective(encoder, value);

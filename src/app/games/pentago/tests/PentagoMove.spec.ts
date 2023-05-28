@@ -1,16 +1,22 @@
 /* eslint-disable max-lines-per-function */
-import { JSONValue } from 'src/app/utils/utils';
 import { PentagoMove } from '../PentagoMove';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('PentagoMove', () => {
 
     it('should throw when rotating inexistant block', () => {
-        const expectedError: string = 'This block do not exist: -1';
-        expect(() => PentagoMove.withRotation(0, 0, -1, true)).toThrowError(expectedError);
+        function rotatingInexistantBlock(): void {
+            PentagoMove.withRotation(0, 0, -1, true);
+        }
+        RulesUtils.expectToThrowAndLog(rotatingInexistantBlock, 'This block do not exist: -1');
     });
     it('should throw when space not in range', () => {
-        const expectedError: string = 'The board is a 6 cas wide square, invalid coord: (-1, 6)';
-        expect(() => PentagoMove.rotationless(-1, 6)).toThrowError(expectedError);
+        function usingOutOfRangeCoord(): void {
+            PentagoMove.rotationless(-1, 6);
+        }
+        RulesUtils.expectToThrowAndLog(usingOutOfRangeCoord,
+                                       'The board is a 6 cas wide square, invalid coord: (-1, 6)');
     });
     it('should print nicely', () => {
         let expectedString: string = 'PentagoMove(4, 2)';
@@ -44,9 +50,7 @@ describe('PentagoMove', () => {
             PentagoMove.withRotation(2, 3, 0, false),
         ];
         for (const move of moves) {
-            const encodedMove: JSONValue = PentagoMove.encoder.encodeValue(move);
-            const decodedMove: PentagoMove = PentagoMove.encoder.decodeValue(encodedMove);
-            expect(move.equals(decodedMove)).toBeTrue();
+            EncoderTestUtils.expectToBeBijective(PentagoMove.encoder, move);
         }
     });
 });

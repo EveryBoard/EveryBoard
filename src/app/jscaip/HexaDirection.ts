@@ -1,5 +1,4 @@
 import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BaseDirection, DirectionFactory } from './Direction';
 import { Encoder } from '../utils/Encoder';
@@ -16,7 +15,7 @@ class HexaDirectionEncoder extends Encoder<HexaDirection> {
         }
     }
     public decode(encoded: number): HexaDirection {
-        assert(0 <= encoded && encoded <= 5, 'Invalid encoded number for HexaDirection ' + encoded);
+        Utils.assert(0 <= encoded && encoded <= 5, 'Invalid encoded number for HexaDirection ' + encoded);
         return HexaDirection.factory.all[encoded];
     }
 }

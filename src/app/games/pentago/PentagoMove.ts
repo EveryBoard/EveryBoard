@@ -34,9 +34,8 @@ export class PentagoMove extends MoveCoord {
                         public readonly turnedClockwise: boolean = false)
     {
         super(x, y);
-        if (this.coord.isNotInRange(6, 6)) {
-            throw new Error('The board is a 6 cas wide square, invalid coord: ' + this.coord.toString());
-        }
+        Utils.assert(this.coord.isInRange(6, 6),
+                     'The board is a 6 cas wide square, invalid coord: ' + this.coord.toString());
     }
     public override toString(): string {
         if (this.blockTurned.isPresent()) {

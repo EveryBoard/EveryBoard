@@ -3,7 +3,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { AbstractEncoder, Encoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { HivePiece } from './HivePiece';
@@ -11,7 +11,7 @@ import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class HiveDropMove extends MoveCoord {
 
-    public static encoder: AbstractEncoder<HiveDropMove> = Encoder.tuple(
+    public static encoder: Encoder<HiveDropMove> = Encoder.tuple(
         [HivePiece.encoder, Coord.encoder],
         (move: HiveDropMove): [HivePiece, Coord] => [move.piece, move.coord],
         (fields: [HivePiece, Coord]): HiveDropMove => new HiveDropMove(fields[0], fields[1].x, fields[1].y),
@@ -35,7 +35,7 @@ export class HiveDropMove extends MoveCoord {
 
 export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
-    public static encoder: AbstractEncoder<HiveMoveCoordToCoord> =
+    public static encoder: Encoder<HiveMoveCoordToCoord> =
         MoveWithTwoCoords.getEncoder(HiveMoveCoordToCoord.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {
@@ -64,7 +64,7 @@ export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
 export class HiveMoveSpider extends HiveMoveCoordToCoord {
 
-    public static override encoder: AbstractEncoder<HiveMoveSpider> = Encoder.tuple(
+    public static override encoder: Encoder<HiveMoveSpider> = Encoder.tuple(
         [Coord.encoder, Coord.encoder, Coord.encoder, Coord.encoder],
         (move: HiveMoveSpider): [Coord, Coord, Coord, Coord] => move.coords,
         (fields: [Coord, Coord, Coord, Coord]): HiveMoveSpider => new HiveMoveSpider(fields),
