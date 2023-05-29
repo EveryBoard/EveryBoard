@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/r
 
 import { Subscription } from 'rxjs';
 
-import { FocusedPart } from '../domain/User';
+import { ObservedPart } from '../domain/User';
 import { ObservedPartService } from '../services/ObservedPartService';
 import { MGPOptional } from '../utils/MGPOptional';
 
@@ -20,11 +20,11 @@ export class ExclusiveOnlineGameGuard implements CanActivate {
     }
     public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
         console.log('canActivate')
-        const observedPart: MGPOptional<FocusedPart> = this.observedPartService.getObservedPart();
+        const observedPart: MGPOptional<ObservedPart> = this.observedPartService.getObservedPart();
         if (observedPart.isAbsent()) {
             return true;
         }
-        const part: FocusedPart = observedPart.get();
+        const part: ObservedPart = observedPart.get();
         if (route.params.id === part.id) {
             return true;
         }

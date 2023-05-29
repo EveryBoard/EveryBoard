@@ -29,8 +29,8 @@ import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { FirstPlayer, PartStatus, PartType, ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Part } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { FocusedPart } from 'src/app/domain/User';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { ObservedPart } from 'src/app/domain/User';
+import { ObservedPartMocks } from 'src/app/domain/mocks/ObservedPartMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
@@ -146,7 +146,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
 
                 // Then observedPart in user doc should be set
-                const expectedObservedPart: FocusedPart = FocusedPartMocks.CREATOR_WITHOUT_OPPONENT;
+                const expectedObservedPart: ObservedPart = ObservedPartMocks.CREATOR_WITHOUT_OPPONENT;
                 expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(expectedObservedPart);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -635,7 +635,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
 
                 // Then observedPart in user doc should be set
-                const observedPart: FocusedPart = FocusedPartMocks.CANDIDATE;
+                const observedPart: ObservedPart = ObservedPartMocks.CANDIDATE;
                 expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(observedPart);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -796,7 +796,7 @@ describe('PartCreationComponent', () => {
 
                 // Then an update should change user doc to say it's chosenOpponent now
                 expect(observedPartService.updateObservedPart)
-                    .toHaveBeenCalledOnceWith(FocusedPartMocks.CHOSEN_OPPONENT);
+                    .toHaveBeenCalledOnceWith(ObservedPartMocks.CHOSEN_OPPONENT);
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));

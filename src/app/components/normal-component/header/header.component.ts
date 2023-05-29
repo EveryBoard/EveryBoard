@@ -6,7 +6,7 @@ import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserSe
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { UserService } from 'src/app/services/UserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { FocusedPart } from 'src/app/domain/User';
+import { ObservedPart } from 'src/app/domain/User';
 
 @Component({
     selector: 'app-header',
@@ -25,7 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public showMenu: boolean = false;
 
-    public observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
+    public observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
 
     public constructor(public router: Router,
                        public connectedUserService: ConnectedUserService,
@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.username = user.email;
             }});
         this.observedPartSubscription =
-            this.observedPartService.subscribeToObservedPart((focusedPart: MGPOptional<FocusedPart>) => {
+            this.observedPartService.subscribeToObservedPart((focusedPart: MGPOptional<ObservedPart>) => {
                 this.observedPart = focusedPart;
             });
     }

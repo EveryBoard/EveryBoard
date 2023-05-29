@@ -3,8 +3,8 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { UserDAO } from 'src/app/dao/UserDAO';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
-import { FocusedPart } from 'src/app/domain/User';
+import { ObservedPartMocks } from 'src/app/domain/mocks/ObservedPartMocks.spec';
+import { ObservedPart } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
@@ -53,7 +53,7 @@ describe('HeaderComponent', () => {
         it('should remove comment in header when disconnecting', fakeAsync(async() => {
             // Given a connected user that has an observedPart
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            const observedPart: FocusedPart = FocusedPartMocks.CANDIDATE;
+            const observedPart: ObservedPart = ObservedPartMocks.CANDIDATE;
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
@@ -83,7 +83,7 @@ describe('HeaderComponent', () => {
     it('should redirect to your current part when clicking on its reference on the header', fakeAsync(async() => {
         // Given a component where connected user is observing a part
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITH_OPPONENT;
+        const observedPart: ObservedPart = ObservedPartMocks.CREATOR_WITH_OPPONENT;
         ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
         testUtils.detectChanges();
         tick();
@@ -105,7 +105,7 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become linked to an observedPart
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(FocusedPartMocks.CREATOR_WITHOUT_OPPONENT));
+            ObservedPartServiceMock.setObservedPart(MGPOptional.of(ObservedPartMocks.CREATOR_WITHOUT_OPPONENT));
             testUtils.detectChanges();
             tick();
 
@@ -121,7 +121,7 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become linked to an observedPart with an opponent set
-            const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITH_OPPONENT;
+            const observedPart: ObservedPart = ObservedPartMocks.CREATOR_WITH_OPPONENT;
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
@@ -140,7 +140,7 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become linked to an observedPart
-            const observedPart: FocusedPart = FocusedPartMocks.OBSERVER;
+            const observedPart: ObservedPart = ObservedPartMocks.OBSERVER;
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();
@@ -159,7 +159,7 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#observedPartLink');
 
             // When user become linked to an observedPart
-            const observedPart: FocusedPart = FocusedPartMocks.CANDIDATE;
+            const observedPart: ObservedPart = ObservedPartMocks.CANDIDATE;
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
             testUtils.detectChanges();
             tick();

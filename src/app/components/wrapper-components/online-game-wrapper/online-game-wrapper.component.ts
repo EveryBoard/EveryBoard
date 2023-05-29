@@ -9,7 +9,7 @@ import { Move } from '../../../jscaip/Move';
 import { Part, PartDocument, GameEvent, GameEventMove, GameEventRequest, GameEventReply, GameEventAction } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { FocusedPart, User } from '../../../domain/User';
+import { ObservedPart, User } from '../../../domain/User';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
@@ -74,7 +74,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private lastRequestOrReply: MGPOptional<GameEventRequest | GameEventReply> = MGPOptional.empty();
 
     public configRoom: ConfigRoom;
-    public observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
+    public observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
 
     private routerEventsSubscription!: Subscription; // Initialized in ngOnInit
     private userSubscription!: Subscription; // Initialized in ngOnInit
@@ -154,7 +154,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.setCurrentPartIdOrRedirect();
         // onObservedPartUpdate needs to access to currentPartId, so it must do it after setCurrentPartIdOrRedirect
         this.observedPartSubscription = this.observedPartService.subscribeToObservedPart(
-            (async(part: MGPOptional<FocusedPart>) => {
+            (async(part: MGPOptional<ObservedPart>) => {
                 await this.onObservedPartUpdate(part);
             }));
 
@@ -169,10 +169,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
       * then, if you start creating a game, this tab should go back to the lobby
       * because user that are playing should not see other players playing
       */
-    private async onObservedPartUpdate(part: MGPOptional<FocusedPart>): Promise<void> {
+    private async onObservedPartUpdate(part: MGPOptional<ObservedPart>): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onObservedPartUpdate called');
         if (part.isPresent()) {
-            const newPart: FocusedPart = part.get();
+            const newPart: ObservedPart = part.get();
             if (newPart.role === 'Observer' || newPart.id === this.currentPartId) {
                 // if we learn that other tabs are observer
                 // or that other tabs are from the same part

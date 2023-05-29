@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { display } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
-import { FocusedPart, UserDocument } from 'src/app/domain/User';
+import { ObservedPart, UserDocument } from 'src/app/domain/User';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -29,8 +29,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     private activePartsSubscription!: Subscription; // initialized in ngOnInit
 
-    private observedPartSubscription!: Subscription; // initialized in ngOnInit
-
     public currentTab: Tab = 'games';
     public createTabClasses: string[] = [];
 
@@ -51,20 +49,17 @@ export class LobbyComponent implements OnInit, OnDestroy {
             (activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
-
-        this.observedPartSubscription = this.observedPartService.subscribeToObservedPart
-            ((observed: MGPOptional<FocusedPart>) => {
-                this.createTabClasses = [];
-                if (observed.isPresent()) {
-                    this.createTabClasses = ['disabled-tab'];
-                }
-            });
+        this.observedPartService.subscribeToObservedPart((observed: MGPOptional<ObservedPart>) => {
+            this.createTabClasses = [];
+            if (observed.isPresent()) {
+                this.createTabClasses = ['disabled-tab'];
+            }
+        });
     }
     public ngOnDestroy(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnDestroy');
         this.activeUsersSubscription.unsubscribe();
         this.activePartsSubscription.unsubscribe();
-        this.observedPartSubscription.unsubscribe();
     }
     public async joinGame(part: PartDocument): Promise<void> {
         const partId: string = part.id;

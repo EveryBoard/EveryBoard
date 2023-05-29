@@ -14,8 +14,8 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
-import { FocusedPart } from 'src/app/domain/User';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { ObservedPart } from 'src/app/domain/User';
+import { ObservedPartMocks } from 'src/app/domain/mocks/ObservedPartMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameEventService } from '../../services/GameEventService';
 import { IFirestoreDAO } from '../FirestoreDAO';
@@ -216,8 +216,8 @@ describe('PartDAO security', () => {
             // Given a non-started part and its creator that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const observedPart: ObservedPart = {
+                ...ObservedPartMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
@@ -238,8 +238,8 @@ describe('PartDAO security', () => {
             // Given a non-started part with its creator who has timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const observedPart: ObservedPart = {
+                ...ObservedPartMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
@@ -260,8 +260,8 @@ describe('PartDAO security', () => {
             // Given a started part and its creator that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const observedPart: ObservedPart = {
+                ...ObservedPartMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
@@ -282,8 +282,8 @@ describe('PartDAO security', () => {
             // Given a started part and its creator that has timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const observedPart: ObservedPart = {
+                ...ObservedPartMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
@@ -617,7 +617,7 @@ describe('PartDAO security', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTED, remainingMsForOne: 1, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // Wait 10ms to ensure the player has timed out
@@ -732,7 +732,7 @@ describe('PartDAO security', () => {
                     eventType: 'Invalid' as 'Move',
                     time: serverTimestamp(),
                     player: 0,
-                };
+                } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
@@ -749,7 +749,7 @@ describe('PartDAO security', () => {
                     eventType: 'Action',
                     time: serverTimestamp(),
                     player: 1,
-                };
+                } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
@@ -863,7 +863,7 @@ describe('PartDAO security', () => {
                 it('should forbid creating StartGame action at non-0 turn', async() => {
                     // Given an ongoing part mid-game
                     const partId: string = await setupStartedPartAsPlayerZero();
-                    await expectAsync(partDAO.update(partId, { turn: 1 }));
+                    await expectAsync(partDAO.update(partId, { turn: 1 })).toBeResolved();
 
                     // When creating a StartGame action at turn > 0
                     const result: Promise<string> = gameEventService.startGame(partId, Player.ZERO);
@@ -926,7 +926,7 @@ describe('PartDAO security', () => {
                 it('should allow requesting take back in in-progress game', async() => {
                     // Given a part at turn >= 1
                     const partId: string = await setupStartedPartAsPlayerZero();
-                    await expectAsync(partDAO.update(partId, { turn: 1 }));
+                    await expectAsync(partDAO.update(partId, { turn: 1 })).toBeResolvedTo();
 
                     // When requesting a take back in-game
                     const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'TakeBack');

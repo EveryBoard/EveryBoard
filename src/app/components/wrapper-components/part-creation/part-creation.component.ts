@@ -19,7 +19,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { FocusedPart, User, UserRoleInPart } from 'src/app/domain/User';
+import { ObservedPart, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
@@ -154,7 +154,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private updateUserDocWithObservedPart(configRoom: ConfigRoom): Promise<void> {
         display(PartCreationComponent.VERBOSE, `updateUserDocWithObservedPart of '` + this.partId + `'`);
         const role: UserRoleInPart = this.getUserRoleInPart(configRoom);
-        const observedPart: FocusedPart = {
+        const observedPart: ObservedPart = {
             id: this.partId,
             opponent: this.getOpponent(),
             typeGame: Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo')),

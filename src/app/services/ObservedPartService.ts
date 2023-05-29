@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
-import { FocusedPart, User, UserRoleInPart } from '../domain/User';
+import { ObservedPart, User, UserRoleInPart } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 import { UserDAO } from '../dao/UserDAO';
 import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
@@ -28,15 +28,15 @@ export class ObservedPartService implements OnDestroy {
     private userSubscription: Subscription = new Subscription();
 
     private observedPartLoading: boolean = true;
-    private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
-    private readonly observedPartRS: ReplaySubject<MGPOptional<FocusedPart>>;
-    private readonly observedPartObs: Observable<MGPOptional<FocusedPart>>;
+    private observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
+    private readonly observedPartRS: ReplaySubject<MGPOptional<ObservedPart>>;
+    private readonly observedPartObs: Observable<MGPOptional<ObservedPart>>;
 
     public constructor(private readonly userDAO: UserDAO,
                        private readonly userService: UserService,
                        private readonly connectedUserService: ConnectedUserService)
     {
-        this.observedPartRS = new ReplaySubject<MGPOptional<FocusedPart>>(1);
+        this.observedPartRS = new ReplaySubject<MGPOptional<ObservedPart>>(1);
         this.observedPartObs = this.observedPartRS.asObservable();
         this.authSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             this.onUserUpdate(user);
@@ -65,10 +65,10 @@ export class ObservedPartService implements OnDestroy {
             this.onObservedPartUpdate(userInDB.get().observedPart)
         }
     }
-    private onObservedPartUpdate(newObservedPart: FocusedPart | null | undefined): void {
+    private onObservedPartUpdate(newObservedPart: ObservedPart | null | undefined): void {
         // Undefined if the user had no observedPart, null if it has been removed
         console.log('OPS.onUpdate: ' + JSON.stringify(newObservedPart))
-        const previousObservedPart: MGPOptional<FocusedPart> = this.observedPart;
+        const previousObservedPart: MGPOptional<ObservedPart> = this.observedPart;
         const stayedNull: boolean = newObservedPart == null && previousObservedPart.isAbsent();
         const stayedItselfAsNonNull: boolean = newObservedPart != null &&
                                                previousObservedPart.equalsValue(newObservedPart);
@@ -80,19 +80,19 @@ export class ObservedPartService implements OnDestroy {
             this.observedPartRS.next(this.observedPart);
         }
     }
-    public updateObservedPart(observedPart: Partial<FocusedPart>): Promise<void> {
+    public updateObservedPart(observedPart: Partial<ObservedPart>): Promise<void> {
         assert(this.connectedUserService.user.isPresent(), 'Should not call updateObservedPart when not connected');
         if (this.observedPart.isPresent()) {
-            const oldObservedPart: FocusedPart = this.observedPart.get();
-            const mergedObservedPart: FocusedPart = { ...oldObservedPart, ...observedPart };
+            const oldObservedPart: ObservedPart = this.observedPart.get();
+            const mergedObservedPart: ObservedPart = { ...oldObservedPart, ...observedPart };
             return this.userDAO.update(this.connectedUserService.user.get().id, { observedPart: mergedObservedPart });
         } else {
-            const fakeFocusedPart: FocusedPart = {
+            const fakeObservedPart: ObservedPart = {
                 id: 'id',
                 role: 'Candidate',
                 typeGame: 'P4',
             };
-            const keys: string[] = Object.keys(fakeFocusedPart);
+            const keys: string[] = Object.keys(fakeObservedPart);
             for (const key of keys) {
                 assert(observedPart[key] != null, 'field ' + key + ' should be set before updating observedPart');
             }
@@ -104,7 +104,7 @@ export class ObservedPartService implements OnDestroy {
         assert(this.connectedUserService.user.isPresent(), 'Should not call removeObservedPart when not connected');
         return this.userDAO.update(this.connectedUserService.user.get().id, { observedPart: null });
     }
-    public subscribeToObservedPart(callback: (optFocusedPart: MGPOptional<FocusedPart>) => void): Subscription {
+    public subscribeToObservedPart(callback: (optObservedPart: MGPOptional<ObservedPart>) => void): Subscription {
         return this.observedPartObs.subscribe(callback);
     }
     public canUserCreate(): MGPValidation {
@@ -132,7 +132,7 @@ export class ObservedPartService implements OnDestroy {
             }
         }
     }
-    public getObservedPart(): MGPOptional<FocusedPart> {
+    public getObservedPart(): MGPOptional<ObservedPart> {
         return this.observedPart;
     }
     public ngOnDestroy(): void {

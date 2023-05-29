@@ -12,10 +12,10 @@ export interface User extends FirestoreJSONObject {
     lastUpdateTime?: FirestoreTime,
     verified: boolean,
     // Observed part can be undefined if the user has never had an observedPart, null if it has been removed
-    observedPart?: FocusedPart | null,
+    observedPart?: ObservedPart | null,
 }
 
-export interface FocusedPart extends FirestoreJSONObject {
+export interface ObservedPart extends FirestoreJSONObject {
     id: string,
     typeGame: string,
     opponent?: MinimalUser | null,

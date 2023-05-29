@@ -13,7 +13,7 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
-fdescribe('ExclusiveOnlineGameGuard', () => {
+describe('ExclusiveOnlineGameGuard', () => {
 
     let exclusiveOnlineGameGuard: ExclusiveOnlineGameGuard;
 

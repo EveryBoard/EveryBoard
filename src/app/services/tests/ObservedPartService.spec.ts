@@ -2,7 +2,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FocusedPart } from 'src/app/domain/User';
+import { ObservedPart } from 'src/app/domain/User';
 import { ObservedPartService } from '../ObservedPartService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -13,27 +13,27 @@ import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { ObservedPartMocks } from 'src/app/domain/mocks/ObservedPartMocks.spec';
 import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { UserService } from '../UserService';
 
 export class ObservedPartServiceMock {
 
-    public static setObservedPart(observedPart: MGPOptional<FocusedPart>): void {
+    public static setObservedPart(observedPart: MGPOptional<ObservedPart>): void {
         (TestBed.inject(ObservedPartService) as unknown as ObservedPartServiceMock)
             .setObservedPart(observedPart);
     }
-    private readonly observedPartRS: ReplaySubject<MGPOptional<FocusedPart>>;
+    private readonly observedPartRS: ReplaySubject<MGPOptional<ObservedPart>>;
 
-    private observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
+    private observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
 
     public constructor() {
-        this.observedPartRS = new ReplaySubject<MGPOptional<FocusedPart>>(1);
+        this.observedPartRS = new ReplaySubject<MGPOptional<ObservedPart>>(1);
     }
-    public subscribeToObservedPart(callback: (optFocusedPart: MGPOptional<FocusedPart>) => void): Subscription {
+    public subscribeToObservedPart(callback: (optObservedPart: MGPOptional<ObservedPart>) => void): Subscription {
         return this.observedPartRS.asObservable().subscribe(callback);
     }
-    public setObservedPart(observedPart: MGPOptional<FocusedPart>): void {
+    public setObservedPart(observedPart: MGPOptional<ObservedPart>): void {
         this.observedPart = observedPart;
         this.observedPartRS.next(observedPart);
     }
@@ -50,8 +50,8 @@ export class ObservedPartServiceMock {
     }
     public canUserJoin(partId: string, gameStarted: boolean): MGPValidation {
         if (this.observedPart.isAbsent() || this.observedPart.get().id === partId) {
-            // If user is in no part, he can join one
-            // If he is onne part and want to join it again, he can
+            // Users can join game if they are not in any game
+            // Or they can join a game if they are already in this specific game
             return MGPValidation.SUCCESS;
         } else {
             if (gameStarted && this.observedPart.get().role === 'Observer') {
@@ -65,10 +65,10 @@ export class ObservedPartServiceMock {
             }
         }
     }
-    public async updateObservedPart(observedPart: FocusedPart): Promise<void> {
+    public async updateObservedPart(observedPart: ObservedPart): Promise<void> {
         this.observedPartRS.next(MGPOptional.of(observedPart));
     }
-    public getObservedPart(): MGPOptional<FocusedPart> {
+    public getObservedPart(): MGPOptional<ObservedPart> {
         return this.observedPart;
     }
 }
@@ -106,9 +106,9 @@ describe('ObservedPartService', () => {
             // Given a registered and connected user observing a game
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             tick(1);
-            let observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
+            let observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
             const subscription: Subscription =
-                observedPartService.subscribeToObservedPart((newValue: MGPOptional<FocusedPart>) => {
+                observedPartService.subscribeToObservedPart((newValue: MGPOptional<ObservedPart>) => {
                     observedPart = newValue;
                 });
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
@@ -124,9 +124,9 @@ describe('ObservedPartService', () => {
         it('should remember the observedPart when user logs in', fakeAsync(async() => {
             // Given a registered and disconnected user observing a game
             ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
-            let observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
+            let observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
             const subscription: Subscription =
-                observedPartService.subscribeToObservedPart((newValue: MGPOptional<FocusedPart>) => {
+                observedPartService.subscribeToObservedPart((newValue: MGPOptional<ObservedPart>) => {
                     console.log('observing')
                     console.log(newValue)
                     observedPart = newValue;
@@ -151,7 +151,7 @@ describe('ObservedPartService', () => {
             ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
             let observedPartSeen: boolean = false;
             const subscription: Subscription =
-                observedPartService.subscribeToObservedPart((value: MGPOptional<FocusedPart>) => {
+                observedPartService.subscribeToObservedPart((value: MGPOptional<ObservedPart>) => {
                     observedPartSeen = value.isPresent();
                 });
 
@@ -176,9 +176,9 @@ describe('ObservedPartService', () => {
             const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
                 resolvePromise = resolve;
             });
-            let lastValue: MGPOptional<FocusedPart> = MGPOptional.empty();
+            let lastValue: MGPOptional<ObservedPart> = MGPOptional.empty();
             const subscription: Subscription =
-                observedPartService.subscribeToObservedPart((observedPart: MGPOptional<FocusedPart>) => {
+                observedPartService.subscribeToObservedPart((observedPart: MGPOptional<ObservedPart>) => {
                     lastValue = observedPart;
                     resolvePromise();
                 });
@@ -206,7 +206,7 @@ describe('ObservedPartService', () => {
 
                 // When asking to update observedPart
                 spyOn(userDAO, 'update').and.resolveTo();
-                const observedPart: FocusedPart = FocusedPartMocks.CREATOR_WITHOUT_OPPONENT;
+                const observedPart: ObservedPart = ObservedPartMocks.CREATOR_WITHOUT_OPPONENT;
                 await observedPartService.updateObservedPart(observedPart);
 
                 // Then the userDAO should update the connected user doc
@@ -216,7 +216,7 @@ describe('ObservedPartService', () => {
                 // Given a service that has an old observedPart
                 ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
                 tick(1);
-                const oldValue: FocusedPart = {
+                const oldValue: ObservedPart = {
                     id: 'old',
                     role: 'Candidate',
                     typeGame: 'old',
@@ -225,13 +225,13 @@ describe('ObservedPartService', () => {
 
                 // When updating it with another value
                 spyOn(userDAO, 'update').and.resolveTo();
-                const newValue: Partial<FocusedPart> = {
+                const newValue: Partial<ObservedPart> = {
                     id: 'new',
                 };
                 await observedPartService.updateObservedPart(newValue);
 
                 // Then all value from the update should be there, and the one not mentionned should be from the old one
-                const observedPart: FocusedPart = {
+                const observedPart: ObservedPart = {
                     id: 'new',
                     role: 'Candidate',
                     typeGame: 'old',
@@ -247,7 +247,7 @@ describe('ObservedPartService', () => {
                 const expectedError: string = 'Assertion failure: field role should be set before updating observedPart';
 
                 // Then the userDAO should update the connected user doc
-                const updatedPart: Partial<FocusedPart> = {
+                const updatedPart: Partial<ObservedPart> = {
                     id: 'another-id',
                     typeGame: 'whatever',
                 };
@@ -262,7 +262,7 @@ describe('ObservedPartService', () => {
                 const expectedError: string = 'Assertion failure: field typeGame should be set before updating observedPart';
 
                 // Then it should throw
-                const updatedPart: Partial<FocusedPart> = {
+                const updatedPart: Partial<ObservedPart> = {
                     id: 'another-id',
                     role: 'Candidate',
                 };
@@ -362,7 +362,7 @@ describe('ObservedPartService', () => {
     });
     describe('canUserJoin', () => {
 
-        async function shouldAllowJoinPart(observedPart: FocusedPart, partToJoin: string, gameStarted: boolean)
+        async function shouldAllowJoinPart(observedPart: ObservedPart, partToJoin: string, gameStarted: boolean)
         : Promise<void>
         {
             await userDAO.update(opponentId, { observedPart });
@@ -375,7 +375,7 @@ describe('ObservedPartService', () => {
                 .withContext('validation should be a success')
                 .toBeTrue();
         }
-        async function shouldForbidJoinPart(observedPart: FocusedPart,
+        async function shouldForbidJoinPart(observedPart: ObservedPart,
                                             partToJoin: string,
                                             gameStarted: boolean,
                                             reason: string)
@@ -416,12 +416,12 @@ describe('ObservedPartService', () => {
         it('should allow user to join twice the same part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
             // When asking if you can join that specific part again
-            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Player' };
+            const observedPart: ObservedPart = { id: '1234', typeGame: 'P4', role: 'Player' };
             await shouldAllowJoinPart(observedPart, '1234', true);
         }));
         it('should refuse for a player already playing', fakeAsync(async() => {
             // Given a ConnectedUserService where user plays a part
-            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Player' };
+            const observedPart: ObservedPart = { id: '1234', typeGame: 'P4', role: 'Player' };
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
 
             // When asking if you can join some started part
@@ -432,7 +432,7 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already creator', fakeAsync(async() => {
             // Given a ConnectedUserService where user is creating a part
-            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Creator' };
+            const observedPart: ObservedPart = { id: '1234', typeGame: 'P4', role: 'Creator' };
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
 
             // When asking if you can join some started part
@@ -443,7 +443,7 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already candidate', fakeAsync(async() => { // Instable: last failed 2022-08-18
             // Given a ConnectedUserService where user is candidate of a part
-            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Candidate' };
+            const observedPart: ObservedPart = { id: '1234', typeGame: 'P4', role: 'Candidate' };
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
 
             // When asking if you can join some started part
@@ -454,7 +454,7 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already Chosen Opponent', fakeAsync(async() => {
             // Given a ConnectedUserService where user is chosen opponent in a part
-            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'ChosenOpponent' };
+            const observedPart: ObservedPart = { id: '1234', typeGame: 'P4', role: 'ChosenOpponent' };
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
 
             // When asking if you can join some started part
@@ -465,7 +465,7 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already Observer to join non-started part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Observer' };
+            const observedPart: ObservedPart = { id: '1234', typeGame: 'P4', role: 'Observer' };
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_OBSERVING();
 
             // When asking if you can join some unstarted part
@@ -473,7 +473,7 @@ describe('ObservedPartService', () => {
         }));
         it('should allow for a player already Observer to join a started part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            const observedPart: FocusedPart = { id: '1234', typeGame: 'P4', role: 'Observer' };
+            const observedPart: ObservedPart = { id: '1234', typeGame: 'P4', role: 'Observer' };
 
             // When asking if you can join some started part
             await shouldAllowJoinPart(observedPart, 'some-id', true);

@@ -2,7 +2,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
@@ -17,7 +17,7 @@ import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { Action, MGPResult, Part, Reply, RequestType } from 'src/app/domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { FocusedPart, User } from 'src/app/domain/User';
+import { ObservedPart, User } from 'src/app/domain/User';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
@@ -33,7 +33,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { ObservedPartMocks } from 'src/app/domain/mocks/ObservedPartMocks.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
@@ -59,7 +59,6 @@ export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promi
     const OBSERVER: User = {
         username: 'jeanJaja',
         lastUpdateTime: new Timestamp(Date.now() / 1000, Date.now() % 1000),
-        state: 'online',
         verified: true,
     };
     const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
@@ -183,7 +182,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     const OBSERVER: User = {
         username: 'jeanJaja',
         lastUpdateTime: new Timestamp(Date.now() / 1000, Date.now() % 1000),
-        state: 'online',
         verified: true,
     };
     const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
@@ -257,8 +255,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     {
         const update: Partial<Part> = {
             turn: initialTurn + newMoves.length,
-            request: null,
-            lastUpdateTime: serverTimestamp(),
         };
         const gameService: GameService = TestBed.inject(GameService);
         let currentPlayer: Player = Player.of(initialTurn % 2);
@@ -443,7 +439,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // Then updateObservedPart should have been called as Player
-            const update: Partial<FocusedPart> = {
+            const update: Partial<ObservedPart> = {
                 id: 'configRoomId',
                 typeGame: 'Quarto',
                 opponent: null,
@@ -463,7 +459,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // Then updateObservedPart should have been called as Player
-            const update: Partial<FocusedPart> = {
+            const update: Partial<ObservedPart> = {
                 id: 'configRoomId',
                 typeGame: 'Quarto',
                 opponent: UserMocks.CREATOR_MINIMAL_USER,
@@ -543,7 +539,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When observedPart is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
+            const observedPart: ObservedPart = ObservedPartMocks.OTHER_CANDIDATE;
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
 
             // Then a redirection to lobby should be triggered
@@ -556,7 +552,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When observedPart is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_OBSERVER;
+            const observedPart: ObservedPart = ObservedPartMocks.OTHER_OBSERVER;
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
 
             // Then a redirection to lobby should not have been triggered
@@ -1057,7 +1053,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(partDAO, 'update').and.callThrough();
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1077,7 +1072,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(observedPartService, 'removeObservedPart').and.callThrough();
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1371,7 +1365,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 winner: UserMocks.CREATOR_MINIMAL_USER,
                 loser: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.RESIGN.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1395,7 +1388,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 winner: UserMocks.CREATOR_MINIMAL_USER,
                 loser: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.RESIGN.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1496,7 +1488,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // Then updateObservedPart should have been called as Observer
-            const update: Partial<FocusedPart> = {
+            const update: Partial<ObservedPart> = {
                 id: 'configRoomId',
                 opponent: UserMocks.CREATOR_MINIMAL_USER,
                 typeGame: 'Quarto',
@@ -1524,7 +1516,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When observedPart is updated to inform component that user is now candidate in another game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
+            const observedPart: ObservedPart = ObservedPartMocks.OTHER_CANDIDATE;
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
 
             // Then the observedPart should have been removed
@@ -1536,7 +1528,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(USER_OBSERVER);
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
             spyOn(observedPartService, 'removeObservedPart').and.callThrough();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
+            const observedPart: ObservedPart = ObservedPartMocks.OTHER_CANDIDATE;
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
 
             // When destroying the component (should normally be triggered once router is triggered)
@@ -1573,7 +1565,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await gameEventService.addRequest('configRoomId', Player.ZERO, 'Draw');
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
-                request: null,
             });
             await receiveReply(Player.ONE, 'Accept', 'Draw');
             await receiveAction(Player.ONE, 'EndGame');
