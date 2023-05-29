@@ -13,7 +13,7 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
-describe('ExclusiveOnlineGameGuard', () => {
+fdescribe('ExclusiveOnlineGameGuard', () => {
 
     let exclusiveOnlineGameGuard: ExclusiveOnlineGameGuard;
 
@@ -43,9 +43,10 @@ describe('ExclusiveOnlineGameGuard', () => {
     it('should create', () => {
         expect(exclusiveOnlineGameGuard).toBeDefined();
     });
-    it('shoud allow to activate when you are not doing anything', async() => {
+    it('shoud allow to activate when you are not doing anything', fakeAsync(async() => {
         // Given a connected user not observing any part
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        tick(1);
         ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
 
         // When asking if user can go to some part id
@@ -55,7 +56,7 @@ describe('ExclusiveOnlineGameGuard', () => {
 
         // Then it should be accepted
         await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(true);
-    });
+    }));
     it(`should allow to go to user's part`, fakeAsync(async() => {
         // Given a connected user service indicating user is player
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);

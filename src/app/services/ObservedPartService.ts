@@ -11,8 +11,6 @@ import { MGPMap } from '../utils/MGPMap';
 import { Localized } from '../utils/LocaleUtils';
 import { UserService } from './UserService';
 
-// TODO: still a bug (that was there already): when part in creation, if you log out, it crashes
-// TODO: other bug: log out, then log in again without reloading the page: observed part is incorrect
 @Injectable({
     providedIn: 'root',
 })
@@ -47,6 +45,7 @@ export class ObservedPartService implements OnDestroy {
     private async onUserUpdate(user: AuthUser): Promise<void> {
         if (user === AuthUser.NOT_CONNECTED) { // user logged out
             this.userSubscription.unsubscribe();
+            this.observedPart = MGPOptional.empty();
             this.observedPartRS.next(MGPOptional.empty());
         } else { // new user logged in
             console.log('OPS: LOG IN')

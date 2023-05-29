@@ -13,7 +13,6 @@ import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { Part } from 'src/app/domain/Part';
 import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { UserService } from '../UserService';
@@ -69,9 +68,12 @@ export class ObservedPartServiceMock {
     public async updateObservedPart(observedPart: FocusedPart): Promise<void> {
         this.observedPartRS.next(MGPOptional.of(observedPart));
     }
+    public getObservedPart(): MGPOptional<FocusedPart> {
+        return this.observedPart;
+    }
 }
 
-fdescribe('ObservedPartService', () => {
+describe('ObservedPartService', () => {
 
     let observedPartService: ObservedPartService;
     let connectedUserService: ConnectedUserService;
@@ -103,21 +105,19 @@ fdescribe('ObservedPartService', () => {
         it('should forget the observedPart when user is disconnected', fakeAsync(async() => {
             // Given a registered and connected user observing a game
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            tick(1);
             let observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
             const subscription: Subscription =
                 observedPartService.subscribeToObservedPart((newValue: MGPOptional<FocusedPart>) => {
-                    console.log('>>>> OBSERVING: ' + JSON.stringify(newValue))
                     observedPart = newValue;
                 });
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
             expect(observedPart.isPresent()).toBeTrue();
 
            // When connected user logs out
-           console.log('>>>>> logging out')
            ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
 
-           // Then the service does not have an observed part anymore
-            console.log('CHECKING')
+           // // Then the service does not have an observed part anymore
            expect(observedPart.isAbsent()).toBeTrue();
            subscription.unsubscribe();
         }));
@@ -141,32 +141,36 @@ fdescribe('ObservedPartService', () => {
 
             // Then the service now has an observed part
             expect(observedPart.isPresent()).toBeTrue();
+            expect(observedPartService.getObservedPart().isPresent()).toBeTrue();
+
             subscription.unsubscribe();
         }));
-    it('should keep observing users even when they are not logged in yet', fakeAsync(async() => {
-        // This caused the infamous "part creation after login" bug
-        // Given an observed part service with a disconnected user
-        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
-        let observedPartSeen: boolean = false;
-        const subscription: Subscription =
-            observedPartService.subscribeToObservedPart((value: MGPOptional<FocusedPart>) => {
-                observedPartSeen = value.isPresent();
-            });
+        it('should keep observing users even when they are not logged in yet', fakeAsync(async() => {
+            // This caused the infamous "part creation after login" bug
+            // Given an observed part service with a disconnected user
+            ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+            let observedPartSeen: boolean = false;
+            const subscription: Subscription =
+                observedPartService.subscribeToObservedPart((value: MGPOptional<FocusedPart>) => {
+                    observedPartSeen = value.isPresent();
+                });
 
-        // When the user logs in and sets an observed part
-        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        await userDAO.update(UserMocks.CONNECTED_AUTH_USER.id, { observedPart: { id: '1234', typeGame: 'P4' } });
+            // When the user logs in and sets an observed part
+            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+            tick(1);
+            await userDAO.update(UserMocks.CONNECTED_AUTH_USER.id, { observedPart: { id: '1234', typeGame: 'P4' } });
 
-        // Then the service should know about it
-        expect(observedPartSeen).toBeTrue();
+            // Then the service should know about it
+            expect(observedPartSeen).toBeTrue();
 
-        subscription.unsubscribe();
-    }));
+            subscription.unsubscribe();
+        }));
     });
     describe('observed part', () => {
         it('should update observedPart observable when UserDAO touches it', fakeAsync(async() => {
             // Given a connected user
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            tick(1)
             // and the observedPart observable
             let resolvePromise: () => void;
             const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
@@ -178,7 +182,7 @@ fdescribe('ObservedPartService', () => {
                     lastValue = observedPart;
                     resolvePromise();
                 });
-            // When the UserDAO modify observedPart in the user document
+            // When the UserDAO modifies observedPart in the user document
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
             await userHasUpdated;
 
@@ -211,6 +215,7 @@ fdescribe('ObservedPartService', () => {
             it('should merge old observedPart to new when the old is present', fakeAsync(async() => {
                 // Given a service that has an old observedPart
                 ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+                tick(1);
                 const oldValue: FocusedPart = {
                     id: 'old',
                     role: 'Candidate',
