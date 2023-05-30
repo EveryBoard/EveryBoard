@@ -2,7 +2,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Vector } from 'src/app/jscaip/Vector';
 import { MoveEncoder } from 'src/app/utils/Encoder';
-import { Move } from 'src/app/jscaip/Move';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoFailure } from './CoerceoFailure';
@@ -93,7 +92,7 @@ export class CoerceoMove extends MoveCoord {
                         public readonly landingCoord: MGPOptional<Coord>,
                         public readonly capture: MGPOptional<Coord>)
     {
-        super();
+        super(0, 0); // TODO: kill that once the move-tuple-reuse is merged
     }
     public isTileExchange(): boolean {
         return this.capture.isPresent();
@@ -107,7 +106,7 @@ export class CoerceoMove extends MoveCoord {
                    this.landingCoord.get().toString() + ')';
         }
     }
-    public equals(other: CoerceoMove): boolean {
+    public override equals(other: CoerceoMove): boolean {
         if (!this.capture.equals(other.capture)) return false;
         if (!this.start.equals(other.start)) return false;
         if (!this.step.equals(other.step)) return false;

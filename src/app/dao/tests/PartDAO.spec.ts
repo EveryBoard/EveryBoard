@@ -19,6 +19,8 @@ import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameEventService } from '../../services/GameEventService';
 import { IFirestoreDAO } from '../FirestoreDAO';
+import { UserService } from 'src/app/services/UserService';
+import { Utils } from 'src/app/utils/utils';
 
 type PartInfo = {
     id: string,
@@ -31,6 +33,7 @@ fdescribe('PartDAO security', () => {
 
     let partDAO: PartDAO;
     let gameEventService: GameEventService;
+    let userService: UserService;
     let userDAO: UserDAO;
     let configRoomDAO: ConfigRoomDAO;
     let configRoomService: ConfigRoomService;
@@ -108,6 +111,7 @@ fdescribe('PartDAO security', () => {
         partDAO = TestBed.inject(PartDAO);
         gameEventService = TestBed.inject(GameEventService);
         userDAO = TestBed.inject(UserDAO);
+        userService = TestBed.inject(UserService);
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         configRoomService = TestBed.inject(ConfigRoomService);
     });
@@ -523,6 +527,14 @@ fdescribe('PartDAO security', () => {
             const partId: string = await partDAO.create(part);
             return { playerZero, playerOne, partId, part };
         }
+        async function updatePlayersElo(finishedPart: Part): Promise<void> {
+            // 1. TODO: Update user's elo
+            // TODO FOR REVIEW: ban casting of <T | null> to null but use getNonNullable instead, I almost forgot her!
+            await userService.updateElo(finishedPart.typeGame,
+                                        finishedPart.playerZero,
+                                        Utils.getNonNullable(finishedPart.playerOne),
+                                        'ONE');
+        }
         it('should forbid player to change typeGame', async() => {
             // Given a part and a player (here, creator)
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
@@ -595,8 +607,8 @@ fdescribe('PartDAO security', () => {
         });
         it('should forbid resigning in place of the other player', async() => {
             // Given an ongoing part and elo updated
-            const { partId, playerOne, playerZero } = await createOngoingPart();
-            updatePlayersElo();
+            const { partId, playerOne, playerZero, part } = await createOngoingPart();
+            await updatePlayersElo(part);
 
             // When resigning and setting the other player as loser
             const result: Promise<void> = partDAO.update(partId, {
@@ -618,9 +630,6 @@ fdescribe('PartDAO security', () => {
                     await expectPermissionToBeDenied(result);
                 }
             }
-            function updatePlayersElo(): void {
-                TODO
-            }
             for (const eloAreUpdated of [true, false]) {
                 it('should allow timeouting a part with a timed out user (or refuse if elo is not updated)', async() => {
                     // Given a part where one player has timed out
@@ -630,7 +639,7 @@ fdescribe('PartDAO security', () => {
                     // Wait 10ms to ensure the player has timed out
                     await new Promise((f: (value: unknown) => void) => setTimeout(f, 10));
                     if (eloAreUpdated) {
-                        updatePlayersElo();
+                        await updatePlayersElo(part);
                     }
 
                     // When setting the part as result as timed out
@@ -645,9 +654,9 @@ fdescribe('PartDAO security', () => {
                 });
                 it('should allow resigning (or refuse if elo is not updated)', async() => {
                     // Given an ongoing part
-                    const { partId, playerOne, playerZero } = await createOngoingPart();
+                    const { partId, playerOne, playerZero, part } = await createOngoingPart();
                     if (eloAreUpdated) {
-                        updatePlayersElo();
+                        await updatePlayersElo(part);
                     }
 
                     // When resigning
@@ -662,9 +671,9 @@ fdescribe('PartDAO security', () => {
                 });
                 it('should allow setting winner and loser (or refuse if elo is not updated)', async() => {
                     // Given an ongoing part where elo are up to date
-                    const { partId, playerOne, playerZero } = await createOngoingPart();
+                    const { partId, playerOne, playerZero, part } = await createOngoingPart();
                     if (eloAreUpdated) {
-                        updatePlayersElo();
+                        await updatePlayersElo(part);
                     }
 
                     // When setting the winner and loser along with a move
@@ -680,9 +689,9 @@ fdescribe('PartDAO security', () => {
                 });
                 it('should allow hard draw (or refuse if elo is not updated)', async() => {
                     // Given a part in 'ongoing' state
-                    const { partId } = await createOngoingPart();
+                    const { partId, part } = await createOngoingPart();
                     if (eloAreUpdated) {
-                        updatePlayersElo();
+                        await updatePlayersElo(part);
                     }
 
                     // When updating it to 'pre-finished' state
@@ -697,8 +706,8 @@ fdescribe('PartDAO security', () => {
         });
         it('should forbid setting a player both as winner and loser', async() => {
             // Given an ongoing part where players elo are up to date
-            const { partId, playerZero } = await createOngoingPart();
-            updatePlayersElo();
+            const { partId, playerZero, part } = await createOngoingPart();
+            await updatePlayersElo(part);
 
             // When setting the winner and loser along with a move
             const result: Promise<void> = partDAO.update(partId, {
@@ -740,10 +749,28 @@ fdescribe('PartDAO security', () => {
             await expectPermissionToBeDenied(loserResult);
         });
         it('should reject update to "pre-finished" if the game was not marked as "ongoing"', async() => {
-            for (let partState of ['finished', 'pas finished lo', 'tout ce quié po prefinished']) {
+            const allButOngoingAndPreFinishedStatuses: MGPResult[] = [
+                MGPResult.AGREED_DRAW_BY_ONE,
+                MGPResult.AGREED_DRAW_BY_ZERO,
+                MGPResult.HARD_DRAW,
+                MGPResult.RESIGN,
+                MGPResult.TIMEOUT,
+                MGPResult.UNACHIEVED,
+                MGPResult.VICTORY,
+            ];
+            for (const partState of allButOngoingAndPreFinishedStatuses) {
                 // Given a part in another state than 'ongoing'
+                const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
+                const partId: string = await partDAO.create({
+                    ...PartMocks.INITIAL,
+                    result: partState.value,
+                    playerZero,
+                });
+
                 // When updating it to 'pre-finished' state
-                // Then it should work
+                await partDAO.update(partId, { result: MGPResult.PRE_FINISHED.value });
+
+                // Then it should be refused
             }
         });
         it('should forbid setting winner and loser without changing result', async() => {

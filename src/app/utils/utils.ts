@@ -19,11 +19,10 @@ export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
 }
 
 export type FirestoreJSONPrimitive = JSONPrimitive | FieldValue;
-export type FirestoreJSONValue =
-    FirestoreJSONPrimitive |
-    FirestoreJSONObject |
-    Array<FirestoreJSONValueWithoutArray> |
-    ReadonlyArray<FirestoreJSONValueWithoutArray>;
+export type FirestoreJSONValue = FirestoreJSONPrimitive |
+                                 FirestoreJSONObject |
+                                 Array<FirestoreJSONValueWithoutArray> |
+                                 ReadonlyArray<FirestoreJSONValueWithoutArray>;
 export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJSONObject
 export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };
 
@@ -50,11 +49,8 @@ export class Utils {
         }
     }
     public static getNonNullable<T>(value : T | null | undefined): T {
-        if (value == null) {
-            throw new Error(`Expected value not to be null or undefined, but it was.`);
-        } else {
-            return value;
-        }
+        Utils.assert(value != null, `Expected value not to be null or undefined, but it was.`);
+        return value as T;
     }
     public static assert(condition: boolean, message: string): void {
         if (condition === false) {
