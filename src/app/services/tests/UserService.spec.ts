@@ -6,6 +6,7 @@ import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { FirestoreDAOMock } from 'src/app/dao/tests/FirestoreDAOMock.spec';
 
 describe('UserService', () => {
 
@@ -55,14 +56,13 @@ describe('UserService', () => {
             // Given a user service and some user
             const id: string = await userDAO.create(UserMocks.CONNECTED);
             const expectedServerTime: Timestamp = new Timestamp(1, 234);
-            spyOn(userService, 'updatePresenceToken').and.callFake(async(id: string) => {
-                await userDAO.update(id, { lastUpdateTime: expectedServerTime });
-            });
+            spyOn(FirestoreDAOMock, 'mockServerTime').and.returnValue(expectedServerTime);
+            spyOn(userService, 'updatePresenceToken').and.callThrough();
 
             // When calling getServerTime
             const serverTime: Timestamp = await userService.getServerTime(id);
 
-            // Then it should update the user's timestamp and return the timestamp provided by the server
+            // Then it should return the timestamp provided by the server
             expect(serverTime).toBe(expectedServerTime);
         }));
     });
