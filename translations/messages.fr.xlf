@@ -594,14 +594,10 @@
         <source>It is not your turn!</source>
         <target>Ce n&apos;est pas votre tour !</target>
       </trans-unit>
-      <trans-unit id="4517991218544205155" datatype="html">
-        <source>You are an observer in this game, you cannot play.</source>
-        <target>Vous observez cette partie, vous ne pouvez pas jouer.</target>
+      <trans-unit id="4691729121764741641" datatype="html">
+        <source>You cannot clone a game. This feature might be implemented later.</source>
+        <target>Clôner une partie n&apos;est pas encore possible. Cette fonctionnalité pourrait être implémentée dans un futur incertain.</target>
       </trans-unit>
-      <trans-unit id="7360329324887745743" datatype="html">
-        <source>You must answer your opponent&apos;s request.</source>
-        <target>Vous devez répondre à le requête de votre adversaire.</target>
-       </trans-unit>
       <trans-unit id="443650994975920138" datatype="html">
         <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
         <target>Ce jeu (<x id="PH" equiv-text="gameName"/>) n'existe pas.</target>
