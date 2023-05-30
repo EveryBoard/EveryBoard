@@ -110,7 +110,7 @@
                     <button id="pass"
                             class="button is-fullwidth mb-1 is-success"
                             (click)="gameComponent.pass()"
-                            [disabled]="(endGame === false && isPlaying() && gameComponent.canPass && currentPlayer?.name === getPlayer().name) === false"
+                            [disabled]="canPass() === false"
                             i18n
                     >Pass a turn</button>
                     <ng-container *ngFor="let request of allRequests">

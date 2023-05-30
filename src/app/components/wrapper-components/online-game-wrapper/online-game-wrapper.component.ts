@@ -364,6 +364,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public deniedRequest(): MGPOptional<RequestType> {
         return this.requestManager.deniedRequest();
     }
+    public canPass(): boolean {
+        if (this.endGame) return false;
+        if (this.isPlaying() === false) return false;
+        if (this.currentPlayer?.name !== this.getPlayer().name) return false;
+        return gameComponent.canPass;
+    }
     private canAskTakeBack(): boolean {
         Utils.assert(this.isPlaying(), 'Non playing should not call canAskTakeBack');
         Utils.assert(this.currentPart != null, 'should not call canAskTakeBack when currentPart is not defined yet');
