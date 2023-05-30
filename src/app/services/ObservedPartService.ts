@@ -66,8 +66,7 @@ export class ObservedPartService implements OnDestroy {
         const stayedItselfAsNonNull: boolean = newObservedPart != null &&
                                                previousObservedPart.equalsValue(newObservedPart);
         const valueChanged: boolean = stayedNull === false && stayedItselfAsNonNull === false;
-        if (valueChanged) { // || this.observedPartLoading) {
-            this.observedPartLoading = false;
+        if (valueChanged) {
             this.observedPart = MGPOptional.ofNullable(newObservedPart);
             this.observedPartRS.next(this.observedPart);
         }
