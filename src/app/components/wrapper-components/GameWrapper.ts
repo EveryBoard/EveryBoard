@@ -44,8 +44,6 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public role: PlayerOrNone = PlayerOrNone.NONE;
 
-    public canPass: boolean;
-
     public endGame: boolean = false;
 
     public Player: typeof Player = Player;
@@ -110,7 +108,6 @@ export abstract class GameWrapper<P extends Comparable> {
                 this.onCancelMove(reason);
             };
         this.setRole(this.role);
-        this.canPass = this.gameComponent.canPass;
         return true;
     }
     public setRole(role: PlayerOrNone): void {
