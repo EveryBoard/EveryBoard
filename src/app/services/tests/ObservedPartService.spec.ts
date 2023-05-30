@@ -95,7 +95,7 @@ describe('ObservedPartService', () => {
         userDAO = TestBed.inject(UserDAO);
         userService = TestBed.inject(UserService);
         connectedUserService = TestBed.inject(ConnectedUserService);
-        observedPartService = TestBed.inject(ObservedPartService) //TestBed.inject(ObservedPartService) //  new ObservedPartService(userDAO, connectedUserService);
+        observedPartService = TestBed.inject(ObservedPartService);
         alreadyDestroyed = false;
 
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
@@ -114,12 +114,12 @@ describe('ObservedPartService', () => {
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
             expect(observedPart.isPresent()).toBeTrue();
 
-           // When connected user logs out
-           ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+            // When connected user logs out
+            ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
 
-           // // Then the service does not have an observed part anymore
-           expect(observedPart.isAbsent()).toBeTrue();
-           subscription.unsubscribe();
+            // Then the service does not have an observed part anymore
+            expect(observedPart.isAbsent()).toBeTrue();
+            subscription.unsubscribe();
         }));
         it('should remember the observedPart when user logs in', fakeAsync(async() => {
             // Given a registered and disconnected user observing a game
@@ -127,15 +127,12 @@ describe('ObservedPartService', () => {
             let observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
             const subscription: Subscription =
                 observedPartService.subscribeToObservedPart((newValue: MGPOptional<ObservedPart>) => {
-                    console.log('observing')
-                    console.log(newValue)
                     observedPart = newValue;
                 });
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
             expect(observedPart.isAbsent()).toBeTrue();
 
             // When disconnected user logs in
-            console.log('logging in')
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             tick(1);
 
@@ -170,7 +167,7 @@ describe('ObservedPartService', () => {
         it('should update observedPart observable when UserDAO touches it', fakeAsync(async() => {
             // Given a connected user
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            tick(1)
+            tick(1);
             // and the observedPart observable
             let resolvePromise: () => void;
             const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
@@ -309,11 +306,9 @@ describe('ObservedPartService', () => {
         }));
         it('should refuse for a player already playing', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            console.log('userDAO.update')
             await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4', role: 'Player' } });
 
             // When asking if you can create
-            console.log('checking now')
             const validation: MGPValidation = observedPartService.canUserCreate();
 
             // Then it's should be refused
@@ -511,7 +506,6 @@ describe('ObservedPartService', () => {
 
     afterEach(async() => {
         if (alreadyDestroyed === false) {
-            console.log('destroying')
             observedPartService.ngOnDestroy();
         }
     });

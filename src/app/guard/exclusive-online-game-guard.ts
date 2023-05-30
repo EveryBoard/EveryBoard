@@ -19,7 +19,6 @@ export class ExclusiveOnlineGameGuard implements CanActivate {
     {
     }
     public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
-        console.log('canActivate')
         const observedPart: MGPOptional<ObservedPart> = this.observedPartService.getObservedPart();
         if (observedPart.isAbsent()) {
             return true;

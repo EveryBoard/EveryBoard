@@ -326,7 +326,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                     totalPartDuration);
     }
     public async cancelGameCreation(): Promise<void> {
-        console.log('PartCreation.cancelGameCreation')
         this.allDocDeleted = true;
         await this.observedPartService.removeObservedPart();
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');

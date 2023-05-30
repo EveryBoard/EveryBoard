@@ -4,7 +4,7 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 
 import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -36,8 +36,13 @@ export class ConnectedUserServiceMock {
         this.userRS = new ReplaySubject<AuthUser>(1);
     }
     public setUser(userId: string, user: AuthUser, notifyObservers: boolean = true): void {
-        this.user = MGPOptional.of(user);
-        this.uid = MGPOptional.of(userId);
+        if (user === AuthUser.NOT_CONNECTED) {
+            this.user = MGPOptional.empty();
+            this.uid = MGPOptional.empty();
+        } else {
+            this.user = MGPOptional.of(user);
+            this.uid = MGPOptional.of(userId);
+        }
         // In some very specific cases, changing the status of a user in firebase does not notify the observers.
         // This is the case if a user becomes verified.
         if (notifyObservers) {

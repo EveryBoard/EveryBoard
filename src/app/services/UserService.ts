@@ -38,11 +38,9 @@ export class UserService {
      */
     public observeUserOnServer(userId: string, callback: (user: MGPOptional<User>) => void): Subscription {
         return this.userDAO.subscribeToChanges(userId, (user: MGPOptional<User>): void => {
-            console.log('new user: ' + JSON.stringify(user))
             if (user.isPresent() && user.get().lastUpdateTime === null) {
                 // Ignore this update as it does not come from firebase but from ourselves
                 // We will get the firebase update later.
-                console.log('ignoring it')
                 return;
             }
             callback(user);

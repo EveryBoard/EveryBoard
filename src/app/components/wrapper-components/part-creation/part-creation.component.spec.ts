@@ -12,7 +12,7 @@ import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
@@ -576,7 +576,6 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
 
                 // When user cancel game creation
-                const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
                 spyOn(observedPartService, 'removeObservedPart').and.callThrough();
                 await clickElement('#cancel');
                 tick(3000);
@@ -809,7 +808,6 @@ describe('PartCreationComponent', () => {
                 expect(component.candidates).toEqual([UserMocks.OPPONENT_MINIMAL_USER]);
 
                 // When leaving the page (tested here by calling ngOnDestroy)
-                const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
                 spyOn(observedPartService, 'removeObservedPart').and.callThrough();
                 spyOn(configRoomService, 'cancelJoining').and.callThrough();
                 testUtils.destroy();
@@ -820,6 +818,24 @@ describe('PartCreationComponent', () => {
                 // Then configRoomService.cancelJoining should have been called
                 expect(configRoomService.cancelJoining).toHaveBeenCalledOnceWith('configRoomId');
                 expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            }));
+            it('should not try to modify DAOs after user logged out', fakeAsync(async() => {
+                // Given a part creation
+                awaitComponentInitialization();
+
+                // When user logs out
+                spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+                spyOn(configRoomService, 'cancelJoining').and.callThrough();
+
+                ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+                testUtils.destroy();
+                tick(3000);
+                await testUtils.whenStable();
+                destroyed = true;
+
+                // Then it should not call cancelJoining nor removeObservedPart
+                expect(configRoomService.cancelJoining).not.toHaveBeenCalled();
+                expect(observedPartService.removeObservedPart).not.toHaveBeenCalled();
             }));
         });
     });

@@ -3,8 +3,6 @@ import { FirestoreDAO } from './FirestoreDAO';
 import { display } from 'src/app/utils/utils';
 import { User } from '../domain/User';
 import { Firestore } from '@angular/fire/firestore';
-import { Subscription } from 'rxjs';
-import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
     providedIn: 'root',

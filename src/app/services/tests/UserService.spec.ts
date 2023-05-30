@@ -2,9 +2,10 @@
 import { UserService } from '../UserService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('UserService', () => {
 
@@ -31,10 +32,10 @@ describe('UserService', () => {
             spyOn(userDAO, 'update').and.resolveTo();
 
             // When the username of a user set
-            await userService.setUsername('uid', 'foo');
+            await userService.setUsername('userId', 'foo');
 
             // Then the username is updated through the DAO
-            expect(userDAO.update).toHaveBeenCalledWith('uid', { username: 'foo' });
+            expect(userDAO.update).toHaveBeenCalledWith('userId', { username: 'foo' });
         });
     });
     describe('updatePresenceToken', () => {
@@ -43,13 +44,26 @@ describe('UserService', () => {
             spyOn(userDAO, 'update').and.resolveTo();
 
             // When calling updatePresenceToken
-            await userService.updatePresenceToken('joserId');
+            await userService.updatePresenceToken('userId');
 
             // Then update should be called
-            expect(userDAO.update).toHaveBeenCalledOnceWith('joserId', { lastUpdateTime: serverTimestamp() });
+            expect(userDAO.update).toHaveBeenCalledOnceWith('userId', { lastUpdateTime: serverTimestamp() });
         });
     });
     describe('getServerTime', () => {
-        it('should TODO')
+        it('should return server time of the presence token', fakeAsync(async() => {
+            // Given a user service and some user
+            const id: string = await userDAO.create(UserMocks.CONNECTED);
+            const expectedServerTime: Timestamp = new Timestamp(1, 234);
+            spyOn(userService, 'updatePresenceToken').and.callFake(async(id: string) => {
+                await userDAO.update(id, { lastUpdateTime: expectedServerTime });
+            });
+
+            // When calling getServerTime
+            const serverTime: Timestamp = await userService.getServerTime(id);
+
+            // Then it should update the user's timestamp and return the timestamp provided by the server
+            expect(serverTime).toBe(expectedServerTime);
+        }));
     });
 });

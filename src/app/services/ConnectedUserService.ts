@@ -14,7 +14,6 @@ import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Localized } from '../utils/LocaleUtils';
 import { UserService } from './UserService';
-import { Timestamp } from 'firebase/firestore';
 
 export class GameActionFailure {
 

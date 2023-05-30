@@ -1,4 +1,4 @@
-import { Mutex } from 'async-mutex'
+import { Mutex } from 'async-mutex';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
