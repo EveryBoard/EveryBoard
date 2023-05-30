@@ -27,7 +27,6 @@ export class ObservedPartService implements OnDestroy {
 
     private userSubscription: Subscription = new Subscription();
 
-    private observedPartLoading: boolean = true;
     private observedPart: MGPOptional<ObservedPart> = MGPOptional.empty();
     private readonly observedPartRS: ReplaySubject<MGPOptional<ObservedPart>>;
     private readonly observedPartObs: Observable<MGPOptional<ObservedPart>>;
