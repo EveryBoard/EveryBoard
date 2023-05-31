@@ -14,7 +14,6 @@ import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -197,7 +196,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async startGame(configRoom: ConfigRoom): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
-        assert(this.gameStarted === false, 'Should not start already started game');
+        Utils.assert(this.gameStarted === false, 'Should not start already started game');
         this.configRoom = configRoom;
 
         this.gameStarted = true;
@@ -206,7 +205,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const createdSuccessfully: boolean = await this.afterViewInit();
             this.timeManager.setClocks([this.chronoZeroTurn, this.chronoOneTurn],
                                        [this.chronoZeroGlobal, this.chronoOneGlobal]);
-            assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
+            Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             await this.startPart();
         }, 2);
     }
@@ -222,7 +221,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // Once we receive the notification that the part started, we will subscribe to the events
         this.partSubscription =
             this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
-                assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
+                Utils.assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
                 this.currentPart = new PartDocument(this.currentPartId, part.get());
             });
         this.subscribeToEvents();
@@ -230,7 +229,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async onGameStart(): Promise<void> {
         await this.initializePlayersDatas(this.currentPart as PartDocument);
         const turn: number = this.gameComponent.getTurn();
-        assert(turn === 0, 'turn should always be 0 upon game start');
+        Utils.assert(turn === 0, 'turn should always be 0 upon game start');
         this.timeManager.onGameStart(this.configRoom);
         this.requestManager.onGameStart();
     }
@@ -304,9 +303,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
-        assert(legality.isSuccess(), message);
+        Utils.assert(legality.isSuccess(), message);
         const success: MGPOptional<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
-        assert(success.isPresent(), 'Chosen move should be legal after all checks, but it is not!');
+        Utils.assert(success.isPresent(), 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.node = success.get();
         this.updateBoardAndShowLastMove();
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
@@ -332,7 +331,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.updateBoardAndShowLastMove();
     }
     public canResign(): boolean {
-        assert(this.isPlaying(), 'Non playing should not call canResign');
+        Utils.assert(this.isPlaying(), 'Non playing should not call canResign');
         if (this.endGame === true) {
             return false;
         }
@@ -365,7 +364,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.requestManager.deniedRequest();
     }
     public canPass(): boolean {
-        assert(this.isPlaying(), 'Non playing should not call canPass');
+        Utils.assert(this.isPlaying(), 'Non playing should not call canPass');
         if (this.endGame) return false;
         if (this.currentPlayer?.name !== this.getPlayer().name) return false;
         return this.gameComponent.canPass;
@@ -394,12 +393,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             MGPOptional.of(part.data.playerZero),
             MGPOptional.ofNullable(part.data.playerOne),
         ];
-        assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
+        Utils.assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
         this.currentPlayer = this.players[part.data.turn % 2].get();
         const opponent: MGPOptional<MinimalUser> = await this.setRealObserverRole();
         if (opponent.isPresent()) {
             const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>) => {
-                assert(user.isPresent(), 'opponent was deleted, what sorcery is this');
+                Utils.assert(user.isPresent(), 'opponent was deleted, what sorcery is this');
                 this.opponent = opponent.get();
             };
             this.opponentSubscription = this.userService.observeUser(opponent.get().id, callback);
@@ -432,7 +431,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // risking receiving the move before computing the game status (thereby adding twice the same move)
             const legality: MGPFallible<unknown> =
                 this.gameComponent.rules.isLegal(move, this.gameComponent.node.gameState);
-            assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
+            Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
             const stateAfterMove: GameState =
                 this.gameComponent.rules.applyLegalMove(move, this.gameComponent.node.gameState, legality.get());
             const node: MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> =
@@ -453,7 +452,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             if (gameStatus === GameStatus.DRAW) {
                 return await this.gameService.drawPart(this.currentPartId, this.role as Player, scores);
             } else {
-                assert(gameStatus.winner.isPlayer(), 'Non-draw end games should have a winner');
+                Utils.assert(gameStatus.winner.isPlayer(), 'Non-draw end games should have a winner');
                 const winner: Player = gameStatus.winner as Player;
                 return this.notifyVictory(winner, scores);
             }
