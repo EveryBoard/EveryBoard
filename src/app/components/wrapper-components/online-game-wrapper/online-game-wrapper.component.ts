@@ -365,8 +365,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.requestManager.deniedRequest();
     }
     public canPass(): boolean {
+        assert(this.isPlaying(), 'Non playing should not call canPass');
         if (this.endGame) return false;
-        if (this.isPlaying() === false) return false;
         if (this.currentPlayer?.name !== this.getPlayer().name) return false;
         return this.gameComponent.canPass;
     }
