@@ -321,7 +321,7 @@ describe('LobbyComponent', () => {
         // When it is destroyed
         component.ngOnDestroy();
 
-        // Then it should have unsubscrbed from active parts
+        // Then it should have unsubscribed from active parts
         expectUnsubscribeToHaveBeenCalled();
     }));
     it('should display turn for humans', fakeAsync(async() => {
@@ -335,5 +335,16 @@ describe('LobbyComponent', () => {
         testUtils.expectElementToExist('#part_0 > .turn');
         const turn: DebugElement = testUtils.findElement('#part_0 > .turn');
         expect(turn.nativeElement.innerText).toEqual('1');
+    }));
+    it('should the chat when clicking on the corresponding tab', fakeAsync(async() => {
+        // Given a lobby
+
+        // When clicking on the chat tab
+        await testUtils.clickElement('#tab-chat');
+        tick();
+        testUtils.detectChanges();
+
+        // Then it should show the chat
+        testUtils.expectElementToExist('#chat');
     }));
 });
