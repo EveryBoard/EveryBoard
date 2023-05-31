@@ -732,11 +732,34 @@ describe('PartDAO security', () => {
                     eventType: 'Invalid' as 'Move',
                     time: serverTimestamp(),
                     player: 0,
-                } as GameEvent;
+                    move: 42,
+                };
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
+            });
+            it('should forbid creating an invalid event', async() => {
+                // Given an ongoing part
+                const partId: string = await setupStartedPartAsPlayerZero();
+
+                const eventsWithMissingField: GameEvent[] = [
+                    { time: serverTimestamp(), player: 0, move: 42 } as GameEvent,
+                    { eventType: 'Move', player: 0, move: 42 } as GameEvent,
+                    { eventType: 'Move', time: serverTimestamp(), move: 42 } as GameEvent,
+                    { eventType: 'Move', time: serverTimestamp(), player: 0 } as GameEvent,
+                    { eventType: 'Request', time: serverTimestamp(), player: 0 } as GameEvent,
+                    { eventType: 'Reply', time: serverTimestamp(), player: 0, reply: 'Accept' } as GameEvent,
+                    { eventType: 'Reply', time: serverTimestamp(), player: 0, requestType: 'Draw' } as GameEvent,
+                    { eventType: 'Action', time: serverTimestamp(), player: 0 } as GameEvent,
+                ];
+
+                for (const event of eventsWithMissingField) {
+                    // When creating an event missing a required field
+                    const result: Promise<string> = events(partId).create(event);
+                    // Then it should fail
+                    await expectPermissionToBeDenied(result);
+                }
             });
             it('should forbid creating an event as the other player', async() => {
                 // Given an ongoing part
@@ -746,10 +769,11 @@ describe('PartDAO security', () => {
                 const event: GameEvent = {
                     // We can't represent such invalid types properly with our typing
                     // but malicious clients could, so we need to make an ugly cast
-                    eventType: 'Action',
+                    eventType: 'Move',
                     time: serverTimestamp(),
                     player: 1,
-                } as GameEvent;
+                    move: 42,
+                };
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
