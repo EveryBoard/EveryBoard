@@ -62,7 +62,7 @@ export class LascaMove extends Move {
         public encode(move: LascaMove): JSONValueWithoutArray {
             return {
                 coords: move.coords.toList().map((coord: Coord): JSONValueWithoutArray => {
-                    return Coord.encoder.encodeValue(coord) as JSONValueWithoutArray;
+                    return Coord.encoder.encode(coord) as JSONValueWithoutArray;
                 }),
                 isStep: move.isStep,
             };
@@ -73,7 +73,7 @@ export class LascaMove extends Move {
             assert(casted.isStep != null, 'Encoded LascaMove should have a isStep field');
             const encodedCoords: JSONValueWithoutArray[] =
                 Utils.getNonNullable(casted.coords) as JSONValueWithoutArray[];
-            const coords: Coord[] = encodedCoords.map((x: JSONValue) => Coord.encoder.decodeValue(x));
+            const coords: Coord[] = encodedCoords.map((x: JSONValue) => Coord.encoder.decode(x));
             return new LascaMove(coords, casted.isStep as boolean);
         }
     };

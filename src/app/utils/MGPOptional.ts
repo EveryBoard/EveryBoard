@@ -23,7 +23,7 @@ export class MGPOptional<T> {
             public encode(opt: MGPOptional<T>): JSONValueWithoutArray {
                 if (opt.isPresent()) {
                     // TODO FOR REVIEW: c'est-ce-tu correct lo ?
-                    return encoderT.encodeValue(opt.get()) as JSONValueWithoutArray;
+                    return encoderT.encode(opt.get()) as JSONValueWithoutArray;
                 } else {
                     return null;
                 }
@@ -32,7 +32,7 @@ export class MGPOptional<T> {
                 if (encoded === null) {
                     return MGPOptional.empty();
                 } else {
-                    return MGPOptional.of(encoderT.decodeValue(encoded));
+                    return MGPOptional.of(encoderT.decode(encoded));
                 }
             }
         };

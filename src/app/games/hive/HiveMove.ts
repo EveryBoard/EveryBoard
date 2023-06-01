@@ -118,17 +118,17 @@ export namespace HiveMove {
             if (value instanceof HiveDropMove) {
                 return {
                     moveType: 'Drop',
-                    encoded: HiveDropMove.encoder.encodeValue(value),
+                    encoded: HiveDropMove.encoder.encode(value),
                 };
             } else if (value instanceof HiveMoveSpider) {
                 return {
                     moveType: 'Spider',
-                    encoded: HiveMoveSpider.encoder.encodeValue(value),
+                    encoded: HiveMoveSpider.encoder.encode(value),
                 };
             } else if (value instanceof HiveMoveCoordToCoord) {
                 return {
                     moveType: 'CoordToCoord',
-                    encoded: HiveMoveCoordToCoord.encoder.encodeValue(value),
+                    encoded: HiveMoveCoordToCoord.encoder.encode(value),
                 };
             } else {
                 return {
@@ -142,11 +142,11 @@ export namespace HiveMove {
             // eslint-disable-next-line dot-notation
             const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
             if (moveType === 'Drop') {
-                return HiveDropMove.encoder.decodeValue(content);
+                return HiveDropMove.encoder.decode(content);
             } else if (moveType === 'Spider') {
-                return HiveMoveSpider.encoder.decodeValue(content);
+                return HiveMoveSpider.encoder.decode(content);
             } else if (moveType === 'CoordToCoord') {
-                return HiveMoveCoordToCoord.encoder.decodeValue(content);
+                return HiveMoveCoordToCoord.encoder.decode(content);
             } else {
                 return HiveMove.PASS;
             }

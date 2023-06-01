@@ -4,12 +4,12 @@ import { Move } from 'src/app/jscaip/Move';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { comparableEquals } from 'src/app/utils/Comparable';
 import { JSONValue, Utils } from 'src/app/utils/utils';
-import { AbstractEncoder, Encoder } from '../Encoder';
+import { Encoder } from '../Encoder';
 
 export class EncoderTestUtils {
-    public static expectToBeBijective<T>(encoder: AbstractEncoder<T>, value: T): void {
-        const encoded: JSONValue = encoder.encodeValue(value);
-        const decoded: T = encoder.decodeValue(encoded);
+    public static expectToBeBijective<T>(encoder: Encoder<T>, value: T): void {
+        const encoded: JSONValue = encoder.encode(value);
+        const decoded: T = encoder.decode(encoded);
         expect(comparableEquals(decoded, value)).withContext(`Expected decoded value (${decoded}) to be ${value}`).toBeTrue();
     }
 }
@@ -57,8 +57,8 @@ describe('MoveEncoder', () => {
         });
     });
     describe('disjunction', () => {
-        const encoder1: AbstractEncoder<number> = Encoder.identity<number>();
-        const encoder2: AbstractEncoder<boolean> = Encoder.identity<boolean>();
+        const encoder1: Encoder<number> = Encoder.identity<number>();
+        const encoder2: Encoder<boolean> = Encoder.identity<boolean>();
         const encoder: Encoder<number | boolean> =
             Encoder.disjunction(encoder1,
                                 encoder2,

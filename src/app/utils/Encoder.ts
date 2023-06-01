@@ -1,17 +1,10 @@
 import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
-export abstract class AbstractEncoder<T> {
-
-    public abstract encodeValue(move: T): JSONValue;
-
-    public abstract decodeValue(encodedMove: JSONValue): T;
-}
-
 // Used internally. If T = [A, B, C], then
 // EncoderArray<T> = [Encoder<A>, Encoder<B>, Encoder<C>]
-type EncoderArray<T> = { [P in keyof T]: AbstractEncoder<T[P]> };
+type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };
 
-export abstract class Encoder<T> extends AbstractEncoder<T> {
+export abstract class Encoder<T> {
 
     public static fromFunctions<U>(toJSON: (value: U) => JSONValueWithoutArray,
                                    fromJSON: (json: JSONValueWithoutArray) => U)
@@ -66,8 +59,8 @@ export abstract class Encoder<T> extends AbstractEncoder<T> {
     /**
      * This creates a "sum" encoder, i.e., it encodes values of either type T and U
      */
-    public static disjunction<T, U>(encoderT: AbstractEncoder<T>,
-                                    encoderU: AbstractEncoder<U>,
+    public static disjunction<T, U>(encoderT: Encoder<T>,
+                                    encoderU: Encoder<U>,
                                     isT: (v: T | U) => v is T)
     : Encoder<T | U>
     {
@@ -76,12 +69,12 @@ export abstract class Encoder<T> extends AbstractEncoder<T> {
                 if (isT(value)) {
                     return {
                         type: 'T',
-                        encoded: encoderT.encodeValue(value),
+                        encoded: encoderT.encode(value),
                     };
                 } else {
                     return {
                         type: 'U',
-                        encoded: encoderU.encodeValue(value),
+                        encoded: encoderU.encode(value),
                     };
                 }
             }
@@ -91,9 +84,9 @@ export abstract class Encoder<T> extends AbstractEncoder<T> {
                 // eslint-disable-next-line dot-notation
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
                 if (type_ === 'T') {
-                    return encoderT.decodeValue(content);
+                    return encoderT.decode(content);
                 } else {
-                    return encoderU.decodeValue(content);
+                    return encoderU.decode(content);
                 }
             }
         };
@@ -109,17 +102,17 @@ export abstract class Encoder<T> extends AbstractEncoder<T> {
                 if (isT(value)) {
                     return {
                         type: 'T',
-                        encoded: encoderT.encodeValue(value),
+                        encoded: encoderT.encode(value),
                     };
                 } else if (isU(value)) {
                     return {
                         type: 'U',
-                        encoded: encoderU.encodeValue(value),
+                        encoded: encoderU.encode(value),
                     };
                 } else {
                     return {
                         type: 'V',
-                        encoded: encoderV.encodeValue(value),
+                        encoded: encoderV.encode(value),
                     };
                 }
             }
@@ -129,23 +122,16 @@ export abstract class Encoder<T> extends AbstractEncoder<T> {
                 // eslint-disable-next-line dot-notation
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
                 if (type_ === 'T') {
-                    return encoderT.decodeValue(content);
+                    return encoderT.decode(content);
                 } else if (type_ === 'U') {
-                    return encoderU.decodeValue(content);
+                    return encoderU.decode(content);
                 } else {
-                    return encoderV.decodeValue(content);
+                    return encoderV.decode(content);
                 }
             }
         };
     }
-    public encodeValue(move: T): JSONValue {
-        return this.encode(move);
-    }
-    public abstract encode(move: T): JSONValueWithoutArray;
+    public abstract encode(move: T): JSONValue;
 
-    public decodeValue(encodedMove: JSONValue): T {
-        Utils.assert(Array.isArray(encodedMove) === false, 'MoveEncoder.decode called with an array');
-        return this.decode(encodedMove as JSONValueWithoutArray);
-    }
-    public abstract decode(encodedMove: JSONValueWithoutArray): T;
+    public abstract decode(encodedMove: JSONValue): T;
 }

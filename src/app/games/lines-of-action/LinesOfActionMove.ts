@@ -33,10 +33,10 @@ export class LinesOfActionMove extends MoveCoordToCoord {
         return 'LinesOfActionMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
     public encode(): JSONValue {
-        return LinesOfActionMove.encoder.encodeValue(this);
+        return LinesOfActionMove.encoder.encode(this);
     }
     public decode(encodedMove: JSONValue): LinesOfActionMove {
-        return LinesOfActionMove.encoder.decodeValue(encodedMove);
+        return LinesOfActionMove.encoder.decode(encodedMove);
     }
 
 }

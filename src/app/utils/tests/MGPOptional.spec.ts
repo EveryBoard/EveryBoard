@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { AbstractEncoder, Encoder } from '../Encoder';
+import { Encoder } from '../Encoder';
 import { MGPOptional } from '../MGPOptional';
 import { EncoderTestUtils } from './Encoder.spec';
 
@@ -19,7 +19,7 @@ describe('MGPOptional', () => {
     });
     describe('getEncoder', () => {
         it('should give a bijective encoder', () => {
-            const encoder: AbstractEncoder<MGPOptional<number>> = MGPOptional.getEncoder(Encoder.identity());
+            const encoder: Encoder<MGPOptional<number>> = MGPOptional.getEncoder(Encoder.identity());
             EncoderTestUtils.expectToBeBijective(encoder, MGPOptional.empty());
             EncoderTestUtils.expectToBeBijective(encoder, MGPOptional.of(5));
         });

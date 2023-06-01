@@ -15,7 +15,7 @@ import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { display, JSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -291,7 +291,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async onReceivedMove(moveEvent: GameEventMove): Promise<void> {
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
-        const chosenMove: Move = this.gameComponent.encoder.decodeValue(moveEvent.move);
+        const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
         const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
             ' at turn ' + currentPartTurn +
@@ -517,7 +517,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
 
             // To adhere to security rules, we must add the move before updating the part
-            const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encode(move);
+            const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
             await this.gameService.addMove(this.currentPartId, this.role as Player, encodedMove);
             return this.updatePartWithStatusAndScores(gameStatus, scores);
         }
