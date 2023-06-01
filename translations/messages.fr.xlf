@@ -506,10 +506,6 @@
         <source>Waiting for opponent</source>
         <target>En attente d&apos;adversaire</target>
       </trans-unit>
-      <trans-unit id="1670632975695309948" datatype="html">
-        <source>Connected users:</source>
-        <target>Utilisateurs connectés :</target>
-      </trans-unit>
       <trans-unit id="7103588127254721505" datatype="html">
         <source>Theme</source>
         <target>Thème</target>

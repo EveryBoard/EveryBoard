@@ -110,9 +110,6 @@
       <trans-unit id="689957366051097321" datatype="html">
         <source>Waiting for opponent</source>
       </trans-unit>
-      <trans-unit id="1670632975695309948" datatype="html">
-        <source>Connected users:</source>
-      </trans-unit>
       <trans-unit id="4768749765465246664" datatype="html">
         <source>Email</source>
       </trans-unit>

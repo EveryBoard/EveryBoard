@@ -336,7 +336,7 @@ describe('LobbyComponent', () => {
         const turn: DebugElement = testUtils.findElement('#part_0 > .turn');
         expect(turn.nativeElement.innerText).toEqual('1');
     }));
-    it('should the chat when clicking on the corresponding tab', fakeAsync(async() => {
+    it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
         // Given a lobby
 
         // When clicking on the chat tab
