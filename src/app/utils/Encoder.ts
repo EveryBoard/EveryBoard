@@ -131,6 +131,22 @@ export abstract class Encoder<T> {
             }
         };
     }
+    public static getListEncoder<T>(encoder: Encoder<T>): Encoder<Array<T>> {
+        return new class extends Encoder<Array<T>> {
+            public encode(list: T[]): JSONValue {
+                return list.map((t: T): JSONValueWithoutArray => {
+                    const encodedCoord: JSONValue = encoder.encode(t);
+                    Utils.assert(Array.isArray(encodedCoord) === false,
+                                 'This encoder should not encode as array');
+                    return encodedCoord as JSONValueWithoutArray;
+                }); // TODO FOR REVIEW: une idée de si il reste de encoders qu'on échappé à la Perfection Christique ?
+            }
+            public decode(encoded: JSONValue): T[] {
+                const casted: Array<JSONValue> = encoded as Array<JSONValue>;
+                return casted.map(encoder.decode);
+            }
+        };
+    }
     public abstract encode(move: T): JSONValue;
 
     public abstract decode(encodedMove: JSONValue): T;

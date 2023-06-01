@@ -10,20 +10,11 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class GipfCapture {
 
-    public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
-        public encode(capture: GipfCapture): JSONValue {
-            return capture.capturedSpaces.map((coord: Coord): JSONValueWithoutArray => {
-                const encodedCoord: JSONValue = Coord.encoder.encode(coord);
-                Utils.assert(Array.isArray(encodedCoord) === false,
-                             'Coord.encoder should not encode coord as array');
-                return encodedCoord as JSONValueWithoutArray;
-            }); // TODO: generalise ListEncoder
-        }
-        public decode(encoded: JSONValue): GipfCapture {
-            const casted: Array<JSONValue> = encoded as Array<JSONValue>;
-            return new GipfCapture(casted.map(Coord.encoder.decode));
-        }
-    };
+    public static encoder: Encoder<GipfCapture> = Encoder.tuple(
+        [Encoder.getListEncoder<Coord>(Coord.encoder)],
+        (move: GipfCapture): [Coord[]] => [ArrayUtils.copyImmutableArray(move.capturedSpaces)],
+        (fields: [Coord[]]): GipfCapture => new GipfCapture(fields[0]),
+    );
     public readonly capturedSpaces: ReadonlyArray<Coord>;
 
     public constructor(captured: ReadonlyArray<Coord>) {

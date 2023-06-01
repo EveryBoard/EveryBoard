@@ -95,33 +95,12 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
 }
 
 export class ConspirateursMoveJump extends Move {
-    public static encoder: Encoder<ConspirateursMoveJump> = new class extends Encoder<ConspirateursMoveJump> {
-        public encode(move: ConspirateursMoveJump): JSONValue {
-            return move.coords.map((coord: Coord): JSONValueWithoutArray => {
-                const encodedCoord: JSONValue = Coord.encoder.encode(coord);
-                Utils.assert(Array.isArray(encodedCoord) === false,
-                             'Coord.encoder should not encode coord as array');
-                return encodedCoord as JSONValueWithoutArray;
-            }); // TODO: generalise ListEncoder
-        }
-        public encodeOld(move: ConspirateursMoveJump): JSONValueWithoutArray {
-            return {
-                // coords: move.coords.map(Coord.encoder.encode),
-            };
-        }
-        public decode(encoded: JSONValue): ConspirateursMoveJump {
-            const casted: Array<JSONValue> = encoded as Array<JSONValue>;
-            return ConspirateursMoveJump.from(casted.map(Coord.encoder.decode)).get();
-        }
-        public decodeOld(encoded: JSONValue): ConspirateursMoveJump {
-            // eslint-disable-next-line dot-notation
-            assert(Utils.getNonNullable(encoded)['coords'] != null, 'Encoded ConspirateursMoveJump should contain coords');
-            // eslint-disable-next-line dot-notation
-            const coords: number[] = Utils.getNonNullable(encoded)['coords'] as number[];
-            const decoded: Coord[] = coords.map(Coord.encoder.decode);
-            return ConspirateursMoveJump.from(decoded).get();
-        }
-    };
+
+    public static encoder: Encoder<ConspirateursMoveJump> = Encoder.tuple(
+        [Encoder.getListEncoder<Coord>(Coord.encoder)],
+        (move: ConspirateursMoveJump): [Coord[]] => [ArrayUtils.copyImmutableArray(move.coords)],
+        (fields: [Coord[]]): ConspirateursMoveJump => ConspirateursMoveJump.from(fields[0]).get(),
+    );
     public static from(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
         if (coords.length < 2) {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
