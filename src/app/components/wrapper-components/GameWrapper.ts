@@ -197,6 +197,7 @@ export abstract class GameWrapper<P extends Comparable> {
         return [];
     }
     protected updateBoardAndShowLastMove(): void {
+        this.gameComponent.cancelMoveAttempt();
         this.gameComponent.updateBoard();
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();

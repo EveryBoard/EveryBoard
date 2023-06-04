@@ -23,7 +23,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
         }
         return ConnectSixRules.singleton.get();
     }
-    private static readonly CONNECT_SIX_HELPER: NInARowHelper<PlayerOrNone> =
+    public static readonly CONNECT_SIX_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(ConnectSixFirstMove.isInRange, Utils.identity, 6);
 
     public static getVictoriousCoords(state: ConnectSixState): Coord[] {

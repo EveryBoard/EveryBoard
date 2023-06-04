@@ -7,6 +7,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ConnectSixMinimax } from '../ConnectSixMinimax';
 
 describe('ConnectSixRules', () => {
 
@@ -21,6 +22,7 @@ describe('ConnectSixRules', () => {
     beforeEach(() => {
         rules = ConnectSixRules.get();
         minimaxes = [
+            new ConnectSixMinimax(rules, 'minimax'),
         ];
     });
     describe('first turn', () => {

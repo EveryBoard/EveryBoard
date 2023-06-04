@@ -60,8 +60,10 @@ describe('LocalGameWrapperComponent', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));
-    it('should create', () => {
+    it('should create the component at turn 0', () => {
         expect(testUtils.getComponent()).toBeTruthy();
+        const state: P4State = testUtils.getComponent().getState();
+        expect(state.turn).toBe(0);
     });
     it('should have game included after view init', () => {
         let p4Tag: DebugElement = testUtils.findElement('app-p4');
@@ -73,20 +75,12 @@ describe('LocalGameWrapperComponent', () => {
             .withContext('gameComponent should be present once component view init').toBeTruthy();
     });
     it('connected user should be able to play', fakeAsync(async() => {
+        // Given the initial board
+        // When doing a move
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
-    }));
-    it('should allow to go back one move', fakeAsync(async() => {
-        const state: P4State = testUtils.getComponent().getState();
-        expect(state.turn).toBe(0);
 
-        await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+        // Then the turn should be incremented
         expect(testUtils.getComponent().getTurn()).toBe(1);
-
-        spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
-        await testUtils.expectInterfaceClickSuccess('#takeBack');
-
-        expect(testUtils.getComponent().getTurn()).toBe(0);
-        expect(testUtils.getComponent().updateBoard).toHaveBeenCalledTimes(1);
     }));
     it('should show draw', fakeAsync(async() => {
         const board: PlayerOrNone[][] = [
@@ -459,4 +453,31 @@ describe('LocalGameWrapperComponent', () => {
         // Then the AI metrics are shown
         testUtils.expectElementToExist('#AIMetrics');
     }));
+    describe('takeBack', () => {
+        it('should allow to go back one move', fakeAsync(async() => {
+            // Given a board with a move already done
+            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+
+            // When taking back
+            spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
+            await testUtils.expectInterfaceClickSuccess('#takeBack');
+
+            // Then we should be back on turn 0 and board should have been updated
+            expect(testUtils.getComponent().getTurn()).toBe(0);
+            expect(testUtils.getComponent().updateBoard).toHaveBeenCalledTimes(1);
+        }));
+        it('should cancelMoveAttempt when taking back', fakeAsync(async() => {
+            // Given a board where a move could be ongoing
+            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+
+            // When calling take back
+            const component: P4Component = testUtils.getComponent();
+            spyOn(component, 'cancelMoveAttempt').and.callThrough();
+            await testUtils.expectInterfaceClickSuccess('#takeBack');
+
+            // Then gameComponent.cancelMoveAttempt should have been called
+            // And hence the potentially ongoing move undone from the board
+            expect(component.cancelMoveAttempt).toHaveBeenCalledOnceWith();
+        }));
+    });
 });

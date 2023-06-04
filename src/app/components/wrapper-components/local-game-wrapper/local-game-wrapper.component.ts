@@ -33,7 +33,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public botTimeOut: number = 1000;
 
-    public displayAIMetrics: boolean = false;
+    public displayAIMetrics: boolean = true;
 
     public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
