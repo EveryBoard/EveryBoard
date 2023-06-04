@@ -1,12 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
-import { Vector } from 'src/app/jscaip/Vector';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Direction, Vector } from 'src/app/jscaip/Direction';
+import { NumberEncoder } from 'src/app/utils/Encoder';
+import { Move } from 'src/app/jscaip/Move';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoFailure } from './CoerceoFailure';
-import { Utils } from 'src/app/utils/utils';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class CoerceoStep implements ComparableObject {
 
@@ -39,9 +37,11 @@ export class CoerceoStep implements ComparableObject {
             return CoerceoStep.STEPS[stepIndex];
         }
     }
-
     private constructor(public readonly direction: Vector, public readonly str: string) {}
 
+    public toInt(): number {
+        return CoerceoStep.STEPS.findIndex((s: CoerceoStep) => s.direction.equals(this.direction));
+    }
     public equals(other: CoerceoStep): boolean {
         return this === other;
     }
@@ -50,34 +50,59 @@ export class CoerceoStep implements ComparableObject {
     }
 }
 
-export class CoerceoMove extends MoveCoord {
-
-    private static readonly tileExchangeEncoder: MoveEncoder<CoerceoMove> =
-        MoveCoord.getEncoder(CoerceoMove.fromTilesExchange);
-
-    private static readonly movementEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
-        [Coord.encoder, Coord.encoder],
-        (m: CoerceoMove): [Coord, Coord] => [m.start.get(), m.landingCoord.get()],
-        (fields: [Coord, Coord]): CoerceoMove => CoerceoMove.fromCoordToCoord(fields[0], fields[1]));
-
-    public static encoder: MoveEncoder<CoerceoMove> = MoveEncoder.disjunction(
-        CoerceoMove.tileExchangeEncoder,
-        CoerceoMove.movementEncoder,
-        (m: CoerceoMove): m is CoerceoMove => m.isTileExchange());
-
+export class CoerceoMove extends Move {
+    public static encoder: NumberEncoder<CoerceoMove> = new class extends NumberEncoder<CoerceoMove> {
+        public maxValue(): number {
+            return 6*150 + 9*14 + 9;
+        }
+        public encodeNumber(move: CoerceoMove): number {
+            // tileExchange: cx, cy
+            // movements: step, cx, cy
+            if (move.isTileExchange()) {
+                const cy: number = move.capture.get().y; // [0, 9]
+                const cx: number = move.capture.get().x; // [0, 14]
+                return (cx * 10) + cy;
+            } else {
+                const cy: number = move.start.get().y; // [0, 9]
+                const cx: number = move.start.get().x; // [0, 14]
+                const step: number = move.step.get().toInt() + 1; // [1, 6]
+                return (step * 150) + (cx * 10) + cy;
+            }
+        }
+        public decodeNumber(encodedMove: number): CoerceoMove {
+            if (encodedMove % 1 !== 0) {
+                throw new Error('EncodedMove must be an integer.');
+            }
+            const cy: number = encodedMove % 10;
+            encodedMove = (encodedMove - cy) / 10;
+            const cx: number = encodedMove % 15;
+            encodedMove = (encodedMove - cx) / 15;
+            if (encodedMove === 0) {
+                return CoerceoMove.fromTilesExchange(new Coord(cx, cy));
+            } else {
+                return CoerceoMove.fromMovement(new Coord(cx, cy), CoerceoStep.STEPS[encodedMove - 1]);
+            }
+        }
+    };
     public static fromMovement(start: Coord,
                                step: CoerceoStep): CoerceoMove
     {
-        Utils.assert(start.isInRange(15, 10), 'Starting coord cannot be out of range (width: 15, height: 10).');
+        if (start.isNotInRange(15, 10)) {
+            throw new Error('Starting coord cannot be out of range (width: 15, height: 10).');
+        }
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
-        Utils.assert(landingCoord.isInRange(15, 10), 'Landing coord cannot be out of range (width: 15, height: 10).');
+        if (landingCoord.isNotInRange(15, 10)) {
+            throw new Error('Landing coord cannot be out of range (width: 15, height: 10).');
+        }
         return new CoerceoMove(MGPOptional.of(start),
                                MGPOptional.of(step),
                                MGPOptional.of(landingCoord),
                                MGPOptional.empty());
     }
     public static fromTilesExchange(capture: Coord): CoerceoMove {
-        Utils.assert(capture.isInRange(15, 10), 'Captured coord cannot be out of range (width: 15, height: 10).');
+        if (capture.isNotInRange(15, 10)) {
+            throw new Error('Captured coord cannot be out of range (width: 15, height: 10).');
+        }
         return new CoerceoMove(MGPOptional.empty(),
                                MGPOptional.empty(),
                                MGPOptional.empty(),
@@ -92,7 +117,7 @@ export class CoerceoMove extends MoveCoord {
                         public readonly landingCoord: MGPOptional<Coord>,
                         public readonly capture: MGPOptional<Coord>)
     {
-        super(0, 0); // TODO: kill that once the move-tuple-reuse is merged
+        super();
     }
     public isTileExchange(): boolean {
         return this.capture.isPresent();
@@ -106,10 +131,10 @@ export class CoerceoMove extends MoveCoord {
                    this.landingCoord.get().toString() + ')';
         }
     }
-    public override equals(other: CoerceoMove): boolean {
-        if (!this.capture.equals(other.capture)) return false;
-        if (!this.start.equals(other.start)) return false;
-        if (!this.step.equals(other.step)) return false;
+    public equals(o: CoerceoMove): boolean {
+        if (!this.capture.equals(o.capture)) return false;
+        if (!this.start.equals(o.start)) return false;
+        if (!this.step.equals(o.step)) return false;
         return true;
     }
 }
