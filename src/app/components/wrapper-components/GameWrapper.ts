@@ -119,14 +119,12 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
-    public async receiveValidMove(move: Move,
-                                  state: GameState,
-                                  scores?: [number, number])
+    public async receiveValidMove(move: Move, state: GameState, scores?: [number, number])
     : Promise<MGPValidation>
     {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
-                { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
+                { gameWrapper_receiveValidMove_ie_chooseMove: { move, state, scores } });
         if (this.isPlayerTurn() === false) {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }

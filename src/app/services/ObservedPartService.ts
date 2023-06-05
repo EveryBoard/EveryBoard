@@ -112,7 +112,7 @@ export class ObservedPartService implements OnDestroy {
                 return MGPValidation.SUCCESS;
             } else {
                 // If the other-part is not-started, you cannot (join it and become candidate)
-                // if the other-part is started but you are active(aka: non-observer) you cannot join it
+                // if the other-part is started but you are active(i.e.: non-observer) you cannot join it
                 const message: string = ObservedPartService.roleToMessage.get(this.observedPart.get().role).get()();
                 return MGPValidation.failure(message);
             }

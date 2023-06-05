@@ -1,25 +1,18 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction, Vector } from 'src/app/jscaip/Direction';
-import { NumberEncoder } from 'src/app/utils/Encoder';
+import { Direction } from 'src/app/jscaip/Direction';
+import { Vector } from 'src/app/jscaip/Vector';
+import { MoveEncoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoFailure } from './CoerceoFailure';
-
 export class CoerceoStep implements ComparableObject {
-
     public static LEFT: CoerceoStep = new CoerceoStep(new Vector(-2, 0), 'LEFT');
-
     public static UP_LEFT: CoerceoStep = new CoerceoStep(Direction.UP_LEFT, 'UP_LEFT');
-
     public static UP_RIGHT: CoerceoStep = new CoerceoStep(Direction.UP_RIGHT, 'UP_RIGHT');
-
     public static RIGHT: CoerceoStep = new CoerceoStep(new Vector(2, 0), 'RIGHT');
-
     public static DOWN_LEFT: CoerceoStep = new CoerceoStep(Direction.DOWN_LEFT, 'DOWN_LEFT');
-
     public static DOWN_RIGHT: CoerceoStep = new CoerceoStep(Direction.DOWN_RIGHT, 'DOWN_RIGHT');
-
     public static readonly STEPS: CoerceoStep[] = [
         CoerceoStep.LEFT,
         CoerceoStep.UP_LEFT,
@@ -37,11 +30,9 @@ export class CoerceoStep implements ComparableObject {
             return CoerceoStep.STEPS[stepIndex];
         }
     }
+
     private constructor(public readonly direction: Vector, public readonly str: string) {}
 
-    public toInt(): number {
-        return CoerceoStep.STEPS.findIndex((s: CoerceoStep) => s.direction.equals(this.direction));
-    }
     public equals(other: CoerceoStep): boolean {
         return this === other;
     }
@@ -51,39 +42,22 @@ export class CoerceoStep implements ComparableObject {
 }
 
 export class CoerceoMove extends Move {
-    public static encoder: NumberEncoder<CoerceoMove> = new class extends NumberEncoder<CoerceoMove> {
-        public maxValue(): number {
-            return 6*150 + 9*14 + 9;
-        }
-        public encodeNumber(move: CoerceoMove): number {
-            // tileExchange: cx, cy
-            // movements: step, cx, cy
-            if (move.isTileExchange()) {
-                const cy: number = move.capture.get().y; // [0, 9]
-                const cx: number = move.capture.get().x; // [0, 14]
-                return (cx * 10) + cy;
-            } else {
-                const cy: number = move.start.get().y; // [0, 9]
-                const cx: number = move.start.get().x; // [0, 14]
-                const step: number = move.step.get().toInt() + 1; // [1, 6]
-                return (step * 150) + (cx * 10) + cy;
-            }
-        }
-        public decodeNumber(encodedMove: number): CoerceoMove {
-            if (encodedMove % 1 !== 0) {
-                throw new Error('EncodedMove must be an integer.');
-            }
-            const cy: number = encodedMove % 10;
-            encodedMove = (encodedMove - cy) / 10;
-            const cx: number = encodedMove % 15;
-            encodedMove = (encodedMove - cx) / 15;
-            if (encodedMove === 0) {
-                return CoerceoMove.fromTilesExchange(new Coord(cx, cy));
-            } else {
-                return CoerceoMove.fromMovement(new Coord(cx, cy), CoerceoStep.STEPS[encodedMove - 1]);
-            }
-        }
-    };
+
+    private static readonly tileExchangeEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
+        [Coord.encoder],
+        (m: CoerceoMove): [Coord] => [m.capture.get()],
+        (fields: [Coord]): CoerceoMove => CoerceoMove.fromTilesExchange(fields[0]));
+
+    private static readonly movementEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
+        [Coord.encoder, Coord.encoder],
+        (m: CoerceoMove): [Coord, Coord] => [m.start.get(), m.landingCoord.get()],
+        (fields: [Coord, Coord]): CoerceoMove => CoerceoMove.fromCoordToCoord(fields[0], fields[1]));
+
+    public static encoder: MoveEncoder<CoerceoMove> = MoveEncoder.disjunction(
+        CoerceoMove.tileExchangeEncoder,
+        CoerceoMove.movementEncoder,
+        (m: CoerceoMove): m is CoerceoMove => m.isTileExchange());
+
     public static fromMovement(start: Coord,
                                step: CoerceoStep): CoerceoMove
     {
@@ -131,10 +105,10 @@ export class CoerceoMove extends Move {
                    this.landingCoord.get().toString() + ')';
         }
     }
-    public equals(o: CoerceoMove): boolean {
-        if (!this.capture.equals(o.capture)) return false;
-        if (!this.start.equals(o.start)) return false;
-        if (!this.step.equals(o.step)) return false;
+    public equals(other: CoerceoMove): boolean {
+        if (!this.capture.equals(other.capture)) return false;
+        if (!this.start.equals(other.start)) return false;
+        if (!this.step.equals(other.step)) return false;
         return true;
     }
 }

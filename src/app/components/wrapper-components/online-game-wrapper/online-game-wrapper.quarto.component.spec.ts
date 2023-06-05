@@ -1677,5 +1677,5 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
 });
-// It should display the name of the player
+// It should display "JeanJaja (152)" so we know how bad JeanJaja is bad at P4 !
 

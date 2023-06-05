@@ -108,7 +108,7 @@ export class GameService {
         const playerZeroElo: number = playerZeroInfo.currentElo;
         const playerOneInfo: EloInfo = await this.userService.getPlayerInfo(playerOne, configRoom.typeGame);
         const playerOneElo: number = playerOneInfo.currentElo;
-        // TODO: TODOTODO round low the elo
+        // TODO: TODOTODO round low the elo, so elo are 158.75896 but displayed as 158 !
         console.log('getStartingConfig', playerZeroElo, ' vs ', playerOneElo)
         return {
             playerZero,

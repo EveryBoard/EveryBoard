@@ -3,15 +3,9 @@ import { Player } from '../jscaip/Player';
 import { Utils } from '../utils/utils';
 import { EloInfo } from '../domain/EloInfo';
 
-export interface EloInfoPair {
-    playerZero: EloInfo,
-    playerOne: EloInfo,
-}
+export type EloInfoPair = [EloInfo, EloInfo];
 
-export interface EloDifferences {
-    pointChangeForZero: number,
-    pointChangeForOne: number,
-}
+export type EloDifferences = [number, number];
 
 export interface EloEntry {
     eloInfoPair: EloInfoPair,
@@ -25,47 +19,56 @@ export class EloCalculationService {
 
     public static getNewElos(eloEntry: EloEntry): EloInfoPair {
         const normalEloDifferences: EloDifferences = EloCalculationService.getNormalEloDifferences(eloEntry);
-        const zeroNewElo: number = EloCalculationService.getActualNewElo(eloEntry.eloInfoPair.playerZero.currentElo,
-                                                                         normalEloDifferences.pointChangeForZero);
-        const oneNewElo: number = EloCalculationService.getActualNewElo(eloEntry.eloInfoPair.playerOne.currentElo,
-                                                                        normalEloDifferences.pointChangeForOne);
-        return {
-            playerZero: {
-                currentElo: zeroNewElo,
-                numberOfGamePlayed: eloEntry.eloInfoPair.playerZero.numberOfGamePlayed + 1,
-            },
-            playerOne: {
-                currentElo: oneNewElo,
-                numberOfGamePlayed: eloEntry.eloInfoPair.playerOne.numberOfGamePlayed + 1,
-            },
-        };
+        const eloInfos: EloInfo[] = [];
+        for (const player of Player.PLAYERS) {
+            const currentElo: number =
+                EloCalculationService.getActualNewElo(eloEntry.eloInfoPair[player.value].currentElo,
+                                                      normalEloDifferences[player.value]);
+            eloInfos[player.value] = {
+                currentElo,
+                numberOfGamePlayed: eloEntry.eloInfoPair[player.value].numberOfGamePlayed + 1,
+            };
+        }
+        return eloInfos as EloInfoPair;
     }
+    /**
+      * The normal difference don't take into account that we don't let player lose elo when they're weaker that 100 elo
+      */
     public static getNormalEloDifferences(eloEntry: EloEntry): EloDifferences {
-        const wZero: number = EloCalculationService.getWFrom(eloEntry.winner, Player.ZERO);
-        const wOne: number = EloCalculationService.getWFrom(eloEntry.winner, Player.ONE);
-        const playerZeroInfo: EloInfo = eloEntry.eloInfoPair.playerZero;
-        const playerOneInfo: EloInfo = eloEntry.eloInfoPair.playerOne;
-        const eloZero: number = playerZeroInfo.currentElo;
-        const eloOne: number = eloEntry.eloInfoPair.playerOne.currentElo;
-        const pZero: number = this.getWinningProbability(eloZero, eloOne);
-        const pOne: number = this.getWinningProbability(eloOne, eloZero);
-        const playerZeroK: number = EloCalculationService.getKFrom(playerZeroInfo.numberOfGamePlayed);
-        const playerOneK: number = EloCalculationService.getKFrom(playerOneInfo.numberOfGamePlayed);
-        return {
-            pointChangeForZero: EloCalculationService.getNormalEloDifference(playerZeroK, wZero, pZero),
-            pointChangeForOne: EloCalculationService.getNormalEloDifference(playerOneK, wOne, pOne),
-        };
+        const eloDifferences: [number, number] = [0, 0];
+        for (const player of Player.PLAYERS) {
+            const playerInfo: EloInfo = eloEntry.eloInfoPair[player.value];
+            const K: number = EloCalculationService.getKFrom(playerInfo.numberOfGamePlayed);
+            const W: number = EloCalculationService.getWFrom(eloEntry.winner, player);
+            const eloPlayer: number = playerInfo.currentElo;
+            const opponentInfo: EloInfo = eloEntry.eloInfoPair[player.getOpponent().value];
+            const eloOpponent: number = opponentInfo.currentElo;
+            const P: number = this.getWinningProbability(eloPlayer, eloOpponent);
+            eloDifferences[player.value] = EloCalculationService.getNormalEloDifference(K, W, P);
+        }
+        return eloDifferences;
     }
+    /**
+      * Calculate the normal difference of level (excluding special rules)
+      * @param K a coefficient depending on how much the player a played game
+      * (to make new user grow quicker to their real lever)
+      * @param W 1 if player 1, 0.5 if player draw, 0 if player lost
+      * @param P The probability player had to win
+      * @returns the difference of elo (negative for lost, positive for victory)
+      */
     public static getNormalEloDifference(K: number, W: number, P: number): number {
         return K * (W - P);
     }
+    /**
+      * Calculate the effective change of Elo that will happens
+      */
     public static getActualNewElo(oldElo: number, eloDifference: number): number {
         let minimumFinalElo: number = 1;
         if (eloDifference < 0) {
             if (oldElo < 100) {
-                eloDifference = 0; // Not removing elo to player bellow 100
+                eloDifference = 0; // Not removing elo to player below 100
             } else {
-                minimumFinalElo = 100; // Not making a player fall back bellow 100
+                minimumFinalElo = 100; // Not making a player fall back below 100
             }
         }
         const newElo: number = oldElo + eloDifference;
@@ -98,9 +101,9 @@ export class EloCalculationService {
             return 20;
         }
     }
-    public static getWinningProbability(eloWinner: number, eloLooser: number): number {
-        const diffEnElo: number = eloWinner - eloLooser;
-        const result: number = 1 / (1 + (10 ** (-diffEnElo / 400)));
+    public static getWinningProbability(eloWinner: number, eloLoser: number): number {
+        const differenceInEloPoints: number = eloWinner - eloLoser;
+        const result: number = 1 / (1 + (10 ** (- differenceInEloPoints / 400)));
         return result;
     }
 }

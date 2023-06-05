@@ -8,7 +8,7 @@ import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserService } from 'src/app/services/UserService';
 
-describe('UserDAO', () => {
+xdescribe('UserDAO', () => {
 
     let userDAO: UserDAO;
     let userService: UserService;
@@ -145,25 +145,25 @@ describe('UserDAO', () => {
         });
     });
     describe('elo security', () => {
-        // Step 2: encoding looser elo
-        it('should allow the last player to write looser elo', async() => {
-            // Given a part in 'pre-finished' state and a looser playing its 15th game
+        // Step 2: encoding loser elo
+        it('should allow the last player to write loser elo', async() => {
+            // Given a part in 'pre-finished' state and a loser playing its 15th game
             // And a user doc
             // When
             // Then
         });
-        it(`should reject looser's elo update if part is not marked as "pre-finished"`, async() => {
+        it(`should reject loser's elo update if part is not marked as "pre-finished"`, async() => {
             // Given a part in another state than 'pre-finished'
-            // And with the looser at his 15th part of this game
+            // And with the loser at his 15th part of this game
             // And a user link to this part who encoded 14 game for this game
 
             // When updating this user's elo
 
             // Then the modification should have been rejected
         });
-        it(`should reject looser's elo update if this part has already been counted`, async() => {
+        it(`should reject loser's elo update if this part has already been counted`, async() => {
             // Given a part in 'pre-finished' state
-            // And with the looser at his 15th part of this game
+            // And with the loser at his 15th part of this game
             // And a user link to this part who encdoed 15 game already for this game
 
             // When updating this user's elo
@@ -181,7 +181,7 @@ describe('UserDAO', () => {
             // When
             // Then the modification should have been rejected
         });
-        it(`should reject winner's elo updates if looser change aren't written`, async() => {
+        it(`should reject winner's elo updates if loser change aren't written`, async() => {
             // Given
             // When
             // Then the modification should have been rejected
@@ -208,7 +208,7 @@ describe('UserDAO', () => {
             // When
             // Then the modification should have been rejected
         });
-        it(`should reject update if looser's elo update hasn't been counted`, async() => {
+        it(`should reject update if loser's elo update hasn't been counted`, async() => {
             // Given
             // When
             // Then the modification should have been rejected

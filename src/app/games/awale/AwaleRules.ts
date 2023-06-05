@@ -215,7 +215,8 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         let direction: number = -1; // by defaut, capture from right to left
         let limit: number = -1;
         if (player === Player.ONE) {
-            /** if Player.ONE capture, it is on the bottom line
+            /**
+              * if Player.ONE capture, it is on the bottom line
               * means capture goes from left to right ( + 1)
               * so one ending condition of the loop is reaching index 6
              */

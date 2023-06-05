@@ -13,7 +13,7 @@ export interface Part extends FirestoreJSONObject {
     readonly result: IMGPResult;
 
     readonly playerOne?: MinimalUser; // the second player
-    readonly playerOneElo?: number, // must always be there once playerOne enters the document
+    readonly playerOneElo?: number, // must be modified/set whenever playerOne is modified/set
     readonly beginning?: FirestoreTime; // beginning of the part
     readonly winner?: MinimalUser;
     readonly loser?: MinimalUser;
@@ -22,7 +22,6 @@ export interface Part extends FirestoreJSONObject {
 
     // Extra fields as sub-collections:
     // events: subcollection of GameEvent
-    // events: subcollection of EloInfo
 }
 
 type EventType = 'Move' | 'Request' | 'Reply' | 'Action';

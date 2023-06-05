@@ -1,8 +1,9 @@
 import { FirestoreJSONObject } from '../utils/utils';
 
-/** Player Elo Info
-  * All the info about the elo that end up in a sub-collection inside user's document
-  * So those data are for one user in a certain game
+/**
+  * Player Elo Info
+  * All the info about the elo that end up in a sub-collection inside the user's document
+  * So this data is for one user in a certain game
   */
 export interface EloInfo extends FirestoreJSONObject {
 

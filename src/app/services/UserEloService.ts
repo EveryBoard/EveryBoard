@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserDAO } from '../dao/UserDAO';
-import { EloHistory } from '../domain/EloInfo';
+import { EloInfo } from '../domain/EloInfo';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +15,7 @@ export class UserEloService {
      * @param elo the new elo value for player
      * @returns a promise
      */
-    public async addEloHistory(userId: string, gameName: string, elo: number): Promise<void> {
-        return this.userDAO.subCollectionDAO(userId, 'messages').set(partId, message);
+    public async update(userId: string, gameName: string, newEloInfo: EloInfo): Promise<void> {
+        return this.userDAO.subCollectionDAO<EloInfo>(userId, 'elos').set(gameName, newEloInfo);
     }
 }

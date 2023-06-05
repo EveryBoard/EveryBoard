@@ -13,7 +13,9 @@ export interface User extends FirestoreJSONObject {
     verified: boolean,
     // Observed part can be undefined if the user has never had an observedPart, null if it has been removed
     observedPart?: FocusedPart | null,
-    // A User has also a sub-collection of Elos
+
+    // Extra fields as sub-collections:
+    // elos: subcollection of EloInfo
 }
 
 export interface FocusedPart extends FirestoreJSONObject {

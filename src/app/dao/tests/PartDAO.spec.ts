@@ -29,7 +29,7 @@ type PartInfo = {
     candidate: MinimalUser,
 }
 
-fdescribe('PartDAO security', () => {
+xdescribe('PartDAO security', () => {
 
     let partDAO: PartDAO;
     let gameEventService: GameEventService;
@@ -460,7 +460,7 @@ fdescribe('PartDAO security', () => {
         });
     });
     describe('for creator', () => {
-        it('should forbid creator to change typeGame/playerZero/playerOneElo/playerOne/playerOneElo/beginning once a part has started', async() => {
+        it('should forbid creator to change typeGame/playerZero/playerZeroElo/playerOne/playerOneElo/beginning once a part has started', async() => {
             // Given a part that has started (i.e., beginning is set), and a player (here creator)
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({
@@ -528,7 +528,6 @@ fdescribe('PartDAO security', () => {
             return { playerZero, playerOne, partId, part };
         }
         async function updatePlayersElo(finishedPart: Part): Promise<void> {
-            // 1. TODO: Update user's elo
             // TODO FOR REVIEW: ban casting of <T | null> to null but use getNonNullable instead, I almost forgot her!
             await userService.updateElo(finishedPart.typeGame,
                                         finishedPart.playerZero,

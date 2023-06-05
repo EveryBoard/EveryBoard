@@ -10,6 +10,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../domain/MinimalUser';
 import { EloCalculationService, EloEntry, EloInfoPair } from './EloCalculationService';
 import { EloInfo } from '../domain/EloInfo';
+import { UserEloService } from './UserEloService';
 
 /**
   * The aim of this service is to:
@@ -24,7 +25,9 @@ import { EloInfo } from '../domain/EloInfo';
 })
 export class UserService {
 
-    public constructor(private readonly userDAO: UserDAO) {
+    public constructor(private readonly userDAO: UserDAO,
+                       private readonly userEloService: UserEloService)
+    {
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
         const usersWithSameUsername: FirestoreDocument<User>[] = await this.userDAO.findWhere([['username', '==', username]]);
@@ -62,22 +65,19 @@ export class UserService {
         const playerOne: EloInfo = await this.getPlayerInfo(one, gameName);
         // Calculate the game result
         const eloEntry: EloEntry = {
-            eloInfoPair: {
-                playerZero,
-                playerOne,
-            },
+            eloInfoPair: [playerZero, playerOne],
             winner,
         };
         const result: EloInfoPair = EloCalculationService.getNewElos(eloEntry);
-        // For both user: change the ELO
-        await this.updatePlayerElo(zero, gameName, result.playerZero);
-        await this.updatePlayerElo(one, gameName, result.playerOne);
+        // For both user: change the Elo
+        await this.updatePlayerElo(zero, gameName, result[0]);
+        await this.updatePlayerElo(one, gameName, result[1]);
     }
     public async getPlayerInfo(player: MinimalUser, gameName: string): Promise<EloInfo> {
         console.log('getPlayerInfo', player, gameName)
-        const chose: IFirestoreDAO<EloInfo> = this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos');
+        const subCollection: IFirestoreDAO<EloInfo> = this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos');
         console.log('subco, on est bon !')
-        const optionalInfo: MGPOptional<EloInfo> = await chose.read(gameName);
+        const optionalInfo: MGPOptional<EloInfo> = await subCollection.read(gameName);
         console.log('lu!')
         return optionalInfo.getOrElse({
             currentElo: 0,
@@ -85,6 +85,6 @@ export class UserService {
         });
     }
     private async updatePlayerElo(player: MinimalUser, gameName: string, newEloInfo: EloInfo): Promise<void> {
-        return this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos').set(gameName, newEloInfo);
+        return this.userEloService.update(player.id, gameName, newEloInfo);
     }
 }

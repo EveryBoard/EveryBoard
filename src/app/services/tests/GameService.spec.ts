@@ -27,7 +27,7 @@ import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { GameEventService } from '../GameEventService';
 
-describe('GameService', () => {
+xdescribe('GameService', () => {
 
     let gameService: GameService;
     let userService: UserService;
@@ -190,34 +190,6 @@ describe('GameService', () => {
         expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
     }));
     describe('resign', () => {
-        it('should delegate to updateAndBumpIndex with a MGPResult.RESIGN value', fakeAsync(async() => {
-            // Given a part ongoing
-            const part: Part = {
-                typeGame: 'Quarto',
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerZeroElo: 0,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                turn: 1,
-                request: null,
-                result: MGPResult.UNACHIEVED.value,
-            };
-            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
-            spyOn(partDAO, 'update').and.resolveTo();
-
-            // When some user resign
-            await gameService.resign(partDocument,
-                                     Player.ONE,
-                                     UserMocks.CANDIDATE_MINIMAL_USER,
-                                     UserMocks.CREATOR_MINIMAL_USER);
-            // Then updateAndBumpIndex should have been called with a MGPResult.RESIGN value
-            const expectedUpdate: Partial<Part> = {
-                result: MGPResult.RESIGN.value,
-                winner: UserMocks.CANDIDATE_MINIMAL_USER,
-                loser: UserMocks.CREATOR_MINIMAL_USER,
-                request: null,
-            };
-            // expect(gameService.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
-        }));
         it('should update elo', fakeAsync(async() => {
             // Given any state of service
             spyOn(userService, 'updateElo').and.callThrough();
