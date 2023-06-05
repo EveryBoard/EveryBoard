@@ -11,7 +11,7 @@ import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 
-fdescribe('AbaloneComponent', () => {
+describe('AbaloneComponent', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
