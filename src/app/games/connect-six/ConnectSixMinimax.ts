@@ -44,7 +44,7 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
         return new MGPSet(moves).toList(); // Removes duplicates
     }
     private getAvailableCoords(state: ConnectSixState): Coord[] {
-        const usefullCoord: boolean[][] = this.getUseFullCoords(state);
+        const usefullCoord: boolean[][] = this.getUsefullCoords(state);
         const availableCoords: Coord[] = [];
         for (const coordsAndContents of state.getCoordsAndContents()) {
             const coord: Coord = coordsAndContents.coord;
@@ -54,16 +54,16 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
         }
         return availableCoords;
     }
-    private getUseFullCoords(state: ConnectSixState): boolean[][] {
+    private getUsefullCoords(state: ConnectSixState): boolean[][] {
         const usefullCoord: boolean[][] = ArrayUtils.createTable(ConnectSixState.WIDTH, ConnectSixState.HEIGHT, false);
         for (const coordsAndContents of state.getCoordsAndContents()) {
             if (coordsAndContents.content.isPlayer()) {
-                this.addNeighbooringCoord(usefullCoord, coordsAndContents.coord);
+                this.addNeighboringCoord(usefullCoord, coordsAndContents.coord);
             }
         }
         return usefullCoord;
     }
-    private addNeighbooringCoord(usefullCoord: boolean[][], coord: Coord): void {
+    private addNeighboringCoord(usefullCoord: boolean[][], coord: Coord): void {
         const usefullDistance: number = 1; // At two, it's already slow
         const minX: number = Math.max(0, coord.x - usefullDistance);
         const minY: number = Math.max(0, coord.y - usefullDistance);
@@ -84,8 +84,7 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
                     ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coordsAndContents.coord);
                 const coordScore: SCORE = MGPNode.getScoreStatus(squareScore);
                 if (coordScore === SCORE.VICTORY) {
-                    // if we find a victory
-                    return new BoardValue(squareScore); // we return it
+                    return new BoardValue(squareScore);
                 }
                 score += squareScore;
             }

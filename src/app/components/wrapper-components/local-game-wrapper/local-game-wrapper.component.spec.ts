@@ -467,7 +467,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(testUtils.getComponent().updateBoard).toHaveBeenCalledTimes(1);
         }));
         it('should cancelMoveAttempt when taking back', fakeAsync(async() => {
-            // Given a board where a move could be ongoing
+            // Given a board where a move could be on construction
             await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
             // When calling take back

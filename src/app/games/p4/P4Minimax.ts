@@ -27,8 +27,7 @@ export class P4Minimax extends Minimax<P4Move, P4State> {
                 // while we haven't reached the top or an empty space
                 const squareScore: number = P4Rules.P4_HELPER.getSquareScore(state, new Coord(x, y));
                 if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
-                    // if we find a victory
-                    return new BoardValue(squareScore); // we return it
+                    return new BoardValue(squareScore);
                 }
                 score += squareScore;
             }

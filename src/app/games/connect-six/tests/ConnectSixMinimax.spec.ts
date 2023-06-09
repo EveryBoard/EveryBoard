@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixMinimax } from '../ConnectSixMinimax';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
@@ -6,7 +7,6 @@ import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-/* eslint-disable max-lines-per-function */
 describe('ConnectSixMinimax', () => {
 
     let minimax: ConnectSixMinimax;
@@ -19,7 +19,7 @@ describe('ConnectSixMinimax', () => {
         minimax = new ConnectSixMinimax(rules, 'Minimax');
     });
     it('should propose only one move at first turns', () => {
-        // Given the minimax and the ConnectSix size of board, and the initial board
+        // Given the initial node
         const width: number = ConnectSixState.WIDTH;
         const height: number = ConnectSixState.HEIGHT;
         const state: ConnectSixState = ConnectSixState.getInitialState();
