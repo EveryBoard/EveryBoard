@@ -130,8 +130,8 @@ describe('ConnectSixMinimax', () => {
         // When counting the number of choices
         const moves: ConnectSixMove[] = minimax.getListMoves(node);
 
-        // Then the answer should be 60
-        expect(moves.length).toBe(60);
+        // Then the answer should be 65
+        expect(moves.length).toBe(65);
     });
     it('should block double-open four at level two', () => {
         // Given a minimax at level two
