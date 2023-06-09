@@ -1,18 +1,13 @@
 import { assert } from 'src/app/utils/assert';
 import { Encoder } from 'src/app/utils/Encoder';
-import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
 export class ApagosCoord {
 
-    public static encoder: Encoder<ApagosCoord> = new class extends Encoder<ApagosCoord> {
-        public encode(coord: ApagosCoord): JSONValueWithoutArray {
-            return coord.x;
-        }
-        public decode(encoded: JSONValueWithoutArray): ApagosCoord {
-            Utils.assert(encoded != null, 'Invalid encoded ApagosCoord: ' + encoded);
-            return ApagosCoord.of(encoded as number);
-        }
-    };
+    public static encoder: Encoder<ApagosCoord> = Encoder.tuple(
+        [Encoder.identity<number>()],
+        (coord: ApagosCoord) => [coord.x],
+        (value: [number]) => ApagosCoord.of(value[0]),
+    );
     public static ZERO: ApagosCoord = new ApagosCoord(0);
 
     public static ONE: ApagosCoord = new ApagosCoord(1);

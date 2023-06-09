@@ -87,7 +87,7 @@ describe('EncapsuleSpace', () => {
             const superposed: MGPOptional<EncapsuleSpace> = c.tryToSuperposePiece(EncapsulePiece.BIG_DARK);
 
             expect(superposed.isPresent()).toBeTrue();
-            expect(superposed.get().encode()).toBe(expected.encode());
+            expect(superposed.get()).toEqual(expected);
         });
     });
     describe('removeBiggest', () => {
@@ -102,7 +102,7 @@ describe('EncapsuleSpace', () => {
 
             const expectedSpace: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
             const expectedPiece: EncapsulePiece = EncapsulePiece.BIG_DARK;
-            expect(result.removedSpace.encode()).toBe(expectedSpace.encode());
+            expect(result.removedSpace).toEqual(expectedSpace);
             expect(result.removedPiece).toBe(expectedPiece);
         });
     });
@@ -117,7 +117,7 @@ describe('EncapsuleSpace', () => {
             const newSpace: EncapsuleSpace = c.put(EncapsulePiece.MEDIUM_DARK);
 
             const expectedSpace: EncapsuleSpace = new EncapsuleSpace(Player.ONE, Player.ZERO, PlayerOrNone.NONE);
-            expect(newSpace.encode()).toBe(expectedSpace.encode());
+            expect(newSpace).toEqual(expectedSpace);
         });
     });
 });

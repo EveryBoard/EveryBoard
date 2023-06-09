@@ -28,9 +28,9 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
     }
     public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _info: void): ConspirateursState {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
-        if (move.isDrop()) {
+        if (ConspirateursMove.isDrop(move)) {
             updatedBoard[move.coord.y][move.coord.x] = state.getCurrentPlayer();
-        } else if (move.isSimple()) {
+        } else if (ConspirateursMove.isSimple(move)) {
             updatedBoard[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
             updatedBoard[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();
         } else {
@@ -42,9 +42,9 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         return new ConspirateursState(updatedBoard, state.turn + 1);
     }
     public isLegal(move: ConspirateursMove, state: ConspirateursState): MGPValidation {
-        if (move.isDrop()) {
+        if (ConspirateursMove.isDrop(move)) {
             return this.dropLegality(move, state);
-        } else if (move.isSimple()) {
+        } else if (ConspirateursMove.isSimple(move)) {
             return this.simpleMoveLegality(move, state);
         } else {
             return this.jumpLegality(move, state);

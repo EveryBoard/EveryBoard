@@ -36,9 +36,9 @@ describe('LodestoneDummyMinimax', () => {
     it('should propose 8 moves on a specific minimal board', () => {
         // Given a state with 4 empty spaces and no remaining pressure plate
         const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'diagonal' });
+                                                             { isPush: 'pull', orientation: 'diagonal' });
         const X: LodestonePiece = LodestonePieceLodestone.of(Player.ONE,
-                                                             { direction: 'push', orientation: 'diagonal' });
+                                                             { isPush: 'push', orientation: 'diagonal' });
         const board: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],

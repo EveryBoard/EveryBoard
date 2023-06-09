@@ -78,7 +78,7 @@ export class CoerceoMinimax extends PlayerMetricsMinimax<CoerceoMove, CoerceoSta
         return moves;
     }
     public moveCapturesList(node: CoerceoNode, move: CoerceoMove): Coord[] {
-        if (move.isTileExchange()) {
+        if (CoerceoMove.isTileExchange(move)) {
             return [move.coord];
         } else {
             // Move the piece

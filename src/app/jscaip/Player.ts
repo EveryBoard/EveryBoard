@@ -23,22 +23,19 @@ class PlayerNone implements ComparableObject {
 
 export class Player implements ComparableObject {
 
-    public static encoder: Encoder<Player> = new class extends Encoder<Player> {
-        public encode(player: Player): JSONValueWithoutArray {
-            return player.value;
-        }
-        public decode(encoded: JSONValueWithoutArray): Player {
-            Utils.assert(encoded === 0 || encoded === 1, 'Invalid encoded player: ' + encoded);
-            return Player.of(encoded as 0|1);
-        }
-    };
+    public static encoder: Encoder<Player> = Encoder.tuple(
+        [Encoder.identity<number>()],
+        (player: Player) => [player.value],
+        (fields: [number]) => Player.of(fields[0]),
+    );
     public static readonly ZERO: Player = new Player(0);
     public static readonly ONE: Player = new Player(1);
     public static readonly PLAYERS: Player[] = [Player.ZERO, Player.ONE];
 
     public static of(value: number): Player {
         switch (value) {
-            case 0: return Player.ZERO;
+            case 0:
+                return Player.ZERO;
             default:
                 Utils.expectToBe(value, 1);
                 return Player.ONE;

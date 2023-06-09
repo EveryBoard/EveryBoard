@@ -58,19 +58,21 @@ describe('MoveEncoder', () => {
     });
     describe('disjunction', () => {
         const encoder1: Encoder<number> = Encoder.identity<number>();
+        function is1(value : number | boolean): value is number {
+            return typeof(value) === 'number';
+        }
         const encoder2: Encoder<boolean> = Encoder.identity<boolean>();
-        const encoder: Encoder<number | boolean> =
-            Encoder.disjunction(encoder1,
-                                encoder2,
-                                (value : number | boolean): value is number => {
-                                    return typeof(value) === 'number';
-                                });
+        function is2(value : number | boolean): value is boolean {
+            return typeof(value) === 'boolean';
+        }
+        const encoder: Encoder<number | boolean> = Encoder.disjunction([is1, is2], [encoder1, encoder2]);
+
         it('should have a bijective encoder', () => {
-            EncoderTestUtils.expectToBeBijective(encoder, 0 as number | boolean);
-            EncoderTestUtils.expectToBeBijective(encoder, 1 as number | boolean);
-            EncoderTestUtils.expectToBeBijective(encoder, 3 as number | boolean);
-            EncoderTestUtils.expectToBeBijective(encoder, true as number | boolean);
-            EncoderTestUtils.expectToBeBijective(encoder, false as number | boolean);
+            const disjunctedValues: (number | boolean)[] = [0, 1, 3, true, false];
+
+            for (const disjunctedValue of disjunctedValues) {
+                EncoderTestUtils.expectToBeBijective(encoder, disjunctedValue);
+            }
         });
     });
 });

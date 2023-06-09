@@ -98,17 +98,6 @@ export abstract class DirectionFactory<T extends BaseDirection> {
     }
 }
 
-export const DirectionEncoder: Encoder<Direction> = Encoder.fromFunctions(
-    (dir: Direction): string => {
-        return dir.toString();
-    },
-    (encoded: JSONValue): Direction => {
-        assert(typeof encoded === 'string', 'Invalid encoded direction');
-        const fromString: MGPFallible<Direction> = Direction.factory.fromString(encoded as string);
-        return fromString.get();
-    },
-);
-
 export class Direction extends BaseDirection {
 
     public static readonly UP: Direction = new Direction(0, -1);
@@ -132,7 +121,6 @@ export class Direction extends BaseDirection {
                 Direction.UP_LEFT,
             ];
         };
-
     public static readonly DIRECTIONS: ReadonlyArray<Direction> = Direction.factory.all;
 
     public static readonly DIAGONALS: ReadonlyArray<Direction> = [
@@ -147,9 +135,16 @@ export class Direction extends BaseDirection {
         Direction.DOWN,
         Direction.LEFT,
     ];
-
-    public static readonly encoder: Encoder<Direction> = DirectionEncoder;
-
+    public static readonly encoder: Encoder<Direction> = Encoder.fromFunctions(
+        (dir: Direction): string => {
+            return dir.toString();
+        },
+        (encoded: JSONValue): Direction => {
+            assert(typeof encoded === 'string', 'Invalid encoded direction');
+            const fromString: MGPFallible<Direction> = Direction.factory.fromString(encoded as string);
+            return fromString.get();
+        },
+    );
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);
     }
@@ -173,6 +168,7 @@ export class OrthogonalEncoder extends Encoder<Orthogonal> {
     }
 }
 export class Orthogonal extends BaseDirection {
+
     public static readonly UP: Orthogonal = new Orthogonal(0, -1);
     public static readonly RIGHT: Orthogonal = new Orthogonal(1, 0);
     public static readonly DOWN: Orthogonal = new Orthogonal(0, 1);

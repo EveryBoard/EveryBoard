@@ -67,7 +67,7 @@ type LodestoneMap = Record<0 | 1, LodestoneDirectionMap>;
 
 export interface LodestoneDescription {
 
-    direction: LodestoneDirection;
+    isPush: boolean;
 
     orientation: LodestoneOrientation;
 }
@@ -76,35 +76,35 @@ export class LodestonePieceLodestone {
     private static readonly LODESTONES: LodestoneMap = {
         0: {
             'push': {
-                'diagonal': new LodestonePieceLodestone(Player.ZERO, 'push', 'diagonal'),
-                'orthogonal': new LodestonePieceLodestone(Player.ZERO, 'push', 'orthogonal'),
+                'diagonal': new LodestonePieceLodestone(Player.ZERO, true, 'diagonal'),
+                'orthogonal': new LodestonePieceLodestone(Player.ZERO, true, 'orthogonal'),
             },
             'pull': {
-                'diagonal': new LodestonePieceLodestone(Player.ZERO, 'pull', 'diagonal'),
-                'orthogonal': new LodestonePieceLodestone(Player.ZERO, 'pull', 'orthogonal'),
+                'diagonal': new LodestonePieceLodestone(Player.ZERO, false, 'diagonal'),
+                'orthogonal': new LodestonePieceLodestone(Player.ZERO, false, 'orthogonal'),
             },
         },
         1: {
             'push': {
-                'diagonal': new LodestonePieceLodestone(Player.ONE, 'push', 'diagonal'),
-                'orthogonal': new LodestonePieceLodestone(Player.ONE, 'push', 'orthogonal'),
+                'diagonal': new LodestonePieceLodestone(Player.ONE, true, 'diagonal'),
+                'orthogonal': new LodestonePieceLodestone(Player.ONE, true, 'orthogonal'),
             },
             'pull': {
-                'diagonal': new LodestonePieceLodestone(Player.ONE, 'pull', 'diagonal'),
-                'orthogonal': new LodestonePieceLodestone(Player.ONE, 'pull', 'orthogonal'),
+                'diagonal': new LodestonePieceLodestone(Player.ONE, false, 'diagonal'),
+                'orthogonal': new LodestonePieceLodestone(Player.ONE, false, 'orthogonal'),
             },
         },
     };
 
     private constructor(public readonly owner: Player,
-                        public readonly direction: LodestoneDirection,
+                        public readonly isPush: boolean,
                         public readonly orientation: LodestoneOrientation)
     {
     }
     public static of(player: Player, description: LodestoneDescription)
     : LodestonePieceLodestone
     {
-        return LodestonePieceLodestone.LODESTONES[player.value][description.direction][description.orientation];
+        return LodestonePieceLodestone.LODESTONES[player.value][description.isPush][description.orientation];
     }
     public isLodestone(): this is LodestonePieceLodestone {
         return true;

@@ -1,6 +1,6 @@
 import { Encoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
 
 export class AwaleMove extends Move {
 
@@ -16,15 +16,11 @@ export class AwaleMove extends Move {
 
     public static readonly FIVE: AwaleMove = new AwaleMove(5);
 
-    public static encoder: Encoder<AwaleMove> = new class extends Encoder<AwaleMove> {
-        public encode(move: AwaleMove): JSONValueWithoutArray {
-            return move.x;
-        }
-        public decode(encoded: JSONValueWithoutArray): AwaleMove {
-            return AwaleMove.of(encoded as number);
-        }
-    };
-
+    public static encoder: Encoder<AwaleMove> = Encoder.tuple(
+        [Encoder.identity<number>()],
+        (coord: AwaleMove) => [coord.x],
+        (value: [number]) => AwaleMove.of(value[0]),
+    );
     public static of(x: number): AwaleMove {
         switch (x) {
             case 0: return AwaleMove.ZERO;
@@ -33,7 +29,7 @@ export class AwaleMove extends Move {
             case 3: return AwaleMove.THREE;
             case 4: return AwaleMove.FOUR;
             default:
-                Utils.assert(x === 5, 'Invalid x for AwaleMove: ' + x);
+                Utils.expectToBe(x, 5, 'Invalid x for AwaleMove: ' + x);
                 return AwaleMove.FIVE;
         }
     }

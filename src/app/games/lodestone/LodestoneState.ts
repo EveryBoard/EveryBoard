@@ -1,4 +1,4 @@
-import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from 'src/app/games/lodestone/LodestonePiece';
+import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from 'src/app/games/lodestone/LodestonePiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
@@ -124,18 +124,14 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         const remainingPieces: [number, number] = this.numberOfPieces();
         return [24 - remainingPieces[1], 24 - remainingPieces[0]];
     }
-    public nextLodestoneDirection(): MGPOptional<LodestoneDirection> {
+    public nextLodestoneDirection(): MGPOptional<boolean> {
         const currentPlayer: Player = this.getCurrentPlayer();
         const lodestonePosition: MGPOptional<Coord> = this.lodestones.get(currentPlayer);
         if (lodestonePosition.isPresent()) {
             const piece: LodestonePiece = this.getPieceAt(lodestonePosition.get());
             assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)' + lodestonePosition.get());
             const lodestone: LodestonePieceLodestone = piece as LodestonePieceLodestone;
-            const currentDirection: LodestoneDirection = lodestone.direction;
-            switch (currentDirection) {
-                case 'push': return MGPOptional.of('pull');
-                case 'pull': return MGPOptional.of('push');
-            }
+            return MGPOptional.of(lodestone.isPush === false);
         } else {
             return MGPOptional.empty();
         }

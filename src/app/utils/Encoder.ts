@@ -1,5 +1,4 @@
 import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
-
 // Used internally. If T = [A, B, C], then
 // EncoderArray<T> = [Encoder<A>, Encoder<B>, Encoder<C>]
 type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };
@@ -57,77 +56,32 @@ export abstract class Encoder<T> {
         };
     }
     /**
-     * This creates a "sum" encoder, i.e., it encodes values of either type T and U
+     * This creates a "sum" encoder, i.e., it encodes values of either type T and U and V and ...
      */
-    public static disjunction<T, U>(encoderT: Encoder<T>,
-                                    encoderU: Encoder<U>,
-                                    isT: (v: T | U) => v is T)
-    : Encoder<T | U>
+    public static disjunction<T>(identifiers: ((value: unknown) => boolean)[],
+                                 encoders: Encoder<unknown>[],
+    ): Encoder<T>
     {
-        return new class extends Encoder<T | U> {
-            public encode(value: T | U): JSONValueWithoutArray {
-                if (isT(value)) {
-                    return {
-                        type: 'T',
-                        encoded: encoderT.encode(value),
-                    };
-                } else {
-                    return {
-                        type: 'U',
-                        encoded: encoderU.encode(value),
-                    };
+        Utils.assert(identifiers.length === encoders.length, 'identifiers and encoders should have same length');
+        return new class extends Encoder<T> {
+            public encode(value: T): JSONValueWithoutArray {
+                let indexClass: number = 0;
+                for (const identifier of identifiers) {
+                    if (identifier(value) === true) {
+                        return {
+                            type: indexClass,
+                            encoded: encoders[indexClass].encode(value),
+                        };
+                    }
+                    indexClass++;
                 }
             }
-            public decode(encoded: JSONValueWithoutArray): T | U {
+            public decode(encoded: JSONValueWithoutArray): T {
                 // eslint-disable-next-line dot-notation
-                const type_: string = Utils.getNonNullable(encoded)['type'];
+                const type_: number = Utils.getNonNullable(encoded)['type'];
                 // eslint-disable-next-line dot-notation
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
-                if (type_ === 'T') {
-                    return encoderT.decode(content);
-                } else {
-                    return encoderU.decode(content);
-                }
-            }
-        };
-    }
-    public static disjunction3<T, U, V>(encoderT: Encoder<T>,
-                                        encoderU: Encoder<U>,
-                                        encoderV: Encoder<V>,
-                                        isT: (v: T | U | V) => v is T,
-                                        isU: (v: T | U | V) => v is U)
-    : Encoder<T | U | V> {
-        return new class extends Encoder<T | U | V> {
-            public encode(value: T | U | V): JSONValueWithoutArray {
-                if (isT(value)) {
-                    return {
-                        type: 'T',
-                        encoded: encoderT.encode(value),
-                    };
-                } else if (isU(value)) {
-                    return {
-                        type: 'U',
-                        encoded: encoderU.encode(value),
-                    };
-                } else {
-                    return {
-                        type: 'V',
-                        encoded: encoderV.encode(value),
-                    };
-                }
-            }
-            public decode(encoded: JSONValueWithoutArray): T | U | V {
-                // eslint-disable-next-line dot-notation
-                const type_: string = Utils.getNonNullable(encoded)['type'];
-                // eslint-disable-next-line dot-notation
-                const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
-                if (type_ === 'T') {
-                    return encoderT.decode(content);
-                } else if (type_ === 'U') {
-                    return encoderU.decode(content);
-                } else {
-                    return encoderV.decode(content);
-                }
+                return encoders[type_].decode(content) as T;
             }
         };
     }

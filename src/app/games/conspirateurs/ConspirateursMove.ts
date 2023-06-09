@@ -8,8 +8,6 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursState } from './ConspirateursState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
@@ -32,20 +30,11 @@ export class ConspirateursMoveDrop extends MoveCoord {
         return `ConspirateursMoveDrop(${this.coord.toString()})`;
     }
     public override equals(other: ConspirateursMove): boolean {
-        if (other.isDrop()) {
+        if (ConspirateursMove.isDrop(other)) {
             return this.coord.equals(other.coord);
         } else {
             return false;
         }
-    }
-    public isDrop(): this is ConspirateursMoveDrop {
-        return true;
-    }
-    public isSimple(): this is ConspirateursMoveSimple {
-        return false;
-    }
-    public isJump(): this is ConspirateursMoveJump {
-        return false;
     }
 }
 
@@ -74,7 +63,7 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         return `ConspirateursMoveSimple(${this.getStart().toString()} -> ${this.getEnd().toString()})`;
     }
     public override equals(other: ConspirateursMove): boolean {
-        if (other.isSimple()) {
+        if (ConspirateursMove.isSimple(other)) {
             if (other === this) return true;
             if (other.getStart().equals(this.getStart()) === false) return false;
             if (other.getEnd().equals(this.getEnd()) === false) return false;
@@ -82,15 +71,6 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         } else {
             return false;
         }
-    }
-    public isDrop(): this is ConspirateursMoveDrop {
-        return false;
-    }
-    public isSimple(): this is ConspirateursMoveSimple {
-        return true;
-    }
-    public isJump(): this is ConspirateursMoveJump {
-        return false;
     }
 }
 
@@ -159,7 +139,7 @@ export class ConspirateursMoveJump extends Move {
         return `ConspirateursMoveJump(${jumps})`;
     }
     public equals(other: ConspirateursMove): boolean {
-        if (other.isSimple() || other.isDrop()) {
+        if (ConspirateursMove.isSimple(other) || ConspirateursMove.isDrop(other)) {
             return false;
         } else {
             if (other === this) return true;
@@ -169,22 +149,24 @@ export class ConspirateursMoveJump extends Move {
             return true;
         }
     }
-    public isDrop(): this is ConspirateursMoveDrop {
-        return false;
-    }
-    public isSimple(): this is ConspirateursMoveSimple {
-        return false;
-    }
-    public isJump(): this is ConspirateursMoveJump {
-        return true;
-    }
 }
 
 export type ConspirateursMove = ConspirateursMoveDrop | ConspirateursMoveSimple | ConspirateursMoveJump;
 
-export const ConspirateursMoveEncoder: Encoder<ConspirateursMove> =
-    Encoder.disjunction3(ConspirateursMoveDrop.encoder,
-                         ConspirateursMoveSimple.encoder,
-                         ConspirateursMoveJump.encoder,
-                         (value: ConspirateursMove): value is ConspirateursMoveDrop => value.isDrop(),
-                         (value: ConspirateursMove): value is ConspirateursMoveSimple => value.isSimple());
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace ConspirateursMove {
+
+    export function isDrop(move: ConspirateursMove): move is ConspirateursMoveDrop {
+        return move instanceof ConspirateursMoveDrop;
+    }
+    export function isSimple(move: ConspirateursMove): move is ConspirateursMoveSimple {
+        return move instanceof ConspirateursMoveSimple;
+    }
+    export function isJump(move: ConspirateursMove): move is ConspirateursMoveJump {
+        return move instanceof ConspirateursMoveJump;
+    }
+    export const encoder: Encoder<ConspirateursMove> =
+        Encoder.disjunction(
+            [ConspirateursMove.isDrop, ConspirateursMove.isSimple, ConspirateursMove.isJump],
+            [ConspirateursMoveDrop.encoder, ConspirateursMoveSimple.encoder, ConspirateursMoveJump.encoder]);
+}

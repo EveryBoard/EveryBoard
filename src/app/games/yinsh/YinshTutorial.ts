@@ -100,7 +100,7 @@ export class YinshTutorial extends Tutorial {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ], [0, 0], 20),
             new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
-                          [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), new Coord(7, 4))]),
+                          [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), MGPOptional.of(new Coord(7, 4)))]),
             (_: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
                 if (result.sideRings[Player.ZERO.value] === 1) {
                     return MGPValidation.SUCCESS;
@@ -129,8 +129,8 @@ export class YinshTutorial extends Tutorial {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ], [0, 0], 10),
             new YinshMove([
-                YinshCapture.of(new Coord(5, 4), new Coord(1, 8), new Coord(3, 2)),
-                YinshCapture.of(new Coord(5, 9), new Coord(5, 5), new Coord(3, 3)),
+                YinshCapture.of(new Coord(5, 4), new Coord(1, 8), MGPOptional.of(new Coord(3, 2))),
+                YinshCapture.of(new Coord(5, 9), new Coord(5, 5), MGPOptional.of(new Coord(3, 3))),
             ],
                           new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
                           []),

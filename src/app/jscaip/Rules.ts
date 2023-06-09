@@ -1,7 +1,7 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { Type } from '@angular/core';
-import { display } from '../utils/utils';
+import { JSONValue, display } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -73,7 +73,7 @@ export abstract class Rules<M extends Move,
         const initialState: S = this.stateType['getInitialState']();
         return new MGPNode(initialState);
     }
-    public applyMoves(encodedMoves: number[], state: S, moveDecoder: (em: number) => M): S {
+    public applyMoves(encodedMoves: JSONValue[], state: S, moveDecoder: (em: JSONValue) => M): S {
         let i: number = 0;
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);

@@ -15,10 +15,10 @@ describe('EpaminondasMove: ', () => {
         RulesUtils.expectToThrowAndLog(createLeftOfBoardCoord, 'Illegal coord outside of board (-1, 0).');
     });
     it('should forbid creation of a move that moves too much', () => {
-        function movingAPhalangeTooMuch(): void {
+        function movingAPhalanxTooMuch(): void {
             new EpaminondasMove(0, 0, 2, 3, Direction.UP);
         }
-        RulesUtils.expectToThrowAndLog(movingAPhalangeTooMuch, 'Cannot move a phalanx further than its size (got step size 3 for 2 pieces).');
+        RulesUtils.expectToThrowAndLog(movingAPhalanxTooMuch, 'Cannot move a phalanx further than its size (got step size 3 for 2 pieces).');
     });
     it('should forbid creation of a move with with negative or null number of selected piece', () => {
         function selectingNegativeNumberOfPiece(): void {
@@ -37,7 +37,7 @@ describe('EpaminondasMove: ', () => {
         const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
         const node: EpaminondasNode = rules.getInitialNode();
         const moves: EpaminondasMove[] = minimax.getListMoves(node);
-        for (const move of [moves[0]]) {
+        for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
         }
     });

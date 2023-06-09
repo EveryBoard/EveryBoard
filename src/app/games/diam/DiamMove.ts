@@ -17,9 +17,6 @@ export class DiamMoveDrop extends Move {
             throw new Error('Cannot drop an empty piece');
         }
     }
-    public isDrop(): this is DiamMoveDrop {
-        return true;
-    }
     public getTarget(): number {
         return this.target;
     }
@@ -53,9 +50,6 @@ export class DiamMoveShift extends Move {
                        public readonly moveDirection: DiamShiftDirection) {
         super();
     }
-    public isDrop(): this is DiamMoveDrop {
-        return false;
-    }
     public getTarget(): number {
         if (this.moveDirection === 'clockwise') {
             return (this.start.x + 1) % 8;
@@ -79,9 +73,16 @@ export class DiamMoveShift extends Move {
 
 export type DiamMove = DiamMoveDrop | DiamMoveShift;
 
-export const DiamMoveEncoder: Encoder<DiamMove> =
-    Encoder.disjunction(DiamMoveDrop.encoder,
-                        DiamMoveShift.encoder,
-                        (value: DiamMove): value is DiamMoveDrop => {
-                            return value.isDrop();
-                        });
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace DiamMove {
+
+    export function isDrop(move: DiamMove): move is DiamMoveDrop {
+        return move instanceof DiamMoveDrop;
+    }
+    export function isShift(move: DiamMove): move is DiamMoveShift {
+        return move instanceof DiamMoveShift;
+    }
+    export const encoder: Encoder<DiamMove> =
+        Encoder.disjunction([DiamMove.isDrop, DiamMove.isShift],
+                            [DiamMoveDrop.encoder, DiamMoveShift.encoder]);
+}

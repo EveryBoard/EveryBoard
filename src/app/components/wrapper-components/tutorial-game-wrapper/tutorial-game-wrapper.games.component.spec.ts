@@ -296,7 +296,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     YinshRules.get(),
                     yinshTutorial[4],
-                    new YinshMove([YinshCapture.of(new Coord(5, 4), new Coord(5, 8), new Coord(3, 2))],
+                    new YinshMove([YinshCapture.of(new Coord(5, 4), new Coord(5, 8), MGPOptional.of(new Coord(3, 2)))],
                                   new Coord(4, 1), MGPOptional.of(new Coord(6, 1)),
                                   []),
                     MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO()),
