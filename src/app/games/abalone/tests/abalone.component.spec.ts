@@ -155,7 +155,7 @@ describe('AbaloneComponent', () => {
             // Given the initial board with first space clicked
             await testUtils.expectClickSuccess('#piece_2_6');
 
-            // When clicking on the space marked by the direction instead of it's arrow
+            // When clicking on the space marked by the direction instead of its arrow
             // Then the move should have been done
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.LEFT).get();
             const state: AbaloneState = AbaloneState.getInitialState();
@@ -268,7 +268,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_2_6');
             await testUtils.expectClickSuccess('#piece_2_7');
 
-            // When clicking on the space marked by the direction instead of it's arrow
+            // When clicking on the space marked by the direction instead of its arrow
             // Then the move should have been done
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 7), HexaDirection.UP).get();
             await testUtils.expectMoveSuccess('#piece_2_5', move, state, [0, 0]);
@@ -296,7 +296,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectMoveSuccess('#direction_DOWN', move, state, [0, 0]);
 
             // When rendering it
-            // Then expect to see left and moved space
+            // Then the starting square of the moved piece should be shown as moved
             testUtils.expectElementToHaveClass('#space_0_7', 'moved-fill');
             testUtils.expectElementToHaveClass('#space_0_8', 'moved-fill');
         }));
