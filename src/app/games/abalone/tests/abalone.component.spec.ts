@@ -81,13 +81,13 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_2_7', 'selected-stroke');
         }));
         it('should select clicked piece when not aligned with first (non dir)', fakeAsync(async() => {
-            // Given the initial board with a selecte piece
+            // Given the initial board with a selected piece
             await testUtils.expectClickSuccess('#piece_2_6');
 
             // When clicking second unaligned coord
             await testUtils.expectClickSuccess('#piece_4_7');
 
-            // Then the first piece should be unselected and second one selected
+            // Then the first piece should be unselected and the second one should be selected
             testUtils.expectElementNotToHaveClass('#piece_2_6', 'selected-stroke');
             testUtils.expectElementToHaveClass('#piece_4_7', 'selected-stroke');
         }));
@@ -98,7 +98,7 @@ describe('AbaloneComponent', () => {
             // When clicking second unaligned coord
             await testUtils.expectClickSuccess('#piece_3_7');
 
-            // Then the first should be unselected and second selected
+            // Then the first piece should be unselected and the second one should be selected
             testUtils.expectElementNotToHaveClass('#piece_2_6', 'selected-stroke');
             testUtils.expectElementToHaveClass('#piece_3_7', 'selected-stroke');
         }));
