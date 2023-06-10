@@ -5,7 +5,6 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { HivePiece } from './HivePiece';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
@@ -89,6 +88,8 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
 
 export class HiveMovePass extends Move {
 
+    public static encoder: Encoder<HiveMovePass> = Encoder.constant('HiveMovePass', new HiveMovePass());
+
     public toString(): string {
         return 'HiveMovePass';
     }
@@ -113,43 +114,25 @@ export namespace HiveMove {
     export function spiderMove(coords: [Coord, Coord, Coord, Coord]): HiveMove {
         return HiveMoveSpider.fromCoords(coords);
     }
-    export const encoder: Encoder<HiveMove> = new class extends Encoder<HiveMove> {
-        public encode(value: HiveMove): JSONValueWithoutArray {
-            if (value instanceof HiveDropMove) {
-                return {
-                    moveType: 'Drop',
-                    encoded: HiveDropMove.encoder.encode(value),
-                };
-            } else if (value instanceof HiveMoveSpider) {
-                return {
-                    moveType: 'Spider',
-                    encoded: HiveMoveSpider.encoder.encode(value),
-                };
-            } else if (value instanceof HiveMoveCoordToCoord) {
-                return {
-                    moveType: 'CoordToCoord',
-                    encoded: HiveMoveCoordToCoord.encoder.encode(value),
-                };
-            } else {
-                return {
-                    moveType: 'Pass',
-                };
-            }
-        }
-        public decode(encoded: JSONValueWithoutArray): HiveMove {
-            // eslint-disable-next-line dot-notation
-            const moveType: string = Utils.getNonNullable(encoded)['moveType'];
-            // eslint-disable-next-line dot-notation
-            const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
-            if (moveType === 'Drop') {
-                return HiveDropMove.encoder.decode(content);
-            } else if (moveType === 'Spider') {
-                return HiveMoveSpider.encoder.decode(content);
-            } else if (moveType === 'CoordToCoord') {
-                return HiveMoveCoordToCoord.encoder.decode(content);
-            } else {
-                return HiveMove.PASS;
-            }
-        }
-    };
+    export function isInstanceOfHiveDropMove(value: HiveMove): boolean {
+        return value instanceof HiveDropMove;
+    }
+    export function isInstanceOfHiveMoveSpider(value: HiveMove): boolean {
+        return value instanceof HiveMoveSpider;
+    }
+    export function isInstanceOfHiveMoveCoordToCoord(value: HiveMove): boolean {
+        return value instanceof HiveMoveCoordToCoord;
+    }
+    export function isInstanceOfHiveMovePass(value: HiveMove): boolean {
+        return value instanceof HiveMovePass;
+    }
+    export const encoder: Encoder<HiveMove> = Encoder.disjunction(
+        [
+            isInstanceOfHiveDropMove,
+            isInstanceOfHiveMoveSpider,
+            isInstanceOfHiveMoveCoordToCoord,
+            isInstanceOfHiveMovePass,
+        ],
+        [HiveDropMove.encoder, HiveMoveSpider.encoder, HiveMoveCoordToCoord.encoder, HiveMovePass.encoder],
+    );
 }

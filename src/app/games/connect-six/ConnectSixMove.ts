@@ -54,9 +54,16 @@ export class ConnectSixDrops extends MoveWithTwoCoords {
 
 export type ConnectSixMove = ConnectSixFirstMove | ConnectSixDrops;
 
-export const ConnectSixMoveEncoder: Encoder<ConnectSixMove> =
-    Encoder.disjunction(ConnectSixFirstMove.encoder,
-                        ConnectSixDrops.encoder,
-                        (value: ConnectSixFirstMove): value is ConnectSixFirstMove => {
-                            return value instanceof ConnectSixFirstMove;
-                        });
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace ConnectSixMove {
+
+    export function isFirstMove(move: ConnectSixMove): move is ConnectSixFirstMove {
+        return move instanceof ConnectSixFirstMove;
+    }
+    export function isDrops(move: ConnectSixMove): move is ConnectSixDrops {
+        return move instanceof ConnectSixDrops;
+    }
+    export const encoder: Encoder<ConnectSixMove> =
+        Encoder.disjunction([ConnectSixMove.isFirstMove, ConnectSixMove.isDrops],
+                            [ConnectSixFirstMove.encoder, ConnectSixDrops.encoder]);
+}

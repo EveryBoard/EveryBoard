@@ -7,13 +7,15 @@ import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { JSONObject, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { LascaFailure } from './LascaFailure';
 import { LascaState } from './LascaState';
 import { MGPUniqueList } from 'src/app/utils/MGPUniqueList';
 
 export class LascaMove extends Move {
 
+    public static from(coords: Coord[], isStep: boolean): MGPFallible<LascaMove> {
+        return MGPFallible.success(new LascaMove(coords, isStep));
+    }
     public static fromCapture(coords: Coord[]): MGPFallible<LascaMove> {
         const jumpsValidity: MGPFallible<MGPSet<Coord>> = LascaMove.getSteppedOverCoords(coords);
         if (jumpsValidity.isSuccess()) {
@@ -58,25 +60,11 @@ export class LascaMove extends Move {
         }
         return MGPFallible.success(new LascaMove([start, end], true));
     }
-    public static encoder: Encoder<LascaMove> = new class extends Encoder<LascaMove> {
-        public encode(move: LascaMove): JSONValueWithoutArray {
-            return {
-                coords: move.coords.toList().map((coord: Coord): JSONValueWithoutArray => {
-                    return Coord.encoder.encode(coord) as JSONValueWithoutArray;
-                }),
-                isStep: move.isStep,
-            };
-        }
-        public decode(encoded: JSONValueWithoutArray): LascaMove {
-            const casted: JSONObject = encoded as JSONObject;
-            assert(casted.coords != null, 'Encoded LascaMove should have a coords field');
-            assert(casted.isStep != null, 'Encoded LascaMove should have a isStep field');
-            const encodedCoords: JSONValueWithoutArray[] =
-                Utils.getNonNullable(casted.coords) as JSONValueWithoutArray[];
-            const coords: Coord[] = encodedCoords.map((x: JSONValue) => Coord.encoder.decode(x));
-            return new LascaMove(coords, casted.isStep as boolean);
-        }
-    };
+    public static encoder: Encoder<LascaMove> = Encoder.tuple(
+        [Encoder.getListEncoder(Coord.encoder), Encoder.identity<boolean>()],
+        (move: LascaMove) => [move.coords.toList(), move.isStep],
+        (fields: [Coord[], boolean]) => LascaMove.from(fields[0], fields[1]).get(),
+    );
     public readonly coords: MGPUniqueList<Coord>;
 
     private constructor(coords: Coord[], public readonly isStep: boolean) {

@@ -253,7 +253,9 @@ describe('YinshComponent', () => {
             testUtils.setupState(state);
 
             // When clicking on the capture and then doing the rest of the move
-            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(3, 2))],
+            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
+                                                                   new Coord(3, 7),
+                                                                   MGPOptional.of(new Coord(3, 2)))],
                                                   new Coord(4, 2), MGPOptional.of(new Coord(4, 3)),
                                                   []);
             // Then it should succeed
@@ -352,8 +354,8 @@ describe('YinshComponent', () => {
 
             // When clicking on both captures and performing a move
             const move: YinshMove = new YinshMove([
-                YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(3, 2)),
-                YinshCapture.of(new Coord(4, 3), new Coord(4, 7), new Coord(4, 2))],
+                YinshCapture.of(new Coord(3, 3), new Coord(3, 7), MGPOptional.of(new Coord(3, 2))),
+                YinshCapture.of(new Coord(4, 3), new Coord(4, 7), MGPOptional.of(new Coord(4, 2)))],
                                                   new Coord(5, 2), MGPOptional.of(new Coord(4, 2)),
                                                   []);
 
@@ -426,7 +428,9 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#player_0_sideRing_1');
 
             // When performing a move that captures
-            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(3, 2))],
+            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
+                                                                   new Coord(3, 7),
+                                                                   MGPOptional.of(new Coord(3, 2)))],
                                                   new Coord(4, 2), MGPOptional.of(new Coord(4, 3)),
                                                   []);
 
@@ -592,7 +596,9 @@ describe('YinshComponent', () => {
             // When creating the capture and selecting it
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 3), MGPOptional.of(new Coord(3, 7)),
-                                                  [YinshCapture.of(new Coord(3, 2), new Coord(3, 6), new Coord(4, 2))]);
+                                                  [YinshCapture.of(new Coord(3, 2),
+                                                                   new Coord(3, 6),
+                                                                   MGPOptional.of(new Coord(4, 2)))]);
 
 
             // Then it should succeed
@@ -624,8 +630,8 @@ describe('YinshComponent', () => {
                 new YinshMove([],
                               new Coord(3, 3), MGPOptional.of(new Coord(3, 8)),
                               [
-                                  YinshCapture.of(new Coord(3, 2), new Coord(3, 6), new Coord(4, 2)),
-                                  YinshCapture.of(new Coord(3, 7), new Coord(7, 7), new Coord(5, 2)),
+                                  YinshCapture.of(new Coord(3, 2), new Coord(3, 6), MGPOptional.of(new Coord(4, 2))),
+                                  YinshCapture.of(new Coord(3, 7), new Coord(7, 7), MGPOptional.of(new Coord(5, 2))),
                               ]);
 
             // Then it should succeed
@@ -659,7 +665,7 @@ describe('YinshComponent', () => {
                 new YinshMove([],
                               new Coord(3, 3), MGPOptional.of(new Coord(3, 8)),
                               [
-                                  YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(4, 2)),
+                                  YinshCapture.of(new Coord(3, 3), new Coord(3, 7), MGPOptional.of(new Coord(4, 2))),
                               ]);
 
 
@@ -689,13 +695,14 @@ describe('YinshComponent', () => {
             testUtils.setupState(state);
 
             // When capturing in two clicks
-            const move: YinshMove =
-                new YinshMove([
-                    YinshCapture.of(new Coord(5, 4), new Coord(5, 8), new Coord(3, 2)),
+            const move: YinshMove = new YinshMove(
+                [
+                    YinshCapture.of(new Coord(5, 4), new Coord(5, 8), MGPOptional.of(new Coord(3, 2))),
                 ],
-                              new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
-                              []);
-
+                new Coord(4, 1),
+                MGPOptional.of(new Coord(4, 2)),
+                [],
+            );
             // Then it should succeed
             await testUtils.expectClickSuccess('#click_5_4'); // select first capture coord
             await testUtils.expectClickSuccess('#click_5_5'); // select second capture coord
@@ -745,7 +752,7 @@ describe('YinshComponent', () => {
             testUtils.setupState(state);
 
             const move: YinshMove =
-                new YinshMove([YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(3, 2))],
+                new YinshMove([YinshCapture.of(new Coord(3, 3), new Coord(3, 7), MGPOptional.of(new Coord(3, 2)))],
                               new Coord(4, 2), MGPOptional.of(new Coord(4, 3)),
                               []);
 

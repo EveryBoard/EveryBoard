@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove, ConnectSixMoveEncoder } from '../ConnectSixMove';
+import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -100,7 +100,7 @@ describe('ConnectSixMove', () => {
                 ConnectSixDrops.from(new Coord(0, 0), new Coord(1, 1)).get(),
             ];
             for (const move of moves) {
-                EncoderTestUtils.expectToBeBijective(ConnectSixMoveEncoder, move);
+                EncoderTestUtils.expectToBeBijective(ConnectSixMove.encoder, move);
             }
         });
     });

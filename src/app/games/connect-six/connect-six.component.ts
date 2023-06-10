@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ConnectSixRules } from './ConnectSixRules';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove, ConnectSixMoveEncoder } from './ConnectSixMove';
+import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixState } from './ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -33,7 +33,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
         ];
-        this.encoder = ConnectSixMoveEncoder;
+        this.encoder = ConnectSixMove.encoder;
         this.tutorial = new ConnectSixTutorial().tutorial;
     }
     public updateBoard(): void {

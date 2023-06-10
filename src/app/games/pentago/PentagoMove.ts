@@ -22,7 +22,7 @@ export class PentagoMove extends MoveCoord {
                                turnedClockwise: boolean)
     : PentagoMove
     {
-        Utils.assert(0 <= blockTurned && blockTurned <= 3, 'This block do not exist: ' + blockTurned);
+        Utils.assert(0 <= blockTurned && blockTurned <= 3, 'This block does not exist: ' + blockTurned);
         return new PentagoMove(x, y, MGPOptional.of(blockTurned), turnedClockwise);
     }
     public static rotationless(x: number, y: number): PentagoMove {
@@ -35,7 +35,7 @@ export class PentagoMove extends MoveCoord {
     {
         super(x, y);
         Utils.assert(this.coord.isInRange(6, 6),
-                     'The board is a 6 cas wide square, invalid coord: ' + this.coord.toString());
+                     'The board is a 6 space wide square, invalid coord: ' + this.coord.toString());
     }
     public override toString(): string {
         if (this.blockTurned.isPresent()) {

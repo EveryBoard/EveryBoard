@@ -3,7 +3,6 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
@@ -32,11 +31,4 @@ export class LinesOfActionMove extends MoveCoordToCoord {
     public override toString(): string {
         return 'LinesOfActionMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
-    public encode(): JSONValue {
-        return LinesOfActionMove.encoder.encode(this);
-    }
-    public decode(encodedMove: JSONValue): LinesOfActionMove {
-        return LinesOfActionMove.encoder.decode(encodedMove);
-    }
-
 }

@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
-import { CoerceoMove, CoerceoMoveEncoder, CoerceoNormalMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
+import { CoerceoMove, CoerceoNormalMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
@@ -11,9 +11,9 @@ describe('CoerceoMove', () => {
 
     it('should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoNormalMove.fromMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
-        expect(move.isTileExchange()).toBeFalse();
+        expect(CoerceoMove.isTileExchange(move)).toBeFalse();
         const capture: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 4)).get();
-        expect(capture.isTileExchange()).toBeTrue();
+        expect(CoerceoMove.isTileExchange(capture)).toBeTrue();
     });
     describe('fromMove', () => {
         it('should not create move of invalid distance', () => {
@@ -80,12 +80,12 @@ describe('CoerceoMove', () => {
                 const node: CoerceoNode = rules.getInitialNode();
                 const moves: CoerceoMove[] = minimax.getListMoves(node);
                 for (const move of moves) {
-                    EncoderTestUtils.expectToBeBijective(CoerceoMoveEncoder, move);
+                    EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
                 }
             });
             it('should be bijective with tiles exchanges', () => {
                 const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(5, 7)).get();
-                EncoderTestUtils.expectToBeBijective(CoerceoMoveEncoder, move);
+                EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
             });
         });
     });

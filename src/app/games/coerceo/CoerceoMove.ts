@@ -36,7 +36,6 @@ export class CoerceoStep {
         Utils.assert(stepIndex !== -1, CoerceoFailure.INVALID_DISTANCE());
         return CoerceoStep.STEPS[stepIndex];
     }
-
     private constructor(public readonly direction: Vector, public readonly str: string) {}
 }
 
@@ -62,14 +61,11 @@ export class CoerceoNormalMove extends MoveCoordToCoord {
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
-    public isTileExchange(): this is CoerceoTileExchangeMove {
-        return false;
-    }
     public override toString(): string {
         return 'CoerceoNormalMove(' + this.getStart().toString() + ' > ' + this.getEnd().toString() + ')';
     }
     public override equals(other: CoerceoMove): boolean {
-        if (other.isTileExchange()) {
+        if (CoerceoMove.isTileExchange(other)) {
             return false;
         } else {
             return MoveCoordToCoord.equals(this, other);
@@ -91,14 +87,11 @@ export class CoerceoTileExchangeMove extends MoveCoord {
     private constructor(capture: Coord) {
         super(capture.x, capture.y);
     }
-    public isTileExchange(): this is CoerceoTileExchangeMove {
-        return true;
-    }
     public override toString(): string {
         return 'CoerceoTileExchangeMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }
     public override equals(other: CoerceoMove): boolean {
-        if (other.isTileExchange()) {
+        if (CoerceoMove.isTileExchange(other)) {
             return other.coord.equals(this.coord);
         } else {
             return false;
@@ -108,9 +101,16 @@ export class CoerceoTileExchangeMove extends MoveCoord {
 
 export type CoerceoMove = CoerceoTileExchangeMove | CoerceoNormalMove;
 
-export const CoerceoMoveEncoder: Encoder<CoerceoMove> =
-    Encoder.disjunction(CoerceoNormalMove.encoder,
-                        CoerceoTileExchangeMove.encoder,
-                        (move: CoerceoNormalMove): move is CoerceoNormalMove => {
-                            return move instanceof CoerceoNormalMove;
-                        });
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace CoerceoMove {
+
+    export function isNormalMove(move: CoerceoMove): move is CoerceoNormalMove {
+        return move instanceof CoerceoNormalMove;
+    }
+    export function isTileExchange(move: CoerceoMove): move is CoerceoTileExchangeMove {
+        return move instanceof CoerceoTileExchangeMove;
+    }
+    export const encoder: Encoder<CoerceoMove> =
+        Encoder.disjunction([CoerceoMove.isNormalMove, CoerceoMove.isTileExchange],
+                            [CoerceoNormalMove.encoder, CoerceoTileExchangeMove.encoder]);
+}

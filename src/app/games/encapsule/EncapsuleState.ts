@@ -128,11 +128,6 @@ export class EncapsuleSpace {
                 return new EncapsuleSpace(piecePlayer, this.medium, this.big);
         }
     }
-    public encode(): number {
-        return this.small.value +
-               this.medium.value*3 +
-               this.big.value*9;
-    }
     public belongsTo(player: Player): boolean {
         return this.getBiggest().getPlayer() === player;
     }
@@ -140,4 +135,5 @@ export class EncapsuleSpace {
         const pieceNames: string[] = this.toOrderedPieceNames();
         return '(' + pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';
     }
+    // TODO FOR REVIEW: haha, on a un moyen de repérer les fonctions qui n'apparaissent QUE dans leur définition ET *.spec.ts ?
 }

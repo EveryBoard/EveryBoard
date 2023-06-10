@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
-import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
+import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
@@ -99,7 +99,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         this.availableMinimaxes = [
             new DiamDummyMinimax(this.rules, 'DiamDummyMinimax'),
         ];
-        this.encoder = DiamMoveEncoder;
+        this.encoder = DiamMove.encoder;
         this.tutorial = new DiamTutorial().tutorial;
     }
     public ngOnInit(): void {
@@ -243,7 +243,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     private showLastMoveOnSpaces(move: DiamMove): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             const classes: string[] = [];
-            if (move.isDrop()) {
+            if (DiamMove.isDrop(move)) {
                 if (move.getTarget() === x) {
                     classes.push('moved-fill');
                 }
@@ -258,7 +258,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     private showLastMoveOnPieces(move: DiamMove): void {
         const previousState: DiamState = this.getPreviousState();
         let lastMoved: LastMoved[] = [];
-        if (move.isDrop()) {
+        if (DiamMove.isDrop(move)) {
             lastMoved = this.getLastMovedFromDrop(move, previousState);
         } else {
             lastMoved = this.getLastMovedFromShift(move, previousState);

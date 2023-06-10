@@ -6,17 +6,17 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 describe('PentagoMove', () => {
 
     it('should throw when rotating inexistant block', () => {
-        function rotatingInexistantBlock(): void {
+        function rotatingNonExistingBlock(): void {
             PentagoMove.withRotation(0, 0, -1, true);
         }
-        RulesUtils.expectToThrowAndLog(rotatingInexistantBlock, 'This block do not exist: -1');
+        RulesUtils.expectToThrowAndLog(rotatingNonExistingBlock, 'This block does not exist: -1');
     });
     it('should throw when space not in range', () => {
         function usingOutOfRangeCoord(): void {
             PentagoMove.rotationless(-1, 6);
         }
         RulesUtils.expectToThrowAndLog(usingOutOfRangeCoord,
-                                       'The board is a 6 cas wide square, invalid coord: (-1, 6)');
+                                       'The board is a 6 space wide square, invalid coord: (-1, 6)');
     });
     it('should print nicely', () => {
         let expectedString: string = 'PentagoMove(4, 2)';

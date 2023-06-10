@@ -48,7 +48,7 @@ export class ConspirateursTutorial extends Tutorial {
             ], 40),
             ConspirateursMoveSimple.from(new Coord(4, 6), new Coord(3, 5)).get(),
             (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
-                if (move.isSimple()) {
+                if (ConspirateursMove.isSimple(move)) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`You have made a jump, not a simple move. Try again!`);
@@ -81,7 +81,7 @@ export class ConspirateursTutorial extends Tutorial {
             ], 40),
             ConspirateursMoveJump.from([new Coord(6, 7), new Coord(6, 5)]).get(),
             (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
-                if (move.isJump()) {
+                if (ConspirateursMove.isJump(move)) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`You have not performed a jump. Try again!`);

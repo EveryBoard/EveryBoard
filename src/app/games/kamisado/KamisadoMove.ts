@@ -7,17 +7,16 @@ import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export type KamisadoMove = KamisadoPieceMove | KamisadoPassMove
+export type KamisadoMove = KamisadoPieceMove | KamisadoPassMove;
 
 class KamisadoPassMove extends Move {
 
     public static PASS: KamisadoMove = new KamisadoPassMove();
 
+    public static readonly encoder: Encoder<KamisadoPassMove> = Encoder.constant('PASS', KamisadoPassMove.PASS);
+
     private constructor() {
         super();
-    }
-    public isPieceMove(): this is KamisadoPieceMove {
-        return false;
     }
     public length(): number {
         return 0;
@@ -32,6 +31,8 @@ class KamisadoPassMove extends Move {
 
 export class KamisadoPieceMove extends MoveCoordToCoord {
 
+    public static readonly encoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.from);
+
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
@@ -42,12 +43,9 @@ export class KamisadoPieceMove extends MoveCoordToCoord {
                      'End coord of KamisadoMove must be on the board, not at ' + end.toString());
         return MGPFallible.success(new KamisadoPieceMove(start, end));
     }
-    public isPieceMove(): this is KamisadoPieceMove {
-        return true;
-    }
     public override equals(other: KamisadoMove): boolean {
         if (other === this) return true;
-        if (other.isPieceMove()) {
+        if (KamisadoMove.isPiece(other)) {
             if (other.getStart().equals(this.getStart()) === false) return false;
             return other.getEnd().equals(this.getEnd());
         } else {
@@ -67,12 +65,13 @@ export namespace KamisadoMove {
     export function from(start: Coord, end: Coord): MGPFallible<KamisadoPieceMove> {
         return KamisadoPieceMove.from(start, end);
     }
-    const passEncoder: Encoder<KamisadoPassMove> = Encoder.constant('PASS', KamisadoMove.PASS);
-
-    const pieceMoveEncoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.from);
-
+    export function isPiece(move: KamisadoMove): move is KamisadoPieceMove {
+        return move instanceof KamisadoPieceMove;
+    }
+    export function isPass(move: KamisadoMove): move is KamisadoPassMove {
+        return move instanceof KamisadoPassMove;
+    }
     export const encoder: Encoder<KamisadoMove> =
-        Encoder.disjunction(pieceMoveEncoder,
-                            passEncoder,
-                            (m: KamisadoMove): m is KamisadoPieceMove => m.isPieceMove());
+        Encoder.disjunction([KamisadoMove.isPiece, KamisadoMove.isPass],
+                            [KamisadoPieceMove.encoder, KamisadoPassMove.encoder]);
 }

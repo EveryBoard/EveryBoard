@@ -4,6 +4,7 @@ import { BaseDirection, DirectionFactory } from './Direction';
 import { Encoder } from '../utils/Encoder';
 
 class HexaDirectionEncoder extends Encoder<HexaDirection> {
+
     public encode(direction: HexaDirection): number {
         switch (direction) {
             case (HexaDirection.UP): return 0;

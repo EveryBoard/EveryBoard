@@ -29,7 +29,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         super(CoerceoState);
     }
     public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState {
-        if (move.isTileExchange()) {
+        if (CoerceoMove.isTileExchange(move)) {
             return this.applyLegalTileExchange(move, state);
         } else {
             return this.applyLegalMovement(move, state);
@@ -77,7 +77,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return resultingState;
     }
     public isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
-        if (move.isTileExchange()) {
+        if (CoerceoMove.isTileExchange(move)) {
             return this.isLegalTileExchange(move, state);
         } else {
             return this.isLegalMovement(move, state);

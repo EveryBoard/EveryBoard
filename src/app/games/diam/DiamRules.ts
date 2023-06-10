@@ -29,7 +29,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         super(DiamState);
     }
     public applyLegalMove(move: DiamMove, state: DiamState, _info: void): DiamState {
-        if (move.isDrop()) {
+        if (DiamMove.isDrop(move)) {
             return this.applyLegalDrop(move, state);
         } else {
             return this.applyLegalShift(move, state);
@@ -57,7 +57,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         return new DiamState(newBoard, state.remainingPieces, state.turn + 1);
     }
     public isLegal(move: DiamMove, state: DiamState): MGPValidation {
-        if (move.isDrop()) {
+        if (DiamMove.isDrop(move)) {
             return this.isDropLegal(move, state);
         } else {
             return this.isShiftLegal(move, state);

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TriangularGameComponent }
     from 'src/app/components/game-components/game-component/TriangularGameComponent';
-import { CoerceoMove, CoerceoMoveEncoder, CoerceoNormalMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
+import { CoerceoMove, CoerceoNormalMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -46,7 +46,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             new CoerceoMinimax(this.rules, 'Normal'),
             new CoerceoPiecesThreatTilesMinimax(this.rules, 'Piece > Threat > Tiles'),
         ];
-        this.encoder = CoerceoMoveEncoder;
+        this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
         this.SPACE_SIZE = 70;
         this.updateBoard();
@@ -56,17 +56,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.state = this.getState();
         this.scores = MGPOptional.of(this.state.captures);
         this.tiles = this.state.tiles;
-        const moveOpt: MGPOptional<CoerceoMove> = this.node.move;
-        if (moveOpt.isPresent()) {
-            const move: CoerceoMove = moveOpt.get();
-            if (move instanceof CoerceoNormalMove) {
-                this.lastStart = MGPOptional.of(move.getStart());
-                this.lastEnd = MGPOptional.of(move.getEnd());
-            }
-        } else {
-            this.lastStart = MGPOptional.empty();
-            this.lastEnd = MGPOptional.empty();
-        }
         this.board = this.getState().board;
     }
     private showHighlight(): void {
@@ -75,6 +64,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.possibleLandings = [];
+    }
+    public override showLastMove(move: CoerceoMove): void {
+        if (move instanceof CoerceoNormalMove) {
+            this.lastStart = MGPOptional.of(move.getStart());
+            this.lastEnd = MGPOptional.of(move.getEnd());
+        }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);

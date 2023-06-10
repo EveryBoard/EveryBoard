@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursFailure } from '../ConspirateursFailure';
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveEncoder, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
+import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 
 describe('ConspirateursMove', () => {
     function drop(target: Coord): ConspirateursMoveDrop {
@@ -28,9 +28,9 @@ describe('ConspirateursMove', () => {
             expect(move.toString()).toBe('ConspirateursMoveDrop((7, 7))');
         });
         it('should redefine type checks for drops', () => {
-            expect(move.isDrop()).toBeTrue();
-            expect(move.isSimple()).toBeFalse();
-            expect(move.isJump()).toBeFalse();
+            expect(ConspirateursMove.isDrop(move)).toBeTrue();
+            expect(ConspirateursMove.isSimple(move)).toBeFalse();
+            expect(ConspirateursMove.isJump(move)).toBeFalse();
         });
         it('should forbid creating a drop out of the board', () => {
             expect(ConspirateursMoveDrop.from(new Coord(-1, -1)).isFailure()).toBeTrue();
@@ -53,9 +53,9 @@ describe('ConspirateursMove', () => {
             expect(move.toString()).toBe('ConspirateursMoveSimple((7, 7) -> (7, 8))');
         });
         it('should redefine type checks for simple moves', () => {
-            expect(move.isDrop()).toBeFalse();
-            expect(move.isSimple()).toBeTrue();
-            expect(move.isJump()).toBeFalse();
+            expect(ConspirateursMove.isDrop(move)).toBeFalse();
+            expect(ConspirateursMove.isSimple(move)).toBeTrue();
+            expect(ConspirateursMove.isJump(move)).toBeFalse();
         });
         it('should forbid creating a simple move out of the board', () => {
             expect(ConspirateursMoveSimple.from(new Coord(-1, 0), new Coord(0, 0)).isFailure()).toBeTrue();
@@ -86,9 +86,9 @@ describe('ConspirateursMove', () => {
             expect(move.toString()).toBe('ConspirateursMoveJump((7, 7) -> (7, 9) -> (7, 11))');
         });
         it('should redefine type checks for jumps', () => {
-            expect(move.isDrop()).toBeFalse();
-            expect(move.isSimple()).toBeFalse();
-            expect(move.isJump()).toBeTrue();
+            expect(ConspirateursMove.isDrop(move)).toBeFalse();
+            expect(ConspirateursMove.isSimple(move)).toBeFalse();
+            expect(ConspirateursMove.isJump(move)).toBeTrue();
         });
         it('should forbid creating a jump with less than two coordinates', () => {
             expect(ConspirateursMoveJump.from([new Coord(1, 1)]).isFailure()).toBeTrue();
@@ -104,11 +104,13 @@ describe('ConspirateursMove', () => {
         });
     });
     it('should have a bijective encoder', () => {
-        EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
-                                             ConspirateursMoveDrop.from(new Coord(7, 7)).get());
-        EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
-                                             ConspirateursMoveSimple.from(new Coord(7, 7), new Coord(7, 8)).get());
-        EncoderTestUtils.expectToBeBijective(ConspirateursMoveEncoder,
-                                             ConspirateursMoveJump.from([new Coord(7, 7), new Coord(7, 9)]).get());
+        const moves: ConspirateursMove[] = [
+            ConspirateursMoveDrop.from(new Coord(7, 7)).get(),
+            ConspirateursMoveSimple.from(new Coord(7, 7), new Coord(7, 8)).get(),
+            ConspirateursMoveJump.from([new Coord(7, 7), new Coord(7, 9)]).get(),
+        ];
+        for (const move of moves) {
+            EncoderTestUtils.expectToBeBijective(ConspirateursMove.encoder, move);
+        }
     });
 });
