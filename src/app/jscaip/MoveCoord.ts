@@ -5,11 +5,17 @@ import { MGPFallible } from '../utils/MGPFallible';
 
 export abstract class MoveCoord extends Move {
 
-    public static getEncoder<T extends MoveCoord>(generate: (coord: Coord) => MGPFallible<T>): Encoder<T> {
+    public static getFallibleEncoder<T extends MoveCoord>(generate: (coord: Coord) => MGPFallible<T>): Encoder<T> {
         return Encoder.tuple(
             [Coord.encoder],
             (m: T): [Coord] => [m.coord],
             (fields: [Coord]): T => generate(fields[0]).get());
+    }
+    public static getEncoder<T extends MoveCoord>(generate: (coord: Coord) => T): Encoder<T> {
+        return Encoder.tuple(
+            [Coord.encoder],
+            (m: T): [Coord] => [m.coord],
+            (fields: [Coord]): T => generate(fields[0]));
     }
     public readonly coord: Coord;
 

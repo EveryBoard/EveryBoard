@@ -1,23 +1,19 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder } from '../utils/Encoder';
-import { MGPFallible } from '../utils/MGPFallible';
 
 export class Coord3D extends Coord {
 
-    public static getCoord3DEncoder<T extends Coord3D>(generate: (x: number, y: number, z: number) => MGPFallible<T>)
+    public static getCoord3DEncoder<T extends Coord3D>(generate: (x: number, y: number, z: number) => T)
     : Encoder<T>
     {
         return Encoder.tuple(
             [Encoder.identity<number>(), Encoder.identity<number>(), Encoder.identity<number>()],
             (coord: T): [number, number, number] => [coord.x, coord.y, coord.z],
-            (fields: [number, number, number]): T => generate(fields[0], fields[1], fields[2]).get(),
+            (fields: [number, number, number]): T => generate(fields[0], fields[1], fields[2]),
         );
     }
     public static of(x: number, y: number, z: number): Coord3D {
         return new Coord3D(x, y, z);
-    }
-    public static from(x: number, y: number, z: number): MGPFallible<Coord3D> {
-        return MGPFallible.success(Coord3D.of(x, y, z));
     }
     public constructor(x: number, y: number, public readonly z: number) {
         super(x, y);

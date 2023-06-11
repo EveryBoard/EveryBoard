@@ -4,16 +4,15 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { Encoder } from 'src/app/utils/Encoder';
 import { Utils } from 'src/app/utils/utils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class PylosCoord extends Coord3D {
 
-    public static coordEncoder: Encoder<PylosCoord> = Coord3D.getCoord3DEncoder(PylosCoord.from);
+    public static coordEncoder: Encoder<PylosCoord> = Coord3D.getCoord3DEncoder(PylosCoord.of);
 
     public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = MGPOptional.getEncoder(PylosCoord.coordEncoder);
 
-    public static override from(x: number, y: number, z: number): MGPFallible<PylosCoord> {
-        return MGPFallible.success(new PylosCoord(x, y, z));
+    public static override of(x: number, y: number, z: number): PylosCoord {
+        return new PylosCoord(x, y, z);
     }
     public constructor(x: number, y: number, z: number) {
         super(x, y, z);

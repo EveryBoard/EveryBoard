@@ -42,7 +42,7 @@ export class DiamMoveShift extends Move {
         (shift: DiamMoveShift): [Coord, boolean] => [shift.start, shift.moveDirection === 'clockwise'],
         (fields: [Coord, boolean]): DiamMoveShift => new DiamMoveShift(fields[0], fields[1] ? 'clockwise' : 'counterclockwise'),
     );
-    public static fromRepresentation(representationStart: Coord, moveDirection: DiamShiftDirection): DiamMoveShift {
+    public static ofRepresentation(representationStart: Coord, moveDirection: DiamShiftDirection): DiamMoveShift {
         // In the representation, the y axis is reverted, so 3 - y gives the real y on board
         return new DiamMoveShift(new Coord(representationStart.x, 3 - representationStart.y), moveDirection);
     }

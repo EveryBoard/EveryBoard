@@ -62,7 +62,7 @@ describe('TrexoComponent', () => {
                         new TrexoPiece(Player.ONE, 1),
                         new TrexoPiece(Player.ONE, 3),
                     ]);
-                    const state: TrexoState = TrexoState.from([
+                    const state: TrexoState = TrexoState.of([
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -73,7 +73,7 @@ describe('TrexoComponent', () => {
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                    ], 4).get();
+                    ], 4);
                     testUtils.setupState(state);
 
                     // When dropping a piece on the third level
@@ -97,7 +97,7 @@ describe('TrexoComponent', () => {
                     }));
                     it(`should fail when clicking on an isolated piece`, fakeAsync(async() => {
                         // Given a board on which 1 space is higher than all its neighbooring space (except its "twin")
-                        const state: TrexoState = TrexoState.from([
+                        const state: TrexoState = TrexoState.of([
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -108,7 +108,7 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                        ], 1).get();
+                        ], 1);
                         testUtils.setupState(state);
 
                         // When trying to choose it as first coord
@@ -173,7 +173,7 @@ describe('TrexoComponent', () => {
                     }));
                     it('should allow dropping on second level', fakeAsync(async() => {
                         // Given any board where two neighboring tiles are on the same level
-                        const state: TrexoState = TrexoState.from([
+                        const state: TrexoState = TrexoState.of([
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -184,7 +184,7 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                        ], 2).get();
+                        ], 2);
                         testUtils.setupState(state);
                         // And a first click has been done on that level
                         await testUtils.expectClickSuccess('#space_4_4');
@@ -240,7 +240,7 @@ describe('TrexoComponent', () => {
                     }));
                     it('should highlight victory', fakeAsync(async() => {
                         // Given any board on which a 4 moves have already been done, aligning piece of Player.ZERO
-                        const state: TrexoState = TrexoState.from([
+                        const state: TrexoState = TrexoState.of([
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, X1_T0, _____, X2_T2, _____, _____, _____, _____],
@@ -251,7 +251,7 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                        ], 4).get();
+                        ], 4);
                         testUtils.setupState(state);
                         await testUtils.expectClickSuccess('#space_7_2');
 
@@ -313,7 +313,7 @@ describe('TrexoComponent', () => {
                 new TrexoPiece(Player.ZERO, 1),
                 new TrexoPiece(Player.ONE, 2),
             ]);
-            const state: TrexoState = TrexoState.from([
+            const state: TrexoState = TrexoState.of([
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -324,7 +324,7 @@ describe('TrexoComponent', () => {
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-            ], 2).get();
+            ], 2);
 
             // When displaying it
             testUtils.setupState(state);

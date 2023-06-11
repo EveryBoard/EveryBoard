@@ -1,7 +1,6 @@
 import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixState } from './ConnectSixState';
 import { Utils } from 'src/app/utils/utils';
@@ -11,11 +10,11 @@ export class ConnectSixFirstMove extends MoveCoord {
     public static isInRange(coord: Coord): boolean {
         return coord.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH);
     }
-    public static from(coord: Coord): MGPFallible<ConnectSixFirstMove> {
+    public static of(coord: Coord): ConnectSixFirstMove {
         Utils.assert(ConnectSixFirstMove.isInRange(coord), 'FIRST_COORD_IS_OUT_OF_RANGE');
-        return MGPFallible.success(new ConnectSixFirstMove(coord.x, coord.y));
+        return new ConnectSixFirstMove(coord.x, coord.y);
     }
-    public static encoder: Encoder<ConnectSixFirstMove> = MoveCoord.getEncoder(ConnectSixFirstMove.from);
+    public static encoder: Encoder<ConnectSixFirstMove> = MoveCoord.getEncoder(ConnectSixFirstMove.of);
 
     private constructor(x: number, y: number) {
         super(x, y);
@@ -26,13 +25,13 @@ export class ConnectSixFirstMove extends MoveCoord {
 }
 export class ConnectSixDrops extends MoveWithTwoCoords {
 
-    public static encoder: Encoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.from);
+    public static encoder: Encoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.of);
 
-    public static from(first: Coord, second: Coord): MGPFallible<ConnectSixDrops> {
+    public static of(first: Coord, second: Coord): ConnectSixDrops {
         Utils.assert(first.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH), 'FIRST_COORD_IS_OUT_OF_RANGE');
         Utils.assert(second.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH), 'SECOND_COORD_IS_OUT_OF_RANGE');
         Utils.assert(first.equals(second) === false, 'COORDS_SHOULD_BE_DIFFERENT');
-        return MGPFallible.success(new ConnectSixDrops(first, second));
+        return new ConnectSixDrops(first, second);
     }
     public toString(): string {
         return 'ConnectSixDrops(' + this.getFirst().toString() + ', ' + this.getSecond().toString() + ')';

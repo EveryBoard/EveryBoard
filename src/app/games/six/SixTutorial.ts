@@ -30,7 +30,7 @@ export class SixTutorial extends Tutorial {
             $localize`Victory (line)`,
             $localize`On this board, by putting your piece at the right place, you can align six of your pieces and win the game<br/><br/>
         Find the victory. You're playing Dark.`,
-            SixState.fromRepresentation([
+            SixState.ofRepresentation([
                 [O, X, X, X, X, O],
                 [_, O, X, _, O, _],
                 [X, X, O, _, _, _],
@@ -46,7 +46,7 @@ export class SixTutorial extends Tutorial {
             $localize`Victory (circle)`,
             $localize`On this board, by putting your piece at the right place, you can form a circle with six of your pieces and win the game.<br/><br/>
         Find the victory. You're playing Dark.`,
-            SixState.fromRepresentation([
+            SixState.ofRepresentation([
                 [_, _, _, X, _, _],
                 [_, _, X, X, O, O],
                 [_, X, _, O, X, _],
@@ -60,7 +60,7 @@ export class SixTutorial extends Tutorial {
             $localize`Victory (triangle)`,
             $localize`On this board, by putting your piece at the right place, you can form a triangle with six of your pieces and win the game.<br/><br/>
         Find the victory. You're playing Dark.`,
-            SixState.fromRepresentation([
+            SixState.ofRepresentation([
                 [_, _, _, X, _, _],
                 [_, O, X, O, O, O],
                 [_, O, _, O, O, _],
@@ -76,7 +76,7 @@ export class SixTutorial extends Tutorial {
         You now have to move your pieces, paying attention not to remove a piece that was preventing the opponent's victory.
         From now on, if after move, on or more pieces are disconnected from the largest group of pieces, these will be taken out of the game.<br/><br/>
         You're playing Dark. Make a move that disconnects one of your opponent's pieces.`,
-            SixState.fromRepresentation([
+            SixState.ofRepresentation([
                 [_, _, _, _, _, _, _, X, _],
                 [_, _, _, _, _, _, O, _, _],
                 [_, _, _, _, O, O, O, _, _],
@@ -109,7 +109,7 @@ export class SixTutorial extends Tutorial {
         If at any time, at least one player does not have enough pieces to win (less than 6), the game ends.
         The one with the most pieces wins. In case they both have the same number of pieces, it's a draw.<br/><br/>
         Here, you're playing Dark and you can win. Do it!`,
-            SixState.fromRepresentation([
+            SixState.ofRepresentation([
                 [_, _, _, _, _, X],
                 [_, _, _, _, O, X],
                 [_, _, _, X, O, O],
@@ -133,7 +133,7 @@ export class SixTutorial extends Tutorial {
             $localize`During a disconnection, two or more groups could have the same size,
         in which case you will have to click on the group you wish to keep.<br/><br/>
         You're playing Dark, play such a move!`,
-            SixState.fromRepresentation([
+            SixState.ofRepresentation([
                 [_, _, _, _, _, X],
                 [_, _, _, _, O, X],
                 [_, _, _, X, O, O],

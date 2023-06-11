@@ -57,7 +57,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: Coord = new Coord(x, y);
-        return this.chooseMove(PenteMove.from(clickedCoord).get(), this.getState());
+        return this.chooseMove(PenteMove.of(clickedCoord), this.getState());
     }
     public getSpaceClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

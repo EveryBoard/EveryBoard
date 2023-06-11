@@ -13,8 +13,8 @@ import { MGPUniqueList } from 'src/app/utils/MGPUniqueList';
 
 export class LascaMove extends Move {
 
-    public static from(coords: Coord[], isStep: boolean): MGPFallible<LascaMove> {
-        return MGPFallible.success(new LascaMove(coords, isStep));
+    public static of(coords: Coord[], isStep: boolean): LascaMove {
+        return new LascaMove(coords, isStep);
     }
     public static fromCapture(coords: Coord[]): MGPFallible<LascaMove> {
         const jumpsValidity: MGPFallible<MGPSet<Coord>> = LascaMove.getSteppedOverCoords(coords);
@@ -63,7 +63,7 @@ export class LascaMove extends Move {
     public static encoder: Encoder<LascaMove> = Encoder.tuple(
         [Encoder.getListEncoder(Coord.encoder), Encoder.identity<boolean>()],
         (move: LascaMove) => [move.coords.toList(), move.isStep],
-        (fields: [Coord[], boolean]) => LascaMove.from(fields[0], fields[1]).get(),
+        (fields: [Coord[], boolean]) => LascaMove.of(fields[0], fields[1]),
     );
     public readonly coords: MGPUniqueList<Coord>;
 

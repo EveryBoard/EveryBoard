@@ -180,9 +180,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     private async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
         let move: PylosMove;
         if (this.chosenStartingCoord.isAbsent()) {
-            move = PylosMove.fromDrop(this.chosenLandingCoord.get(), captures);
+            move = PylosMove.ofDrop(this.chosenLandingCoord.get(), captures);
         } else {
-            move = PylosMove.fromClimb(this.chosenStartingCoord.get(),
+            move = PylosMove.ofClimb(this.chosenStartingCoord.get(),
                                        this.chosenLandingCoord.get(),
                                        captures);
         }

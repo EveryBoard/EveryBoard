@@ -8,10 +8,11 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { Utils } from 'src/app/utils/utils';
 
 export class SaharaMove extends MoveCoordToCoord {
 
-    public static encoder: Encoder<SaharaMove> = MoveWithTwoCoords.getEncoder(SaharaMove.from);
+    public static encoder: Encoder<SaharaMove> = MoveWithTwoCoords.getFallibleEncoder(SaharaMove.from);
 
     public static checkDistanceAndLocation(start: Coord, end: Coord): MGPValidation {
         const distance: number = start.getOrthogonalDistance(end);
@@ -35,12 +36,10 @@ export class SaharaMove extends MoveCoordToCoord {
         return MGPValidation.SUCCESS;
     }
     public static from(start: Coord, end: Coord): MGPFallible<SaharaMove> {
-        if (!start.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT)) {
-            throw new Error('Move must start inside the board not at ' + start.toString() + '.');
-        }
-        if (!end.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT)) {
-            throw new Error('Move must end inside the board not at ' + end.toString() + '.');
-        }
+        Utils.assert(start.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT),
+                     'Move must start inside the board not at ' + start.toString() + '.');
+        Utils.assert(end.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT),
+                     'Move must end inside the board not at ' + end.toString() + '.');
         const validity: MGPValidation = SaharaMove.checkDistanceAndLocation(start, end);
         if (validity.isFailure()) {
             return validity.toOtherFallible();

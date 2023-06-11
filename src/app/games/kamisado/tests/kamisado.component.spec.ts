@@ -148,7 +148,7 @@ describe('KamisadoComponent', () => {
         // Given a board (here, the initial board) with a selected piece
         await testUtils.expectClickSuccess('#click_0_7');
         // When trying to perform an invalid move
-        const move: KamisadoMove = KamisadoMove.from(new Coord(0, 7), new Coord(5, 4)).get();
+        const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(5, 4));
         // Then it should fail
         await testUtils.expectMoveFailure('#click_5_4', KamisadoFailure.DIRECTION_NOT_ALLOWED(), move);
     }));
@@ -193,7 +193,7 @@ describe('KamisadoComponent', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(0, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        const lastMove: KamisadoMove = KamisadoMove.from(new Coord(0, 7), new Coord(0, 6)).get();
+        const lastMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
 
         // When displaying it
         testUtils.setupState(state, undefined, lastMove);

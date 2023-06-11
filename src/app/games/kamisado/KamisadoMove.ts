@@ -5,7 +5,6 @@ import { KamisadoBoard } from './KamisadoBoard';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { Utils } from 'src/app/utils/utils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export type KamisadoMove = KamisadoPieceMove | KamisadoPassMove;
 
@@ -31,17 +30,17 @@ class KamisadoPassMove extends Move {
 
 export class KamisadoPieceMove extends MoveCoordToCoord {
 
-    public static readonly encoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.from);
+    public static readonly encoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.of);
 
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
-    public static from(start: Coord, end: Coord): MGPFallible<KamisadoPieceMove> {
+    public static of(start: Coord, end: Coord): KamisadoPieceMove {
         Utils.assert(start.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE),
                      'Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
         Utils.assert(end.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE),
                      'End coord of KamisadoMove must be on the board, not at ' + end.toString());
-        return MGPFallible.success(new KamisadoPieceMove(start, end));
+        return new KamisadoPieceMove(start, end);
     }
     public override equals(other: KamisadoMove): boolean {
         if (other === this) return true;
@@ -62,8 +61,8 @@ export namespace KamisadoMove {
 
     export const PASS: KamisadoPassMove = KamisadoPassMove.PASS;
 
-    export function from(start: Coord, end: Coord): MGPFallible<KamisadoPieceMove> {
-        return KamisadoPieceMove.from(start, end);
+    export function of(start: Coord, end: Coord): KamisadoPieceMove {
+        return KamisadoPieceMove.of(start, end);
     }
     export function isPiece(move: KamisadoMove): move is KamisadoPieceMove {
         return move instanceof KamisadoPieceMove;

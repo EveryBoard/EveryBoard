@@ -3,6 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsulePiece } from './EncapsulePiece';
 import { Encoder } from 'src/app/utils/Encoder';
+import { Utils } from 'src/app/utils/utils';
 
 type EncapsuleMoveFields = [MGPOptional<Coord>, Coord, MGPOptional<EncapsulePiece>];
 
@@ -19,13 +20,11 @@ export class EncapsuleMove extends Move {
     {
         super();
     }
-    public static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
-        if (startingCoord.equals(landingCoord)) {
-            throw new Error('Starting coord and landing coord must be separate coords');
-        }
+    public static ofMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
+        Utils.assert(startingCoord.equals(landingCoord) === false, 'Starting coord and landing coord must be separate coords');
         return new EncapsuleMove(MGPOptional.of(startingCoord), landingCoord, MGPOptional.empty());
     }
-    public static fromDrop(piece: EncapsulePiece, landingCoord: Coord): EncapsuleMove {
+    public static ofDrop(piece: EncapsulePiece, landingCoord: Coord): EncapsuleMove {
         return new EncapsuleMove(MGPOptional.empty(), landingCoord, MGPOptional.of(piece));
     }
     public isDropping(): boolean {

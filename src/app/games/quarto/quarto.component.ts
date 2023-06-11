@@ -92,11 +92,11 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
-        if (this.pieceToGive.equalsValue(QuartoPiece.fromInt(givenPiece))) {
+        if (this.pieceToGive.equalsValue(QuartoPiece.ofInt(givenPiece))) {
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        this.pieceToGive = MGPOptional.of(QuartoPiece.fromInt(givenPiece));
+        this.pieceToGive = MGPOptional.of(QuartoPiece.ofInt(givenPiece));
         if (this.chosen.isAbsent()) {
             return MGPValidation.SUCCESS; // the user has just chosen his piece
         } else {
@@ -129,7 +129,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.chosen = MGPOptional.of(new Coord(x, y));
     }
     public isRemaining(pawn: number): boolean {
-        return QuartoState.isGivable(QuartoPiece.fromInt(pawn), this.board, this.pieceInHand);
+        return QuartoState.isGivable(QuartoPiece.ofInt(pawn), this.board, this.pieceInHand);
     }
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

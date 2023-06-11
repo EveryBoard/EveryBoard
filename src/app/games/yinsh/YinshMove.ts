@@ -5,8 +5,6 @@ import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 
 // A capture at Yinsh is just like a capture at Gipf, with the only difference
 // that it needs to be of length 5 rather than 4, and it contains a ring taken

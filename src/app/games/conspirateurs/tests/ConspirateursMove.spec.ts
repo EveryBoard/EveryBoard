@@ -4,6 +4,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('ConspirateursMove', () => {
     function drop(target: Coord): ConspirateursMoveDrop {
@@ -57,9 +58,19 @@ describe('ConspirateursMove', () => {
             expect(ConspirateursMove.isSimple(move)).toBeTrue();
             expect(ConspirateursMove.isJump(move)).toBeFalse();
         });
-        it('should forbid creating a simple move out of the board', () => {
-            expect(ConspirateursMoveSimple.from(new Coord(-1, 0), new Coord(0, 0)).isFailure()).toBeTrue();
-            expect(ConspirateursMoveSimple.from(new Coord(0, 0), new Coord(-1, 0)).isFailure()).toBeTrue();
+        it('should forbid creating a simple move starting out of the board', () => {
+            function createMoveStartingOutOfRange(): void {
+                ConspirateursMoveSimple.from(new Coord(-1, 0), new Coord(0, 0));
+            }
+            const error: string = 'Move out of board';
+            RulesUtils.expectToThrowAndLog(createMoveStartingOutOfRange, error);
+        });
+        it('should forbid creating a simple move ending out of the board', () => {
+            function createMoveEndingOutOfRange(): void {
+                ConspirateursMoveSimple.from(new Coord(0, 0), new Coord(-1, 0));
+            }
+            const error: string = 'Move out of board';
+            RulesUtils.expectToThrowAndLog(createMoveEndingOutOfRange, error);
         });
         it('should forbid creating a move that has a distance of more than one', () => {
             const failure: MGPFallible<ConspirateursMoveSimple> =

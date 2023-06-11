@@ -29,7 +29,7 @@ describe('SixComponent', () => {
             const board: Table<PlayerOrNone> = [
                 [O],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 41);
+            const state: SixState = SixState.ofRepresentation(board, 41);
             testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
@@ -47,7 +47,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#neighbor_1_1', SixFailure.CAN_NO_LONGER_DROP());
@@ -65,7 +65,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             // When clicking on one of the user's pieces
@@ -85,7 +85,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             const gameComponent: SixComponent = testUtils.getComponent();
@@ -108,7 +108,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_0');
 
@@ -127,7 +127,7 @@ describe('SixComponent', () => {
                 [O, O, X],
                 [X, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             // Choosing piece
@@ -165,7 +165,7 @@ describe('SixComponent', () => {
                 [O, O, X],
                 [X, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             // Choosing piece
@@ -190,7 +190,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
@@ -208,7 +208,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece_0_2');
@@ -224,7 +224,7 @@ describe('SixComponent', () => {
                 [O, O, O, O, O, X, X, X, X, X],
                 [_, _, _, _, _, _, _, _, _, X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 42);
+            const state: SixState = SixState.ofRepresentation(board, 42);
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece_0_0');

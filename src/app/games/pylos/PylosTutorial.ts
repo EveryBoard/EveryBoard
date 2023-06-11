@@ -29,7 +29,7 @@ export class PylosTutorial extends Tutorial {
         The gray squares are where you can drop your pieces.<br/><br/>
         Click on one of the squares to drop a piece there.`,
             PylosState.getInitialState(),
-            PylosMove.fromDrop(new PylosCoord(1, 1, 0), []),
+            PylosMove.ofDrop(new PylosCoord(1, 1, 0), []),
             $localize`There you go, as simple as that.`,
         ),
         TutorialStep.fromMove(
@@ -59,7 +59,7 @@ export class PylosTutorial extends Tutorial {
                     [_],
                 ],
             ], 0),
-            [PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), [])],
+            [PylosMove.ofClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), [])],
             $localize`Congratulations!<br/>
         Some important notes:
         <ol>
@@ -95,10 +95,10 @@ export class PylosTutorial extends Tutorial {
                 ],
             ], 0),
             [
-                PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0)]),
-                PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 1, 0)]),
-                PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 0, 0)]),
-                PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
+                PylosMove.ofDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0)]),
+                PylosMove.ofDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 1, 0)]),
+                PylosMove.ofDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 0, 0)]),
+                PylosMove.ofDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
             ],
             $localize`Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.`,
             $localize`Failed. Try again.`,
@@ -124,7 +124,7 @@ export class PylosTutorial extends Tutorial {
                     [_],
                 ],
             ], 0),
-            PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]),
+            PylosMove.ofDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]),
             (move: PylosMove, _previous: PylosState, _result: PylosState) => {
                 if (move.secondCapture.isPresent()) {
                     return MGPValidation.SUCCESS;

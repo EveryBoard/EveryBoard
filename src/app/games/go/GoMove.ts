@@ -1,7 +1,6 @@
 import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class GoMove extends MoveCoord {
 
@@ -9,10 +8,10 @@ export class GoMove extends MoveCoord {
 
     public static readonly ACCEPT: GoMove = new GoMove(-2, 0);
 
-    public static encoder: Encoder<GoMove> = MoveCoord.getEncoder(GoMove.from);
+    public static encoder: Encoder<GoMove> = MoveCoord.getEncoder(GoMove.of);
 
-    public static from(coord: Coord): MGPFallible<GoMove> {
-        return MGPFallible.success(new GoMove(coord.x, coord.y));
+    public static of(coord: Coord): GoMove {
+        return new GoMove(coord.x, coord.y);
     }
     public toString(): string {
         if (this === GoMove.PASS) {

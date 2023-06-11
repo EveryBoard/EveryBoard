@@ -158,7 +158,7 @@ describe('CoerceoComponent', () => {
         it('should hide last move when selecting first piece', fakeAsync(async() => {
             // Given a state with a last move
             await testUtils.expectClickSuccess('#click_6_2');
-            const move: CoerceoMove = CoerceoNormalMove.from(new Coord(6, 2), new Coord(7, 3)).get();
+            const move: CoerceoMove = CoerceoNormalMove.of(new Coord(6, 2), new Coord(7, 3));
             await testUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
 
             // When clicking on the piece to move
@@ -172,7 +172,7 @@ describe('CoerceoComponent', () => {
     describe('Second click', () => {
         it('should allow simple move', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_6_2');
-            const move: CoerceoMove = CoerceoNormalMove.from(new Coord(6, 2), new Coord(7, 3)).get();
+            const move: CoerceoMove = CoerceoNormalMove.of(new Coord(6, 2), new Coord(7, 3));
             await testUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
         }));
         it('should switch of selected piece when clicking another player piece', fakeAsync(async() => {
@@ -214,7 +214,7 @@ describe('CoerceoComponent', () => {
             await testUtils.expectClickSuccess('#click_6_2');
 
             // When finishing the move
-            const move: CoerceoMove = CoerceoNormalMove.from(new Coord(6, 2), new Coord(7, 3)).get();
+            const move: CoerceoMove = CoerceoNormalMove.of(new Coord(6, 2), new Coord(7, 3));
             await testUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
 
             // Then the highlight of the last move should be present

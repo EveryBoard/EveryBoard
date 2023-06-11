@@ -56,7 +56,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         }
         const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().turn === 0) {
-            return this.chooseMove(ConnectSixFirstMove.from(clickedCoord).get(), this.getState());
+            return this.chooseMove(ConnectSixFirstMove.of(clickedCoord), this.getState());
         } else {
             if (this.getState().getPieceAt(clickedCoord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
@@ -65,7 +65,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                     this.droppedCoord = MGPOptional.empty();
                     return MGPValidation.SUCCESS;
                 } else {
-                    const move: ConnectSixMove = ConnectSixDrops.from(this.droppedCoord.get(), clickedCoord).get();
+                    const move: ConnectSixMove = ConnectSixDrops.of(this.droppedCoord.get(), clickedCoord);
                     return this.chooseMove(move, this.getState());
                 }
             } else {

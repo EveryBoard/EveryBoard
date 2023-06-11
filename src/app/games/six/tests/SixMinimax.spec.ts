@@ -34,7 +34,7 @@ describe('SixMinimax', () => {
                 [_, O, X, X, _, _, _],
                 [_, X, _, _, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 11);
+            const state: SixState = SixState.ofRepresentation(board, 11);
             const lastMove: SixMove = SixMove.ofDrop(new Coord(1, 5));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(lastMove));
 
@@ -55,7 +55,7 @@ describe('SixMinimax', () => {
                 [_, O, X, X, _, _, _],
                 [_, X, _, _, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 11);
+            const state: SixState = SixState.ofRepresentation(board, 11);
             const lastMove: SixMove = SixMove.ofDrop(new Coord(1, 5));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(lastMove));
             minimax.getBoardValue(node);
@@ -75,7 +75,7 @@ describe('SixMinimax', () => {
                 [_, O, O, _, O, X],
                 [O, _, O, O, X, X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 9);
+            const state: SixState = SixState.ofRepresentation(board, 9);
             const move: SixMove = SixMove.ofDrop(new Coord(2, 3));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
 
@@ -92,7 +92,7 @@ describe('SixMinimax', () => {
                 [O, _, O, _],
                 [O, O, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 9);
+            const state: SixState = SixState.ofRepresentation(board, 9);
             const move: SixMove = SixMove.ofDrop(new Coord(1, 0));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
             const boardValue: SixBoardValue = minimax.getBoardValue(node);
@@ -102,12 +102,12 @@ describe('SixMinimax', () => {
     describe('4 pieces aligned is better than 3 pieces aligned', () => {
         it('should be true with lines', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
-            const weakerState: SixState = SixState.fromRepresentation([
+            const weakerState: SixState = SixState.ofRepresentation([
                 [O, O, _, _, _],
                 [X, X, X, _, _],
                 [O, O, _, _, _],
             ], 7);
-            const strongerState: SixState = SixState.fromRepresentation([
+            const strongerState: SixState = SixState.ofRepresentation([
                 [O, O, _, _, _],
                 [X, X, X, X, _],
                 [O, O, _, _, _],
@@ -120,13 +120,13 @@ describe('SixMinimax', () => {
         });
         it('should be true with triangle', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(1, 3));
-            const weakerState: SixState = SixState.fromRepresentation([
+            const weakerState: SixState = SixState.ofRepresentation([
                 [_, _, _],
                 [X, _, _],
                 [X, _, O],
                 [X, O, _],
             ], 7);
-            const strongerState: SixState = SixState.fromRepresentation([
+            const strongerState: SixState = SixState.ofRepresentation([
                 [_, _, _],
                 [X, _, X],
                 [X, _, O],
@@ -139,12 +139,12 @@ describe('SixMinimax', () => {
         });
         it('should be true with circle', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(2, 1));
-            const weakerState: SixState = SixState.fromRepresentation([
+            const weakerState: SixState = SixState.ofRepresentation([
                 [_, X, X],
                 [_, O, X],
                 [_, _, _],
             ], 7);
-            const strongerState: SixState = SixState.fromRepresentation([
+            const strongerState: SixState = SixState.ofRepresentation([
                 [_, X, X],
                 [_, O, X],
                 [_, X, _],
@@ -158,12 +158,12 @@ describe('SixMinimax', () => {
     describe('4 pieces aligned with two spaces should be better than 4 aligned with two opponents', () => {
         it('should be true with lines', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
-            const weakerState: SixState = SixState.fromRepresentation([
+            const weakerState: SixState = SixState.ofRepresentation([
                 [O, O, O, O, O, O],
                 [O, X, X, X, X, O],
                 [O, O, O, O, O, O],
             ], 7);
-            const strongerState: SixState = SixState.fromRepresentation([
+            const strongerState: SixState = SixState.ofRepresentation([
                 [O, O, O, O, O, O],
                 [_, X, X, X, X, _],
                 [O, O, O, O, O, O],
@@ -185,7 +185,7 @@ describe('SixMinimax', () => {
                 [X, _, X, X, O, _, _],
                 [_, X, _, _, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             const node: SixNode = new SixNode(state);
 
             // When asking the minimax the best choice
@@ -200,7 +200,7 @@ describe('SixMinimax', () => {
                 [O, X, X, X, X, X, O],
                 [_, O, O, O, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             const node: SixNode = new SixNode(state);
 
             // When listing the choices
@@ -218,7 +218,7 @@ describe('SixMinimax', () => {
                 [O, O, O, O, X, X, X, X, O],
                 [O, O, O, O, X, X, X, X, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 42);
+            const state: SixState = SixState.ofRepresentation(board, 42);
             const parentNode: SixNode = new SixNode(state);
             // (2. getting the child from it)
             const forcingMove: SixMove = SixMove.ofMovement(new Coord(8, 0), new Coord(-1, 0));
@@ -231,7 +231,7 @@ describe('SixMinimax', () => {
             expect(listMove.every((move: SixMove) => move.landing.equals(new Coord(-2, 0)))).toBeTrue();
         });
         it('Score after 40th turn should be a substraction of the number of piece', () => {
-            const state: SixState = SixState.fromRepresentation([
+            const state: SixState = SixState.ofRepresentation([
                 [X, X, X, X, O, O, O, O, O],
                 [X, X, X, X, O, O, O, O, O],
             ], 40);
@@ -243,7 +243,7 @@ describe('SixMinimax', () => {
     describe('getListMove', () => {
         it('should pass possible drops when Phase 1', () => {
             // Given a game state in phase 1
-            const state: SixState = SixState.fromRepresentation([
+            const state: SixState = SixState.ofRepresentation([
                 [O],
             ], 1);
             const node: SixNode = new SixNode(state);
@@ -257,7 +257,7 @@ describe('SixMinimax', () => {
         });
         it('should pass possible movement when Phase 2', () => {
             // Given a game state in phase 2
-            const state: SixState = SixState.fromRepresentation([
+            const state: SixState = SixState.ofRepresentation([
                 [O, O, O, X, X, X],
                 [O, O, O, X, X, X],
             ], 42);
@@ -271,7 +271,7 @@ describe('SixMinimax', () => {
         });
         it('should include cutting move as well', () => {
             // Given a game state in phase 2
-            const state: SixState = SixState.fromRepresentation([
+            const state: SixState = SixState.ofRepresentation([
                 [O, O, X, O, X, X, O, X, _],
                 [X, X, O, X, _, O, X, O, O],
             ], 43);
@@ -287,7 +287,7 @@ describe('SixMinimax', () => {
     });
     it('should assign a value of 0 in case of draw', () => {
         // Given a state in a draw in phase 2
-        const state: SixState = SixState.fromRepresentation([
+        const state: SixState = SixState.ofRepresentation([
             [O, O, X, X],
             [O, O, X, X],
         ], 42);

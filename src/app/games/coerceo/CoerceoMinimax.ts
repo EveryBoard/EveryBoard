@@ -43,7 +43,7 @@ export class CoerceoMinimax extends PlayerMetricsMinimax<CoerceoMove, CoerceoSta
                 if (state.getPieceAt(start).is(player)) {
                     const legalLandings: Coord[] = state.getLegalLandings(start);
                     for (const end of legalLandings) {
-                        const move: CoerceoMove = CoerceoNormalMove.from(start, end).get();
+                        const move: CoerceoMove = CoerceoNormalMove.of(start, end);
                         movements.push(move);
                     }
                 }

@@ -14,7 +14,7 @@ describe('MoveCoord', () => {
     describe('encoder', () => {
         it('should be bijective', () => {
             const encoder: Encoder<MyMoveCoord> =
-                MoveCoord.getEncoder((coord: Coord) => MGPFallible.success(new MyMoveCoord(coord.x, coord.y)));
+                MoveCoord.getFallibleEncoder((coord: Coord) => MGPFallible.success(new MyMoveCoord(coord.x, coord.y)));
             EncoderTestUtils.expectToBeBijective(encoder, new MyMoveCoord(2, 2));
         });
     });

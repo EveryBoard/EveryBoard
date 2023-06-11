@@ -35,7 +35,7 @@ export class HiveDropMove extends MoveCoord {
 export class HiveMoveCoordToCoord extends MoveCoordToCoord {
 
     public static encoder: Encoder<HiveMoveCoordToCoord> =
-        MoveWithTwoCoords.getEncoder(HiveMoveCoordToCoord.from);
+        MoveWithTwoCoords.getFallibleEncoder(HiveMoveCoordToCoord.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {
         if (start.equals(end)) {
@@ -68,7 +68,7 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
         (move: HiveMoveSpider): [Coord, Coord, Coord, Coord] => move.coords,
         (fields: [Coord, Coord, Coord, Coord]): HiveMoveSpider => new HiveMoveSpider(fields),
     );
-    public static fromCoords(coords: [Coord, Coord, Coord, Coord]): HiveMoveSpider {
+    public static ofCoords(coords: [Coord, Coord, Coord, Coord]): HiveMoveSpider {
         return new HiveMoveSpider(coords);
     }
     private constructor(public readonly coords: [Coord, Coord, Coord, Coord]) {
@@ -112,7 +112,7 @@ export namespace HiveMove {
         return HiveMoveCoordToCoord.from(start, end);
     }
     export function spiderMove(coords: [Coord, Coord, Coord, Coord]): HiveMove {
-        return HiveMoveSpider.fromCoords(coords);
+        return HiveMoveSpider.ofCoords(coords);
     }
     export function isInstanceOfHiveDropMove(value: HiveMove): boolean {
         return value instanceof HiveDropMove;

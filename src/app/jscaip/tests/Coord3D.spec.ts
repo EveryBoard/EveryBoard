@@ -13,7 +13,7 @@ describe('Coord3D', () => {
             MGPOptional.of(new Coord3D(0, 0, 0)),
         ];
         const encoder: Encoder<MGPOptional<Coord3D>> =
-            MGPOptional.getEncoder(Coord3D.getCoord3DEncoder(Coord3D.from));
+            MGPOptional.getEncoder(Coord3D.getCoord3DEncoder(Coord3D.of));
         for (const value of values) {
             EncoderTestUtils.expectToBeBijective(encoder, value);
         }
@@ -33,8 +33,8 @@ describe('Coord3D', () => {
     });
 
     it('should implement toString and toShortString', () => {
-        expect(Coord3D.from(0, 0, 0).get().toString()).toBe('Coord3D(0, 0, 0)');
-        expect(Coord3D.from(0, 0, 0).get().toShortString()).toBe('(0, 0, 0)');
+        expect(Coord3D.of(0, 0, 0).toString()).toBe('Coord3D(0, 0, 0)');
+        expect(Coord3D.of(0, 0, 0).toShortString()).toBe('(0, 0, 0)');
     });
 
     it('should compare Z correctly', () => {

@@ -6,7 +6,6 @@ import { CoerceoFailure } from './CoerceoFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class CoerceoStep {
 
@@ -30,7 +29,7 @@ export class CoerceoStep {
         CoerceoStep.DOWN_LEFT,
         CoerceoStep.DOWN_RIGHT,
     ];
-    public static fromCoords(a: Coord, b: Coord): CoerceoStep {
+    public static ofCoords(a: Coord, b: Coord): CoerceoStep {
         const vector: Vector = a.getVectorToward(b);
         const stepIndex: number = CoerceoStep.STEPS.findIndex((s: CoerceoStep) => s.direction.equals(vector));
         Utils.assert(stepIndex !== -1, CoerceoFailure.INVALID_DISTANCE());
@@ -41,18 +40,14 @@ export class CoerceoStep {
 
 export class CoerceoNormalMove extends MoveCoordToCoord {
 
-    public static readonly encoder: Encoder<CoerceoNormalMove> =
-        MoveCoordToCoord.getEncoder(CoerceoNormalMove.strictFrom);
+    public static readonly encoder: Encoder<CoerceoNormalMove> = MoveCoordToCoord.getEncoder(CoerceoNormalMove.of);
 
-    private static strictFrom(start: Coord, end: Coord): MGPFallible<CoerceoNormalMove> {
-        const step: CoerceoStep = CoerceoStep.fromCoords(start, end);
-        const move: CoerceoNormalMove = CoerceoNormalMove.fromMovement(start, step) as CoerceoNormalMove;
-        return MGPFallible.success(move);
+    public static of(start: Coord, end: Coord): CoerceoNormalMove {
+        const step: CoerceoStep = CoerceoStep.ofCoords(start, end);
+        const move: CoerceoNormalMove = CoerceoNormalMove.ofMovement(start, step) as CoerceoNormalMove;
+        return move;
     }
-    public static from(start: Coord, end: Coord): MGPFallible<CoerceoMove> {
-        return CoerceoNormalMove.strictFrom(start, end);
-    }
-    public static fromMovement(start: Coord, step: CoerceoStep): CoerceoMove {
+    public static ofMovement(start: Coord, step: CoerceoStep): CoerceoMove {
         Utils.assert(start.isInRange(15, 10), 'Starting coord cannot be out of range (width: 15, height: 10).');
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
         Utils.assert(landingCoord.isInRange(15, 10), 'Landing coord cannot be out of range (width: 15, height: 10).');
@@ -75,14 +70,9 @@ export class CoerceoNormalMove extends MoveCoordToCoord {
 
 export class CoerceoTileExchangeMove extends MoveCoord {
 
-    public static encoder: Encoder<CoerceoTileExchangeMove> = MoveCoord.getEncoder(CoerceoTileExchangeMove.strictFrom);
+    public static encoder: Encoder<CoerceoTileExchangeMove> = MoveCoord.getEncoder(CoerceoTileExchangeMove.of);
 
-    private static strictFrom(capture: Coord): MGPFallible<CoerceoTileExchangeMove> {
-        // TODO FOR REVIEW: genre on est d'accord que thrower dans une fonction qui donne du Fallible, c'con ?
-        Utils.assert(capture.isInRange(15, 10), 'Captured coord cannot be out of range (width: 15, height: 10).');
-        return MGPFallible.success(new CoerceoTileExchangeMove(capture));
-    }
-    public static of(capture: Coord): CoerceoMove {
+    public static of(capture: Coord): CoerceoTileExchangeMove {
         Utils.assert(capture.isInRange(15, 10), 'Captured coord cannot be out of range (width: 15, height: 10).');
         return new CoerceoTileExchangeMove(capture);
     }

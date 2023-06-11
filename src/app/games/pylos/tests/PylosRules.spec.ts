@@ -49,7 +49,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0), []);
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -73,7 +73,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -97,7 +97,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
         const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -121,7 +121,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 1), []);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 1), []);
         const reason: string = PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -146,7 +146,7 @@ describe('PylosRules', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove =
-            PylosMove.fromDrop(new PylosCoord(0, 3, 0), [new PylosCoord(0, 0, 0), new PylosCoord(3, 3, 0)]);
+            PylosMove.ofDrop(new PylosCoord(0, 3, 0), [new PylosCoord(0, 0, 0), new PylosCoord(3, 3, 0)]);
         const reason: string = PylosFailure.CANNOT_CAPTURE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -171,11 +171,11 @@ describe('PylosRules', () => {
 
         const state: PylosState = new PylosState(board, 0);
 
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(2, 2, 0)]);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0), [new PylosCoord(2, 2, 0)]);
         const reason: string = PylosFailure.INVALID_FIRST_CAPTURE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
 
-        const otherMove: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0),
+        const otherMove: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0),
                                                         [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
         RulesUtils.expectMoveFailure(rules, state, otherMove, PylosFailure.INVALID_SECOND_CAPTURE());
     });
@@ -202,7 +202,7 @@ describe('PylosRules', () => {
 
         // When trying to capture a piece below the landed piece
         // Then the move should be illegal
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 1), [new PylosCoord(2, 2, 0)]);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(1, 1, 1), [new PylosCoord(2, 2, 0)]);
         const reason: string = PylosFailure.INVALID_FIRST_CAPTURE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -226,7 +226,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(0, 0, 0)]);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0), [new PylosCoord(0, 0, 0)]);
         const status: MGPValidation = rules.isLegal(move, state);
         expect(status.isSuccess()).toBeTrue();
     });
@@ -250,7 +250,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 1, 0), new PylosCoord(0, 0, 1), []);
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(1, 1, 0), new PylosCoord(0, 0, 1), []);
         const reason: string = PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -274,7 +274,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 0, 0), new PylosCoord(0, 1, 1), []);
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(1, 0, 0), new PylosCoord(0, 1, 1), []);
         const reason: string = PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -298,7 +298,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 3, 0),
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 3, 0),
                                                     new PylosCoord(0, 0, 1),
                                                     [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
         const status: MGPValidation = rules.isLegal(move, state);
@@ -324,7 +324,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
         const expectedBoard: PlayerOrNone[][][] = [
             [
                 [X, O, X, O],
@@ -368,7 +368,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 1);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
         const expectedBoard: PlayerOrNone[][][] = [
             [
                 [O, X, O, X],

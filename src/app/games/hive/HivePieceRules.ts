@@ -204,7 +204,7 @@ export class HiveSpiderRules extends HivePieceRules {
             movesSoFar = movesSoFar.flatMap((move: Coord[]) => this.nextMoveStep(stateWithoutMovedSpider, move));
         }
         function makeMove(move: Coord[]): HiveMoveSpider {
-            return HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]);
+            return HiveMoveSpider.ofCoords(move as [Coord, Coord, Coord, Coord]);
         }
         const uniqueMoves: MGPSet<HiveMoveCoordToCoord> = new MGPSet(movesSoFar.map(makeMove));
         return uniqueMoves.toList();

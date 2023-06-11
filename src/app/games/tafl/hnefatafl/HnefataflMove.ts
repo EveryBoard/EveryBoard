@@ -6,7 +6,8 @@ import { TaflMove } from '../TaflMove';
 
 export class HnefataflMove extends TaflMove {
 
-    public static encoder: Encoder<HnefataflMove> = MoveWithTwoCoords.getEncoder<HnefataflMove>(HnefataflMove.from);
+    public static encoder: Encoder<HnefataflMove> =
+        MoveWithTwoCoords.getFallibleEncoder<HnefataflMove>(HnefataflMove.from);
 
     public static of(start: Coord, end: Coord): HnefataflMove {
         return new HnefataflMove(start, end);

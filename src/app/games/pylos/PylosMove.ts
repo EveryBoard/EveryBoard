@@ -4,6 +4,7 @@ import { PylosCoord } from './PylosCoord';
 import { Encoder } from 'src/app/utils/Encoder';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { PylosFailure } from './PylosFailure';
+import { Utils } from 'src/app/utils/utils';
 
 export class PylosMoveFailure {
     public static readonly MUST_CAPTURE_MAXIMUM_TWO_PIECES: Localized = () => $localize`You must capture one or two pieces, not more.`;
@@ -17,9 +18,9 @@ export class PylosMove extends Move {
         [PylosCoord.optionalEncoder, PylosCoord.coordEncoder, PylosCoord.optionalEncoder, PylosCoord.optionalEncoder],
         (move: PylosMove): PylosFields =>
             [move.startingCoord, move.landingCoord, move.firstCapture, move.secondCapture],
-        (fields: PylosFields): PylosMove => PylosMove.from(fields[0], fields[1], fields[2], fields[3]),
+        (fields: PylosFields): PylosMove => PylosMove.of(fields[0], fields[1], fields[2], fields[3]),
     );
-    public static fromClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
+    public static ofClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoordOpt: MGPOptional<PylosCoord> = MGPOptional.of(startingCoord);
         const capturesOptionals: {
             firstCapture: MGPOptional<PylosCoord>,
@@ -29,9 +30,7 @@ export class PylosMove extends Move {
                                                  landingCoord,
                                                  capturesOptionals.firstCapture,
                                                  capturesOptionals.secondCapture);
-        if (landingCoord.isHigherThan(startingCoord) === false) {
-            throw new Error(PylosFailure.MUST_MOVE_UPWARD());
-        }
+        Utils.assert(landingCoord.isHigherThan(startingCoord), PylosFailure.MUST_MOVE_UPWARD());
         return newMove;
     }
     public static checkCaptures(captures: PylosCoord[])
@@ -57,7 +56,7 @@ export class PylosMove extends Move {
         }
         return { firstCapture, secondCapture };
     }
-    public static fromDrop(landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
+    public static ofDrop(landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
         const capturesOptionals: {
             firstCapture: MGPOptional<PylosCoord>,
@@ -78,10 +77,10 @@ export class PylosMove extends Move {
                              capturesOptionals.firstCapture,
                              capturesOptionals.secondCapture);
     }
-    private static from(startingCoord: MGPOptional<PylosCoord>,
-                        landingCoord: PylosCoord,
-                        firstCapture: MGPOptional<PylosCoord>,
-                        secondCapture: MGPOptional<PylosCoord>)
+    private static of(startingCoord: MGPOptional<PylosCoord>,
+                      landingCoord: PylosCoord,
+                      firstCapture: MGPOptional<PylosCoord>,
+                      secondCapture: MGPOptional<PylosCoord>)
     : PylosMove
     {
         return new PylosMove(startingCoord, landingCoord, firstCapture, secondCapture);

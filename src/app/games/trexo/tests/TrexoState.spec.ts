@@ -14,7 +14,7 @@ describe('TrexoState', () => {
 
         // When passing it as an argument
         // Then it should fail
-        expect(() => TrexoState.from(board, 0)).toThrowError('Assertion failure: ' + error);
+        expect(() => TrexoState.of(board, 0)).toThrowError('Assertion failure: ' + error);
         expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
     });
     it('should refuse creating a board of which height is not 10', () => {
@@ -25,7 +25,7 @@ describe('TrexoState', () => {
 
         // When passing it as an argument
         // Then it should fail
-        expect(() => TrexoState.from(board, 0)).toThrowError('Assertion failure: ' + error);
+        expect(() => TrexoState.of(board, 0)).toThrowError('Assertion failure: ' + error);
         expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
     });
     it('should drop piece at the lowest level possible', () => {

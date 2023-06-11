@@ -82,7 +82,7 @@ describe('EncapsuleComponent', () => {
         it('should drop a piece on the board when selecting it and dropping it', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_5');
 
-            const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
+            const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
             await testUtils.expectMoveSuccess('#click_0_0', move);
         }));
         it('should allow dropping a piece on a smaller one', fakeAsync(async() => {
@@ -95,7 +95,7 @@ describe('EncapsuleComponent', () => {
             testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.MEDIUM_DARK]));
             await testUtils.expectClickSuccess('#piece_0_MEDIUM_DARK_0');
 
-            const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.MEDIUM_DARK, new Coord(0, 1));
+            const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.MEDIUM_DARK, new Coord(0, 1));
             await testUtils.expectMoveSuccess('#click_0_1', move);
         }));
         it('should forbid dropping a piece on a bigger one', fakeAsync(async() => {
@@ -108,7 +108,7 @@ describe('EncapsuleComponent', () => {
             testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_DARK]));
             await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_0');
 
-            const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 1));
+            const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 1));
             await testUtils.expectMoveFailure('#click_0_1', EncapsuleFailure.INVALID_PLACEMENT(), move);
         }));
         it('should move a piece when clicking on the piece and clicking on its destination coord', fakeAsync(async() => {
@@ -122,7 +122,7 @@ describe('EncapsuleComponent', () => {
 
             await testUtils.expectClickSuccess('#click_0_1');
 
-            const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2));
+            const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 1), new Coord(0, 2));
             await testUtils.expectMoveSuccess('#click_0_2', move);
         }));
         it('should allow moving a piece on top of a smaller one', fakeAsync(async() => {
@@ -137,7 +137,7 @@ describe('EncapsuleComponent', () => {
 
             await testUtils.expectClickSuccess('#click_1_1');
 
-            const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(1, 1), new Coord(0, 1));
+            const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(0, 1));
             await testUtils.expectMoveSuccess('#click_0_1', move);
         }));
         it('should forbid moving a piece on top of a bigger one', fakeAsync(async() => {
@@ -152,7 +152,7 @@ describe('EncapsuleComponent', () => {
 
             await testUtils.expectClickSuccess('#click_0_1');
 
-            const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 1), new Coord(1, 1));
+            const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 1), new Coord(1, 1));
             await testUtils.expectMoveFailure('#click_1_1', EncapsuleFailure.INVALID_PLACEMENT(), move);
         }));
         it('should forbid selecting a remaining piece when a move is being constructed', fakeAsync(async() => {

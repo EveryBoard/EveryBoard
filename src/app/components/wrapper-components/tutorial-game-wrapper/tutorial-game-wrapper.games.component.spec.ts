@@ -151,17 +151,17 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
-                    EncapsuleMove.fromDrop(EncapsulePiece.BIG_DARK, new Coord(0, 2)),
+                    EncapsuleMove.ofDrop(EncapsulePiece.BIG_DARK, new Coord(0, 2)),
                     MGPValidation.failure(`You won, but the exercise is to win while moving a piece!`),
                 ], [
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
-                    EncapsuleMove.fromMove(new Coord(0, 0), new Coord(0, 2)),
+                    EncapsuleMove.ofMove(new Coord(0, 0), new Coord(0, 2)),
                     MGPValidation.failure(`Failed. Try again.`),
                 ], [
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
-                    EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 0)),
+                    EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 0)),
                     MGPValidation.failure(`Failed. Try again.`),
                 ], [
                     EpaminondasRules.get(),
@@ -241,12 +241,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     PylosRules.get(),
                     pylosTutorial[4],
-                    PylosMove.fromDrop(new PylosCoord(3, 3, 0), []),
+                    PylosMove.ofDrop(new PylosCoord(3, 3, 0), []),
                     MGPValidation.failure(TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
                 ], [
                     PylosRules.get(),
                     pylosTutorial[4],
-                    PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0)]),
+                    PylosMove.ofDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0)]),
                     MGPValidation.failure(`Failed, you only captured one piece.`),
                 ], [
                     SaharaRules.get(),

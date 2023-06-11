@@ -11,10 +11,11 @@ import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursState } from './ConspirateursState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { Utils } from 'src/app/utils/utils';
 
 export class ConspirateursMoveDrop extends MoveCoord {
 
-    public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getEncoder(ConspirateursMoveDrop.from);
+    public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getFallibleEncoder(ConspirateursMoveDrop.from);
 
     public static from(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
         if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
@@ -41,18 +42,16 @@ export class ConspirateursMoveDrop extends MoveCoord {
 export class ConspirateursMoveSimple extends MoveCoordToCoord {
 
     public static encoder: Encoder<ConspirateursMoveSimple> =
-        MoveWithTwoCoords.getEncoder(ConspirateursMoveSimple.from);
+        MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
-        if (start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) &&
-            end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
-            if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
-                return MGPFallible.success(new ConspirateursMoveSimple(start, end));
-            } else {
-                return MGPFallible.failure(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
-            }
+        const startInRange: boolean = start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
+        const endInRange: boolean = end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
+        Utils.assert(startInRange && endInRange, 'Move out of board');
+        if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
+            return MGPFallible.success(new ConspirateursMoveSimple(start, end));
         } else {
-            return MGPFallible.failure('Move out of board');
+            return MGPFallible.failure(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
         }
     }
 
