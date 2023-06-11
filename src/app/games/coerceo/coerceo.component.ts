@@ -93,7 +93,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     private async firstClick(coord: Coord): Promise<MGPValidation> {
         const clickedPiece: FourStatePiece = this.state.getPieceAt(coord);
         if (clickedPiece.is(this.state.getCurrentOpponent())) {
-            const move: CoerceoMove = CoerceoTileExchangeMove.from(coord).get();
+            const move: CoerceoMove = CoerceoTileExchangeMove.of(coord);
             return this.chooseMove(move, this.state, this.state.captures);
         } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
             this.chosenCoord = MGPOptional.of(coord);

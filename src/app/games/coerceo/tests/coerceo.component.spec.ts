@@ -73,7 +73,7 @@ describe('CoerceoComponent', () => {
             ];
             const previousState: CoerceoState = new CoerceoState(previousBoard, 2, [2, 0], [0, 0]);
             const state: CoerceoState = new CoerceoState(board, 3, [0, 0], [1, 0]);
-            const previousMove: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(8, 6)).get();
+            const previousMove: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(8, 6));
 
             // When rendering the board
             testUtils.setupState(state, previousState, previousMove);
@@ -115,7 +115,7 @@ describe('CoerceoComponent', () => {
                 [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
             ];
             const previousState: CoerceoState = new CoerceoState(previousBoard, 2, [0, 0], [0, 0]);
-            const previousMove: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(8, 6)).get();
+            const previousMove: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(8, 6));
             const state: CoerceoState = new CoerceoState(board, 3, [0, 0], [1, 0]);
 
             // When rendering the board
@@ -128,7 +128,7 @@ describe('CoerceoComponent', () => {
     });
     describe('First click', () => {
         it('should accept tiles exchange proposal as first click', fakeAsync(async() => {
-            const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 9)).get();
+            const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
             await testUtils.expectMoveFailure('#click_6_9',
                                               CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
                                               move,

@@ -109,7 +109,7 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
             ], 1, [0, 2], [0, 0]),
             [
-                CoerceoTileExchangeMove.from(new Coord(5, 5)).get(),
+                CoerceoTileExchangeMove.of(new Coord(5, 5)),
             ],
             $localize`Congratulations!`,
             $localize`It's nice to move a piece, but you could have had the opponent's piece immediately by clicking on it!`,

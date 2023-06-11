@@ -78,11 +78,13 @@ export class CoerceoTileExchangeMove extends MoveCoord {
     public static encoder: Encoder<CoerceoTileExchangeMove> = MoveCoord.getEncoder(CoerceoTileExchangeMove.strictFrom);
 
     private static strictFrom(capture: Coord): MGPFallible<CoerceoTileExchangeMove> {
+        // TODO FOR REVIEW: genre on est d'accord que thrower dans une fonction qui donne du Fallible, c'con ?
         Utils.assert(capture.isInRange(15, 10), 'Captured coord cannot be out of range (width: 15, height: 10).');
         return MGPFallible.success(new CoerceoTileExchangeMove(capture));
     }
-    public static from(capture: Coord): MGPFallible<CoerceoMove> {
-        return CoerceoTileExchangeMove.strictFrom(capture);
+    public static of(capture: Coord): CoerceoMove {
+        Utils.assert(capture.isInRange(15, 10), 'Captured coord cannot be out of range (width: 15, height: 10).');
+        return new CoerceoTileExchangeMove(capture);
     }
     private constructor(capture: Coord) {
         super(capture.x, capture.y);

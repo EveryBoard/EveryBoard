@@ -12,7 +12,7 @@ describe('CoerceoMove', () => {
     it('should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoNormalMove.fromMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
         expect(CoerceoMove.isTileExchange(move)).toBeFalse();
-        const capture: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(6, 4)).get();
+        const capture: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 4));
         expect(CoerceoMove.isTileExchange(capture)).toBeTrue();
     });
     describe('fromMove', () => {
@@ -37,11 +37,11 @@ describe('CoerceoMove', () => {
                                            'Landing coord cannot be out of range (width: 15, height: 10).');
         });
     });
-    describe('fromTilesExchange', () => {
+    describe('CoerceoTileExchangeMove.of', () => {
         it('should not allow out of range capture coord', () => {
             const reason: string = 'Captured coord cannot be out of range (width: 15, height: 10).';
             function allowOutOfRangeCaptureCoord(): void {
-                CoerceoTileExchangeMove.from(new Coord(-1, 16));
+                CoerceoTileExchangeMove.of(new Coord(-1, 16));
             }
             RulesUtils.expectToThrowAndLog(allowOutOfRangeCaptureCoord, reason);
         });
@@ -52,8 +52,8 @@ describe('CoerceoMove', () => {
             const b: Coord = new Coord(2, 0);
             const c: Coord = new Coord(4, 0);
             const d: Coord = new Coord(1, 1);
-            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.from(a).get();
-            const differentCapture: CoerceoMove = CoerceoTileExchangeMove.from(b).get();
+            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.of(a);
+            const differentCapture: CoerceoMove = CoerceoTileExchangeMove.of(b);
             const movement: CoerceoMove = CoerceoNormalMove.from(a, b).get();
             const differentStart: CoerceoMove = CoerceoNormalMove.from(c, b).get();
             const differentEnd: CoerceoMove = CoerceoNormalMove.from(a, d).get();
@@ -68,7 +68,7 @@ describe('CoerceoMove', () => {
             expect(movement.equals(movement)).toBeTrue();
         });
         it('should stringify nicely', () => {
-            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(5, 5)).get();
+            const tileExchange: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(5, 5));
             const movement: CoerceoMove = CoerceoNormalMove.from(new Coord(5, 5), new Coord(7, 5)).get();
             expect(tileExchange.toString()).toBe('CoerceoTileExchangeMove(5, 5)');
             expect(movement.toString()).toBe('CoerceoNormalMove((5, 5) > (7, 5))');
@@ -84,7 +84,7 @@ describe('CoerceoMove', () => {
                 }
             });
             it('should be bijective with tiles exchanges', () => {
-                const move: CoerceoMove = CoerceoTileExchangeMove.from(new Coord(5, 7)).get();
+                const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(5, 7));
                 EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
             });
         });

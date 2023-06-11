@@ -5,7 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
-import { LodestoneOrientation, LodestonePiece } from './LodestonePiece';
+import { LodestoneDirection, LodestoneOrientation, LodestonePiece } from './LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
 import { LodestoneState } from './LodestoneState';
 
@@ -14,15 +14,15 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
         const state: LodestoneState = node.gameState;
         return this.flatMapEmptyCoords(state, (coord: Coord): LodestoneMove[] => {
             const moves: LodestoneMove[] = [];
-            for (const isPush of this.nextDirection(state)) {
+            for (const direction of this.nextDirection(state)) {
                 const orientations: LodestoneOrientation[] = ['diagonal', 'orthogonal'];
                 for (const orientation of orientations) {
                     const infos: LodestoneInfos =
-                        LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, { isPush, orientation });
+                        LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, { direction, orientation });
                     const captures: Coord[] = infos.captures;
                     const numberOfCaptures: number = captures.length;
                     for (const captures of this.captureCombinations(state, numberOfCaptures)) {
-                        moves.push(new LodestoneMove(coord, isPush, orientation, captures));
+                        moves.push(new LodestoneMove(coord, direction, orientation, captures));
                     }
                 }
             }
@@ -73,12 +73,12 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
         }
         return moves;
     }
-    private nextDirection(state: LodestoneState): boolean[] {
-        const nextDirection: MGPOptional<boolean> = state.nextLodestoneDirection();
+    private nextDirection(state: LodestoneState): LodestoneDirection[] {
+        const nextDirection: MGPOptional<LodestoneDirection> = state.nextLodestoneDirection();
         if (nextDirection.isPresent()) {
             return [nextDirection.get()];
         } else {
-            return [true, false];
+            return ['push', 'pull'];
         }
     }
     public getBoardValue(node: LodestoneNode): BoardValue {

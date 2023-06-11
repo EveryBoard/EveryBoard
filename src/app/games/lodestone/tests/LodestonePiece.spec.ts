@@ -7,7 +7,7 @@ describe('LodestonePiece', () => {
         const unreachable: LodestonePiece = LodestonePieceNone.UNREACHABLE;
         const piece: LodestonePiece = LodestonePiecePlayer.ZERO;
         const lodestone: LodestonePiece =
-            LodestonePieceLodestone.of(Player.ZERO, { isPush: 'push', orientation: 'orthogonal' });
+            LodestonePieceLodestone.of(Player.ZERO, { direction: 'push', orientation: 'orthogonal' });
 
         expect(empty.equals(unreachable)).toBeFalse();
         expect(empty.equals(empty)).toBeTrue();
