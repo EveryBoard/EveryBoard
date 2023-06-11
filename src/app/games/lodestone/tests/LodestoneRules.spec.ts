@@ -62,7 +62,7 @@ describe('LodestoneRules', () => {
     it('should forbid placing a lodestone on a square occupied by the lodestone of the opponent', () => {
         // Given a state with the opponent lodestone
         const B: LodestonePiece = LodestonePieceLodestone.of(Player.ONE,
-                                                             { direction: 'push', orientation: 'diagonal' });
+                                                             { isPush: 'push', orientation: 'diagonal' });
         const board: Table<LodestonePiece> = [
             [B, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -86,7 +86,7 @@ describe('LodestoneRules', () => {
     it('should allow placing a lodestone on the square where it already was', () => {
         // Given a state with our lodestone
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'diagonal' });
+                                                             { isPush: 'push', orientation: 'diagonal' });
         const board: Table<LodestonePiece> = [
             [A, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -105,7 +105,7 @@ describe('LodestoneRules', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'pull', 'orthogonal');
         // Then the move should be illegal
         const Y: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'orthogonal' });
+                                                             { isPush: 'pull', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [Y, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -126,7 +126,7 @@ describe('LodestoneRules', () => {
     it('should remove the lodestone from its previous square', () => {
         // Given a state with our lodestone
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'diagonal' });
+                                                             { isPush: 'push', orientation: 'diagonal' });
         const board: Table<LodestonePiece> = [
             [A, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -145,7 +145,7 @@ describe('LodestoneRules', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(1, 0), 'pull', 'orthogonal');
         // Then the move should be illegal
         const Y: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'orthogonal' });
+                                                             { isPush: 'pull', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [_, Y, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -182,7 +182,7 @@ describe('LodestoneRules', () => {
     it('should forbid choosing the wrong side of the lodestone when it was already on the board (push)', () => {
         // Given a state where the lodestone is on the board
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'diagonal' });
+                                                             { isPush: 'push', orientation: 'diagonal' });
         const board: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -206,7 +206,7 @@ describe('LodestoneRules', () => {
     it('should forbid choosing the wrong side of the lodestone when it was already on the board (pull)', () => {
         // Given a state where the lodestone is on the board
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'diagonal' });
+                                                             { isPush: 'pull', orientation: 'diagonal' });
         const board: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -237,7 +237,7 @@ describe('LodestoneRules', () => {
                                                       { top: 4, bottom: 0, left: 0, right: 0 });
         // Then the move should be legal and aligned player pieces should be pulled
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'orthogonal' });
+                                                             { isPush: 'pull', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, O, X, _, X, _, _],
             [_, O, X, O, O, O, X, _],
@@ -280,7 +280,7 @@ describe('LodestoneRules', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(5, 4), 'pull', 'diagonal');
         // Then the move should be legal, and A is pulled, but not B
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'diagonal' });
+                                                             { isPush: 'pull', orientation: 'diagonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -327,7 +327,7 @@ describe('LodestoneRules', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'pull', 'orthogonal');
         // Then the move should be legal, and no player pieces have moved
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'orthogonal' });
+                                                             { isPush: 'pull', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -362,7 +362,7 @@ describe('LodestoneRules', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', 'orthogonal');
         // Then the move should be legal, and B is pushed, but not A
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -397,7 +397,7 @@ describe('LodestoneRules', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(5, 4), 'push', 'diagonal');
         // Then the move should be legal, and B is pushed, but not A
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'diagonal' });
+                                                             { isPush: 'push', orientation: 'diagonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -435,7 +435,7 @@ describe('LodestoneRules', () => {
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be legal, and B is pushed and captured, but not A
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -459,7 +459,7 @@ describe('LodestoneRules', () => {
     it('should block when arriving on one of the player pieces or on a lodestone (push)', () => {
         // Given a state with an opponent piece next to a player piece or a lodestone
         const Y: LodestonePiece = LodestonePieceLodestone.of(Player.ONE,
-                                                             { direction: 'push', orientation: 'diagonal' });
+                                                             { isPush: 'push', orientation: 'diagonal' });
         const board: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -478,7 +478,7 @@ describe('LodestoneRules', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4), 'push', 'orthogonal');
         // Then the move should be legal, but no B moves
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -546,7 +546,7 @@ describe('LodestoneRules', () => {
                                                       { top: 0, bottom: 1, left: 0, right: 0 });
         // Then the move should be valid and B falls
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
@@ -592,7 +592,7 @@ describe('LodestoneRules', () => {
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, and the top pressure plate crumbles
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
@@ -638,7 +638,7 @@ describe('LodestoneRules', () => {
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, and the top pressure plate crumbles a second time
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
@@ -685,7 +685,7 @@ describe('LodestoneRules', () => {
                                                       { top: 5, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, and the top pressure plate crumbles *twice*
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'orthogonal' });
+                                                             { isPush: 'pull', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
@@ -757,7 +757,7 @@ describe('LodestoneRules', () => {
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, but only one piece is captured
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
@@ -782,7 +782,7 @@ describe('LodestoneRules', () => {
     it('should crumble the floor under a lodestone when needed', () => {
         // Given a state with an opponent piece next to a floor that will soon crumble
         const Y: LodestonePiece = LodestonePieceLodestone.of(Player.ONE,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const board: Table<LodestonePiece> = [
             [_, _, _, _, X, _, Y, _],
             [_, _, _, _, _, _, _, _],
@@ -808,7 +808,7 @@ describe('LodestoneRules', () => {
                                                       { top: 1, bottom: 0, left: 0, right: 0 });
         // Then the move should be valid, but only one piece is captured
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [_, _, _, _, _, _, _, _],
@@ -833,9 +833,9 @@ describe('LodestoneRules', () => {
     it('should not block piece at the previous lodestone position', () => {
         // Given a specific state with a lodestone is aligned with a piece
         const R: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const B: LodestonePiece = LodestonePieceLodestone.of(Player.ONE,
-                                                             { direction: 'push', orientation: 'diagonal' });
+                                                             { isPush: 'push', orientation: 'diagonal' });
         const board: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, _, O, _, _, N, N],
@@ -866,7 +866,7 @@ describe('LodestoneRules', () => {
 
         // Then the move should be valid and the piece has been pulled
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'orthogonal' });
+                                                             { isPush: 'pull', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, _, _, _, _, N, N],
@@ -908,7 +908,7 @@ describe('LodestoneRules', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(3, 3), 'push', 'orthogonal');
         // Then the move should be valid and no piece is actually considered captured
         const A: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'push', orientation: 'orthogonal' });
+                                                             { isPush: 'push', orientation: 'orthogonal' });
         const expectedBoard: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],

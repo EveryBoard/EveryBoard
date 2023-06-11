@@ -14,13 +14,13 @@ import { Utils } from 'src/app/utils/utils';
 import { LodestoneDummyMinimax } from './LodestoneDummyMinimax';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
-import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
+import { LodestoneOrientation, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneTutorial } from './LodestoneTutorial';
 
 interface LodestoneInfo {
-    direction: LodestoneDirection,
+    isPush: boolean,
     pieceClasses: string[],
     selectedClass: string,
     movingClass: string,
@@ -173,7 +173,7 @@ export class LodestoneComponent
         }
     }
     public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#lodestone_' + lodestone.direction + '_' + lodestone.orientation);
+        const clickValidity: MGPValidation = this.canUserPlay('#lodestone_' + lodestone.isPush + '_' + lodestone.orientation);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -200,7 +200,7 @@ export class LodestoneComponent
         const coord: Coord = this.selectedCoord.get();
         const lodestone: LodestoneDescription = this.selectedLodestone.get();
         const state: LodestoneState = this.getState();
-        const validity: MGPValidation = LodestoneRules.get().isLegalWithoutCaptures(state, coord, lodestone.direction);
+        const validity: MGPValidation = LodestoneRules.get().isLegalWithoutCaptures(state, coord, lodestone.isPush);
         assert(validity.isSuccess(), 'Lodestone component should only allow creation of legal moves');
         const infos: LodestoneInfos = LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, lodestone);
         this.lastInfos = MGPOptional.of(infos);
@@ -219,7 +219,7 @@ export class LodestoneComponent
         assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
         const coord: Coord = this.selectedCoord.get();
         const lodestone: LodestoneDescription = this.selectedLodestone.get();
-        const move: LodestoneMove = new LodestoneMove(coord, lodestone.direction, lodestone.orientation, this.captures);
+        const move: LodestoneMove = new LodestoneMove(coord, lodestone.isPush, lodestone.orientation, this.captures);
         return this.chooseMove(move, this.getState());
     }
     public onPressurePlateClick(temporary: boolean, position: LodestonePressurePlatePosition, index: number)
@@ -346,13 +346,13 @@ export class LodestoneComponent
         }
         if (piece.isLodestone()) {
             squareInfo.lodestone = {
-                direction: piece.direction,
+                isPush: piece.isPush,
                 pieceClasses: [this.getPlayerClass(piece.owner)],
                 selectedClass: '',
                 movingClass: '',
                 orientation: piece.orientation,
             };
-            if (piece.direction === 'push') {
+            if (piece.isPush) {
                 squareInfo.lodestone.movingClass = this.getPlayerClass(piece.owner.getOpponent());
             } else {
                 squareInfo.lodestone.movingClass = this.getPlayerClass(piece.owner);
@@ -369,19 +369,19 @@ export class LodestoneComponent
             // Moreover, since we remove the lodestone from the board (for displaying purposes),
             // we break an assumption of nextLodestoneDirection
             const player: Player = this.getState().getCurrentPlayer();
-            const nextDirection: MGPOptional<LodestoneDirection> = this.getState().nextLodestoneDirection();
+            const nextDirection: MGPOptional<boolean> = this.getState().nextLodestoneDirection();
             if (nextDirection.isPresent()) {
-                const direction: LodestoneDirection = nextDirection.get();
+                const direction: boolean = nextDirection.get();
                 this.viewInfo.availableLodestones = [
-                    this.nextLodestone(player, { direction, orientation: 'orthogonal' }),
-                    this.nextLodestone(player, { direction, orientation: 'diagonal' }),
+                    this.nextLodestone(player, { isPush: direction, orientation: 'orthogonal' }),
+                    this.nextLodestone(player, { isPush: direction, orientation: 'diagonal' }),
                 ];
             } else {
                 this.viewInfo.availableLodestones = [
-                    this.nextLodestone(player, { direction: 'push', orientation: 'orthogonal' }),
-                    this.nextLodestone(player, { direction: 'push', orientation: 'diagonal' }),
-                    this.nextLodestone(player, { direction: 'pull', orientation: 'orthogonal' }),
-                    this.nextLodestone(player, { direction: 'pull', orientation: 'diagonal' }),
+                    this.nextLodestone(player, { isPush: true, orientation: 'orthogonal' }),
+                    this.nextLodestone(player, { isPush: true, orientation: 'diagonal' }),
+                    this.nextLodestone(player, { isPush: false, orientation: 'orthogonal' }),
+                    this.nextLodestone(player, { isPush: false, orientation: 'diagonal' }),
                 ];
             }
         }
@@ -399,13 +399,13 @@ export class LodestoneComponent
         const lodestone: LodestonePieceLodestone =
             LodestonePieceLodestone.of(player, description);
         const info: LodestoneInfo = {
-            direction: lodestone.direction,
+            isPush: lodestone.isPush,
             orientation: lodestone.orientation,
             pieceClasses: [this.getPlayerClass(lodestone.owner)],
             movingClass: '',
             selectedClass: '',
         };
-        if (lodestone.direction === 'push') {
+        if (lodestone.isPush) {
             info.movingClass = this.getPlayerClass(lodestone.owner.getOpponent());
         } else {
             info.movingClass = this.getPlayerClass(lodestone.owner);
