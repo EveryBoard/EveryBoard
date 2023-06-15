@@ -32,6 +32,7 @@ export class ConfigRoomServiceMock {
                 chosenOpponent: { id: 'uniqueCandidate-doc-id', name: 'uniqueCandidate' },
                 firstPlayer: FirstPlayer.CREATOR.value,
                 partType: PartType.STANDARD.value,
+                typeGame: 'Quarto',
                 partStatus: PartStatus.PART_STARTED.value,
                 maximalMoveDuration: 60,
                 totalPartDuration: 300,

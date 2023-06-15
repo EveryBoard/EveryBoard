@@ -6,21 +6,13 @@ import { Move } from 'src/app/jscaip/Move';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoFailure } from './CoerceoFailure';
-
 export class CoerceoStep implements ComparableObject {
-
     public static LEFT: CoerceoStep = new CoerceoStep(new Vector(-2, 0), 'LEFT');
-
     public static UP_LEFT: CoerceoStep = new CoerceoStep(Direction.UP_LEFT, 'UP_LEFT');
-
     public static UP_RIGHT: CoerceoStep = new CoerceoStep(Direction.UP_RIGHT, 'UP_RIGHT');
-
     public static RIGHT: CoerceoStep = new CoerceoStep(new Vector(2, 0), 'RIGHT');
-
     public static DOWN_LEFT: CoerceoStep = new CoerceoStep(Direction.DOWN_LEFT, 'DOWN_LEFT');
-
     public static DOWN_RIGHT: CoerceoStep = new CoerceoStep(Direction.DOWN_RIGHT, 'DOWN_RIGHT');
-
     public static readonly STEPS: CoerceoStep[] = [
         CoerceoStep.LEFT,
         CoerceoStep.UP_LEFT,
@@ -51,12 +43,12 @@ export class CoerceoStep implements ComparableObject {
 
 export class CoerceoMove extends Move {
 
-    private static tileExchangeEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
+    private static readonly tileExchangeEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
         [Coord.encoder],
         (m: CoerceoMove): [Coord] => [m.capture.get()],
         (fields: [Coord]): CoerceoMove => CoerceoMove.fromTilesExchange(fields[0]));
 
-    private static movementEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
+    private static readonly movementEncoder: MoveEncoder<CoerceoMove> = MoveEncoder.tuple(
         [Coord.encoder, Coord.encoder],
         (m: CoerceoMove): [Coord, Coord] => [m.start.get(), m.landingCoord.get()],
         (fields: [Coord, Coord]): CoerceoMove => CoerceoMove.fromCoordToCoord(fields[0], fields[1]));

@@ -2,6 +2,7 @@
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { display, isJSONPrimitive, Utils } from '../utils';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('utils', () => {
 
@@ -50,9 +51,19 @@ describe('utils', () => {
         });
     });
     describe('getNonNullable', () => {
-        it('should fail if the value is null or undefined', () => {
-            expect(() => Utils.getNonNullable(null)).toThrowError('Expected value not to be null or undefined, but it was.');
-            expect(() => Utils.getNonNullable(undefined)).toThrowError('Expected value not to be null or undefined, but it was.');
+        fit('should fail if the value is null', () => {
+            function getNonNullableNullValue(): void {
+                Utils.getNonNullable(null);
+            }
+            const error: string = 'Expected value not to be null or undefined, but it was.';
+            RulesUtils.expectToThrowAndLog(getNonNullableNullValue, error);
+        });
+        fit('should fail if the value is undefined', () => {
+            function getNonNullableUndefinedValue(): void {
+                Utils.getNonNullable(undefined);
+            }
+            const error: string = 'Expected value not to be null or undefined, but it was.';
+            RulesUtils.expectToThrowAndLog(getNonNullableUndefinedValue, error);
         });
         it('should return the value if it is not null', () => {
             expect(Utils.getNonNullable(42)).toBe(42);

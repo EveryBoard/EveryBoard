@@ -21,7 +21,7 @@ class HexaDirectionEncoder extends MoveEncoder<HexaDirection> {
     }
 }
 
-/** Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons */
+// Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons
 export class HexaDirection extends BaseDirection {
 
     public static readonly UP: HexaDirection = new HexaDirection(0, -1);

@@ -43,6 +43,9 @@ Thumbs.db
 # firebase config file
 /src/app/firebaseConfig.ts
 
+# firebase emulator files
+/data
+
 
 # Local Netlify folder
 .netlify

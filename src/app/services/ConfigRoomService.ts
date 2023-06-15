@@ -66,7 +66,7 @@ export class ConfigRoomService {
         const subCollection: IFirestoreDAO<FirestoreJSONObject> = this.configRoomDAO.subCollectionDAO(configRoomId, 'candidates');
         return subCollection.observingWhere([], observer);
     }
-    public async createInitialConfigRoom(configRoomId: string): Promise<void> {
+    public async createInitialConfigRoom(configRoomId: string, typeGame: string): Promise<void> {
         display(ConfigRoomService.VERBOSE, 'ConfigRoomService.createInitialConfigRoom(' + configRoomId + ')');
 
         const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
@@ -75,6 +75,7 @@ export class ConfigRoomService {
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
+            typeGame,
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator,

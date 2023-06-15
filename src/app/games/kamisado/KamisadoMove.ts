@@ -5,7 +5,7 @@ import { KamisadoBoard } from './KamisadoBoard';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
-export type KamisadoMove = KamisadoPieceMove | KamisadoPassMove
+export type KamisadoMove = KamisadoPieceMove | KamisadoPassMove;
 
 class KamisadoPassMove extends Move {
 
@@ -27,8 +27,8 @@ class KamisadoPassMove extends Move {
         return 'KamisadoMove(PASS)';
     }
 }
-
 export class KamisadoPieceMove extends MoveCoordToCoord {
+
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
@@ -60,12 +60,12 @@ export class KamisadoPieceMove extends MoveCoordToCoord {
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace KamisadoMove {
+
     export const PASS: KamisadoPassMove = KamisadoPassMove.PASS;
 
     export function of(start: Coord, end: Coord): KamisadoPieceMove {
         return KamisadoPieceMove.of(start, end);
     }
-
     const passEncoder: MoveEncoder<KamisadoPassMove> = MoveEncoder.constant('PASS', KamisadoMove.PASS);
     const pieceMoveEncoder: MoveEncoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.of);
     export const encoder: MoveEncoder<KamisadoMove> =

@@ -10,12 +10,13 @@ export interface ConfigRoom extends JSONObject {
     readonly partStatus: IPartStatus;
 
     readonly firstPlayer: IFirstPlayer;
-    readonly partType: IPartType
+    readonly partType: IPartType;
+    readonly typeGame: string;
     readonly maximalMoveDuration: number;
     readonly totalPartDuration: number;
 }
 
-export type ConfigRoomDocument = FirestoreDocument<ConfigRoom>
+export type ConfigRoomDocument = FirestoreDocument<ConfigRoom>;
 
 export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';
 

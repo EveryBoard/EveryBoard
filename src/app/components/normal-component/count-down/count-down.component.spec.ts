@@ -6,6 +6,7 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Utils } from 'src/app/utils/utils';
 import { CountDownComponent } from './count-down.component';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('CountDownComponent', () => {
 
@@ -84,12 +85,11 @@ describe('CountDownComponent', () => {
             expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
         });
         it('should throw when pausing not started chrono', () => {
-            spyOn(Utils, 'assert').and.callFake((b: boolean, s: string) => {throw new Error('prout');});
+            function pausingWhenChronoDidNotStart(): void {
+                component.pause();
+            }
             const error: string = 'Should not pause not started chrono (undefined)';
-
-            expect(() => component.pause()).toThrowError('prout');
-
-            expect(Utils.assert).toHaveBeenCalledOnceWith(false, error);
+            RulesUtils.expectToThrowAndLog(pausingWhenChronoDidNotStart, error);
         });
     });
     describe('resume', () => {

@@ -10,16 +10,13 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { P4Tutorial } from './P4Tutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone> {
-
     public static VERBOSE: boolean = false;
-
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public last: MGPOptional<Coord>;
     public victoryCoords: Coord[] = [];

@@ -5,6 +5,7 @@ import { EncapsulePiece } from './EncapsulePiece';
 import { MoveEncoder } from 'src/app/utils/Encoder';
 
 type EncapsuleMoveFields = [MGPOptional<Coord>, Coord, MGPOptional<EncapsulePiece>];
+
 export class EncapsuleMove extends Move {
     public static encoder: MoveEncoder<EncapsuleMove> = MoveEncoder.tuple(
         [MGPOptional.getEncoder(Coord.encoder), Coord.encoder, MGPOptional.getEncoder(EncapsulePiece.encoder)],

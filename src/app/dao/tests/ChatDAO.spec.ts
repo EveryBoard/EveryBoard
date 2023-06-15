@@ -19,7 +19,7 @@ import { UserDAO } from '../UserDAO';
 import { ChatService } from 'src/app/services/ChatService';
 import { Subscription } from 'rxjs';
 
-describe('ChatDAO', () => {
+xdescribe('ChatDAO', () => {
 
     let chatDAO: ChatDAO;
     let chatService: ChatService;

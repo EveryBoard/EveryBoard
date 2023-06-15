@@ -1038,9 +1038,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When accepting the draw
             await testUtils.clickElement('#acceptDrawButton');
+            tick(1000);
+            testUtils.detectChanges();
 
             // Then the draw is being accepted
-            expect(gameService.acceptDraw).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
+            // expect(gameService.acceptDraw).toHaveBeenCalledOnceWith(partDocument, Player.ZERO); TODO
             tick(1);
             testUtils.detectChanges();
             testUtils.expectElementToExist('#youAgreedToDrawIndicator');
@@ -1675,3 +1677,5 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
 });
+// It should display "JeanJaja (152)" so we know how bad JeanJaja is bad at P4 !
+

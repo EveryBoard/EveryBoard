@@ -11,14 +11,15 @@ import { TrexoMove } from '../TrexoMove';
 describe('TrexoHalfSquareComponent', () => {
 
     function expectAllLinesToBeDisplayed(): void {
-        /** Then all those lines should be displayed:
-         *     0------1
-         *    /      /|
-         *   2------3 |
-         *   |      | 4
-         *   |      |/
-         *   5------6
-         */
+        /**
+          * Then all those lines should be displayed:
+          *     0------1
+          *    /      /|
+          *   2------3 |
+          *   |      | 4
+          *   |      |/
+          *   5------6
+          */
         testUtils.expectElementToExist('#line_0_to_1');
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
@@ -34,15 +35,16 @@ describe('TrexoHalfSquareComponent', () => {
 
     let component: TrexoHalfPieceComponent;
 
-    /** Thoses are all the points, and line_A_to_B is the name of the line going from point A to point B
-     * Pretty complex notation right ?
-     *     0------1
-     *    /      /|
-     *   2------3 |
-     *   |      | 4
-     *   |      |/
-     *   5------6
-     */
+    /**
+      * Thoses are all the points, and line_A_to_B is the name of the line going from point A to point B
+      * Pretty complex notation right ?
+      *     0------1
+      *    /      /|
+      *   2------3 |
+      *   |      | 4
+      *   |      |/
+      *   5------6
+      */
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(TrexoHalfPieceComponent);
@@ -75,14 +77,15 @@ describe('TrexoHalfSquareComponent', () => {
         // When displaying it
         testUtils.detectChanges();
 
-        /** Then all those lines should be displayed:
-         *     0------1
-         *    /
-         *   2------3
-         *   |
-         *   |
-         *   5------6
-         */
+        /**
+          * Then all those lines should be displayed:
+          *     0------1
+          *    /
+          *   2------3
+          *   |
+          *   |
+          *   5------6
+          */
         testUtils.expectElementToExist('#line_0_to_1');
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
@@ -102,14 +105,15 @@ describe('TrexoHalfSquareComponent', () => {
         // When displaying it
         testUtils.detectChanges();
 
-        /** Then all those lines should be displayed:
-         *     0------1
-         *           /|
-         *   2------3 |
-         *          | 4
-         *          |/
-         *   5------6
-         */
+        /**
+          * Then all those lines should be displayed:
+          *     0------1
+          *           /|
+          *   2------3 |
+          *          | 4
+          *          |/
+          *   5------6
+          */
         testUtils.expectElementToExist('#line_0_to_1');
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
@@ -129,14 +133,15 @@ describe('TrexoHalfSquareComponent', () => {
         // When displaying it
         testUtils.detectChanges();
 
-        /** Then all those lines should be displayed:
-         *     0------1
-         *    /      /|
-         *   2      3 |
-         *            4
-         *           /
-         *          6
-         */
+        /**
+          * Then all those lines should be displayed:
+          *     0------1
+          *    /      /|
+          *   2      3 |
+          *            4
+          *           /
+          *          6
+          */
         testUtils.expectElementToExist('#line_0_to_1');
         testUtils.expectElementToExist('#line_0_to_2');
         testUtils.expectElementToExist('#line_1_to_3');
@@ -156,14 +161,15 @@ describe('TrexoHalfSquareComponent', () => {
         // When displaying it
         testUtils.detectChanges();
 
-        /** Then all those lines should be displayed:
-         *     0      1
-         *    /      /
-         *   2------3
-         *   |      | 4
-         *   |      |/
-         *   5------6
-         */
+        /**
+          * Then all those lines should be displayed:
+          *     0      1
+          *    /      /
+          *   2------3
+          *   |      | 4
+          *   |      |/
+          *   5------6
+          */
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
         testUtils.expectElementToExist('#line_0_to_2');
@@ -183,14 +189,15 @@ describe('TrexoHalfSquareComponent', () => {
         // When displaying it
         testUtils.detectChanges();
 
-        /** Then all those lines should be displayed:
-         *     0      1
-         *    /      /
-         *   2------3
-         *   |      | 4
-         *   |      |/
-         *   5------6
-         */
+        /**
+          * Then all those lines should be displayed:
+          *     0      1
+          *    /      /
+          *   2------3
+          *   |      | 4
+          *   |      |/
+          *   5------6
+          */
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
         testUtils.expectElementToExist('#line_0_to_2');
