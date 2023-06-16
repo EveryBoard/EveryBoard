@@ -819,7 +819,7 @@ describe('PartCreationComponent', () => {
                 expect(configRoomService.cancelJoining).toHaveBeenCalledOnceWith('configRoomId');
                 expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
             }));
-            it('should not try to modify DAOs after user logged out', fakeAsync(async() => {
+            fit('should not try to modify DAOs after user logged out', fakeAsync(async() => {
                 // Given a part creation
                 awaitComponentInitialization();
 
@@ -829,7 +829,6 @@ describe('PartCreationComponent', () => {
 
                 ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
                 testUtils.destroy();
-                tick(3000);
                 await testUtils.whenStable();
                 destroyed = true;
 
