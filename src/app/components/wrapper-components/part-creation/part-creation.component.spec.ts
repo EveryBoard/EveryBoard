@@ -819,7 +819,7 @@ describe('PartCreationComponent', () => {
                 expect(configRoomService.cancelJoining).toHaveBeenCalledOnceWith('configRoomId');
                 expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
             }));
-            fit('should not try to modify DAOs after user logged out', fakeAsync(async() => {
+            it('should not try to modify DAOs after user logged out', fakeAsync(async() => {
                 // Given a part creation
                 awaitComponentInitialization();
 
