@@ -14,7 +14,7 @@ class FirestoreTimeTestComponent {
     public timestamp: FirestoreTime = new Timestamp(FirestoreTimeTestComponent.timestampInSeconds, 0);
 }
 
-fdescribe('FirestoreTimePipe', () => {
+describe('FirestoreTimePipe', () => {
     let testUtils: SimpleComponentTestUtils<FirestoreTimeTestComponent>;
 
     beforeEach(fakeAsync(async() => {
