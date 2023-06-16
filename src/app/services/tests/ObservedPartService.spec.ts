@@ -138,9 +138,19 @@ describe('ObservedPartService', () => {
 
             // Then the service now has an observed part
             expect(observedPart.isPresent()).toBeTrue();
-            expect(observedPartService.getObservedPart().isPresent()).toBeTrue();
-
             subscription.unsubscribe();
+        }));
+        it('should get the observedPart with getObservedPart', fakeAsync(async() => {
+            // Given a registered and disconnected user observing a game
+            ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
+            await userDAO.update(opponentId, { observedPart: { id: '1234', typeGame: 'P4' } });
+
+            // When disconnected user logs in
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            tick(1);
+
+            // Then the service now has an observed part
+            expect((await observedPartService.getObservedPart()).isPresent()).toBeTrue();
         }));
         it('should keep observing users even when they are not logged in yet', fakeAsync(async() => {
             // This caused the infamous "part creation after login" bug

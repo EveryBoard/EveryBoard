@@ -56,7 +56,8 @@ export class ObservedPartService implements OnDestroy {
                 });
             // And we need to make sure we get the current observed part
             const userInDB: MGPOptional<User> = await this.userDAO.read(user.id);
-            this.onObservedPartUpdate(userInDB.get().observedPart);
+            this.observedPart = MGPOptional.ofNullable(userInDB.get().observedPart);
+            this.observedPartRS.next(this.observedPart);
         }
     }
     private onObservedPartUpdate(newObservedPart: ObservedPart | null | undefined): void {
@@ -123,8 +124,17 @@ export class ObservedPartService implements OnDestroy {
             }
         }
     }
-    public getObservedPart(): MGPOptional<ObservedPart> {
-        return this.observedPart;
+    public getObservedPart(): Promise<MGPOptional<ObservedPart>> {
+        // Need to make sure we fully initialized, hence observedPartObs contains a value
+        // We will get that value in the first call to the callback
+        return new Promise((resolve: (result: MGPOptional<ObservedPart>) => void) => {
+            // We need to initialize subscription first so that it is available within the called function
+            let subscription: Subscription = new Subscription();
+            subscription = this.observedPartObs.subscribe((observed: MGPOptional<ObservedPart>) => {
+                resolve(observed);
+                subscription.unsubscribe();
+            });
+        });
     }
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
