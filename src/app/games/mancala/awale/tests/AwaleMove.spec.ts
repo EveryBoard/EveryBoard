@@ -1,23 +1,23 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
-import { AwaleMove } from '../AwaleMove';
+import { MancalaMove } from '../../MancalaMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
-describe('AwaleMove', () => {
+describe('MancalaMove', () => {
 
     it('should have a bijective encoder', () => {
         const rules: AwaleRules = AwaleRules.get();
-        const minimax: AwaleMinimax = new AwaleMinimax(rules, 'AwaleMinimax');
+        const minimax: AwaleMinimax = new AwaleMinimax();
         const node: AwaleNode = rules.getInitialNode();
-        const firstTurnMoves: AwaleMove[] = minimax.getListMoves(node);
+        const firstTurnMoves: MancalaMove[] = minimax.getListMoves(node);
         for (const move of firstTurnMoves) {
-            EncoderTestUtils.expectToBeBijective(AwaleMove.encoder, move);
+            EncoderTestUtils.expectToBeBijective(MancalaMove.encoder, move);
         }
     });
     it('should override equals correctly', () => {
-        const move: AwaleMove = AwaleMove.ZERO;
-        const other: AwaleMove = AwaleMove.ONE;
+        const move: MancalaMove = MancalaMove.ZERO;
+        const other: MancalaMove = MancalaMove.ONE;
         expect(move.equals(move)).toBeTrue();
         expect(move.equals(other)).toBeFalse();
     });

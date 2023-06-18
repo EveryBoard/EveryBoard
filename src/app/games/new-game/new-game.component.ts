@@ -34,7 +34,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         // If the board you draw must be rotated of 180° when you play the second player, enable the following:
-        // this.hasAsymetricBoard = true;
+        // this.hasAsymmetricBoard = true;
         // If your game has scores in-game, enable the following:
         // this.scores = MGPOptional.of([0, 0]);
         this.rules = NewGameRules.get();

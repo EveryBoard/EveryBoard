@@ -1,6 +1,6 @@
 import { Localized } from 'src/app/utils/LocaleUtils';
 
-export class AwaleFailure {
+export class MancalaFailure {
 
     public static CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME: Localized = () => $localize`You cannot distribute from the opponent's home.`;
 

@@ -43,7 +43,7 @@ import { NextGameLoadingComponent } from './components/normal-component/next-gam
 
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
-import { AwaleComponent } from './games/awale/awale.component';
+import { AwaleComponent } from './games/mancala/awale/awale.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { ConnectSixComponent } from './games/connect-six/connect-six.component';
@@ -104,6 +104,7 @@ import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { GameEventService } from './services/GameEventService';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
+import { KalahComponent } from './games/mancala/kalah/kalah.component';
 
 registerLocaleData(localeFr);
 
@@ -201,6 +202,7 @@ export class FirebaseProviders {
         GoComponent,
         HiveComponent, HivePieceComponent,
         HnefataflComponent,
+        KalahComponent,
         KamisadoComponent,
         LascaComponent,
         LinesOfActionComponent,

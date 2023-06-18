@@ -1,11 +1,11 @@
-import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 
-export class AwaleState extends GameStateWithTable<number> {
+export class MancalaState extends GameStateWithTable<number> {
 
-    public static getInitialState(): AwaleState {
+    public static getInitialState(): MancalaState {
         const board: number[][] = ArrayUtils.createTable(6, 2, 4);
-        return new AwaleState(board, 0, [0, 0]);
+        return new MancalaState(board, 0, [0, 0]);
     }
     public constructor(b: Table<number>, turn: number, public readonly captured: readonly [number, number]) {
         super(b, turn);

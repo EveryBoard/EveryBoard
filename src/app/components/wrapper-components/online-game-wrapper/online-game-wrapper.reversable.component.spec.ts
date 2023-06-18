@@ -2,7 +2,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
-import { AwaleComponent } from 'src/app/games/awale/awale.component';
+import { AwaleComponent } from 'src/app/games/mancala/awale/awale.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';

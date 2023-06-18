@@ -112,7 +112,7 @@ export class ArrayUtils {
     }
 }
 
-interface Cell<T> {
+interface Cell<T> { // TODO: reuse this instead of "CoordAndContent"
     x: number,
     y: number,
     content: T,

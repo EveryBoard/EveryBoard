@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleComponent } from '../awale.component';
-import { AwaleMove } from 'src/app/games/awale/AwaleMove';
-import { AwaleState } from 'src/app/games/awale/AwaleState';
+import { MancalaMove } from 'src/app/games/mancala/MancalaMove';
+import { MancalaState } from 'src/app/games/mancala/MancalaState';
 import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { AwaleFailure } from '../AwaleFailure';
+import { MancalaFailure } from '../../MancalaFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { DebugElement } from '@angular/core';
 
@@ -24,11 +24,11 @@ describe('AwaleComponent', () => {
             [4, 1, 4, 4, 4, 4],
             [2, 4, 4, 4, 4, 4],
         ];
-        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 0, [0, 0]);
         testUtils.setupState(state);
 
         // When player zero clicks on a house to distribute
-        const move: AwaleMove = AwaleMove.ZERO;
+        const move: MancalaMove = MancalaMove.ZERO;
 
         // Then the move should be performed
         await testUtils.expectMoveSuccess('#click_0_1', move);
@@ -44,7 +44,7 @@ describe('AwaleComponent', () => {
         // Given any state (initial here by default)
 
         // When player performs a move
-        const move: AwaleMove = AwaleMove.FIVE;
+        const move: MancalaMove = MancalaMove.FIVE;
         await testUtils.expectMoveSuccess('#click_5_1', move);
 
         // Then the moved spaces should be shown
@@ -62,14 +62,14 @@ describe('AwaleComponent', () => {
             [0, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 4],
         ];
-        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
         testUtils.setupState(state);
 
         // When clicking on the empty house
-        const move: AwaleMove = AwaleMove.ZERO;
+        const move: MancalaMove = MancalaMove.ZERO;
 
         // Then it should fail
-        const reason: string = AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
+        const reason: string = MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
         await testUtils.expectMoveFailure('#click_0_0', reason, move);
     }));
     it(`should tell to user opponent's house cannot be moved`, fakeAsync(async() => {
@@ -78,12 +78,12 @@ describe('AwaleComponent', () => {
             [4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 4],
         ];
-        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 0, [0, 0]);
         testUtils.setupState(state);
 
         // When clicking on a house of the opponent
         // Then it should fail
-        await testUtils.expectClickFailure('#click_0_0', AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
+        await testUtils.expectClickFailure('#click_0_0', MancalaFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
     }));
     it('should display filled-then-captured capture', fakeAsync(async() => {
         // Given a board where some empty space could filled then captured
@@ -91,11 +91,11 @@ describe('AwaleComponent', () => {
             [11, 4, 4, 4, 4, 0],
             [17, 4, 4, 4, 4, 4],
         ];
-        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 0, [0, 0]);
         testUtils.setupState(state);
 
         // When doing the capturing move
-        const move: AwaleMove = AwaleMove.ZERO;
+        const move: MancalaMove = MancalaMove.ZERO;
         await testUtils.expectMoveSuccess('#click_0_1', move);
 
         // Then the space in question should be marked as "captured"
@@ -109,11 +109,11 @@ describe('AwaleComponent', () => {
             [0, 0, 0, 0, 0, 1],
             [0, 0, 0, 0, 0, 4],
         ];
-        const state: AwaleState = new AwaleState(board, 121, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 121, [0, 0]);
         testUtils.setupState(state);
 
         // When doing the capturing move
-        const move: AwaleMove = AwaleMove.FIVE;
+        const move: MancalaMove = MancalaMove.FIVE;
         await testUtils.expectMoveSuccess('#click_5_0', move);
 
         // Then the space in question should be marked as "captured"
