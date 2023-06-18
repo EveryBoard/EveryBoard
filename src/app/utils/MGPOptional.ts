@@ -20,10 +20,9 @@ export class MGPOptional<T> {
      */
     public static getEncoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
         return new class extends Encoder<MGPOptional<T>> {
-            public encode(opt: MGPOptional<T>): JSONValueWithoutArray {
+            public encode(opt: MGPOptional<T>): JSONValue {
                 if (opt.isPresent()) {
-                    // TODO FOR REVIEW: c'est-ce-tu correct lo ?
-                    return encoderT.encode(opt.get()) as JSONValueWithoutArray;
+                    return encoderT.encode(opt.get());
                 } else {
                     return null;
                 }

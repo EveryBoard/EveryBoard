@@ -93,7 +93,7 @@ export abstract class Encoder<T> {
                     Utils.assert(Array.isArray(encodedCoord) === false,
                                  'This encoder should not encode as array');
                     return encodedCoord as JSONValueWithoutArray;
-                }); // TODO FOR REVIEW: une idée de si il reste de encoders qu'on échappé à la Perfection Christique ?
+                });
             }
             public decode(encoded: JSONValue): T[] {
                 const casted: Array<JSONValue> = encoded as Array<JSONValue>;
