@@ -15,7 +15,7 @@ import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { Debug, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -43,6 +43,7 @@ export class OnlineGameWrapperMessages {
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
 })
+@Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
     public static override VERBOSE: boolean = false;
@@ -99,7 +100,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        private readonly timeManager: OGWCTimeManagerService)
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
     // Gets the server time by relying on the presence token of the user.
     private async getServerTime(): Promise<Timestamp> {
@@ -158,7 +158,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.redirectIfPartOrGameIsInvalid();
     }
     public async ngOnInit(): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
 
         this.routerEventsSubscription = this.router.events.subscribe(async(ev: Event) => {
             if (ev instanceof NavigationEnd) {
@@ -177,7 +176,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.onObservedPartUpdate(part);
             }));
 
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit done');
     }
     /**
       * Here you can only be an observer or a player
@@ -189,7 +187,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
       * because user that are playing should not see other players playing
       */
     private async onObservedPartUpdate(part: MGPOptional<FocusedPart>): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onObservedPartUpdate called');
         if (part.isPresent()) {
             const newPart: FocusedPart = part.get();
             if (newPart.role === 'Observer' || newPart.id === this.currentPartId) {
@@ -207,8 +204,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public async startGame(configRoom: ConfigRoom): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
-
         assert(this.gameStarted === false, 'Should not start already started game');
         this.configRoom = configRoom;
 
@@ -223,8 +218,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }, 2);
     }
     protected async startPart(): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
-
         // Trigger the first update manually, so that we will have info on the part before receiving any moves
         // This is useful when we join a part in the middle.
         const part: Part = (await this.gameService.getPart(this.currentPartId)).get();
@@ -361,8 +354,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.gameService.notifyTimeout(this.currentPartId, player, victoriousPlayer, loser);
     }
     public async notifyVictory(winner: Player, scores?: [number, number]): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
-
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         const playerZero: MinimalUser = this.players[0].get();
         const playerOne: MinimalUser = this.players[1].get();
@@ -419,7 +410,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     private takeBackToPreviousPlayerTurn(player: Player): void {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackToPreviousPlayerTurn');
         // Take back once, in any case
         this.gameComponent.node = this.gameComponent.node.mother.get();
         if (this.gameComponent.getCurrentPlayer() !== player) {
@@ -466,7 +456,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public async initializePlayersDatas(part: PartDocument): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_initializePlayersDatas: part });
         this.players = [
             MGPOptional.of(part.data.playerZero),
             MGPOptional.ofNullable(part.data.playerOne),
@@ -500,7 +489,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return opponent;
     }
     public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onLegalUserMove');
         if (this.isOpponentWaitingForTakeBackResponse()) {
             this.gameComponent.message('You must answer to take back request');
         } else {
@@ -525,7 +513,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores?: [number, number])
     : Promise<void>
     {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updatePartWithStatusAndScores');
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
                 return this.notifyDraw(scores);
@@ -539,14 +526,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public async resign(): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.resign');
         const player: Player = this.role as Player;
         const resigner: MinimalUser = this.getPlayer();
         const victoriousOpponent: MinimalUser = this.players[(this.role.value + 1) % 2].get();
         await this.gameService.resign(this.currentPartId, player, victoriousOpponent, resigner);
     }
     public async reachedOutOfTime(player: Player): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         if (this.isPlaying() === false) {
             return;
         }
@@ -638,7 +623,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public async ngOnDestroy(): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');
         this.routerEventsSubscription.unsubscribe();
         this.userSubscription.unsubscribe();
         this.observedPartSubscription.unsubscribe();
@@ -650,6 +634,5 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.partSubscription.unsubscribe();
             this.gameEventsSubscription.unsubscribe();
         }
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
     }
 }

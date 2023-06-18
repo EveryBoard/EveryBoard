@@ -27,6 +27,48 @@ export type FirestoreJSONValue =
 export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJSONObject
 export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };
 
+export class Debug {
+    private static isVerbose(name: string): boolean {
+        /* eslint-disable dot-notation */
+        if (window['verbosity'] == null) return false;
+        if (window['verbosity'][name] == null) return false;
+        return window['verbosity'][name];
+        /* eslint-enable dot-notation */
+    }
+    public static display(verbosityName: string, message: unknown): void {
+        if (Debug.isVerbose(verbosityName)) {
+            console.log(message);
+        }
+    }
+    public static log<T extends { new(...args: unknown[]): unknown }>(constructor: T): void {
+        const className: string = constructor.name;
+        for (const propertyName of Object.getOwnPropertyNames(constructor.prototype)) {
+            const descriptor: PropertyDescriptor =
+                Utils.getNonNullable(Object.getOwnPropertyDescriptor(constructor.prototype, propertyName));
+            const isMethod: boolean = descriptor.value instanceof Function;
+            if (isMethod === false) {
+                continue;
+            }
+
+            const originalMethod: (...args: unknown[]) => unknown = descriptor.value;
+            descriptor.value = function(...args: unknown[]): unknown {
+                if (Debug.isVerbose(className) || Debug.isVerbose(className + '.' + propertyName)) {
+                    const strArgs: string = Array.from(args).map((arg: unknown): string =>
+                        JSON.stringify(arg)).join(', ');
+                    console.log(`> ${className}.${propertyName}(${strArgs})`);
+                }
+                const result: unknown = originalMethod.apply(this, args);
+                if (Debug.isVerbose(className) || Debug.isVerbose(className + '.' + propertyName)) {
+                    console.log(`< ${className}.${propertyName} -> ${JSON.stringify(result)}`);
+                }
+                return result;
+            };
+
+            Object.defineProperty(constructor.prototype, propertyName, descriptor);
+        }
+    }
+}
+
 export class Utils {
 
     public static expectToBe<T>(value: T, expected: T, message?: string): void {
@@ -71,8 +113,4 @@ export class Utils {
     }
 }
 
-export function display(verbose: boolean, message: unknown): void {
-    if (verbose) {
-        console.log(message);
-    }
-}
+export function display(cond: boolean, message: string): void {}
