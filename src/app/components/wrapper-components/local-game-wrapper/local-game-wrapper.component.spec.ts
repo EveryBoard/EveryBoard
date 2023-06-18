@@ -467,7 +467,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(testUtils.getComponent().updateBoard).toHaveBeenCalledTimes(1);
         }));
         it('should cancelMoveAttempt when taking back', fakeAsync(async() => {
-            // Given a board where a move could be on construction
+            // Given a board where a move could be in construction
             await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
             // When calling take back
@@ -476,7 +476,7 @@ describe('LocalGameWrapperComponent', () => {
             await testUtils.expectInterfaceClickSuccess('#takeBack');
 
             // Then gameComponent.cancelMoveAttempt should have been called
-            // And hence the potentially ongoing move undone from the board
+            // And hence the potentially move in construction undone from the board
             expect(component.cancelMoveAttempt).toHaveBeenCalledOnceWith();
         }));
     });

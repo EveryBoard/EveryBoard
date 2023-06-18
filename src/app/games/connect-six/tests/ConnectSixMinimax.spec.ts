@@ -68,7 +68,7 @@ describe('ConnectSixMinimax', () => {
     });
     it('should block double-open fives at level two', () => {
         // Given a minimax at level two
-        // And an board where current opponent could win if nothing is done (..XXXXX..)
+        // And a board where current opponent could win if current player does not block them (..XXXXX..)
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -100,9 +100,9 @@ describe('ConnectSixMinimax', () => {
         expect(bestMove).toEqual(ConnectSixDrops.from(new Coord(1, 18), new Coord(7, 18)).get());
     });
     it('should count all possible moves including only neighbooring-coord', () => {
-        // Given a board with 60 possibles combinaisons of two coords
-        // With the first being neighbors of the original set
-        // and the second able to also be a neighboor of the first coord
+        // Given a board with 60 possibles combinations of two coords
+        // With the firsts being neighbors of piece on board
+        // and the seconds being also able to neighboor the firsts coords
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -135,7 +135,7 @@ describe('ConnectSixMinimax', () => {
     });
     it('should block double-open four at level two', () => {
         // Given a minimax at level two
-        // And an board where current opponent could win if nothing is done (..XXXX..)
+        // And an board where current opponent could win if current player does not block them (..XXXX..)
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
