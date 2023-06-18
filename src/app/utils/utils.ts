@@ -113,4 +113,4 @@ export class Utils {
     }
 }
 
-export function display(cond: boolean, message: string): void {}
+export function display(cond: boolean, message: any): void {}
