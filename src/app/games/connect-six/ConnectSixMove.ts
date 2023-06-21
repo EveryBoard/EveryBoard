@@ -59,10 +59,10 @@ export namespace ConnectSixMove {
     export function isFirstMove(move: ConnectSixMove): move is ConnectSixFirstMove {
         return move instanceof ConnectSixFirstMove;
     }
-    export function isDrops(move: ConnectSixMove): move is ConnectSixDrops {
+    export function isDrop(move: ConnectSixMove): move is ConnectSixDrops {
         return move instanceof ConnectSixDrops;
     }
     export const encoder: Encoder<ConnectSixMove> =
-        Encoder.disjunction([ConnectSixMove.isFirstMove, ConnectSixMove.isDrops],
+        Encoder.disjunction([ConnectSixMove.isFirstMove, ConnectSixMove.isDrop],
                             [ConnectSixFirstMove.encoder, ConnectSixDrops.encoder]);
 }

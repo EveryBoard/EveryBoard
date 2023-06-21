@@ -76,7 +76,7 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
 export class ConspirateursMoveJump extends Move {
 
     public static encoder: Encoder<ConspirateursMoveJump> = Encoder.tuple(
-        [Encoder.getListEncoder<Coord>(Coord.encoder)],
+        [Encoder.list<Coord>(Coord.encoder)],
         (move: ConspirateursMoveJump): [Coord[]] => [ArrayUtils.copyImmutableArray(move.coords)],
         (fields: [Coord[]]): ConspirateursMoveJump => ConspirateursMoveJump.from(fields[0]).get(),
     );

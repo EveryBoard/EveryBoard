@@ -85,7 +85,7 @@ export abstract class Encoder<T> {
             }
         };
     }
-    public static getListEncoder<T>(encoder: Encoder<T>): Encoder<Array<T>> {
+    public static list<T>(encoder: Encoder<T>): Encoder<Array<T>> {
         return new class extends Encoder<Array<T>> {
             public encode(list: T[]): JSONValue {
                 return list.map((t: T): JSONValueWithoutArray => {

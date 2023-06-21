@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 // that it needs to be of length 5 rather than 4, and it contains a ring taken
 export class YinshCapture extends GipfCapture {
     public static override encoder: Encoder<YinshCapture> = Encoder.tuple(
-        [Encoder.getListEncoder(Coord.encoder), MGPOptional.getEncoder(Coord.encoder)],
+        [Encoder.list(Coord.encoder), MGPOptional.getEncoder(Coord.encoder)],
         (capture: YinshCapture) => [capture.capturedSpaces, capture.ringTaken],
         (fields: [Array<Coord>, MGPOptional<Coord>]) => new YinshCapture(fields[0], fields[1]),
     );
@@ -52,10 +52,10 @@ export class YinshMove extends Move {
 
     public static encoder: Encoder<YinshMove> = Encoder.tuple(
         [
-            Encoder.getListEncoder(YinshCapture.encoder),
+            Encoder.list(YinshCapture.encoder),
             Coord.encoder,
             MGPOptional.getEncoder(Coord.encoder),
-            Encoder.getListEncoder(YinshCapture.encoder),
+            Encoder.list(YinshCapture.encoder),
         ],
         (move: YinshMove) => [move.initialCaptures, move.start, move.end, move.finalCaptures],
         (fields: YinshFields) => new YinshMove(fields[0], fields[1], fields[2], fields[3]),

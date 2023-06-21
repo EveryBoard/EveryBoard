@@ -52,7 +52,7 @@ export class MartianChessMove extends MoveCoordToCoord {
                                       ending + ')';
     }
     public override equals(other: MartianChessMove): boolean {
-        if (MoveCoordToCoord.equals(this, other) === false) return false;
+        if (super.equals(other as this) === false) return false;
         return this.calledTheClock === other.calledTheClock;
     }
     public isValidForPawn(): boolean {

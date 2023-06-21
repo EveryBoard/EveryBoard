@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TriangularGameComponent }
     from 'src/app/components/game-components/game-component/TriangularGameComponent';
-import { CoerceoMove, CoerceoNormalMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -66,9 +66,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.possibleLandings = [];
     }
     public override showLastMove(move: CoerceoMove): void {
-        if (move instanceof CoerceoNormalMove) {
+        if (move instanceof CoerceoRegularMove) {
             this.lastStart = MGPOptional.of(move.getStart());
             this.lastEnd = MGPOptional.of(move.getEnd());
+        } else {
+            this.lastStart = MGPOptional.empty();
+            this.lastEnd = MGPOptional.empty(); // TODO: test this !
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -105,7 +108,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
     private async secondClick(coord: Coord): Promise<MGPValidation> {
         if (this.possibleLandings.some((c: Coord) => c.equals(coord))) {
-            const move: CoerceoMove = CoerceoNormalMove.of(this.chosenCoord.get(), coord);
+            const move: CoerceoMove = CoerceoRegularMove.of(this.chosenCoord.get(), coord);
             return this.chooseMove(move, this.state, this.state.captures);
         } else {
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE());

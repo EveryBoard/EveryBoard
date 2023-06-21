@@ -3,14 +3,14 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
-import { CoerceoMove, CoerceoNormalMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
+import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('CoerceoMove', () => {
 
     it('should distinguish move and capture based on presence or not of capture', () => {
-        const move: CoerceoMove = CoerceoNormalMove.ofMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
+        const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
         expect(CoerceoMove.isTileExchange(move)).toBeFalse();
         const capture: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 4));
         expect(CoerceoMove.isTileExchange(capture)).toBeTrue();
@@ -18,20 +18,20 @@ describe('CoerceoMove', () => {
     describe('fromMove', () => {
         it('should not create move of invalid distance', () => {
             function createMoveWithInvalidDistance(): void {
-                CoerceoNormalMove.of(new Coord(2, 2), new Coord(9, 9));
+                CoerceoRegularMove.of(new Coord(2, 2), new Coord(9, 9));
             }
             RulesUtils.expectToThrowAndLog(createMoveWithInvalidDistance, CoerceoFailure.INVALID_DISTANCE());
         });
         it('should not allow out of range starting coord', () => {
             function createOutOfRangeStartingCoord(): void {
-                CoerceoNormalMove.ofMovement(new Coord(-1, 0), CoerceoStep.LEFT);
+                CoerceoRegularMove.ofMovement(new Coord(-1, 0), CoerceoStep.LEFT);
             }
             RulesUtils.expectToThrowAndLog(createOutOfRangeStartingCoord,
                                            'Starting coord cannot be out of range (width: 15, height: 10).');
         });
         it('should not allow out of range landing coord', () => {
             function allowOutOfRangeLandingCoord(): void {
-                CoerceoNormalMove.ofMovement(new Coord(0, 0), CoerceoStep.LEFT);
+                CoerceoRegularMove.ofMovement(new Coord(0, 0), CoerceoStep.LEFT);
             }
             RulesUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord,
                                            'Landing coord cannot be out of range (width: 15, height: 10).');
@@ -54,9 +54,9 @@ describe('CoerceoMove', () => {
             const d: Coord = new Coord(1, 1);
             const tileExchange: CoerceoMove = CoerceoTileExchangeMove.of(a);
             const differentCapture: CoerceoMove = CoerceoTileExchangeMove.of(b);
-            const movement: CoerceoMove = CoerceoNormalMove.of(a, b);
-            const differentStart: CoerceoMove = CoerceoNormalMove.of(c, b);
-            const differentEnd: CoerceoMove = CoerceoNormalMove.of(a, d);
+            const movement: CoerceoMove = CoerceoRegularMove.of(a, b);
+            const differentStart: CoerceoMove = CoerceoRegularMove.of(c, b);
+            const differentEnd: CoerceoMove = CoerceoRegularMove.of(a, d);
 
             expect(tileExchange.equals(differentCapture)).toBeFalse();
             expect(tileExchange.equals(tileExchange)).toBeTrue();
@@ -69,9 +69,9 @@ describe('CoerceoMove', () => {
         });
         it('should stringify nicely', () => {
             const tileExchange: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(5, 5));
-            const movement: CoerceoMove = CoerceoNormalMove.of(new Coord(5, 5), new Coord(7, 5));
+            const movement: CoerceoMove = CoerceoRegularMove.of(new Coord(5, 5), new Coord(7, 5));
             expect(tileExchange.toString()).toBe('CoerceoTileExchangeMove(5, 5)');
-            expect(movement.toString()).toBe('CoerceoNormalMove((5, 5) > (7, 5))');
+            expect(movement.toString()).toBe('CoerceoRegularMove((5, 5) > (7, 5))');
         });
         describe('encoder', () => {
             it('should be bijective with first turn moves', () => {

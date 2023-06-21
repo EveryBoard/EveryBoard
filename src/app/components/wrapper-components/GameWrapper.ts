@@ -145,6 +145,10 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
+    public abstract onCancelMove(_reason?: string): void;
+
+    public abstract getPlayer(): P
+
     public onUserClick(_elementName: string): MGPValidation {
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
@@ -156,7 +160,6 @@ export abstract class GameWrapper<P extends Comparable> {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
     }
-    public abstract onCancelMove(_reason?: string): void;
 
     public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {
@@ -184,7 +187,6 @@ export abstract class GameWrapper<P extends Comparable> {
             return true;
         }
     }
-    public abstract getPlayer(): P
 
     public getBoardHighlight(): string[] {
         if (this.endGame) {

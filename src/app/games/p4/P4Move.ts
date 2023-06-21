@@ -12,7 +12,7 @@ export class P4Move extends Move {
 
     public static encoder: Encoder<P4Move> = Encoder.tuple(
         [Encoder.identity<number>()],
-        (coord: P4Move) => [coord.x],
+        (move: P4Move) => [move.x],
         (value: [number]) => P4Move.of(value[0]),
     );
     public static of(n: number): P4Move {

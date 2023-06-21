@@ -3,8 +3,6 @@ import { Player, PlayerOrNone } from './Player';
 export class BoardValue {
 
     public static fromWinner(player: PlayerOrNone): BoardValue {
-        // TODO FOR REVIEW: j'ai un peu autisté là pour le coup avec from=fallible mais ofWinner c'est bizarre
-        // Et deux trois autres modif que j'ai faite ont pu être pareille, sorry :D
         if (player.isPlayer()) {
             return new BoardValue(player.getVictoryValue());
         } else {

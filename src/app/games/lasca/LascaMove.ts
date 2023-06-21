@@ -61,7 +61,7 @@ export class LascaMove extends Move {
         return MGPFallible.success(new LascaMove([start, end], true));
     }
     public static encoder: Encoder<LascaMove> = Encoder.tuple(
-        [Encoder.getListEncoder(Coord.encoder), Encoder.identity<boolean>()],
+        [Encoder.list(Coord.encoder), Encoder.identity<boolean>()],
         (move: LascaMove) => [move.coords.toList(), move.isStep],
         (fields: [Coord[], boolean]) => LascaMove.of(fields[0], fields[1]),
     );

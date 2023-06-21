@@ -349,7 +349,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.timeManager.beforeEventsBatch(this.endGame);
     }
     private async afterEventsBatch(): Promise<void> {
-        const player: Player = Player.fromTurn(this.gameComponent.getTurn());
+        const player: Player = Player.ofTurn(this.gameComponent.getTurn());
         this.timeManager.afterEventsBatch(this.endGame, player, await this.getServerTime());
     }
     public async notifyDraw(scores?: [number, number]): Promise<void> {

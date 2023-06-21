@@ -156,17 +156,7 @@ export class Direction extends BaseDirection {
         return opposite.get();
     }
 }
-export class OrthogonalEncoder extends Encoder<Orthogonal> {
 
-    public encode(dir: Orthogonal): string {
-        return dir.toString();
-    }
-    public decode(encoded: JSONValue): Orthogonal {
-        assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
-        const fromString: MGPFallible<Orthogonal> = Orthogonal.factory.fromString(encoded as string);
-        return fromString.get();
-    }
-}
 export class Orthogonal extends BaseDirection {
 
     public static readonly UP: Orthogonal = new Orthogonal(0, -1);
@@ -192,7 +182,16 @@ export class Orthogonal extends BaseDirection {
         };
     public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = Orthogonal.factory.all;
 
-    public static readonly encoder: Encoder<Orthogonal> = new OrthogonalEncoder();
+    public static readonly encoder: Encoder<Orthogonal> = Encoder.fromFunctions(
+        (dir: Orthogonal): string => {
+            return dir.toString();
+        },
+        (encoded: JSONValue): Orthogonal => {
+            assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
+            const fromString: MGPFallible<Orthogonal> = Orthogonal.factory.fromString(encoded as string);
+            return fromString.get();
+        },
+    );
 
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);

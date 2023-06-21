@@ -6,11 +6,6 @@ import { MoveWithTwoCoords } from './MoveWithTwoCoords';
 
 export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
 
-    public static equals<T extends MoveCoordToCoord>(first: T, second: T): boolean {
-        if (first === second) return true;
-        if (first.getStart().equals(second.getStart()) === false) return false;
-        return first.getEnd().equals(second.getEnd());
-    }
     public constructor(start: Coord, end: Coord) {
         super(start, end);
         if (start.equals(end)) throw new Error(RulesFailure.MOVE_CANNOT_BE_STATIC());
@@ -28,6 +23,8 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
         return this.getSecond();
     }
     public equals(other: this): boolean {
-        return MoveCoordToCoord.equals(this, other);
+        if (this === other) return true;
+        if (this.getStart().equals(other.getStart()) === false) return false;
+        return this.getEnd().equals(other.getEnd());
     }
 }

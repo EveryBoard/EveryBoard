@@ -3,7 +3,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils, display } from 'src/app/utils/utils';
-import { CoerceoMove, CoerceoNormalMove, CoerceoTileExchangeMove } from './CoerceoMove';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoFailure } from './CoerceoFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
@@ -57,7 +57,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                     { a_initialState: state, afterCapture, afterTileRemoval, resultingState } });
         return resultingState;
     }
-    public applyLegalMovement(move: CoerceoNormalMove, state: CoerceoState): CoerceoState {
+    public applyLegalMovement(move: CoerceoRegularMove, state: CoerceoState): CoerceoState {
         // Move the piece
         const afterMovement: CoerceoState = state.applyLegalMovement(move);
         // removes emptied tiles
@@ -98,7 +98,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         }
         return MGPValidation.SUCCESS;
     }
-    public isLegalMovement(move: CoerceoNormalMove, state: CoerceoState): MGPValidation {
+    public isLegalMovement(move: CoerceoRegularMove, state: CoerceoState): MGPValidation {
         Utils.assert(state.getPieceAt(move.getStart()) !== FourStatePiece.UNREACHABLE,
                      'Cannot start with a coord outside the board ' + move.getStart().toString() + '.');
         Utils.assert(state.getPieceAt(move.getEnd()) !== FourStatePiece.UNREACHABLE,

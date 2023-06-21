@@ -32,16 +32,16 @@ export class HiveDropMove extends MoveCoord {
     }
 }
 
-export class HiveMoveCoordToCoord extends MoveCoordToCoord {
+export class HiveCoordToCoordMove extends MoveCoordToCoord {
 
-    public static encoder: Encoder<HiveMoveCoordToCoord> =
-        MoveWithTwoCoords.getFallibleEncoder(HiveMoveCoordToCoord.from);
+    public static encoder: Encoder<HiveCoordToCoordMove> =
+        MoveWithTwoCoords.getFallibleEncoder(HiveCoordToCoordMove.from);
 
-    public static from(start: Coord, end: Coord): MGPFallible<HiveMoveCoordToCoord> {
+    public static from(start: Coord, end: Coord): MGPFallible<HiveCoordToCoordMove> {
         if (start.equals(end)) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
         }
-        return MGPFallible.success(new HiveMoveCoordToCoord(start, end));
+        return MGPFallible.success(new HiveCoordToCoordMove(start, end));
     }
     protected constructor(start: Coord, end: Coord) {
         super(start, end);
@@ -50,26 +50,26 @@ export class HiveMoveCoordToCoord extends MoveCoordToCoord {
         return `HiveMoveCoordToCoord(${this.getStart().toString()} -> ${this.getEnd().toString()})`;
     }
     public override equals(other: HiveMove): boolean {
-        if (other instanceof HiveMoveSpider) {
+        if (other instanceof HiveSpiderMove) {
             // Spider moves are coord to coord but the intermediate coords matter, so we can't compare them here
             return false;
         }
-        if (other instanceof HiveMoveCoordToCoord) {
+        if (other instanceof HiveCoordToCoordMove) {
             return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
         }
         return false;
     }
 }
 
-export class HiveMoveSpider extends HiveMoveCoordToCoord {
+export class HiveSpiderMove extends HiveCoordToCoordMove {
 
-    public static override encoder: Encoder<HiveMoveSpider> = Encoder.tuple(
+    public static override encoder: Encoder<HiveSpiderMove> = Encoder.tuple(
         [Coord.encoder, Coord.encoder, Coord.encoder, Coord.encoder],
-        (move: HiveMoveSpider): [Coord, Coord, Coord, Coord] => move.coords,
-        (fields: [Coord, Coord, Coord, Coord]): HiveMoveSpider => new HiveMoveSpider(fields),
+        (move: HiveSpiderMove): [Coord, Coord, Coord, Coord] => move.coords,
+        (fields: [Coord, Coord, Coord, Coord]): HiveSpiderMove => new HiveSpiderMove(fields),
     );
-    public static ofCoords(coords: [Coord, Coord, Coord, Coord]): HiveMoveSpider {
-        return new HiveMoveSpider(coords);
+    public static ofCoords(coords: [Coord, Coord, Coord, Coord]): HiveSpiderMove {
+        return new HiveSpiderMove(coords);
     }
     private constructor(public readonly coords: [Coord, Coord, Coord, Coord]) {
         super(coords[0], coords[3]);
@@ -79,52 +79,52 @@ export class HiveMoveSpider extends HiveMoveCoordToCoord {
         return `HiveMoveSpider(${coords})`;
     }
     public override equals(other: HiveMove): boolean {
-        if (other instanceof HiveMoveSpider) {
+        if (other instanceof HiveSpiderMove) {
             return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
         }
         return false;
     }
 }
 
-export class HiveMovePass extends Move {
+export class HivePassMove extends Move {
 
-    public static encoder: Encoder<HiveMovePass> = Encoder.constant('HiveMovePass', new HiveMovePass());
+    public static encoder: Encoder<HivePassMove> = Encoder.constant('HiveMovePass', new HivePassMove());
 
     public toString(): string {
         return 'HiveMovePass';
     }
     public override equals(other: this): boolean {
-        return other instanceof HiveMovePass;
+        return other instanceof HivePassMove;
     }
 }
 
-export type HiveMove = HiveDropMove | HiveMoveCoordToCoord | HiveMoveSpider | HiveMovePass;
+export type HiveMove = HiveDropMove | HiveCoordToCoordMove | HiveSpiderMove | HivePassMove;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace HiveMove {
 
-    export const PASS: HiveMove = new HiveMovePass();
+    export const PASS: HiveMove = new HivePassMove();
 
     export function drop(piece: HivePiece, coord: Coord): HiveMove {
         return HiveDropMove.of(piece, coord);
     }
     export function move(start: Coord, end: Coord): MGPFallible<HiveMove> {
-        return HiveMoveCoordToCoord.from(start, end);
+        return HiveCoordToCoordMove.from(start, end);
     }
     export function spiderMove(coords: [Coord, Coord, Coord, Coord]): HiveMove {
-        return HiveMoveSpider.ofCoords(coords);
+        return HiveSpiderMove.ofCoords(coords);
     }
     export function isInstanceOfHiveDropMove(value: HiveMove): boolean {
         return value instanceof HiveDropMove;
     }
     export function isInstanceOfHiveMoveSpider(value: HiveMove): boolean {
-        return value instanceof HiveMoveSpider;
+        return value instanceof HiveSpiderMove;
     }
     export function isInstanceOfHiveMoveCoordToCoord(value: HiveMove): boolean {
-        return value instanceof HiveMoveCoordToCoord;
+        return value instanceof HiveCoordToCoordMove;
     }
     export function isInstanceOfHiveMovePass(value: HiveMove): boolean {
-        return value instanceof HiveMovePass;
+        return value instanceof HivePassMove;
     }
     export const encoder: Encoder<HiveMove> = Encoder.disjunction(
         [
@@ -133,6 +133,6 @@ export namespace HiveMove {
             isInstanceOfHiveMoveCoordToCoord,
             isInstanceOfHiveMovePass,
         ],
-        [HiveDropMove.encoder, HiveMoveSpider.encoder, HiveMoveCoordToCoord.encoder, HiveMovePass.encoder],
+        [HiveDropMove.encoder, HiveSpiderMove.encoder, HiveCoordToCoordMove.encoder, HivePassMove.encoder],
     );
 }

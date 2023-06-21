@@ -10,11 +10,11 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class GipfCapture {
 
     public static encoder: Encoder<GipfCapture> = Encoder.tuple(
-        [Encoder.getListEncoder<Coord>(Coord.encoder)],
-        (move: GipfCapture): [Coord[]] => [ArrayUtils.copyImmutableArray(move.capturedSpaces)],
+        [Encoder.list<Coord>(Coord.encoder)],
+        (move: GipfCapture): [ReadonlyArray<Coord>] => [move.capturedSpaces],
         (fields: [Coord[]]): GipfCapture => new GipfCapture(fields[0]),
     );
-    public static listEncoder: Encoder<ReadonlyArray<GipfCapture>> = Encoder.getListEncoder(GipfCapture.encoder);
+    public static listEncoder: Encoder<ReadonlyArray<GipfCapture>> = Encoder.list(GipfCapture.encoder);
 
     public readonly capturedSpaces: ReadonlyArray<Coord>;
 

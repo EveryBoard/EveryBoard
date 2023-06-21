@@ -38,32 +38,32 @@ export class CoerceoStep {
     private constructor(public readonly direction: Vector, public readonly str: string) {}
 }
 
-export class CoerceoNormalMove extends MoveCoordToCoord {
+export class CoerceoRegularMove extends MoveCoordToCoord {
 
-    public static readonly encoder: Encoder<CoerceoNormalMove> = MoveCoordToCoord.getEncoder(CoerceoNormalMove.of);
+    public static readonly encoder: Encoder<CoerceoRegularMove> = MoveCoordToCoord.getEncoder(CoerceoRegularMove.of);
 
-    public static of(start: Coord, end: Coord): CoerceoNormalMove {
+    public static of(start: Coord, end: Coord): CoerceoRegularMove {
         const step: CoerceoStep = CoerceoStep.ofCoords(start, end);
-        const move: CoerceoNormalMove = CoerceoNormalMove.ofMovement(start, step) as CoerceoNormalMove;
+        const move: CoerceoRegularMove = CoerceoRegularMove.ofMovement(start, step) as CoerceoRegularMove;
         return move;
     }
     public static ofMovement(start: Coord, step: CoerceoStep): CoerceoMove {
         Utils.assert(start.isInRange(15, 10), 'Starting coord cannot be out of range (width: 15, height: 10).');
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
         Utils.assert(landingCoord.isInRange(15, 10), 'Landing coord cannot be out of range (width: 15, height: 10).');
-        return new CoerceoNormalMove(start, landingCoord);
+        return new CoerceoRegularMove(start, landingCoord);
     }
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
     public override toString(): string {
-        return 'CoerceoNormalMove(' + this.getStart().toString() + ' > ' + this.getEnd().toString() + ')';
+        return 'CoerceoRegularMove(' + this.getStart().toString() + ' > ' + this.getEnd().toString() + ')';
     }
     public override equals(other: CoerceoMove): boolean {
         if (CoerceoMove.isTileExchange(other)) {
             return false;
         } else {
-            return MoveCoordToCoord.equals(this, other);
+            return super.equals(other as this);
         }
     }
 }
@@ -91,18 +91,18 @@ export class CoerceoTileExchangeMove extends MoveCoord {
     }
 }
 
-export type CoerceoMove = CoerceoTileExchangeMove | CoerceoNormalMove;
+export type CoerceoMove = CoerceoTileExchangeMove | CoerceoRegularMove;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace CoerceoMove {
 
-    export function isNormalMove(move: CoerceoMove): move is CoerceoNormalMove {
-        return move instanceof CoerceoNormalMove;
+    export function isNormalMove(move: CoerceoMove): move is CoerceoRegularMove {
+        return move instanceof CoerceoRegularMove;
     }
     export function isTileExchange(move: CoerceoMove): move is CoerceoTileExchangeMove {
         return move instanceof CoerceoTileExchangeMove;
     }
     export const encoder: Encoder<CoerceoMove> =
         Encoder.disjunction([CoerceoMove.isNormalMove, CoerceoMove.isTileExchange],
-                            [CoerceoNormalMove.encoder, CoerceoTileExchangeMove.encoder]);
+                            [CoerceoRegularMove.encoder, CoerceoTileExchangeMove.encoder]);
 }

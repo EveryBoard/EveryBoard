@@ -17,7 +17,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveFailure } from './HiveFailure';
 import { HiveMinimax } from './HiveMinimax';
-import { HiveMove, HiveMoveCoordToCoord, HiveDropMove, HiveMoveSpider } from './HiveMove';
+import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
@@ -253,7 +253,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         let lastMove: Coord[] = [];
         if (move instanceof HiveDropMove) {
             lastMove = [move.coord];
-        } else if (move instanceof HiveMoveCoordToCoord) {
+        } else if (move instanceof HiveCoordToCoordMove) {
             lastMove = [move.getStart(), move.getEnd()];
         }
         return lastMove;
@@ -405,15 +405,15 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     private getNextPossibleCoords(coord: Coord): Coord[] {
         const state: HiveState = this.getState();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
-        const moves: MGPSet<HiveMoveCoordToCoord> = HiveRules.get().getPossibleMovesFrom(state, coord);
+        const moves: MGPSet<HiveCoordToCoordMove> = HiveRules.get().getPossibleMovesFrom(state, coord);
         if (topPiece.kind === 'Spider') {
-            const spiderMoves: MGPSet<HiveMoveSpider> = moves as MGPSet<HiveMoveSpider>;
+            const spiderMoves: MGPSet<HiveSpiderMove> = moves as MGPSet<HiveSpiderMove>;
             return spiderMoves
-                .filter((move: HiveMoveSpider) => ArrayUtils.isPrefix(this.selectedSpiderCoords, move.coords))
-                .map((move: HiveMoveSpider) => move.coords[this.selectedSpiderCoords.length])
+                .filter((move: HiveSpiderMove) => ArrayUtils.isPrefix(this.selectedSpiderCoords, move.coords))
+                .map((move: HiveSpiderMove) => move.coords[this.selectedSpiderCoords.length])
                 .toList();
         } else {
-            return moves.map((move: HiveMoveCoordToCoord) => move.getEnd()).toList();
+            return moves.map((move: HiveCoordToCoordMove) => move.getEnd()).toList();
         }
     }
     private async selectNextSpiderSpace(coord: Coord): Promise<MGPValidation> {

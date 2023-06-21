@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoMove, CoerceoNormalMove, CoerceoTileExchangeMove } from './CoerceoMove';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -43,7 +43,7 @@ export class CoerceoMinimax extends PlayerMetricsMinimax<CoerceoMove, CoerceoSta
                 if (state.getPieceAt(start).is(player)) {
                     const legalLandings: Coord[] = state.getLegalLandings(start);
                     for (const end of legalLandings) {
-                        const move: CoerceoMove = CoerceoNormalMove.of(start, end);
+                        const move: CoerceoMove = CoerceoRegularMove.of(start, end);
                         movements.push(move);
                     }
                 }

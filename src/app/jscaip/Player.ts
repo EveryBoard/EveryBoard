@@ -41,8 +41,7 @@ export class Player implements ComparableObject {
                 return Player.ONE;
         }
     }
-    public static fromTurn(turn: number): Player {
-        // TODO FOR REVIEW: ofTurn ?
+    public static ofTurn(turn: number): Player {
         return turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
     protected constructor(public readonly value: number) {}
