@@ -99,10 +99,10 @@ describe('ConnectSixMinimax', () => {
         // Then the minimax level two should block
         expect(bestMove).toEqual(ConnectSixDrops.from(new Coord(1, 18), new Coord(7, 18)).get());
     });
-    it('should count all possible moves including only neighbooring-coord', () => {
+    it('should count all possible moves including only neighboring-coord', () => {
         // Given a board with 60 possibles combinations of two coords
-        // With the firsts being neighbors of piece on board
-        // and the seconds being also able to neighboor the firsts coords
+        // With the firsts being neighbors of a piece on board
+        // and the seconds being neighbors of a piece on board or of the firsts coords
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
