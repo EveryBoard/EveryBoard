@@ -35,8 +35,11 @@ export class Debug {
         return window['verbosity'][name];
         /* eslint-enable dot-notation */
     }
-    public static display(verbosityName: string, message: unknown): void {
-        if (Debug.isVerbose(verbosityName)) {
+    private static isMethodVerbose(className: string, methodName: string): boolean {
+        return Debug.isVerbose(className) || Debug.isVerbose(className + '.' + methodName);
+    }
+    public static display(className: string, methodName: string, message: unknown): void {
+        if (Debug.isMethodVerbose(className, methodName)) {
             console.log(message);
         }
     }
@@ -52,13 +55,13 @@ export class Debug {
 
             const originalMethod: (...args: unknown[]) => unknown = descriptor.value;
             descriptor.value = function(...args: unknown[]): unknown {
-                if (Debug.isVerbose(className) || Debug.isVerbose(className + '.' + propertyName)) {
+                if (Debug.isMethodVerbose(className, propertyName)) {
                     const strArgs: string = Array.from(args).map((arg: unknown): string =>
                         JSON.stringify(arg)).join(', ');
                     console.log(`> ${className}.${propertyName}(${strArgs})`);
                 }
                 const result: unknown = originalMethod.apply(this, args);
-                if (Debug.isVerbose(className) || Debug.isVerbose(className + '.' + propertyName)) {
+                if (Debug.isMethodVerbose(className, propertyName)) {
                     console.log(`< ${className}.${propertyName} -> ${JSON.stringify(result)}`);
                 }
                 return result;
