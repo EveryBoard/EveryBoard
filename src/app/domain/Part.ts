@@ -54,10 +54,10 @@ export type GameEventReply = GameEventBase & {
     readonly eventType: 'Reply';
     readonly reply: Reply;
     readonly requestType: RequestType;
-    readonly data: JSONValue;
+    readonly data?: JSONValue;
 }
 
-export type GameEvent = GameEventReply | GameEventRequest | GameEventAction | GameEventMove
+export type GameEvent = GameEventReply | GameEventRequest | GameEventAction | GameEventMove;
 
 export class MGPResult {
     public static readonly HARD_DRAW: MGPResult = new MGPResult(0);
