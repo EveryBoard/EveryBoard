@@ -28,14 +28,31 @@ export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJ
 export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };
 
 export class Debug {
-    private static isVerbose(name: string): boolean {
+    /**
+     * Enables logging for a class or method programmatically.
+     * For example, call Debug.enableLog([true, false], 'YourClass', 'yourMethod') in app.component.ts
+     */
+    public static enableLog(entryExit: [boolean, boolean], className: string, methodName?: string): void {
+        if (methodName) {
+            window['verbosity'][className + '.' + methodName] = entryExit;
+        } else {
+            window['verbosity'][className] = entryExit;
+        }
+    }
+    private static isVerbose(name: string): [boolean, boolean] {
         /* eslint-disable dot-notation */
-        if (window['verbosity'] == null) return false;
-        if (window['verbosity'][name] == null) return false;
-        return window['verbosity'][name];
+        if (window['verbosity'] == null) return [false, false];
+        if (window['verbosity'][name] == null) return [false, false];
+        if (Array.isArray(window['verbosity'][name])) {
+            // If it is an array, this means we want to specify input or output logging
+            return window['verbosity'][name] as [boolean, boolean];
+        } else {
+            // If it is anything else (besides null/undefined), this means logging is fully enabled
+            return [true, true];
+        }
         /* eslint-enable dot-notation */
     }
-    private static isMethodVerbose(className: string, methodName: string): boolean {
+    private static isMethodVerbose(className: string, methodName: string): [boolean, boolean] {
         return Debug.isVerbose(className) || Debug.isVerbose(className + '.' + methodName);
     }
     public static display(className: string, methodName: string, message: unknown): void {
@@ -43,6 +60,9 @@ export class Debug {
             console.log(message);
         }
     }
+    /**
+     * Class decorator that enables logging for all methods of a class
+     */
     public static log<T extends { new(...args: unknown[]): unknown }>(constructor: T): void {
         const className: string = constructor.name;
         for (const propertyName of Object.getOwnPropertyNames(constructor.prototype)) {
@@ -55,13 +75,13 @@ export class Debug {
 
             const originalMethod: (...args: unknown[]) => unknown = descriptor.value;
             descriptor.value = function(...args: unknown[]): unknown {
-                if (Debug.isMethodVerbose(className, propertyName)) {
+                if (Debug.isMethodVerbose(className, propertyName)[0]) {
                     const strArgs: string = Array.from(args).map((arg: unknown): string =>
                         JSON.stringify(arg)).join(', ');
                     console.log(`> ${className}.${propertyName}(${strArgs})`);
                 }
                 const result: unknown = originalMethod.apply(this, args);
-                if (Debug.isMethodVerbose(className, propertyName)) {
+                if (Debug.isMethodVerbose(className, propertyName)[1]) {
                     console.log(`< ${className}.${propertyName} -> ${JSON.stringify(result)}`);
                 }
                 return result;
