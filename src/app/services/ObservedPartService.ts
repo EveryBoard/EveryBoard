@@ -125,7 +125,7 @@ export class ObservedPartService implements OnDestroy {
         }
     }
     public getObservedPart(): Promise<MGPOptional<ObservedPart>> {
-        // Need to make sure we fully initialized, hence observedPartObs contains a value
+        // We need to make sure we have fully initialized, hence observedPartObs contains a value
         // We will get that value in the first call to the callback
         return new Promise((resolve: (result: MGPOptional<ObservedPart>) => void) => {
             // We need to initialize subscription first so that it is available within the called function
