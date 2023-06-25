@@ -1361,6 +1361,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then it should be refused
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();
+            tick(3000);
         }));
         it('should display when the opponent resigned', fakeAsync(async() => {
             // Given a board where the opponent has resigned

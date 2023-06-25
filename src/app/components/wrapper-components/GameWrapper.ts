@@ -19,6 +19,8 @@ export class GameWrapperMessages {
 
     public static readonly NOT_YOUR_TURN: Localized = () => $localize`It is not your turn!`;
 
+    public static readonly GAME_HAS_ENDED: Localized = () => $localize`This game has ended.`;
+
     public static readonly NO_CLONING_FEATURE: Localized = () => $localize`You cannot clone a game. This feature might be implemented later.`;
 
     public static NO_MATCHING_GAME(gameName: string): string {
@@ -96,7 +98,7 @@ export abstract class GameWrapper<P extends Comparable> {
         this.gameComponent.canUserPlay =
             // So that when the game component click
             (elementName: string): MGPValidation => {
-                return this.onUserClick(elementName);
+                return this.canUserPlay(elementName);
             };
         // the game wrapper can act accordly
         this.gameComponent.isPlayerTurn = (): boolean => {
@@ -127,11 +129,10 @@ export abstract class GameWrapper<P extends Comparable> {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
                 { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
-        if (this.isPlayerTurn() === false) {
-            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
-        }
-        if (this.endGame) {
-            return MGPValidation.failure($localize`The game has ended.`);
+        const userPlayValidity: MGPValidation = this.canUserPlay('none');
+        if (userPlayValidity.isFailure()) {
+            this.gameComponent.cancelMove(userPlayValidity.getReason());
+            return userPlayValidity;
         }
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state);
         if (legality.isFailure()) {
@@ -145,16 +146,18 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public onUserClick(_elementName: string): MGPValidation {
+    public canUserPlay(_clickedElementName: string): MGPValidation {
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);
         }
-        if (this.isPlayerTurn()) {
-            return MGPValidation.SUCCESS;
-        } else {
+        if (this.isPlayerTurn() === false) {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
+        if (this.endGame) {
+            return MGPValidation.failure(GameWrapperMessages.GAME_HAS_ENDED());
+        }
+        return MGPValidation.SUCCESS;
     }
     public abstract onCancelMove(_reason?: string): void;
 

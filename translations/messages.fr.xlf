@@ -606,9 +606,9 @@
         <source>The game you tried to join does not exist.</source>
         <target>La partie que vous essayez de rejoindre n'existe pas.</target>
       </trans-unit>
-      <trans-unit id="3568920234618711065" datatype="html">
-        <source>The game has ended.</source>
-        <target>La partie est terminée.</target>
+      <trans-unit id="7285945849261218681" datatype="html">
+        <source>This game has ended.</source>
+        <target>Cette partie est terminée.</target>
       </trans-unit>
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
