@@ -4,14 +4,14 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { KalahMove } from '../KalahMove';
 import { KalahNode, KalahRules } from '../KalahRules';
 import { KalahDummyMinimax } from '../KalahDummyMinimax';
-import { MancalaMove } from '../../MancalaMove';
-import { MancalaState } from '../../MancalaState';
-import { Table } from 'src/app/utils/ArrayUtils'
+import { MancalaMove } from '../../commons/MancalaMove';
+import { MancalaState } from '../../commons/MancalaState';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { KalahFailure } from '../KalahFailure';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 
-fdescribe('KalahRules', () => {
+describe('KalahRules', () => {
 
     let rules: Rules<KalahMove, MancalaState>;
     let minimaxes: Minimax<KalahMove, MancalaState>[];
@@ -188,20 +188,58 @@ fdescribe('KalahRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should allow to pass by kalah several time', () => {
-        // Given a board where you could ass by kalah two time
+        // Given a board where you could pass by kalah five times
         const state: MancalaState = new MancalaState([
-            [6, 1, 7, 6, 1, 7],
-            [0, 1, 6, 2, 0, 5],
-        ], 3, [4, 2]);
+            [0, 0, 1, 9, 0, 0],
+            [1, 1, 4, 1, 5, 4],
+        ], 10, [13, 9]);
 
         // When doing that complex move
-        const move: KalahMove = new KalahMove(MancalaMove.ZERO, [MancalaMove.FOUR, MancalaMove.ONE]);
+        const move: KalahMove =
+        new KalahMove(MancalaMove.ZERO,
+                      [MancalaMove.FOUR, MancalaMove.ZERO, MancalaMove.ONE, MancalaMove.ZERO, MancalaMove.FIVE]);
 
         // Then it should be legal
         const expectedState: MancalaState = new MancalaState([
-            [0, 0, 9, 8, 0, 9],
-            [0, 1, 6, 2, 0, 5],
-        ], 4, [4, 4]);
+            [0, 0, 1, 9, 0, 0],
+            [0, 1, 6, 3, 1, 0],
+        ], 11, [18, 9]);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
+    it('should allow bojoure canar', () => {
+        // Given a board where you could pass by kalah five times
+        const state: MancalaState = new MancalaState([
+            [0, 0, 1, 9, 0, 0],
+            [1, 2, 3, 0, 0, 0],
+        ], 0, [0, 0]);
+
+        // When doing that complex move
+        const move: KalahMove =
+        new KalahMove(MancalaMove.ZERO,
+                      [MancalaMove.ONE, MancalaMove.ZERO, MancalaMove.TWO, MancalaMove.ZERO, MancalaMove.ONE]);
+
+        // Then it should be legal
+        const expectedState: MancalaState = new MancalaState([
+            [0, 0, 1, 9, 0, 0],
+            [1, 0, 0, 0, 0, 0],
+        ], 1, [5, 0]);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
+    it('should allow to stop part in the kalah when no more piece available', () => {
+        // Given a move where current player has no more non-kalah sub-moves
+        const state: MancalaState = new MancalaState([
+            [0, 0, 1, 9, 0, 0],
+            [1, 0, 0, 0, 0, 0],
+        ], 10, [13, 9]);
+
+        // When doing the only move possible for the remaining sub-move
+        const move: KalahMove = new KalahMove(MancalaMove.ZERO);
+
+        // Then that normally-illegal move should be accepted
+        const expectedState: MancalaState = new MancalaState([
+            [0, 0, 1, 9, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+        ], 11, [14, 9]);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     // TODO: check if we must or not, refill the starting house

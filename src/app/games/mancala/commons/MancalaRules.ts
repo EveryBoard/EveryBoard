@@ -31,55 +31,6 @@ export interface MancalaDistributionResult {
 
 export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState> {
 
-    public static doesDistribute(x: number, y: number, board: Table<number>): boolean {
-        if (y === 0) { // distribution from left to right
-            return board[y][x] > (5 - x);
-        }
-        return board[y][x] > x; // distribution from right to left
-    }
-    public static canDistribute(player: Player, board: Table<number>): boolean {
-        for (let x: number = 0; x < 6; x++) {
-            if (MancalaRules.doesDistribute(x, player.getOpponent().value, board)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public static isStarving(player: Player, board: Table<number>): boolean {
-        let i: number = 0;
-        const playerY: number = player.getOpponent().value; // For player 0 has row 1
-        do {
-            if (board[playerY][i++] > 0) {
-                return false; // found some food there, so not starving
-            }
-        } while (i < 6);
-        return true;
-    }
-    /**
-      * Captures all the seeds of the mansooning player.
-      * Returns the sum of all captured seeds.
-      * Is called when a game is over because of starvation
-      */
-    public static mansoon(mansooningPlayer: Player, postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
-        const state: MancalaState = postCaptureResult.resultingState;
-        const resultingBoard: number[][] = state.getCopiedBoard();
-        let capturedSum: number = 0;
-        const captureMap: number[][] = ArrayUtils.copyBiArray(postCaptureResult.captureMap);
-        let x: number = 0;
-        const mansoonedY: number = mansooningPlayer.getOpponent().value;
-        do {
-            capturedSum += resultingBoard[mansoonedY][x];
-            captureMap[mansoonedY][x] = resultingBoard[mansoonedY][x];
-            resultingBoard[mansoonedY][x] = 0;
-            x++;
-        } while (x < 6);
-        return {
-            capturedSum,
-            captureMap,
-            // TODO: add capture there
-            resultingState: new MancalaState(resultingBoard, state.turn, state.getCapturedCopy()),
-        };
-    }
     public constructor(public readonly config: MancalaConfig) {
         super(MancalaState);
     }
@@ -103,13 +54,13 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         const opponent: Player = postCaptureState.getCurrentOpponent();
         const player: Player = postCaptureState.getCurrentPlayer();
         if (this.config.mustFeed) {
-            if (MancalaRules.isStarving(player, postCaptureBoard) &&
-                MancalaRules.canDistribute(opponent, postCaptureBoard) === false)
+            if (this.isStarving(player, postCaptureBoard) &&
+                this.canDistribute(opponent, postCaptureBoard) === false)
             {
                 return opponent;
                 // Opponent takes all his last piece for himself
             }
-        } else if (MancalaRules.isStarving(opponent, postCaptureBoard)) {
+        } else if (this.isStarving(opponent, postCaptureBoard)) {
             return player;
         }
         return PlayerOrNone.NONE;
@@ -136,8 +87,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         const playerToMansoon: PlayerOrNone = this.mustMansoon(postCaptureState); // TODO: mansoon capture, not me!
         if (playerToMansoon !== PlayerOrNone.NONE) {
             // if the player distributed his last seeds and the opponent could not give him seeds
-            const mansoonResult: MancalaCaptureResult =
-            MancalaRules.mansoon(playerToMansoon as Player, captureResult);
+            const mansoonResult: MancalaCaptureResult = this.mansoon(playerToMansoon as Player, captureResult);
             captured[playerToMansoon.value] += mansoonResult.capturedSum;
             return new MancalaState(mansoonResult.resultingState.board, state.turn + 1, captured);
         } else {
@@ -151,13 +101,11 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
      * Returns the coords of the filled houses
      * TODO: make this shorted for Eru's sake
      */
-    // eslint-disable-next-line max-lines-per-function
     public distributeHouse(x: number, y: number, state: MancalaState): MancalaDistributionResult {
         const resultingBoard: number[][] = state.getCopiedBoard();
         const player: Player = state.getCurrentPlayer();
         // iy and ix are the initial spaces
-        const ix: number = x;
-        const iy: number = y;
+        const i: Coord = new Coord(x, y);
         // to remember in order not to sow in the starting space if we make a full turn
         let inHand: number = resultingBoard[y][x];
         const filledHouses: Coord[] = [];
@@ -174,27 +122,18 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
                     if (this.config.passByPlayerKalah && player === Player.ONE && previousDropWasKalah === false) {
                         passedByKalahNTimes++; // Player drop a piece in its kalah
                         endUpInKalah = true;
-                    } else {
-                        y = 1; // go from the bottom row to the top row
-                    }
-                } else {
-                    x++; // clockwise order on the top = left to right
-                }
+                    } else y = y === 0 ? 1 : 0; // go from the bottom row to the top row
+                } else x += 1; // clockwise order on the top = left to right
             } else {
                 if (x === 0) {
                     if (this.config.passByPlayerKalah && player === Player.ZERO && previousDropWasKalah === false) {
                         passedByKalahNTimes++; // Player drop a piece in its kalah
                         endUpInKalah = true;
-                    } else {
-                        y = 0; // go from the bottom row to the top
-                    }
-                } else {
-                    x--; // clockwise order on the bottom = right to left
-                }
+                    } else y = y === 0 ? 1 : 0; // go from the bottom row to the top
+                } else x += -1; // clockwise order on the bottom = right to left
             }
-            if (endUpInKalah) {
-                inHand--;
-            } else if ((x === ix && y === iy) === false) {
+            if (endUpInKalah) inHand--;
+            else if (i.equals(new Coord(x, y)) === false) {
                 // not to distribute on our starting space
                 resultingBoard[y][x] += 1;
                 filledHouses.push(new Coord(x, y));
@@ -204,8 +143,56 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         return {
             filledHouses,
             passedByKalahNTimes,
-            endUpInKalah,
-            // TODO: add capture here
+            endUpInKalah, // TODO: add capture here
+            resultingState: new MancalaState(resultingBoard, state.turn, state.getCapturedCopy()),
+        };
+    }
+    public doesDistribute(x: number, y: number, board: Table<number>): boolean {
+        if (y === 0) { // distribution from left to right
+            return board[y][x] > (5 - x);
+        }
+        return board[y][x] > x; // distribution from right to left
+    }
+    public canDistribute(player: Player, board: Table<number>): boolean {
+        for (let x: number = 0; x < 6; x++) {
+            if (this.doesDistribute(x, player.getOpponent().value, board)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public isStarving(player: Player, board: Table<number>): boolean {
+        let i: number = 0;
+        const playerY: number = player.getOpponent().value; // For player 0 has row 1
+        do {
+            if (board[playerY][i++] > 0) {
+                return false; // found some food there, so not starving
+            }
+        } while (i < 6);
+        return true;
+    }
+    /**
+      * Captures all the seeds of the mansooning player.
+      * Returns the sum of all captured seeds.
+      * Is called when a game is over because of starvation
+      */
+    public mansoon(mansooningPlayer: Player, postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
+        const state: MancalaState = postCaptureResult.resultingState;
+        const resultingBoard: number[][] = state.getCopiedBoard();
+        let capturedSum: number = 0;
+        const captureMap: number[][] = ArrayUtils.copyBiArray(postCaptureResult.captureMap);
+        let x: number = 0;
+        const mansoonedY: number = mansooningPlayer.getOpponent().value;
+        do {
+            capturedSum += resultingBoard[mansoonedY][x];
+            captureMap[mansoonedY][x] += resultingBoard[mansoonedY][x];
+            resultingBoard[mansoonedY][x] = 0;
+            x++;
+        } while (x < 6);
+        return {
+            capturedSum,
+            captureMap,
+            // TODO: add capture there
             resultingState: new MancalaState(resultingBoard, state.turn, state.getCapturedCopy()),
         };
     }

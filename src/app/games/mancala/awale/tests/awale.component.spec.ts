@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleComponent } from '../awale.component';
-import { MancalaMove } from 'src/app/games/mancala/MancalaMove';
-import { MancalaState } from 'src/app/games/mancala/MancalaState';
+import { MancalaMove } from 'src/app/games/mancala/commons/MancalaMove';
+import { MancalaState } from 'src/app/games/mancala/commons/MancalaState';
 import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MancalaFailure } from '../../MancalaFailure';
+import { MancalaFailure } from '../../commons/MancalaFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { DebugElement } from '@angular/core';
 
@@ -25,7 +25,7 @@ describe('AwaleComponent', () => {
             [2, 4, 4, 4, 4, 4],
         ];
         const state: MancalaState = new MancalaState(board, 0, [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When player zero clicks on a house to distribute
         const move: MancalaMove = MancalaMove.ZERO;
@@ -63,7 +63,7 @@ describe('AwaleComponent', () => {
             [4, 4, 4, 4, 4, 4],
         ];
         const state: MancalaState = new MancalaState(board, 1, [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When clicking on the empty house
         const move: MancalaMove = MancalaMove.ZERO;
@@ -79,7 +79,7 @@ describe('AwaleComponent', () => {
             [4, 4, 4, 4, 4, 4],
         ];
         const state: MancalaState = new MancalaState(board, 0, [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When clicking on a house of the opponent
         // Then it should fail
@@ -92,7 +92,7 @@ describe('AwaleComponent', () => {
             [17, 4, 4, 4, 4, 4],
         ];
         const state: MancalaState = new MancalaState(board, 0, [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When doing the capturing move
         const move: MancalaMove = MancalaMove.ZERO;
@@ -110,7 +110,7 @@ describe('AwaleComponent', () => {
             [0, 0, 0, 0, 0, 4],
         ];
         const state: MancalaState = new MancalaState(board, 121, [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When doing the capturing move
         const move: MancalaMove = MancalaMove.FIVE;

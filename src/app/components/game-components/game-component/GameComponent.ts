@@ -89,9 +89,9 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
                         state: S,
                         scores?: readonly [number, number]) => Promise<MGPValidation>;
 
-    public canUserPlay: (element: string) => MGPValidation;
+    public canUserPlay: (element: string) => Promise<MGPValidation>;
 
-    public cancelMoveOnWrapper: (reason?: string) => void;
+    public cancelMoveOnWrapper: (reason?: string) => Promise<void>;
 
     public role: PlayerOrNone;
 
@@ -107,9 +107,11 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
-        this.cancelMoveOnWrapper(reason);
+        await this.cancelMoveOnWrapper(reason);
+        // TODO: UNIT TEST
+        await this.updateBoard(false, 'cancelMove');
         if (reason == null) {
             return MGPValidation.SUCCESS;
         } else {
@@ -120,7 +122,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public cancelMoveAttempt(): void {
         // Override if need be
     }
-    public abstract updateBoard(): void;
+    public abstract updateBoard(triggerAnimation: boolean, caller: string): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {
         const gameName: string = this.constructor.name;
@@ -139,7 +141,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public getPreviousState(): S {
         return this.node.mother.get().gameState;
     }
-    public showLastMove(move: M): void {
+    public showLastMove(move: M, caller: string = 'root?'): void {
         // Not needed by default
     }
 }

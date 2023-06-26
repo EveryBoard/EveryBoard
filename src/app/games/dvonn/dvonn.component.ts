@@ -52,7 +52,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.cancelMoveAttempt();
         this.state = this.getState();
         this.disconnecteds = [];
@@ -89,7 +89,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         return await this.chooseMove(DvonnMove.PASS, this.getState());
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -103,7 +103,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             return await this.chooseDestination(x, y);
         }
     }
-    public choosePiece(x: number, y: number): MGPValidation {
+    public async choosePiece(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
         const legal: MGPValidation = this.rules.isMovablePiece(this.getState(), coord);
         if (legal.isSuccess()) {

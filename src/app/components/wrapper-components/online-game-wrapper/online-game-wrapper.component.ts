@@ -300,7 +300,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const success: MGPOptional<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
         assert(success.isPresent(), 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.node = success.get();
-        this.updateBoardAndShowLastMove();
+        await this.updateBoardAndShowLastMove();
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.timeManager.onReceivedMove(moveEvent);
     }
@@ -332,7 +332,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         switch (reply.requestType) {
             case 'TakeBack':
                 const accepter: Player = Player.of(reply.player);
-                this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
+                await this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
                 break;
             case 'Rematch':
                 await this.router.navigate(['/nextGameLoading']);
@@ -418,7 +418,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             return PlayerOrNone.NONE;
         }
     }
-    private takeBackToPreviousPlayerTurn(player: Player): void {
+    private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackToPreviousPlayerTurn');
         // Take back once, in any case
         this.gameComponent.node = this.gameComponent.node.mother.get();
@@ -427,7 +427,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.gameComponent.node = this.gameComponent.node.mother.get();
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        this.updateBoardAndShowLastMove();
+        await this.updateBoardAndShowLastMove(); // TODO: say here "don't animate"
     }
     public canProposeDraw(): boolean {
         assert(this.isPlaying(), 'Non playing should not call canProposeDraw');
@@ -485,13 +485,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async setRealObserverRole(): Promise<MGPOptional<MinimalUser>> {
         let opponent: MGPOptional<MinimalUser> = MGPOptional.empty();
         if (this.players[0].equalsValue(this.getPlayer())) {
-            this.setRole(Player.ZERO);
+            await this.setRole(Player.ZERO);
             opponent = this.players[1];
         } else if (this.players[1].equalsValue(this.getPlayer())) {
-            this.setRole(Player.ONE);
+            await this.setRole(Player.ONE);
             opponent = this.players[0];
         } else {
-            this.setRole(PlayerOrNone.NONE);
+            await this.setRole(PlayerOrNone.NONE);
         }
         await this.observedPartService.updateObservedPart({
             ...this.observedPart.get(),
@@ -631,11 +631,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const giver: Player = this.role as Player;
         return this.gameService.addTurnTime(this.currentPartId, giver);
     }
-    public onCancelMove(reason?: string): void {
+    public async onCancelMove(reason?: string): Promise<void> {
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
+            console.log('onCancelMove => showLastMove')
             this.gameComponent.showLastMove(move);
         }
+        return;
     }
     public async ngOnDestroy(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy');

@@ -116,7 +116,7 @@ describe('AbaloneComponent', () => {
                 [O, O, O, O, O, N, N, N, N],
             ];
             const state: AbaloneState = new AbaloneState(board, 0);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_1_5');
 
             // When choosing the piece that is aligned and at good distance but not making a line
@@ -282,7 +282,7 @@ describe('AbaloneComponent', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const state: AbaloneState = new AbaloneState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#piece_2_6');
         await testUtils.expectClickSuccess('#piece_2_7');
 

@@ -62,9 +62,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                          new Coord(- 8 * this.SPACE_SIZE, 2 * this.SPACE_SIZE),
                                          PointyHexaOrientation.INSTANCE);
 
-        this.updateBoard();
+        void this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.cancelMoveAttempt();
         this.hidePreviousMove();
         this.hexaBoard = this.getState().getCopiedBoard();
@@ -109,7 +109,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
     public async onPieceClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#piece_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -269,7 +269,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                 }
             }
         }
-        const legality: MGPValidation = this.cancelMove(AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
+        const legality: MGPValidation = await this.cancelMove(AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         await this.firstClick(clicked.x, clicked.y);
         return legality;
     }
@@ -281,7 +281,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return MGPValidation.SUCCESS;
     }
     public async chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#direction_' + dir.toString());
+        const clickValidity: MGPValidation = await this.canUserPlay('#direction_' + dir.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -300,7 +300,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return this.chooseMove(move, state, this.scores.get());
     }
     public async onSpaceClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#space_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

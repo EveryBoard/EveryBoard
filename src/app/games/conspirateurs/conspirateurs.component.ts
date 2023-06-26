@@ -73,9 +73,9 @@ export class ConspirateursComponent
         this.tutorial = new ConspirateursTutorial().tutorial;
     }
     public ngOnInit(): void {
-        this.updateBoard();
+        void this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.updateViewInfo();
     }
     private updateViewInfo(): void {
@@ -161,13 +161,13 @@ export class ConspirateursComponent
             }
         }
     }
-    public override cancelMoveAttempt(): void {
+    public override async cancelMoveAttempt(): Promise<void> {
         this.jumpInConstruction = MGPOptional.empty();
         this.selected = MGPOptional.empty();
-        this.updateBoard();
+        await this.updateBoard(); // TODO TODOTODO: better make this one async !
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -175,7 +175,7 @@ export class ConspirateursComponent
         const state: ConspirateursState = this.getState();
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             if (this.selected.equalsValue(coord)) {
-                this.cancelMoveAttempt();
+                await this.cancelMoveAttempt();
             } else {
                 this.selected = MGPOptional.of(coord);
                 this.jumpInConstruction = MGPOptional.empty();

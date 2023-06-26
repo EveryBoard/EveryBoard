@@ -49,9 +49,9 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
         this.SPACE_SIZE = 70;
-        this.updateBoard();
+        void this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.chosenCoord = MGPOptional.empty();
         this.state = this.getState();
         this.scores = MGPOptional.of(this.state.captures);
@@ -74,7 +74,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.possibleLandings = [];
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

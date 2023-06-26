@@ -74,7 +74,7 @@ describe('TrexoComponent', () => {
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                     ], 4).get();
-                    testUtils.setupState(state);
+                    await testUtils.setupState(state);
 
                     // When dropping a piece on the third level
                     await testUtils.expectClickSuccess('#space_4_4');
@@ -109,7 +109,7 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         ], 1).get();
-                        testUtils.setupState(state);
+                        await testUtils.setupState(state);
 
                         // When trying to choose it as first coord
                         // Then it should fail
@@ -185,7 +185,7 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         ], 2).get();
-                        testUtils.setupState(state);
+                        await testUtils.setupState(state);
                         // And a first click has been done on that level
                         await testUtils.expectClickSuccess('#space_4_4');
 
@@ -252,7 +252,7 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         ], 4).get();
-                        testUtils.setupState(state);
+                        await testUtils.setupState(state);
                         await testUtils.expectClickSuccess('#space_7_2');
 
                         // When doing the victorious move
@@ -327,7 +327,7 @@ describe('TrexoComponent', () => {
             ], 2).get();
 
             // When displaying it
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then lower piece should still be of Player.ZERO and higher be of Player.ONE
             testUtils.expectElementToHaveClass('#tile_4_4_0', 'player0-fill');

@@ -58,9 +58,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         ];
         this.encoder = EpaminondasMove.encoder;
         this.tutorial = new EpaminondasTutorial().tutorial;
-        this.updateBoard();
+        void this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.firstPiece = MGPOptional.empty();
         this.lastPiece = MGPOptional.empty();
         this.hidePreviousMove();
@@ -82,7 +82,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -357,9 +357,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.phalanxValidLandings = this.getPhalanxValidLandings();
         return MGPValidation.SUCCESS;
     }
-    public tryMove(move: EpaminondasMove): Promise<MGPValidation> {
+    public async tryMove(move: EpaminondasMove): Promise<MGPValidation> {
         const state: EpaminondasState = this.getState();
-        this.cancelMove();
+        await this.cancelMove();
         return this.chooseMove(move, state);
     }
     public getPieceClasses(x: number, y: number): string[] {

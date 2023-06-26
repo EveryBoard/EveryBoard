@@ -86,7 +86,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.tutorial = new TrexoTutorial().tutorial;
         TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
-        this.updateBoard();
+        void this.updateBoard();
     }
     public switchToMode(mode: ModeType): void {
         this.chosenMode = mode;
@@ -131,7 +131,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         const pieceBonus: number = maxZ * mode.pieceHeightRatio * this.SPACE_SIZE;
         return pieceBonus;
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         const state: TrexoState = this.getState();
         this.board = state.getCopiedBoard();
         this.currentOpponentClass = this.getPlayerClass(state.getCurrentOpponent());
@@ -199,7 +199,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         };
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#space_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -207,7 +207,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         if (this.droppedPiece.isPresent()) {
             const dropped: Coord = this.droppedPiece.get();
             if (this.droppedPiece.equalsValue(clicked)) {
-                this.cancelMoveAttempt();
+                await this.cancelMoveAttempt();
                 return MGPValidation.SUCCESS;
             }
             if (this.possibleNextClicks.some((c: Coord) => c.equals(clicked))) {
@@ -231,7 +231,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             this.pieceOnBoard[z][nextClick.y][nextClick.x].isPossibleClick = false;
         }
     }
-    private selectPiece(clicked: Coord): MGPValidation {
+    private async selectPiece(clicked: Coord): Promise<MGPValidation> {
         if (this.possibleMoves.some((move: TrexoMove) => move.getZero().equals(clicked))) {
             const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
             if (pieceHeight >= this.pieceOnBoard.length) {
@@ -267,10 +267,10 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         });
         return potentiallyStartedMove.map((move: TrexoMove) => move.getOne());
     }
-    public override cancelMoveAttempt(): void {
+    public override async cancelMoveAttempt(): Promise<void> {
         this.droppedPiece = MGPOptional.empty();
         this.possibleNextClicks = [];
-        this.updateBoard();
+        await this.updateBoard();
     }
     public getPieceClasses(x: number, y: number, z: number): string[] {
         const piece: Coord = new Coord(x, y);

@@ -289,10 +289,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public setRoute(id: string, value: string): void {
         this.activatedRouteStub.setRoute(id, value);
     }
-    public setupState(state: GameState,
-                      previousState?: GameState,
-                      previousMove?: Move)
-    : void
+    public async setupState(state: GameState,
+                            previousState?: GameState,
+                            previousMove?: Move)
+    : Promise<void>
     {
         this.gameComponent.node = new MGPNode(
             state,
@@ -300,7 +300,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                 new MGPNode(previousState)),
             MGPOptional.ofNullable(previousMove),
         );
-        this.gameComponent.updateBoard();
+        await this.gameComponent.updateBoard(false, 'TU.setupState');
         if (previousMove !== undefined) {
             this.gameComponent.showLastMove(previousMove);
         }
@@ -376,7 +376,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         if (element == null) {
             return;
         } else {
-            const clickValidity: MGPValidation = this.gameComponent.canUserPlay(elementName);
+            const clickValidity: MGPValidation = await this.gameComponent.canUserPlay(elementName);
             expect(clickValidity.getReason()).toBe(reason);
             this.canUserPlaySpy.calls.reset();
             element.triggerEventHandler('click', null);

@@ -1,5 +1,5 @@
-import { MancalaMove } from 'src/app/games/mancala/MancalaMove';
-import { MancalaState } from 'src/app/games/mancala/MancalaState';
+import { MancalaMove } from 'src/app/games/mancala/commons/MancalaMove';
+import { MancalaState } from 'src/app/games/mancala/commons/MancalaState';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 export class AwaleTutorial extends Tutorial {

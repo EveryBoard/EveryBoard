@@ -45,7 +45,7 @@ describe('MartianChessComponent', () => {
             [_, _, _, _],
         ];
         const state: MartianChessState = new MartianChessState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When selecting a piece able to do capture/promotion/displacement
         await testUtils.expectClickSuccess('#click_2_4');
@@ -166,7 +166,7 @@ describe('MartianChessComponent', () => {
             [_, A, _, _],
         ];
         const state: MartianChessState = new MartianChessState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_1_4');
 
         // When capturing
@@ -191,7 +191,7 @@ describe('MartianChessComponent', () => {
             [_, A, _, _],
         ];
         const state: MartianChessState = new MartianChessState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_1_7');
 
         // When finalizing the move
@@ -252,7 +252,7 @@ describe('MartianChessComponent', () => {
             // Given a board where the clock has been called in the past
             const board: Table<MartianChessPiece> = MartianChessState.getInitialState().board;
             const state: MartianChessState = new MartianChessState(board, 4, MGPOptional.empty(), MGPOptional.of(3));
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on the circle
             await testUtils.expectClickSuccess('#clockOrCountDownView');

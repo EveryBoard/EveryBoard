@@ -48,7 +48,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
     /**
      * This method updates the displayed board.
      */
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
     }
     /**
      * This method should display the last move in the component

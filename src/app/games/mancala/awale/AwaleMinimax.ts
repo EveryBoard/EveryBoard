@@ -1,12 +1,12 @@
-import { MancalaState } from '../MancalaState';
-import { MancalaMove } from './../MancalaMove';
+import { MancalaState } from '../commons/MancalaState';
+import { MancalaMove } from '../commons/MancalaMove';
 import { AwaleNode, AwaleRules } from './AwaleRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from '../../../utils/MGPValidation';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
-import { MancalaDistributionResult } from '../MancalaRules';
+import { MancalaDistributionResult } from '../commons/MancalaRules';
 
 export class AwaleMinimax extends PlayerMetricsMinimax<MancalaMove, MancalaState> {
 
@@ -59,7 +59,7 @@ export class AwaleMinimax extends PlayerMetricsMinimax<MancalaMove, MancalaState
                     sameTerritoryValue = 10;
                 }
             } else {
-                captured = AwaleRules.captureIfLegal(endHouse.x, opponentY, node.gameState).capturedSum;
+                captured = AwaleRules.get().captureIfLegal(endHouse.x, opponentY, node.gameState).capturedSum;
             }
             // Prioritize captured, then moves in same territory, then tries to minimize number of pieces distributed
             return captured * 100 + sameTerritoryValue - toDistribute;

@@ -39,7 +39,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         return begin + ' ' + begin + ' ' + width + ' ' + width;
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         display(this.VERBOSE, 'taflComponent.updateBoard');
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
@@ -81,7 +81,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         display(this.VERBOSE, 'TaflComponent.onClick(' + x + ', ' + y + ')');
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -110,7 +110,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
             return this.cancelMove(move.getReason());
         }
     }
-    private choosePiece(coord: Coord): MGPValidation {
+    private async choosePiece(coord: Coord): Promise<MGPValidation> {
         display(this.VERBOSE, 'TaflComponent.choosePiece');
 
         if (this.board[coord.y][coord.x] === TaflPawn.UNOCCUPIED) {

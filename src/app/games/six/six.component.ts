@@ -57,16 +57,16 @@ export class SixComponent
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.updateBoard();
+        void this.updateBoard();
     }
-    public override cancelMoveAttempt(): void {
+    public override async cancelMoveAttempt(): Promise<void> {
         this.selectedPiece = MGPOptional.empty();
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
         this.nextClickShouldSelectGroup = false;
-        this.updateBoard(); // Need to refresh the board in case we showed virtual moves for cuts
+        await this.updateBoard(); // Need to refresh the board in case we showed virtual moves for cuts
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.state = this.node.gameState;
         const lastMove: MGPOptional<SixMove> = this.node.move;
         if (lastMove.isAbsent()) {
@@ -133,7 +133,7 @@ export class SixComponent
         return this.getPlayerClass(player);
     }
     public async onPieceClick(piece: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + piece.x + '_' + piece.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#piece_' + piece.x + '_' + piece.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -156,7 +156,7 @@ export class SixComponent
         }
     }
     public async onNeighborClick(neighbor: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#neighbor_' + neighbor.x + '_' + neighbor.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#neighbor_' + neighbor.x + '_' + neighbor.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

@@ -83,13 +83,13 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.encoder = ApagosMove.encoder;
         this.tutorial = new ApagosTutorial().tutorial;
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
-        this.updateBoard();
+        void this.updateBoard();
     }
     public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.showPossibleDrops();
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
         this.remainingZero = state.remaining.get(Player.ZERO).get();
@@ -204,7 +204,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     }
     public async onArrowClick(x: number, player: Player): Promise<MGPValidation> {
         const playerString: string = (player === Player.ZERO) ? 'zero' : 'one';
-        const clickValidity: MGPValidation = this.canUserPlay('#dropArrow_' + playerString + '_' + x);
+        const clickValidity: MGPValidation = await this.canUserPlay('#dropArrow_' + playerString + '_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -255,7 +255,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
 
     }
     public async onSquareClick(x: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#square_' + x);
+        const clickValidity: MGPValidation = await this.canUserPlay('#square_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

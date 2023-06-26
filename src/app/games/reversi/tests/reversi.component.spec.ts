@@ -33,7 +33,7 @@ describe('ReversiComponent', () => {
             [_, _, _, O, _, _, _, _],
         ];
         const initialState: ReversiState = new ReversiState(board, 0);
-        testUtils.setupState(initialState);
+        await testUtils.setupState(initialState);
 
         const move: ReversiMove = new ReversiMove(0, 4);
         await testUtils.expectMoveSuccess('#click_0_4', move, undefined, [2, 7]);
@@ -65,7 +65,7 @@ describe('ReversiComponent', () => {
         ], 1);
 
         // When displaying the board
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Then the player can pass
         await testUtils.expectPassSuccess(ReversiMove.PASS, [1, 1]);

@@ -32,10 +32,10 @@ describe('KamisadoComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
-    it('should remove chosen coord when calling updateBoard without move', () => {
+    it('should remove chosen coord when calling updateBoard without move', async() => {
         // Given the game component
         // When calling updateBoard()
-        testUtils.getComponent().updateBoard();
+        await testUtils.getComponent().updateBoard();
         // Then the chosen piece should be absent, and nothing should be highlighted
         expect(testUtils.getComponent().chosen.isAbsent()).toBeTrue();
         testUtils.expectElementNotToExist('.highlight');
@@ -79,7 +79,7 @@ describe('KamisadoComponent', () => {
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
         // When displaying the board
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Then the player can pass
         await testUtils.expectPassSuccess(KamisadoMove.PASS);
@@ -98,7 +98,7 @@ describe('KamisadoComponent', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When clicking anywhere
         // Then it should fail and say that player must pass
@@ -118,7 +118,7 @@ describe('KamisadoComponent', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When clicking on the piece to deselect it
         // Then it should fail
@@ -138,7 +138,7 @@ describe('KamisadoComponent', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When clicking on another of its pieces
         // Then it should fail
@@ -174,7 +174,7 @@ describe('KamisadoComponent', () => {
             new KamisadoState(1, KamisadoColor.RED, MGPOptional.of(new Coord(2, 1)), false, board);
 
         // When displaying the board
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Then the next selected piece should not be highlighted
         testUtils.expectElementNotToExist('#selectedPiece');
@@ -196,7 +196,7 @@ describe('KamisadoComponent', () => {
         const lastMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
 
         // When displaying it
-        testUtils.setupState(state, undefined, lastMove);
+        await testUtils.setupState(state, undefined, lastMove);
 
         // Then it should display last move
         testUtils.expectElementToHaveClass('#last_move_start_0_7', 'last-move-stroke');

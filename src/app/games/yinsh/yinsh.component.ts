@@ -124,7 +124,7 @@ export class YinshComponent
             };
         });
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.cancelMoveAttempt();
         const state: YinshState = this.getState();
         this.scores = MGPOptional.of(state.countScores());
@@ -273,7 +273,7 @@ export class YinshComponent
         return MGPValidation.SUCCESS;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

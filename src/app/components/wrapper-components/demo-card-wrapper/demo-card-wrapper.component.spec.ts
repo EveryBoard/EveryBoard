@@ -74,7 +74,7 @@ describe('DemoCardComponent', () => {
     it('should do nothing when you pass', fakeAsync(async() => {
         // Given any starting state of component
         // When passing
-        const result: void = testUtils.getComponent().onCancelMove('not even necessary');
+        const result: void = await testUtils.getComponent().onCancelMove('not even necessary');
         // Then nothing should have happend (for coverage sake)
         expect(result).withContext('should be null').toBe();
     }));

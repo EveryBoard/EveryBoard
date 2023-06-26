@@ -36,7 +36,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.encoder = ConnectSixMoveEncoder;
         this.tutorial = new ConnectSixTutorial().tutorial;
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
@@ -50,7 +50,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

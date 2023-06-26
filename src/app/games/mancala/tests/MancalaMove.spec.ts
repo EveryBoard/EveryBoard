@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleNode, AwaleRules } from '../AwaleRules';
-import { AwaleMinimax } from '../AwaleMinimax';
-import { MancalaMove } from '../../MancalaMove';
+import { AwaleNode, AwaleRules } from '../awale/AwaleRules';
+import { AwaleMinimax } from '../awale/AwaleMinimax';
+import { MancalaMove } from '../commons/MancalaMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('MancalaMove', () => {

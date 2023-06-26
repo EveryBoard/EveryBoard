@@ -33,17 +33,17 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         ];
         this.encoder = P4Move.encoder;
         this.tutorial = new P4Tutorial().tutorial;
-        this.updateBoard();
+        void this.updateBoard();
     }
     public async onClick(x: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: P4Move = P4Move.of(x);
         return await this.chooseMove(chosenMove, this.getState());
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         const state: P4State = this.getState();
 
         this.victoryCoords = P4Rules.getVictoriousCoords(state);

@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleNode, AwaleRules } from '../AwaleRules';
-import { MancalaMove } from '../../MancalaMove';
-import { MancalaState } from '../../MancalaState';
+import { MancalaMove } from '../../commons/MancalaMove';
+import { MancalaState } from '../../commons/MancalaState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMinimax } from '../AwaleMinimax';
-import { MancalaFailure } from '../../MancalaFailure';
+import { MancalaFailure } from '../../commons/MancalaFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';

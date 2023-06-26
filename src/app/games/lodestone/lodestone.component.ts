@@ -144,10 +144,10 @@ export class LodestoneComponent
         this.scores = MGPOptional.of([0, 0]);
     }
     public ngOnInit(): void {
-        this.updateBoard();
+        void this.updateBoard(); // TODO: que faire
     }
     public async selectCoord(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#square_' + coord.x + '_' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#square_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -173,7 +173,7 @@ export class LodestoneComponent
         }
     }
     public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#lodestone_' + lodestone.direction + '_' + lodestone.orientation);
+        const clickValidity: MGPValidation = await this.canUserPlay('#lodestone_' + lodestone.direction + '_' + lodestone.orientation);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -231,7 +231,7 @@ export class LodestoneComponent
         }
     }
     private async selectPressurePlate(position: LodestonePressurePlatePosition, index: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#plate_' + position + '_' + index);
+        const clickValidity: MGPValidation = await this.canUserPlay('#plate_' + position + '_' + index);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -261,7 +261,7 @@ export class LodestoneComponent
     public async deselectPressurePlate(position: LodestonePressurePlatePosition, index: number)
     : Promise<MGPValidation>
     {
-        const clickValidity: MGPValidation = this.canUserPlay('#plate_' + position + '_' + index);
+        const clickValidity: MGPValidation = await this.canUserPlay('#plate_' + position + '_' + index);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -281,7 +281,7 @@ export class LodestoneComponent
         this.showPressurePlateDifferences(this.getState(), this.displayedState, true);
         return MGPValidation.SUCCESS;
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.cancelMoveAttempt();
         this.scores = MGPOptional.of(this.getState().getScores());
     }

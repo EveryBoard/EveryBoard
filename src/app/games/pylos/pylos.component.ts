@@ -58,7 +58,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         ];
         this.encoder = PylosMove.encoder;
         this.tutorial = new PylosTutorial().tutorial;
-        this.updateBoard();
+        void this.updateBoard();
     }
     public getPiecesCyForPlayer(player: Player): number {
         if (player === Player.ONE) {
@@ -88,7 +88,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
                this.chosenSecondCapture.equalsValue(coord);
     }
     public async onPieceClick(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
+        const clickValidity: MGPValidation = await this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -162,7 +162,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
     public async validateCapture(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#capture_validation');
+        const clickValidity: MGPValidation = await this.canUserPlay('#capture_validation');
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -189,7 +189,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return this.tryMove(move, this.state);
     }
     private async tryMove(move: PylosMove, state: PylosState): Promise<MGPValidation> {
-        this.cancelMove();
+        void this.cancelMove();
         return this.chooseMove(move, state);
     }
     public override cancelMoveAttempt(): void {
@@ -201,7 +201,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.capturables = [];
     }
     public async onDrop(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#drop_' + x + '_' + y + '_' + z);
+        const clickValidity: MGPValidation = await this.canUserPlay('#drop_' + x + '_' + y + '_' + z);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -296,7 +296,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
         return pieces;
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.state = this.getState();
         this.constructedState = this.state;
         this.lastMove = this.node.move;

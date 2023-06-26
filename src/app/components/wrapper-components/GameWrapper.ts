@@ -66,7 +66,7 @@ export abstract class GameWrapper<P extends Comparable> {
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.node = this.gameComponent.rules.getInitialNode();
-            this.gameComponent.updateBoard();
+            await this.gameComponent.updateBoard(false, 'GW.afterViewInit');
         }
         return gameCreatedSuccessfully;
     }
@@ -95,7 +95,7 @@ export abstract class GameWrapper<P extends Comparable> {
         // the game wrapper can then act accordingly to the chosen move.
         this.gameComponent.canUserPlay =
             // So that when the game component click
-            (elementName: string): MGPValidation => {
+            (elementName: string): Promise<MGPValidation> => {
                 return this.onUserClick(elementName);
             };
         // the game wrapper can act accordly
@@ -104,20 +104,20 @@ export abstract class GameWrapper<P extends Comparable> {
         };
         this.gameComponent.cancelMoveOnWrapper =
             // Mostly for interception by TutorialGameWrapper
-            (reason?: string): void => {
-                this.onCancelMove(reason);
+            (reason?: string): Promise<void> => {
+                return this.onCancelMove(reason);
             };
-        this.setRole(this.role);
+        await this.setRole(this.role);
         this.canPass = this.gameComponent.canPass;
         return true;
     }
-    public setRole(role: PlayerOrNone): void {
+    public async setRole(role: PlayerOrNone): Promise<void> {
         this.role = role;
         this.gameComponent.role = this.role;
         if (this.gameComponent.hasAsymmetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
-        this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
+        await this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,
@@ -135,7 +135,7 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state);
         if (legality.isFailure()) {
-            this.gameComponent.cancelMove(legality.getReason());
+            await this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);
         }
         this.gameComponent.cancelMoveAttempt();
@@ -145,7 +145,7 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public onUserClick(_elementName: string): MGPValidation {
+    public async onUserClick(_elementName: string): Promise<MGPValidation> {
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);
@@ -156,7 +156,7 @@ export abstract class GameWrapper<P extends Comparable> {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
     }
-    public abstract onCancelMove(_reason?: string): void;
+    public abstract onCancelMove(_reason?: string): Promise<void>;
 
     public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {
@@ -196,11 +196,13 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         return [];
     }
-    protected updateBoardAndShowLastMove(): void {
-        this.gameComponent.updateBoard();
+    protected async updateBoardAndShowLastMove(triggerAnimation: boolean=false): Promise<void> {
+        console.log('>>> >>> GW.updateBoardAndShowLastMove (gameCompo.updateBoard, gameCompo.showLastMove)')
+        await this.gameComponent.updateBoard(triggerAnimation, 'GW.updateBoardAndShowLastMove');
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
-            this.gameComponent.showLastMove(move);
+            this.gameComponent.showLastMove(move, 'updateBoardAndShowLastMove');
         }
+        console.log('<<< <<< GW.updateBoardAndShowLastMove (gameCompo.updateBoard, gameCompo.showLastMove)')
     }
 }

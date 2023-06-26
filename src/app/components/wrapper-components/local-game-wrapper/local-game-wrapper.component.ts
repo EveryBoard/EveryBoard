@@ -56,29 +56,30 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         setTimeout(async() => {
             const createdSuccessfully: boolean = await this.afterViewInit();
             if (createdSuccessfully) {
-                this.restartGame();
+                await this.restartGame();
                 this.cdr.detectChanges();
             }
         }, 1);
     }
-    public updatePlayer(player: Player): void {
+    public async updatePlayer(player: Player): Promise<void> {
         this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
         if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
-            this.setRole(Player.ONE);
+            await this.setRole(Player.ONE);
         } else {
-            this.setRole(Player.ZERO);
+            await this.setRole(Player.ZERO);
         }
         this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
-        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onLegalUserMove');
+        display(LocalGameWrapperComponent.VERBOSE || true, 'LocalGameWrapperComponent.onLegalUserMove');
 
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
-        this.updateBoard();
+        await this.updateBoard(true, 'LGWC.onLegalUserMove');
         this.proposeAIToPlay();
     }
-    public updateBoard(): void {
-        this.updateBoardAndShowLastMove();
+    public async updateBoard(triggerAnimation: boolean=false, caller: string): Promise<void> {
+        console.log('>>> LGWC.updateBoard (LGWC.updateBoardAndShowLastMove)')
+        await this.updateBoardAndShowLastMove(triggerAnimation);
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
@@ -102,6 +103,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }
 
         }
+        console.log('<<< LGWC.updateBoard')
     }
     public proposeAIToPlay(): void {
         // check if ai's turn has come, if so, make her start after a delay
@@ -129,6 +131,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }));
     }
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
+        console.log('>> >> >> LGWC.doAIMove (ruler.choose, LGWC.updateBoard, LGWC.proposeAIToPlay)')
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
@@ -139,31 +142,34 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const nextNode: MGPOptional<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
         if (nextNode.isPresent()) {
             this.gameComponent.node = nextNode.get();
-            this.updateBoard();
+            await this.updateBoard(true, 'LGWC.doAIMove');
             this.cdr.detectChanges();
             this.proposeAIToPlay();
+            console.log('<< << << LGWC.doAIMove')
             return MGPValidation.SUCCESS;
         } else {
             this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
+            console.log('<< << << LGWC.doAIMove')
             return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { name: playingMinimax.name, move: aiMove.toString() });
         }
     }
     public canTakeBack(): boolean {
         return this.gameComponent.getTurn() > 0;
     }
-    public takeBack(): void {
+    public async takeBack(): Promise<void> {
+        console.log('LGWC.takeBack (LGWC.updateBoardAndShowLastMove)')
         this.gameComponent.node = this.gameComponent.node.mother.get();
         if (this.isAITurn()) {
             this.gameComponent.node = this.gameComponent.node.mother.get();
         }
-        this.updateBoardAndShowLastMove();
+        await this.updateBoardAndShowLastMove();
     }
     private isAITurn(): boolean {
         return this.getPlayingAI().isPresent();
     }
-    public restartGame(): void {
+    public async restartGame(): Promise<void> {
         this.gameComponent.node = this.gameComponent.rules.getInitialNode();
-        this.gameComponent.updateBoard();
+        await this.gameComponent.updateBoard(false, 'LGWC.restartGame');
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
         this.proposeAIToPlay();
@@ -171,10 +177,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public getPlayer(): string {
         return 'human';
     }
-    public onCancelMove(reason?: string): void {
+    public async onCancelMove(reason?: string): Promise<void> {
+        console.log('LGWC.onCancelMove (gameComponent.showLastMove)')
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
-            this.gameComponent.showLastMove(move);
+            this.gameComponent.showLastMove(move, 'onCancelMove');
         }
     }
 }

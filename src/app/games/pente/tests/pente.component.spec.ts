@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -66,7 +67,7 @@ describe('PenteComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], [0, 0], 3);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When doing the capture
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -102,7 +103,7 @@ describe('PenteComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], [0, 0], 6);
         // When displaying it
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         // Then it should show the victory
         testUtils.expectElementToHaveClass('#piece_9_9', 'victory-stroke');
         testUtils.expectElementToHaveClass('#piece_10_9', 'victory-stroke');

@@ -1,9 +1,9 @@
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { KalahMove } from './KalahMove';
-import { MancalaState } from './../MancalaState';
+import { MancalaState } from './../commons/MancalaState';
 import { KalahNode, KalahRules } from './KalahRules';
-import { MancalaCaptureResult, MancalaDistributionResult } from '../MancalaRules';
-import { MancalaMove } from '../MancalaMove';
+import { MancalaDistributionResult } from '../commons/MancalaRules';
+import { MancalaMove } from '../commons/MancalaMove';
 
 export class KalahDummyMinimax extends PlayerMetricsMinimax<KalahMove,
                                                             MancalaState,
@@ -30,12 +30,10 @@ export class KalahDummyMinimax extends PlayerMetricsMinimax<KalahMove,
     }
     private getChildMoves(state: MancalaState, x: number, y: number, currentMove: KalahMove): KalahMove[] {
         const moves: KalahMove[] = [];
-        let distributionResult: MancalaDistributionResult =
-            this.ruler.distributeHouse(x, y, state);
-        if (distributionResult.endUpInKalah) {
-            // We don't need to update captured result here
-            state = distributionResult.resultingState;
-            distributionResult = this.ruler.distributeHouse(x, y, state);
+        const distributionResult: MancalaDistributionResult = this.ruler.distributeHouse(x, y, state);
+        state = distributionResult.resultingState;
+        const playerHasPieces: boolean = this.ruler.isStarving(state.getCurrentPlayer(), state.board) === false;
+        if (distributionResult.endUpInKalah && playerHasPieces) {
             for (let x: number = 0; x < 6; x++) {
                 if (state.getPieceAtXY(x, y) > 0) {
                     const move: KalahMove = currentMove.add(MancalaMove.from(x));

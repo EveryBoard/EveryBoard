@@ -10,7 +10,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-describe('SixComponent', () => {
+fdescribe('SixComponent', () => {
 
     let testUtils: ComponentTestUtils<SixComponent>;
 
@@ -30,7 +30,7 @@ describe('SixComponent', () => {
                 [O],
             ];
             const state: SixState = SixState.fromRepresentation(board, 41);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));
@@ -48,7 +48,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#neighbor_1_1', SixFailure.CAN_NO_LONGER_DROP());
         }));
@@ -66,7 +66,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on one of the user's pieces
             await testUtils.expectClickSuccess('#piece_0_0');
@@ -86,7 +86,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             const gameComponent: SixComponent = testUtils.getComponent();
             await testUtils.expectClickSuccess('#piece_0_0');
@@ -109,7 +109,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // When clicking on it again
@@ -128,7 +128,7 @@ describe('SixComponent', () => {
                 [X, _, _],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Choosing piece
             await testUtils.expectClickSuccess('#piece_1_2');
@@ -166,7 +166,7 @@ describe('SixComponent', () => {
                 [X, _, _],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Choosing piece
             await testUtils.expectClickSuccess('#piece_1_2');
@@ -191,7 +191,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
             // When the user clicks on an empty space instead of selecting a group
@@ -209,7 +209,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
@@ -217,15 +217,15 @@ describe('SixComponent', () => {
             await testUtils.expectMoveSuccess('#piece_0_1', move);
         }));
     });
-    describe('view', () => {
-        it('should highlight winning coords', fakeAsync(async() => {
+    fdescribe('view', () => {
+        fit('should highlight winning coords', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _, _, _, _, _, _],
                 [O, O, O, O, O, X, X, X, X, X],
                 [_, _, _, _, _, _, _, _, _, X],
             ];
             const state: SixState = SixState.fromRepresentation(board, 42);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece_0_0');
             const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(-1, 1));

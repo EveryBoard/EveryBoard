@@ -126,9 +126,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
         this.canPass = false;
-        this.updateBoard();
+        void this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.cancelMoveAttempt();
         this.layers = [];
         for (const coord of this.getState().occupiedSpaces()) {
@@ -291,7 +291,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
     public async selectRemaining(piece: HivePiece): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay(`#remainingPiece_${piece.toString() }`);
+        const clickValidity: MGPValidation = await this.canUserPlay(`#remainingPiece_${piece.toString() }`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -322,7 +322,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         return this.select(new Coord(x, y), 'space');
     }
     private async select(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);
+        const clickValidity: MGPValidation = await this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

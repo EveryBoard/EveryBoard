@@ -41,17 +41,17 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.encoder = ReversiMove.encoder;
         this.tutorial = new ReversiTutorial().tutorial;
         this.canPass = false;
-        this.updateBoard();
+        void this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: ReversiMove = new ReversiMove(x, y);
         return await this.chooseMove(chosenMove, this.getState(), this.scores.get());
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         const state: ReversiState = this.getState();
 
         this.board = state.getCopiedBoard();

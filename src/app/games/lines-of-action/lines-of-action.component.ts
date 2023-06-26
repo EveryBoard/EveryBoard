@@ -41,10 +41,10 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         ];
         this.encoder = LinesOfActionMove.encoder;
         this.tutorial = new LinesOfActionTutorial().tutorial;
-        this.updateBoard();
+        void this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -83,7 +83,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         }
         return MGPValidation.SUCCESS;
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.cancelMoveAttempt();
         this.board = this.getState().board;
         this.lastMove = this.node.move;

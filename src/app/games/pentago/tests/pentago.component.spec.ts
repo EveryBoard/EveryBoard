@@ -37,7 +37,7 @@ describe('PentagoComponent', () => {
                 [_, _, _, _, _, _],
             ];
             const state: PentagoState = new PentagoState(board, 5);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_0_0');
             testUtils.expectElementNotToExist('#rotate_0_clockwise');
         }));
@@ -54,7 +54,7 @@ describe('PentagoComponent', () => {
             const state: PentagoState = new PentagoState(board, 5);
 
             // When rendering the board
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then there should not be clickable thing there
             await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
@@ -71,7 +71,7 @@ describe('PentagoComponent', () => {
             ];
             const state: PentagoState = new PentagoState(board, 1);
             const lastMove: PentagoMove = PentagoMove.withRotation(5, 5, 3, false);
-            testUtils.setupState(state, PentagoState.getInitialState(), lastMove);
+            await testUtils.setupState(state, PentagoState.getInitialState(), lastMove);
             testUtils.expectElementToHaveClass('#last_rotation_3_counterclockwise', 'last-move-stroke');
 
             // When clicking on a piece (and when having to click again to finish the move)
@@ -103,7 +103,7 @@ describe('PentagoComponent', () => {
                 [_, X, X, _, _, _],
             ];
             const state: PentagoState = new PentagoState(board, 5);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_0_5');
             const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, true);
             await testUtils.expectMoveSuccess('#rotate_2_clockwise', move);
@@ -137,7 +137,7 @@ describe('PentagoComponent', () => {
                 [_, _, _, _, _, _],
             ];
             const state: PentagoState = new PentagoState(board, 5);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_0_1');
             const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
             await testUtils.expectMoveSuccess('#rotate_1_counterclockwise', move);
@@ -158,7 +158,7 @@ describe('PentagoComponent', () => {
         ];
         const state: PentagoState = new PentagoState(board, 1);
         const move: PentagoMove = PentagoMove.rotationless(5, 5);
-        testUtils.setupState(state, PentagoState.getInitialState(), move);
+        await testUtils.setupState(state, PentagoState.getInitialState(), move);
 
         // When taking it back
         await testUtils.expectInterfaceClickSuccess('#takeBack');

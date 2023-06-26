@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
-import { MancalaMove } from '../../MancalaMove';
-import { MancalaState } from 'src/app/games/mancala/MancalaState';
+import { MancalaMove } from '../../commons/MancalaMove';
+import { MancalaState } from 'src/app/games/mancala/commons/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('AwaleMinimax', () => {

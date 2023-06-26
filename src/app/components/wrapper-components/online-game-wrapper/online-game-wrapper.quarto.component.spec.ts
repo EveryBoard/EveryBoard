@@ -1655,7 +1655,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.wrapper.onCancelMove();
+            await testUtils.wrapper.onCancelMove();
 
             // Then showLastMove should have been called
             expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
@@ -1667,7 +1667,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.wrapper.onCancelMove();
+            await testUtils.wrapper.onCancelMove();
 
             // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();

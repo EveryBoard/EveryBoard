@@ -83,7 +83,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When trying to select the opponent's piece
         // Then it should fail
@@ -99,7 +99,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When performing a rotation
         // Then it should succeed
@@ -116,7 +116,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When moving forward
         // Then it should succeed
@@ -133,7 +133,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When performing a move
         const move: SiamMove = SiamMove.of(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
@@ -154,7 +154,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When making the piece exit the board
         // Then the orientation of the piece does not have to be chosen
@@ -204,7 +204,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#remainingPieces_0');
 
         // When the player clicks on the piece on the board
@@ -225,7 +225,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
         await testUtils.expectClickSuccess('#square_4_3');
 
@@ -245,7 +245,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
 
         // When the player clicks on a mountain
@@ -263,7 +263,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When the player inserts a piece in the same corner by selecting an arrow
         await testUtils.expectClickSuccess('#remainingPieces_0');

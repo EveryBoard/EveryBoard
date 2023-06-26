@@ -81,6 +81,7 @@ describe('GameComponent', () => {
                 selectRemaining: [new HivePiece(Player.ZERO, 'QueenBee')],
             },
             Hnefatafl: { onClick: [0, 0] },
+            Kalah: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
             Lasca: { onClick: [0, 0] },
             LinesOfAction: { onClick: [0, 0] },

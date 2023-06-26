@@ -76,7 +76,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                                    - this.hexagonWidth),
                                          FlatHexaOrientation.INSTANCE);
     }
-    public updateBoard(): void {
+    public async updateBoard(): Promise<void> {
         this.cancelMoveAttempt();
     }
     public override showLastMove(move: GipfMove): void {
@@ -118,7 +118,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return piece;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -222,7 +222,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
             this.movePhase = GipfComponent.PHASE_PLACEMENT_DIRECTION;
             this.computeArrows(coord);
             if (this.arrows.length === 0) {
-                this.cancelMove(GipfFailure.NO_DIRECTIONS_AVAILABLE());
+                await this.cancelMove(GipfFailure.NO_DIRECTIONS_AVAILABLE());
             }
         }
         return MGPValidation.SUCCESS;

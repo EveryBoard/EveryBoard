@@ -36,7 +36,7 @@ describe('HiveComponent', () => {
             it('should select one of your pieces by clicking on it', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveState.getInitialState();
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When clicking on a remaining piece
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
@@ -47,7 +47,7 @@ describe('HiveComponent', () => {
             it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveState.getInitialState();
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When clicking on a remaining piece of the opponent
                 // Then it should fail
@@ -57,7 +57,7 @@ describe('HiveComponent', () => {
             it('should show valid landings after selection', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveState.getInitialState();
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When clicking on a remaining piece
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
@@ -70,7 +70,7 @@ describe('HiveComponent', () => {
                 const state: HiveState = HiveState.fromRepresentation([
                     [[B], [G], [A], [g], [s], [a]],
                 ], 6);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When trying to select a remaining piece
                 // Then it should fail
@@ -82,7 +82,7 @@ describe('HiveComponent', () => {
             it('should drop the piece on the selected space', fakeAsync(async() => {
                 // Given a state with a selected remaining piece
                 const state: HiveState = HiveState.getInitialState();
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
 
                 // When clicking on a valid landing
@@ -95,7 +95,7 @@ describe('HiveComponent', () => {
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],
                 ], 2);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When performing an illegal drop move
                 await testUtils.expectClickSuccess('#remainingPiece_Beetle_PLAYER_ZERO');
@@ -108,7 +108,7 @@ describe('HiveComponent', () => {
             it('should show one less remaining piece after dropping', fakeAsync(async() => {
                 // Given a state
                 const state: HiveState = HiveState.getInitialState();
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When performing a drop move
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
@@ -121,7 +121,7 @@ describe('HiveComponent', () => {
             it('should show the last move after dropping', fakeAsync(async() => {
                 // Given a state
                 const state: HiveState = HiveState.getInitialState();
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When performing a drop move
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
@@ -135,7 +135,7 @@ describe('HiveComponent', () => {
         it('should deselect the piece at second click on it', fakeAsync(async() => {
             // Given a state with remaining pieces and a selected one
             const state: HiveState = HiveState.getInitialState();
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
 
             // When clicking on the selected piece again
@@ -152,7 +152,7 @@ describe('HiveComponent', () => {
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],
                 ], 2);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When clicking on a piece on the board
                 await testUtils.expectClickSuccess('#piece_0_0');
@@ -165,7 +165,7 @@ describe('HiveComponent', () => {
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],
                 ], 2);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When clicking on a piece of the opponent
                 // Then it should fail
@@ -177,7 +177,7 @@ describe('HiveComponent', () => {
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],
                 ], 2);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When clicking on a piece on the board
                 await testUtils.expectClickSuccess('#piece_0_0');
@@ -196,7 +196,7 @@ describe('HiveComponent', () => {
                 const state: HiveState = HiveState.fromRepresentation([
                     [[B], [G], [A], [g], [s], [a]],
                 ], 6);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When trying to select a piece
                 // Then it should fail
@@ -208,7 +208,7 @@ describe('HiveComponent', () => {
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],
                 ], 2);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#piece_0_0');
 
                 // When clicking on the selected piece again
@@ -223,7 +223,7 @@ describe('HiveComponent', () => {
                     [[Q], [q]],
                     [[B], []],
                 ], 2);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#piece_0_1');
 
                 // When clicking on a destination
@@ -237,7 +237,7 @@ describe('HiveComponent', () => {
                     [[Q], [q]],
                     [[B], []],
                 ], 2);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#piece_0_1');
 
                 // When clicking on an illegal destination
@@ -254,7 +254,7 @@ describe('HiveComponent', () => {
                         [[Q], [q]],
                         [[S], []],
                     ], 2);
-                    testUtils.setupState(state);
+                    await testUtils.setupState(state);
 
                     // When selecting a spider and clicking on 3 spaces to perform a spider move
                     await testUtils.expectClickSuccess('#piece_0_2');
@@ -277,7 +277,7 @@ describe('HiveComponent', () => {
                         [[Q], [q]],
                         [[S], []],
                     ], 2);
-                    testUtils.setupState(state);
+                    await testUtils.setupState(state);
 
                     // When doing intermediary clicks
                     await testUtils.expectClickSuccess('#piece_0_2');
@@ -295,7 +295,7 @@ describe('HiveComponent', () => {
                         [[Q], [q]],
                         [[S], []],
                     ], 2);
-                    testUtils.setupState(state);
+                    await testUtils.setupState(state);
                     await testUtils.expectClickSuccess('#piece_0_2');
                     await testUtils.expectClickSuccess('#space_1_2');
 
@@ -311,7 +311,7 @@ describe('HiveComponent', () => {
                     [[Q], [q]],
                     [[B], []],
                 ], 2);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#piece_0_1');
 
                 // When performing a move
@@ -331,7 +331,7 @@ describe('HiveComponent', () => {
             const state: HiveState = HiveState.fromRepresentation([
                 [[B, b, Q], [q]],
             ], 2);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on the stack
             await testUtils.expectClickSuccess('#piece_0_0');
@@ -344,7 +344,7 @@ describe('HiveComponent', () => {
             const state: HiveState = HiveState.fromRepresentation([
                 [[B, b, Q], [q]],
             ], 2);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // When clicking on the stack a second time
@@ -356,7 +356,7 @@ describe('HiveComponent', () => {
             const state: HiveState = HiveState.fromRepresentation([
                 [[b, B, Q], [q]],
             ], 2);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on the stack
             await testUtils.expectClickSuccess('#piece_0_0');
@@ -369,7 +369,7 @@ describe('HiveComponent', () => {
             const state: HiveState = HiveState.fromRepresentation([
                 [[b]],
             ], 2);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on the beetle
             // Then it should fail as there is no stack beneath it
@@ -380,7 +380,7 @@ describe('HiveComponent', () => {
             const state: HiveState = HiveState.fromRepresentation([
                 [[b, b, Q], [q]],
             ], 2);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_0');
             testUtils.expectElementToExist('#inspectedStack_0');
 
@@ -395,7 +395,7 @@ describe('HiveComponent', () => {
         const state: HiveState = HiveState.fromRepresentation([
             [[Q], [b]],
         ], 2);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When clicking on an empty space
         // Then the move should be canceled
@@ -408,7 +408,7 @@ describe('HiveComponent', () => {
         ], 4);
 
         // When it is displayed
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Then the player can pass
         const move: HiveMove = HiveMove.PASS;
@@ -423,7 +423,7 @@ describe('HiveComponent', () => {
         ], 4);
 
         // When it is displayed
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Then the victory should be shown
         testUtils.expectElementToHaveClass('#stroke_1_1', 'victory-stroke');
@@ -438,7 +438,7 @@ describe('HiveComponent', () => {
         ], 4);
 
         // When it is displayed
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Then the draw should be shown (as multiple victory strokes)
         testUtils.expectElementToHaveClass('#stroke_1_1', 'victory-stroke');
@@ -453,7 +453,7 @@ describe('HiveComponent', () => {
         const state: HiveState = HiveState.fromRepresentation([
             [[Q], [q]],
         ], 2);
-        testUtils.setupState(state, previousState, previousMove);
+        await testUtils.setupState(state, previousState, previousMove);
 
         // When starting and then cancelling a move
         await testUtils.expectClickSuccess('#piece_0_0');

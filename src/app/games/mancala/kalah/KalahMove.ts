@@ -1,6 +1,6 @@
 import { Move } from 'src/app/jscaip/Move';
 import { MoveEncoder } from 'src/app/utils/Encoder';
-import { MancalaMove } from '../MancalaMove';
+import { MancalaMove } from '../commons/MancalaMove';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class KalahMove extends Move {

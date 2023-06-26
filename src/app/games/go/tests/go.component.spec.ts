@@ -38,7 +38,7 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
         ];
         const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
         await testUtils.expectMoveSuccess('#click_0_1', move, undefined, [0, 0]);
@@ -60,7 +60,7 @@ describe('GoComponent', () => {
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then it should have hoshi in the middle (9, 9)
             testUtils.expectElementToExist('#hoshi_9_9'); // Middle Middle
@@ -82,7 +82,7 @@ describe('GoComponent', () => {
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // Then it should have hoshi in the middle (6, 6)
             testUtils.expectElementToExist('#hoshi_6_6'); // Middle Middle
 
@@ -105,7 +105,7 @@ describe('GoComponent', () => {
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then it should have hoshi in the middle (4, 4)
             testUtils.expectElementToExist('#blank_board');

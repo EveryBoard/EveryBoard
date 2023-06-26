@@ -98,7 +98,7 @@ describe('LocalGameWrapperComponent', () => {
             [X, X, X, O, X, X, X],
         ];
         const state: P4State = new P4State(board, 41);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
         testUtils.expectElementToExist('#draw');
@@ -129,7 +129,7 @@ describe('LocalGameWrapperComponent', () => {
                 [X, X, X, O, X, X, X],
             ];
             const state: P4State = new P4State(board, 41);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
 
@@ -355,7 +355,7 @@ describe('LocalGameWrapperComponent', () => {
         it(`should display 'Player <N> won' when human vs human victory`, fakeAsync(async() => {
             // Given a Human-vs-human board where victory is imminent
             const state: P4State = new P4State(preVictoryBoard, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When player zero does the winning move
             await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
@@ -375,7 +375,7 @@ describe('LocalGameWrapperComponent', () => {
                 [X, X, O, O, X, X, X],
             ];
             const state: P4State = new P4State(board, 37);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
             // When selecting AI, and AI then doing winning move
@@ -389,7 +389,7 @@ describe('LocalGameWrapperComponent', () => {
         it(`should display 'You won' when human win again AI`, fakeAsync(async() => {
             // Given a board where victory is imminent for human (against AI)
             const state: P4State = new P4State(preVictoryBoard, 39);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await selectAIPlayer(Player.ZERO);
 
             // When user does the winning move
@@ -410,7 +410,7 @@ describe('LocalGameWrapperComponent', () => {
                 [_, _, X, X, X, _, _],
             ];
             const state: P4State = new P4State(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await selectAIPlayer(Player.ZERO);
             tick((testUtils.wrapper as LocalGameWrapperComponent).botTimeOut);
 
@@ -431,7 +431,7 @@ describe('LocalGameWrapperComponent', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.wrapper.onCancelMove();
+            await testUtils.wrapper.onCancelMove();
 
             // Then showLastMove should have been called
             expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.FOUR);
@@ -442,7 +442,7 @@ describe('LocalGameWrapperComponent', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.wrapper.onCancelMove();
+            await testUtils.wrapper.onCancelMove();
 
             // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();
