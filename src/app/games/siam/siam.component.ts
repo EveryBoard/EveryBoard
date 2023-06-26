@@ -10,7 +10,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display } from 'src/app/utils/utils';
+import { Debug, display } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
@@ -30,6 +30,7 @@ export type SiamIndicatorArrow = {
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
+@Debug.log
 export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamMove,
                                                             SiamState,
@@ -60,7 +61,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.updateBoard();
     }
     public updateBoard(): void {
-        display(SiamComponent.VERBOSE, 'updateBoard');
         const state: SiamState = this.getState();
         this.board = state.board;
         this.movedPieces = [];
@@ -118,7 +118,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return this.chooseMove(move, this.getState());
     }
     public async clickSquare(x: number, y: number, internalCall: boolean = false): Promise<MGPValidation> {
-        display(SiamComponent.VERBOSE, 'SiamComponent.clickSquare(' + x + ', ' + y + ')');
         if (internalCall === false) {
             const clickValidity: MGPValidation = this.canUserPlay('#square_' + x + '_' + y);
             if (clickValidity.isFailure()) {

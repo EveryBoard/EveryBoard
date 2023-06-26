@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { User, UserDocument } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
-import { display, Utils } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { Subscription } from 'rxjs';
 import { Timestamp } from 'firebase/firestore';
 
 @Injectable({
     providedIn: 'root',
 })
+@Debug.log
 export class ActiveUsersService {
 
     public static VERBOSE: boolean = false;
@@ -16,16 +17,13 @@ export class ActiveUsersService {
     public constructor(public userDAO: UserDAO) {
     }
     public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Subscription {
-        display(ActiveUsersService.VERBOSE, 'ActiveUsersService.subscribeToActiveUsers');
         let activeUsers: UserDocument[] = [];
         const onDocumentCreated: (newUsers: UserDocument[]) => void = (newUsers: UserDocument[]) => {
-            display(ActiveUsersService.VERBOSE, 'our DAO gave us ' + newUsers.length + ' new user(s)');
             activeUsers = this.sort(activeUsers.concat(...newUsers));
             callback(activeUsers);
         };
         const onDocumentModified: (modifiedUsers: UserDocument[]) => void = (modifiedUsers: UserDocument[]) => {
             let updatedUsers: UserDocument[] = activeUsers;
-            display(ActiveUsersService.VERBOSE, 'our DAO updated ' + modifiedUsers.length + ' user(s)');
             for (const u of modifiedUsers) {
                 updatedUsers.forEach((user: UserDocument) => {
                     if (user.id === u.id) user.data = u.data;

@@ -53,16 +53,13 @@ export abstract class GameWrapper<P extends Comparable> {
                        protected readonly router: Router,
                        protected readonly messageDisplayer: MessageDisplayer)
     {
-        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.boardRef != null));
     }
     public getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
     protected async afterViewInit(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.afterViewInit');
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.node = this.gameComponent.rules.getInitialNode();
@@ -124,9 +121,6 @@ export abstract class GameWrapper<P extends Comparable> {
                                   scores?: [number, number])
     : Promise<MGPValidation>
     {
-        const LOCAL_VERBOSE: boolean = false;
-        display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
-                { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
         if (this.isPlayerTurn() === false) {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
@@ -140,7 +134,6 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         this.gameComponent.cancelMoveAttempt();
         await this.onLegalUserMove(move, scores);
-        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
@@ -169,15 +162,6 @@ export abstract class GameWrapper<P extends Comparable> {
         const turn: number = this.gameComponent.getTurn();
         const indexPlayer: number = turn % 2;
         const player: P = this.getPlayer();
-        display(GameWrapper.VERBOSE, { isPlayerTurn: {
-            turn,
-            players: this.players,
-            player,
-            observer: this.role,
-            areYouPlayer: this.players[indexPlayer].isPresent() &&
-                comparableEquals(this.players[indexPlayer].get(), player),
-            isThereAPlayer: this.players[indexPlayer],
-        } });
         if (this.players[indexPlayer].isPresent()) {
             return this.players[indexPlayer].equalsValue(player);
         } else {

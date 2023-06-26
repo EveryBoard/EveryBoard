@@ -5,7 +5,7 @@ import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
@@ -25,6 +25,7 @@ export class ReversiMoveWithSwitched {
 
 export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiState, ReversiLegalityInformation> {}
 
+@Debug.log
 export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegalityInformation> {
 
     public static VERBOSE: boolean = false;
@@ -189,12 +190,10 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
             }
         }
         if (state.getPieceAt(move.coord).isPlayer()) {
-            display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: you cannot play on a busy space');
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, state.getCurrentPlayer(), board);
-        display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: '+ switched.length + ' element(s) switched');
         if (switched.length === 0) {
             return MGPFallible.failure(ReversiFailure.NO_ELEMENT_SWITCHED());
         } else {

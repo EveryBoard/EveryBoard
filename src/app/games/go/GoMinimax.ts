@@ -1,17 +1,16 @@
 import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
+@Debug.log
 export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GoLegalityInformation> {
 
     public getListMoves(node: GoNode): GoMove[] {
-        const LOCAL_VERBOSE: boolean = false;
-        display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getListMoves');
 
         const currentState: GoState = node.gameState;
         const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);
@@ -20,7 +19,6 @@ export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GoLegalityI
             playingMoves.push(GoMove.PASS);
             return playingMoves;
         } else {
-            display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getListMoves in counting phase');
             const markingMoves: GoMove[] = this.getCountingMovesList(currentState);
             if (markingMoves.length === 0) {
                 return [GoMove.ACCEPT];

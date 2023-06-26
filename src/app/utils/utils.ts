@@ -62,12 +62,14 @@ export class Debug {
     }
     /**
      * Class decorator that enables logging for all methods of a class
+     * Note: we could think that T should be typed `T extends { new(...args: unknown[]): unknown }>`
+     * but this would restrict the decorator to only be applied to classes with public constructors.
      */
-    public static log<T extends { new(...args: unknown[]): unknown }>(constructor: T): void {
-        const className: string = constructor.name;
-        for (const propertyName of Object.getOwnPropertyNames(constructor.prototype)) {
+    public static log<T>(constructor: T): void {
+        const className: string = constructor['name'];
+        for (const propertyName of Object.getOwnPropertyNames(constructor['prototype'])) {
             const descriptor: PropertyDescriptor =
-                Utils.getNonNullable(Object.getOwnPropertyDescriptor(constructor.prototype, propertyName));
+                Utils.getNonNullable(Object.getOwnPropertyDescriptor(constructor['prototype'], propertyName));
             const isMethod: boolean = descriptor.value instanceof Function;
             if (isMethod === false) {
                 continue;
@@ -87,7 +89,7 @@ export class Debug {
                 return result;
             };
 
-            Object.defineProperty(constructor.prototype, propertyName, descriptor);
+            Object.defineProperty(constructor['prototype'], propertyName, descriptor);
         }
     }
 }
