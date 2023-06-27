@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
 import { FocusedPart, UserDocument } from 'src/app/domain/User';
@@ -17,6 +17,7 @@ type Tab = 'games' | 'create' | 'chat';
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
 })
+@Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {
 
     public static VERBOSE: boolean = false;
@@ -40,7 +41,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
     {
     }
     public ngOnInit(): void {
-        display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnInit');
         this.activeUsersSubscription = this.activeUsersService.subscribeToActiveUsers(
             (activeUsers: UserDocument[]) => {
                 this.activeUsers = activeUsers;
@@ -57,7 +57,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
         });
     }
     public ngOnDestroy(): void {
-        display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnDestroy');
         this.activeUsersSubscription.unsubscribe();
         this.activePartsSubscription.unsubscribe();
     }

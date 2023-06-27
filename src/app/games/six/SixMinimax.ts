@@ -7,7 +7,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
 import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
@@ -22,6 +22,7 @@ export class SixBoardValue extends BoardValue {
     }
 }
 
+@Debug.log
 export class SixMinimax extends AlignementMinimax<SixMove,
                                                   SixState,
                                                   SixLegalityInformation,
@@ -64,14 +65,12 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return this.getMovementFrom(state, safelyMovablePieceOrFirstOne, legalLandings);
     }
     private createForcedDrop(unheritance: SixBoardValue): SixMove[] {
-        display(this.VERBOSE, { called: 'SixMinimax.createForceDrop', unheritance });
         const forcedMove: SixMove[] = [];
         const move: SixMove = SixMove.fromDrop(unheritance.preVictory.get());
         forcedMove.push(move);
         return forcedMove;
     }
     private createForcedMovement(node: SixNode, unheritance: SixBoardValue): SixMove[] {
-        display(this.VERBOSE, { called: 'SixRules.createForcedDeplacement', node });
         const possiblesStarts: MGPSet<Coord> = this.getSafelyMovablePieceOrFirstOne(node.gameState);
         const legalLandings: Coord[] = [unheritance.preVictory.get()];
         return this.getMovementFrom(node.gameState, possiblesStarts, legalLandings);
@@ -188,7 +187,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return new SixBoardValue(shapeInfo.sum * LAST_PLAYER.getScoreModifier(), shapeInfo.preVictory);
     }
     public startSearchingVictorySources(): void {
-        display(this.VERBOSE, 'SixRules.startSearchingVictorySources()');
         this.currentVictorySource = {
             typeSource: 'LINE',
             index: -1,
@@ -231,7 +229,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     public searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixState): BoardInfo {
         const lastDrop: Coord = move.landing;
-        display(this.VERBOSE, { called: 'SixRules.searchVictoryOnly', victorySource, move, state });
         switch (victorySource.typeSource) {
             case 'LINE':
                 return this.searchVictoryOnlyForLine(victorySource.index, lastDrop, state);
@@ -244,8 +241,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         }
     }
     public searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixState): BoardInfo {
-        display(this.VERBOSE,
-                { called: 'SixRules.searchVictoryOnlyForCircle', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -306,8 +301,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         };
     }
     public searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixState): BoardInfo {
-        display(this.VERBOSE,
-                { called: 'SixRules.searchVictoryTriangleCornerOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -339,8 +332,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         };
     }
     public searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixState): BoardInfo {
-        display(this.VERBOSE,
-                { called: 'SixRules.searchVictoryTriangleEdgeOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -377,8 +368,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                         boardInfo: BoardInfo)
     : BoardInfo
     {
-        display(this.VERBOSE,
-                { called: 'SixRules.getBoardInfo', victorySource, move, state, boardInfo });
         const lastDrop: Coord = move.landing;
         switch (victorySource.typeSource) {
             case 'CIRCLE':
@@ -392,8 +381,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         }
     }
     public getBoardInfoForCircle(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE,
-                { called: 'SixMinimaw.getBoardInfoForCircle', index, lastDrop, state, boardInfo });
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -426,7 +413,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     {
         let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
         if (subSum === 4.16) {
-            display(this.VERBOSE, '5+1 found!');
             // We found 5 pieces aligned and one space, so that space is a preVictory coord
             if (preVictory.isPresent() && (preVictory.equals(lastEmpty) === false)) {
                 return {
@@ -454,7 +440,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         };
     }
     public getBoardInfoForLine(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForLine', index, lastDrop, state, boardInfo });
         const dir: HexaDirection = HexaDirection.factory.all[index];
         let testedCoord: Coord = lastDrop.getPrevious(dir, 5);
         let testedCoords: Coord[] = [];
@@ -534,8 +519,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                                          boardInfo: BoardInfo)
     : BoardInfo
     {
-        display(this.VERBOSE,
-                { called: 'SixRules.getBoardInfoForTriangleCorner', index, lastDrop, state, boardInfo });
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -569,7 +552,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                                        state: SixState,
                                        boardInfo: BoardInfo): BoardInfo {
 
-        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForTriangleEdge', index, lastDrop, state, boardInfo });
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];

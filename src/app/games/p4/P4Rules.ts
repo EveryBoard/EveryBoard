@@ -4,7 +4,7 @@ import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { P4State } from './P4State';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Utils, display } from 'src/app/utils/utils';
+import { Utils, Debug } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
@@ -16,6 +16,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
 
+@Debug.log
 export class P4Rules extends Rules<P4Move, P4State> {
 
     public static VERBOSE: boolean = false;
@@ -40,7 +41,6 @@ export class P4Rules extends Rules<P4Move, P4State> {
         return P4Rules.P4_HELPER.getVictoriousCoord(state);
     }
     private static getBoardValueFromScratch(state: P4State): BoardValue {
-        display(P4Rules.VERBOSE, { P4Rules_getBoardValueFromScratch: { state } });
         let score: number = 0;
 
         for (let x: number = 0; x < 7; x++) {
@@ -50,7 +50,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
                 const squareScore: number = P4Rules.getSquareScore(state, new Coord(x, y));
                 if (MGPNode.getScoreStatus(squareScore) !== SCORE.DEFAULT) {
                     // if we find a pre-victory
-                    display(P4Rules.VERBOSE, { preVictoryOrVictory: { state, squareScore, coord: { x, y } } });
+                    Debug.display('P4Rules', 'getBoardValueFromScratch', { preVictoryOrVictory: { state, squareScore, coord: { x, y } } });
                     return new BoardValue(squareScore); // we return it
                     // It seems possible to have a pre victory on one column, and a victory on the next
                 }
@@ -67,13 +67,9 @@ export class P4Rules extends Rules<P4Move, P4State> {
         return y - 1;
     }
     public static getSquareScore(state: P4State, coord: Coord): number {
-        display(P4Rules.VERBOSE, 'getSquareScore(board, ' + coord.x + ', ' + coord.y + ') called');
-        display(P4Rules.VERBOSE, state.board);
         return P4Rules.P4_HELPER.getSquareScore(state, coord);
     }
     public static getListMoves(node: P4Node): P4Move[] {
-        display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });
-
         // should be called only if the game is not over
         const originalState: P4State = node.gameState;
         const moves: P4Move[] = [];
@@ -87,10 +83,6 @@ export class P4Rules extends Rules<P4Move, P4State> {
         return moves;
     }
     public static getBoardValue(state: P4State): BoardValue {
-        display(P4Rules.VERBOSE, {
-            text: 'P4Rules.getBoardValue called',
-            board: state.getCopiedBoard(),
-        });
         return P4Rules.getBoardValueFromScratch(state);
     }
     public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
@@ -106,7 +98,6 @@ export class P4Rules extends Rules<P4Move, P4State> {
         return resultingState;
     }
     public isLegal(move: P4Move, state: P4State): MGPValidation {
-        display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
         if (state.getPieceAtXY(move.x, 0).isPlayer()) {
             return MGPValidation.failure(P4Failure.COLUMN_IS_FULL());
         }

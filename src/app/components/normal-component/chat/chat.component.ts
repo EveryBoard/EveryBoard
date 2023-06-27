@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewCh
 import { ChatService } from '../../../services/ChatService';
 import { Message, MessageDocument } from '../../../domain/Message';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-chat',
     templateUrl: './chat.component.html',
 })
+@Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     public static VERBOSE: boolean = false;
@@ -41,11 +42,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public constructor(private readonly chatService: ChatService,
                        private readonly connectedUserService: ConnectedUserService)
     {
-        display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {
-        display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
-
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
         this.loadChatContent();
     }

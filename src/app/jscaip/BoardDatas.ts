@@ -1,6 +1,6 @@
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { display } from '../utils/utils';
+import { Debug } from '../utils/utils';
 import { Direction } from './Direction';
 
 export class BoardDatas {
@@ -44,18 +44,17 @@ export class GroupInfos {
                        readonly neighborsEntryPoints: ReadonlyArray<Coord>) { }
 }
 
+@Debug.log
 export abstract class GroupDatasFactory<T> {
 
     public abstract getNewInstance(color: T): GroupDatas<T>;
 
     public getGroupDatas(coord: Coord, board: Table<T>): GroupDatas<T> {
-        display(GroupDatas.VERBOSE, 'GroupDatas.getGroupDatas(' + coord + ', ' + board + ')');
         const color: T = board[coord.y][coord.x];
         const groupDatas: GroupDatas<T> = this.getNewInstance(color);
         return this._getGroupDatas(coord, board, groupDatas);
     }
     private _getGroupDatas(coord: Coord, board: Table<T>, groupDatas: GroupDatas<T>): GroupDatas<T> {
-        display(GroupDatas.VERBOSE, { GroupDatas_getGroupDatas: { groupDatas, coord } });
         const color: T = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
         if (color === groupDatas.color) {

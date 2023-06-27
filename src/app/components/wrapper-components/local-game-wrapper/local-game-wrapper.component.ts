@@ -4,7 +4,7 @@ import { AbstractNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
@@ -21,6 +21,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
     templateUrl: './local-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
     public static override VERBOSE: boolean = false;
@@ -44,7 +45,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         super(actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
-        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
     public getCreatedNodes(): number {
         return MGPNodeStats.createdNodes;
@@ -71,8 +71,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
-        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onLegalUserMove');
-
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
         this.updateBoard();
         this.proposeAIToPlay();

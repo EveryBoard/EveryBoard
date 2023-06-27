@@ -6,7 +6,7 @@ import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
@@ -18,6 +18,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaState> {}
 
+@Debug.log
 export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     public static VERBOSE: boolean = false;
@@ -58,7 +59,6 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return playerFreedoms.sort((a: number, b: number) => a - b);
     }
     public applyLegalMove(move: SaharaMove, state: SaharaState, _info: void): SaharaState {
-        display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
         const board: FourStatePiece[][] = state.getCopiedBoard();
         board[move.getEnd().y][move.getEnd().x] = board[move.getStart().y][move.getStart().x];
         board[move.getStart().y][move.getStart().x] = FourStatePiece.EMPTY;

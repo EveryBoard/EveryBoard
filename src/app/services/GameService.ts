@@ -6,7 +6,7 @@ import { ConfigRoomService } from './ConfigRoomService';
 import { ChatService } from './ChatService';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, JSONValue, Utils } from 'src/app/utils/utils';
+import { Debug, JSONValue, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
 import { serverTimestamp } from 'firebase/firestore';
@@ -25,6 +25,7 @@ export interface StartingPartConfig extends Partial<Part> {
 @Injectable({
     providedIn: 'root',
 })
+@Debug.log
 export class GameService {
 
     public static VERBOSE: boolean = false;
@@ -35,7 +36,6 @@ export class GameService {
                        private readonly configRoomService: ConfigRoomService,
                        private readonly chatService: ChatService)
     {
-        display(GameService.VERBOSE, 'GameService.constructor');
     }
     private async update(id: string, update: Partial<Part>): Promise<void> {
         return this.partDAO.update(id, update);
@@ -52,8 +52,6 @@ export class GameService {
         }
     }
     private createUnstartedPart(typeGame: string): Promise<string> {
-        display(GameService.VERBOSE, 'GameService.createUnstartedPart(' + typeGame + ')');
-
         const playerZero: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
 
         const newPart: Part = {
@@ -65,13 +63,9 @@ export class GameService {
         return this.partDAO.create(newPart);
     }
     private createChat(chatId: string): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.createChat(' + chatId + ')');
-
         return this.chatService.createNewChat(chatId);
     }
     public async createPartConfigRoomAndChat(typeGame: string): Promise<string> {
-        display(GameService.VERBOSE, `GameService.createGame(${typeGame})`);
-
         const gameId: string = await this.createUnstartedPart(typeGame);
         await this.configRoomService.createInitialConfigRoom(gameId);
         await this.createChat(gameId);
@@ -103,12 +97,9 @@ export class GameService {
         };
     }
     public deletePart(partId: string): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
         return this.partDAO.delete(partId);
     }
     public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<void> {
-        display(GameService.VERBOSE, { gameService_acceptConfig: { partId, configRoom } });
-
         await this.configRoomService.acceptConfig(partId);
 
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
@@ -165,7 +156,6 @@ export class GameService {
         await this.gameEventService.addRequest(partId, player, 'Rematch');
     }
     public async acceptRematch(partDocument: PartDocument, player: Player): Promise<void> {
-        display(GameService.VERBOSE, { called: 'GameService.acceptRematch', partDocument });
         const part: Part = Utils.getNonNullable(partDocument.data);
 
         const configRoom: ConfigRoom = await this.configRoomService.readConfigRoomById(partDocument.id);
@@ -235,7 +225,6 @@ export class GameService {
         return update;
     }
     public async updatePart(partId: string, scores?: [number, number]): Promise<void> {
-        display(GameService.VERBOSE, { gameService_updatePart: { partId, scores } });
         const update: Partial<Part> = await this.preparePartUpdate(partId, scores);
         await this.update(partId, update);
     }

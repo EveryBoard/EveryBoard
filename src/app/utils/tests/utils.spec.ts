@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { display, isJSONPrimitive, Utils } from '../utils';
+import { Debug, isJSONPrimitive, Utils } from '../utils';
 
 describe('utils', () => {
 
@@ -58,23 +58,66 @@ describe('utils', () => {
             expect(Utils.getNonNullable(42)).toBe(42);
         });
     });
-    describe('display', () => {
-        it('should log if verbose is true', () => {
-            spyOn(console, 'log').and.callFake((_: string) => {});
-            display(true, 'foo');
-            expect(console.log).toHaveBeenCalledTimes(1);
-        });
-        it('should not log if verbose is false', () => {
-            spyOn(console, 'log').and.callFake((_: string) => {});
-            display(false, 'foo');
-            expect(console.log).not.toHaveBeenCalled();
-        });
-    });
     describe('assert', () => {
         it('should log error and throw when condition is false', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             expect(() => Utils.assert(false, 'error')).toThrowError('Assertion failure: error');
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'error');
+        });
+    });
+});
+
+@Debug.log
+class MyClass {
+    public someMethod(arg: number): string {
+        return 'boo';
+    }
+}
+
+describe('Debug', () => {
+    describe('display', () => {
+        it('should log when verbose is enabled', () => {
+            // Given a verbose-enabled name
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([true, true], 'Class', 'method');
+            // When calling Debug.display
+            Debug.display('Class', 'method', 'message');
+            // Then it should have logged the message
+            expect(console.log).toHaveBeenCalledOnceWith('Class.method: message');
+        });
+        it('should not log when verbose is disabled', () => {
+            // Given a verbose-disabled name
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([false, false], 'Class', 'method');
+            // When calling Debug.display
+            Debug.display('Class', 'method', 'message');
+            // Then it should have logged the message
+            expect(console.log).not.toHaveBeenCalled();
+        });
+    });
+    describe('log', () => {
+        it('should log when verbose is enabled', () => {
+            // Given a verbose-enabled method
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([true, true], 'MyClass', 'someMethod');
+            // When calling the method
+            const instance: MyClass = new MyClass();
+            instance.someMethod(42);
+
+            // Then it should have logged on entry and exit
+            expect(console.log).toHaveBeenCalledWith('> MyClass.someMethod(42)');
+            expect(console.log).toHaveBeenCalledWith('< MyClass.someMethod -> "boo"');
+        });
+        it('should not log when verbose is disabled', () => {
+            // Given a verbose-disabled method
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([false, false], 'MyClass', 'someMethod');
+            // When calling the method
+            const instance: MyClass = new MyClass();
+            instance.someMethod(42);
+
+            // Then it should not have logged
+            expect(console.log).not.toHaveBeenCalled();
         });
     });
 });

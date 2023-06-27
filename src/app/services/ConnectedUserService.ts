@@ -3,7 +3,7 @@ import * as FireAuth from '@angular/fire/auth';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
-import { display, Utils } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
@@ -99,6 +99,7 @@ export class AuthUser {
 @Injectable({
     providedIn: 'root',
 })
+@Debug.log
 export class ConnectedUserService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
@@ -119,14 +120,12 @@ export class ConnectedUserService implements OnDestroy {
                        private readonly userService: UserService,
                        private readonly auth: FireAuth.Auth)
     {
-        display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
-
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
         this.authSubscription =
             new Subscription(FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
-                    display(ConnectedUserService.VERBOSE, 'User is not connected');
+                    Debug.display('ConnectedUserService', 'subscription', 'User is not connected');
                     this.userSubscription.unsubscribe();
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
@@ -137,7 +136,7 @@ export class ConnectedUserService implements OnDestroy {
                             if (docOpt.isPresent()) {
                                 const doc: User = docOpt.get();
                                 const username: string | undefined = doc.username;
-                                display(ConnectedUserService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
+                                Debug.display('ConnectedUserService', 'subscription', `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
                                 const userHasFinalizedVerification: boolean =
                                     this.emailVerified(user) === true && username != null;
                                 if (userHasFinalizedVerification === true && doc.verified === false) {
@@ -175,7 +174,6 @@ export class ConnectedUserService implements OnDestroy {
      * Returns the firebase user upon success, or a failure otherwise.
      */
     public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<FireAuth.User>> {
-        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doRegister(' + email + ')');
         if (await this.userService.usernameIsAvailable(username)) {
             return this.registerAfterUsernameCheck(username, email, password);
         } else {
@@ -223,7 +221,6 @@ export class ConnectedUserService implements OnDestroy {
         }
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
-        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.sendEmailVerification()');
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
             if (this.emailVerified(user.get())) {
@@ -246,7 +243,6 @@ export class ConnectedUserService implements OnDestroy {
      * either success, or failure with a specific error.
      */
     public async doEmailLogin(email: string, password: string): Promise<MGPValidation> {
-        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doEmailLogin(' + email + ')');
         try {
             // Login through firebase. If the login is incorrect or fails for some reason, an error is thrown.
             await Auth.signInWithEmailAndPassword(this.auth, email, password);

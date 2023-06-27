@@ -30,9 +30,12 @@ export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };
 export class Debug {
     /**
      * Enables logging for a class or method programmatically.
-     * For example, call Debug.enableLog([true, false], 'YourClass', 'yourMethod') in app.component.ts
+     * For example, call `Debug.enableLog([true, false], 'YourClass', 'yourMethod')` in app.component.ts
+     * `entryExit` is composed of two booleans: the first states if we want to log entry to a method,
+     * the second if we want to log exit
      */
     public static enableLog(entryExit: [boolean, boolean], className: string, methodName?: string): void {
+        if (window['verbosity'] == undefined) window['verbosity'] = {};
         if (methodName) {
             window['verbosity'][className + '.' + methodName] = entryExit;
         } else {
@@ -52,12 +55,16 @@ export class Debug {
         }
         /* eslint-enable dot-notation */
     }
-    private static isMethodVerbose(className: string, methodName: string): [boolean, boolean] {
-        return Debug.isVerbose(className) || Debug.isVerbose(className + '.' + methodName);
+    private static isMethodVerboseEntry(className: string, methodName: string): boolean {
+        const r = Debug.isVerbose(className)[0] || Debug.isVerbose(className + '.' + methodName)[0];
+        return r;
+    }
+    private static isMethodVerboseExit(className: string, methodName: string): boolean {
+        return Debug.isVerbose(className)[1] || Debug.isVerbose(className + '.' + methodName)[1];
     }
     public static display(className: string, methodName: string, message: unknown): void {
-        if (Debug.isMethodVerbose(className, methodName)) {
-            console.log(message);
+        if (Debug.isMethodVerboseEntry(className, methodName)) {
+            console.log(`${className}.${methodName}: ${message}`);
         }
     }
     /**
@@ -77,13 +84,13 @@ export class Debug {
 
             const originalMethod: (...args: unknown[]) => unknown = descriptor.value;
             descriptor.value = function(...args: unknown[]): unknown {
-                if (Debug.isMethodVerbose(className, propertyName)[0]) {
+                if (Debug.isMethodVerboseEntry(className, propertyName)) {
                     const strArgs: string = Array.from(args).map((arg: unknown): string =>
                         JSON.stringify(arg)).join(', ');
                     console.log(`> ${className}.${propertyName}(${strArgs})`);
                 }
                 const result: unknown = originalMethod.apply(this, args);
-                if (Debug.isMethodVerbose(className, propertyName)[1]) {
+                if (Debug.isMethodVerboseExit(className, propertyName)) {
                     console.log(`< ${className}.${propertyName} -> ${JSON.stringify(result)}`);
                 }
                 return result;
@@ -137,5 +144,3 @@ export class Utils {
         return thing;
     }
 }
-
-export function display(cond: boolean, message: any): void {}

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, Utils } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -13,7 +13,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Comparable, comparableEquals } from 'src/app/utils/Comparable';
+import { Comparable } from 'src/app/utils/Comparable';
 
 export class GameWrapperMessages {
 
@@ -28,6 +28,7 @@ export class GameWrapperMessages {
 }
 
 @Component({ template: '' })
+@Debug.log
 export abstract class GameWrapper<P extends Comparable> {
 
     public static VERBOSE: boolean = false;
@@ -71,8 +72,6 @@ export abstract class GameWrapper<P extends Comparable> {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
     private async createGameComponent(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, { m: 'GameWrapper.createGameComponent', that: this });
-
         const gameName: string = this.getGameName();
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
         if (component.isAbsent()) {

@@ -3,7 +3,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -295,10 +295,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                 // if c is occupied
                 if (commonCriterion.isAbsent()) {
                     commonCriterion = MGPOptional.of(new QuartoCriterion(c));
-                    display(QuartoRules.VERBOSE, 'set commonCrit to ' + commonCriterion.toString());
+                    Debug.display('QuartoRules', 'getLineInfos', 'set commonCrit to ' + commonCriterion.toString());
                 } else {
                     commonCriterion.get().mergeWithQuartoPiece(c);
-                    display(QuartoRules.VERBOSE, 'update commonCrit: ' + commonCriterion.toString());
+                    Debug.display('QuartoRules', 'getLineInfos', 'update commonCrit: ' + commonCriterion.toString());
                 }
             }
             coord = coord.getNext(line.direction, 1);

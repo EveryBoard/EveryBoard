@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Utils, display } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoFailure } from './CoerceoFailure';
@@ -13,6 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
 
+@Debug.log
 export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 
     public static VERBOSE: boolean = false;
@@ -54,9 +55,6 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                                                               afterTileRemoval.turn + 1,
                                                               afterTileRemoval.tiles,
                                                               afterTileRemoval.captures);
-        display(CoerceoRules.VERBOSE,
-                { coerceoRules_applyLegalTileExchange:
-                    { a_initialState: state, afterCapture, afterTileRemoval, resultingState } });
         return resultingState;
     }
     public applyLegalMovement(move: CoerceoMove, state: CoerceoState): CoerceoState
@@ -71,12 +69,6 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                                                               state.turn + 1,
                                                               afterCaptures.tiles,
                                                               afterCaptures.captures);
-        display(CoerceoRules.VERBOSE, {
-            ab_state: state,
-            afterMovement,
-            afterTilesRemoved,
-            afterCaptures,
-            resultingState });
         return resultingState;
     }
     public isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
