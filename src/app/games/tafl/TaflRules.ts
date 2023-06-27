@@ -20,8 +20,6 @@ class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflSta
 
 export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S> {
 
-    public static VERBOSE: boolean = false;
-
     protected constructor(stateType: Type<S>,
                           public readonly config: TaflConfig,
                           public generateMove: (start: Coord, end: Coord) => M)
@@ -198,8 +196,6 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
          * - 2 opponents
          * - 1 opponents 1 empty-throne
          */
-        const LOCAL_VERBOSE: boolean = false;
-
         const threatenedPieceCoord: Coord = coord.getNext(direction);
 
         const backCoord: Coord = threatenedPieceCoord.getNext(direction);
@@ -243,7 +239,6 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                                             rightCoord: Coord)
     : MGPOptional<Coord>
     {
-        const LOCAL_VERBOSE: boolean = false;
         if (this.kingTouchCentralThrone(state, kingCoord) === false &&
             this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED)
         {
@@ -290,7 +285,6 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return GameStatus.ONGOING;
     }
     public getWinner(state: S): MGPOptional<Player> {
-        const LOCAL_VERBOSE: boolean = false;
         const optionalKingCoord: MGPOptional<Coord> = this.getKingCoord(state);
         if (optionalKingCoord.isAbsent()) {
             Debug.display('TaflRules', 'getWinner', 'The king is dead, victory to invader');

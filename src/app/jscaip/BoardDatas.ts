@@ -73,7 +73,6 @@ export abstract class GroupDatasFactory<T> {
 }
 
 export abstract class GroupDatas<T> {
-    public static VERBOSE: boolean = false;
 
     public constructor(public readonly color: T) {}
 

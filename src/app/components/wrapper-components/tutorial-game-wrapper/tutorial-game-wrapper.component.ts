@@ -25,8 +25,6 @@ type TutorialPlayer = 'tutorial-player';
 @Debug.log
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
 
-    public static override VERBOSE: boolean = false;
-
     public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Congratulations, you completed the tutorial.`;
 
     public steps: TutorialStep[] = [];

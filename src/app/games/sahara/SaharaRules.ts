@@ -21,8 +21,6 @@ export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaState> {}
 @Debug.log
 export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<SaharaRules> = MGPOptional.empty();
 
     public static get(): SaharaRules {

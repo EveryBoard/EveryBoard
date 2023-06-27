@@ -28,8 +28,6 @@ export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiState
 @Debug.log
 export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegalityInformation> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<ReversiRules> = MGPOptional.empty();
 
     public static get(): ReversiRules {

@@ -28,8 +28,6 @@ export interface StartingPartConfig extends Partial<Part> {
 @Debug.log
 export class GameService {
 
-    public static VERBOSE: boolean = false;
-
     public constructor(private readonly partDAO: PartDAO,
                        private readonly gameEventService: GameEventService,
                        private readonly connectedUserService: ConnectedUserService,

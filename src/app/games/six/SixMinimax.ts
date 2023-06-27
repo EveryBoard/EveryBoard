@@ -32,8 +32,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
 
     private static singleton: MGPOptional<SixMinimax> = MGPOptional.empty();
 
-    public VERBOSE: boolean = false;
-
     public static get(): SixMinimax {
         if (SixMinimax.singleton.isAbsent()) {
             const rules: SixRules = SixRules.get();

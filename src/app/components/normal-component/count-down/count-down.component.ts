@@ -6,9 +6,7 @@ import { Debug, Utils } from 'src/app/utils/utils';
     templateUrl: './count-down.component.html',
 })
 @Debug.log
-export class CountDownComponent implements OnInit, OnDestroy {
-
-    public static VERBOSE: boolean = false;
+export class CountDownComponent implements OnDestroy {
 
     @Input() debugName: string;
     @Input() timeToAdd: string;
@@ -36,8 +34,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
 
     public cssClasses: string = CountDownComponent.SAFE_TIME;
 
-    public ngOnInit(): void {
-    }
     // Set the duration (in ms) for a non-started countdown
     public setDuration(duration: number): void {
         Utils.assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');

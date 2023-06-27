@@ -10,8 +10,6 @@ import { Debug } from '../utils/utils';
 @Debug.log
 export class PartDAO extends FirestoreDAO<Part> {
 
-    public static override VERBOSE: boolean = false;
-
     public constructor(firestore: Firestore) {
         super('parts', firestore);
     }

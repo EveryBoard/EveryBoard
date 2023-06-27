@@ -39,8 +39,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         super(SiamState);
     }
 
-    public static VERBOSE: boolean = false;
-
     public isLegal(move: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {
         if (!move.isInsertion()) {
             const movedPiece: SiamPiece = state.getPieceAt(move.coord);

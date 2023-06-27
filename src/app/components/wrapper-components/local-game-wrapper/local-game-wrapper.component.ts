@@ -24,8 +24,6 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static override VERBOSE: boolean = false;
-
     public aiDepths: [string, string] = ['0', '0'];
 
     public playerSelection: [string, string] = ['human', 'human'];

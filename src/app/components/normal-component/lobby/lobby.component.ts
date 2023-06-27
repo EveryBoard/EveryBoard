@@ -20,8 +20,6 @@ type Tab = 'games' | 'create' | 'chat';
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = false;
-
     public activeUsers: UserDocument[] = [];
 
     public activeParts: PartDocument[] = [];

@@ -17,8 +17,6 @@ import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 @Debug.log
 export class ConfigRoomService {
 
-    public static VERBOSE: boolean = false;
-
     public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`Game does not exist`;
 
     public constructor(private readonly configRoomDAO: ConfigRoomDAO,

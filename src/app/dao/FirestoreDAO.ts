@@ -41,8 +41,6 @@ export interface IFirestoreDAO<T extends FirestoreJSONObject> {
 
 export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFirestoreDAO<T> {
 
-    public static VERBOSE: boolean = false;
-
     public readonly collection: Firestore.CollectionReference<T>;
 
     private readonly subDAOs: Record<string, IFirestoreDAO<FirestoreJSONObject>> = {};

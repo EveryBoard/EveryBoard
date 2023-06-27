@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Debug, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -28,10 +28,7 @@ export class GameWrapperMessages {
 }
 
 @Component({ template: '' })
-@Debug.log
 export abstract class GameWrapper<P extends Comparable> {
-
-    public static VERBOSE: boolean = false;
 
     // This holds the #board html element
     @ViewChild('board', { read: ViewContainerRef })

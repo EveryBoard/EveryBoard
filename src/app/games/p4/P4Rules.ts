@@ -19,8 +19,6 @@ export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
 @Debug.log
 export class P4Rules extends Rules<P4Move, P4State> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
 
     public static get(): P4Rules {

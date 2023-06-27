@@ -18,8 +18,6 @@ export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
                                                       TaflRules<TaflMove, TaflState>>
 {
     public getListMoves(node: TaflNode): TaflMove[] {
-        const LOCAL_VERBOSE: boolean = false;
-
         const state: TaflState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         const listMoves: TaflMove[] = this.ruler.getPlayerListMoves(currentPlayer, state);

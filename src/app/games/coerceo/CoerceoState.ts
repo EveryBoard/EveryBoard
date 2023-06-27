@@ -13,8 +13,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 @Debug.log
 export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
-    public static VERBOSE: boolean = false;
-
     public static readonly NEIGHBORS_TILES_DIRECTIONS: ReadonlyArray<Vector> = [
         new Vector(+0, -2), // UP
         new Vector(+3, -1), // UP_RIGHT

@@ -35,7 +35,7 @@ export class Debug {
      * the second if we want to log exit
      */
     public static enableLog(entryExit: [boolean, boolean], className: string, methodName?: string): void {
-        if (window['verbosity'] == undefined) window['verbosity'] = {};
+        if (window['verbosity'] === undefined) window['verbosity'] = {};
         if (methodName) {
             window['verbosity'][className + '.' + methodName] = entryExit;
         } else {
@@ -56,8 +56,7 @@ export class Debug {
         /* eslint-enable dot-notation */
     }
     private static isMethodVerboseEntry(className: string, methodName: string): boolean {
-        const r = Debug.isVerbose(className)[0] || Debug.isVerbose(className + '.' + methodName)[0];
-        return r;
+        return Debug.isVerbose(className)[0] || Debug.isVerbose(className + '.' + methodName)[0];
     }
     private static isMethodVerboseExit(className: string, methodName: string): boolean {
         return Debug.isVerbose(className)[1] || Debug.isVerbose(className + '.' + methodName)[1];

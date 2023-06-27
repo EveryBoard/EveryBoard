@@ -24,8 +24,6 @@ export class MGPNode<R extends Rules<M, S, L>,
                      L = void,
                      B extends BoardValue = BoardValue> {
 
-    public static VERBOSE: boolean = false;
-
     public static minimaxes: MGPMap<string, Minimax<Move, GameState>> = new MGPMap();
 
     private childs: MGPOptional<MGPNode<R, M, S, L, B>[]> = MGPOptional.empty();
@@ -53,7 +51,6 @@ export class MGPNode<R extends Rules<M, S, L>,
         /* the score status is VICTORY if the score is minValue or MaxValue,
          * because it's how we encode the boardValue if there's a victory
          */
-        const LOCAL_VERBOSE: boolean = false;
         if (score === Number.MAX_SAFE_INTEGER) {
             Debug.display('MGPNode', 'getScoreStatus', 'VICTORY');
             return SCORE.VICTORY;
@@ -118,7 +115,6 @@ export class MGPNode<R extends Rules<M, S, L>,
                      prune: boolean)
     : MGPNode<R, M, S, L, B>
     {
-        const LOCAL_VERBOSE: boolean = false;
         if (depth < 1) {
             Debug.display('MGPNode', 'alphaBeta', 'isLeaf-Calculation : ' + this.myToString() + ' at depth ' + depth);
             return this; // leaf by calculation

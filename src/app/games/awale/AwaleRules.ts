@@ -26,8 +26,6 @@ export interface CaptureResult {
 @Debug.log
 export class AwaleRules extends Rules<AwaleMove, AwaleState> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
     public static get(): AwaleRules {

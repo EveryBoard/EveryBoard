@@ -127,8 +127,6 @@ interface LineInfos {
 
 export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<QuartoRules> = MGPOptional.empty();
 
     public static get(): QuartoRules {

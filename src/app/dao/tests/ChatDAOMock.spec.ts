@@ -13,14 +13,12 @@ type MessageOS = ObservableSubject<MGPOptional<MessageDocument>>
 @Debug.log
 export class ChatDAOMock extends FirestoreDAOMock<Chat> {
 
-    public static override VERBOSE: boolean = false;
-
     private static chatDB: MGPMap<string, ChatOS>;
 
     public static messagesDB: MGPMap<string, MGPMap<string, MessageOS>>;
 
     public constructor() {
-        super('ChatDAOMock', ChatDAOMock.VERBOSE);
+        super('ChatDAOMock');
     }
     public getStaticDB(): MGPMap<string, ChatOS> {
         return ChatDAOMock.chatDB;

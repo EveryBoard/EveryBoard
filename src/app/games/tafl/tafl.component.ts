@@ -28,7 +28,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public lastMove: MGPOptional<M> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       public VERBOSE: boolean,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
         super(messageDisplayer);

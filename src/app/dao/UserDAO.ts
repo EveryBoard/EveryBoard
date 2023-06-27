@@ -10,8 +10,6 @@ import { Firestore } from '@angular/fire/firestore';
 @Debug.log
 export class UserDAO extends FirestoreDAO<User> {
 
-    public static override VERBOSE: boolean = false;
-
     public static COLLECTION_NAME: string = 'users';
 
     public constructor(firestore: Firestore) {

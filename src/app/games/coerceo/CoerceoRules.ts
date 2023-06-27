@@ -16,8 +16,6 @@ export class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState
 @Debug.log
 export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<CoerceoRules> = MGPOptional.empty();
 
     public static get(): CoerceoRules {

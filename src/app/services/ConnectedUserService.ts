@@ -102,8 +102,6 @@ export class AuthUser {
 @Debug.log
 export class ConnectedUserService implements OnDestroy {
 
-    public static VERBOSE: boolean = false;
-
     private readonly authSubscription: Subscription;
 
     /**

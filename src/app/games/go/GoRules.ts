@@ -22,8 +22,6 @@ export class GoNode extends MGPNode<GoRules, GoMove, GoState, GoLegalityInformat
 @Debug.log
 export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
 
     public static get(): GoRules {

@@ -26,8 +26,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              SaharaState,
                                                              FourStatePiece>
 {
-    public static VERBOSE: boolean = false;
-
     public lastCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();

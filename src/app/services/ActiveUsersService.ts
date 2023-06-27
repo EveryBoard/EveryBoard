@@ -12,8 +12,6 @@ import { Timestamp } from 'firebase/firestore';
 @Debug.log
 export class ActiveUsersService {
 
-    public static VERBOSE: boolean = false;
-
     public constructor(public userDAO: UserDAO) {
     }
     public subscribeToActiveUsers(callback: (users: UserDocument[]) => void): Subscription {

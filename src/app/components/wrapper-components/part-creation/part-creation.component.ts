@@ -64,8 +64,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      * they need common data so that the parent calculates/retrieves the data then share it
      * with the part creation component
      */
-    public static VERBOSE: boolean = false;
-
     public static TOKEN_INTERVAL: number = 5 * 1000;
 
     public static TOKEN_TIMEOUT: number = PartCreationComponent.TOKEN_INTERVAL * 2;

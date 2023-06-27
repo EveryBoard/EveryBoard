@@ -32,8 +32,6 @@ export class SixRules extends Rules<SixMove,
                                     SixBoardValue>
 {
 
-    public VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<SixRules> = MGPOptional.empty();
 
     public static get(): SixRules {

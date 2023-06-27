@@ -15,8 +15,6 @@ type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
 @Debug.log
 export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements IFirestoreDAO<T> {
 
-    public static VERBOSE: boolean = false;
-
     public static mockServerTime(): Timestamp {
         const dateNow: number = Date.now();
         const ms: number = dateNow % 1000;
@@ -29,9 +27,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
 
     private readonly subDAOs: MGPMap<string, IFirestoreDAO<FirestoreJSONObject>> = new MGPMap();
 
-    public constructor(public readonly collectionName: string,
-                       public VERBOSE: boolean)
-    {
+    public constructor(public readonly collectionName: string) {
         this.reset();
     }
     public abstract getStaticDB(): MGPMap<string, DocumentSubject<T>>;
@@ -229,7 +225,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             return this.subDAOs.get(name).get() as IFirestoreDAO<T>;
         } else {
             const superName: string = this.collectionName;
-            const verbosity: boolean = this.VERBOSE;
             type OS = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
             class CustomMock extends FirestoreDAOMock<T> {
                 private static db: MGPMap<string, OS>;
@@ -240,7 +235,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                     CustomMock.db = new MGPMap();
                 }
                 public constructor() {
-                    super(`${superName}/${id}/${name}`, verbosity);
+                    super(`${superName}/${id}/${name}`);
                 }
             }
             const mock: FirestoreDAOMock<T> = new CustomMock();

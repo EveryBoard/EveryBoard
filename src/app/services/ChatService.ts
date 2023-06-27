@@ -20,7 +20,6 @@ export class ChatMessages {
 })
 @Debug.log
 export class ChatService {
-    public static VERBOSE: boolean = false;
 
     public constructor(private readonly chatDAO: ChatDAO) {}
 

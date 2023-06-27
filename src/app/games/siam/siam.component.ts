@@ -37,8 +37,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamPiece,
                                                             SiamLegalityInformation>
 {
-    public static VERBOSE: boolean = false;
-
     public lastMove: MGPOptional<SiamMove> = MGPOptional.empty();
     public movedPieces: Coord[] = [];
     public selectedPiece: MGPOptional<Coord> = MGPOptional.empty();
