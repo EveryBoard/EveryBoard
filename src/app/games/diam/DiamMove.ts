@@ -4,6 +4,7 @@ import { DiamPiece } from './DiamPiece';
 import { Encoder } from '../../utils/Encoder';
 
 export class DiamMoveDrop extends Move {
+
     public static encoder: Encoder<DiamMoveDrop> = Encoder.tuple(
         [Encoder.identity<number>(), DiamPiece.encoder],
         (drop: DiamMoveDrop): [number, DiamPiece] => [drop.target, drop.piece],
@@ -73,16 +74,17 @@ export class DiamMoveShift extends Move {
 
 export type DiamMove = DiamMoveDrop | DiamMoveShift;
 
+function isShift(move: DiamMove): move is DiamMoveShift {
+    return move instanceof DiamMoveShift;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace DiamMove {
 
     export function isDrop(move: DiamMove): move is DiamMoveDrop {
         return move instanceof DiamMoveDrop;
     }
-    export function isShift(move: DiamMove): move is DiamMoveShift {
-        return move instanceof DiamMoveShift;
-    }
     export const encoder: Encoder<DiamMove> =
-        Encoder.disjunction([DiamMove.isDrop, DiamMove.isShift],
+        Encoder.disjunction([DiamMove.isDrop, isShift],
                             [DiamMoveDrop.encoder, DiamMoveShift.encoder]);
 }

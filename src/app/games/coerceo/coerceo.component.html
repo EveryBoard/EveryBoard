@@ -7,6 +7,7 @@
            id="click_{{ x }}_{{ y }}"
            (click)="onClick(x, y)">
             <polygon *ngIf="isPyramid(x, y) else emptySpace"
+                     id="pyramid_{{ x }}_{{ y }}"
                      [attr.points]="getPyramidCoordinate(x, y)"
                      [ngClass]="getPyramidClass(x, y)"
                      class="base mid-stroke"

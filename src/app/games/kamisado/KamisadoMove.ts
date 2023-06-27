@@ -56,6 +56,10 @@ export class KamisadoPieceMove extends MoveCoordToCoord {
     }
 }
 
+function isPass(move: KamisadoMove): move is KamisadoPassMove {
+    return move instanceof KamisadoPassMove;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace KamisadoMove {
 
@@ -67,10 +71,7 @@ export namespace KamisadoMove {
     export function isPiece(move: KamisadoMove): move is KamisadoPieceMove {
         return move instanceof KamisadoPieceMove;
     }
-    export function isPass(move: KamisadoMove): move is KamisadoPassMove {
-        return move instanceof KamisadoPassMove;
-    }
     export const encoder: Encoder<KamisadoMove> =
-        Encoder.disjunction([KamisadoMove.isPiece, KamisadoMove.isPass],
+        Encoder.disjunction([KamisadoMove.isPiece, isPass],
                             [KamisadoPieceMove.encoder, KamisadoPassMove.encoder]);
 }

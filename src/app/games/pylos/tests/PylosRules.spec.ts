@@ -176,7 +176,7 @@ describe('PylosRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason);
 
         const otherMove: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0),
-                                                        [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
+                                                      [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
         RulesUtils.expectMoveFailure(rules, state, otherMove, PylosFailure.INVALID_SECOND_CAPTURE());
     });
     it('should forbid move who capture a piece that became supporting during the same move', () => {
@@ -299,8 +299,8 @@ describe('PylosRules', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 3, 0),
-                                                    new PylosCoord(0, 0, 1),
-                                                    [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
+                                                  new PylosCoord(0, 0, 1),
+                                                  [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
         const status: MGPValidation = rules.isLegal(move, state);
         expect(status.isSuccess()).toBeTrue();
     });

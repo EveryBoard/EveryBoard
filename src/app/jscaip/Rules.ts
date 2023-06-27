@@ -1,7 +1,7 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { Type } from '@angular/core';
-import { JSONValue, display } from '../utils/utils';
+import { display } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -72,17 +72,6 @@ export abstract class Rules<M extends Move,
         // eslint-disable-next-line dot-notation
         const initialState: S = this.stateType['getInitialState']();
         return new MGPNode(initialState);
-    }
-    public applyMoves(encodedMoves: JSONValue[], state: S, moveDecoder: (em: JSONValue) => M): S {
-        let i: number = 0;
-        for (const encodedMove of encodedMoves) {
-            const move: M = moveDecoder(encodedMove);
-            const legality: MGPFallible<L> = this.isLegal(move, state);
-            assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
-            state = this.applyLegalMove(move, state, legality.get());
-            i++;
-        }
-        return state;
     }
     public abstract getGameStatus(node: MGPNode<Rules<M, S, L>, M, S, L>): GameStatus;
 }

@@ -100,6 +100,18 @@ export class HivePassMove extends Move {
 
 export type HiveMove = HiveDropMove | HiveCoordToCoordMove | HiveSpiderMove | HivePassMove;
 
+function isInstanceOfHiveDropMove(value: HiveMove): boolean {
+    return value instanceof HiveDropMove;
+}
+function isInstanceOfHiveMoveSpider(value: HiveMove): boolean {
+    return value instanceof HiveSpiderMove;
+}
+function isInstanceOfHiveMoveCoordToCoord(value: HiveMove): boolean {
+    return value instanceof HiveCoordToCoordMove;
+}
+function isInstanceOfHiveMovePass(value: HiveMove): boolean {
+    return value instanceof HivePassMove;
+}
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace HiveMove {
 
@@ -113,18 +125,6 @@ export namespace HiveMove {
     }
     export function spiderMove(coords: [Coord, Coord, Coord, Coord]): HiveMove {
         return HiveSpiderMove.ofCoords(coords);
-    }
-    export function isInstanceOfHiveDropMove(value: HiveMove): boolean {
-        return value instanceof HiveDropMove;
-    }
-    export function isInstanceOfHiveMoveSpider(value: HiveMove): boolean {
-        return value instanceof HiveSpiderMove;
-    }
-    export function isInstanceOfHiveMoveCoordToCoord(value: HiveMove): boolean {
-        return value instanceof HiveCoordToCoordMove;
-    }
-    export function isInstanceOfHiveMovePass(value: HiveMove): boolean {
-        return value instanceof HivePassMove;
     }
     export const encoder: Encoder<HiveMove> = Encoder.disjunction(
         [

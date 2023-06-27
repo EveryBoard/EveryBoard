@@ -44,10 +44,10 @@ export class CoerceoRegularMove extends MoveCoordToCoord {
 
     public static of(start: Coord, end: Coord): CoerceoRegularMove {
         const step: CoerceoStep = CoerceoStep.ofCoords(start, end);
-        const move: CoerceoRegularMove = CoerceoRegularMove.ofMovement(start, step) as CoerceoRegularMove;
+        const move: CoerceoRegularMove = CoerceoRegularMove.ofMovement(start, step);
         return move;
     }
-    public static ofMovement(start: Coord, step: CoerceoStep): CoerceoMove {
+    public static ofMovement(start: Coord, step: CoerceoStep): CoerceoRegularMove {
         Utils.assert(start.isInRange(15, 10), 'Starting coord cannot be out of range (width: 15, height: 10).');
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
         Utils.assert(landingCoord.isInRange(15, 10), 'Landing coord cannot be out of range (width: 15, height: 10).');

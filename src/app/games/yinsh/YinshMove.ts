@@ -48,8 +48,6 @@ export type YinshFields = [YinshCapture[], Coord, MGPOptional<Coord>, YinshCaptu
 
 export class YinshMove extends Move {
 
-    private static readonly coordOptionalEncoder: Encoder<MGPOptional<Coord>> = MGPOptional.getEncoder(Coord.encoder);
-
     public static encoder: Encoder<YinshMove> = Encoder.tuple(
         [
             Encoder.list(YinshCapture.encoder),

@@ -15,14 +15,11 @@ import { Utils } from 'src/app/utils/utils';
 
 export class ConspirateursMoveDrop extends MoveCoord {
 
-    public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getFallibleEncoder(ConspirateursMoveDrop.from);
+    public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getEncoder(ConspirateursMoveDrop.of);
 
-    public static from(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
-        if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
-            return MGPFallible.success(new ConspirateursMoveDrop(coord));
-        } else {
-            return MGPFallible.failure('Move out of board');
-        }
+    public static of(coord: Coord): ConspirateursMoveDrop {
+        Utils.assert(coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT), 'Move out of board');
+        return new ConspirateursMoveDrop(coord);
     }
     private constructor(coord: Coord) {
         super(coord.x, coord.y);
@@ -63,10 +60,7 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
     }
     public override equals(other: ConspirateursMove): boolean {
         if (ConspirateursMove.isSimple(other)) {
-            if (other === this) return true;
-            if (other.getStart().equals(this.getStart()) === false) return false;
-            if (other.getEnd().equals(this.getEnd()) === false) return false;
-            return true;
+            return super.equals(other as this);
         } else {
             return false;
         }

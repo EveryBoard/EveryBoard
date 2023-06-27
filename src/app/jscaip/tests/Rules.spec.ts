@@ -7,6 +7,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from '../GameStatus';
 import { JSONValue } from 'src/app/utils/utils';
+import { RulesUtils } from './RulesUtils.spec';
 
 class MyAbstractState extends GameStateWithTable<number> {
 
@@ -69,7 +70,10 @@ describe('Rules', () => {
         const encodedMoveList: JSONValue[] = moveValues.map((n: number) => P4Move.encoder.encode(P4Move.of(n)));
 
         // When calling applyMoves
-        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decode);
+        const state: MyAbstractState = RulesUtils.applyMoves(rules,
+                                                             encodedMoveList,
+                                                             initialState,
+                                                             P4Move.encoder.decode);
 
         // Then last move should be the last one encoded and state should be adapted
         expect(state.board).toEqual([moveValues]);

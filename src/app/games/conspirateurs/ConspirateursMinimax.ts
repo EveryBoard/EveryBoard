@@ -31,7 +31,7 @@ export class ConspirateursMinimax extends PlayerMetricsMinimax<ConspirateursMove
         for (let y: number = start.y; y <= end.y; y++) {
             for (let x: number = start.x; x <= end.x; x++) {
                 if (state.getPieceAtXY(x, y) === PlayerOrNone.NONE) {
-                    moves.push(ConspirateursMoveDrop.from(new Coord(x, y)).get());
+                    moves.push(ConspirateursMoveDrop.of(new Coord(x, y)));
                 }
             }
         }

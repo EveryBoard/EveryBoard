@@ -127,7 +127,7 @@ describe('CoerceoComponent', () => {
         }));
     });
     describe('First click', () => {
-        it('should accept tiles exchange proposal as first click', fakeAsync(async() => {
+        it('should refuse tiles exchange proposal as first click', fakeAsync(async() => {
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
             await testUtils.expectMoveFailure('#click_6_9',
                                               CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
@@ -220,6 +220,38 @@ describe('CoerceoComponent', () => {
             // Then the highlight of the last move should be present
             testUtils.expectElementToHaveClass('#last_start_6_2', 'last-move-stroke');
             testUtils.expectElementToHaveClass('#last_end_7_3', 'last-move-stroke');
+        }));
+    });
+    describe('showLastMove', () => {
+        it('should work for tile exchange', fakeAsync(async() => {
+            // Given a board where last move was a piece move
+            const board: FourStatePiece[][] = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
+                [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
+            ];
+            const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
+            testUtils.setupState(state, undefined, CoerceoRegularMove.of(new Coord(8, 9), new Coord(6, 9)));
+            testUtils.expectElementToHaveClasses('#last_end_6_9', ['base', 'no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#last_start_8_9', ['base', 'no-fill', 'last-move-stroke']);
+
+            // When applying a tile exchange
+            await testUtils.expectMoveSuccess('#click_6_9',
+                                              CoerceoTileExchangeMove.of(new Coord(6, 9)),
+                                              undefined,
+                                              [0, 0]);
+
+            // Then the start and end of penultimate move should be gone
+            testUtils.expectElementNotToExist('#last_end_6_9');
+            testUtils.expectElementNotToExist('#last_start_8_9');
+            testUtils.expectElementToHaveClass('#pyramid_6_9', 'captured-fill');
         }));
     });
 });

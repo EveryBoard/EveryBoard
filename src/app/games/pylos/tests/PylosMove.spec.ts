@@ -14,7 +14,7 @@ describe('PylosMove', () => {
         // Given two coord on the same Z level
         // When creating a move going horizontally
         function creatingAMoveGoingHorizontally(): void {
-            PylosMove.ofClimb(coord, new PylosCoord(1, 1, 0), [])
+            PylosMove.ofClimb(coord, new PylosCoord(1, 1, 0), []);
         }
         // Then it should throw
         const error: string = PylosFailure.MUST_MOVE_UPWARD();

@@ -58,15 +58,15 @@ export abstract class Encoder<T> {
     /**
      * This creates a "sum" encoder, i.e., it encodes values of either type T and U and V and ...
      */
-    public static disjunction<T>(identifiers: ((value: unknown) => boolean)[],
+    public static disjunction<T>(typePredicates: ((value: unknown) => boolean)[],
                                  encoders: Encoder<unknown>[],
     ): Encoder<T>
     {
-        Utils.assert(identifiers.length === encoders.length, 'identifiers and encoders should have same length');
+        Utils.assert(typePredicates.length === encoders.length, 'typePredicates and encoders should have same length');
         return new class extends Encoder<T> {
             public encode(value: T): JSONValueWithoutArray {
                 let indexClass: number = 0;
-                for (const identifier of identifiers) {
+                for (const identifier of typePredicates) {
                     if (identifier(value) === true) {
                         return {
                             type: indexClass,

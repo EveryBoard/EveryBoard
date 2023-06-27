@@ -8,7 +8,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('ConspirateursMove', () => {
     function drop(target: Coord): ConspirateursMoveDrop {
-        return ConspirateursMoveDrop.from(target).get();
+        return ConspirateursMoveDrop.of(target);
     }
     function simpleMove(start: Coord, end: Coord): ConspirateursMoveSimple {
         return ConspirateursMoveSimple.from(start, end).get();
@@ -34,7 +34,9 @@ describe('ConspirateursMove', () => {
             expect(ConspirateursMove.isJump(move)).toBeFalse();
         });
         it('should forbid creating a drop out of the board', () => {
-            expect(ConspirateursMoveDrop.from(new Coord(-1, -1)).isFailure()).toBeTrue();
+            RulesUtils.expectToThrowAndLog(() => {
+                ConspirateursMoveDrop.of(new Coord(-1, -1));
+            }, 'Move out of board');
         });
     });
     describe('simple', () => {
@@ -116,7 +118,7 @@ describe('ConspirateursMove', () => {
     });
     it('should have a bijective encoder', () => {
         const moves: ConspirateursMove[] = [
-            ConspirateursMoveDrop.from(new Coord(7, 7)).get(),
+            ConspirateursMoveDrop.of(new Coord(7, 7)),
             ConspirateursMoveSimple.from(new Coord(7, 7), new Coord(7, 8)).get(),
             ConspirateursMoveJump.from([new Coord(7, 7), new Coord(7, 9)]).get(),
         ];

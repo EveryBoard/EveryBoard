@@ -135,5 +135,4 @@ export class EncapsuleSpace {
         const pieceNames: string[] = this.toOrderedPieceNames();
         return '(' + pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';
     }
-    // TODO FOR REVIEW: haha, on a un moyen de repérer les fonctions qui n'apparaissent QUE dans leur définition ET *.spec.ts ?
 }

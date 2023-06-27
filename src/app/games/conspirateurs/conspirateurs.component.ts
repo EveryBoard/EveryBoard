@@ -8,7 +8,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/assert';
 import { ConspirateursMinimax } from './ConspirateursMinimax';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
@@ -187,9 +186,8 @@ export class ConspirateursComponent
         } else if (this.selected.isPresent()) {
             return this.selectNextCoord(coord);
         } else if (state.isDropPhase()) {
-            const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.from(coord);
-            assert(move.isSuccess(), 'ConspirateursMove should be valid by construction');
-            return this.chooseMove(move.get(), state);
+            const move: ConspirateursMove = ConspirateursMoveDrop.of(coord);
+            return this.chooseMove(move, state);
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }

@@ -13,6 +13,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { GameStatus } from '../GameStatus';
 import { BoardValue } from '../BoardValue';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 
 export class RulesUtils {
 
@@ -150,5 +151,28 @@ export class RulesUtils {
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         expect(func).toThrowError('Assertion failure: ' + error);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
+    }
+    /**
+     * @param ruler the rules of the game you need to debug
+     * @param encodedMoves the encoded moves that caused the bug
+     * @param state the board on which theses moves have to be applied
+     * @param moveDecoder the move decoder
+     * @returns the state create from applying move, enjoy you debug !
+     */
+    public static applyMoves<S extends GameState, M extends Move, L>(ruler: Rules<M, S, L>,
+                                                                     encodedMoves: JSONValue[],
+                                                                     state: S,
+                                                                     moveDecoder: (em: JSONValue) => M)
+    : S
+    {
+        let i: number = 0;
+        for (const encodedMove of encodedMoves) {
+            const move: M = moveDecoder(encodedMove);
+            const legality: MGPFallible<L> = ruler.isLegal(move, state);
+            Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
+            state = ruler.applyLegalMove(move, state, legality.get());
+            i++;
+        }
+        return state;
     }
 }
