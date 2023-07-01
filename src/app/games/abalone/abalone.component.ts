@@ -297,7 +297,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             const lastPiece: Coord = this.selecteds[this.selecteds.length - 1];
             move = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
         }
-        return this.chooseMove(move, state, this.scores.get());
+        return this.chooseMove(move);
     }
     public async onSpaceClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);

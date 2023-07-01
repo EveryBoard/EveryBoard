@@ -391,7 +391,6 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
-                                   state?: GameState,
                                    scores?: readonly [number, number])
     : Promise<void>
     {
@@ -400,7 +399,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state ?? this.gameComponent.getState();
+            const moveState: GameState = this.gameComponent.getState();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
@@ -419,7 +418,6 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public async expectMoveFailure(elementName: string,
                                    reason: string,
                                    move: Move,
-                                   state?: GameState,
                                    scores?: readonly [number, number])
     : Promise<void>
     {
@@ -428,7 +426,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state ?? this.gameComponent.getState();
+            const moveState: GameState = this.gameComponent.getState();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();

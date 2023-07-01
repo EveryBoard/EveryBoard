@@ -207,7 +207,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const state: QuartoState = wrapper.gameComponent.getState() as QuartoState;
-        const result: MGPValidation = await wrapper.gameComponent.chooseMove(move, state);
+        const result: MGPValidation = await wrapper.gameComponent.chooseMove(move);
         const message: string = 'move ' + move.toString() + ' should be legal but failed because: ' + result.getReasonOr('no failure');
         expect(result.isSuccess()).withContext(message).toEqual(legal);
         testUtils.detectChanges();

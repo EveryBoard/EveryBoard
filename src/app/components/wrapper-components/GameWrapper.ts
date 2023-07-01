@@ -89,8 +89,8 @@ export abstract class GameWrapper<P extends Comparable> {
         this.gameComponent = componentRef.instance;
 
         this.gameComponent.chooseMove = // so that when the game component do a move
-            (m: Move, s: GameState, scores?: [number, number]): Promise<MGPValidation> => {
-                return this.receiveValidMove(m, s, scores);
+            (m: Move): Promise<MGPValidation> => {
+                return this.receiveValidMove(m);
             };
         // the game wrapper can then act accordingly to the chosen move.
         this.gameComponent.canUserPlay =
@@ -98,7 +98,7 @@ export abstract class GameWrapper<P extends Comparable> {
             (elementName: string): MGPValidation => {
                 return this.onUserClick(elementName);
             };
-        // the game wrapper can act accordly
+        // the game wrapper can act accordingly
         this.gameComponent.isPlayerTurn = (): boolean => {
             return this.isPlayerTurn();
         };
@@ -119,11 +119,7 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
-    public async receiveValidMove(move: Move,
-                                  state: GameState,
-                                  scores?: [number, number])
-    : Promise<MGPValidation>
-    {
+    public async receiveValidMove(move: Move): Promise<MGPValidation> {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
                 { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
@@ -133,13 +129,13 @@ export abstract class GameWrapper<P extends Comparable> {
         if (this.endGame) {
             return MGPValidation.failure($localize`The game has ended.`);
         }
-        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state);
+        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, this.gameComponent.getState());
         if (legality.isFailure()) {
             this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);
         }
         this.gameComponent.cancelMoveAttempt();
-        await this.onLegalUserMove(move, scores);
+        await this.onLegalUserMove(move);
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;
     }

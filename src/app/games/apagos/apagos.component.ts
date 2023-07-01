@@ -217,7 +217,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             move = ApagosMove.drop(clicked, player);
         }
         const state: ApagosState = this.getState();
-        return this.chooseMove(move, state);
+        return this.chooseMove(move);
     }
     public getPieceClasses(x: number, i: number, square: ApagosSquare): string[] {
         const pieceLocation: PieceLocation = { square: x, piece: i };

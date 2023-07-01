@@ -225,7 +225,7 @@ export class GameService {
     public async addTurnTime(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addAction(partId, player, 'AddTurnTime');
     }
-    private async preparePartUpdate(partId: string, scores?: [number, number]): Promise<Partial<Part>> {
+    private async preparePartUpdate(partId: string, scores: MGPOptional<readonly [number, number]>): Promise<Partial<Part>> {
         const part: Part = (await this.partDAO.read(partId)).get();
         const turn: number = part.turn + 1;
         let update: Partial<Part> = {
@@ -234,12 +234,12 @@ export class GameService {
         update = this.updateScore(update, scores);
         return update;
     }
-    public async updatePart(partId: string, scores?: [number, number]): Promise<void> {
+    public async updatePart(partId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
         display(GameService.VERBOSE, { gameService_updatePart: { partId, scores } });
         const update: Partial<Part> = await this.preparePartUpdate(partId, scores);
         await this.update(partId, update);
     }
-    public async drawPart(partId: string, player: Player, scores?: [number, number]): Promise<void> {
+    public async drawPart(partId: string, player: Player, scores: MGPOptional<readonly [number, number]>): Promise<void> {
         let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
         update = {
             ...update,
@@ -252,7 +252,9 @@ export class GameService {
                                     player: Player,
                                     winner: MinimalUser,
                                     loser: MinimalUser,
-                                    scores?: [number, number]): Promise<void> {
+                                    scores: MGPOptional<readonly [number, number]>)
+    : Promise<void>
+    {
         let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
         update = {
             ...update,
@@ -266,8 +268,8 @@ export class GameService {
     public async addMove(partId: string, player: Player, encodedMove: JSONValue): Promise<void> {
         await this.gameEventService.addMove(partId, player, encodedMove);
     }
-    private updateScore(update: Partial<Part>, scores?: [number, number]): Partial<Part> {
-        if (scores !== undefined) {
+    private updateScore(update: Partial<Part>, scores: MGPOptional<readonly [number, number]>): Partial<Part> {
+        if (scores.isPresent()) {
             return {
                 ...update,
                 scorePlayerZero: scores[0],

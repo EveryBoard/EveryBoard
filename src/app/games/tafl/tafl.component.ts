@@ -105,7 +105,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const chosenDestination: Coord = new Coord(x, y);
         const move: MGPFallible<M> = this.generateMove(chosenPiece, chosenDestination);
         if (move.isSuccess()) {
-            return await this.chooseMove(move.get(), this.getState());
+            return await this.chooseMove(move.get());
         } else {
             return this.cancelMove(move.getReason());
         }
