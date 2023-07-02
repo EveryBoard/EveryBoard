@@ -9,7 +9,6 @@ import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -122,7 +121,7 @@ export abstract class GameWrapper<P extends Comparable> {
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
-                { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
+                { gameWrapper_receiveValidMove_AKA_chooseMove: { move } });
         if (this.isPlayerTurn() === false) {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }

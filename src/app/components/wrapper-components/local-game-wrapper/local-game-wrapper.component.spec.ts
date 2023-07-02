@@ -334,8 +334,7 @@ describe('LocalGameWrapperComponent', () => {
             wrapper.aiDepths[0] = '1';
 
             // When receiveValidMove is called
-            const state: P4State = testUtils.getComponent().getState();
-            const result: MGPValidation = await wrapper.receiveValidMove(P4Move.ZERO, state);
+            const result: MGPValidation = await wrapper.receiveValidMove(P4Move.ZERO);
 
             // Then it should display a message
             expect(result.isFailure()).toBeTrue();

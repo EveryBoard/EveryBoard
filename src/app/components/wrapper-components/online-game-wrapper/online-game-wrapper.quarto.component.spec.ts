@@ -12,7 +12,6 @@ import { GameEventService } from 'src/app/services/GameEventService';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { Action, MGPResult, Part, Reply, RequestType } from 'src/app/domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -206,7 +205,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     const THIRD_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(THIRD_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
-        const state: QuartoState = wrapper.gameComponent.getState() as QuartoState;
         const result: MGPValidation = await wrapper.gameComponent.chooseMove(move);
         const message: string = 'move ' + move.toString() + ' should be legal but failed because: ' + result.getReasonOr('no failure');
         expect(result.isSuccess()).withContext(message).toEqual(legal);

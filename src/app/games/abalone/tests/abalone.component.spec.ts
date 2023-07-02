@@ -158,8 +158,7 @@ describe('AbaloneComponent', () => {
             // When clicking on the space marked by the direction instead of its arrow
             // Then the move should have been done
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.LEFT).get();
-            const state: AbaloneState = AbaloneState.getInitialState();
-            await testUtils.expectMoveSuccess('#space_1_6', move, state, [0, 0]);
+            await testUtils.expectMoveSuccess('#space_1_6', move);
         }));
         it('should do move when clicking direction', fakeAsync(async() => {
             // Given the initial board with piece selected
@@ -168,8 +167,7 @@ describe('AbaloneComponent', () => {
             // When clicking on coord then direction
             // Then the move should be done
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.UP).get();
-            const state: AbaloneState = AbaloneState.getInitialState();
-            await testUtils.expectMoveSuccess('#direction_UP', move, state, [0, 0]);
+            await testUtils.expectMoveSuccess('#direction_UP', move);
         }));
     });
     describe('third click', () => {
@@ -271,7 +269,7 @@ describe('AbaloneComponent', () => {
             // When clicking on the space marked by the direction instead of its arrow
             // Then the move should have been done
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 7), HexaDirection.UP).get();
-            await testUtils.expectMoveSuccess('#piece_2_5', move, state, [0, 0]);
+            await testUtils.expectMoveSuccess('#piece_2_5', move);
         }));
         it('should allow clicking on the arrow itself to do a translation', fakeAsync(async() => {
             // Given an initial board with two aligned pieces selected
@@ -282,8 +280,7 @@ describe('AbaloneComponent', () => {
             // Then the translation move should be done
             const move: AbaloneMove =
                 AbaloneMove.fromDoubleCoord(new Coord(2, 6), new Coord(3, 6), HexaDirection.UP).get();
-            const state: AbaloneState = AbaloneState.getInitialState();
-            await testUtils.expectMoveSuccess('#direction_UP', move, state, [0, 0]);
+            await testUtils.expectMoveSuccess('#direction_UP', move);
         }));
     });
     describe('showLastMove', () => {
@@ -292,8 +289,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_7');
             await testUtils.expectClickSuccess('#piece_0_8');
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.DOWN).get();
-            const state: AbaloneState = AbaloneState.getInitialState();
-            await testUtils.expectMoveSuccess('#direction_DOWN', move, state, [0, 0]);
+            await testUtils.expectMoveSuccess('#direction_DOWN', move);
 
             // When rendering it
             // Then the starting square of the moved piece should be shown as moved
@@ -308,8 +304,7 @@ describe('AbaloneComponent', () => {
             // When clicking third one then moving them
             await testUtils.expectClickSuccess('#piece_4_6');
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 6), HexaDirection.LEFT).get();
-            const state: AbaloneState = AbaloneState.getInitialState();
-            await testUtils.expectMoveSuccess('#direction_LEFT', move, state, [0, 0]);
+            await testUtils.expectMoveSuccess('#direction_LEFT', move);
 
             // Then four spaces should be moved
             testUtils.expectElementToHaveClass('#space_1_6', 'moved-fill');

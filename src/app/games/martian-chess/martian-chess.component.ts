@@ -295,7 +295,6 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             const move: MGPFallible<MartianChessMove> =
                 MartianChessMove.from(info.selectedPiece, endCoord, this.callTheClock);
             assert(move.isSuccess(), 'MartianChessComponent or Rules did a mistake thinking this would have been a legal move!');
-            const state: MartianChessState = this.getState();
             return this.chooseMove(move.get());
         } else if (this.isOneOfUsersPieces(endCoord)) {
             return this.selectAsFirstPiece(endCoord);
