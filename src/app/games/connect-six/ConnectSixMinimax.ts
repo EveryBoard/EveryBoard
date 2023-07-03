@@ -34,8 +34,8 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
         for (const firstCoord of availableFirstCoords) {
             const board: PlayerOrNone[][] = node.gameState.getCopiedBoard();
             board[firstCoord.y][firstCoord.x] = node.gameState.getCurrentPlayer();
-            const postFirstDropsState: ConnectSixState = new ConnectSixState(board, node.gameState.turn);
-            const availableSecondCoords: Coord[] = this.getAvailableCoords(postFirstDropsState);
+            const stateAfterFirstDrops: ConnectSixState = new ConnectSixState(board, node.gameState.turn);
+            const availableSecondCoords: Coord[] = this.getAvailableCoords(stateAfterFirstDrops);
             for (const secondCoord of availableSecondCoords) {
                 const newMove: ConnectSixDrops = ConnectSixDrops.from(firstCoord, secondCoord).get();
                 moves.push(newMove);
@@ -44,34 +44,34 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
         return new MGPSet(moves).toList(); // Removes duplicates
     }
     private getAvailableCoords(state: ConnectSixState): Coord[] {
-        const usefullCoord: boolean[][] = this.getUsefullCoords(state);
+        const usefulCoord: boolean[][] = this.getUsefulCoords(state);
         const availableCoords: Coord[] = [];
         for (const coordsAndContents of state.getCoordsAndContents()) {
             const coord: Coord = coordsAndContents.coord;
-            if (usefullCoord[coord.y][coord.x] === true && coordsAndContents.content.isPlayer() === false) {
+            if (usefulCoord[coord.y][coord.x] === true && coordsAndContents.content.isPlayer() === false) {
                 availableCoords.push(coord);
             }
         }
         return availableCoords;
     }
-    private getUsefullCoords(state: ConnectSixState): boolean[][] {
-        const usefullCoord: boolean[][] = ArrayUtils.createTable(ConnectSixState.WIDTH, ConnectSixState.HEIGHT, false);
+    private getUsefulCoords(state: ConnectSixState): boolean[][] {
+        const usefulCoord: boolean[][] = ArrayUtils.createTable(ConnectSixState.WIDTH, ConnectSixState.HEIGHT, false);
         for (const coordsAndContents of state.getCoordsAndContents()) {
             if (coordsAndContents.content.isPlayer()) {
-                this.addNeighboringCoord(usefullCoord, coordsAndContents.coord);
+                this.addNeighboringCoord(usefulCoord, coordsAndContents.coord);
             }
         }
-        return usefullCoord;
+        return usefulCoord;
     }
-    private addNeighboringCoord(usefullCoord: boolean[][], coord: Coord): void {
-        const usefullDistance: number = 1; // At two, it's already slow
-        const minX: number = Math.max(0, coord.x - usefullDistance);
-        const minY: number = Math.max(0, coord.y - usefullDistance);
-        const maxX: number = Math.min(ConnectSixState.WIDTH - 1, coord.x + usefullDistance);
-        const maxY: number = Math.min(ConnectSixState.HEIGHT - 1, coord.y + usefullDistance);
+    private addNeighboringCoord(usefulCoord: boolean[][], coord: Coord): void {
+        const usefulDistance: number = 1; // At two, it's already slow
+        const minX: number = Math.max(0, coord.x - usefulDistance);
+        const minY: number = Math.max(0, coord.y - usefulDistance);
+        const maxX: number = Math.min(ConnectSixState.WIDTH - 1, coord.x + usefulDistance);
+        const maxY: number = Math.min(ConnectSixState.HEIGHT - 1, coord.y + usefulDistance);
         for (let y: number = minY; y <= maxY; y++) {
             for (let x: number = minX; x <= maxX; x++) {
-                usefullCoord[y][x] = true;
+                usefulCoord[y][x] = true;
             }
         }
     }
