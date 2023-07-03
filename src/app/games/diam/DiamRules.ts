@@ -29,10 +29,10 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         super(DiamState);
     }
     public applyLegalMove(move: DiamMove, state: DiamState, _info: void): DiamState {
-        if (DiamMove.isDrop(move)) {
+        if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {
-            return this.applyLegalShift(move, state);
+            return this.applyLegalShift(move as DiamMoveShift, state);
         }
     }
     private applyLegalDrop(drop: DiamMoveDrop, state: DiamState): DiamState {
@@ -57,10 +57,10 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         return new DiamState(newBoard, state.remainingPieces, state.turn + 1);
     }
     public isLegal(move: DiamMove, state: DiamState): MGPValidation {
-        if (DiamMove.isDrop(move)) {
+        if (move.isDrop()) {
             return this.isDropLegal(move, state);
         } else {
-            return this.isShiftLegal(move, state);
+            return this.isShiftLegal(move as DiamMoveShift, state);
         }
     }
     private isDropLegal(drop: DiamMoveDrop, state: DiamState): MGPValidation {

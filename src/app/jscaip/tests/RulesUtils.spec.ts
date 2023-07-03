@@ -155,9 +155,9 @@ export class RulesUtils {
     /**
      * @param ruler the rules of the game you need to debug
      * @param encodedMoves the encoded moves that caused the bug
-     * @param state the board on which theses moves have to be applied
+     * @param state the board on which these moves have to be applied
      * @param moveDecoder the move decoder
-     * @returns the state create from applying move, enjoy you debug !
+     * @returns the state creates from applying the moves, enjoy you debug !
      */
     public static applyMoves<S extends GameState, M extends Move, L>(ruler: Rules<M, S, L>,
                                                                      encodedMoves: JSONValue[],

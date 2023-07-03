@@ -127,7 +127,10 @@ describe('CoerceoComponent', () => {
         }));
     });
     describe('First click', () => {
-        it('should refuse tiles exchange proposal as first click', fakeAsync(async() => {
+        it('should refuse tiles exchange when player have no tiles', fakeAsync(async() => {
+            // Given a board without tiles (the initial one here)
+            // When clicking on an opponent piece
+            // Then the move should fail
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
             await testUtils.expectMoveFailure('#click_6_9',
                                               CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),

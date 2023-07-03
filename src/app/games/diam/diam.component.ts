@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
-import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
+import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
@@ -99,7 +99,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         this.availableMinimaxes = [
             new DiamDummyMinimax(this.rules, 'DiamDummyMinimax'),
         ];
-        this.encoder = DiamMove.encoder;
+        this.encoder = DiamMoveEncoder;
         this.tutorial = new DiamTutorial().tutorial;
     }
     public ngOnInit(): void {
@@ -243,12 +243,13 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     private showLastMoveOnSpaces(move: DiamMove): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             const classes: string[] = [];
-            if (DiamMove.isDrop(move)) {
+            if (move.isDrop()) {
                 if (move.getTarget() === x) {
                     classes.push('moved-fill');
                 }
             } else {
-                if (move.getTarget() === x || move.start.x === x) {
+                const shift: DiamMoveShift = move as DiamMoveShift;
+                if (shift.getTarget() === x || shift.start.x === x) {
                     classes.push('moved-fill');
                 }
             }
@@ -258,10 +259,10 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     private showLastMoveOnPieces(move: DiamMove): void {
         const previousState: DiamState = this.getPreviousState();
         let lastMoved: LastMoved[] = [];
-        if (DiamMove.isDrop(move)) {
+        if (move.isDrop()) {
             lastMoved = this.getLastMovedFromDrop(move, previousState);
         } else {
-            lastMoved = this.getLastMovedFromShift(move, previousState);
+            lastMoved = this.getLastMovedFromShift(move as DiamMoveShift, previousState);
         }
         for (const movedPiece of lastMoved) {
             const x: number = movedPiece.end.x;

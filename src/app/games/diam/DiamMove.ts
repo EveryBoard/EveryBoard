@@ -3,7 +3,17 @@ import { Move } from 'src/app/jscaip/Move';
 import { DiamPiece } from './DiamPiece';
 import { Encoder } from '../../utils/Encoder';
 
-export class DiamMoveDrop extends Move {
+export abstract class DiamMove extends Move {
+
+    public isDrop(): this is DiamMoveDrop {
+        return this instanceof DiamMoveDrop;
+    }
+    public isShift(): this is DiamMoveShift {
+        return this instanceof DiamMoveShift;
+    }
+}
+
+export class DiamMoveDrop extends DiamMove {
 
     public static encoder: Encoder<DiamMoveDrop> = Encoder.tuple(
         [Encoder.identity<number>(), DiamPiece.encoder],
@@ -36,7 +46,7 @@ export class DiamMoveDrop extends Move {
 
 type DiamShiftDirection = 'clockwise' | 'counterclockwise';
 
-export class DiamMoveShift extends Move {
+export class DiamMoveShift extends DiamMove {
 
     public static encoder: Encoder<DiamMoveShift> = Encoder.tuple(
         [Coord.encoder, Encoder.identity<boolean>()],
@@ -72,19 +82,10 @@ export class DiamMoveShift extends Move {
     }
 }
 
-export type DiamMove = DiamMoveDrop | DiamMoveShift;
-
-function isShift(move: DiamMove): move is DiamMoveShift {
-    return move instanceof DiamMoveShift;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export namespace DiamMove {
-
-    export function isDrop(move: DiamMove): move is DiamMoveDrop {
-        return move instanceof DiamMoveDrop;
-    }
-    export const encoder: Encoder<DiamMove> =
-        Encoder.disjunction([DiamMove.isDrop, isShift],
-                            [DiamMoveDrop.encoder, DiamMoveShift.encoder]);
-}
+export const DiamMoveEncoder: Encoder<DiamMove> = Encoder.disjunction(
+    [
+        (move: DiamMove): move is DiamMoveDrop => move.isDrop(),
+        (move: DiamMove): move is DiamMoveShift => move.isShift(),
+    ],
+    [DiamMoveDrop.encoder, DiamMoveShift.encoder],
+);
