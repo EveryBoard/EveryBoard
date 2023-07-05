@@ -104,7 +104,7 @@ describe('LocalGameWrapperComponent', () => {
         testUtils.expectElementToExist('#draw');
     }));
     it('should not allow clicks after the end of the game', fakeAsync(async() => {
-        // Given an ended game
+        // Given a game about to end
         const board: PlayerOrNone[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -115,10 +115,9 @@ describe('LocalGameWrapperComponent', () => {
         ];
         const state: P4State = new P4State(board, 41);
         testUtils.setupState(state);
+        // When finishing the game
         await testUtils.expectMoveSuccess('#click_0', P4Move.ZERO);
-
-        // When trying to play
-        // Then it should fail
+        // Then it should not be possible to click again
         await testUtils.expectClickFailure('#click_3', GameWrapperMessages.GAME_HAS_ENDED());
     }));
     it('should show score if needed', fakeAsync(async() => {
