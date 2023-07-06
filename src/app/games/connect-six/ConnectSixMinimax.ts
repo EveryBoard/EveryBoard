@@ -44,7 +44,7 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
         return new MGPSet(moves).toList(); // Removes duplicates
     }
     private getAvailableCoords(state: ConnectSixState): Coord[] {
-        const usefulCoord: boolean[][] = this.getUsefulCoords(state);
+        const usefulCoord: boolean[][] = this.getNeighboringCoords(state);
         const availableCoords: Coord[] = [];
         for (const coordsAndContents of state.getCoordsAndContents()) {
             const coord: Coord = coordsAndContents.coord;
@@ -54,7 +54,11 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
         }
         return availableCoords;
     }
-    private getUsefulCoords(state: ConnectSixState): boolean[][] {
+    /**
+     * The coords where there is a a piece have neighboors that are empty
+     * This function returns a table on which table[y][x] == true only if (x, y) is one of thoses neighbors
+     */
+    private getNeighboringCoords(state: ConnectSixState): boolean[][] {
         const usefulCoord: boolean[][] = ArrayUtils.createTable(ConnectSixState.WIDTH, ConnectSixState.HEIGHT, false);
         for (const coordsAndContents of state.getCoordsAndContents()) {
             if (coordsAndContents.content.isPlayer()) {
@@ -64,7 +68,7 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
         return usefulCoord;
     }
     private addNeighboringCoord(usefulCoord: boolean[][], coord: Coord): void {
-        const usefulDistance: number = 1; // At two, it's already slow
+        const usefulDistance: number = 1; // At two, it's already too much calculation for the minimax sadly
         const minX: number = Math.max(0, coord.x - usefulDistance);
         const minY: number = Math.max(0, coord.y - usefulDistance);
         const maxX: number = Math.min(ConnectSixState.WIDTH - 1, coord.x + usefulDistance);
