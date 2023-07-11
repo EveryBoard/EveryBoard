@@ -43,8 +43,8 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirebaseError } from 'firebase/app';
 import { Comparable } from '../Comparable';
 import { Subscription } from 'rxjs';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 
 @Component({})
@@ -110,7 +110,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
@@ -249,7 +249,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },

@@ -35,6 +35,7 @@ describe('ActiveUsersService', () => {
             username: 'premier',
             state: 'online',
             verified: true,
+            currentGame: null,
         });
         let observerCalls: number = 0;
         const subscription: Subscription = activeUsersService.subscribeToActiveUsers((users: UserDocument[]) => {
@@ -45,6 +46,7 @@ describe('ActiveUsersService', () => {
                         username: 'nouveau',
                         state: 'online',
                         verified: true,
+                        currentGame: null,
                     },
                 }]);
             }
@@ -59,21 +61,25 @@ describe('ActiveUsersService', () => {
             username: 'first',
             verified: true,
             lastUpdateTime: new Timestamp(1, 3000000),
+            currentGame: null,
         };
         const SECOND_USER: User = {
             username: 'second',
             verified: true,
             lastUpdateTime: new Timestamp(2, 3000000),
+            currentGame: null,
         };
         const THIRD_USER: User = {
             username: 'third',
             verified: true,
             lastUpdateTime: new Timestamp(3, 3000000),
+            currentGame: null,
         };
         const FOURTH_USER: User = {
             username: 'fourth',
             verified: true,
             lastUpdateTime: new Timestamp(4, 3000000),
+            currentGame: null,
         };
         const userDocs: UserDocument[] = [
             { id: 'second', data: SECOND_USER },
@@ -115,6 +121,7 @@ describe('ActiveUsersService', () => {
                 username: 'premier',
                 state: 'online',
                 verified: true,
+                currentGame: null,
             });
             let seenActiveUsers: UserDocument[] = [];
             let activeUsersSubscription: Subscription = activeUsersService.subscribeToActiveUsers(

@@ -113,7 +113,7 @@ export async function createConnectedGoogleUser(email: string, username?: string
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    await userDAO.set(credential.user.uid, { verified: false });
+    await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
     if (username != null) {
         // This needs to happen in multiple updates to match the security rules
         await userDAO.update(credential.user.uid, { username });
@@ -145,7 +145,7 @@ export async function createUnverifiedUser(email: string, username: string): Pro
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    await userDAO.set(credential.user.uid, { verified: false });
+    await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
     await userDAO.update(credential.user.uid, { username });
     return { id: credential.user.uid, name: username };
 }

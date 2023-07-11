@@ -3,13 +3,13 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { UserDAO } from 'src/app/dao/UserDAO';
-import { ObservedPartMocks } from 'src/app/domain/mocks/ObservedPartMocks.spec';
-import { ObservedPart } from 'src/app/domain/User';
+import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
+import { CurrentGame } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { expectValidRoutingLink, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Utils } from 'src/app/utils/utils';
@@ -51,21 +51,21 @@ describe('HeaderComponent', () => {
             expect(component.connectedUserService.disconnect).toHaveBeenCalledTimes(1);
         }));
         it('should remove comment in header when disconnecting', fakeAsync(async() => {
-            // Given a connected user that has an observedPart
+            // Given a connected user that has an currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            const observedPart: ObservedPart = ObservedPartMocks.CANDIDATE;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            const currentGame: CurrentGame = CurrentGameMocks.CANDIDATE;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
             tick();
-            testUtils.expectElementToExist('#observedPartLink');
+            testUtils.expectElementToExist('#currentGameLink');
 
             // When connectedUserService informs us that user is disconnected
             ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
-            ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
             testUtils.detectChanges();
 
-            // Then observedPartLink should not be displayed
-            testUtils.expectElementNotToExist('#observedPartLink');
+            // Then currentGameLink should not be displayed
+            testUtils.expectElementNotToExist('#currentGameLink');
         }));
     });
     it('should have empty username when user is not connected', fakeAsync(async() => {
@@ -83,92 +83,92 @@ describe('HeaderComponent', () => {
     it('should redirect to your current part when clicking on its reference on the header', fakeAsync(async() => {
         // Given a component where connected user is observing a part
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        const observedPart: ObservedPart = ObservedPartMocks.CREATOR_WITH_OPPONENT;
-        ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+        const currentGame: CurrentGame = CurrentGameMocks.CREATOR_WITH_OPPONENT;
+        CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
         testUtils.detectChanges();
         tick();
 
         // When clicking on the info about the part
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo(true);
-        await testUtils.clickElement('#observedPartLink');
+        await testUtils.clickElement('#currentGameLink');
 
         // Then it should have redirect to the part
-        expect(router.navigate).toHaveBeenCalledOnceWith(['/play', observedPart.typeGame, observedPart.id]);
+        expect(router.navigate).toHaveBeenCalledOnceWith(['/play', currentGame.typeGame, currentGame.id]);
     }));
-    describe('observedPart', () => {
+    describe('currentGame', () => {
         it('should display "<TypeGame> (waiting for opponent)" when creator without chosenOpponent', fakeAsync(async() => {
-            // Given a connected user that has no observedPart
+            // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             tick();
-            testUtils.expectElementNotToExist('#observedPartLink');
+            testUtils.expectElementNotToExist('#currentGameLink');
 
-            // When user become linked to an observedPart
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(ObservedPartMocks.CREATOR_WITHOUT_OPPONENT));
+            // When user become linked to an currentGame
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(CurrentGameMocks.CREATOR_WITHOUT_OPPONENT));
             testUtils.detectChanges();
             tick();
 
             // Then "P4 (waiting for opponent)" should be displayed
-            const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
-            expect(observedPartLink.nativeElement.innerText).toEqual('P4 (waiting for opponent)');
+            const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
+            expect(currentGameLink.nativeElement.innerText).toEqual('P4 (waiting for opponent)');
         }));
         it('should display "<TypeGame> againt <Opponent>" when creator with chosenOpponent', fakeAsync(async() => {
-            // Given a connected user that has no observedPart
+            // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             tick();
-            testUtils.expectElementNotToExist('#observedPartLink');
+            testUtils.expectElementNotToExist('#currentGameLink');
 
-            // When user become linked to an observedPart with an opponent set
-            const observedPart: ObservedPart = ObservedPartMocks.CREATOR_WITH_OPPONENT;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            // When user become linked to an currentGame with an opponent set
+            const currentGame: CurrentGame = CurrentGameMocks.CREATOR_WITH_OPPONENT;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
             tick();
 
             // Then "<Game> against <Opponent>" should be displayed
-            const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
-            const typeGame: string = observedPart.typeGame;
-            const opponentName: string = Utils.getNonNullable(observedPart.opponent?.name);
-            expect(observedPartLink.nativeElement.innerText).toEqual(typeGame + ' against ' + opponentName);
+            const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
+            const typeGame: string = currentGame.typeGame;
+            const opponentName: string = Utils.getNonNullable(currentGame.opponent?.name);
+            expect(currentGameLink.nativeElement.innerText).toEqual(typeGame + ' against ' + opponentName);
         }));
         it(`should display '<TypeGame> by <Creator>' when watching as observer`, fakeAsync(async() => {
-            // Given a connected user that has no observedPart
+            // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             tick();
-            testUtils.expectElementNotToExist('#observedPartLink');
+            testUtils.expectElementNotToExist('#currentGameLink');
 
-            // When user become linked to an observedPart
-            const observedPart: ObservedPart = ObservedPartMocks.OBSERVER;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            // When user become linked to an currentGame
+            const currentGame: CurrentGame = CurrentGameMocks.OBSERVER;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
             tick();
 
             // Then "<TypeGame> by <Opponent, that should contain the creator>" should be displayed
-            const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
-            const typeGame: string = observedPart.typeGame;
-            const opponent: string = Utils.getNonNullable(observedPart.opponent?.name);
-            expect(observedPartLink.nativeElement.innerText).toEqual(typeGame + ' by ' + opponent);
+            const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
+            const typeGame: string = currentGame.typeGame;
+            const opponent: string = Utils.getNonNullable(currentGame.opponent?.name);
+            expect(currentGameLink.nativeElement.innerText).toEqual(typeGame + ' by ' + opponent);
         }));
         it(`should display '<TypeGame> by <Creator>' when watching as candidate`, fakeAsync(async() => {
-            // Given a connected user that has no observedPart
+            // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
             tick();
-            testUtils.expectElementNotToExist('#observedPartLink');
+            testUtils.expectElementNotToExist('#currentGameLink');
 
-            // When user become linked to an observedPart
-            const observedPart: ObservedPart = ObservedPartMocks.CANDIDATE;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            // When user become linked to an currentGame
+            const currentGame: CurrentGame = CurrentGameMocks.CANDIDATE;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
             tick();
 
             // Then "Epaminondas by El Creatoro" should be displayed
-            const observedPartLink: DebugElement = testUtils.findElement('#observedPartLink');
-            const typeGame: string = observedPart.typeGame;
-            const opponent: string = Utils.getNonNullable(observedPart.opponent?.name);
-            expect(observedPartLink.nativeElement.innerText).toEqual(typeGame + ' by ' + opponent);
+            const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
+            const typeGame: string = currentGame.typeGame;
+            const opponent: string = Utils.getNonNullable(currentGame.opponent?.name);
+            expect(currentGameLink.nativeElement.innerText).toEqual(typeGame + ' by ' + opponent);
         }));
     });
     it('should unsubscribe from connectedUserService when destroying component', fakeAsync(async() => {
@@ -185,10 +185,10 @@ describe('HeaderComponent', () => {
         // By hitting it in the ... HEAD.
         expectUnsubscribeToHaveBeenCalled();
     }));
-    it('should unsubscribe from observedPartService when destroying component', fakeAsync(async() => {
+    it('should unsubscribe from currentGameService when destroying component', fakeAsync(async() => {
         // Given a header
-        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-        const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(observedPartService, 'subscribeToObservedPart');
+        const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+        const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(currentGameService, 'subscribeToCurrentGame');
         testUtils.detectChanges();
 
         // When it is destroyed

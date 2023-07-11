@@ -29,12 +29,12 @@ import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { FirstPlayer, PartStatus, PartType, ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Part } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { ObservedPart } from 'src/app/domain/User';
-import { ObservedPartMocks } from 'src/app/domain/mocks/ObservedPartMocks.spec';
+import { CurrentGame } from 'src/app/domain/User';
+import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
 
 describe('PartCreationComponent', () => {
 
@@ -50,7 +50,7 @@ describe('PartCreationComponent', () => {
     let gameService: GameService;
     let chatService: ChatService;
     let connectedUserService: ConnectedUserService;
-    let observedPartService: ObservedPartService;
+    let currentGameService: CurrentGameService;
 
     let destroyed: boolean;
 
@@ -109,7 +109,7 @@ describe('PartCreationComponent', () => {
         gameService = TestBed.inject(GameService);
         chatService = TestBed.inject(ChatService);
         connectedUserService = TestBed.inject(ConnectedUserService);
-        observedPartService = TestBed.inject(ObservedPartService);
+        currentGameService = TestBed.inject(CurrentGameService);
         component = testUtils.getComponent();
         component.partId = 'configRoomId';
         await chatDAO.set('configRoomId', { messages: [], status: 'dummy status' });
@@ -138,16 +138,16 @@ describe('PartCreationComponent', () => {
                 expect(component).withContext('PartCreationComponent should have been created').toBeTruthy();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            it('should add observedPart to user doc', fakeAsync(() => {
+            it('should add currentGame to user doc', fakeAsync(() => {
                 // Given a partCreation
-                spyOn(observedPartService, 'updateObservedPart').and.callFake(async() => {});
+                spyOn(currentGameService, 'updateCurrentGame').and.callFake(async() => {});
 
                 // When the user, the creator, arrives
                 awaitComponentInitialization();
 
-                // Then observedPart in user doc should be set
-                const expectedObservedPart: ObservedPart = ObservedPartMocks.CREATOR_WITHOUT_OPPONENT;
-                expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(expectedObservedPart);
+                // Then currentGame in user doc should be set
+                const expectedCurrentGame: CurrentGame = CurrentGameMocks.CREATOR_WITHOUT_OPPONENT;
+                expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(expectedCurrentGame);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should not start observing configRoom if part does not exist', fakeAsync(() => {
@@ -205,7 +205,7 @@ describe('PartCreationComponent', () => {
                 spyOn(component.messageDisplayer, 'infoMessage').and.resolveTo(); // Skip 3000ms of toast
 
                 // When the chosenOpponent leaves
-                spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+                spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
                 await receiveConfigRoomUpdate({
                     partStatus: PartStatus.PART_CREATED.value,
                     chosenOpponent: null,
@@ -218,8 +218,8 @@ describe('PartCreationComponent', () => {
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
                 const errorMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(errorMessage);
-                // And component should update the observedPart
-                expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith({ opponent: null });
+                // And component should update the currentGame
+                expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith({ opponent: null });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should deselect non chosen candidate when they leaves', fakeAsync(async() => {
@@ -249,7 +249,7 @@ describe('PartCreationComponent', () => {
                 spyOn(component.messageDisplayer, 'infoMessage').and.resolveTo(); // Skip 3000ms of toast
 
                 // When the candidate token becomes too old
-                spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+                spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
                 // Creator update his last presence token
                 await userService.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id);
                 // but chosenOpponent don't update his last presence token
@@ -260,8 +260,8 @@ describe('PartCreationComponent', () => {
                 const errorMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
                 expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(errorMessage);
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
-                // And component should update the observedPart
-                expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith({ opponent: null });
+                // And component should update the currentGame
+                expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith({ opponent: null });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should remove candidates from the list when they stop sending token', fakeAsync(async() => {
@@ -333,7 +333,7 @@ describe('PartCreationComponent', () => {
                 expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            it('should modify observedPart to add chosen opponent', fakeAsync(async() => {
+            it('should modify currentGame to add chosen opponent', fakeAsync(async() => {
                 // Given a component with candidate present but not selected
                 awaitComponentInitialization();
                 await mockCandidateArrival();
@@ -343,11 +343,11 @@ describe('PartCreationComponent', () => {
                 expect(findElement('#proposeConfig').nativeElement.disabled).withContext(contextBefore).toBeTruthy();
 
                 // When choosing the opponent
-                spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+                spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
                 await chooseOpponent();
 
-                // Then updateObservedPart should have been called
-                expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith({
+                // Then updateCurrentGame should have been called
+                expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith({
                     opponent: UserMocks.OPPONENT_MINIMAL_USER,
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -571,17 +571,17 @@ describe('PartCreationComponent', () => {
                 // Then it should not delete anything
                 expect(component.cancelGameCreation).not.toHaveBeenCalled();
             }));
-            it('should ask ConnectedUserService to remove observedPart', fakeAsync(async() => {
+            it('should ask ConnectedUserService to remove currentGame', fakeAsync(async() => {
                 // Given any part with a non started game
                 awaitComponentInitialization();
 
                 // When user cancel game creation
-                spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+                spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
                 await clickElement('#cancel');
                 tick(3000);
 
-                // Then observedPart should be emptied
-                expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+                // Then currentGame should be emptied
+                expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
                 await partDAO.set('configRoomId', PartMocks.INITIAL);
                 await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
@@ -626,16 +626,16 @@ describe('PartCreationComponent', () => {
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            it('should add observedPart to user doc', fakeAsync(() => {
+            it('should add currentGame to user doc', fakeAsync(() => {
                 // Given a partCreation
-                spyOn(observedPartService, 'updateObservedPart').and.callFake(async() => {});
+                spyOn(currentGameService, 'updateCurrentGame').and.callFake(async() => {});
 
                 // When the user, a candidate, arrives
                 awaitComponentInitialization();
 
-                // Then observedPart in user doc should be set
-                const observedPart: ObservedPart = ObservedPartMocks.CANDIDATE;
-                expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(observedPart);
+                // Then currentGame in user doc should be set
+                const currentGame: CurrentGame = CurrentGameMocks.CANDIDATE;
+                expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(currentGame);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should start sending presence token', fakeAsync(() => {
@@ -785,30 +785,30 @@ describe('PartCreationComponent', () => {
                 expect(component.stopSendingPresenceTokensAndObservingUsersIfNeeded).not.toHaveBeenCalled();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            it('should update observedPart and mark user as chosen opponent', fakeAsync(async() => {
+            it('should update currentGame and mark user as chosen opponent', fakeAsync(async() => {
                 // Given a partCreation where user is candidate
                 awaitComponentInitialization();
 
                 // When user is selected as chosen opponent
-                spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+                spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
                 await receiveConfigRoomUpdate(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
 
                 // Then an update should change user doc to say it's chosenOpponent now
-                expect(observedPartService.updateObservedPart)
-                    .toHaveBeenCalledOnceWith(ObservedPartMocks.CHOSEN_OPPONENT);
+                expect(currentGameService.updateCurrentGame)
+                    .toHaveBeenCalledOnceWith(CurrentGameMocks.CHOSEN_OPPONENT);
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
         describe('Leaving', () => {
-            it('should remove yourself when leaving the room and empty user.observedPart', fakeAsync(async() => {
+            it('should remove yourself when leaving the room and empty user.currentGame', fakeAsync(async() => {
                 // Given a partCreation where user is candidate
                 awaitComponentInitialization();
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
                 expect(component.candidates).toEqual([UserMocks.OPPONENT_MINIMAL_USER]);
 
                 // When leaving the page (tested here by calling ngOnDestroy)
-                spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+                spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
                 spyOn(configRoomService, 'cancelJoining').and.callThrough();
                 testUtils.destroy();
                 tick(3000);
@@ -817,14 +817,14 @@ describe('PartCreationComponent', () => {
 
                 // Then configRoomService.cancelJoining should have been called
                 expect(configRoomService.cancelJoining).toHaveBeenCalledOnceWith('configRoomId');
-                expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+                expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             }));
             it('should not try to modify DAOs after user logged out', fakeAsync(async() => {
                 // Given a part creation
                 awaitComponentInitialization();
 
                 // When user logs out
-                spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+                spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
                 spyOn(configRoomService, 'cancelJoining').and.callThrough();
 
                 ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
@@ -832,9 +832,9 @@ describe('PartCreationComponent', () => {
                 await testUtils.whenStable();
                 destroyed = true;
 
-                // Then it should not call cancelJoining nor removeObservedPart
+                // Then it should not call cancelJoining nor removeCurrentGame
                 expect(configRoomService.cancelJoining).not.toHaveBeenCalled();
-                expect(observedPartService.removeObservedPart).not.toHaveBeenCalled();
+                expect(currentGameService.removeCurrentGame).not.toHaveBeenCalled();
             }));
         });
     });

@@ -3,8 +3,8 @@ import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/r
 
 import { Subscription } from 'rxjs';
 
-import { ObservedPart } from '../domain/User';
-import { ObservedPartService } from '../services/ObservedPartService';
+import { CurrentGame } from '../domain/User';
+import { CurrentGameService } from '../services/CurrentGameService';
 import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
@@ -12,18 +12,18 @@ import { MGPOptional } from '../utils/MGPOptional';
 })
 export class ExclusiveOnlineGameGuard implements CanActivate {
 
-    protected observedPartSubscription: MGPOptional<Subscription> = MGPOptional.empty();
+    protected currentGameSubscription: MGPOptional<Subscription> = MGPOptional.empty();
 
-    public constructor(private readonly observedPartService: ObservedPartService,
+    public constructor(private readonly currentGameService: CurrentGameService,
                        private readonly router: Router)
     {
     }
     public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
-        const observedPart: MGPOptional<ObservedPart> = await this.observedPartService.getObservedPart();
-        if (observedPart.isAbsent()) {
+        const currentGame: MGPOptional<CurrentGame> = await this.currentGameService.getCurrentGame();
+        if (currentGame.isAbsent()) {
             return true;
         }
-        const part: ObservedPart = observedPart.get();
+        const part: CurrentGame = currentGame.get();
         if (route.params.id === part.id) {
             return true;
         }
