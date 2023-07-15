@@ -509,15 +509,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('should forbid making a move when it is not the turn of the player', fakeAsync(async() => {
         // Given a game
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        spyOn(messageDisplayer, 'gameMessage').and.callThrough();
 
         // When it is not the player's turn (because he made the first move)
         await doMove(FIRST_MOVE, true);
 
         // Then the player cannot play
         await testUtils.clickElement('#chooseCoord_0_0');
-        expect(messageDisplayer.gameMessage).toHaveBeenCalledWith(GameWrapperMessages.NOT_YOUR_TURN());
+        testUtils.expectGameMessageToHaveBeenDisplayed(GameWrapperMessages.NOT_YOUR_TURN());
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));

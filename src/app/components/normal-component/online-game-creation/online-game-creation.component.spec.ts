@@ -55,20 +55,17 @@ describe('OnlineGameCreationComponent', () => {
     it('should show toast and navigate to server when creator has active parts', fakeAsync(async() => {
         // Given a page that is loaded for a specific game by a connected user that already has an active part
         const router: Router = TestBed.inject(Router);
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
         const refusalReason: string = 'whatever reason the service has';
         spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(refusalReason));
         spyOn(router, 'navigate').and.callThrough();
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        spyOn(messageDisplayer, 'infoMessage').and.callThrough();
 
         // When the page is rendered
         testUtils.detectChanges();
-        tick(3000); // needs to be >2999
 
         // Then it should toast, and navigate to server
-        expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(refusalReason);
+        testUtils.expectInfoMessageToHaveBeenDisplayed(refusalReason);
         expectValidRouting(router, ['/lobby'], LobbyComponent);
     }));
 });

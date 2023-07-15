@@ -46,6 +46,7 @@ import { Subscription } from 'rxjs';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 @Component({})
 export class BlankComponent {}
@@ -118,9 +119,49 @@ export class SimpleComponentTestUtils<T> {
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
         testUtils.fixture = TestBed.createComponent(componentType);
         testUtils.component = testUtils.fixture.componentInstance;
+        testUtils.prepareSpies();
         return testUtils;
     }
     private constructor() {}
+
+    // TODO: have ComponentTestUtils inherit from this
+    private gameMessageSpy: jasmine.Spy;
+    private infoMessageSpy: jasmine.Spy;
+    private criticalMessageSpy: jasmine.Spy;
+    public prepareSpies(): void {
+        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+        if (jasmine.isSpy(messageDisplayer.gameMessage)) {
+            this.gameMessageSpy = messageDisplayer.gameMessage as jasmine.Spy;
+        } else {
+            this.gameMessageSpy = spyOn(messageDisplayer, 'gameMessage').and.returnValue();
+        }
+        if (jasmine.isSpy(messageDisplayer.criticalMessage)) {
+            this.criticalMessageSpy = messageDisplayer.criticalMessage as jasmine.Spy;
+        } else {
+            this.criticalMessageSpy = spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
+        }
+        if (jasmine.isSpy(messageDisplayer.infoMessage)) {
+            this.infoMessageSpy = messageDisplayer.infoMessage as jasmine.Spy;
+        } else {
+            this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.returnValue();
+        }
+    }
+
+    public expectGameMessageToHaveBeenDisplayed(message: string) {
+        expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
+        this.gameMessageSpy.calls.reset();
+    }
+    public expectCriticalMessageToHaveBeenDisplayed(message: string) {
+        expect(this.criticalMessageSpy).toHaveBeenCalledOnceWith(message);
+        this.criticalMessageSpy.calls.reset();
+    }
+    public expectInfoMessageToHaveBeenDisplayed(message: string) {
+        expect(this.infoMessageSpy).toHaveBeenCalledOnceWith(message);
+        this.infoMessageSpy.calls.reset();
+    }
+    public expectInfoMessageNotToHaveBeenDisplayed() {
+        expect(this.infoMessageSpy).not.toHaveBeenCalled();
+    }
 
     public async clickElement(elementName: string, awaitStability: boolean = true): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
@@ -192,6 +233,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     private cancelMoveSpy: jasmine.Spy;
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
+    private gameMessageSpy: jasmine.Spy;
+    private infoMessageSpy: jasmine.Spy;
+    private criticalMessageSpy: jasmine.Spy;
 
     public static async forGame<T extends AbstractGameComponent>(
         game: string,
@@ -270,10 +314,28 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.gameComponent = this.wrapper.gameComponent;
     }
     public prepareSpies(): void {
+        // TODO: no need to store the values, we can just do this.gameComponent.cancelMove and this is the spy
         this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
         this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
         this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
+        
+        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+        if (jasmine.isSpy(messageDisplayer.gameMessage)) {
+            this.gameMessageSpy = messageDisplayer.gameMessage as jasmine.Spy;
+        } else {
+            this.gameMessageSpy = spyOn(messageDisplayer, 'gameMessage').and.returnValue();
+        }
+        if (jasmine.isSpy(messageDisplayer.criticalMessage)) {
+            this.criticalMessageSpy = messageDisplayer.criticalMessage as jasmine.Spy;
+        } else {
+            this.criticalMessageSpy = spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
+        }
+        if (jasmine.isSpy(messageDisplayer.infoMessage)) {
+            this.infoMessageSpy = messageDisplayer.infoMessage as jasmine.Spy;
+        } else {
+            this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.returnValue();
+        }
     }
     public expectToBeCreated(): void {
         expect(this.wrapper).withContext('Wrapper should be created').toBeTruthy();
@@ -362,9 +424,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                 expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith();
             } else {
                 expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+                expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
             }
             this.cancelMoveSpy.calls.reset();
-            tick(3000); // needs to be >2999
+            this.gameMessageSpy.calls.reset();
         }
     }
     public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
@@ -385,8 +448,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
-            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.getReason());
-            tick(3000); // needs to be > 2999
+            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+            expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
+            this.cancelMoveSpy.calls.reset();
+            this.gameMessageSpy.calls.reset();
         }
     }
     public async expectMoveSuccess(elementName: string,
@@ -443,7 +508,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
             expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
-            tick(3000); // needs to be >2999
+            expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
+            this.gameMessageSpy.calls.reset();
         }
     }
     public expectPassToBeForbidden(): void {
@@ -520,6 +586,18 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public findElement(elementName: string): DebugElement {
         return this.debugElement.query(By.css(elementName));
+    }
+    public expectGameMessageToHaveBeenDisplayed(message: string) {
+        expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
+        this.gameMessageSpy.calls.reset();
+    }
+    public expectCriticalMessageToHaveBeenDisplayed(message: string) {
+        expect(this.criticalMessageSpy).toHaveBeenCalledOnceWith(message);
+        this.criticalMessageSpy.calls.reset();
+    }
+    public expectInfoMessageToHaveBeenDisplayed(message: string) {
+        expect(this.infoMessageSpy).toHaveBeenCalledOnceWith(message);
+        this.infoMessageSpy.calls.reset();
     }
 }
 

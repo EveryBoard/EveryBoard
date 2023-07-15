@@ -35,6 +35,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 describe('PartCreationComponent', () => {
 
@@ -202,7 +203,6 @@ describe('PartCreationComponent', () => {
                 await mockCandidateArrival();
                 await chooseOpponent();
                 expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
-                spyOn(component.messageDisplayer, 'infoMessage').and.resolveTo(); // Skip 3000ms of toast
 
                 // When the chosenOpponent leaves
                 spyOn(observedPartService, 'updateObservedPart').and.callThrough();
@@ -217,7 +217,7 @@ describe('PartCreationComponent', () => {
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
                 const errorMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(errorMessage);
+                testUtils.expectInfoMessageToHaveBeenDisplayed(errorMessage);
                 // And component should update the observedPart
                 expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith({ opponent: null });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -227,7 +227,6 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
                 await mockCandidateArrival();
                 expectElementToExist('#presenceOf_' + UserMocks.OPPONENT.username);
-                spyOn(component.messageDisplayer, 'infoMessage').and.resolveTo(); // Skip 3000ms of toast
 
                 // When the candidate leaves
                 await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
@@ -235,7 +234,7 @@ describe('PartCreationComponent', () => {
                 // Then it is not selected anymore, configRoom is back to start, and no toast appeared
                 expectElementNotToExist('#presenceOf_' + UserMocks.OPPONENT.username);
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
-                expect(component.messageDisplayer.infoMessage).not.toHaveBeenCalled();
+                testUtils.expectInfoMessageNotToHaveBeenDisplayed();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
@@ -246,7 +245,6 @@ describe('PartCreationComponent', () => {
                 await mockCandidateArrival(new Timestamp(123, 456000000));
                 await chooseOpponent();
                 expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
-                spyOn(component.messageDisplayer, 'infoMessage').and.resolveTo(); // Skip 3000ms of toast
 
                 // When the candidate token becomes too old
                 spyOn(observedPartService, 'updateObservedPart').and.callThrough();
@@ -258,7 +256,7 @@ describe('PartCreationComponent', () => {
                 // Then there is no longer any candidate nor chosen opponent in the room
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 const errorMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
-                expect(component.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(errorMessage);
+                testUtils.expectInfoMessageToHaveBeenDisplayed(errorMessage);
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
                 // And component should update the observedPart
                 expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith({ opponent: null });
@@ -269,7 +267,6 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
                 await mockCandidateArrival(new Timestamp(123, 456000000));
                 expectElementToExist('#candidate_firstCandidate');
-                spyOn(component.messageDisplayer, 'infoMessage').and.resolveTo(); // Skip 3000ms of toast
 
                 // When the candidate stop sending token
                 // Creator updates its last presence
@@ -280,6 +277,7 @@ describe('PartCreationComponent', () => {
                 // Then the candidate should have disappeared and the configRoom have been updated and no toast appeared
                 expectElementNotToExist('#candidate_firstCandidate');
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                testUtils.expectInfoMessageNotToHaveBeenDisplayed()
                 expect(component.messageDisplayer.infoMessage).not.toHaveBeenCalled();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));

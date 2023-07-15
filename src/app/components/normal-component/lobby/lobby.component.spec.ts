@@ -63,8 +63,6 @@ describe('LobbyComponent', () => {
             // Given a server page
             testUtils.detectChanges();
             // where you are forbidden by connectedUserService
-            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-            spyOn(messageDisplayer, 'criticalMessage').and.resolveTo();
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
             const error: string = `Si je dit non, c'est non!!!`;
             spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
@@ -75,7 +73,7 @@ describe('LobbyComponent', () => {
 
             // Then online-game-selection component should not be visible and an error should be toasted
             testUtils.expectElementNotToExist('#online-game-selection');
-            expect(messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
+            testUtils.expectCriticalMessageToHaveBeenDisplayed(error);
         }));
     });
 
@@ -103,11 +101,10 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // When clicking on the part
-        spyOn(component.messageDisplayer, 'criticalMessage').and.resolveTo(); // Skip 3000ms of toast
         await testUtils.clickElement('#part_0');
 
         // Then the refusal reason should be given
-        expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+        testUtils.expectCriticalMessageToHaveBeenDisplayed(reason);
     }
     describe('clicking on a started game', () => {
 

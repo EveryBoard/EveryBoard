@@ -34,8 +34,6 @@ describe('OnlineGameSelectionComponent', () => {
         testUtils.getComponent().pickGame('whateverGame');
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        spyOn(messageDisplayer, 'criticalMessage').and.callFake((m: string) => null);
         const reason: string = 'some refusal reason from the service';
         spyOn(component.observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
 
@@ -45,6 +43,6 @@ describe('OnlineGameSelectionComponent', () => {
 
         // Then refusal should be toasted and router not called
         expect(router.navigate).not.toHaveBeenCalled();
-        expect(messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+        testUtils.expectCriticalMessageToHaveBeenDisplayed(reason);
     }));
 });
