@@ -19,6 +19,7 @@ describe('DemoCardComponent', () => {
         testUtils.getComponent().demoNodeInfo = nodeInfo;
         testUtils.detectChanges();
         tick(1); // because of the setTimeout in ngAfterViewInit
+        tick();
     }
 
     beforeEach(fakeAsync(async() => {
@@ -51,7 +52,6 @@ describe('DemoCardComponent', () => {
             node: new LodestoneNode(LodestoneState.getInitialState()),
             click: MGPOptional.of('#lodestone_push_orthogonal'),
         });
-
         // Then it should have performed a click
         testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
     }));

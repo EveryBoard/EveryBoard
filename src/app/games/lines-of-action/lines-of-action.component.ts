@@ -88,7 +88,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.board = this.getState().board;
         this.lastMove = this.node.move;
     }
-    public override showLastMove(move: LinesOfActionMove): void {
+    public override async showLastMove(move: LinesOfActionMove): Promise<void> {
         if (this.getPreviousState().getPieceAt(move.getEnd()).isPlayer()) {
             this.captured = MGPOptional.of(move.getEnd());
         } else {

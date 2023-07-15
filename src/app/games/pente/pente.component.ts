@@ -41,8 +41,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.createHoshis();
         this.cancelMoveAttempt();
     }
-    public override showLastMove(): void {
-        const move: PenteMove = this.node.move.get();
+    public override async showLastMove(move: PenteMove): Promise<void> {
         this.lastMoved = MGPOptional.of(move.coord);
         const opponent: Player = this.getCurrentPlayer().getOpponent();
         this.captured = PenteRules.get().getCaptures(move.coord, this.getPreviousState(), opponent);

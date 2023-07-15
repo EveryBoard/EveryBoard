@@ -306,7 +306,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.cancelMoveAttempt();
         this.hideLastMove();
     }
-    public override showLastMove(move: PylosMove): void {
+    public override async showLastMove(move: PylosMove): Promise<void> {
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastStartingCoord = move.startingCoord;
         this.lastFirstCapture = move.firstCapture;

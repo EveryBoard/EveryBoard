@@ -197,12 +197,10 @@ export abstract class GameWrapper<P extends Comparable> {
         return [];
     }
     protected async updateBoardAndShowLastMove(triggerAnimation: boolean=false): Promise<void> {
-        console.log('>>> >>> GW.updateBoardAndShowLastMove (gameCompo.updateBoard, gameCompo.showLastMove)')
         await this.gameComponent.updateBoard(triggerAnimation, 'GW.updateBoardAndShowLastMove');
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
-            this.gameComponent.showLastMove(move, 'updateBoardAndShowLastMove');
+            await this.gameComponent.showLastMove(move);
         }
-        console.log('<<< <<< GW.updateBoardAndShowLastMove (gameCompo.updateBoard, gameCompo.showLastMove)')
     }
 }

@@ -38,11 +38,11 @@ describe('TrexoComponent', () => {
             const name: string = switchTo2D ? '3D' : '2D';
 
             describe(name, () => {
-                beforeEach(async() => {
+                beforeEach(fakeAsync(async() => {
                     if (switchTo2D) {
                         await testUtils.clickElement('#switchTo2D');
                     }
-                });
+                }));
 
                 it('should create a third level', fakeAsync(async() => {
                     // Given a board with two level

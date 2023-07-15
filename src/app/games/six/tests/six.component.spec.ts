@@ -10,7 +10,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-fdescribe('SixComponent', () => {
+describe('SixComponent', () => {
 
     let testUtils: ComponentTestUtils<SixComponent>;
 
@@ -55,7 +55,7 @@ fdescribe('SixComponent', () => {
         it('should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
             await testUtils.expectClickFailure('#piece_0_0', SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         }));
-        it('should selected piece when clicking on it (in moving phase)', fakeAsync(async() => {
+        it('should select piece when clicking on it (in moving phase)', fakeAsync(async() => {
             // Given a board in moving phase
             const board: Table<PlayerOrNone> = [
                 [O],
@@ -93,7 +93,6 @@ fdescribe('SixComponent', () => {
             testUtils.expectElementToExist('#selectedPiece_0_0');
             const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(0, 6));
             await testUtils.expectMoveSuccess('#neighbor_0_6', move);
-
             testUtils.expectElementToExist('#leftCoord_0_0');
             testUtils.expectElementToExist('#lastDrop_0_6');
             expect(gameComponent.getPieceClass(new Coord(0, 6))).toBe('player0-fill');
@@ -121,6 +120,7 @@ fdescribe('SixComponent', () => {
     });
     describe('Third click (cutting)', () => {
         it('should ask to cut when needed', fakeAsync(async() => {
+            // Given a board with a chosen piece and chosen landing
             const board: Table<PlayerOrNone> = [
                 [O, _, O],
                 [X, _, O],
@@ -217,8 +217,8 @@ fdescribe('SixComponent', () => {
             await testUtils.expectMoveSuccess('#piece_0_1', move);
         }));
     });
-    fdescribe('view', () => {
-        fit('should highlight winning coords', fakeAsync(async() => {
+    describe('view', () => {
+        it('should highlight winning coords', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _, _, _, _, _, _],
                 [O, O, O, O, O, X, X, X, X, X],

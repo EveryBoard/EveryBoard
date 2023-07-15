@@ -906,6 +906,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveReply(Player.ONE, 'Accept', 'TakeBack');
                 const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
                 expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
+                tick();
 
                 // Then turn should be changed to 0 and resumeCountDown be called
                 expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();

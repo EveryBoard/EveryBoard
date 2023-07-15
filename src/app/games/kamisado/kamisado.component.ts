@@ -73,7 +73,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             this.chosen = state.coordToPlay;
         }
     }
-    public override showLastMove(move: KamisadoMove): void {
+    public override async showLastMove(move: KamisadoMove): Promise<void> {
         if (move.isPieceMove()) {
             this.lastPieceMove = MGPOptional.of(move);
         }

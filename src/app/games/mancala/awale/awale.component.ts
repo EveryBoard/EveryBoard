@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { AwaleRules } from './AwaleRules';
 import { AwaleMinimax } from './AwaleMinimax';
 import { MancalaMove } from 'src/app/games/mancala/commons/MancalaMove';
 import { MancalaState } from '../commons/MancalaState';
-import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MancalaFailure } from './../commons/MancalaFailure';
@@ -20,8 +19,10 @@ import { MancalaComponent } from '../commons/MancalaComponent';
 })
 export class AwaleComponent extends MancalaComponent<AwaleRules, MancalaMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer,
+                       cdr: ChangeDetectorRef)
+    {
+        super(messageDisplayer, cdr);
         this.rules = AwaleRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
@@ -29,8 +30,6 @@ export class AwaleComponent extends MancalaComponent<AwaleRules, MancalaMove> {
         ];
         this.encoder = MancalaMove.encoder;
         this.tutorial = new AwaleTutorial().tutorial;
-
-        void this.updateBoard();
     }
     public async updateBoard(): Promise<void> {
         const state: MancalaState = this.getState();
@@ -38,21 +37,19 @@ export class AwaleComponent extends MancalaComponent<AwaleRules, MancalaMove> {
         this.hidePreviousMove();
 
         this.board = state.getCopiedBoard();
-        // Will be set in showLastMove if there is one
-        this.last = MGPOptional.empty();// TODO: LOOKS LIKE YOU BELONG IN hidePreviousMove BOY
+        this.changeVisibleState(state);
     }
-    public override showLastMove(move: MancalaMove): void {
-        const lastPlayer: number = this.getState().getCurrentPlayer().value;
-        this.last = MGPOptional.of(new Coord(move.x, lastPlayer));
-        const previousState: MancalaState = this.getPreviousState();
-        const distributionResult: MancalaDistributionResult = this.rules.distributeMove(move, previousState);
-        this.filledHouses = distributionResult.filledHouses;
-        const captureResult: MancalaCaptureResult = this.rules.applyCapture(distributionResult);
+    public override async showLastMove(distribution: MancalaMove): Promise<void> {
+        const state: MancalaState = this.getPreviousState();
+        const distributionResult: MancalaDistributionResult = await this.showSimpleDistributionFor(distribution, state);
+        let captureResult: MancalaCaptureResult = this.rules.applyCapture(distributionResult);
         this.captured = captureResult.captureMap;
         const mansoonedPlayer: PlayerOrNone = this.rules.mustMansoon(captureResult.resultingState);
         if (mansoonedPlayer !== PlayerOrNone.NONE) {
-            this.captured = this.rules.mansoon(mansoonedPlayer as Player, captureResult).captureMap;
+            captureResult = this.rules.mansoon(mansoonedPlayer as Player, captureResult);
+            this.captured = captureResult.captureMap;
         }
+        this.changeVisibleState(captureResult.resultingState);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);

@@ -8,6 +8,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export interface MancalaCaptureResult {
 
@@ -102,6 +103,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
      * TODO: make this shorted for Eru's sake
      */
     public distributeHouse(x: number, y: number, state: MancalaState): MancalaDistributionResult {
+        let coord: Coord = new Coord(x, y);
         const resultingBoard: number[][] = state.getCopiedBoard();
         const player: Player = state.getCurrentPlayer();
         // iy and ix are the initial spaces
@@ -117,27 +119,20 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
             previousDropWasKalah = endUpInKalah;
             endUpInKalah = false;
             // get next space
-            if (y === 0) {
-                if (x === 5) {
-                    if (this.config.passByPlayerKalah && player === Player.ONE && previousDropWasKalah === false) {
-                        passedByKalahNTimes++; // Player drop a piece in its kalah
-                        endUpInKalah = true;
-                    } else y = y === 0 ? 1 : 0; // go from the bottom row to the top row
-                } else x += 1; // clockwise order on the top = left to right
+            const nextCoord: MGPOptional<Coord> = this.getNextCoord(coord, player, previousDropWasKalah);
+            endUpInKalah = nextCoord.isAbsent();
+
+            if (endUpInKalah) {
+                passedByKalahNTimes++;
+                inHand--;
             } else {
-                if (x === 0) {
-                    if (this.config.passByPlayerKalah && player === Player.ZERO && previousDropWasKalah === false) {
-                        passedByKalahNTimes++; // Player drop a piece in its kalah
-                        endUpInKalah = true;
-                    } else y = y === 0 ? 1 : 0; // go from the bottom row to the top
-                } else x += -1; // clockwise order on the bottom = right to left
-            }
-            if (endUpInKalah) inHand--;
-            else if (i.equals(new Coord(x, y)) === false) {
-                // not to distribute on our starting space
-                resultingBoard[y][x] += 1;
-                filledHouses.push(new Coord(x, y));
-                inHand--; // drop in this space a piece we have in hand
+                coord = nextCoord.get();
+                if (i.equals(coord) === false) {
+                    // not to distribute on our starting space
+                    resultingBoard[coord.y][coord.x] += 1;
+                    filledHouses.push(coord);
+                    inHand--; // drop in this space a piece we have in hand
+                }
             }
         }
         return {
@@ -146,6 +141,29 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
             endUpInKalah, // TODO: add capture here
             resultingState: new MancalaState(resultingBoard, state.turn, state.getCapturedCopy()),
         };
+    }
+    public getNextCoord(coord: Coord, player: Player, previousDropWasKalah: boolean): MGPOptional<Coord> {
+        if (coord.y === 0) {
+            if (coord.x === 5) {
+                if (this.config.passByPlayerKalah && player === Player.ONE && previousDropWasKalah === false) {
+                    return MGPOptional.empty();
+                } else {
+                    return MGPOptional.of(new Coord(coord.x, 1)); // go from the bottom row to the top row
+                }
+            } else {
+                return MGPOptional.of(new Coord(coord.x + 1, coord.y)); // clockwise order on the top = left to right
+            }
+        } else {
+            if (coord.x === 0) {
+                if (this.config.passByPlayerKalah && player === Player.ZERO && previousDropWasKalah === false) {
+                    return MGPOptional.empty();
+                } else {
+                    return MGPOptional.of(new Coord(coord.x, 0)); // go from the bottom row to the top
+                }
+            } else {
+                return MGPOptional.of(new Coord(coord.x - 1, coord.y)); // clockwise order on the bottom = right to left
+            }
+        }
     }
     public doesDistribute(x: number, y: number, board: Table<number>): boolean {
         if (y === 0) { // distribution from left to right

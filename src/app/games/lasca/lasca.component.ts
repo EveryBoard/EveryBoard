@@ -131,7 +131,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             squareClasses: [],
         };
     }
-    public override showLastMove(move: LascaMove): void {
+    public override async showLastMove(move: LascaMove): Promise<void> {
         this.showLastCapture(move);
         this.showSteppedOnCoord(move);
     }

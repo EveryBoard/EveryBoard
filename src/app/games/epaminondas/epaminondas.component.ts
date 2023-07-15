@@ -66,7 +66,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.hidePreviousMove();
         this.board = this.getState().getCopiedBoard();
     }
-    public override showLastMove(move: EpaminondasMove): void {
+    public override async showLastMove(move: EpaminondasMove): Promise<void> {
         let moved: Coord = move.coord;
         this.moveds = [moved];
         for (let i: number = 1; i < (move.stepSize + move.movedPieces); i++) {

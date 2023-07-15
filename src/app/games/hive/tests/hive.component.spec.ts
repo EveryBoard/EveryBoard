@@ -11,6 +11,7 @@ import { HivePiece } from '../HivePiece';
 import { HiveState } from '../HiveState';
 
 describe('HiveComponent', () => {
+
     let testUtils: ComponentTestUtils<HiveComponent>;
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');

@@ -111,7 +111,10 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
         this.cancelMoveAttempt();
         await this.cancelMoveOnWrapper(reason);
         // TODO: UNIT TEST
-        await this.updateBoard(false, 'cancelMove');
+        await this.updateBoard(false, 'cancelMove')
+        if (this.node.move.isPresent()) {
+            await this.showLastMove(this.node.move.get());
+        }
         if (reason == null) {
             return MGPValidation.SUCCESS;
         } else {
@@ -141,8 +144,9 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public getPreviousState(): S {
         return this.node.mother.get().gameState;
     }
-    public showLastMove(move: M, caller: string = 'root?'): void {
+    public async showLastMove(move: M): Promise<void> {
         // Not needed by default
+        return;
     }
 }
 

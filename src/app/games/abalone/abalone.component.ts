@@ -77,7 +77,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.directions = [];
         this.selecteds = [];
     }
-    public override showLastMove(move: AbaloneMove): void {
+    public override async showLastMove(move: AbaloneMove): Promise<void> {
         if (move.isSingleCoord()) {
             this.showPushingMove(move);
         } else {

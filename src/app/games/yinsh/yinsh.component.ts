@@ -224,7 +224,7 @@ export class YinshComponent
         this.currentlyMoved = [];
         this.moveToInitialCaptureOrMovePhase();
     }
-    public override showLastMove(move: YinshMove): void {
+    public override async showLastMove(move: YinshMove): Promise<void> {
         if (move.isInitialPlacement()) {
             this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved-fill'];
         } else {

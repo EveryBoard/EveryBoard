@@ -236,7 +236,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             };
         }
     }
-    public override showLastMove(move: DiamMove): void {
+    public override async showLastMove(move: DiamMove): Promise<void> {
         this.showLastMoveOnSpaces(move);
         this.showLastMoveOnPieces(move);
     }

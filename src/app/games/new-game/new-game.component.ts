@@ -53,7 +53,8 @@ export class NewGameComponent extends GameComponent<NewGameRules,
     /**
      * This method should display the last move in the component
      */
-    public override showLastMove(move: NewGameMove): void {
+    public override async showLastMove(move: NewGameMove): Promise<void> {
+        return;
     }
     /**
      * This method should clear out any data coming from a move attempt

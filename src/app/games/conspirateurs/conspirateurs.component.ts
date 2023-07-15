@@ -144,7 +144,7 @@ export class ConspirateursComponent
             }
         }
     }
-    public override showLastMove(move: ConspirateursMove): void {
+    public override async showLastMove(move: ConspirateursMove): Promise<void> {
         if (move.isDrop()) {
             this.viewInfo.boardInfo[move.coord.y][move.coord.x].squareClasses.push('moved-fill');
         } else if (move.isSimple()) {

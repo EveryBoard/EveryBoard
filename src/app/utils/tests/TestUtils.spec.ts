@@ -140,7 +140,12 @@ export class SimpleComponentTestUtils<T> {
     public detectChanges(): void {
         this.fixture.detectChanges();
     }
+    public forceChangeDetection(): void {
+        this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        this.detectChanges();
+    }
     public findElement(elementName: string): DebugElement {
+        this.forceChangeDetection();
         return this.fixture.debugElement.query(By.css(elementName));
     }
     public findElements(elementName: string): DebugElement[] {
@@ -314,7 +319,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
      * @param nameInFunction Its name inside the code
      */
     public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
-        await this.expectInterfaceClickSuccess(nameInHtml);
+        await this.expectInterfaceClickSuccess(nameInHtml, true);
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
     }
@@ -355,6 +360,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
+            tick();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
@@ -404,6 +410,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
+            tick();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             if (scores) {
@@ -478,6 +485,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         element.triggerEventHandler('click', null);
         await this.fixture.whenStable();
         this.detectChanges();
+        tick();
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
@@ -519,6 +527,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(elementClasses).toEqual(classesSorted);
     }
     public findElement(elementName: string): DebugElement {
+        this.forceChangeDetection();
         return this.debugElement.query(By.css(elementName));
     }
 }

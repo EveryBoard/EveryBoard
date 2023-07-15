@@ -446,7 +446,7 @@ export class LodestoneComponent
             this.viewInfo.pressurePlates.push({ position: pressurePlate, coords: plateCoordInfos });
         }
     }
-    public override showLastMove(move: LodestoneMove): void {
+    public override async showLastMove(move: LodestoneMove): Promise<void> {
         const lastState: LodestoneState = this.getPreviousState();
         this.lastInfos = MGPOptional.of(
             LodestoneRules.get().applyMoveWithoutPlacingCaptures(lastState, move.coord, move));

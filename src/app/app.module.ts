@@ -56,6 +56,7 @@ import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
 import { HiveComponent } from './games/hive/hive.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
+import { KalahComponent } from './games/mancala/kalah/kalah.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LascaComponent } from './games/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
@@ -64,6 +65,7 @@ import { MartianChessComponent } from './games/martian-chess/martian-chess.compo
 import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
 import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
 import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
+import { NumberedCircleComponent } from './games/mancala/commons/numbered-circle.component';
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
 import { PenteComponent } from './games/pente/pente.component';
@@ -104,7 +106,6 @@ import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { GameEventService } from './services/GameEventService';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
-import { KalahComponent } from './games/mancala/kalah/kalah.component';
 
 registerLocaleData(localeFr);
 
@@ -189,7 +190,7 @@ export class FirebaseProviders {
 
         AbaloneComponent,
         ApagosComponent,
-        AwaleComponent,
+        AwaleComponent, NumberedCircleComponent,
         BrandhubComponent,
         CoerceoComponent,
         ConnectSixComponent,

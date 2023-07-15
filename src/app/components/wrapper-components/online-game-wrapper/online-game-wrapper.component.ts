@@ -634,8 +634,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async onCancelMove(reason?: string): Promise<void> {
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
-            console.log('onCancelMove => showLastMove')
-            this.gameComponent.showLastMove(move);
+            await this.gameComponent.showLastMove(move);
         }
         return;
     }

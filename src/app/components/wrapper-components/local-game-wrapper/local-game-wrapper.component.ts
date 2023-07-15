@@ -71,16 +71,17 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
-        display(LocalGameWrapperComponent.VERBOSE || true, 'LocalGameWrapperComponent.onLegalUserMove');
+        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onLegalUserMove');
 
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
         await this.updateBoard(true, 'LGWC.onLegalUserMove');
+        console.log('votre move est terminé, je lance le robot ! at', new Date().getTime() % 10000)
         this.proposeAIToPlay();
     }
     public async updateBoard(triggerAnimation: boolean=false, caller: string): Promise<void> {
-        console.log('>>> LGWC.updateBoard (LGWC.updateBoardAndShowLastMove)')
         await this.updateBoardAndShowLastMove(triggerAnimation);
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node);
+        console.log('gameStatus:', gameStatus)
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner.isPlayer()) {
@@ -101,11 +102,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     }
                 }
             }
-
+            this.cdr.detectChanges();
         }
-        console.log('<<< LGWC.updateBoard')
     }
     public proposeAIToPlay(): void {
+        console.log('proposeAIToPlay at', new Date().getTime() % 10000)
         // check if ai's turn has come, if so, make her start after a delay
         const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {
@@ -131,7 +132,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }));
     }
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
-        console.log('>> >> >> LGWC.doAIMove (ruler.choose, LGWC.updateBoard, LGWC.proposeAIToPlay)')
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
@@ -145,11 +145,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             await this.updateBoard(true, 'LGWC.doAIMove');
             this.cdr.detectChanges();
             this.proposeAIToPlay();
-            console.log('<< << << LGWC.doAIMove')
             return MGPValidation.SUCCESS;
         } else {
             this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
-            console.log('<< << << LGWC.doAIMove')
             return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { name: playingMinimax.name, move: aiMove.toString() });
         }
     }
@@ -157,7 +155,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.gameComponent.getTurn() > 0;
     }
     public async takeBack(): Promise<void> {
-        console.log('LGWC.takeBack (LGWC.updateBoardAndShowLastMove)')
         this.gameComponent.node = this.gameComponent.node.mother.get();
         if (this.isAITurn()) {
             this.gameComponent.node = this.gameComponent.node.mother.get();
@@ -178,10 +175,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return 'human';
     }
     public async onCancelMove(reason?: string): Promise<void> {
-        console.log('LGWC.onCancelMove (gameComponent.showLastMove)')
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
-            this.gameComponent.showLastMove(move, 'onCancelMove');
+            await this.gameComponent.showLastMove(move);
         }
     }
 }

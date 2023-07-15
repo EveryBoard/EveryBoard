@@ -79,7 +79,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     public async updateBoard(): Promise<void> {
         this.cancelMoveAttempt();
     }
-    public override showLastMove(move: GipfMove): void {
+    public override async showLastMove(move: GipfMove): Promise<void> {
         this.inserted = MGPOptional.empty();
         if (move.placement.direction.isPresent()) {
             const lastPlacement: GipfPlacement = move.placement;

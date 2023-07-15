@@ -46,7 +46,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.updateViewInfo();
         this.lastMove = this.node.move;
     }
-    public override showLastMove(move: M): void {
+    public override async showLastMove(move: M): Promise<void> {
         const previousState: S = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {

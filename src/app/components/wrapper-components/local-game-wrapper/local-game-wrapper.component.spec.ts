@@ -232,7 +232,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(proposeAIToPlay).toHaveBeenCalledTimes(1);
             tick(1000);
         }));
-        it('should propose AI 2 to play when selecting her just before her turn', async() => {
+        it('should propose AI 2 to play when selecting her just before her turn', fakeAsync(async() => {
             // Given wrapper on which a first move have been done
             await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
@@ -252,7 +252,7 @@ describe('LocalGameWrapperComponent', () => {
 
             // Then it should have proposed AI to play
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
-        });
+        }));
         it('should take back to users turn when playing against AI', fakeAsync(async() => {
             // Given a board, where each player played at least one move, where AI just played
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerOneSelect').nativeElement;

@@ -120,6 +120,10 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
     public static getInitialState(): HiveState {
         const board: Table<HivePiece[]> = [];
         return HiveState.fromRepresentation(board, 0);
+        // const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
+        // return HiveState.fromRepresentation([
+        //     [[Q]],
+        // ], 1);
     }
     public static fromRepresentation(board: Table<HivePiece[]>, turn: number, vector: Vector = new Vector(0, 0))
     : HiveState

@@ -90,6 +90,7 @@ class Layer extends Table2DWithPossibleNegativeIndices<SpaceInLayerInfo> {
     selector: 'app-hive',
     templateUrl: './hive.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, HiveState, HivePieceStack> {
 
@@ -111,7 +112,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    constructor(messageDisplayer: MessageDisplayer)
+    {
         super(messageDisplayer);
         this.rules = HiveRules.get();
         this.node = this.rules.getInitialNode();
@@ -129,7 +131,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         void this.updateBoard();
     }
     public async updateBoard(): Promise<void> {
-        this.cancelMoveAttempt();
         this.layers = [];
         for (const coord of this.getState().occupiedSpaces()) {
             const stack: HivePieceStack = this.getState().getAt(coord);
@@ -242,7 +243,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.inspectedStack = MGPOptional.empty();
         this.computeViewBox();
     }
-    public override showLastMove(move: HiveMove): void {
+    public override async showLastMove(move: HiveMove): Promise<void> {
         for (const coord of this.getLastMoveCoords(move)) {
             this.highlight(coord, 'last-move-stroke');
             this.ground.highlightStroke(coord, 'last-move-stroke');
@@ -315,11 +316,13 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         return MGPValidation.SUCCESS;
     }
-    public selectStack(x: number, y: number): Promise<MGPValidation> {
-        return this.select(new Coord(x, y), 'piece');
+    public async selectStack(x: number, y: number): Promise<MGPValidation> {
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'piece');
+        return selectionValidity;
     }
-    public selectSpace(x: number, y: number): Promise<MGPValidation> {
-        return this.select(new Coord(x, y), 'space');
+    public async selectSpace(x: number, y: number): Promise<MGPValidation> {
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'space');
+        return selectionValidity;
     }
     private async select(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);

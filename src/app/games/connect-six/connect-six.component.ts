@@ -42,7 +42,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
         this.createHoshis();
     }
-    public override showLastMove(move: ConnectSixMove): void {
+    public override async showLastMove(move: ConnectSixMove): Promise<void> {
         if (move instanceof ConnectSixFirstMove) {
             this.lastMoved = [move.coord];
         } else {

@@ -31,7 +31,6 @@ export class KalahRules extends MancalaRules<KalahMove> {
         });
     }
     public isLegal(move: KalahMove, state: MancalaState): MGPValidation {
-        console.log('is legal ?', move.toString())
         const playerY: number = state.getCurrentOpponent().value; // centralise that in MancalaState !
         let canStillPlay: boolean = true;
         for (const subMove of move) {

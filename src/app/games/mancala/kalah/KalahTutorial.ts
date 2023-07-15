@@ -1,6 +1,8 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 export class KalahTutorial extends Tutorial {
-    public tutorial: TutorialStep[] = []; // TODO
+    public tutorial: TutorialStep[] = [
+        // 1.
+    ];
 }
 // TODO: make it throw when you create a game without minimax !

@@ -67,7 +67,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.lastDrop = MGPOptional.empty();
         this.lastRotation = MGPOptional.empty();
     }
-    public override showLastMove(move: PentagoMove): void {
+    public override async showLastMove(move: PentagoMove): Promise<void> {
         this.cancelMoveAttempt();
         this.movedBlock = move.blockTurned;
         const localCoord: Coord = new Coord(move.coord.x % 3 - 1, move.coord.y % 3 - 1);
