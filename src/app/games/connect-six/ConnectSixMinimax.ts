@@ -46,27 +46,32 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
     private getAvailableCoords(state: ConnectSixState): Coord[] {
         const usefulCoord: boolean[][] = this.getNeighboringCoords(state);
         const availableCoords: Coord[] = [];
-        for (const coordsAndContents of state.getCoordsAndContents()) {
-            const coord: Coord = coordsAndContents.coord;
-            if (usefulCoord[coord.y][coord.x] === true && coordsAndContents.content.isPlayer() === false) {
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            if (usefulCoord[coord.y][coord.x] === true && coordAndContent.content.isPlayer() === false) {
                 availableCoords.push(coord);
             }
         }
         return availableCoords;
     }
     /**
-     * The coords where there is a a piece have neighboors that are empty
-     * This function returns a table on which table[y][x] == true only if (x, y) is one of thoses neighbors
+     * This function returns a table on which table[y][x] === true only if:
+     *     (x, y) is empty but has occupied neighbors
      */
     private getNeighboringCoords(state: ConnectSixState): boolean[][] {
         const usefulCoord: boolean[][] = ArrayUtils.createTable(ConnectSixState.WIDTH, ConnectSixState.HEIGHT, false);
-        for (const coordsAndContents of state.getCoordsAndContents()) {
-            if (coordsAndContents.content.isPlayer()) {
-                this.addNeighboringCoord(usefulCoord, coordsAndContents.coord);
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            if (coordAndContent.content.isPlayer()) {
+                this.addNeighboringCoord(usefulCoord, coordAndContent.coord);
             }
         }
         return usefulCoord;
     }
+    /**
+     * mark the space neighboring coord as "space that have an occupied neighbor"
+     * @param usefulCoord a map of the board which each space mapped to true if it has an occupied neighbor
+     * @param coord the coord to add to this map
+     */
     private addNeighboringCoord(usefulCoord: boolean[][], coord: Coord): void {
         const usefulDistance: number = 1; // At two, it's already too much calculation for the minimax sadly
         const minX: number = Math.max(0, coord.x - usefulDistance);
@@ -82,10 +87,10 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
     public getBoardValue(node: ConnectSixNode): BoardValue {
         const state: ConnectSixState = node.gameState;
         let score: number = 0;
-        for (const coordsAndContents of state.getCoordsAndContents()) {
-            if (coordsAndContents.content.isPlayer()) {
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            if (coordAndContent.content.isPlayer()) {
                 const squareScore: number =
-                    ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coordsAndContents.coord);
+                    ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coordAndContent.coord);
                 const coordScore: SCORE = MGPNode.getScoreStatus(squareScore);
                 if (coordScore === SCORE.VICTORY) {
                     return new BoardValue(squareScore);
