@@ -153,7 +153,7 @@ describe('ActivePartsService', () => {
             activePartsSubscription.unsubscribe();
         }));
         it('should call observingWhere with the right condition', () => {
-            // Given an ActiveUsersService
+            // Given an ActivePartsService
             spyOn(partDAO, 'observingWhere').and.callFake(
                 (query: FirestoreCondition[], callback: FirestoreCollectionObserver<Part>): Subscription => {
                     const expectedParameters: FirestoreCondition[] = [
