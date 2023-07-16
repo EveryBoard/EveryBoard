@@ -245,9 +245,8 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
-        await TestBed.inject(ChatDAO).set('configRoomId', { messages: [], status: `I don't have a clue` });
         testUtils.detectChanges();
-        tick(3000); // Since a criticalToast will pop
+        tick(3000);
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));

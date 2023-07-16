@@ -72,7 +72,6 @@ describe('ExclusiveOnlineGameGuard', () => {
 
         // Then it should be refused
         await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(true);
-        tick(3000);
     }));
     it(`should refuse to go to another part and redirect to user's part`, fakeAsync(async() => {
         // Given a connected user service indicating user is already player
@@ -90,6 +89,5 @@ describe('ExclusiveOnlineGameGuard', () => {
 
         // Then it should be refused and redirected
         await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(router.parseUrl('/play/P4/I-play'));
-        tick(3000);
     }));
 });

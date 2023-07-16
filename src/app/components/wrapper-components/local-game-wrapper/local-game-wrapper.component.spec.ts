@@ -31,7 +31,7 @@ import { NotFoundComponent } from '../../normal-component/not-found/not-found.co
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
-    it('should redirect to /notFound', fakeAsync(async() => {
+    fit('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game', true);
         ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
@@ -41,10 +41,11 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
 
         // When loading the wrapper
         testUtils.detectChanges();
-        tick(3000);
+        tick(1);
 
-        // Then it goes to /notFound with the expected error message
+        // Then it goes to /notFound with the expected error message and displays a toast
         expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
+        testUtils.expectCriticalMessageToHaveBeenDisplayed('TODO');
     }));
 });
 
