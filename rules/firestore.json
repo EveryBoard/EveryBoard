@@ -180,7 +180,7 @@ service cloud.firestore {
                     (event.requestType == 'TakeBack' && part.turn >= 1 && !partFinished));
         }
         function validReply(event) {
-            return hasField(event, 'reply') &&
+            return hasField(event, 'reply') && hasField(event, 'requestType') &&
                    ((event.reply == 'Accept') ||
                     (event.reply == 'Reject'));
         }
@@ -198,6 +198,7 @@ service cloud.firestore {
             let part = get(/databases/$(database)/documents/parts/$(partId)).data;
             let isPlayerTurn = part.turn % 2 == moveEvent.player;
             return validEvent(moveEvent) && moveEvent.eventType == 'Move' &&
+                   hasField(moveEvent, 'move') &&
                    playerAddsEvent(part, moveEvent) &&
                    isPlayerTurn;
         }

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { GameEvent, RequestType, Reply, Part, MGPResult } from 'src/app/domain/Part';
+import { GameEvent, RequestType, Reply, Part, MGPResult, GameEventMove, GameEventRequest, GameEventReply, GameEventAction } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedUser, createUnverifiedUser, signOut, reconnectUser, createDisconnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -732,11 +732,40 @@ describe('PartDAO security', () => {
                     eventType: 'Invalid' as 'Move',
                     time: serverTimestamp(),
                     player: 0,
+                    move: 42,
                 } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
+            });
+            it('should forbid creating an invalid event', async() => {
+                // Given an ongoing part
+                const partId: string = await setupStartedPartAsPlayerZero();
+
+                const eventsWithMissingField: GameEvent[] = [
+                    { time: serverTimestamp(), player: 0, move: 42 } as GameEvent,
+                    { eventType: 'Move', player: 0, move: 42 } as GameEventMove,
+                    { eventType: 'Move', time: serverTimestamp(), move: 42 } as GameEventMove,
+                    { eventType: 'Move', time: serverTimestamp(), player: 0 } as GameEventMove,
+                    { eventType: 'Request', player: 0, requestType: 'Draw' } as GameEventRequest,
+                    { eventType: 'Request', time: serverTimestamp(), requestType: 'Draw' } as GameEventRequest,
+                    { eventType: 'Request', time: serverTimestamp(), player: 0 } as GameEventRequest,
+                    { eventType: 'Reply', player: 0, reply: 'Accept', requestType: 'Draw' } as GameEventReply,
+                    { eventType: 'Reply', time: serverTimestamp(), reply: 'Accept', requestType: 'Draw' } as GameEventReply,
+                    { eventType: 'Reply', time: serverTimestamp(), player: 0, reply: 'Accept' } as GameEventReply,
+                    { eventType: 'Reply', time: serverTimestamp(), player: 0, requestType: 'Draw' } as GameEventReply,
+                    { eventType: 'Action', player: 0, action: 'AddTurnTime' } as GameEventAction,
+                    { eventType: 'Action', time: serverTimestamp(), action: 'AddTurnTime' } as GameEventAction,
+                    { eventType: 'Action', time: serverTimestamp(), player: 0 } as GameEventAction,
+                ];
+
+                for (const event of eventsWithMissingField) {
+                    // When creating an event missing a required field
+                    const result: Promise<string> = events(partId).create(event);
+                    // Then it should fail
+                    await expectPermissionToBeDenied(result);
+                }
             });
             it('should forbid creating an event as the other player', async() => {
                 // Given an ongoing part
@@ -746,9 +775,10 @@ describe('PartDAO security', () => {
                 const event: GameEvent = {
                     // We can't represent such invalid types properly with our typing
                     // but malicious clients could, so we need to make an ugly cast
-                    eventType: 'Action',
+                    eventType: 'Move',
                     time: serverTimestamp(),
                     player: 1,
+                    move: 42,
                 } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 

@@ -2,25 +2,17 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
-import { formatDate } from '@angular/common';
-import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
-
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
-import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
 import { GameActionFailure } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { UserDAO } from 'src/app/dao/UserDAO';
-
 import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { PartDocument } from 'src/app/domain/Part';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { User } from 'src/app/domain/User';
-
 import { LobbyComponent } from './lobby.component';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
@@ -329,7 +321,7 @@ describe('LobbyComponent', () => {
         // When it is destroyed
         component.ngOnDestroy();
 
-        // Then it should have unsubscrbed from active parts
+        // Then it should have unsubscribed from active parts
         expectUnsubscribeToHaveBeenCalled();
     }));
     it('should unsubscribe from active users when destroying component', fakeAsync(async() => {
@@ -391,5 +383,16 @@ describe('LobbyComponent', () => {
         testUtils.expectElementToExist('#part_0 > .turn');
         const turn: DebugElement = testUtils.findElement('#part_0 > .turn');
         expect(turn.nativeElement.innerText).toEqual('1');
+    }));
+    it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
+        // Given a lobby
+
+        // When clicking on the chat tab
+        await testUtils.clickElement('#tab-chat');
+        tick();
+        testUtils.detectChanges();
+
+        // Then it should show the chat
+        testUtils.expectElementToExist('#chat');
     }));
 });

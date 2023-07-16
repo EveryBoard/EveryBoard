@@ -221,11 +221,24 @@ describe('GameService', () => {
             partDAO = TestBed.inject(PartDAO);
         });
         it('should send request when proposing a rematch', fakeAsync(async() => {
+            // Given a game service
             spyOn(gameEventService, 'addRequest').and.resolveTo();
 
+            // When proposing a rematch
             await gameService.proposeRematch('partId', Player.ZERO);
 
+            // Then it should add a request
             expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Rematch');
+        }));
+        it('should send reply when rejecting a rematch', fakeAsync(async() => {
+            // Given a game service
+            spyOn(gameEventService, 'addReply').and.resolveTo();
+
+            // When rejecting a rematch
+            await gameService.rejectRematch('partId', Player.ZERO);
+
+            // Then it should add a reply
+            expect(gameEventService.addReply).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Reject', 'Rematch');
         }));
         it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
             // Given a previous game
@@ -352,7 +365,7 @@ describe('GameService', () => {
             // Given a part during our turn
             const part: Part = { ...PartMocks.STARTED, turn: 2 };
             // When accepting the take back
-            await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
+            await gameService.acceptTakeBack('configRoomId', part.turn, Player.ZERO);
             // Then it should decrease the turn by one
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
         }));
@@ -361,7 +374,7 @@ describe('GameService', () => {
             // Given a part during the opponent's turn
             const part: Part = { ...PartMocks.STARTED, turn: 3 };
             // When accepting the take back
-            await gameService.acceptTakeBack('configRoomId', part, Player.ZERO);
+            await gameService.acceptTakeBack('configRoomId', part.turn, Player.ZERO);
             // Then it should decrease the turn by 2
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
                 turn: 1,

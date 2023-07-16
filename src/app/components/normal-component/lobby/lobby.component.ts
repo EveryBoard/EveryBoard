@@ -9,7 +9,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Subscription } from 'rxjs';
-import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -21,11 +20,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    public activeUsers: UserDocument[] = [];
-
     public activeParts: PartDocument[] = [];
 
-    private activeUsersSubscription!: Subscription; // initialized in ngOnInit
     private activePartsSubscription!: Subscription; // initialized in ngOnInit
     private currentGameSubscription!: Subscription; // initialized in ngOnInit
 
@@ -35,16 +31,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
     public constructor(public readonly router: Router,
                        public readonly messageDisplayer: MessageDisplayer,
                        private readonly activePartsService: ActivePartsService,
-                       private readonly activeUsersService: ActiveUsersService,
                        private readonly currentGameService: CurrentGameService)
     {
     }
     public ngOnInit(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnInit');
-        this.activeUsersSubscription = this.activeUsersService.subscribeToActiveUsers(
-            (activeUsers: UserDocument[]) => {
-                this.activeUsers = activeUsers;
-            });
         this.activePartsSubscription = this.activePartsService.subscribeToActiveParts(
             (activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
@@ -59,7 +50,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
     public ngOnDestroy(): void {
         display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnDestroy');
-        this.activeUsersSubscription.unsubscribe();
         this.activePartsSubscription.unsubscribe();
         this.currentGameSubscription.unsubscribe();
     }
