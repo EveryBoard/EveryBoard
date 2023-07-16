@@ -2,7 +2,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
@@ -57,7 +57,6 @@ export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promi
     const OBSERVER: User = {
         username: 'jeanJaja',
         lastUpdateTime: new Timestamp(Date.now() / 1000, Date.now() % 1000),
-        state: 'online',
         verified: true,
     };
     const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
@@ -179,7 +178,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     const OBSERVER: User = {
         username: 'jeanJaja',
         lastUpdateTime: new Timestamp(Date.now() / 1000, Date.now() % 1000),
-        state: 'online',
         verified: true,
     };
     const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
@@ -253,8 +251,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     {
         const update: Partial<Part> = {
             turn: initialTurn + newMoves.length,
-            request: null,
-            lastUpdateTime: serverTimestamp(),
         };
         const gameService: GameService = TestBed.inject(GameService);
         let currentPlayer: Player = Player.of(initialTurn % 2);
@@ -1070,7 +1066,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(partDAO, 'update').and.callThrough();
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1090,7 +1085,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(observedPartService, 'removeObservedPart').and.callThrough();
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1387,7 +1381,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 winner: UserMocks.CREATOR_MINIMAL_USER,
                 loser: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.RESIGN.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1411,7 +1404,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 winner: UserMocks.CREATOR_MINIMAL_USER,
                 loser: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.RESIGN.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1618,7 +1610,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await gameEventService.addRequest('configRoomId', Player.ZERO, 'Draw');
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
-                request: null,
             });
             await receiveReply(Player.ONE, 'Accept', 'Draw');
             await receiveAction(Player.ONE, 'EndGame');
