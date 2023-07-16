@@ -110,7 +110,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Move
         }
     }
     public getPieceCx(x: number): number {
-        return 60 + 100 * (x + 1);
+        return 80 + 100 * (x + 1);
     }
     public getPieceCy(y: number): number {
         return 60 + 120 * y;
@@ -125,6 +125,5 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Move
         this.constructedState = MGPOptional.of(state);
         this.board = this.constructedState.get().board;
         this.cdr.detectChanges();
-        console.log('change detected!')
     }
 }

@@ -8,7 +8,7 @@ import { DebugElement } from '@angular/core';
 import { MancalaState } from '../../commons/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('KalahComponent', () => {
+fdescribe('KalahComponent', () => {
 
     let testUtils: ComponentTestUtils<KalahComponent>;
 
@@ -16,18 +16,21 @@ describe('KalahComponent', () => {
         const component: KalahComponent = testUtils.getComponent();
         let state: MancalaState = component.getState();
         const playerY: number = component.getCurrentPlayer().getOpponent().value;
-        let nbSeed: number = 0;
+        let moveDuration: number = 0;
+        let lastDistributionSeedNumber: number = 0;
         for (const subMove of move) {
-            nbSeed += state.getPieceAtXY(subMove.x, playerY);
+            lastDistributionSeedNumber = state.getPieceAtXY(subMove.x, playerY);
+            moveDuration += lastDistributionSeedNumber * 200; // The time to move the seeds
+            moveDuration += 200; // The time between each subdistribution
             state = component.rules.distributeHouse(subMove.x, playerY, state).resultingState;
         }
-        await testUtils.expectMoveSuccess(click, move);
-        tick((nbSeed + 2) * 200);
+        await testUtils.expectMoveSuccess(click, move, undefined, undefined, moveDuration);
+        tick(moveDuration + 200);
     }
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<KalahComponent>('Kalah');
     }));
-    describe('Commons Mancala Tests', () => {
+    fdescribe('Commons Mancala Tests', () => {
         it('should create', () => {
             testUtils.expectToBeCreated();
         });
@@ -38,7 +41,7 @@ describe('KalahComponent', () => {
             // Then it should be a success
             await expectMoveSuccess('#click_0_1', move);
         }));
-        it('should display last move after basic move', fakeAsync(async() => {
+        fit('should display last move after basic move', fakeAsync(async() => {
             // Given any state (initial here by default)
 
             // When player performs a move

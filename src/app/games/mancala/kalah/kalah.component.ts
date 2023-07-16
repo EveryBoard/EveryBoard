@@ -54,7 +54,7 @@ export class KalahComponent extends MancalaComponent<KalahRules, KalahMove> {
         const nextState: MancalaState = simpleDistributionResult.resultingState;
         this.changeVisibleState(nextState);
         return new Promise((resolve: (result: void) => void) => {
-            setTimeout(resolve, 1000);
+            setTimeout(resolve, 200);
         });
     }
     public override async showLastMove(move: KalahMove): Promise<void> {
@@ -81,6 +81,7 @@ export class KalahComponent extends MancalaComponent<KalahRules, KalahMove> {
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        console.log('clicked!')
         this.hidePreviousMove();
         if (y === this.getState().getCurrentPlayer().value) {
             return this.cancelMove(MancalaFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
@@ -93,8 +94,10 @@ export class KalahComponent extends MancalaComponent<KalahRules, KalahMove> {
             this.currentMove = MGPOptional.of(this.currentMove.get().add(MancalaMove.from(x)));
         }
         const distributionResult: MancalaDistributionResult = await this.showSimpleDistribution(MancalaMove.from(x));
+        console.log('showed ongoing distribution');
         if (distributionResult.endUpInKalah === false) {
             this.constructedState = MGPOptional.empty();
+            console.log('and next instruction, choosing moooove')
             return this.chooseMove(this.currentMove.get(), this.getState());
         } else {
             this.changeVisibleState(distributionResult.resultingState);

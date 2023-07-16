@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     viewBox="-5 -5 830 250"
+     viewBox="-5 -5 870 250"
      [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet"
      >
     <rect x="0" y="0"
           ry="115" rx="115"
-          width="820" height="240"
+          width="860" height="240"
           fill="blue"
           class="base"
     />
@@ -25,7 +25,29 @@
             ></g>
         </g>
     </g>
-    <line x1="100" y1="120" x2="720" y2="120" class="base"/>
-    <line x1="100" y1="0"   x2="100" y2="240" class="base"/>
-    <line x1="720" y1="0"   x2="720" y2="240" class="base"/>
+    <line x1="120" y1="120" x2="740" y2="120" class="base"/>
+
+    <line x1="120" y1="0"   x2="120" y2="240" class="base"/>
+    <line x1="740" y1="0"   x2="740" y2="240" class="base"/>
+
+    <g id="player_zero_captures"
+       app-numbered-circle
+       transform="translate(60 120)"
+       [x]="-1"
+       [y]="-1"
+       [content]="scores.get()[0]"
+       [spaceClasses]="['player0-fill']"
+       [rotation]="getPieceRotation()"
+       [secondaryContent]="MGPOptional.empty()"
+    ></g>
+    <g id="player_one_captures"
+       app-numbered-circle
+       transform="translate(800 120)"
+       [x]="2"
+       [y]="2"
+       [content]="scores.get()[1]"
+       [spaceClasses]="['player1-fill']"
+       [rotation]="getPieceRotation()"
+       [secondaryContent]="MGPOptional.empty()"
+    ></g>
 </svg>

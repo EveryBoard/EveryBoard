@@ -106,7 +106,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
     public proposeAIToPlay(): void {
-        console.log('proposeAIToPlay at', new Date().getTime() % 10000)
         // check if ai's turn has come, if so, make her start after a delay
         const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {

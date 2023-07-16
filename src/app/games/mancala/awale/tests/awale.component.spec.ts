@@ -8,7 +8,7 @@ import { MancalaFailure } from '../../commons/MancalaFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { DebugElement } from '@angular/core';
 
-fdescribe('AwaleComponent', () => {
+describe('AwaleComponent', () => {
 
     let testUtils: ComponentTestUtils<AwaleComponent>;
 
@@ -118,6 +118,23 @@ fdescribe('AwaleComponent', () => {
             testUtils.expectElementToHaveClasses('#circle_3_1', ['base', 'player0-fill']);
             testUtils.expectElementToHaveClasses('#circle_2_1', ['base', 'player0-fill']);
             testUtils.expectElementToHaveClasses('#circle_1_1', ['base', 'player0-fill']);
+        }));
+        it('should display score of players on the board', fakeAsync(async() => {
+            // Given a board with captured piece
+            const state: MancalaState = new MancalaState([
+                [4, 4, 4, 4, 4, 4],
+                [4, 4, 4, 4, 4, 4],
+            ], 0, [1, 2]);
+
+            // When rendering it
+            await testUtils.setupState(state);
+
+            // Then player zero's captures should be displayed
+            const zeroContent: DebugElement = testUtils.findElement('#number_-1_-1');
+            expect(zeroContent.nativeElement.innerHTML).toBe(' 1 ');
+            // And player one's captures should be displayed too
+            const oneContent: DebugElement = testUtils.findElement('#number_2_2');
+            expect(oneContent.nativeElement.innerHTML).toBe(' 2 ');
         }));
     });
     it('should accept simple move for player zero, show captured and moved', fakeAsync(async() => {

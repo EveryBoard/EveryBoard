@@ -307,7 +307,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         );
         await this.gameComponent.updateBoard(false, 'TU.setupState');
         if (previousMove !== undefined) {
-            this.gameComponent.showLastMove(previousMove);
+            await this.gameComponent.showLastMove(previousMove);
         }
         this.forceChangeDetection();
     }
@@ -398,7 +398,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
                                    state?: GameState,
-                                   scores?: readonly [number, number])
+                                   scores?: readonly [number, number],
+                                   clickAnimationDuration?: number)
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
@@ -410,9 +411,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
-            tick();
+            if (clickAnimationDuration === undefined) {
+                tick();
+            } else {
+                tick(clickAnimationDuration);
+            }
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
+            console.log('>>> ... checking now')
             if (scores) {
                 expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
             } else {
