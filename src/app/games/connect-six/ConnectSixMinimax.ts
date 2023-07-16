@@ -44,7 +44,7 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
         return new MGPSet(moves).toList(); // Removes duplicates
     }
     private getAvailableCoords(state: ConnectSixState): Coord[] {
-        const usefulCoord: boolean[][] = this.getNeighboringCoords(state);
+        const usefulCoord: boolean[][] = this.getUsefulCoordsMap(state);
         const availableCoords: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
@@ -58,7 +58,7 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
      * This function returns a table on which table[y][x] === true only if:
      *     (x, y) is empty but has occupied neighbors
      */
-    private getNeighboringCoords(state: ConnectSixState): boolean[][] {
+    private getUsefulCoordsMap(state: ConnectSixState): boolean[][] {
         const usefulCoord: boolean[][] = ArrayUtils.createTable(ConnectSixState.WIDTH, ConnectSixState.HEIGHT, false);
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content.isPlayer()) {
