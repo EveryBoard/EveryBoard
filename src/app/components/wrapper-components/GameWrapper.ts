@@ -19,7 +19,9 @@ export class GameWrapperMessages {
 
     public static readonly NOT_YOUR_TURN: Localized = () => $localize`It is not your turn!`;
 
-    public static readonly NO_CLONING_FEATURE: Localized = () => $localize`You cannot clone a game. This feature might be implemented later.`;
+    public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
+
+    public static readonly MUST_ANSWER_REQUEST: Localized = () => $localize`You must answer your opponent's request.`;
 
     public static NO_MATCHING_GAME(gameName: string): string {
         return $localize`This game (${gameName}) does not exist.`;
@@ -41,8 +43,6 @@ export abstract class GameWrapper<P extends Comparable> {
     public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
     public role: PlayerOrNone = PlayerOrNone.NONE;
-
-    public canPass: boolean;
 
     public endGame: boolean = false;
 
@@ -108,7 +108,6 @@ export abstract class GameWrapper<P extends Comparable> {
                 this.onCancelMove(reason);
             };
         this.setRole(this.role);
-        this.canPass = this.gameComponent.canPass;
         return true;
     }
     public setRole(role: PlayerOrNone): void {
@@ -147,7 +146,7 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public onUserClick(_elementName: string): MGPValidation {
         if (this.role === PlayerOrNone.NONE) {
-            const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
+            const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
             return MGPValidation.failure(message);
         }
         if (this.isPlayerTurn()) {
