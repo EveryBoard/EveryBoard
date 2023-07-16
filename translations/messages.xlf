@@ -449,6 +449,9 @@
       <trans-unit id="2129768251160483742" datatype="html">
         <source>It is not your turn!</source>
       </trans-unit>
+      <trans-unit id="7285945849261218681" datatype="html">
+        <source>This game has ended.</source>
+      </trans-unit>
       <trans-unit id="4517991218544205155" datatype="html">
         <source>You are an observer in this game, you cannot play.</source>
       </trans-unit>
@@ -457,9 +460,6 @@
       </trans-unit>
       <trans-unit id="443650994975920138" datatype="html">
         <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
-      </trans-unit>
-      <trans-unit id="3568920234618711065" datatype="html">
-        <source>The game has ended.</source>
       </trans-unit>
       <trans-unit id="1944212987695444934" datatype="html">
         <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ gameComponent.getTurn() + 1 }}"/></source>
