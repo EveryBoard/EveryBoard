@@ -144,7 +144,7 @@ describe('GameComponent', () => {
             },
             Yinsh: { onClick: [0, 0] },
         };
-        const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());
+        const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
         for (const gameInfo of GameInfo.ALL_GAMES()) {
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {

@@ -16,16 +16,16 @@
         "strictBindCallApply": true,
         "strictNullChecks": true,
         "noImplicitOverride": true,
+        "strict": true,
+        "noImplicitThis": true,
         // The following options still need to be set to true (they are false by default, but we list them explicitly)
         "noUncheckedIndexedAccess": false, // Include 'undefined' in index signature results, e.g., a[0] could be undefined
         "noImplicitAny": false, // some fixes to do before enabling this one
-        "noImplicitThis": false,
         "strictFunctionTypes": false, // requires improving genericity
         "strictPropertyInitialization": false,
         "strictBindCallApply": false,
         "strictFunctionTypes": false,
         "useUnknownInCatchVariables": false,
-        "strict": true,
 
         "module": "es2020",
         "moduleResolution": "node",
