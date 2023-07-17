@@ -14,7 +14,7 @@ export class Vector implements ComparableObject {
                Math.abs(this.y) === length;
     }
     public toMinimalVector(): Vector {
-        let greatestCommonDivisor: number = MathUtils.gcd(this.x, this.y);
+        const greatestCommonDivisor: number = MathUtils.gcd(this.x, this.y);
         return new Vector(this.x / greatestCommonDivisor,
                           this.y / greatestCommonDivisor);
     }
