@@ -8,7 +8,6 @@ import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
 import { Part, PartDocument, GameEvent, GameEventMove, GameEventRequest, GameEventReply, GameEventAction, RequestType } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
-import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { CurrentGame, User } from '../../../domain/User';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';

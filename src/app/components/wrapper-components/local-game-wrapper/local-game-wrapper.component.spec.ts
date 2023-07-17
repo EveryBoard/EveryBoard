@@ -350,13 +350,9 @@ describe('LocalGameWrapperComponent', () => {
             wrapper.players[0] = MGPOptional.of('P4Minimax');
             wrapper.aiDepths[0] = '1';
 
-            // When receiveValidMove is called
-            const state: P4State = testUtils.getComponent().getState();
-            const result: MGPValidation = await wrapper.receiveValidMove(P4Move.ZERO, state);
-
-            // Then it should display a message
-            expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe(GameWrapperMessages.NOT_YOUR_TURN());
+            // When trying to click
+            // Then it should fail
+            await testUtils.expectClickFailure('#click_3', GameWrapperMessages.NOT_YOUR_TURN());
             tick(3000);
         }));
     });
