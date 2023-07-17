@@ -1,11 +1,11 @@
-import { FirestoreJSONObject, JSONValue, Utils } from 'src/app/utils/utils';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from '../utils/assert';
 import { FirestoreTime } from './Time';
 import { MinimalUser } from './MinimalUser';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MGPOptional } from '../utils/MGPOptional';
 
-export interface Part extends FirestoreJSONObject {
+export type Part = {
     readonly typeGame: string; // the type of game
     readonly playerZero: MinimalUser; // the first player
     readonly turn: number; // -1 means the part has not started, 0 is the initial turn
@@ -24,13 +24,13 @@ export interface Part extends FirestoreJSONObject {
 
 type EventType = 'Move' | 'Request' | 'Reply' | 'Action';
 
-export interface GameEvent extends FirestoreJSONObject {
+export type GameEventBase = {
     readonly eventType: EventType;
     readonly time: FirestoreTime;
     readonly player: 0 | 1;
 }
 
-export interface GameEventMove extends GameEvent {
+export type GameEventMove = GameEventBase & {
     readonly eventType: 'Move';
     readonly move: JSONValue;
 }
@@ -38,24 +38,26 @@ export interface GameEventMove extends GameEvent {
 // The StartGame action is a dummy action to ensure that at least one event occurs at game start.
 // This is required because the clock logic relies on at least one event happening at the start of the game.
 export type Action = 'AddTurnTime' | 'AddGlobalTime' | 'StartGame' | 'EndGame';
-export interface GameEventAction extends GameEvent {
+export type GameEventAction = GameEventBase & {
     readonly eventType: 'Action';
     readonly action: Action;
 }
 
 export type RequestType = 'Draw' | 'Rematch' | 'TakeBack';
-export interface GameEventRequest extends GameEvent {
+export type GameEventRequest = GameEventBase & {
     readonly eventType: 'Request';
     readonly requestType: RequestType;
 }
 
 export type Reply = 'Accept' | 'Reject';
-export interface GameEventReply extends GameEvent {
+export type GameEventReply = GameEventBase & {
     readonly eventType: 'Reply';
     readonly reply: Reply;
     readonly requestType: RequestType;
-    readonly data: JSONValue;
+    readonly data?: JSONValue;
 }
+
+export type GameEvent = GameEventReply | GameEventRequest | GameEventAction | GameEventMove;
 
 export class MGPResult {
     public static readonly HARD_DRAW: MGPResult = new MGPResult(0);

@@ -103,6 +103,23 @@ describe('LocalGameWrapperComponent', () => {
         await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
         testUtils.expectElementToExist('#draw');
     }));
+    it('should not allow clicks after the end of the game', fakeAsync(async() => {
+        // Given a game about to end
+        const board: PlayerOrNone[][] = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _],
+            [X, O, _, _, _, _, _],
+            [X, O, O, O, _, _, _],
+        ];
+        const state: P4State = new P4State(board, 41);
+        testUtils.setupState(state);
+        // When finishing the game
+        await testUtils.expectMoveSuccess('#click_0', P4Move.ZERO);
+        // Then it should not be possible to click again
+        await testUtils.expectClickFailure('#click_3', GameWrapperMessages.GAME_HAS_ENDED());
+    }));
     it('should show score if needed', fakeAsync(async() => {
         testUtils.getComponent().scores = MGPOptional.empty();
         testUtils.expectElementNotToExist('#scoreZero');
@@ -340,6 +357,7 @@ describe('LocalGameWrapperComponent', () => {
             // Then it should display a message
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe(GameWrapperMessages.NOT_YOUR_TURN());
+            tick(3000);
         }));
     });
     describe('winner indicator', () => {
