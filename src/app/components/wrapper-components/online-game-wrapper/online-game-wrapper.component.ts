@@ -464,7 +464,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const player: Player = this.role as Player;
         await this.gameService.notifyTimeout(this.currentPartId, player, victoriousPlayer, loser);
     }
-    private async notifyVictory(winner: Player, scores?: [number, number]): Promise<void> {
+    private async notifyVictory(winner: Player, scores: MGPOptional<readonly [number, number]>): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
