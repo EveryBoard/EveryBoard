@@ -70,7 +70,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public availableMinimaxes: Minimax<M, S, L>[];
 
-    public canPass: boolean;
+    public canPass: boolean = false;
 
     public scores: MGPOptional<readonly [number, number]> = MGPOptional.empty();
 
