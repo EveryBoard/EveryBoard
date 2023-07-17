@@ -47,15 +47,15 @@ describe('TrexoState', () => {
         const O1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 0)]);
         const O1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1)]);
         const O2__T2: TrexoPieceStack = TrexoPieceStack.from([
-                new TrexoPiece(Player.ZERO, 0),
-                new TrexoPiece(Player.ZERO, 2),
+            new TrexoPiece(Player.ZERO, 0),
+            new TrexoPiece(Player.ZERO, 2),
         ]);
         const O1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 3)]);
         const X1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 0)]);
         const X1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1)]);
         const X2__T2: TrexoPieceStack = TrexoPieceStack.from([
-                new TrexoPiece(Player.ONE, 0),
-                new TrexoPiece(Player.ONE, 2),
+            new TrexoPiece(Player.ONE, 0),
+            new TrexoPiece(Player.ONE, 2),
         ]);
         const X1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 3)]);
         it('should display state', () => {

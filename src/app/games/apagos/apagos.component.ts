@@ -211,9 +211,11 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         const clicked: ApagosCoord = ApagosCoord.from(x);
         if (this.selectedPiece.isPresent()) {
             const square: number = this.selectedPiece.get().square;
-            return this.chooseMove(ApagosMove.transfer(ApagosCoord.from(square), clicked).get());
+            const move: ApagosMove = ApagosMove.transfer(ApagosCoord.from(square), clicked).get();
+            return this.chooseMove(move);
         } else {
-            return this.chooseMove(ApagosMove.drop(clicked, player));
+            const move: ApagosMove = ApagosMove.drop(clicked, player);
+            return this.chooseMove(move);
         }
     }
     public getPieceClasses(x: number, i: number, square: ApagosSquare): string[] {

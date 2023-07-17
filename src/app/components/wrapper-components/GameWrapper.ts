@@ -87,22 +87,23 @@ export abstract class GameWrapper<P extends Comparable> {
             Utils.getNonNullable(this.boardRef).createComponent(component.get());
         this.gameComponent = componentRef.instance;
 
-        this.gameComponent.chooseMove = // so that when the game component do a move
+
+        // chooseMove is called by the game component when a move is done
+        this.gameComponent.chooseMove =
             (m: Move): Promise<MGPValidation> => {
+                // the game wrapper can then act accordingly to the chosen move.
                 return this.receiveValidMove(m);
             };
-        // the game wrapper can then act accordingly to the chosen move.
+        // canUserPlay is called upon a click by the user
         this.gameComponent.canUserPlay =
-            // So that when the game component click
             (elementName: string): MGPValidation => {
                 return this.onUserClick(elementName);
             };
-        // the game wrapper can act accordingly
         this.gameComponent.isPlayerTurn = (): boolean => {
             return this.isPlayerTurn();
         };
+        // Mostly for interception by TutorialGameWrapper
         this.gameComponent.cancelMoveOnWrapper =
-            // Mostly for interception by TutorialGameWrapper
             (reason?: string): void => {
                 this.onCancelMove(reason);
             };

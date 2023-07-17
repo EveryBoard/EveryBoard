@@ -179,11 +179,13 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     private async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
         if (this.chosenStartingCoord.isAbsent()) {
-            return this.tryMove(PylosMove.fromDrop(this.chosenLandingCoord.get(), captures));
+            const move: PylosMove = PylosMove.fromDrop(this.chosenLandingCoord.get(), captures)
+            return this.tryMove(move);
         } else {
-            return this.tryMove(PylosMove.fromClimb(this.chosenStartingCoord.get(),
-                                                    this.chosenLandingCoord.get(),
-                                                    captures));
+            const move: PylosMove = PylosMove.fromClimb(this.chosenStartingCoord.get(),
+                                                        this.chosenLandingCoord.get(),
+                                                        captures)
+            return this.tryMove(move);
         }
     }
     private async tryMove(move: PylosMove): Promise<MGPValidation> {
