@@ -16,7 +16,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { Part } from 'src/app/domain/Part';
 import { UserService } from '../UserService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
@@ -615,7 +614,7 @@ describe('ConnectedUserService', () => {
             connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
             // When asking to send presence token
-            spyOn(userDAO, 'update').and.callFake(async(pid: string, u: Partial<Part>) => {});
+            spyOn(userDAO, 'update').and.resolveTo();
             await connectedUserService.sendPresenceToken();
 
             // Then the userDAO should update the connected user doc
