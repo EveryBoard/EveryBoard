@@ -3,13 +3,12 @@ import { Router } from '@angular/router';
 import { Debug } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
-import { FocusedPart, UserDocument } from 'src/app/domain/User';
+import { FocusedPart } from 'src/app/domain/User';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Subscription } from 'rxjs';
-import { ActiveUsersService } from 'src/app/services/ActiveUsersService';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -20,11 +19,7 @@ type Tab = 'games' | 'create' | 'chat';
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {
 
-    public activeUsers: UserDocument[] = [];
-
     public activeParts: PartDocument[] = [];
-
-    private activeUsersSubscription!: Subscription; // initialized in ngOnInit
 
     private activePartsSubscription!: Subscription; // initialized in ngOnInit
 
@@ -34,15 +29,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
     public constructor(public readonly router: Router,
                        public readonly messageDisplayer: MessageDisplayer,
                        private readonly activePartsService: ActivePartsService,
-                       private readonly activeUsersService: ActiveUsersService,
                        private readonly observedPartService: ObservedPartService)
     {
     }
     public ngOnInit(): void {
-        this.activeUsersSubscription = this.activeUsersService.subscribeToActiveUsers(
-            (activeUsers: UserDocument[]) => {
-                this.activeUsers = activeUsers;
-            });
         this.activePartsSubscription = this.activePartsService.subscribeToActiveParts(
             (activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
@@ -55,7 +45,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
         });
     }
     public ngOnDestroy(): void {
-        this.activeUsersSubscription.unsubscribe();
         this.activePartsSubscription.unsubscribe();
     }
     public async joinGame(part: PartDocument): Promise<void> {

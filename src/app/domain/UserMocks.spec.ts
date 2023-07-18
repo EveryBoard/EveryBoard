@@ -40,18 +40,15 @@ export class UserMocks {
 
     public static readonly CREATOR: User = {
         username: UserMocks.CREATOR_AUTH_USER.username.get(),
-        state: 'online',
         verified: true,
         lastUpdateTime: new Timestamp(123, 456000000),
     };
     public static readonly CONNECTED: User = {
         username: UserMocks.CONNECTED_AUTH_USER.username.get(),
-        state: 'online',
         verified: true,
     };
     public static readonly OPPONENT: User = {
         username: UserMocks.OPPONENT_AUTH_USER.username.get(),
-        state: 'online',
         verified: true,
         lastUpdateTime: new Timestamp(124, 456000000),
     };

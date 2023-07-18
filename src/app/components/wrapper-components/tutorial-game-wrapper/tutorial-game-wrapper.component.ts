@@ -134,7 +134,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.moveAttemptMade = false;
         this.showStep(this.stepIndex);
     }
-    public override onUserClick(elementName: string): MGPValidation {
+    public override canUserPlay(elementName: string): MGPValidation {
         this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
             return MGPValidation.failure(TutorialFailure.STEP_FINISHED());

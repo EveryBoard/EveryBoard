@@ -19,7 +19,11 @@ export class GameWrapperMessages {
 
     public static readonly NOT_YOUR_TURN: Localized = () => $localize`It is not your turn!`;
 
-    public static readonly NO_CLONING_FEATURE: Localized = () => $localize`You cannot clone a game. This feature might be implemented later.`;
+    public static readonly GAME_HAS_ENDED: Localized = () => $localize`This game has ended.`;
+
+    public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
+
+    public static readonly MUST_ANSWER_REQUEST: Localized = () => $localize`You must answer your opponent's request.`;
 
     public static NO_MATCHING_GAME(gameName: string): string {
         return $localize`This game (${gameName}) does not exist.`;
@@ -39,8 +43,6 @@ export abstract class GameWrapper<P extends Comparable> {
     public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
     public role: PlayerOrNone = PlayerOrNone.NONE;
-
-    public canPass: boolean;
 
     public endGame: boolean = false;
 
@@ -89,7 +91,7 @@ export abstract class GameWrapper<P extends Comparable> {
         this.gameComponent.canUserPlay =
             // So that when the game component click
             (elementName: string): MGPValidation => {
-                return this.onUserClick(elementName);
+                return this.canUserPlay(elementName);
             };
         // the game wrapper can act accordly
         this.gameComponent.isPlayerTurn = (): boolean => {
@@ -101,7 +103,6 @@ export abstract class GameWrapper<P extends Comparable> {
                 this.onCancelMove(reason);
             };
         this.setRole(this.role);
-        this.canPass = this.gameComponent.canPass;
         return true;
     }
     public setRole(role: PlayerOrNone): void {
@@ -117,11 +118,10 @@ export abstract class GameWrapper<P extends Comparable> {
                                   scores?: [number, number])
     : Promise<MGPValidation>
     {
-        if (this.isPlayerTurn() === false) {
-            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
-        }
-        if (this.endGame) {
-            return MGPValidation.failure($localize`The game has ended.`);
+        const userPlayValidity: MGPValidation = this.canUserPlay('none');
+        if (userPlayValidity.isFailure()) {
+            this.gameComponent.cancelMove(userPlayValidity.getReason());
+            return userPlayValidity;
         }
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state);
         if (legality.isFailure()) {
@@ -134,16 +134,18 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public onUserClick(_elementName: string): MGPValidation {
+    public canUserPlay(_clickedElementName: string): MGPValidation {
         if (this.role === PlayerOrNone.NONE) {
-            const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
+            const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
             return MGPValidation.failure(message);
         }
-        if (this.isPlayerTurn()) {
-            return MGPValidation.SUCCESS;
-        } else {
+        if (this.isPlayerTurn() === false) {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
+        if (this.endGame) {
+            return MGPValidation.failure(GameWrapperMessages.GAME_HAS_ENDED());
+        }
+        return MGPValidation.SUCCESS;
     }
     public abstract onCancelMove(_reason?: string): void;
 

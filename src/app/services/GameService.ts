@@ -153,6 +153,9 @@ export class GameService {
     public async proposeRematch(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addRequest(partId, player, 'Rematch');
     }
+    public async rejectRematch(partId: string, player: Player): Promise<void> {
+        await this.gameEventService.addReply(partId, player, 'Reject', 'Rematch');
+    }
     public async acceptRematch(partDocument: PartDocument, player: Player): Promise<void> {
         const part: Part = Utils.getNonNullable(partDocument.data);
 
@@ -191,9 +194,8 @@ export class GameService {
     public async askTakeBack(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addRequest(partId, player, 'TakeBack');
     }
-    public async acceptTakeBack(partId: string, part: Part, player: Player): Promise<void> {
-        let turn: number = part.turn;
-        turn--;
+    public async acceptTakeBack(partId: string, currentTurn: number, player: Player): Promise<void> {
+        let turn: number = currentTurn-1;
         if (turn % 2 === player.value) {
             // We need to take back a second time to let the requester take back their move
             turn--;
