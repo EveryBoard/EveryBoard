@@ -344,7 +344,7 @@ describe('LocalGameWrapperComponent', () => {
             // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
         }));
-        it('should reject human move if it tries to play (without click) when it is not its turn', fakeAsync(async() => {
+        it('should reject human move if it tries to play when it is not its turn', fakeAsync(async() => {
             // Given a game against an AI
             const wrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
             wrapper.players[0] = MGPOptional.of('P4Minimax');
