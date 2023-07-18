@@ -1,37 +1,63 @@
-import { FirestoreJSONObject, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from '../utils/assert';
-import { Request } from './Request';
 import { FirestoreTime } from './Time';
-import { MGPOptional } from '../utils/MGPOptional';
-import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MinimalUser } from './MinimalUser';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { MGPOptional } from '../utils/MGPOptional';
 
-interface LastUpdateInfo extends FirestoreJSONObject {
-    readonly index: number,
-    readonly player: number,
-}
-export interface Part extends FirestoreJSONObject {
-    readonly lastUpdate: LastUpdateInfo,
-    readonly typeGame: string, // the type of game
-    readonly playerZero: MinimalUser, // the first player
-    readonly turn: number, // -1 means the part has not started, 0 is the initial turn
-    readonly result: IMGPResult,
-    readonly listMoves: ReadonlyArray<JSONValueWithoutArray>,
+export type Part = {
+    readonly typeGame: string; // the type of game
+    readonly playerZero: MinimalUser; // the first player
+    readonly turn: number; // -1 means the part has not started, 0 is the initial turn
+    readonly result: IMGPResult;
 
-    readonly playerOne?: MinimalUser, // the second player
-    /* Server time being handled on server by firestore, when we send it, it's a FieldValue
-     * so firebase write the server time and send us back a timestamp in the form of Time
-     */
-    readonly beginning?: FirestoreTime,
-    readonly lastUpdateTime?: FirestoreTime,
-    readonly remainingMsForZero?: number;
-    readonly remainingMsForOne?: number;
-    readonly winner?: MinimalUser,
-    readonly loser?: MinimalUser,
-    readonly scorePlayerZero?: number,
-    readonly scorePlayerOne?: number,
-    readonly request?: Request | null, // can be null because we should be able to remove a request
+    readonly playerOne?: MinimalUser; // the second player
+    readonly beginning?: FirestoreTime; // beginning of the part
+    readonly winner?: MinimalUser;
+    readonly loser?: MinimalUser;
+    readonly scorePlayerZero?: number;
+    readonly scorePlayerOne?: number;
+
+    // Extra fields as sub-collections:
+    // events: subcollection of GameEvent
 }
+
+type EventType = 'Move' | 'Request' | 'Reply' | 'Action';
+
+export type GameEventBase = {
+    readonly eventType: EventType;
+    readonly time: FirestoreTime;
+    readonly player: 0 | 1;
+}
+
+export type GameEventMove = GameEventBase & {
+    readonly eventType: 'Move';
+    readonly move: JSONValue;
+}
+
+// The StartGame action is a dummy action to ensure that at least one event occurs at game start.
+// This is required because the clock logic relies on at least one event happening at the start of the game.
+export type Action = 'AddTurnTime' | 'AddGlobalTime' | 'StartGame' | 'EndGame';
+export type GameEventAction = GameEventBase & {
+    readonly eventType: 'Action';
+    readonly action: Action;
+}
+
+export type RequestType = 'Draw' | 'Rematch' | 'TakeBack';
+export type GameEventRequest = GameEventBase & {
+    readonly eventType: 'Request';
+    readonly requestType: RequestType;
+}
+
+export type Reply = 'Accept' | 'Reject';
+export type GameEventReply = GameEventBase & {
+    readonly eventType: 'Reply';
+    readonly reply: Reply;
+    readonly requestType: RequestType;
+    readonly data?: JSONValue;
+}
+
+export type GameEvent = GameEventReply | GameEventRequest | GameEventAction | GameEventMove;
 
 export class MGPResult {
     public static readonly HARD_DRAW: MGPResult = new MGPResult(0);

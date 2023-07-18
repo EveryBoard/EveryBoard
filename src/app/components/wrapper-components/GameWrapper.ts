@@ -1,4 +1,4 @@
-import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
@@ -19,7 +19,11 @@ export class GameWrapperMessages {
 
     public static readonly NOT_YOUR_TURN: Localized = () => $localize`It is not your turn!`;
 
-    public static readonly NO_CLONING_FEATURE: Localized = () => $localize`You cannot clone a game. This feature might be implemented later.`;
+    public static readonly GAME_HAS_ENDED: Localized = () => $localize`This game has ended.`;
+
+    public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
+
+    public static readonly MUST_ANSWER_REQUEST: Localized = () => $localize`You must answer your opponent's request.`;
 
     public static NO_MATCHING_GAME(gameName: string): string {
         return $localize`This game (${gameName}) does not exist.`;
@@ -42,14 +46,11 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public role: PlayerOrNone = PlayerOrNone.NONE;
 
-    public canPass: boolean;
-
     public endGame: boolean = false;
 
     public Player: typeof Player = Player;
 
-    public constructor(protected readonly componentFactoryResolver: ComponentFactoryResolver,
-                       protected readonly actRoute: ActivatedRoute,
+    public constructor(protected readonly actRoute: ActivatedRoute,
                        protected readonly connectedUserService: ConnectedUserService,
                        protected readonly router: Router,
                        protected readonly messageDisplayer: MessageDisplayer)
@@ -66,7 +67,7 @@ export abstract class GameWrapper<P extends Comparable> {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterViewInit');
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
-            this.gameComponent.rules.setInitialBoard();
+            this.gameComponent.node = this.gameComponent.rules.getInitialNode();
             this.gameComponent.updateBoard();
         }
         return gameCreatedSuccessfully;
@@ -84,11 +85,9 @@ export abstract class GameWrapper<P extends Comparable> {
             return false;
         }
         assert(this.boardRef != null, 'Board element should be present');
-        const componentFactory: ComponentFactory<AbstractGameComponent> =
-            this.componentFactoryResolver.resolveComponentFactory(component.get());
 
         const componentRef: ComponentRef<AbstractGameComponent> =
-            Utils.getNonNullable(this.boardRef).createComponent(componentFactory);
+            Utils.getNonNullable(this.boardRef).createComponent(component.get());
         this.gameComponent = componentRef.instance;
 
         this.gameComponent.chooseMove = // so that when the game component do a move
@@ -99,7 +98,7 @@ export abstract class GameWrapper<P extends Comparable> {
         this.gameComponent.canUserPlay =
             // So that when the game component click
             (elementName: string): MGPValidation => {
-                return this.onUserClick(elementName);
+                return this.canUserPlay(elementName);
             };
         // the game wrapper can act accordly
         this.gameComponent.isPlayerTurn = (): boolean => {
@@ -111,7 +110,6 @@ export abstract class GameWrapper<P extends Comparable> {
                 this.onCancelMove(reason);
             };
         this.setRole(this.role);
-        this.canPass = this.gameComponent.canPass;
         return true;
     }
     public setRole(role: PlayerOrNone): void {
@@ -120,7 +118,7 @@ export abstract class GameWrapper<P extends Comparable> {
         if (this.gameComponent.hasAsymmetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
-        this.gameComponent.updateBoard(); // Trigger redrawing of the board (might need to be rotated 180°)
+        this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,
@@ -130,11 +128,10 @@ export abstract class GameWrapper<P extends Comparable> {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
                 { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
-        if (!this.isPlayerTurn()) {
-            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
-        }
-        if (this.endGame) {
-            return MGPValidation.failure($localize`The game has ended.`);
+        const userPlayValidity: MGPValidation = this.canUserPlay('none');
+        if (userPlayValidity.isFailure()) {
+            this.gameComponent.cancelMove(userPlayValidity.getReason());
+            return userPlayValidity;
         }
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state);
         if (legality.isFailure()) {
@@ -148,17 +145,18 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public onUserClick(_elementName: string): MGPValidation {
-        // TODO: Not the same logic to use in Online and Local, make abstract
+    public canUserPlay(_clickedElementName: string): MGPValidation {
         if (this.role === PlayerOrNone.NONE) {
-            const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
+            const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
             return MGPValidation.failure(message);
         }
-        if (this.isPlayerTurn()) {
-            return MGPValidation.SUCCESS;
-        } else {
+        if (this.isPlayerTurn() === false) {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
+        if (this.endGame) {
+            return MGPValidation.failure(GameWrapperMessages.GAME_HAS_ENDED());
+        }
+        return MGPValidation.SUCCESS;
     }
     public abstract onCancelMove(_reason?: string): void;
 
@@ -199,5 +197,12 @@ export abstract class GameWrapper<P extends Comparable> {
             return ['player' + (turn % 2) + '-bg'];
         }
         return [];
+    }
+    protected updateBoardAndShowLastMove(): void {
+        this.gameComponent.updateBoard();
+        if (this.gameComponent.node.move.isPresent()) {
+            const move: Move = this.gameComponent.node.move.get();
+            this.gameComponent.showLastMove(move);
+        }
     }
 }

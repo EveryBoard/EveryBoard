@@ -29,6 +29,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-brands-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "async-mutex": "^0.4.0",
     "bulma": "^0.9.4",
     "bulma-toast": "^2.4.1",
     "bulmaswatch": "^0.8.1",

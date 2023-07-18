@@ -18,11 +18,6 @@ describe('ActivePartsService', () => {
     let partDAO: PartDAO;
 
     const part: Part = {
-        lastUpdate: {
-            index: 0,
-            player: 0,
-        },
-        listMoves: [],
         playerZero: UserMocks.CREATOR_MINIMAL_USER,
         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
         result: 5,
@@ -158,7 +153,7 @@ describe('ActivePartsService', () => {
             activePartsSubscription.unsubscribe();
         }));
         it('should call observingWhere with the right condition', () => {
-            // Given an ActiveUsersService
+            // Given an ActivePartsService
             spyOn(partDAO, 'observingWhere').and.callFake(
                 (query: FirestoreCondition[], callback: FirestoreCollectionObserver<Part>): Subscription => {
                     const expectedParameters: FirestoreCondition[] = [

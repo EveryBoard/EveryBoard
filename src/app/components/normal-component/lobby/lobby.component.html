@@ -37,7 +37,7 @@
                             <ng-container i18n>Waiting for opponent</ng-container>
                         </ng-template>
                     </td>
-                    <td class="td">{{ part.data.turn }}</td>
+                    <td class="td turn">{{ part.data.turn+1 }}</td>
                 </tr>
             </tbody>
         </table>
@@ -53,21 +53,9 @@
 <div *ngIf="currentTab === 'chat'"
      id="chatTab"
      class="columns">
-    <div id="chatContainerDiv" class="column is-12">
+    <div class="column is-12">
         <div id="chat" class="box">
             <app-chat chatId="server" [turn]="-1"></app-chat>
-        </div>
-    </div>
-    <div class="column is-3 is-hidden">
-        <div id="onlineUsers" class="box">
-            <p i18n>Connected users:</p>
-            <ul id="activeUsersList">
-                <ng-container *ngFor="let user of activeUsers">
-                    <li id="{{ user.data.username }}"
-                        *ngIf="user.data.lastUpdateTime"
-                    >{{ user.data.username }}: {{ user.data.lastUpdateTime | firebaseDate }}</li>
-                </ng-container>
-            </ul>
         </div>
     </div>
 </div>

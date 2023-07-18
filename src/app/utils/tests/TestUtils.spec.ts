@@ -173,6 +173,14 @@ export class SimpleComponentTestUtils<T> {
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         return element;
     }
+    public expectElementToBeEnabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+    }
+    public expectElementToBeDisabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
+    }
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist in order to fill its value').toBeTruthy();
@@ -294,7 +302,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                       previousMove?: Move)
     : void
     {
-        this.gameComponent.rules.node = new MGPNode(
+        this.gameComponent.node = new MGPNode(
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
                 new MGPNode(previousState)),
@@ -518,6 +526,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
     }
+    public expectElementToBeEnabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+    }
+    public expectElementToBeDisabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
+    }
     public findElement(elementName: string): DebugElement {
         return this.debugElement.query(By.css(elementName));
     }
@@ -562,7 +578,7 @@ function getComponentClassName(component: Type<any>): string {
 }
 
 /**
- * Tests that we routes are used as expected. The router.navigate method should
+ * Tests that the routes are used as expected. The router.navigate method should
  * be spyed on. This function will match the route that is navigated to with
  * the declared routes of the application, and ensure that the component that is
  * routed to matches `component`. In case multiple router.navigate calls happen,

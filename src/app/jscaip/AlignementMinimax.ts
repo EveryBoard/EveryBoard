@@ -16,13 +16,13 @@ export abstract class AlignementMinimax<M extends Move,
                                         S extends GameState,
                                         L,
                                         V,
-                                        U extends BoardValue = BoardValue>
-    extends Minimax<M, S, L, U>
+                                        B extends BoardValue = BoardValue>
+    extends Minimax<M, S, L, B>
 {
 
     public calculateBoardValue(move: M, state: S): BoardInfo {
         this.startSearchingVictorySources();
-        let boardInfo: BoardInfo = {
+        const boardInfo: BoardInfo = {
             status: SCORE.DEFAULT,
             victory: MGPOptional.empty(),
             preVictory: MGPOptional.empty(),
@@ -39,12 +39,11 @@ export abstract class AlignementMinimax<M extends Move,
             if (newBoardInfo.status === SCORE.VICTORY) {
                 return newBoardInfo;
             }
-            boardInfo = {
-                status: newBoardInfo.status,
-                victory: MGPOptional.empty(),
-                preVictory: newBoardInfo.preVictory,
-                sum: boardInfo.sum + newBoardInfo.sum,
-            };
+            boardInfo.status = newBoardInfo.status;
+            boardInfo.sum = boardInfo.sum + newBoardInfo.sum;
+            if (boardInfo.preVictory.isAbsent()) {
+                boardInfo.preVictory = newBoardInfo.preVictory;
+            }
         }
         return boardInfo;
     }

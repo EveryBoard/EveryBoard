@@ -497,7 +497,8 @@ describe('HiveRules', () => {
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, -1)).get();
 
             // Then it should fail
-            RulesUtils.expectMoveFailure(rules, state, move, HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES());
+            const reason: string = HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should allow the grasshopper to jump over more than one piece', () => {
             // Given a state with one grasshopper ready to jump over multiple pieces
@@ -972,7 +973,7 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
-            // Then the game is ongoing
+            // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
     });

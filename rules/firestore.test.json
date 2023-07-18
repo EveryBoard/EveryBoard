@@ -29,11 +29,15 @@ service cloud.firestore {
         }
         match /chats/lobby {
             allow create: if userIsVerified();
+            allow update, delete: if false;
+            allow read: if false;
         }
         match /chats/{id} {
             allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(id);
             // Anyone can delete the chat in case the creator timed out
             allow delete: if userIsVerified() && hasTimedOut(creatorOf(id).id);
+            allow update: if false;
+            allow read: if false
         }
         function partExistsAndOwnedByCurrentUser(partId) {
             let configRoom = get(/databases/$(database)/documents/config-room/$(partId)).data;
@@ -74,6 +78,7 @@ service cloud.firestore {
                 isValidMessage(update);
         }
         match /users/{userId} {
+            allow delete: if false;
             allow create: if authenticatedUserCreatesUnverifiedUser(userId, request.resource.data);
             allow update: if authenticatedUserUpdatesUser(userId, resource.data, request.resource.data);
             // Anybody can read the fields of a user.
@@ -116,10 +121,16 @@ service cloud.firestore {
             allow delete: if creatorDeletesUnstartedPart(id, resource.data);
             allow delete: if verifiedUserDeletesPartAfterCreatorTimeout(id, resource.data);
             allow update: if chosenOpponentStartsPart(id, resource.data, request.resource.data);
-            allow update: if playerPerformsMove(resource.data, request.resource.data);
-            allow update: if playerPerformsNonMoveUpdate(resource.data, request.resource.data);
+            allow update: if playerPerformsUpdate(resource.data, request.resource.data);
             // All verified user can read parts (needed for the lobby)
             allow read: if userIsVerified();
+        }
+        match /parts/{partId}/events/{eventId} {
+            allow read: if userIsVerified();
+            allow create: if playerAddsMoveEvent(partId, request.resource.data);
+            allow create: if playerAddsNonMoveEvent(partId, request.resource.data);
+            allow update: if false; // Events cannot be modified
+            allow delete: if false; // Events cannot be deleted
         }
         function verifiedUserCreatesPart(part) {
             // Any verified user can create a part with the proper fields set, and has to be the creator
@@ -131,35 +142,72 @@ service cloud.firestore {
             let creatorIsPlayer = creatorIsPlayerZero || creatorIsPlayerOne;
 
             return userIsVerified() &&
-                turnForNewPartOrRematch &&
-                hasField(part, 'typeGame') &&
-                hasField(part, 'winner') == false &&
-                hasField(part, 'loser') == false &&
-                part.listMoves == [] &&
-                creatorIsPlayer;
+                   turnForNewPartOrRematch &&
+                   hasField(part, 'typeGame') &&
+                   hasField(part, 'winner') == false &&
+                   hasField(part, 'loser') == false &&
+                   creatorIsPlayer;
         }
         function creatorDeletesUnstartedPart(partId, part) {
             // The owner of a part can delete it, if it has not started
             return userIsVerified() &&
-                creatorOf(partId).id == request.auth.uid &&
-                partHasStarted(part) == false;
+                   creatorOf(partId).id == request.auth.uid &&
+                   partHasStarted(part) == false;
         }
         function verifiedUserDeletesPartAfterCreatorTimeout(id, part) {
             // Anyone can delete a part if the owner has timed out and the part has not started
             return userIsVerified() &&
-                hasTimedOut(creatorOf(id).id) &&
-                partHasStarted(part) == false;
+                   hasTimedOut(creatorOf(id).id) &&
+                   partHasStarted(part) == false;
         }
-        function playerPerformsMove(part, update) {
-            // A player can perform a move
-            let isUserTurn = (part.turn % 2 == 0 && userIsPlayerZero(part)) ||
-                (part.turn % 2 == 1 && userIsPlayerOne(part));
-            return part.listMoves != update.listMoves &&
-                isValidPartUpdateDuringGame(part) &&
-                safeTurnIncrease(part.turn, update.turn) &&
-                safeLastUpdate(part, update) &&
-                setsWinnerIfVictory(part, update) &&
-                isUserTurn;
+        function playerAddsEvent(part, event) {
+            return userIsVerified() &&
+                   ((event.player == 0 && userIsPlayerZero(part)) ||
+                    (event.player == 1 && userIsPlayerOne(part)));
+        }
+        function validEvent(event) {
+            return hasField(event, 'eventType') &&
+                   hasField(event, 'time') &&
+                   hasField(event, 'player');
+        }
+        function validAction(part, event) {
+            let gameJustStarted = part.turn == 0;
+            let gameFinished = part.result != 5; // Unachieved
+            return hasField(event, 'action') &&
+                   ((event.action == 'AddTurnTime') ||
+                    (event.action == 'AddGlobalTime') ||
+                    (event.action == 'StartGame' && gameJustStarted) ||
+                    (event.action == 'EndGame' && gameFinished));
+        }
+        function validRequest(part, event) {
+            let partFinished = part.result != 5;
+            return hasField(event, 'requestType') &&
+                   ((event.requestType == 'Draw' && !partFinished) ||
+                    (event.requestType == 'Rematch' && partFinished) ||
+                    (event.requestType == 'TakeBack' && part.turn >= 1 && !partFinished));
+        }
+        function validReply(event) {
+            return hasField(event, 'reply') && hasField(event, 'requestType') &&
+                   ((event.reply == 'Accept') ||
+                    (event.reply == 'Reject'));
+        }
+        function playerAddsNonMoveEvent(partId, event) {
+            let part = get(/databases/$(database)/documents/parts/$(partId)).data;
+            return validEvent(event) &&
+                   playerAddsEvent(part, event) &&
+                   ((event.eventType == 'Request' && validRequest(part, event)) ||
+                    (event.eventType == 'Reply' && validReply(event)) ||
+                    (event.eventType == 'Action' && validAction(part, event)));
+        }
+        function playerAddsMoveEvent(partId, moveEvent) {
+            // Move addition is performed before updating the part turn
+            // This way, if move addition fails, the part isn't corrupt
+            let part = get(/databases/$(database)/documents/parts/$(partId)).data;
+            let isPlayerTurn = part.turn % 2 == moveEvent.player;
+            return validEvent(moveEvent) && moveEvent.eventType == 'Move' &&
+                   hasField(moveEvent, 'move') &&
+                   playerAddsEvent(part, moveEvent) &&
+                   isPlayerTurn;
         }
         function setsWinnerIfVictory(part, update) {
             let isVictory = part.result == 5 && update.result == 3; // 3 = victory, 5 = unachieved
@@ -167,52 +215,14 @@ service cloud.firestore {
             let playerOneWinsAndZeroLoses =  update.loser.id == part.playerOne.id && update.winner.id == part.playerZero.id;
             return isVictory == false || playerZeroWinsAndOneLoses || playerOneWinsAndZeroLoses;
         }
-        function playerPerformsNonMoveUpdate(part, update) {
+        function playerPerformsUpdate(part, update) {
             // A player can do other requests such as take backs, etc. if there is no move done
-            // Time can be increased (add more time to other player) or decreased (on take backs, for any player)
-//            let playerZeroTimeUnchanged = preservesField('remainingMsForZero');
-//            let safeTimeIncreasePlayerZero = userIsPlayerOne(part) && safeTimeIncrease(part.playerZero, 'remainingMsForZero', part, update);
-//            let playerZeroTimeDecreased = update.remainingMsForZero < part.remainingMsForZero;
-//            let playerOneTimeUnchanged = preservesField('remainingMsForOne');
-//            let safeTimeIncreasePlayerOne = userIsPlayerZero(part) && safeTimeUpdate(part.playerOne, 'remainingMsForOne', part, update);
-//            let playerOneTimeDecreased = update.remainingMsForOne < part.remainingMsForOne;
-//            let safeTimeManagement = (playerZeroTimeUnchanged || safeTimeIncreasePlayerZero || playerZeroTimeDecreased) &&
-//                (playerOneTimeUnchanged || safeTimeIncreasePlayerOne || playerOneTimeDecreased);
             return isValidPartUpdateDuringGame(part) &&
-//                safeTimeManagement &&
-                (preservesField('turn') || safeTurnDecrease(part.turn, update.turn)) &&
-                preservesWinnerAndLoserUnlessResultChanges() &&
-                onlyAcceptsDrawIfProposed(part, update) &&
-//                onlyAcceptsOrRefusesTakeBackIfAsked(part, update) &&
-                onlyResignsInTheirName(part, update) &&
-                isNotSetToVictory(part, update) &&
-                safeLastUpdate(part, update);
+                   (part.turn == update.turn || safeTurnIncrease(part.turn, update.turn) || safeTurnDecrease(part.turn, update.turn)) &&
+                   preservesWinnerAndLoserUnlessResultChanges() &&
+                   onlyResignsInTheirName(part, update) &&
+                   setsWinnerIfVictory(part, update);
         }
-        function isNotSetToVictory(part, update) {
-            // 3 = victory
-            let partWasVictory = part.result == 3;
-            let newPartIsVictory = update.result == 3;
-            return partWasVictory || (newPartIsVictory == false);
-        }
-        function onlyAcceptsDrawIfProposed(part, update) {
-            // 6 = draw agreed by zero
-            // 7 = draw agreed by one
-            let updateAcceptsDraw = hasField(update, 'result') &&
-                ((userIsPlayerZero(part) && part.result != 6 && update.result == 6) ||
-                 (userIsPlayerOne(part) && part.result != 7 && update.result == 7));
-            let drawWasProposed = hasField(part, 'request') && part.request.code == 'DrawProposed';
-            return updateAcceptsDraw == false ||
-                (updateAcceptsDraw && drawWasProposed);
-        }
-//        function onlyAcceptsOrRefusesTakeBackIfAsked(part, update) {
-//            let takeBackWasProposed = hasField(part, 'request') && part.request.code == 'TakeBackAsked';
-//            let updateAnswersToTakeBack = hasField(update, 'request') &&
-//                (part.request.code == 'TakeBackAccepted' || part.request.code == 'TakeBackRefused');
-//            let updateFromDifferentPlayer = hasField(part, 'request') && hasField(update, 'request') &&
-//                part.request.player != update.request.player;
-//            return takeBackWasProposed == false ||
-//                (takeBackWasProposed && updateAnswersToTakeBack && updateFromDifferentPlayer);
-//        }
         function onlyResignsInTheirName(part, update) {
             let playerResigns = part.result == 5 && update.result == 1 && // 1 = resign, 5 = unachieved
                 hasField(update, 'winner') &&
@@ -248,27 +258,9 @@ service cloud.firestore {
                 preservesField('scorePlayerZero') &&
                 preservesField('scorePlayerOne') &&
                 update.turn == 0 &&
-                safeLastUpdate(part, update) &&
                 userIsChosenOpponentInConfigRoom(configRoom) &&
-                validPlayerSelection(configRoom, update) &&
-                // The time is set using the values from the config room
-                update.remainingMsForZero == configRoom.totalPartDuration * 1000 &&
-                update.remainingMsForOne == configRoom.totalPartDuration * 1000;
+                validPlayerSelection(configRoom, update);
         }
-//        function safeTimeDecrease(player, remainingMsFieldName, part, update) {
-//            let timeDecreased = update[remainingMsFieldName] < part[remainingMsFieldName];
-//            let isNotOwnTime = request.auth.uid != player.id;
-//            return timeDecreased && isNotOwnTime;
-//        }
-//        function safeTimeIncrease(player, remainingMsFieldName, part, update) {
-//            let timeIncreased = update[remainingMsFieldName] > part[remainingMsFieldName];
-//            let isNotOwnTime = request.auth.uid != player.id;
-//            return timeIncreased && isNotOwnTime;
-//        }
-//        function safeTimeUpdate(player, remainingMsFieldName, part, update) {
-//            return safeTimeIncrease(player, remainingMsFieldName, part, update) ||
-//                safeTimeDecrease(player, remainingMsFieldName, part, update)
-//        }
         function validPlayerSelection(configRoom, partUpdate) {
             let playerZeroIsCreator = playerEquals(partUpdate.playerZero, configRoom.creator);
             let playerZeroIsChosenOpponent = playerEquals(partUpdate.playerZero, configRoom.chosenOpponent);
@@ -296,14 +288,6 @@ service cloud.firestore {
         }
         function safeTurnDecrease(oldTurn, newTurn) {
             return (newTurn == oldTurn - 1) || (newTurn == oldTurn - 2);
-        }
-        function safeLastUpdate(part, update) {
-            let legitimatePlayerZeroUpdate = update.lastUpdate.player == 0 && part.playerZero.id == request.auth.uid;
-            let legitimatePlayerOneUpdate = hasField(part, 'playerOne') &&
-                update.lastUpdate.player == 1 &&
-                part.playerOne.id == request.auth.uid;
-            let indexIncremented = update.lastUpdate.index == part.lastUpdate.index + 1;
-            return (legitimatePlayerZeroUpdate || legitimatePlayerOneUpdate || partHasStarted(part) == false) && indexIncremented;
         }
         function partHasStarted(part) {
             // A part is started when the beginning field is set

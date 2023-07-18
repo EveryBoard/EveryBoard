@@ -68,7 +68,7 @@ describe('ConfigRoomService', () => {
         await configRoomService.createInitialConfigRoom('id');
 
         // Then it should delegate to the DAO and create the initial configRoom
-        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.INITIAL);
+        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.INITIAL_RANDOM);
     }));
     describe('joinGame', () => {
         it('should call configRoomService.addCandidate even when called while already in the game', fakeAsync(async() => {

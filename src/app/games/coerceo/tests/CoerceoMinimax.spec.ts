@@ -18,7 +18,7 @@ describe('CoerceoMinimax', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     beforeEach(() => {
-        const rules: CoerceoRules = new CoerceoRules(CoerceoState);
+        const rules: CoerceoRules = CoerceoRules.get();
         minimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
     });
     it('should prefer a board where he has more freedom', () => {

@@ -21,6 +21,17 @@ export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, GipfLegali
 
 export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformation> {
 
+    private static singleton: MGPOptional<GipfRules> = MGPOptional.empty();
+
+    public static get(): GipfRules {
+        if (GipfRules.singleton.isAbsent()) {
+            GipfRules.singleton = MGPOptional.of(new GipfRules());
+        }
+        return GipfRules.singleton.get();
+    }
+    private constructor() {
+        super(GipfState);
+    }
     public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
         return new GipfState(computedState.board,
                              computedState.turn + 1,

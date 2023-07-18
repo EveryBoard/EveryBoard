@@ -97,8 +97,9 @@ describe('ConnectSixRules', () => {
             const move: ConnectSixMove =
                 ConnectSixDrops.from(new Coord(9, 9), new Coord(10, 10)).get() as ConnectSixMove;
 
+            const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
             // Then the move should be forbidden
-            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should refuse dropping second coord on another piece', () => {
             // Given a board with pieces on it
@@ -128,7 +129,8 @@ describe('ConnectSixRules', () => {
             const move: ConnectSixMove = ConnectSixDrops.from(new Coord(8, 8), new Coord(9, 9)).get() as ConnectSixMove;
 
             // Then the move should be forbidden
-            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+            const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should allow move that drop two pieces on empty pieces', () => {
             // Given a board with pieces on it

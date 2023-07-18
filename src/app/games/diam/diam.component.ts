@@ -95,6 +95,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = DiamRules.get();
+        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new DiamDummyMinimax(this.rules, 'DiamDummyMinimax'),
         ];

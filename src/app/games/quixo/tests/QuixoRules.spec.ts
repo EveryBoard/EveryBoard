@@ -13,7 +13,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 
-describe('QuixoRules:', () => {
+describe('QuixoRules', () => {
 
     let rules: QuixoRules;
     let minimaxes: Minimax<QuixoMove, QuixoState>[];
@@ -22,7 +22,7 @@ describe('QuixoRules:', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        rules = new QuixoRules(QuixoState);
+        rules = QuixoRules.get();
         minimaxes = [
             new QuixoMinimax(rules, 'QuixoMinimax'),
         ];
@@ -37,7 +37,8 @@ describe('QuixoRules:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should always put moved piece to currentPlayer symbol', () => {
         const board: Table<PlayerOrNone> = [

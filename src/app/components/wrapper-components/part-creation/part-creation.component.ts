@@ -16,7 +16,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
+import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { FocusedPart, User, UserRoleInPart } from 'src/app/domain/User';
@@ -456,7 +456,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return true;
         }
         const lastUpdateTime: Timestamp = lastChangedOpt.get() as Timestamp;
-        const diff: number = getMillisecondsDifference(lastUpdateTime, currentTime);
+        const diff: number = getMillisecondsElapsed(lastUpdateTime, currentTime);
         return diff > PartCreationComponent.TOKEN_TIMEOUT;
     }
     private async removeCandidateFromLobby(user: MinimalUser): Promise<void> {

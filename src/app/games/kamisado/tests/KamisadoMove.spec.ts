@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { KamisadoState } from '../KamisadoState';
-import { KamisadoRules } from '../KamisadoRules';
+import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
 import { KamisadoMinimax } from '../KamisadoMinimax';
 import { KamisadoMove } from '../KamisadoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
@@ -13,9 +12,10 @@ describe('KamisadoMove', () => {
         expect(KamisadoMove.PASS.toString()).toEqual('KamisadoMove(PASS)');
     });
     it('should have a bijective encoder', () => {
-        const rules: KamisadoRules = new KamisadoRules(KamisadoState);
+        const rules: KamisadoRules = KamisadoRules.get();
         const minimax: KamisadoMinimax = new KamisadoMinimax(rules, 'KamisadoMinimax');
-        const moves: KamisadoMove[] = minimax.getListMoves(rules.node);
+        const node: KamisadoNode = rules.getInitialNode();
+        const moves: KamisadoMove[] = minimax.getListMoves(node);
         moves.push(KamisadoMove.PASS);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(KamisadoMove.encoder, move);

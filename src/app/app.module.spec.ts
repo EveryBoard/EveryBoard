@@ -23,12 +23,14 @@ import * as Firestore from '@angular/fire/firestore';
 import * as FireAuth from '@angular/fire/auth';
 import { TestBed } from '@angular/core/testing';
 import { setupEmulators } from './utils/tests/TestUtils.spec';
+import { AccountComponent } from './components/normal-component/account/account.component';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const routingSpecification: [string, Type<any>][] = [
     ['login', LoginComponent],
     ['lobby', LobbyComponent],
     ['settings', SettingsComponent],
+    ['account', AccountComponent],
     ['register', RegisterComponent],
     ['notFound/errorMessage', NotFoundComponent],
     ['nextGameLoading', NextGameLoadingComponent],

@@ -103,6 +103,23 @@ describe('LocalGameWrapperComponent', () => {
         await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
         testUtils.expectElementToExist('#draw');
     }));
+    it('should not allow clicks after the end of the game', fakeAsync(async() => {
+        // Given a game about to end
+        const board: PlayerOrNone[][] = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _],
+            [X, O, _, _, _, _, _],
+            [X, O, O, O, _, _, _],
+        ];
+        const state: P4State = new P4State(board, 41);
+        testUtils.setupState(state);
+        // When finishing the game
+        await testUtils.expectMoveSuccess('#click_0', P4Move.ZERO);
+        // Then it should not be possible to click again
+        await testUtils.expectClickFailure('#click_3', GameWrapperMessages.GAME_HAS_ENDED());
+    }));
     it('should show score if needed', fakeAsync(async() => {
         testUtils.getComponent().scores = MGPOptional.empty();
         testUtils.expectElementNotToExist('#scoreZero');
@@ -291,11 +308,11 @@ describe('LocalGameWrapperComponent', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board on which some illegal move are possible from the AI
             const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
-            spyOn(testUtils.getComponent().rules, 'choose').and.returnValue(false);
-            spyOn(testUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);
+            spyOn(testUtils.getComponent().rules, 'choose').and.returnValue(MGPOptional.empty());
+            spyOn(testUtils.getComponent().node, 'findBestMove').and.returnValue(P4Move.ZERO);
 
             // When it is the turn of the bugged AI (that performs an illegal move)
-            const minimax: P4Minimax = new P4Minimax(new P4Rules(P4State), 'P4');
+            const minimax: P4Minimax = new P4Minimax(P4Rules.get(), 'P4');
             const result: MGPValidation = await localGameWrapper.doAIMove(minimax);
 
             // Then it should fail and an error should be logged
@@ -340,6 +357,7 @@ describe('LocalGameWrapperComponent', () => {
             // Then it should display a message
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe(GameWrapperMessages.NOT_YOUR_TURN());
+            tick(3000);
         }));
     });
     describe('winner indicator', () => {
