@@ -35,20 +35,28 @@ export class Debug {
      * the second if we want to log exit
      */
     public static enableLog(entryExit: [boolean, boolean], className: string, methodName?: string): void {
-        if (window['verbosity'] === undefined) window['verbosity'] = {};
-        if (methodName) {
-            window['verbosity'][className + '.' + methodName] = entryExit;
-        } else {
-            window['verbosity'][className] = entryExit;
+        // We can't store objects in localStorage, only strings. So we serialize everything to JSON.
+        const verbosityJSON: string | null = localStorage.getItem('verbosity');
+        let verbosity: object = {};
+        if (verbosityJSON != null) {
+            verbosity = JSON.parse(verbosityJSON);
         }
+        if (methodName) {
+            verbosity[className + '.' + methodName] = entryExit;
+        } else {
+            verbosity[className] = entryExit;
+        }
+        localStorage.setItem('verbosity', JSON.stringify(verbosity));
     }
     private static isVerbose(name: string): [boolean, boolean] {
         /* eslint-disable dot-notation */
-        if (window['verbosity'] == null) return [false, false];
-        if (window['verbosity'][name] == null) return [false, false];
-        if (Array.isArray(window['verbosity'][name])) {
+        const verbosityJSON: string | null = localStorage.getItem('verbosity');
+        if (verbosityJSON == null) return [false, false];
+        const verbosity: object = JSON.parse(verbosityJSON);
+        if (verbosity[name] == null) return [false, false];
+        if (Array.isArray(verbosity[name])) {
             // If it is an array, this means we want to specify input or output logging
-            return window['verbosity'][name] as [boolean, boolean];
+            return verbosity[name] as [boolean, boolean];
         } else {
             // If it is anything else (besides null/undefined), this means logging is fully enabled
             return [true, true];

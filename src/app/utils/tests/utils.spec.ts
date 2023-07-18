@@ -120,4 +120,14 @@ describe('Debug', () => {
             expect(console.log).not.toHaveBeenCalled();
         });
     });
+    it('should remember settings across sessions through localStorage', () => {
+        // Given a page
+        spyOn(console, 'log').and.returnValue();
+        // When enabling logging
+        Debug.enableLog([true, true], 'Class', 'method');
+        // Then it should be stored in localStorage for future sessions
+        const verbosity: object = JSON.parse(Utils.getNonNullable(localStorage.getItem('verbosity')));
+        expect(verbosity['Class.method']).toEqual([true, true]);
+        localStorage.clear();
+    });
 });
