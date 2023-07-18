@@ -238,7 +238,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         let node: MGPNode<R, M, S, L, B> = this;
         if (node.mother.isAbsent()) {
             const turn: number = node.gameState.turn;
-            return 'NodeInitial: ' + turn;
+            return 'InitialNode: ' + turn;
         }
         while (node.mother.isPresent()) {
             const move: string = node.move.isAbsent() ? ' ' : ' > ' + node.move.get().toString() + '> ';

@@ -76,8 +76,8 @@ class MyClass {
 
 describe('Debug', () => {
     describe('display', () => {
-        it('should log when verbose is enabled', () => {
-            // Given a verbose-enabled name
+        it('should log when verbose is enabled on the current method', () => {
+            // Given a verbose-enabled method
             spyOn(console, 'log').and.returnValue();
             Debug.enableLog([true, true], 'Class', 'method');
             // When calling Debug.display
@@ -85,14 +85,41 @@ describe('Debug', () => {
             // Then it should have logged the message
             expect(console.log).toHaveBeenCalledOnceWith('Class.method: message');
         });
+        it('should log when verbose is enabled on the current class', () => {
+            // Given a verbose-enabled class
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([true, true], 'Class');
+            // When calling Debug.display
+            Debug.display('Class', 'method', 'message');
+            // Then it should have logged the message
+            expect(console.log).toHaveBeenCalledOnceWith('Class.method: message');
+        });
         it('should not log when verbose is disabled', () => {
-            // Given a verbose-disabled name
+            // Given a verbose-disabled method and class
             spyOn(console, 'log').and.returnValue();
             Debug.enableLog([false, false], 'Class', 'method');
             // When calling Debug.display
             Debug.display('Class', 'method', 'message');
             // Then it should have logged the message
             expect(console.log).not.toHaveBeenCalled();
+        });
+        it('should not log when verbose is unset', () => {
+            // Given a verbose-unset method and class
+            spyOn(console, 'log').and.returnValue();
+            // When calling Debug.display
+            Debug.display('Class', 'method', 'message');
+            // Then it should have logged the message
+            expect(console.log).not.toHaveBeenCalled();
+        });
+        it('should still work with multiple calls to enableLog', () => {
+            // Given a verbose-enabled method
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([true, true], 'Class', 'otherMethod');
+            Debug.enableLog([true, true], 'Class', 'method');
+            // When calling Debug.display
+            Debug.display('Class', 'method', 'message');
+            // Then it should have logged the message
+            expect(console.log).toHaveBeenCalledOnceWith('Class.method: message');
         });
     });
     describe('log', () => {
@@ -128,6 +155,9 @@ describe('Debug', () => {
         // Then it should be stored in localStorage for future sessions
         const verbosity: object = JSON.parse(Utils.getNonNullable(localStorage.getItem('verbosity')));
         expect(verbosity['Class.method']).toEqual([true, true]);
+    });
+    afterEach(() => {
+        // We need to forget our debug settings after each test
         localStorage.clear();
     });
 });

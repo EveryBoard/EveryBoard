@@ -14,7 +14,6 @@ import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Debug, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';

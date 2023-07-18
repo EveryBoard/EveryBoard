@@ -54,13 +54,8 @@ export class Debug {
         if (verbosityJSON == null) return [false, false];
         const verbosity: object = JSON.parse(verbosityJSON);
         if (verbosity[name] == null) return [false, false];
-        if (Array.isArray(verbosity[name])) {
-            // If it is an array, this means we want to specify input or output logging
-            return verbosity[name] as [boolean, boolean];
-        } else {
-            // If it is anything else (besides null/undefined), this means logging is fully enabled
-            return [true, true];
-        }
+        Utils.assert(Array.isArray(verbosity[name]), `malformed verbosity levels: ${verbosity[name]}`);
+        return verbosity[name] as [boolean, boolean];
         /* eslint-enable dot-notation */
     }
     private static isMethodVerboseEntry(className: string, methodName: string): boolean {
@@ -85,9 +80,8 @@ export class Debug {
             const descriptor: PropertyDescriptor =
                 Utils.getNonNullable(Object.getOwnPropertyDescriptor(constructor['prototype'], propertyName));
             const isMethod: boolean = descriptor.value instanceof Function;
-            if (isMethod === false) {
-                continue;
-            }
+            // In case the following assert ever gets violated, we can simply ignore the cases that are not method
+            Utils.assert(isMethod, 'cannot add logging to properties that are not methods!');
 
             const originalMethod: (...args: unknown[]) => unknown = descriptor.value;
             descriptor.value = function(...args: unknown[]): unknown {
@@ -107,6 +101,10 @@ export class Debug {
         }
     }
 }
+
+// This makes Debug.enableLog accessible in the console
+// To use it, one just has to do window.enableLog([true, true], 'SomeClass, 'someMethod')
+window['enableLog'] = Debug.enableLog;
 
 export class Utils {
 
