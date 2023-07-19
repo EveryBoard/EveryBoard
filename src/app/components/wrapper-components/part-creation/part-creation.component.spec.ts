@@ -160,10 +160,10 @@ describe('PartCreationComponent', () => {
                 // When the component is loaded
                 awaitComponentInitialization();
                 // and the toast displayed
-                tick(3000);
 
-                // Then observe is not called
+                // Then observe is not called and a message is displayed
                 expect(configRoomService.subscribeToChanges).not.toHaveBeenCalled();
+                testUtils.expectCriticalMessageToHaveBeenDisplayed(ConfigRoomService.GAME_DOES_NOT_EXIST())
             }));
         });
         describe('Candidate arrival', () => {
@@ -303,7 +303,6 @@ describe('PartCreationComponent', () => {
                 // and the candidate has been removed from the lobby
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-                tick(3000);
             }));
         });
         describe('Chosing Opponent', () => {
@@ -562,7 +561,7 @@ describe('PartCreationComponent', () => {
                 // When the component is destroyed
                 spyOn(component, 'cancelGameCreation').and.callThrough();
                 testUtils.destroy();
-                tick(3000);
+                testUtils.expectInfoMessageToHaveBeenDisplayed('The game has been canceled!');
                 await testUtils.whenStable();
                 destroyed = true;
 
@@ -577,7 +576,8 @@ describe('PartCreationComponent', () => {
                 const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
                 spyOn(observedPartService, 'removeObservedPart').and.callThrough();
                 await clickElement('#cancel');
-                tick(3000);
+                tick(1);
+                testUtils.expectInfoMessageToHaveBeenDisplayed('The game has been canceled!');
 
                 // Then observedPart should be emptied
                 expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
@@ -663,7 +663,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
                 // and waiting one TOKEN_INTERVAL
                 tick(PartCreationComponent.TOKEN_INTERVAL);
-                tick(3000);
+                testUtils.expectInfoMessageToHaveBeenDisplayed('The game has been canceled!')
 
                 // Then the part and all its related data should be removed
                 expect(gameService.deletePart).toHaveBeenCalledOnceWith('configRoomId');
@@ -684,7 +684,7 @@ describe('PartCreationComponent', () => {
                 // When the configRoom is deleted (because the game has been cancelled)
                 await configRoomDAO.delete('configRoomId');
                 testUtils.detectChanges();
-                tick(3000); // needs to be >2999
+                testUtils.expectInfoMessageToHaveBeenDisplayed('The game has been canceled!')
 
                 // Then the user is rerouted to the server
                 expectValidRouting(router, ['/lobby'], LobbyComponent);
@@ -811,7 +811,6 @@ describe('PartCreationComponent', () => {
                 spyOn(observedPartService, 'removeObservedPart').and.callThrough();
                 spyOn(configRoomService, 'cancelJoining').and.callThrough();
                 testUtils.destroy();
-                tick(3000);
                 await testUtils.whenStable();
                 destroyed = true;
 
@@ -824,7 +823,6 @@ describe('PartCreationComponent', () => {
     afterEach(fakeAsync(async() => {
         if (destroyed === false) {
             testUtils.destroy();
-            tick(3000);
             await testUtils.whenStable();
         }
     }));

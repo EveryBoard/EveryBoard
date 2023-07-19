@@ -310,7 +310,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }).compileComponents();
     }
 
-    public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
+    public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {
+        this.prepareMessageDisplayerSpies();
+    }
 
     public prepareFixture(wrapperKind: Type<GameWrapper<P>>): void {
         this.fixture = TestBed.createComponent(wrapperKind);
@@ -322,12 +324,12 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.gameComponent = this.wrapper.gameComponent;
     }
     public prepareSpies(): void {
-        // TODO: no need to store the values, we can just do this.gameComponent.cancelMove and this is the spy
         this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
         this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
         this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
-        
+    }
+    private prepareMessageDisplayerSpies(): void {
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         if (jasmine.isSpy(messageDisplayer.gameMessage)) {
             this.gameMessageSpy = messageDisplayer.gameMessage as jasmine.Spy;

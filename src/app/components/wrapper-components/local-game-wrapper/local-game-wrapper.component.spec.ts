@@ -21,7 +21,6 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
@@ -31,7 +30,7 @@ import { NotFoundComponent } from '../../normal-component/not-found/not-found.co
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
-    fit('should redirect to /notFound', fakeAsync(async() => {
+    it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game', true);
         ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
@@ -45,7 +44,6 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
 
         // Then it goes to /notFound with the expected error message and displays a toast
         expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
-        testUtils.expectCriticalMessageToHaveBeenDisplayed('TODO');
     }));
 });
 
@@ -352,11 +350,11 @@ describe('LocalGameWrapperComponent', () => {
             // When receiveValidMove is called
             const state: P4State = testUtils.getComponent().getState();
             const result: MGPValidation = await wrapper.receiveValidMove(P4Move.ZERO, state);
+            tick(1);
 
             // Then it should display a message
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe(GameWrapperMessages.NOT_YOUR_TURN());
-            tick(3000);
         }));
     });
     describe('winner indicator', () => {

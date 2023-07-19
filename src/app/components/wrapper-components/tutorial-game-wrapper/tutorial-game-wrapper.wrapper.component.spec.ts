@@ -30,7 +30,7 @@ describe('TutorialGameWrapperComponent for non-existing game', () => {
 
         // When loading the wrapper
         testUtils.detectChanges();
-        tick(3000);
+        tick(1);
 
         // Then it goes to /notFound with the expected error message
         expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });

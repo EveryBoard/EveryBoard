@@ -165,7 +165,6 @@ describe('GameComponent', () => {
                 expect(clickResult).toEqual(refusal);
             }
         }
-        tick(3000); // needs to be >2999
     }));
     it('should have an encoder and a tutorial for every game', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES()) {

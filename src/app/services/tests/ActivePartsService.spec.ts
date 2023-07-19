@@ -65,7 +65,6 @@ describe('ActivePartsService', () => {
                     seenActiveParts = activeParts;
                 });
             activePartsSubscription.unsubscribe();
-            tick(3000);
 
             // When a new part is added
             await partDAO.create(part);

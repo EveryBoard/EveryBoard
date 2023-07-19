@@ -2,7 +2,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -22,12 +21,11 @@ describe('OnlineGameCreationComponent for non-existing game', () => {
 
         // When loading the wrapper
         testUtils.detectChanges();
-        tick(3000);
+        tick(1);
 
         // Then it goes to /notFound with the expected error message
         const route: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
         expectValidRouting(router, route, NotFoundComponent, { skipLocationChange: true });
-
     }));
 });
 
@@ -47,7 +45,7 @@ describe('OnlineGameCreationComponent', () => {
 
         // When the page is rendered
         testUtils.detectChanges();
-        tick(3000); // wait for some toast to leave
+        tick(1);
 
         // Then the user should be redirected to the game
         expectValidRouting(router, ['/play', game, 'PartDAOMock0'], OnlineGameWrapperComponent);

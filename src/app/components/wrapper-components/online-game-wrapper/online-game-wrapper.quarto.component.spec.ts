@@ -23,7 +23,6 @@ import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameWrapperMessages } from '../GameWrapper';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -1012,14 +1011,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveRequest(Player.ONE, 'Draw');
             testUtils.detectChanges();
-            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-            spyOn(messageDisplayer, 'gameMessage').and.callThrough();
 
             // When ignoring it and trying to play
             await doMove(FIRST_MOVE, true);
 
             // Then it should fail
-            expect(messageDisplayer.gameMessage).toHaveBeenCalledWith(GameWrapperMessages.MUST_ANSWER_REQUEST());
+            testUtils.expectGameMessageToHaveBeenDisplayed(GameWrapperMessages.MUST_ANSWER_REQUEST());
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should forbid to propose to draw after refusal', fakeAsync(async() => {
@@ -1368,7 +1365,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then it should be refused
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();
-            tick(3000);
+            testUtils.expectGameMessageToHaveBeenDisplayed(GameWrapperMessages.GAME_HAS_ENDED());
         }));
         it('should display when the opponent resigned', fakeAsync(async() => {
             // Given a board where the opponent has resigned
