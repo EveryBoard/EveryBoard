@@ -214,6 +214,14 @@ export class SimpleComponentTestUtils<T> {
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         return element;
     }
+    public expectElementToBeEnabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+    }
+    public expectElementToBeDisabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
+    }
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist in order to fill its value').toBeTruthy();
@@ -583,6 +591,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
         const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
+    }
+    public expectElementToBeEnabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+    }
+    public expectElementToBeDisabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
     }
     public findElement(elementName: string): DebugElement {
         return this.debugElement.query(By.css(elementName));
