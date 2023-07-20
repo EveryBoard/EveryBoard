@@ -1,7 +1,7 @@
 import { Vector } from '../Vector';
 
 describe('Vector', () => {
-    it('should vectorise correctly', () => {
+    it('should compute minimal vector correctly', () => {
         const c: Vector = new Vector(3, -11);
         expect(c.toMinimalVector()).toEqual(new Vector(3, -11));
 
