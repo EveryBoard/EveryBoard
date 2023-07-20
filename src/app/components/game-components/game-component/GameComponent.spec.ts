@@ -139,6 +139,7 @@ describe('GameComponent', () => {
                 onNeighborClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
+            Teeko: { onClick: [0, 0] },
             Trexo: {
                 onClick: [0, 0],
             },

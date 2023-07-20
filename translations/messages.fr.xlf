@@ -286,6 +286,10 @@
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
         <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
+      <trans-unit id="7854184833872393890" datatype="html">
+        <source>Align your 4 piece or put them in a square to win!</source>
+        <target>Alignez vos 4 pièces ou placez les en carré pour gagner !</target>
+      </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
         <target>Alignez 5 pièces de votre couleur en ligne droite, mais attention, les pièces peuvent s'empiler !</target>
@@ -413,6 +417,10 @@
       <trans-unit id="7128132932954450153" datatype="html">
         <source>Pente</source>
         <target>Pente</target>
+      </trans-unit>
+      <trans-unit id="6202245590217996824" datatype="html">
+        <source>Teeko</source>
+        <target>Teeko</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -3060,17 +3068,13 @@
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
         <target>Bravo ! Note : si tout les quadrants sont neutres après que vous ayez déposé votre pièce, il n&apos;y aura pas de rotation !</target>
       </trans-unit>
-      <trans-unit id="1301553003354246210" datatype="html">
-        <source>Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.</source>
+      <trans-unit id="481364308060927522" datatype="html">
+        <source>Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.</source>
         <target>Pente se joue sur un plateau 19x19, sur lequel on dépose les pierres aux intersections des cases. Le but du jeu est d'aligner 5 de vos pièces, ou de capturer 10 pièces de votre adversaire. Initialement, une pièce du joueur clair est placée au centre du plateau.</target>
       </trans-unit>
-      <trans-unit id="730381467241225928" datatype="html">
-        <source>Dropping a stone</source>
-        <target>Déposer une pierre</target>
-      </trans-unit>
-      <trans-unit id="254985125186363895" datatype="html">
-        <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
-        <target>Lors de votre tour, vous devez déposer une pierre sur le plateau. Il n'y a pas de restriction : vous pouvez la placer sur n'importe quel emplacement libre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pierre sur le plateau.</target>
+      <trans-unit id="4134686113968191036" datatype="html">
+        <source>At your turn, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+        <target>Lors de votre tour, vous devez déposer une pièce sur n'importe quel case vide du plateau. Il n'y a pas d'autres restrictions.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pièce sur le plateau.</target>
       </trans-unit>
       <trans-unit id="6622643035593861381" datatype="html">
         <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
@@ -3908,6 +3912,18 @@
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
+      </trans-unit>
+      <trans-unit id="626881465832467578" datatype="html">
+        <source>The goal of the game is to align your 4 piece, or to make a square with them.</source>
+        <target>Le but du jeu est d'aligner vos 4 pièces, ou de les placer en carré.</target>
+      </trans-unit>
+      <trans-unit id="3501096768840548285" datatype="html">
+        <source>After you drop all your four pieces, if nobody won yet, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+        <target>Après avoir déposé vos quatre pièces, si personne n'as encore gagné, vous devez mainenant déplacer vos pièces à un autre emplacement vide. Le but reste le même, être le premier à créer une ligne ou un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
+      </trans-unit>
+      <trans-unit id="366926106758793789" datatype="html">
+        <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
+        <target>Sur ce plateau, vous pouvez gagner soit en créant une ligne, soit un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>

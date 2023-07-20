@@ -34,7 +34,8 @@ export class P4Rules extends Rules<P4Move, P4State> {
     public static isInRange(coord: Coord): boolean {
         return coord.isInRange(7, 6);
     }
-    public static P4_HELPER: NInARowHelper<PlayerOrNone> = new NInARowHelper(P4Rules.isInRange, Utils.identity, 4);
+    private static readonly P4_HELPER: NInARowHelper<PlayerOrNone> =
+        new NInARowHelper(P4Rules.isInRange, Utils.identity, 4);
 
     public static getVictoriousCoords(state: P4State): Coord[] {
         return P4Rules.P4_HELPER.getVictoriousCoord(state);
