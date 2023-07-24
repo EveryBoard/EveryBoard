@@ -342,7 +342,7 @@ describe('LodestoneComponent', () => {
             // When displaying the state
             testUtils.setupState(state);
             // Then the score should be the number of pieces captured
-            expect(testUtils.getComponent().scores).toEqual(MGPOptional.of([22, 20]));
+            expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of([22, 20]));
         });
     });
 });

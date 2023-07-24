@@ -88,7 +88,7 @@ describe('SixComponent', () => {
             const state: SixState = SixState.fromRepresentation(board, 40);
             testUtils.setupState(state);
 
-            const gameComponent: SixComponent = testUtils.getComponent();
+            const gameComponent: SixComponent = testUtils.getGameComponent();
             await testUtils.expectClickSuccess('#piece_0_0');
             testUtils.expectElementToExist('#selectedPiece_0_0');
             const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(0, 6));

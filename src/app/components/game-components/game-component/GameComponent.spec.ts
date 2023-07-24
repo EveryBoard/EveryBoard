@@ -29,7 +29,7 @@ describe('GameComponent', () => {
         // Given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
         const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone');
-        const component: AbstractGameComponent = testUtils.getComponent();
+        const component: AbstractGameComponent = testUtils.getGameComponent();
         expect(component).toBeDefined();
         testUtils.wrapper.role = Player.ONE;
         testUtils.detectChanges();
@@ -153,7 +153,7 @@ describe('GameComponent', () => {
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
                 await ComponentTestUtils.forGame(gameInfo.urlName, false);
-            const component: AbstractGameComponent = testUtils.getComponent();
+            const component: AbstractGameComponent = testUtils.getGameComponent();
             testUtils.wrapper.role = PlayerOrNone.NONE;
             testUtils.detectChanges();
             tick(1);
@@ -174,7 +174,7 @@ describe('GameComponent', () => {
                 await ComponentTestUtils.forGame(gameInfo.urlName, false);
 
             // When displaying the game
-            const component: AbstractGameComponent = testUtils.getComponent();
+            const component: AbstractGameComponent = testUtils.getGameComponent();
             testUtils.detectChanges();
             tick(1);
 

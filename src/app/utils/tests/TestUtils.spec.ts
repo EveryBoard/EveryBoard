@@ -349,7 +349,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public expectToBeCreated(): void {
         expect(this.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(this.getComponent()).withContext('Component should be created').toBeTruthy();
+        expect(this.getGameComponent()).withContext('Component should be created').toBeTruthy();
     }
     public detectChanges(): void {
         this.fixture.detectChanges();
@@ -378,7 +378,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }
         this.forceChangeDetection();
     }
-    public getComponent(): T {
+    public getGameComponent(): T {
         return (this.gameComponent as unknown) as T;
     }
     /**
@@ -616,6 +616,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public expectInfoMessageToHaveBeenDisplayed(message: string) {
         expect(this.infoMessageSpy).toHaveBeenCalledOnceWith(message);
         this.infoMessageSpy.calls.reset();
+    }
+    public async whenStable(): Promise<void> {
+        return this.fixture.whenStable();
     }
 }
 

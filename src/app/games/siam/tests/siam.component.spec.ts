@@ -230,10 +230,10 @@ describe('SiamComponent', () => {
         await testUtils.expectClickSuccess('#square_4_3');
 
         // When the player clicks on a square instead of an orientation arrow
-        spyOn(testUtils.getComponent(), 'cancelMoveAttempt').and.callThrough();
+        spyOn(testUtils.getGameComponent(), 'cancelMoveAttempt').and.callThrough();
         await testUtils.expectClickSuccess('#square_2_2');
         // Then the move should be cancelled
-        expect(testUtils.getComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
+        expect(testUtils.getGameComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
     }));
     it('should cancel the move when clicking on invalid target for move', fakeAsync(async() => {
         // Given a state with a piece already on board, which has been selected by the player

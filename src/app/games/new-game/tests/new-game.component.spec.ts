@@ -37,8 +37,8 @@ describe('NewGameComponent', () => {
      *   - `testUtils.expectElementToHaveClass` to check that an existing HTML element has a given CSS class
      */
     it('this test is only there to cover new-game remaining functions', () => {
-        testUtils.getComponent().showLastMove(new NewGameMove());
-        testUtils.getComponent().cancelMoveAttempt();
+        testUtils.getGameComponent().showLastMove(new NewGameMove());
+        testUtils.getGameComponent().cancelMoveAttempt();
         expect(42).toBeGreaterThan(37);
     });
 });

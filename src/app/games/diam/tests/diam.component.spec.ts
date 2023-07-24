@@ -23,7 +23,7 @@ describe('DiamComponent', () => {
     }));
     it('should create', () => {
         expect(testUtils.wrapper).withContext('Should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        expect(testUtils.getGameComponent()).withContext('Component should be created').toBeTruthy();
     });
     describe('First click', () => {
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {

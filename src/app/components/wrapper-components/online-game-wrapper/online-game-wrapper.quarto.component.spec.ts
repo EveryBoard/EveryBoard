@@ -347,7 +347,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             .toBeFalsy();
 
         testUtils.expectElementNotToExist('#partCreation');
-        expect(testUtils.getComponent())
+        expect(testUtils.getGameComponent())
             .withContext('gameComponent field should be absent after config accepted and async ms finished')
             .toBeFalsy();
 
@@ -1682,7 +1682,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a any component
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await doMove(FIRST_MOVE, true);
-            const component: QuartoComponent = testUtils.getComponent();
+            const component: QuartoComponent = testUtils.getGameComponent();
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
@@ -1694,7 +1694,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should not call gameComponent.showLastMove if there is no move', fakeAsync(async() => {
             // Given a component without previous move
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-            const component: QuartoComponent = testUtils.getComponent();
+            const component: QuartoComponent = testUtils.getGameComponent();
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove

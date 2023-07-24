@@ -19,15 +19,15 @@ describe('CoerceoComponent', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     function getScores(): readonly [number, number] {
-        return testUtils.getComponent().scores.get();
+        return testUtils.getGameComponent().scores.get();
     }
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
-        const gameComponent: CoerceoComponent = testUtils.getComponent();
+        const gameComponent: CoerceoComponent = testUtils.getGameComponent();
         expect(gameComponent.isEmptySpace(x, y)).toBeTrue();
         expect(gameComponent.getEmptyClass(x, y)).toBe('captured-alternate-fill');
     }
     function expectCoordToBeOfCapturedFill(x: number, y: number): void {
-        const gameComponent: CoerceoComponent = testUtils.getComponent();
+        const gameComponent: CoerceoComponent = testUtils.getGameComponent();
         expect(gameComponent.isPyramid(x, y)).toBeTrue();
         expect(gameComponent.getPyramidClass(x, y)).toBe('captured-fill');
     }
@@ -141,7 +141,7 @@ describe('CoerceoComponent', () => {
             await testUtils.expectClickSuccess('#click_6_2');
 
             // Then its destinations should be displayed
-            const component: CoerceoComponent = testUtils.getComponent();
+            const component: CoerceoComponent = testUtils.getGameComponent();
             testUtils.expectElementToHaveClass('#selected_6_2', 'selected-stroke');
             expect(component.possibleLandings.length).toBe(4);
             expect(component.possibleLandings).toContain(new Coord(7, 1));
@@ -183,7 +183,7 @@ describe('CoerceoComponent', () => {
             await testUtils.expectClickSuccess('#click_8_2');
 
             // Then second piece should be selected
-            const component: CoerceoComponent = testUtils.getComponent();
+            const component: CoerceoComponent = testUtils.getGameComponent();
             testUtils.expectElementNotToExist('#selected_6_2');
             testUtils.expectElementToHaveClass('#selected_8_2', 'selected-stroke');
             expect(component.possibleLandings).toContain(new Coord(7, 1));
@@ -201,7 +201,7 @@ describe('CoerceoComponent', () => {
             await testUtils.expectClickSuccess('#click_6_2');
 
             // Then the different highlighs should be gone since the piece is deselected
-            const component: CoerceoComponent = testUtils.getComponent();
+            const component: CoerceoComponent = testUtils.getGameComponent();
             testUtils.expectElementNotToExist('#selected_6_2');
             expect(component.possibleLandings.length).toBe(0);
         }));
