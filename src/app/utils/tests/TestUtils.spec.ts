@@ -61,7 +61,7 @@ export class ActivatedRouteStub {
             paramMap: {
                 get: (str: string): string => {
                     // Returns null in case the route does not exist.
-                    // This is the same behaviour than ActivatedRoute
+                    // This is the same behavior than ActivatedRoute
                     return this.route[str];
                 },
             },
@@ -80,8 +80,11 @@ export class ActivatedRouteStub {
 export class SimpleComponentTestUtils<T> {
 
     private fixture: ComponentFixture<T>;
-
     private component: T;
+
+    private infoMessageSpy: jasmine.Spy;
+    private criticalMessageSpy: jasmine.Spy;
+    protected gameMessageSpy: jasmine.Spy;
 
     public static async create<T>(componentType: Type<T>, activatedRouteStub?: ActivatedRouteStub)
     : Promise<SimpleComponentTestUtils<T>>
@@ -91,16 +94,25 @@ export class SimpleComponentTestUtils<T> {
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
         testUtils.fixture = TestBed.createComponent(componentType);
         testUtils.component = testUtils.fixture.componentInstance;
-        testUtils.prepareSpies();
+        testUtils.prepareMessageDisplayerSpies();
         return testUtils;
     }
     private constructor() {}
 
-    // TODO: have ComponentTestUtils inherit from this
-    private gameMessageSpy: jasmine.Spy;
-    private infoMessageSpy: jasmine.Spy;
-    private criticalMessageSpy: jasmine.Spy;
-    public prepareSpies(): void {
+    public getComponent(): T {
+        return this.component;
+    }
+    public detectChanges(): void {
+        this.fixture.detectChanges();
+    }
+    public destroy(): void {
+        return this.fixture.destroy();
+    }
+    public async whenStable(): Promise<void> {
+        return this.fixture.whenStable();
+    }
+
+    public prepareMessageDisplayerSpies(): void {
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         if (jasmine.isSpy(messageDisplayer.gameMessage)) {
             this.gameMessageSpy = messageDisplayer.gameMessage as jasmine.Spy;
@@ -118,7 +130,6 @@ export class SimpleComponentTestUtils<T> {
             this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.returnValue();
         }
     }
-
     public expectGameMessageToHaveBeenDisplayed(message: string) {
         expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
         this.gameMessageSpy.calls.reset();
@@ -147,12 +158,6 @@ export class SimpleComponentTestUtils<T> {
         }
         this.detectChanges();
     }
-    public getComponent(): T {
-        return this.component;
-    }
-    public detectChanges(): void {
-        this.fixture.detectChanges();
-    }
     public findElement(elementName: string): DebugElement {
         return this.fixture.debugElement.query(By.css(elementName));
     }
@@ -162,36 +167,51 @@ export class SimpleComponentTestUtils<T> {
     public findElementByDirective(directive: Type<unknown>): DebugElement {
         return this.fixture.debugElement.query(By.directive(directive));
     }
-    public destroy(): void {
-        return this.fixture.destroy();
-    }
-    public async whenStable(): Promise<void> {
-        return this.fixture.whenStable();
-    }
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');
         if (element.attributes.class != null && element.attributes.class !== '') {
             const elementClasses: string[] = element.attributes.class.split(' ').sort();
             expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
         }
     }
+    public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');
+        if (element.attributes.class != null) {
+            const elementClasses: string[] = element.attributes.class.split(' ').sort();
+            expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
+        }
+    }
+    public expectElementToHaveClasses(elementName: string, classes: string[]): void {
+        const classesSorted: string[] = [...classes].sort();
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
+        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
+        expect(elementClasses).toEqual(classesSorted);
+    }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should not exist').toBeNull();
+        expect(element).withContext(`${elementName} should not exist`).toBeNull();
     }
     public expectElementToExist(elementName: string): DebugElement {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         return element;
     }
     public expectElementToBeEnabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
     }
     public expectElementToBeDisabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
     }
     public fillInput(elementName: string, value: string): void {
@@ -352,8 +372,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             tick(1);
         }
 
-        await this.fixture.whenStable();
-        this.fixture.detectChanges();
+        await this.whenStable();
+        this.detectChanges();
         expect(this.cancelMoveSpy).not
             .withContext(context)
             .toHaveBeenCalledWith();
@@ -375,8 +395,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             return;
         } else {
             element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
+            await this.whenStable();
+            this.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
@@ -403,8 +423,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             expect(clickValidity.getReason()).toBe(reason);
             this.canUserPlaySpy.calls.reset();
             element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
+            await this.whenStable();
+            this.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
@@ -427,8 +447,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         } else {
             const moveState: GameState = state ?? this.gameComponent.getState();
             element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
+            await this.whenStable();
+            this.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             if (scores) {
@@ -455,8 +475,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         } else {
             const moveState: GameState = state ?? this.gameComponent.getState();
             element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
+            await this.whenStable();
+            this.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             if (scores) {
@@ -483,8 +503,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         } else {
             const state: GameState = this.gameComponent.getState();
             passButton.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
+            await this.whenStable();
+            this.detectChanges();
             if (scores) {
                 expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state, scores);
             } else {
@@ -502,7 +522,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             return;
         }
         element.triggerEventHandler('click', null);
-        await this.fixture.whenStable();
+        await this.whenStable();
         this.detectChanges();
     }
     public expectElementNotToExist(elementName: string): void {
