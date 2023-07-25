@@ -98,10 +98,9 @@ export class SimpleComponentTestUtils<T> {
     }
     protected constructor() {}
 
-
     public prepareFixture(componentType: Type<T>): void {
         this.fixture = TestBed.createComponent(componentType);
-        this.component = this.fixture.componentInstance;
+        this.component = this.fixture.debugElement.componentInstance;
     }
 
     public getComponent(): T {
@@ -227,9 +226,8 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string> {
+export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string> { // TODO extends SimpleComponentTestUtils<GameWrapper<P>> {
 
-    public fixture: ComponentFixture<GameWrapper<P>>;
     public wrapper: GameWrapper<P>;
     private gameComponent: AbstractGameComponent;
 
@@ -237,9 +235,6 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     private cancelMoveSpy: jasmine.Spy;
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
-    private gameMessageSpy: jasmine.Spy;
-    private infoMessageSpy: jasmine.Spy;
-    private criticalMessageSpy: jasmine.Spy;
 
     public static async forGame<T extends AbstractGameComponent>(
         game: string,
@@ -284,15 +279,11 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         return new ComponentTestUtils<T, P>(activatedRouteStub);
     }
 
-    public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {
+    // TODO: remove arg, useless
+    protected constructor(private readonly activatedRouteStub: ActivatedRouteStub) {
         this.prepareMessageDisplayerSpies();
     }
 
-    public prepareFixture(wrapperKind: Type<GameWrapper<P>>): void {
-        this.fixture = TestBed.createComponent(wrapperKind);
-        this.wrapper = this.fixture.debugElement.componentInstance;
-        this.debugElement = this.fixture.debugElement;
-    }
     public bindGameComponent(): void {
         expect(this.wrapper.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
         this.gameComponent = this.wrapper.gameComponent;
@@ -303,30 +294,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
     }
-    private prepareMessageDisplayerSpies(): void {
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        if (jasmine.isSpy(messageDisplayer.gameMessage)) {
-            this.gameMessageSpy = messageDisplayer.gameMessage as jasmine.Spy;
-        } else {
-            this.gameMessageSpy = spyOn(messageDisplayer, 'gameMessage').and.returnValue();
-        }
-        if (jasmine.isSpy(messageDisplayer.criticalMessage)) {
-            this.criticalMessageSpy = messageDisplayer.criticalMessage as jasmine.Spy;
-        } else {
-            this.criticalMessageSpy = spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
-        }
-        if (jasmine.isSpy(messageDisplayer.infoMessage)) {
-            this.infoMessageSpy = messageDisplayer.infoMessage as jasmine.Spy;
-        } else {
-            this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.returnValue();
-        }
-    }
     public expectToBeCreated(): void {
         expect(this.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(this.getGameComponent()).withContext('Component should be created').toBeTruthy();
-    }
-    public detectChanges(): void {
-        this.fixture.detectChanges();
     }
     public forceChangeDetection(): void {
         this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
@@ -519,6 +489,34 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             this.onLegalUserMoveSpy.calls.reset();
         }
     }
+
+    // TODO: from here, this is common with Simple
+    protected fixture: ComponentFixture<GameWrapper<P>>;
+    public prepareFixture(wrapperKind: Type<GameWrapper<P>>): void {
+        this.fixture = TestBed.createComponent(wrapperKind);
+        this.wrapper = this.fixture.debugElement.componentInstance;
+    }
+    private gameMessageSpy: jasmine.Spy;
+    private infoMessageSpy: jasmine.Spy;
+    private criticalMessageSpy: jasmine.Spy;
+    private prepareMessageDisplayerSpies(): void {
+        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+        if (jasmine.isSpy(messageDisplayer.gameMessage)) {
+            this.gameMessageSpy = messageDisplayer.gameMessage as jasmine.Spy;
+        } else {
+            this.gameMessageSpy = spyOn(messageDisplayer, 'gameMessage').and.returnValue();
+        }
+        if (jasmine.isSpy(messageDisplayer.criticalMessage)) {
+            this.criticalMessageSpy = messageDisplayer.criticalMessage as jasmine.Spy;
+        } else {
+            this.criticalMessageSpy = spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
+        }
+        if (jasmine.isSpy(messageDisplayer.infoMessage)) {
+            this.infoMessageSpy = messageDisplayer.infoMessage as jasmine.Spy;
+        } else {
+            this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.returnValue();
+        }
+    }
     public async clickElement(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
@@ -593,6 +591,12 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public async whenStable(): Promise<void> {
         return this.fixture.whenStable();
+    }
+    public detectChanges(): void {
+        this.fixture.detectChanges();
+    }
+    public destroy(): void {
+        return this.fixture.destroy();
     }
 }
 

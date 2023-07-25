@@ -588,7 +588,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the game should be a victory
             expect(wrapper.gameComponent.node.move.get()).toEqual(FIRST_MOVE);
             expect(partDAOCalled).toBeTrue(); // Ensure the check on update has passed and succeed
-            testUtils.fixture.detectChanges();
+            testUtils.detectChanges();
             testUtils.expectElementToExist('#youWonIndicator');
             expectGameToBeOver();
         }));
@@ -616,7 +616,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the game should be a victory
             expect(wrapper.gameComponent.node.move.get()).toEqual(FIRST_MOVE);
             expect(partDAOCalled).toBeTrue(); // Ensure the check on update has passed and succeed
-            testUtils.fixture.detectChanges();
+            testUtils.detectChanges();
             testUtils.expectElementToExist('#youLostIndicator');
             expectGameToBeOver();
         }));
@@ -633,7 +633,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // the call to the serverTimeMock() is very close to the update
             // hence, the second update got called while the first update was executing
             tick(1000);
-            testUtils.fixture.detectChanges();
+            testUtils.detectChanges();
 
             // Then removeObservedPart should have been called
             expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
@@ -655,7 +655,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             });
             await doMove(FIRST_MOVE, true);
             tick(1000); // When time arrive too quickly after the move_without_time started
-            testUtils.fixture.detectChanges();
+            testUtils.detectChanges();
 
             // Then the game should be a draw
             expect(wrapper.gameComponent.node.move.get()).toEqual(FIRST_MOVE);
@@ -1539,7 +1539,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When user leaves the component (here, destroys it)
             const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
             spyOn(observedPartService, 'removeObservedPart').and.callThrough();
-            testUtils.fixture.destroy();
+            testUtils.destroy();
 
             // Then the observedPart should have been removed
             expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
@@ -1567,7 +1567,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
 
             // When destroying the component (should normally be triggered once router is triggered)
-            testUtils.fixture.destroy();
+            testUtils.destroy();
 
             // Then the observedPart should have been removed
             expect(observedPartService.removeObservedPart).not.toHaveBeenCalled();
