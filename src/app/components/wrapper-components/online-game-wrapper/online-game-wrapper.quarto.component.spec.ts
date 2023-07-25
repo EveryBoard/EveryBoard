@@ -66,15 +66,6 @@ export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promi
     return;
 }
 
-export async function prepareWrapper<T extends AbstractGameComponent>(user: AuthUser, component: string)
-: Promise<ComponentTestUtils<T, MinimalUser>>
-{
-    const testUtils: ComponentTestUtils<T, MinimalUser> = await ComponentTestUtils.basic(component);
-    await prepareMockDBContent(ConfigRoomMocks.INITIAL);
-    ConnectedUserServiceMock.setUser(user);
-    return testUtils;
-}
-
 export type PreparationOptions = {
     shorterGlobalClock: boolean;
     waitForPartToStart: boolean;
@@ -107,11 +98,13 @@ export namespace PreparationOptions {
 
 export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     user: AuthUser,
-    component: string,
+    game: string,
     preparationOptions: PreparationOptions = PreparationOptions.def)
 : Promise<PreparationResult<T>>
 {
-    const testUtils: ComponentTestUtils<T, MinimalUser> = await prepareWrapper<T>(user, component);
+    const testUtils: ComponentTestUtils<T, MinimalUser> = await ComponentTestUtils.basic(game);
+    await prepareMockDBContent(ConfigRoomMocks.INITIAL);
+    ConnectedUserServiceMock.setUser(user);
     testUtils.prepareFixture(OnlineGameWrapperComponent);
     if (preparationOptions.runClocks === false) {
         spyOn(TestBed.inject(OGWCTimeManagerService), 'resumeClocks').and.callFake(async() => {});

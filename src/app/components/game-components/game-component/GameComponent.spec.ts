@@ -5,7 +5,7 @@ import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ActivatedRouteStub, ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { AbstractGameComponent } from './GameComponent';
@@ -23,12 +23,12 @@ describe('GameComponent', () => {
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(fakeAsync(async() => {
-        await ComponentTestUtils.configureTestModule(activatedRouteStub);
+        await TestUtils.configureTestingModuleForGame(activatedRouteStub);
     }));
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
         // Given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
-        const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone');
+        const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone', false);
         const component: AbstractGameComponent = testUtils.getGameComponent();
         expect(component).toBeDefined();
         testUtils.wrapper.role = Player.ONE;

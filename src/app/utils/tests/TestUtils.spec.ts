@@ -47,6 +47,7 @@ import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { TutorialGameWrapperComponent } from 'src/app/components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 
 @Component({})
 export class BlankComponent {}
@@ -85,36 +86,7 @@ export class SimpleComponentTestUtils<T> {
     public static async create<T>(componentType: Type<T>, activatedRouteStub?: ActivatedRouteStub)
     : Promise<SimpleComponentTestUtils<T>>
     {
-        await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
-                    { path: '**', component: BlankComponent },
-                ]),
-                FormsModule,
-                ReactiveFormsModule,
-                NoopAnimationsModule,
-            ],
-            declarations: [
-                componentType,
-                FirestoreTimePipe,
-                HumanDurationPipe,
-                AutofocusDirective,
-                ToggleVisibilityDirective,
-            ],
-            schemas: [
-                CUSTOM_ELEMENTS_SCHEMA,
-            ],
-            providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: PartDAO, useClass: PartDAOMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: UserDAO, useClass: UserDAOMock },
-                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
-                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
-            ],
-        }).compileComponents();
+        await TestUtils.configureTestingModule(componentType, activatedRouteStub);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
         testUtils.fixture = TestBed.createComponent(componentType);
@@ -247,7 +219,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
 
     public static async forGame<T extends AbstractGameComponent>(
         game: string,
-        configureTestModule: boolean = true)
+        configureTestingModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
         const gameInfo: MGPOptional<GameInfo> =
@@ -258,16 +230,16 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,
                                                      AuthUser.NOT_CONNECTED,
-                                                     configureTestModule);
+                                                     configureTestingModule);
     }
     public static async forGameWithWrapper<T extends AbstractGameComponent, P extends Comparable>(
         game: string,
         wrapperKind: Type<GameWrapper<P>>,
         user: AuthUser = AuthUser.NOT_CONNECTED,
-        configureTestModule: boolean = true)
+        configureTestingModule: boolean = true)
     : Promise<ComponentTestUtils<T, P>>
     {
-        const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestModule);
+        const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestingModule);
         ConnectedUserServiceMock.setUser(user);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
@@ -278,36 +250,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public static async basic<T extends AbstractGameComponent, P extends Comparable>(
         game?: string,
-        configureTestModule: boolean = true)
+        configureTestingModule: boolean = true)
     : Promise<ComponentTestUtils<T, P>>
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
-        if (configureTestModule) {
-            await ComponentTestUtils.configureTestModule(activatedRouteStub);
+        if (configureTestingModule) {
+            await TestUtils.configureTestingModuleForGame(activatedRouteStub);
         }
         return new ComponentTestUtils<T, P>(activatedRouteStub);
-    }
-    public static async configureTestModule(activatedRouteStub: ActivatedRouteStub): Promise<void> {
-        await TestBed.configureTestingModule({
-            imports: [
-                AppModule,
-                RouterTestingModule.withRoutes([
-                    { path: 'play', component: OnlineGameWrapperComponent },
-                    { path: 'server', component: BlankComponent },
-                ]),
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: UserDAO, useClass: UserDAOMock },
-                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-                { provide: PartDAO, useClass: PartDAOMock },
-                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
-            ],
-        }).compileComponents();
     }
 
     public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {
@@ -627,6 +577,61 @@ export class TestUtils {
     public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
         const reason: string = validation.getReason();
         expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
+    }
+
+    public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
+        await TestBed.configureTestingModule({
+            imports: [
+                AppModule,
+                RouterTestingModule.withRoutes([
+                    { path: 'play', component: OnlineGameWrapperComponent },
+                    { path: 'server', component: BlankComponent },
+                ]),
+            ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            providers: [
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: UserDAO, useClass: UserDAOMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
+                { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
+                { provide: PartDAO, useClass: PartDAOMock },
+                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+            ],
+        }).compileComponents();
+    }
+    public static async configureTestingModule(componentType: object, activatedRouteStub?: ActivatedRouteStub): Promise<void> {
+        await TestBed.configureTestingModule({
+            imports: [
+                RouterTestingModule.withRoutes([
+                    { path: '**', component: BlankComponent },
+                ]),
+                FormsModule,
+                ReactiveFormsModule,
+                NoopAnimationsModule,
+            ],
+            declarations: [
+                componentType,
+                FirestoreTimePipe,
+                HumanDurationPipe,
+                AutofocusDirective,
+                ToggleVisibilityDirective,
+            ],
+            schemas: [
+                CUSTOM_ELEMENTS_SCHEMA,
+            ],
+            providers: [
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: PartDAO, useClass: PartDAOMock },
+                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
+                { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: UserDAO, useClass: UserDAOMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
+                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+            ],
+        }).compileComponents();
     }
 }
 
