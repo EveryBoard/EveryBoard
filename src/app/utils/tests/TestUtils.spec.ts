@@ -79,7 +79,7 @@ export class ActivatedRouteStub {
 }
 export class SimpleComponentTestUtils<T> {
 
-    private fixture: ComponentFixture<T>;
+    protected fixture: ComponentFixture<T>;
     private component: T;
 
     private infoMessageSpy: jasmine.Spy;
@@ -92,12 +92,17 @@ export class SimpleComponentTestUtils<T> {
         await TestUtils.configureTestingModule(componentType, activatedRouteStub);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
-        testUtils.fixture = TestBed.createComponent(componentType);
-        testUtils.component = testUtils.fixture.componentInstance;
+        testUtils.prepareFixture(componentType);
         testUtils.prepareMessageDisplayerSpies();
         return testUtils;
     }
-    private constructor() {}
+    protected constructor() {}
+
+
+    public prepareFixture(componentType: Type<T>): void {
+        this.fixture = TestBed.createComponent(componentType);
+        this.component = this.fixture.componentInstance;
+    }
 
     public getComponent(): T {
         return this.component;
@@ -226,7 +231,6 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
 
     public fixture: ComponentFixture<GameWrapper<P>>;
     public wrapper: GameWrapper<P>;
-    private debugElement: DebugElement;
     private gameComponent: AbstractGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
@@ -573,7 +577,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
     }
     public findElement(elementName: string): DebugElement {
-        return this.debugElement.query(By.css(elementName));
+        return this.fixture.debugElement.query(By.css(elementName));
     }
     public expectGameMessageToHaveBeenDisplayed(message: string) {
         expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
