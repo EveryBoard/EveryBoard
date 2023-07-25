@@ -276,11 +276,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         if (configureTestingModule) {
             await TestUtils.configureTestingModuleForGame(activatedRouteStub);
         }
-        return new ComponentTestUtils<T, P>(activatedRouteStub);
+        return new ComponentTestUtils<T, P>();
     }
 
-    // TODO: remove arg, useless
-    protected constructor(private readonly activatedRouteStub: ActivatedRouteStub) {
+    protected constructor() {
         this.prepareMessageDisplayerSpies();
     }
 
@@ -303,7 +302,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.detectChanges();
     }
     public setRoute(id: string, value: string): void {
-        this.activatedRouteStub.setRoute(id, value);
+        TestBed.inject(ActivatedRouteStub).setRoute(id, value);
     }
     public setupState(state: GameState,
                       previousState?: GameState,
