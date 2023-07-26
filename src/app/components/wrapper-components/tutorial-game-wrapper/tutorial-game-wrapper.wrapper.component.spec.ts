@@ -909,8 +909,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // expect to see still the steps success message on component
             const expectedMessage: string = 'instruction 0';
-            const currentMessage: string =
-                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         it('should mark step as finished when skipped', fakeAsync(async() => {

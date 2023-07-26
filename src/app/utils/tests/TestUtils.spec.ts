@@ -147,7 +147,7 @@ export class SimpleComponentTestUtils<T> {
         expect(this.infoMessageSpy).not.toHaveBeenCalled();
     }
 
-    public async clickElement(elementName: string, awaitStability: boolean = true): Promise<void> {
+    public async clickElement(elementName: string, awaitStability: boolean = true, waitOneMs: boolean = false): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist on the page`).toBeTruthy();
         if (element == null) {
@@ -156,6 +156,9 @@ export class SimpleComponentTestUtils<T> {
         element.triggerEventHandler('click', null);
         if (awaitStability) {
             await this.fixture.whenStable();
+        }
+        if (waitOneMs) {
+            tick(1);
         }
         this.detectChanges();
     }
@@ -332,16 +335,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
     }
     public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
         const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
-        element.triggerEventHandler('click', null);
-        if (waitOneMs) {
-            tick(1);
-        }
+        await this.clickElement(elementName, false, waitOneMs);
 
-        await this.whenStable();
-        this.detectChanges();
         expect(this.cancelMoveSpy).not
             .withContext(context)
             .toHaveBeenCalledWith();
@@ -357,50 +353,35 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                                                         reason?: string)
     : Promise<void>
     {
-        const element: DebugElement = this.findElement(nameInHtml);
-        expect(element).withContext('Element "' + nameInHtml + '" should exist').toBeTruthy();
-        if (element == null) {
-            return;
+        await this.clickElement(nameInHtml);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
+        this.canUserPlaySpy.calls.reset();
+        expect(this.chooseMoveSpy).not.toHaveBeenCalled();
+        if (reason == null) {
+            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith();
         } else {
-            element.triggerEventHandler('click', null);
-            await this.whenStable();
-            this.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
-            this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).not.toHaveBeenCalled();
-            if (reason == null) {
-                expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith();
-            } else {
-                expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
-                expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
-            }
-            this.cancelMoveSpy.calls.reset();
-            this.gameMessageSpy.calls.reset();
+            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+            expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
         }
+        this.cancelMoveSpy.calls.reset();
+        this.gameMessageSpy.calls.reset();
     }
     public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
         return this.expectClickFailureWithAsymmetricNaming(elementName, elementName, reason);
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
-        if (element == null) {
-            return;
-        } else {
-            const clickValidity: MGPValidation = this.gameComponent.canUserPlay(elementName);
-            expect(clickValidity.getReason()).toBe(reason);
-            this.canUserPlaySpy.calls.reset();
-            element.triggerEventHandler('click', null);
-            await this.whenStable();
-            this.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
-            this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).not.toHaveBeenCalled();
-            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
-            expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
-            this.cancelMoveSpy.calls.reset();
-            this.gameMessageSpy.calls.reset();
-        }
+        const clickValidity: MGPValidation = this.gameComponent.canUserPlay(elementName);
+        expect(clickValidity.getReason()).toBe(reason);
+        this.canUserPlaySpy.calls.reset();
+
+        await this.clickElement(elementName);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+        expect(this.chooseMoveSpy).not.toHaveBeenCalled();
+        expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+        expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
+        this.cancelMoveSpy.calls.reset();
+        this.gameMessageSpy.calls.reset();
     }
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
@@ -408,26 +389,18 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                                    scores?: readonly [number, number])
     : Promise<void>
     {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
-        if (element == null) {
-            return;
+        const moveState: GameState = state ?? this.gameComponent.getState();
+        await this.clickElement(elementName);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+        if (scores) {
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
         } else {
-            const moveState: GameState = state ?? this.gameComponent.getState();
-            element.triggerEventHandler('click', null);
-            await this.whenStable();
-            this.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
-            this.canUserPlaySpy.calls.reset();
-            if (scores) {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
-            } else {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
-            }
-            this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
-            this.onLegalUserMoveSpy.calls.reset();
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
         }
+        this.chooseMoveSpy.calls.reset();
+        expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
+        this.onLegalUserMoveSpy.calls.reset();
     }
     public async expectMoveFailure(elementName: string,
                                    reason: string,
@@ -436,52 +409,36 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                                    scores?: readonly [number, number])
     : Promise<void>
     {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
-        if (element == null) {
-            return;
+        const moveState: GameState = state ?? this.gameComponent.getState();
+        await this.clickElement(elementName);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+        if (scores) {
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
         } else {
-            const moveState: GameState = state ?? this.gameComponent.getState();
-            element.triggerEventHandler('click', null);
-            await this.whenStable();
-            this.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
-            this.canUserPlaySpy.calls.reset();
-            if (scores) {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
-            } else {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
-            }
-            this.chooseMoveSpy.calls.reset();
-            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
-            this.cancelMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
-            expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
-            this.gameMessageSpy.calls.reset();
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
         }
+        this.chooseMoveSpy.calls.reset();
+        expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+        this.cancelMoveSpy.calls.reset();
+        expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
+        expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
+        this.gameMessageSpy.calls.reset();
     }
     public expectPassToBeForbidden(): void {
         this.expectElementNotToExist('#passButton');
     }
     public async expectPassSuccess(move: Move, scores?: readonly [number, number]): Promise<void> {
-        const passButton: DebugElement = this.findElement('#passButton');
-        expect(passButton).withContext('Pass button is expected to be shown, but it is not').toBeTruthy();
-        if (passButton == null) {
-            return;
+        const state: GameState = this.gameComponent.getState();
+        await this.clickElement('#passButton');
+        if (scores) {
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state, scores);
         } else {
-            const state: GameState = this.gameComponent.getState();
-            passButton.triggerEventHandler('click', null);
-            await this.whenStable();
-            this.detectChanges();
-            if (scores) {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state, scores);
-            } else {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state);
-            }
-            this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
-            this.onLegalUserMoveSpy.calls.reset();
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state);
         }
+        this.chooseMoveSpy.calls.reset();
+        expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
+        this.onLegalUserMoveSpy.calls.reset();
     }
 }
 
