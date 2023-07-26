@@ -276,11 +276,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         if (configureTestingModule) {
             await TestUtils.configureTestingModuleForGame(activatedRouteStub);
         }
-        return new ComponentTestUtils<T, P>();
-    }
-
-    protected constructor() {
-        this.prepareMessageDisplayerSpies();
+        const testUtils: ComponentTestUtils<T, P> = new ComponentTestUtils<T, P>();
+        testUtils.prepareMessageDisplayerSpies();
+        return testUtils;
     }
 
     public bindGameComponent(): void {
