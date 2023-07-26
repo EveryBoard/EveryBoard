@@ -47,7 +47,6 @@ import { ObservedPartService } from 'src/app/services/ObservedPartService';
 import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TutorialGameWrapperComponent } from 'src/app/components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 
 @Component({})
 export class BlankComponent {}
@@ -80,7 +79,7 @@ export class ActivatedRouteStub {
 export class SimpleComponentTestUtils<T> {
 
     protected fixture: ComponentFixture<T>;
-    private component: T;
+    protected component: T;
 
     private infoMessageSpy: jasmine.Spy;
     private criticalMessageSpy: jasmine.Spy;
@@ -102,7 +101,6 @@ export class SimpleComponentTestUtils<T> {
         this.fixture = TestBed.createComponent(componentType);
         this.component = this.fixture.debugElement.componentInstance;
     }
-
     public getComponent(): T {
         return this.component;
     }
@@ -115,7 +113,6 @@ export class SimpleComponentTestUtils<T> {
     public async whenStable(): Promise<void> {
         return this.fixture.whenStable();
     }
-
     public prepareMessageDisplayerSpies(): void {
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         if (jasmine.isSpy(messageDisplayer.gameMessage)) {
@@ -152,7 +149,7 @@ export class SimpleComponentTestUtils<T> {
 
     public async clickElement(elementName: string, awaitStability: boolean = true): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
+        expect(element).withContext(`${elementName} should exist on the page`).toBeTruthy();
         if (element == null) {
             return;
         }
@@ -178,17 +175,15 @@ export class SimpleComponentTestUtils<T> {
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');
         if (element.attributes.class != null && element.attributes.class !== '') {
             const elementClasses: string[] = element.attributes.class.split(' ').sort();
-            expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
+            expect(elementClasses).withContext(`${elementName} should contain CSS class ${cssClass}`).toContain(cssClass);
         }
     }
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');
         if (element.attributes.class != null) {
             const elementClasses: string[] = element.attributes.class.split(' ').sort();
-            expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
+            expect(elementClasses).withContext(`${elementName} should not contain CSS class ${cssClass}`).not.toContain(cssClass);
         }
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
@@ -216,19 +211,18 @@ export class SimpleComponentTestUtils<T> {
     public expectElementToBeDisabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
+        expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();
     }
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist in order to fill its value').toBeTruthy();
+        expect(element).withContext(`${elementName} should exist in order to fill its value`).toBeTruthy();
         element.nativeElement.value = value;
         element.nativeElement.dispatchEvent(new Event('input'));
     }
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string> { // TODO extends SimpleComponentTestUtils<GameWrapper<P>> {
+export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string> extends SimpleComponentTestUtils<GameWrapper<P>> {
 
-    public component: GameWrapper<P>;
     private gameComponent: AbstractGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
@@ -488,115 +482,6 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
             this.onLegalUserMoveSpy.calls.reset();
         }
-    }
-
-    // TODO: from here, this is common with Simple
-    protected fixture: ComponentFixture<GameWrapper<P>>;
-    public prepareFixture(wrapperKind: Type<GameWrapper<P>>): void {
-        this.fixture = TestBed.createComponent(wrapperKind);
-        this.component = this.fixture.debugElement.componentInstance;
-    }
-    private gameMessageSpy: jasmine.Spy;
-    private infoMessageSpy: jasmine.Spy;
-    private criticalMessageSpy: jasmine.Spy;
-    private prepareMessageDisplayerSpies(): void {
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        if (jasmine.isSpy(messageDisplayer.gameMessage)) {
-            this.gameMessageSpy = messageDisplayer.gameMessage as jasmine.Spy;
-        } else {
-            this.gameMessageSpy = spyOn(messageDisplayer, 'gameMessage').and.returnValue();
-        }
-        if (jasmine.isSpy(messageDisplayer.criticalMessage)) {
-            this.criticalMessageSpy = messageDisplayer.criticalMessage as jasmine.Spy;
-        } else {
-            this.criticalMessageSpy = spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
-        }
-        if (jasmine.isSpy(messageDisplayer.infoMessage)) {
-            this.infoMessageSpy = messageDisplayer.infoMessage as jasmine.Spy;
-        } else {
-            this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.returnValue();
-        }
-    }
-    public async clickElement(elementName: string): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
-        if (element == null) {
-            return;
-        }
-        element.triggerEventHandler('click', null);
-        await this.whenStable();
-        this.detectChanges();
-    }
-    public expectElementNotToExist(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should not exist').toBeNull();
-    }
-    public expectElementToExist(elementName: string): DebugElement {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        return element;
-    }
-    public expectElementToHaveClass(elementName: string, cssClass: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        if (element.attributes.class == null) {
-            expect(false).withContext(elementName + ' should have class attribute').toBeTrue();
-        } else {
-            const classAttribute: string = element.attributes.class;
-            expect(classAttribute).withContext(elementName + ' should have a class attribute').toBeTruthy();
-            const elementClasses: string[] = Utils.getNonNullable(classAttribute).split(' ').sort();
-            expect(elementClasses).withContext(elementName + ' should contain ' + cssClass).toContain(cssClass);
-        }
-    }
-    public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        if (element.attributes.class == null) {
-            throw new Error(`${elementName} should have a class attribute`);
-        } else {
-            const elementClasses: string[] = element.attributes.class.split(' ').sort();
-            expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
-        }
-    }
-    public expectElementToHaveClasses(elementName: string, classes: string[]): void {
-        const classesSorted: string[] = [...classes].sort();
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
-        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
-        expect(elementClasses).toEqual(classesSorted);
-    }
-    public expectElementToBeEnabled(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
-    }
-    public expectElementToBeDisabled(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
-    }
-    public findElement(elementName: string): DebugElement {
-        return this.fixture.debugElement.query(By.css(elementName));
-    }
-    public expectGameMessageToHaveBeenDisplayed(message: string) {
-        expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
-        this.gameMessageSpy.calls.reset();
-    }
-    public expectCriticalMessageToHaveBeenDisplayed(message: string) {
-        expect(this.criticalMessageSpy).toHaveBeenCalledOnceWith(message);
-        this.criticalMessageSpy.calls.reset();
-    }
-    public expectInfoMessageToHaveBeenDisplayed(message: string) {
-        expect(this.infoMessageSpy).toHaveBeenCalledOnceWith(message);
-        this.infoMessageSpy.calls.reset();
-    }
-    public async whenStable(): Promise<void> {
-        return this.fixture.whenStable();
-    }
-    public detectChanges(): void {
-        this.fixture.detectChanges();
-    }
-    public destroy(): void {
-        return this.fixture.destroy();
     }
 }
 
