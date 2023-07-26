@@ -228,7 +228,7 @@ export class SimpleComponentTestUtils<T> {
 
 export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string> { // TODO extends SimpleComponentTestUtils<GameWrapper<P>> {
 
-    public wrapper: GameWrapper<P>;
+    public component: GameWrapper<P>;
     private gameComponent: AbstractGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
@@ -282,17 +282,17 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
 
     public bindGameComponent(): void {
-        expect(this.wrapper.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
-        this.gameComponent = this.wrapper.gameComponent;
+        expect(this.component.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
+        this.gameComponent = this.component.gameComponent;
     }
     public prepareSpies(): void {
         this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
         this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
-        this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
+        this.onLegalUserMoveSpy = spyOn(this.component, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
     }
     public expectToBeCreated(): void {
-        expect(this.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(this.getWrapper()).withContext('Wrapper should be created').toBeTruthy();
         expect(this.getGameComponent()).withContext('Component should be created').toBeTruthy();
     }
     public forceChangeDetection(): void {
@@ -318,6 +318,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             this.gameComponent.showLastMove(previousMove);
         }
         this.forceChangeDetection();
+    }
+    public getWrapper(): GameWrapper<P> {
+        return this.component;
     }
     public getGameComponent(): T {
         return (this.gameComponent as unknown) as T;
@@ -491,7 +494,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     protected fixture: ComponentFixture<GameWrapper<P>>;
     public prepareFixture(wrapperKind: Type<GameWrapper<P>>): void {
         this.fixture = TestBed.createComponent(wrapperKind);
-        this.wrapper = this.fixture.debugElement.componentInstance;
+        this.component = this.fixture.debugElement.componentInstance;
     }
     private gameMessageSpy: jasmine.Spy;
     private infoMessageSpy: jasmine.Spy;

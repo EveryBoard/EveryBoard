@@ -31,7 +31,7 @@ describe('GameComponent', () => {
         const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone', false);
         const component: AbstractGameComponent = testUtils.getGameComponent();
         expect(component).toBeDefined();
-        testUtils.wrapper.role = Player.ONE;
+        testUtils.getWrapper().role = Player.ONE;
         testUtils.detectChanges();
         tick(1);
 
@@ -154,7 +154,7 @@ describe('GameComponent', () => {
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
                 await ComponentTestUtils.forGame(gameInfo.urlName, false);
             const component: AbstractGameComponent = testUtils.getGameComponent();
-            testUtils.wrapper.role = PlayerOrNone.NONE;
+            testUtils.getWrapper().role = PlayerOrNone.NONE;
             testUtils.detectChanges();
             tick(1);
             expect(component).toBeDefined();

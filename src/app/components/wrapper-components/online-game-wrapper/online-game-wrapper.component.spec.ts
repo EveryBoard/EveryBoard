@@ -91,7 +91,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
 
             testUtils.prepareFixture(OnlineGameWrapperComponent);
-            wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
+            wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
         });
         it('Initialization should lead to child component PartCreation to call ConfigRoomService', fakeAsync(async() => {
             // Given a starting component for the creator
@@ -217,7 +217,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER); // Normally, the header does that
 
             testUtils.prepareFixture(OnlineGameWrapperComponent);
-            wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
+            wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
         });
         xit('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
             // Given a component loaded with non creator
@@ -242,7 +242,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
 
         testUtils.prepareFixture(OnlineGameWrapperComponent);
-        wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
+        wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         testUtils.detectChanges();
@@ -257,7 +257,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(TestBed.inject(GameService), 'subscribeToChanges');
 
         testUtils.prepareFixture(OnlineGameWrapperComponent);
-        wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
+        wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
 
         await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
         testUtils.detectChanges();

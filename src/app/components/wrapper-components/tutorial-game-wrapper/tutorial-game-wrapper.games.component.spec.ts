@@ -90,7 +90,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             it(game.urlName, fakeAsync(async() => {
                 const wrapper: GameWrapper<Comparable> =
                     (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
-                        .wrapper;
+                        .getWrapper();
                 expect(wrapper).toBeTruthy();
             }));
         }

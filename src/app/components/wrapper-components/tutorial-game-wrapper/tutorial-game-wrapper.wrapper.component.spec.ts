@@ -45,13 +45,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     beforeEach(fakeAsync(async() => {
         testUtils =
             await ComponentTestUtils.forGameWithWrapper<QuartoComponent, Comparable>('Quarto', TutorialGameWrapperComponent);
-        wrapper = testUtils.wrapper as TutorialGameWrapperComponent;
+        wrapper = testUtils.getWrapper() as TutorialGameWrapperComponent;
     }));
     describe('Common behavior', () => {
         // ///////////////////////// Before ///////////////////////////////////////
         it('should create', () => {
-            expect(testUtils.wrapper).toBeTruthy();
-            expect(testUtils.getGameComponent()).toBeTruthy();
+            testUtils.expectToBeCreated();
         });
         it('should show informations below/beside the board', fakeAsync(async() => {
             // Given a certain TutorialStep

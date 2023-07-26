@@ -68,7 +68,7 @@ describe('LocalGameWrapperComponent', () => {
         p4Tag = testUtils.findElement('app-p4');
         expect(p4Tag).withContext('app-p4 tag should be present after view init').toBeTruthy();
 
-        expect(testUtils.wrapper.gameComponent)
+        expect(testUtils.getWrapper().gameComponent)
             .withContext('gameComponent should be present once component view init').toBeTruthy();
     });
     it('connected user should be able to play', fakeAsync(async() => {
@@ -203,7 +203,7 @@ describe('LocalGameWrapperComponent', () => {
             // When selecting player zero as AI
             await choosingAIOrHuman(Player.ZERO, 'AI');
             const proposeAIToPlay: jasmine.Spy =
-                spyOn(testUtils.wrapper as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
+                spyOn(testUtils.getWrapper() as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
             await choosingAILevel(Player.ZERO);
             await testUtils.whenStable();
 
@@ -235,7 +235,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(rotation).toBe('rotate(0)');
         });
         it('should propose AI to play when restarting game', fakeAsync(async() => {
-            const wrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
+            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             wrapper.players[0] = MGPOptional.of('P4Minimax');
             wrapper.aiDepths[0] = '1';
 
@@ -260,7 +260,7 @@ describe('LocalGameWrapperComponent', () => {
             await testUtils.whenStable();
             const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneDepthSelect').nativeElement;
             const proposeAIToPlay: jasmine.Spy =
-                spyOn(testUtils.wrapper as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
+                spyOn(testUtils.getWrapper() as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
             selectDepth.value = selectDepth.options[1].value;
             selectDepth.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
@@ -289,7 +289,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(testUtils.getGameComponent().getTurn()).toBe(1);
 
             // eslint-disable-next-line dot-notation
-            tick(testUtils.wrapper['botTimeOut']);
+            tick(testUtils.getWrapper()['botTimeOut']);
             expect(testUtils.getGameComponent().getTurn()).toBe(2);
 
             // // When taking back
@@ -304,7 +304,7 @@ describe('LocalGameWrapperComponent', () => {
         it('Minimax proposing illegal move should log error and show it to the user', fakeAsync(async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board on which some illegal move are possible from the AI
-            const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
+            const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPOptional.empty());
             spyOn(testUtils.getGameComponent().node, 'findBestMove').and.returnValue(P4Move.ZERO);
 
@@ -320,7 +320,7 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.expectCriticalMessageToHaveBeenDisplayed('The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!');
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
-            const localGameWrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
+            const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(localGameWrapper, 'doAIMove').and.callThrough();
 
             // Given a game which is finished
@@ -343,7 +343,7 @@ describe('LocalGameWrapperComponent', () => {
         }));
         it('should reject human move if it tries to play (without click) when it is not its turn', fakeAsync(async() => {
             // Given a game against an AI
-            const wrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
+            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             wrapper.players[0] = MGPOptional.of('P4Minimax');
             wrapper.aiDepths[0] = '1';
 
@@ -395,7 +395,7 @@ describe('LocalGameWrapperComponent', () => {
 
             // When selecting AI, and AI then doing winning move
             await selectAIPlayer(Player.ZERO);
-            tick((testUtils.wrapper as LocalGameWrapperComponent).botTimeOut);
+            tick((testUtils.getWrapper() as LocalGameWrapperComponent).botTimeOut);
 
             // Then 'You lost' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
@@ -427,11 +427,11 @@ describe('LocalGameWrapperComponent', () => {
             const state: P4State = new P4State(board, 40);
             testUtils.setupState(state);
             await selectAIPlayer(Player.ZERO);
-            tick((testUtils.wrapper as LocalGameWrapperComponent).botTimeOut);
+            tick((testUtils.getWrapper() as LocalGameWrapperComponent).botTimeOut);
 
             // When AI zero does the winning move
             await selectAIPlayer(Player.ONE);
-            tick((testUtils.wrapper as LocalGameWrapperComponent).botTimeOut);
+            tick((testUtils.getWrapper() as LocalGameWrapperComponent).botTimeOut);
 
             // Then 'AI (Player 0) won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
@@ -446,7 +446,7 @@ describe('LocalGameWrapperComponent', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.wrapper.onCancelMove();
+            testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
             expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.FOUR);
@@ -457,7 +457,7 @@ describe('LocalGameWrapperComponent', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.wrapper.onCancelMove();
+            testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();
@@ -465,7 +465,7 @@ describe('LocalGameWrapperComponent', () => {
     });
     it('should display AI metrics when parameter is set to true', fakeAsync(async() => {
         // Given a component where we want to show the AI metrics in the middle of a part
-        (testUtils.wrapper as LocalGameWrapperComponent).displayAIMetrics = true;
+        (testUtils.getWrapper() as LocalGameWrapperComponent).displayAIMetrics = true;
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
         // When displaying it

@@ -263,7 +263,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         partDAO = TestBed.inject(PartDAO);
         gameEventService = TestBed.inject(GameEventService);
         gameService = TestBed.inject(GameService);
-        wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
+        wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
     }
     async function prepareBoard(moves: QuartoMove[], player: Player = Player.ZERO): Promise<void> {
         let authUser: AuthUser;
@@ -319,7 +319,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveNewMoves(turn, [encodedMoves[i]], false);
             turn += 1;
         }
-        wrapper = testUtils.wrapper as OnlineGameWrapperComponent;
+        wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
         testUtils.detectChanges();
         tick(1);
     }
@@ -399,7 +399,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
 
             // Then the new move should be done
-            expect(testUtils.wrapper.gameComponent.getState().turn).toBe(2);
+            expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(2);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should allow user to arrive late on the game (not on their turn)', fakeAsync(async() => {
@@ -410,7 +410,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
 
             // Then the new move should be done
-            expect(testUtils.wrapper.gameComponent.getState().turn).toBe(3);
+            expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(3);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
@@ -1283,7 +1283,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then game should end by timeout only after new time has run out
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
-                expect(testUtils.wrapper.endGame).withContext('game should not be finished yet').toBeFalse();
+                expect(testUtils.getWrapper().endGame).withContext('game should not be finished yet').toBeFalse();
                 tick(30 * 1000);
                 expectGameToBeOver();
             }));
@@ -1679,7 +1679,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.wrapper.onCancelMove();
+            testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
             expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
@@ -1691,7 +1691,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.wrapper.onCancelMove();
+            testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();
