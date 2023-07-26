@@ -35,7 +35,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 describe('PartCreationComponent', () => {
 
@@ -163,7 +162,7 @@ describe('PartCreationComponent', () => {
 
                 // Then observe is not called and a message is displayed
                 expect(configRoomService.subscribeToChanges).not.toHaveBeenCalled();
-                testUtils.expectCriticalMessageToHaveBeenDisplayed(ConfigRoomService.GAME_DOES_NOT_EXIST())
+                testUtils.expectCriticalMessageToHaveBeenDisplayed(ConfigRoomService.GAME_DOES_NOT_EXIST());
             }));
         });
         describe('Candidate arrival', () => {
@@ -277,7 +276,7 @@ describe('PartCreationComponent', () => {
                 // Then the candidate should have disappeared and the configRoom have been updated and no toast appeared
                 expectElementNotToExist('#candidate_firstCandidate');
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
-                testUtils.expectInfoMessageNotToHaveBeenDisplayed()
+                testUtils.expectInfoMessageNotToHaveBeenDisplayed();
                 expect(component.messageDisplayer.infoMessage).not.toHaveBeenCalled();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -663,7 +662,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
                 // and waiting one TOKEN_INTERVAL
                 tick(PartCreationComponent.TOKEN_INTERVAL);
-                testUtils.expectInfoMessageToHaveBeenDisplayed('The game has been canceled!')
+                testUtils.expectInfoMessageToHaveBeenDisplayed('The game has been canceled!');
 
                 // Then the part and all its related data should be removed
                 expect(gameService.deletePart).toHaveBeenCalledOnceWith('configRoomId');
@@ -684,7 +683,7 @@ describe('PartCreationComponent', () => {
                 // When the configRoom is deleted (because the game has been cancelled)
                 await configRoomDAO.delete('configRoomId');
                 testUtils.detectChanges();
-                testUtils.expectInfoMessageToHaveBeenDisplayed('The game has been canceled!')
+                testUtils.expectInfoMessageToHaveBeenDisplayed('The game has been canceled!');
 
                 // Then the user is rerouted to the server
                 expectValidRouting(router, ['/lobby'], LobbyComponent);

@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { GameActionFailure } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';

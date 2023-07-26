@@ -20,8 +20,6 @@ export class MessageDisplayer {
         this.toast(message, cssClass, duration);
     }
     private toast(message: string, cssClass: ToastType, duration: number): void {
-        console.log({message, cssClass, duration})
-        console.log({message, cssClass, duration})
         toast({
             message,
             duration,
@@ -38,7 +36,7 @@ export class MessageDisplayer {
     private getDuration(message: string): number {
         const words: number = message.split(' ').length;
         const belowAverageReadingSpeed: number = 150; // Average reading speed is around 200 words per minute
-        const readingTime: number = words *  60 * 1000/ belowAverageReadingSpeed;
+        const readingTime: number = words * 60 * 1000/ belowAverageReadingSpeed;
         return Math.max(readingTime, 3000);
     }
 }

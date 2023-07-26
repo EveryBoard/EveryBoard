@@ -131,23 +131,27 @@ export class SimpleComponentTestUtils<T> {
             this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.returnValue();
         }
     }
-    public expectGameMessageToHaveBeenDisplayed(message: string) {
+    public expectGameMessageToHaveBeenDisplayed(message: string): void {
         expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
         this.gameMessageSpy.calls.reset();
     }
-    public expectCriticalMessageToHaveBeenDisplayed(message: string) {
+    public expectCriticalMessageToHaveBeenDisplayed(message: string): void {
         expect(this.criticalMessageSpy).toHaveBeenCalledOnceWith(message);
         this.criticalMessageSpy.calls.reset();
     }
-    public expectInfoMessageToHaveBeenDisplayed(message: string) {
+    public expectInfoMessageToHaveBeenDisplayed(message: string): void {
         expect(this.infoMessageSpy).toHaveBeenCalledOnceWith(message);
         this.infoMessageSpy.calls.reset();
     }
-    public expectInfoMessageNotToHaveBeenDisplayed() {
+    public expectInfoMessageNotToHaveBeenDisplayed(): void {
         expect(this.infoMessageSpy).not.toHaveBeenCalled();
     }
 
-    public async clickElement(elementName: string, awaitStability: boolean = true, waitOneMs: boolean = false): Promise<void> {
+    public async clickElement(elementName: string, awaitStability:
+                              boolean = true,
+                              waitOneMs: boolean = false)
+    : Promise<void>
+    {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist on the page`).toBeTruthy();
         if (element == null) {
@@ -224,7 +228,9 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string> extends SimpleComponentTestUtils<GameWrapper<P>> {
+export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string>
+    extends SimpleComponentTestUtils<GameWrapper<P>>
+{
 
     private gameComponent: AbstractGameComponent;
 
@@ -471,7 +477,10 @@ export class TestUtils {
             ],
         }).compileComponents();
     }
-    public static async configureTestingModule(componentType: object, activatedRouteStub?: ActivatedRouteStub): Promise<void> {
+    public static async configureTestingModule(componentType: object,
+                                               activatedRouteStub?: ActivatedRouteStub)
+    : Promise<void>
+    {
         await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule.withRoutes([

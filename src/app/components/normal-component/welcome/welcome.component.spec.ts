@@ -48,7 +48,6 @@ describe('WelcomeComponent', () => {
         spyOn(router, 'navigate').and.callThrough();
 
         // When clicking on the online-button of one game
-        const component: WelcomeComponent = testUtils.getComponent();
         await testUtils.clickElement('#playOnline_Awale');
 
         // Then the component should not have changed page and should toast the reason
@@ -94,7 +93,6 @@ describe('WelcomeComponent', () => {
         spyOn(router, 'navigate').and.callThrough();
 
         // When clicking on the online-button of one game
-        const component: WelcomeComponent = testUtils.getComponent();
         await testUtils.clickElement('#createOnlineGame');
 
         // Then the component should not have changed page and should toast the reason

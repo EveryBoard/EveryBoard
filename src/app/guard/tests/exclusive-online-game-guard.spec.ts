@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { ExclusiveOnlineGameGuard } from '../exclusive-online-game-guard';
