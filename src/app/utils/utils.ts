@@ -77,8 +77,10 @@ export class Debug {
     public static log<T>(constructor: T): void {
         const className: string = constructor['name'];
         for (const propertyName of Object.getOwnPropertyNames(constructor['prototype'])) {
-            const descriptor: PropertyDescriptor =
-                Utils.getNonNullable(Object.getOwnPropertyDescriptor(constructor['prototype'], propertyName));
+            const nullableDescriptor: PropertyDescriptor | undefined = Object.getOwnPropertyDescriptor(
+                constructor['prototype'],
+                propertyName);
+            const descriptor: PropertyDescriptor = Utils.getNonNullable(nullableDescriptor);
             const isMethod: boolean = descriptor.value instanceof Function;
             // In case the following assert ever gets violated, we can simply ignore the cases that are not method
             Utils.assert(isMethod, 'cannot add logging to properties that are not methods!');

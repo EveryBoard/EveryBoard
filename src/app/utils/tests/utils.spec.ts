@@ -122,8 +122,8 @@ describe('Debug', () => {
             expect(console.log).toHaveBeenCalledOnceWith('Class.method: message');
         });
     });
-    describe('log', () => {
-        it('should log when verbose is enabled', () => {
+    describe('log annotation', () => {
+        it('should log entry and exit when verbose is enabled', () => {
             // Given a verbose-enabled method
             spyOn(console, 'log').and.returnValue();
             Debug.enableLog([true, true], 'MyClass', 'someMethod');
@@ -133,6 +133,30 @@ describe('Debug', () => {
 
             // Then it should have logged on entry and exit
             expect(console.log).toHaveBeenCalledWith('> MyClass.someMethod(42)');
+            expect(console.log).toHaveBeenCalledWith('< MyClass.someMethod -> "boo"');
+        });
+        it('should log entry only when verbose is enabled for entry only', () => {
+            // Given a verbose-enabled method
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([true, false], 'MyClass', 'someMethod');
+            // When calling the method
+            const instance: MyClass = new MyClass();
+            instance.someMethod(42);
+
+            // Then it should have logged on entry only
+            expect(console.log).toHaveBeenCalledWith('> MyClass.someMethod(42)');
+            expect(console.log).not.toHaveBeenCalledWith('< MyClass.someMethod -> "boo"');
+        });
+        it('should log exit only when verbose is enabled for exit only', () => {
+            // Given a verbose-enabled method
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([false, true], 'MyClass', 'someMethod');
+            // When calling the method
+            const instance: MyClass = new MyClass();
+            instance.someMethod(42);
+
+            // Then it should have logged on exit only
+            expect(console.log).not.toHaveBeenCalledWith('> MyClass.someMethod(42)');
             expect(console.log).toHaveBeenCalledWith('< MyClass.someMethod -> "boo"');
         });
         it('should not log when verbose is disabled', () => {

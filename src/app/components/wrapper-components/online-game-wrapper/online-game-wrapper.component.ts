@@ -160,7 +160,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             (async(part: MGPOptional<FocusedPart>) => {
                 await this.onObservedPartUpdate(part);
             }));
-
     }
     /**
       * Here you can only be an observer or a player
