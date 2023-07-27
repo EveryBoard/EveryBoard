@@ -66,11 +66,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
     public async updateBoard(): Promise<void> {
         this.cancelMoveAttempt();
-        this.hidePreviousMove();
+        this.hideLastMove();
         this.hexaBoard = this.getState().getCopiedBoard();
         this.scores = MGPOptional.of(this.getState().getScores());
     }
-    private hidePreviousMove(): void {
+    public override hideLastMove(): void {
         this.moveds = [];
     }
     public override cancelMoveAttempt(): void {

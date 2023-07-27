@@ -63,7 +63,8 @@ describe('PenteRules', () => {
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+        const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should capture pieces when two opponent pieces are sandwiched', () => {
         // Given a state almost at a sandwich point

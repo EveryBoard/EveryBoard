@@ -254,12 +254,12 @@ export class YinshComponent
         for (const coord of capture.capturedSpaces) {
             this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['captured-fill'];
             if (alsoShowPiece) {
-                this.markRemovedMarker(coord, this.getState().getCurrentPlayer().getOpponent());
+                this.markRemovedMarker(coord, this.getState().getCurrentOpponent());
             }
         }
         this.viewInfo.spaceInfo[capture.ringTaken.get().y][capture.ringTaken.get().x].spaceClasses = ['captured-fill'];
         if (alsoShowPiece) {
-            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentPlayer().getOpponent());
+            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentOpponent());
         }
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {

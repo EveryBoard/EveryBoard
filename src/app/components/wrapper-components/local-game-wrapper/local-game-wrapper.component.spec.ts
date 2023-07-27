@@ -116,8 +116,26 @@ describe('LocalGameWrapperComponent', () => {
     }));
     describe('restarting games', () => {
         it('should allow to restart game during the play', fakeAsync(async() => {
+            // Given the board at any moment
+            const advancedState: P4State = new P4State([
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _],
+                [O, _, _, _, _, _, _],
+            ], 2);
+            await testUtils.setupState(advancedState);
+            let state: P4State = testUtils.getComponent().getState();
+            expect(state.turn).toBe(2);
+
+            // When clicking on restart button
             testUtils.expectElementToExist('#restartButton');
             await testUtils.expectInterfaceClickSuccess('#restartButton');
+
+            // Then it should go back to first turn
+            state = testUtils.getComponent().getState();
+            expect(state.turn).toBe(0);
         }));
         it('should allow to restart game at the end', fakeAsync(async() => {
             const board: PlayerOrNone[][] = [
@@ -140,6 +158,28 @@ describe('LocalGameWrapperComponent', () => {
             expect(testUtils.getComponent().getTurn()).toBe(0);
             testUtils.expectElementNotToExist('#draw');
             tick(1000);
+        }));
+        it('should call hide last move', fakeAsync(async() => {
+            // Given the board at any moment
+            const advancedState: P4State = new P4State([
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _],
+                [O, _, _, _, _, _, _],
+            ], 2);
+            await testUtils.setupState(advancedState);
+            const state: P4State = testUtils.getComponent().getState();
+            expect(state.turn).toBe(2);
+
+            // When restarting the game
+            spyOn(testUtils.getComponent(), 'hideLastMove').and.callThrough();
+            testUtils.expectElementToExist('#restartButton');
+            await testUtils.expectInterfaceClickSuccess('#restartButton');
+
+            // Then it should go back to first turn
+            expect(testUtils.getComponent().hideLastMove).toHaveBeenCalledOnceWith();
         }));
     });
     async function selectAIPlayer(player: Player): Promise<void> {
@@ -248,6 +288,7 @@ describe('LocalGameWrapperComponent', () => {
             selectDepth.value = selectDepth.options[1].value;
             selectDepth.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
+            tick(1000); // botTimeout
             await testUtils.fixture.whenStable();
 
             // Then it should have proposed AI to play

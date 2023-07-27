@@ -1412,7 +1412,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementNotToExist('#proposeRematchButton');
 
             // When it is finished
-            await testUtils.expectInterfaceClickSuccess('#resignButton', true);
+            await testUtils.expectInterfaceClickSuccess('#resignButton', 1);
 
             // Then it should allow to propose rematch
             testUtils.expectElementToExist('#proposeRematchButton');

@@ -182,7 +182,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             };
         }
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.createAdaptedBoardFrom(this.getState());
         this.rotateAdaptedBoardIfNeeded();
     }

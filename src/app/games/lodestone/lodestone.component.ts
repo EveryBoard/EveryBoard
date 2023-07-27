@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -71,7 +71,6 @@ interface SquareInfo {
 })
 export class LodestoneComponent
     extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, LodestoneInfos>
-    implements OnInit
 {
     private static readonly PRESSURE_PLATE_EXTRA_SHIFT: number = 0.2;
 
@@ -142,9 +141,6 @@ export class LodestoneComponent
         this.TRIANGLE_IN = `${radius30},0 ${radius80},${radius30} ${radius80},-${radius30}`;
         this.displayedState = this.getState();
         this.scores = MGPOptional.of([0, 0]);
-    }
-    public ngOnInit(): void {
-        void this.updateBoard(); // TODO: que faire
     }
     public async selectCoord(coord: Coord): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#square_' + coord.x + '_' + coord.y);
@@ -243,7 +239,7 @@ export class LodestoneComponent
         this.capturesToPlace--;
         this.captures[position]++;
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
-        const opponent: Player = this.getCurrentPlayer().getOpponent();
+        const opponent: Player = this.getCurrentOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         const lodestones: LodestonePositions = state.lodestones.getCopy();
@@ -270,7 +266,7 @@ export class LodestoneComponent
         this.captures[position]--;
 
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
-        const opponent: Player = this.getCurrentPlayer().getOpponent();
+        const opponent: Player = this.getCurrentOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         const lodestones: LodestonePositions = state.lodestones.getCopy();
@@ -387,7 +383,7 @@ export class LodestoneComponent
         }
     }
     private showCapturesToPlace(): void {
-        const opponent: Player = this.getCurrentPlayer().getOpponent();
+        const opponent: Player = this.getCurrentOpponent();
         this.viewInfo.capturesToPlace = [];
         for (let i: number = 0; i < this.capturesToPlace; i++) {
             this.viewInfo.capturesToPlace.push({

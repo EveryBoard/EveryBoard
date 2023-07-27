@@ -3,7 +3,7 @@ import { KalahDummyMinimax } from '../KalahDummyMinimax';
 import { KalahMove } from '../KalahMove';
 import { KalahNode } from '../KalahRules';
 import { MancalaState } from '../../commons/MancalaState';
-import { MancalaMove } from '../../commons/MancalaMove';
+import { MancalaDistribution } from '../../commons/MancalaMove';
 
 describe('KalahDummyMinimax', () => {
 
@@ -48,8 +48,14 @@ describe('KalahDummyMinimax', () => {
 
         // When choosing the best choice
         const expectedBestMove: KalahMove =
-            new KalahMove(MancalaMove.ZERO,
-                          [MancalaMove.ONE, MancalaMove.ZERO, MancalaMove.TWO, MancalaMove.ZERO, MancalaMove.ONE]);
+            KalahMove.of(MancalaDistribution.ZERO,
+                         [
+                             MancalaDistribution.ONE,
+                             MancalaDistribution.ZERO,
+                             MancalaDistribution.TWO,
+                             MancalaDistribution.ZERO,
+                             MancalaDistribution.ONE,
+                         ]);
         const best: KalahMove = node.findBestMove(1, minimax);
 
         // Then the minimax should take it

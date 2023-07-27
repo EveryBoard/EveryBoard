@@ -98,7 +98,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.hideLastMove();
         this.showPossibleDrops();
     }
-    public hideLastMove(): void {
+    public override hideLastMove(): void {
         this.movedSquare = [];
         this.droppedPiece = MGPOptional.empty();
         this.leftPiece = MGPOptional.empty();

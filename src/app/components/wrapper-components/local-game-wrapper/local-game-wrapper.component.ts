@@ -53,7 +53,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
-        setTimeout(async() => {
+        window.setTimeout(async() => {
             const createdSuccessfully: boolean = await this.afterViewInit();
             if (createdSuccessfully) {
                 await this.restartGame();
@@ -74,14 +74,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onLegalUserMove');
 
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
-        await this.updateBoard(true, 'LGWC.onLegalUserMove');
-        console.log('votre move est terminé, je lance le robot ! at', new Date().getTime() % 10000)
+        await this.updateBoard(false);
         this.proposeAIToPlay();
+        this.cdr.detectChanges();
     }
-    public async updateBoard(triggerAnimation: boolean=false, caller: string): Promise<void> {
+    public async updateBoard(triggerAnimation: boolean): Promise<void> {
         await this.updateBoardAndShowLastMove(triggerAnimation);
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node);
-        console.log('gameStatus:', gameStatus)
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner.isPlayer()) {
@@ -141,7 +140,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const nextNode: MGPOptional<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
         if (nextNode.isPresent()) {
             this.gameComponent.node = nextNode.get();
-            await this.updateBoard(true, 'LGWC.doAIMove');
+            await this.updateBoard(true);
             this.cdr.detectChanges();
             this.proposeAIToPlay();
             return MGPValidation.SUCCESS;
@@ -158,14 +157,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (this.isAITurn()) {
             this.gameComponent.node = this.gameComponent.node.mother.get();
         }
-        await this.updateBoardAndShowLastMove();
+        await this.updateBoardAndShowLastMove(false);
     }
     private isAITurn(): boolean {
         return this.getPlayingAI().isPresent();
     }
     public async restartGame(): Promise<void> {
         this.gameComponent.node = this.gameComponent.rules.getInitialNode();
-        await this.gameComponent.updateBoard(false, 'LGWC.restartGame');
+        await this.updateBoardAndShowLastMove(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
         this.proposeAIToPlay();

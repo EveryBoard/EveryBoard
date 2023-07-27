@@ -621,7 +621,7 @@ xdescribe('PartDAO security', () => {
             const partId: string = await partDAO.create(part);
 
             // Wait 10ms to ensure the player has timed out
-            await new Promise((f: (value: unknown) => void) => setTimeout(f, 10));
+            await new Promise((f: (value: unknown) => void) => window.setTimeout(f, 10));
 
             // When setting the part as result as timed out
             const result: Promise<void> = partDAO.update(partId, {

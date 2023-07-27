@@ -1,6 +1,6 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MancalaState } from '../commons/MancalaState';
-import { MancalaMove } from '../commons/MancalaMove';
+import { AwaleMove } from './AwaleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MancalaFailure } from './../commons/MancalaFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -9,9 +9,9 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../commons/MancalaRules';
 import { Utils } from 'src/app/utils/utils';
 
-export class AwaleNode extends MGPNode<AwaleRules, MancalaMove, MancalaState> {}
+export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, MancalaState> {}
 
-export class AwaleRules extends MancalaRules<MancalaMove> {
+export class AwaleRules extends MancalaRules<AwaleMove> {
 
     public static VERBOSE: boolean = false;
 
@@ -29,31 +29,15 @@ export class AwaleRules extends MancalaRules<MancalaMove> {
             mustFeed: true,
         });
     }
-    public distributeMove(move: MancalaMove, state: MancalaState): MancalaDistributionResult {
+    public distributeMove(move: AwaleMove, state: MancalaState): MancalaDistributionResult {
         const playerY: number = state.getCurrentOpponent().value;
         return this.distributeHouse(move.x, playerY, state);
     }
-    public applyCapture(distributionResult: MancalaDistributionResult)
-    : MancalaCaptureResult
-    {
-        const postDistributionState: MancalaState = distributionResult.resultingState;
-        // So that Player ZERO plays on the row 1
-        const playerY: number = postDistributionState.getCurrentOpponent().value;
+    public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {
         const filledHouses: Coord[] = distributionResult.filledHouses;
         const landingCoord: Coord = filledHouses[filledHouses.length - 1];
-        const landingCamp: number = landingCoord.y;
         const resultingState: MancalaState = distributionResult.resultingState;
-        if (landingCamp === playerY) {
-            // we finish sowing on our own side, nothing else to do
-            return {
-                capturedSum: 0,
-                captureMap: [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]],
-                resultingState: distributionResult.resultingState,
-            };
-        } else {
-            // we finish sowing on the opponent's side, we therefore check the captures
-            return this.captureIfLegal(landingCoord.x, landingCoord.y, resultingState);
-        }
+        return this.captureIfLegal(landingCoord.x, landingCoord.y, resultingState);
     }
     /**
      * Modifies the move to addPart the capture.
@@ -61,7 +45,7 @@ export class AwaleRules extends MancalaRules<MancalaMove> {
      * Returns -1 if it is not legal, if so, the board should not be affected
      * Returns the number captured otherwise
      */
-    public isLegal(move: MancalaMove, state: MancalaState): MGPValidation {
+    public isLegal(move: AwaleMove, state: MancalaState): MGPValidation {
         const opponent: Player = state.getCurrentOpponent();
         const playerY: number = opponent.value; // So player 0 is in row 1
 
@@ -118,9 +102,8 @@ export class AwaleRules extends MancalaRules<MancalaMove> {
         const captured: [number, number] = state.getCapturedCopy();
         captured[state.getCurrentPlayer().value] += capturedSum;
         return {
-            capturedSum, // TODO: kill this perhaps
+            capturedSum,
             captureMap,
-            // TODO: update capture with captureSum ?
             resultingState: new MancalaState(resultingBoard, state.turn, captured),
         };
     }

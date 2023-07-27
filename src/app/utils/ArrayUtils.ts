@@ -112,11 +112,12 @@ export class ArrayUtils {
     }
 }
 
-interface Cell<T> { // TODO: reuse this instead of "CoordAndContent"
+export type Cell<T> = {
     x: number,
     y: number,
     content: T,
-}
+};
+
 
 export class Table2DWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
     // This cannot be represented by an array as it may have negative indices

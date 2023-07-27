@@ -164,7 +164,7 @@ export class ConspirateursComponent
     public override async cancelMoveAttempt(): Promise<void> {
         this.jumpInConstruction = MGPOptional.empty();
         this.selected = MGPOptional.empty();
-        await this.updateBoard(); // TODO TODOTODO: better make this one async !
+        await this.updateBoard();
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);

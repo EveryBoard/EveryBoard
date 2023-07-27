@@ -49,7 +49,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.state = this.getState();
         this.hexaBoard = this.getState().board;
     }
-    public hideLastMove(): void {
+    public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
     public async updateBoard(): Promise<void> {

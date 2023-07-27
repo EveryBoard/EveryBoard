@@ -3,7 +3,7 @@ import { KalahMove } from './KalahMove';
 import { MancalaState } from './../commons/MancalaState';
 import { KalahNode, KalahRules } from './KalahRules';
 import { MancalaDistributionResult } from '../commons/MancalaRules';
-import { MancalaMove } from '../commons/MancalaMove';
+import { MancalaDistribution } from '../commons/MancalaMove';
 
 export class KalahDummyMinimax extends PlayerMetricsMinimax<KalahMove,
                                                             MancalaState,
@@ -22,7 +22,7 @@ export class KalahDummyMinimax extends PlayerMetricsMinimax<KalahMove,
         for (let x: number = 0; x < 6; x++) {
             if (node.gameState.getPieceAtXY(x, playerY) > 0) {
                 const state: MancalaState = node.gameState;
-                const move: KalahMove = new KalahMove(MancalaMove.from(x));
+                const move: KalahMove = KalahMove.of(MancalaDistribution.of(x));
                 moves.push(...this.getChildMoves(state, x, playerY, move));
             }
         }
@@ -36,7 +36,7 @@ export class KalahDummyMinimax extends PlayerMetricsMinimax<KalahMove,
         if (distributionResult.endUpInKalah && playerHasPieces) {
             for (let x: number = 0; x < 6; x++) {
                 if (state.getPieceAtXY(x, y) > 0) {
-                    const move: KalahMove = currentMove.add(MancalaMove.from(x));
+                    const move: KalahMove = currentMove.add(MancalaDistribution.of(x));
                     moves.push(...this.getChildMoves(state, x, y, move));
                 }
             }
