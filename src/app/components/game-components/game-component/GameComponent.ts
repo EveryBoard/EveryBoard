@@ -110,8 +110,6 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         await this.cancelMoveOnWrapper(reason);
-        // TODO: UNIT TEST
-        await this.updateBoard(false, 'cancelMove')
         if (this.node.move.isPresent()) {
             await this.showLastMove(this.node.move.get());
         }
@@ -125,7 +123,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public cancelMoveAttempt(): void {
         // Override if need be
     }
-    public abstract updateBoard(triggerAnimation: boolean, caller: string): Promise<void>;
+    public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {
         const gameName: string = this.constructor.name;
@@ -138,6 +136,9 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public getCurrentPlayer(): Player {
         return this.node.gameState.getCurrentPlayer();
     }
+    public getCurrentOpponent(): Player {
+        return this.node.gameState.getCurrentOpponent();
+    }
     public getState(): S {
         return this.node.gameState;
     }
@@ -145,6 +146,10 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
         return this.node.mother.get().gameState;
     }
     public async showLastMove(move: M): Promise<void> {
+        // Not needed by default
+        return;
+    }
+    public hideLastMove(): void {
         // Not needed by default
         return;
     }

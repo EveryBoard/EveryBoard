@@ -1,20 +1,38 @@
 import { MancalaState } from './MancalaState';
-import { Move } from 'src/app/jscaip/Move';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MancalaMove } from './MancalaMove';
-import { Player } from 'src/app/jscaip/Player';
-import { MancalaDistributionResult, MancalaRules } from './MancalaRules';
+import { MancalaDistribution, MancalaMove } from './MancalaMove';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from './MancalaRules';
 import { ChangeDetectorRef } from '@angular/core';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MancalaFailure } from './MancalaFailure';
+import { Utils } from 'src/app/utils/utils';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
-export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Move>
+export abstract class MancalaComponent<R extends MancalaRules<M>, M extends MancalaMove>
     extends RectangularGameComponent<R, M, MancalaState, number>
 {
-
     public MGPOptional: typeof MGPOptional = MGPOptional;
+
+    public lasts: Coord[] = [];
+
+    public currentMove: MGPOptional<M> = MGPOptional.empty();
+
+    public readonly multipleDistribution: boolean = false;
+
+    public captured: Table<number> = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+    ];
+    public droppedInKalah: [number, number] = [0, 0];
+
+    protected filledHouses: Coord[] = [];
+
+    public constructedState: MGPOptional<MancalaState> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer,
                        public readonly cdr: ChangeDetectorRef)
@@ -23,32 +41,86 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Move
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
     }
-    public lasts: Coord[] = [];
-
-    public captured: Table<number> = [
-        [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0],
-    ];
-    protected filledHouses: Coord[] = [];
-
-    public constructedState: MGPOptional<MancalaState> = MGPOptional.empty();
-
-    protected async showSimpleDistributionFor(distribution: MancalaMove, state: MancalaState)
-    : Promise<MancalaDistributionResult>
-    {
+    public override async showLastMove(move: M): Promise<void> {
+        const previousState: MancalaState = this.getPreviousState();
+        const distributionResult: MancalaDistributionResult =
+            this.rules.distributeMove(move, previousState);
+        this.filledHouses = distributionResult.filledHouses;
+        let captureResult: MancalaCaptureResult = this.rules.applyCapture(distributionResult);
+        this.captured = captureResult.captureMap;
+        const playerY: number = previousState.getCurrentOpponent().value;
+        this.lasts = move.subMoves.map((value: MancalaDistribution) => new Coord(value.x, playerY));
+        const mansoonedPlayer: PlayerOrNone = this.rules.mustMansoon(captureResult.resultingState);
+        if (mansoonedPlayer !== PlayerOrNone.NONE) {
+            captureResult = this.rules.mansoon(mansoonedPlayer as Player, captureResult);
+            this.captured = captureResult.captureMap;
+        }
+        this.changeVisibleState(this.getState());
+    }
+    public async updateBoard(triggerAnimation: boolean = false): Promise<void> {
+        const state: MancalaState = this.getState();
+        if (triggerAnimation) {
+            this.changeVisibleState(this.node.mother.get().gameState);
+            for (const subMove of this.node.move.get()) {
+                await this.animateDistribution(subMove);
+            }
+        }
+        this.scores = MGPOptional.of(state.getCapturedCopy());
+        this.changeVisibleState(state);
+    }
+    private async animateDistribution(distribution: MancalaDistribution): Promise<void> {
+        await this.showSimpleDistribution(distribution);
+        return new Promise((resolve: (result: void) => void) => {
+            window.setTimeout(resolve, 200);
+        });
+    }
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
+        // TODO: clicking while animation ongoing should resume it
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+        if (y === this.getState().getCurrentPlayer().value) {
+            return this.cancelMove(MancalaFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
+        }
+        if (this.multipleDistribution) {
+            if (this.currentMove.isAbsent()) {
+                this.hideLastMove();
+                this.currentMove = MGPOptional.of(this.generateMove(x));
+            } else {
+                const newMove: MGPOptional<M> = this.addToMove(x);
+                Utils.assert(newMove.isPresent(), 'TODO test failure: addToMove should provide a move');
+                this.currentMove = newMove;
+            }
+        } else {
+            this.currentMove = MGPOptional.of(this.generateMove(x));
+        }
+        if (this.getState().getPieceAtXY(x, y) === 0) {
+            return this.cancelMove(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
+        } else {
+            const distributionResult: MancalaDistributionResult =
+                await this.showSimpleDistribution(MancalaDistribution.of(x));
+            if (distributionResult.endUpInKalah) {
+                return MGPValidation.SUCCESS;
+            } else {
+                return this.chooseMove(this.currentMove.get(), this.getState());
+            }
+        }
+    }
+    private async showSimpleDistribution(distribution: MancalaDistribution): Promise<MancalaDistributionResult> {
+        const state: MancalaState = this.constructedState.get();
         const lastPlayer: Player = state.getCurrentOpponent();
         const playerY: number = lastPlayer.value;
+        await this.showSeedBySeed(distribution.x, playerY, state);
+        const coord: Coord = new Coord(distribution.x, playerY);
+        this.lasts = [coord]; // TODO: push, don't set ?
         const distributionResult: MancalaDistributionResult =
             this.rules.distributeHouse(distribution.x, playerY, state);
-        await this.showSeedBySeed(distribution.x, playerY, state);
-
-        this.lasts = [new Coord(distribution.x, playerY)];
-        this.filledHouses = distributionResult.filledHouses;
         return distributionResult;
     }
     private async showSeedBySeed(x :number, y: number, state: MancalaState): Promise<void> {
         let coord: Coord = new Coord(x, y);
-        this.lasts = [coord];
+        this.lasts.push(coord);
         const resultingBoard: number[][] = state.getCopiedBoard();
         const player: Player = state.getCurrentPlayer();
         // iy and ix are the initial spaces
@@ -62,7 +134,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Move
         // Changing immediately the chosen house
         this.changeVisibleState(new MancalaState(resultingBoard, state.turn, state.captured));
         await new Promise((resolve: (result: void) => void) => {
-            setTimeout(resolve, 200);
+            window.setTimeout(resolve, 200);
         });
         while (inHand > 0) {
             previousDropWasKalah = endUpInKalah;
@@ -73,6 +145,8 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Move
 
             if (endUpInKalah) {
                 inHand--;
+                this.filledHouses.push(MancalaRules.FAKE_KALAH_COORD.get(player).get());
+                this.droppedInKalah[player.value] += 1;
             } else {
                 coord = nextCoord.get();
                 if (i.equals(coord) === false) {
@@ -84,22 +158,28 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Move
             }
             this.changeVisibleState(new MancalaState(resultingBoard, state.turn, state.captured));
             await new Promise((resolve: (result: void) => void) => {
-                setTimeout(resolve, 200);
+                window.setTimeout(resolve, 200);
             });
         }
     }
-    protected hidePreviousMove(): void {
+    public override hideLastMove(): void {
         this.captured = [
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
         ];
+        this.droppedInKalah = [0, 0];
         this.filledHouses = [];
         this.lasts = [];
+        this.changeVisibleState(this.getState());
+    }
+    public override cancelMoveAttempt(): void {
+        this.currentMove = MGPOptional.empty();
     }
     public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const homeColor: string = 'player' + (y + 1) % 2 + '-fill';
-        if (this.captured[y][x] > 0) {
+        const homeOwner: Player = this.getSpaceOwner(coord);
+        const homeColor: string = this.getPlayerClass(homeOwner);
+        if (this.getKalahOwner(coord).isAbsent() && this.captured[y][x] > 0) {
             return ['captured-fill', 'moved-stroke'];
         } else if (this.lasts.some((c: Coord) => c.equals(coord))) {
             return ['moved-stroke', 'last-move-stroke', homeColor];
@@ -107,6 +187,17 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Move
             return ['moved-stroke', homeColor];
         } else {
             return [homeColor];
+        }
+    }
+    private getKalahOwner(coord: Coord): MGPOptional<MGPSet<Player>> {
+        return MancalaRules.FAKE_KALAH_COORD.reverse().get(coord);
+    }
+    private getSpaceOwner(coord: Coord): Player {
+        const owner: MGPOptional<MGPSet<Player>> = this.getKalahOwner(coord);
+        if (owner.isPresent()) {
+            return owner.get().getAnyElement().get(); // Only one player can be in there
+        } else {
+            return Player.of((coord.y + 1) % 2);
         }
     }
     public getPieceCx(x: number): number {
@@ -121,9 +212,14 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Move
     public getPieceRotation(): string {
         return 'rotate(' + this.role.value * 180 + ')';
     }
-    public changeVisibleState(state: MancalaState): void {
+    private changeVisibleState(state: MancalaState): void {
         this.constructedState = MGPOptional.of(state);
         this.board = this.constructedState.get().board;
         this.cdr.detectChanges();
+    }
+    public abstract generateMove(x: number): M;
+
+    protected addToMove(x: number): MGPOptional<M> {
+        return MGPOptional.empty();
     }
 }

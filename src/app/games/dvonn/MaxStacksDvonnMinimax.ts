@@ -15,7 +15,7 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
         const moves: DvonnMove[] = super.getListMoves(node);
 
         // Sort the moves by the size of pieces that they add to the player
-        const opponent: Player = state.getCurrentPlayer().getOpponent();
+        const opponent: Player = state.getCurrentOpponent();
         ArrayUtils.sortByDescending(moves, (move: DvonnMove): number => {
             // We can't have DvonnMove.PASS here, because it would be the single move of the list
             assert(move !== DvonnMove.PASS, 'Cannot sort with DvonnMove.PASS');

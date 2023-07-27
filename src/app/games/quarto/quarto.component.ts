@@ -106,7 +106,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             return this.chooseMove(chosenMove, this.node.gameState);
         }
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
     public override cancelMoveAttempt(): void {

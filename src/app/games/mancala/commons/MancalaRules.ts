@@ -9,6 +9,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
 
 export interface MancalaCaptureResult {
 
@@ -32,6 +33,10 @@ export interface MancalaDistributionResult {
 
 export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState> {
 
+    public static FAKE_KALAH_COORD: ReversibleMap<Player, Coord> = new ReversibleMap([
+        { key: Player.ZERO, value: new Coord(-1, -1)},
+        { key: Player.ONE, value: new Coord(+2, +2)},
+    ]);
     public constructor(public readonly config: MancalaConfig) {
         super(MancalaState);
     }
@@ -81,26 +86,22 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     }
     public applyLegalMove(move: M, state: MancalaState, _: void): MancalaState {
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state);
-        // TODO: c'est pas au post-distribution qu'il faut capturer si besouin ?
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult);
-        const postCaptureState: MancalaState = captureResult.resultingState;
-        const captured: [number, number] = postCaptureState.getCapturedCopy();
-        const playerToMansoon: PlayerOrNone = this.mustMansoon(postCaptureState); // TODO: mansoon capture, not me!
+        let resultingState: MancalaState = captureResult.resultingState;
+        const playerToMansoon: PlayerOrNone = this.mustMansoon(resultingState);
         if (playerToMansoon !== PlayerOrNone.NONE) {
             // if the player distributed his last seeds and the opponent could not give him seeds
             const mansoonResult: MancalaCaptureResult = this.mansoon(playerToMansoon as Player, captureResult);
-            captured[playerToMansoon.value] += mansoonResult.capturedSum;
-            return new MancalaState(mansoonResult.resultingState.board, state.turn + 1, captured);
-        } else {
-            const postCaptureBoard: Table<number> = postCaptureState.getCopiedBoard();
-            return new MancalaState(postCaptureBoard, state.turn + 1, captured);
+            resultingState = mansoonResult.resultingState;
         }
+        return new MancalaState(resultingState.board,
+                                resultingState.turn + 1,
+                                resultingState.captured);
     }
     /**
      * Simply distribute then group of stone in (x, y)
      * Does not make the capture nor verify the legality of the move
      * Returns the coords of the filled houses
-     * TODO: make this shorted for Eru's sake
      */
     public distributeHouse(x: number, y: number, state: MancalaState): MancalaDistributionResult {
         let coord: Coord = new Coord(x, y);
@@ -125,6 +126,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
             if (endUpInKalah) {
                 passedByKalahNTimes++;
                 inHand--;
+                filledHouses.push(MancalaRules.FAKE_KALAH_COORD.get(player).get());
             } else {
                 coord = nextCoord.get();
                 if (i.equals(coord) === false) {
@@ -138,7 +140,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         return {
             filledHouses,
             passedByKalahNTimes,
-            endUpInKalah, // TODO: add capture here
+            endUpInKalah,
             resultingState: new MancalaState(resultingBoard, state.turn, state.getCapturedCopy()),
         };
     }
@@ -197,6 +199,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     public mansoon(mansooningPlayer: Player, postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
         const state: MancalaState = postCaptureResult.resultingState;
         const resultingBoard: number[][] = state.getCopiedBoard();
+        const captured: [number, number] = state.getCapturedCopy()
         let capturedSum: number = 0;
         const captureMap: number[][] = ArrayUtils.copyBiArray(postCaptureResult.captureMap);
         let x: number = 0;
@@ -207,11 +210,11 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
             resultingBoard[mansoonedY][x] = 0;
             x++;
         } while (x < 6);
+        captured[mansooningPlayer.value] += capturedSum;
         return {
             capturedSum,
             captureMap,
-            // TODO: add capture there
-            resultingState: new MancalaState(resultingBoard, state.turn, state.getCapturedCopy()),
+            resultingState: new MancalaState(resultingBoard, state.turn, captured),
         };
     }
 }

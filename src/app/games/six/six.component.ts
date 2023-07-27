@@ -77,7 +77,7 @@ export class SixComponent
         this.neighbors = this.getEmptyNeighbors();
         this.viewBox = this.getViewBox();
     }
-    public hideLastMove(): void {
+    public override hideLastMove(): void {
         this.leftCoord = MGPOptional.empty();
         this.lastDrop = MGPOptional.empty();
         this.victoryCoords = [];

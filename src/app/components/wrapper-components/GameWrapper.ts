@@ -66,7 +66,7 @@ export abstract class GameWrapper<P extends Comparable> {
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.node = this.gameComponent.rules.getInitialNode();
-            await this.gameComponent.updateBoard(false, 'GW.afterViewInit');
+            await this.gameComponent.updateBoard(false);
         }
         return gameCreatedSuccessfully;
     }
@@ -117,7 +117,7 @@ export abstract class GameWrapper<P extends Comparable> {
         if (this.gameComponent.hasAsymmetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
-        await this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
+        await this.updateBoardAndShowLastMove(false); // Trigger redrawing of the board (might need to be rotated 180°)
     }
     public async receiveValidMove(move: Move,
                                   state: GameState,
@@ -189,15 +189,16 @@ export abstract class GameWrapper<P extends Comparable> {
     public getBoardHighlight(): string[] {
         if (this.endGame) {
             return ['endgame-bg'];
-        }
-        if (this.isPlayerTurn()) {
+        } else if (this.isPlayerTurn()) {
             const turn: number = this.gameComponent.getTurn();
             return ['player' + (turn % 2) + '-bg'];
+        } else {
+            return [];
         }
-        return [];
     }
-    protected async updateBoardAndShowLastMove(triggerAnimation: boolean=false): Promise<void> {
-        await this.gameComponent.updateBoard(triggerAnimation, 'GW.updateBoardAndShowLastMove');
+    protected async updateBoardAndShowLastMove(triggerAnimation: boolean): Promise<void> {
+        this.gameComponent.hideLastMove();
+        await this.gameComponent.updateBoard(triggerAnimation);
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
             await this.gameComponent.showLastMove(move);

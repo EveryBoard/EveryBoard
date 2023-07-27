@@ -118,7 +118,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         const lastMoveBlockIndex: number = lastMoveBlockY * 2 + lastMoveBlockX;
         return lastMove.blockTurned.equalsValue(lastMoveBlockIndex);
     }
-    public hidePreviousMove(): void {
+    public override hideLastMove(): void {
         this.lastDrop = MGPOptional.empty();
         this.movedBlock = MGPOptional.empty();
         this.lastRotation = MGPOptional.empty();
@@ -160,7 +160,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.hidePreviousMove();
+        this.hideLastMove();
         if (this.board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }

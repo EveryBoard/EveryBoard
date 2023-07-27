@@ -109,7 +109,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
         this.gameComponent.node = node.get();
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: legal move');
-        await this.updateBoardAndShowLastMove();
+        await this.updateBoardAndShowLastMove(false);
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const previousState: GameState = this.gameComponent.getPreviousState();
@@ -152,7 +152,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
-            await this.updateBoardAndShowLastMove();
+            await this.updateBoardAndShowLastMove(false);
             this.moveAttemptMade = true;
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess(currentStep.getSuccessMessage());
@@ -218,7 +218,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
             this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution).get();
-            await this.updateBoardAndShowLastMove();
+            await this.updateBoardAndShowLastMove(false);
         } else {
             await this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;

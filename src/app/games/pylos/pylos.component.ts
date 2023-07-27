@@ -317,7 +317,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             this.highCapture = this.lastFirstCapture;
         }
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.lastStartingCoord = MGPOptional.empty();
         this.lastLandingCoord = MGPOptional.empty();
         this.lastFirstCapture = MGPOptional.empty();

@@ -4,13 +4,13 @@ import { MancalaState } from './../commons/MancalaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MancalaMove } from '../commons/MancalaMove';
-import { KalahFailure } from './KalahFailure';
+import { MancalaDistribution } from '../commons/MancalaMove';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../commons/MancalaRules';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaFailure } from '../commons/MancalaFailure';
+import { Utils } from 'src/app/utils/utils';
 
 export class KalahNode extends MGPNode<KalahRules, KalahMove, MancalaState> {}
 
@@ -34,9 +34,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         const playerY: number = state.getCurrentOpponent().value; // centralise that in MancalaState !
         let canStillPlay: boolean = true;
         for (const subMove of move) {
-            if (canStillPlay === false) {
-                return MGPValidation.failure(KalahFailure.CANNOT_PLAY_AFTER_NON_KALAH_MOVE());
-            }
+            Utils.assert(canStillPlay === true, 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE');
             const subMoveResult: MGPFallible<boolean> = this.isLegalSubMove(subMove, state);
             if (subMoveResult.isFailure()) {
                 return MGPValidation.ofFallible(subMoveResult);
@@ -45,17 +43,14 @@ export class KalahRules extends MancalaRules<KalahMove> {
                 canStillPlay = subMoveResult.get();
             }
         }
-        if (canStillPlay) {
-            return MGPValidation.failure(KalahFailure.MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE());
-        } else {
-            return MGPValidation.SUCCESS;
-        }
+        Utils.assert(canStillPlay === false, 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE');
+        return MGPValidation.SUCCESS;
     }
     /**
       * @param subMove the sub move to try
       * @return: MGPFallible.failure(reason) if it is illegal, MGPFallible.success(userCanStillPlay)
       */
-    private isLegalSubMove(subMove: MancalaMove, state: MancalaState): MGPFallible<boolean> {
+    private isLegalSubMove(subMove: MancalaDistribution, state: MancalaState): MGPFallible<boolean> {
         const opponent: Player = state.getCurrentOpponent();
         const playerY: number = opponent.value; // So player 0 is in row 1
         if (state.getPieceAtXY(subMove.x, playerY) === 0) {
@@ -88,7 +83,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
             endUpInKalah,
             filledHouses,
             passedByKalahNTimes,
-            resultingState: distributedState, // TODO: reuse where needed ?
+            resultingState: distributedState,
         };
     }
     public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {

@@ -36,9 +36,9 @@
        [x]="-1"
        [y]="-1"
        [content]="scores.get()[0]"
-       [spaceClasses]="['player0-fill']"
+       [spaceClasses]="getSpaceClasses(-1, -1)"
        [rotation]="getPieceRotation()"
-       [secondaryContent]="MGPOptional.empty()"
+       [secondaryContent]="droppedInKalah[0] === 0 ? MGPOptional.empty() : MGPOptional.of('+' + droppedInKalah[0])"
     ></g>
     <g id="player_one_captures"
        app-numbered-circle
@@ -46,8 +46,8 @@
        [x]="2"
        [y]="2"
        [content]="scores.get()[1]"
-       [spaceClasses]="['player1-fill']"
+       [spaceClasses]="getSpaceClasses(2, 2)"
        [rotation]="getPieceRotation()"
-       [secondaryContent]="MGPOptional.empty()"
+       [secondaryContent]="droppedInKalah[1] === 0 ? MGPOptional.empty() : MGPOptional.of('+' + droppedInKalah[1])"
     ></g>
 </svg>

@@ -305,7 +305,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                 new MGPNode(previousState)),
             MGPOptional.ofNullable(previousMove),
         );
-        await this.gameComponent.updateBoard(false, 'TU.setupState');
+        await this.gameComponent.updateBoard(false);
         if (previousMove !== undefined) {
             await this.gameComponent.showLastMove(previousMove);
         }
@@ -319,20 +319,20 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
      * @param nameInFunction Its name inside the code
      */
     public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
-        await this.expectInterfaceClickSuccess(nameInHtml, true);
+        await this.expectInterfaceClickSuccess(nameInHtml, 1);
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
     }
     public async expectClickSuccess(elementName: string): Promise<void> {
         return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
     }
-    public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {
+    public async expectInterfaceClickSuccess(elementName: string, waitInMs?: number): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
         expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         element.triggerEventHandler('click', null);
-        if (waitOneMs) {
-            tick(1);
+        if (waitInMs !== undefined) {
+            tick(waitInMs);
         }
 
         await this.fixture.whenStable();
@@ -418,7 +418,6 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             }
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            console.log('>>> ... checking now')
             if (scores) {
                 expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
             } else {
