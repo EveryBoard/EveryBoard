@@ -25,7 +25,7 @@ describe('TeekoMinimax', () => {
         // When computing the list of moves
         const moves: TeekoMove[] = minimax.getListMoves(node);
 
-        // Then there should have 25 move, one by space
+        // Then there should be 25 move, one by space
         expect(moves.length).toBe(25);
     });
     it('should have all move options in translation phase', () => {
@@ -43,11 +43,11 @@ describe('TeekoMinimax', () => {
         // When computing the list of moves
         const moves: TeekoMove[] = minimax.getListMoves(node);
 
-        // Then there should have 4 x 17 (the number of piece x the number of empty space)
+        // Then there should be 4 x 17 (the number of piece x the number of empty space)
         expect(moves.length).toBe(4 * 17);
     });
     describe('getBoardValue', () => {
-        it('should count the number of possible square and line', () => {
+        it('should count the number of possible squares and lines', () => {
             // Given any board with only piece of Player.ZERO
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _],
@@ -62,7 +62,7 @@ describe('TeekoMinimax', () => {
             // When calculating the board value
             const boardValue: number = minimax.getBoardValue(node).value;
 
-            // Then it should be the number of possible victory of 0 in negative
+            // Then it should be minus the number of possible victory of Player.ZERO in negative
             expect(boardValue).toBe(-12);
         });
     });

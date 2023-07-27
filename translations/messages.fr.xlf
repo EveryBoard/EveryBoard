@@ -286,8 +286,8 @@
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
         <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
-      <trans-unit id="7854184833872393890" datatype="html">
-        <source>Align your 4 piece or put them in a square to win!</source>
+      <trans-unit id="6432141756227180076" datatype="html">
+        <source>Align your 4 pieces or form a square with them to win!</source>
         <target>Alignez vos 4 pièces ou placez les en carré pour gagner !</target>
       </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
@@ -3074,6 +3074,10 @@
       </trans-unit>
       <trans-unit id="4134686113968191036" datatype="html">
         <source>At your turn, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+        <target>Durant vos tour, vous devez déposer une pièce sur n'importe quelle case vide. Il n'y a pas d'autre restriction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déposez une pièce.</target>
+      </trans-unit>
+      <trans-unit id="6387234418172087558" datatype="html">
+        <source>For your four first turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
         <target>Lors de votre tour, vous devez déposer une pièce sur n'importe quel case vide du plateau. Il n'y a pas d'autres restrictions.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pièce sur le plateau.</target>
       </trans-unit>
       <trans-unit id="6622643035593861381" datatype="html">
@@ -3913,13 +3917,13 @@
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
       </trans-unit>
-      <trans-unit id="626881465832467578" datatype="html">
-        <source>The goal of the game is to align your 4 piece, or to make a square with them.</source>
+      <trans-unit id="6938841492013420599" datatype="html">
+        <source>The goal of the game is to align your 4 pieces, or form a square with them.</source>
         <target>Le but du jeu est d'aligner vos 4 pièces, ou de les placer en carré.</target>
       </trans-unit>
-      <trans-unit id="3501096768840548285" datatype="html">
-        <source>After you drop all your four pieces, if nobody won yet, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
-        <target>Après avoir déposé vos quatre pièces, si personne n'as encore gagné, vous devez mainenant déplacer vos pièces à un autre emplacement vide. Le but reste le même, être le premier à créer une ligne ou un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
+      <trans-unit id="322267404708379069" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+        <target>Après avoir déposé vos quatre pièces, vous devez déplacer vos pièces à un emplacement vide. Le but reste le même : être le premier à créer une ligne ou un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
       </trans-unit>
       <trans-unit id="366926106758793789" datatype="html">
         <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>

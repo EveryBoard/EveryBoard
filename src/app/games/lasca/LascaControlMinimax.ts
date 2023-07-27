@@ -28,7 +28,7 @@ export class LascaControlMinimax extends Minimax<LascaMove, LascaState> {
         return LascaControlMinimax.getListMoves(node);
     }
     public getBoardValue(node: LascaNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = LascaRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }

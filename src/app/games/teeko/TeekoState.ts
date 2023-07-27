@@ -8,4 +8,7 @@ export class TeekoState extends GameStateWithTable<PlayerOrNone> {
         const board: Table<PlayerOrNone> = ArrayUtils.createTable(5, 5, PlayerOrNone.NONE);
         return new TeekoState(board, 0);
     }
+    public isInDropPhase(): boolean {
+        return this.turn < 8;
+    }
 }

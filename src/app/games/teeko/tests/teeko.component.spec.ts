@@ -6,7 +6,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TeekoState } from '../TeekoState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TeekoDropMove, TeekoMove, TeekoTranslateMove } from '../TeekoMove';
+import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 
 describe('TeekoComponent', () => {
@@ -24,7 +24,7 @@ describe('TeekoComponent', () => {
         testUtils.expectToBeCreated();
     });
     describe('drop phase', () => {
-        it('should toast error when clicking on occupied space', fakeAsync(async() => {
+        it('should fail when clicking on occupied space', fakeAsync(async() => {
             // Given any component in drop phase with present pieces
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _],
@@ -59,10 +59,10 @@ describe('TeekoComponent', () => {
             testUtils.expectElementToHaveClasses('#piece_2_2', ['base', 'player0-fill', 'last-move-stroke']);
         }));
     });
-    describe('translation hase', () => {
+    describe('translation phase', () => {
         describe('first click', () => {
-            it('should toast error when clicking on empty space', fakeAsync(async() => {
-                // Given any board on translation phase
+            it('should fail when clicking on empty space', fakeAsync(async() => {
+                // Given any board in translation phase
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],
                     [O, O, _, _, _],
@@ -78,8 +78,8 @@ describe('TeekoComponent', () => {
                 const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
                 await testUtils.expectClickFailure('#click_2_2', reason);
             }));
-            it('should toast error when clicking on opponent piece', fakeAsync(async() => {
-                // Given any board on translation phase
+            it('should fail when clicking on opponent piece', fakeAsync(async() => {
+                // Given any board in translation phase
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],
                     [O, O, _, _, _],
@@ -96,7 +96,7 @@ describe('TeekoComponent', () => {
                 await testUtils.expectClickFailure('#click_0_3', reason);
             }));
             it('should mark as selected the player clicked piece', fakeAsync(async() => {
-                // Given any board on translation phase
+                // Given any board in translation phase
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],
                     [O, O, _, _, _],
@@ -116,7 +116,7 @@ describe('TeekoComponent', () => {
         });
         describe('second click', () => {
             it('should deselect the player piece when clicked on again', fakeAsync(async() => {
-                // Given any board on translation phase with a selected piece
+                // Given any board in translation phase with a selected piece
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],
                     [O, O, _, _, _],
@@ -135,7 +135,7 @@ describe('TeekoComponent', () => {
                 testUtils.expectElementNotToHaveClass('#piece_0_0', 'selected-stroke');
             }));
             it('should do the move when clicking on empty space', fakeAsync(async() => {
-                // Given any board on translation phase with a selected piece
+                // Given any board in translation phase with a selected piece
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],
                     [O, O, _, _, _],
@@ -148,13 +148,13 @@ describe('TeekoComponent', () => {
                 await testUtils.expectClickSuccess('#click_0_0');
 
                 // When clicking on valid landing space
-                const move: TeekoMove = TeekoTranslateMove.from(new Coord(0, 0), new Coord(2, 2)).get();
+                const move: TeekoMove = TeekoTranslationMove.from(new Coord(0, 0), new Coord(2, 2)).get();
 
                 // Then it should succeed
                 await testUtils.expectMoveSuccess('#click_2_2', move);
             }));
-            it('should toast error when doing illegal move', fakeAsync(async() => {
-                // Given any board on translation phase with a selected piece
+            it('should fail when doing illegal move', fakeAsync(async() => {
+                // Given any board in translation phase with a selected piece
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],
                     [O, O, _, _, _],
@@ -169,11 +169,11 @@ describe('TeekoComponent', () => {
                 // When clicking on an invalid landing space
                 // Then it should fail
                 const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
-                const move: TeekoTranslateMove = TeekoTranslateMove.from(new Coord(0, 0), new Coord(1, 1)).get();
+                const move: TeekoTranslationMove = TeekoTranslationMove.from(new Coord(0, 0), new Coord(1, 1)).get();
                 await testUtils.expectMoveFailure('#click_1_1', reason, move);
             }));
-            it('should show left coord and dropped coord after move', fakeAsync(async() => {
-                // Given any board on translation phase with a selected piece
+            it('should show starting coord and landing coord after move', fakeAsync(async() => {
+                // Given any board in translation phase with a selected piece
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],
                     [O, O, _, _, _],
@@ -186,16 +186,17 @@ describe('TeekoComponent', () => {
                 await testUtils.expectClickSuccess('#click_0_0');
 
                 // When finishing the move legally
-                const move: TeekoMove = TeekoTranslateMove.from(new Coord(0, 0), new Coord(2, 2)).get();
+                const move: TeekoMove = TeekoTranslationMove.from(new Coord(0, 0), new Coord(2, 2)).get();
                 await testUtils.expectMoveSuccess('#click_2_2', move);
 
-                // Then it should have left coord and landing coord
+                // Then it should should display as moved starting coord and landing coord
                 testUtils.expectElementToHaveClasses('#space_0_0', ['base', 'moved-fill']);
                 testUtils.expectElementToHaveClasses('#space_2_2', ['base', 'moved-fill']);
+                // And display the piece as last-move
                 testUtils.expectElementToHaveClasses('#piece_2_2', ['base', 'player0-fill', 'last-move-stroke']);
             }));
             it('should show victory coords when alignment', fakeAsync(async() => {
-                // Given any board on translation phase
+                // Given any board in translation phase
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],
                     [O, O, _, _, _],
@@ -209,7 +210,7 @@ describe('TeekoComponent', () => {
                 // Then
             }));
             it('should show victory coords when squaring coord', fakeAsync(async() => {
-                // Given any board on translation phase
+                // Given any board in translation phase
                 const board: Table<PlayerOrNone> = [
                     [O, O, _, _, _],
                     [O, _, _, _, _],
@@ -221,11 +222,11 @@ describe('TeekoComponent', () => {
                 testUtils.setupState(state);
 
                 // When translating piece into victory
-                const move: TeekoMove = TeekoTranslateMove.from(new Coord(2, 2), new Coord(1, 1)).get();
+                const move: TeekoMove = TeekoTranslationMove.from(new Coord(2, 2), new Coord(1, 1)).get();
                 await testUtils.expectClickSuccess('#click_2_2');
                 await testUtils.expectMoveSuccess('#click_1_1', move);
 
-                // Then the three non-last victory coords should be highlighted
+                // Then the four victory pieces should be highlighted
                 testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'victory-stroke']);
                 testUtils.expectElementToHaveClasses('#piece_0_1', ['base', 'player0-fill', 'victory-stroke']);
                 testUtils.expectElementToHaveClasses('#piece_1_0', ['base', 'player0-fill', 'victory-stroke']);

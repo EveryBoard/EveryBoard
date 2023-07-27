@@ -5,7 +5,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export type TeekoMove = TeekoDropMove | TeekoTranslateMove;
+export type TeekoMove = TeekoDropMove | TeekoTranslationMove;
 
 export class TeekoDropMove extends MoveCoord {
 
@@ -30,12 +30,12 @@ export class TeekoDropMove extends MoveCoord {
     }
 }
 
-export class TeekoTranslateMove extends MoveCoordToCoord {
+export class TeekoTranslationMove extends MoveCoordToCoord {
 
-    public static encoder: MoveEncoder<TeekoTranslateMove> =
-        MoveCoordToCoord.getFallibleEncoder(TeekoTranslateMove.from);
+    public static encoder: MoveEncoder<TeekoTranslationMove> =
+        MoveCoordToCoord.getFallibleEncoder(TeekoTranslationMove.from);
 
-    public static from(start: Coord, end: Coord): MGPFallible<TeekoTranslateMove> {
+    public static from(start: Coord, end: Coord): MGPFallible<TeekoTranslationMove> {
         if (TeekoMove.isInRange(start) === false) {
             return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
         } else if (TeekoMove.isInRange(end) === false) {
@@ -43,14 +43,14 @@ export class TeekoTranslateMove extends MoveCoordToCoord {
         } else if (start.equals(end)) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
         } else {
-            return MGPFallible.success(new TeekoTranslateMove(start, end));
+            return MGPFallible.success(new TeekoTranslationMove(start, end));
         }
     }
     public override toString(): string {
         return 'TeekoMove(' + this.getStart().toString() + ' -> ' + this.getEnd().toString() + ')';
     }
     public override equals(other: TeekoMove): boolean {
-        if (other instanceof TeekoTranslateMove) {
+        if (other instanceof TeekoTranslationMove) {
             return this.getStart().equals(other.getStart()) &&
                    this.getEnd().equals(other.getEnd()); // TODO: refactor after move-reuse-tuple
         } else {
@@ -67,6 +67,6 @@ export namespace TeekoMove {
     }
     export const encoder: MoveEncoder<TeekoMove> =
         MoveEncoder.disjunction(TeekoDropMove.encoder,
-                                TeekoTranslateMove.encoder,
+                                TeekoTranslationMove.encoder,
                                 (move: TeekoMove): move is TeekoDropMove => move instanceof TeekoDropMove);
 }

@@ -1,5 +1,5 @@
 import { TeekoRules } from './TeekoRules';
-import { TeekoDropMove, TeekoMove, TeekoTranslateMove } from './TeekoMove';
+import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -44,7 +44,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     }
     public override showLastMove(move: TeekoMove): void {
         this.last = MGPOptional.of(this.rules.getLastCoord(move));
-        if (move instanceof TeekoTranslateMove) {
+        if (move instanceof TeekoTranslationMove) {
             this.moved = [move.getStart(), move.getEnd()];
         } else {
             this.moved = [];
@@ -65,7 +65,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: Coord = new Coord(x, y);
-        if (this.getState().turn < 8) {
+        if (this.getState().isInDropPhase()) {
             const move: TeekoDropMove = TeekoDropMove.from(clickedCoord).get();
             return this.chooseMove(move, this.getState());
         } else {
@@ -74,7 +74,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
                     this.selected = MGPOptional.empty();
                     return MGPValidation.SUCCESS;
                 } else {
-                    const move: TeekoTranslateMove = TeekoTranslateMove.from(this.selected.get(), clickedCoord).get();
+                    const move: TeekoTranslationMove = TeekoTranslationMove.from(this.selected.get(), clickedCoord).get();
                     return this.chooseMove(move, this.getState());
                 }
             } else {

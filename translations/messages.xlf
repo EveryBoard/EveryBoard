@@ -242,8 +242,8 @@
       <trans-unit id="1177593339964527523" datatype="html">
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
-      <trans-unit id="7854184833872393890" datatype="html">
-        <source>Align your 4 piece or put them in a square to win!</source>
+      <trans-unit id="6432141756227180076" datatype="html">
+        <source>Align your 4 pieces or form a square with them to win!</source>
       </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
@@ -2804,11 +2804,14 @@
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
-      <trans-unit id="626881465832467578" datatype="html">
-        <source>The goal of the game is to align your 4 piece, or to make a square with them.</source>
+      <trans-unit id="6938841492013420599" datatype="html">
+        <source>The goal of the game is to align your 4 pieces, or form a square with them.</source>
       </trans-unit>
-      <trans-unit id="3501096768840548285" datatype="html">
-        <source>After you drop all your four pieces, if nobody won yet, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+      <trans-unit id="6387234418172087558" datatype="html">
+        <source>For your four first turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+      </trans-unit>
+      <trans-unit id="322267404708379069" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
       </trans-unit>
       <trans-unit id="366926106758793789" datatype="html">
         <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>

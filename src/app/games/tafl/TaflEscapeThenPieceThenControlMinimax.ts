@@ -13,7 +13,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMinimax {
 
     public override getBoardValue(node: TaflNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = this.ruler.getGameStatus(node); // TODO
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { TeekoDropMove, TeekoMove, TeekoTranslateMove } from '../TeekoMove';
+import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
 import { TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
 import { TeekoMinimax } from '../TeekoMinimax';
@@ -21,7 +21,7 @@ describe('TeekoRules', () => {
     let minimaxes: Minimax<TeekoMove, TeekoState>[];
 
     function translate(start: Coord, end: Coord): TeekoMove {
-        return TeekoTranslateMove.from(start, end).get();
+        return TeekoTranslationMove.from(start, end).get();
     }
     function drop(coord: Coord): TeekoMove {
         return TeekoDropMove.from(coord).get();
@@ -34,7 +34,7 @@ describe('TeekoRules', () => {
             new TeekoMinimax(),
         ];
     });
-    describe('droping phase', () => {
+    describe('dropping phase', () => {
         it('should fail if receiving translation in the 8 first turns', () => {
             // Given a board on the first phase
             const state: TeekoState = TeekoState.getInitialState();
@@ -43,7 +43,7 @@ describe('TeekoRules', () => {
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(1, 1));
 
             // Then the move attempt should throw
-            const reason: string = 'CANNOT_TRANSLATE_IN_DROPPING_PHASE';
+            const reason: string = 'Cannot translate in dropping phase !';
             RulesUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
@@ -95,7 +95,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 6);
 
-            // When dropping the fourth O
+            // When dropping the fourth O in alignment with the 3 others
             const move: TeekoMove = drop(new Coord(1, 2));
 
             // Then it should be legal and marked as victory
@@ -122,7 +122,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 6);
 
-            // When dropping the fourth O
+            // When dropping the fourth O in alignment with the 3 others
             const move: TeekoMove = drop(new Coord(3, 3));
 
             // Then it should be legal and marked as victory
@@ -149,7 +149,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 6);
 
-            // When dropping the fourth O
+            // When dropping the fourth O in alignment with the 3 others
             const move: TeekoMove = drop(new Coord(2, 3));
 
             // Then it should be legal and marked as victory
@@ -176,7 +176,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 6);
 
-            // When dropping the fourth O
+            // When dropping the fourth O forming a square with the 3 others
             const move: TeekoMove = drop(new Coord(1, 0));
 
             // Then it should be legal and marked as victory
@@ -209,12 +209,12 @@ describe('TeekoRules', () => {
             const move: TeekoMove = drop(new Coord(4, 4));
 
             // Then the move attempt should throw
-            const reason: string = 'CANNOT_DROP_IN_TRANSLATING_PHASE';
+            const reason: string = 'Cannot drop in translation phase !';
             RulesUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });
-        it('should refuse moving empty space', () => {
+        it('should refuse moving from an empty space', () => {
             // Given a board in second phase
             const board: Table<PlayerOrNone> = [
                 [O, X, _, _, _],
@@ -225,7 +225,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 8);
 
-            // When translation emptyness
+            // When doing translation with empty starting coord
             const move: TeekoMove = translate(new Coord(2, 2), new Coord(3, 3));
 
             // Then the move should be illegal
@@ -243,7 +243,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 8);
 
-            // When translation opponent piece
+            // When translating opponent piece
             const move: TeekoMove = translate(new Coord(0, 3), new Coord(2, 2));
 
             // Then the move should be illegal
@@ -261,7 +261,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 8);
 
-            // When translation a piece on occupied place
+            // When translating a piece on occupied place
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(1, 1));
 
             // Then the move should be illegal
@@ -304,7 +304,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 8);
 
-            // When translation a piece to align 4
+            // When translating a piece to align 4
             const move: TeekoMove = translate(new Coord(3, 1), new Coord(1, 2));
 
             // Then it should be legal and marked as victory
@@ -331,7 +331,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 8);
 
-            // When translation a piece to align 4
+            // When translating a piece to align 4
             const move: TeekoMove = translate(new Coord(3, 4), new Coord(3, 3));
 
             // Then it should be legal and marked as victory
@@ -358,7 +358,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 8);
 
-            // When translation a piece victriously
+            // When translating a piece victriously
             const move: TeekoMove = translate(new Coord(1, 3), new Coord(0, 3));
 
             // Then it should be legal and marked as victory
@@ -385,7 +385,7 @@ describe('TeekoRules', () => {
             ];
             const state: TeekoState = new TeekoState(board, 9);
 
-            // When dropping the fourth O
+            // When dropping the fourth O forming a square with the 3 others
             const move: TeekoMove = translate(new Coord(4, 2), new Coord(2, 1));
 
             // Then it should be legal and marked as victory

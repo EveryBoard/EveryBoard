@@ -189,7 +189,7 @@ class GameDescription {
 
     public static readonly TABLUT: Localized = () => $localize`Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
-    public static readonly TEEKO: Localized = () => $localize`Align your 4 piece or put them in a square to win!`;
+    public static readonly TEEKO: Localized = () => $localize`Align your 4 pieces or form a square with them to win!`;
 
     public static readonly TREXO: Localized = () => $localize`Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!`;
 
