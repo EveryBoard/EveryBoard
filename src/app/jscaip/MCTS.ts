@@ -27,7 +27,7 @@ class MCTSNode<R extends Rules<M, S, L>,
     // The number of wins seen when simulating from this node
     public wins: number = 0;
     // The children of this node
-    public children: MCTSNode<R, M, S, L, U>[] = []
+    public children: MCTSNode<R, M, S, L, U>[] = [];
 
     public constructor(
         public readonly id: number,
@@ -36,7 +36,8 @@ class MCTSNode<R extends Rules<M, S, L>,
     }
 
     /**
-     * Computes the UCB value of this node
+     * Computes the UCB value of this node.
+     * The UCB (Upper-Confidence-Bound) is a value used to select nodes to explore.
      */
     public ucb(totalSimulations: number): number {
         if (totalSimulations === 0 || this.simulations === 0) {
@@ -48,11 +49,47 @@ class MCTSNode<R extends Rules<M, S, L>,
                MCTS.explorationParameter * Math.sqrt(Math.log(totalSimulations) / this.simulations);
     }
     /**
-     * Computes the win ratio for this node
+     * Computes the win ratio for this node, as how many simulations have been won.
      */
     public winRatio(): number {
         if (this.simulations === 0) return 1;
         return this.wins / this.simulations;
+    }
+
+    /**
+     * Represents the tree starting at this node as a DOT graph.
+     * You can view the DOT graph with a tool like xdot,
+     * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
+     */
+    public printDot(rules: Rules<M, S, L>, level: number = 0, max?: number) {
+        if (level === 0) {
+            console.log('digraph G {');
+        }
+        const gameStatus: GameStatus = rules.getGameStatus(this.node);
+        let color: string = "white";
+        if (gameStatus.isEndGame) {
+            switch (gameStatus.winner) {
+                case Player.ZERO:
+                    color = "#994d00";
+                    break;
+                case Player.ONE:
+                    color = "#ffc34d";
+                    break;
+                default:
+                    color = "grey";
+                    break;
+            }
+        }
+        console.log(`    node_${this.id} [label="#${this.node.gameState.turn}: ${this.wins}/${this.simulations}", style=filled, fillcolor="${color}"];`);
+        if (max === undefined || level < max) {
+            for (const child of this.children) {
+                console.log(`    node_${this.id} -> node_${child.id} [label="${child.node.move.get()}"];`);
+                child.printDot(rules, level+1, max);
+            }
+        }
+        if (level === 0) {
+            console.log('}');
+        }
     }
 }
 
@@ -91,29 +128,34 @@ export class MCTS<R extends Rules<M, S, L>,
                        private readonly rules: Rules<M, S, L>) {
     }
 
-    private id: number = 0;
+    private id: number = 0; // Used for naming nodes upon debugging
     /**
      * Performs the search, given a node representing a board.
      * The search is performed for at most `iterations` iterations.
      */
     public search(start: MGPNode<R, M, S, L, U>, iterations: number = 1000): M {
+        Utils.assert(this.rules.getGameStatus(start).isEndGame === false, 'cannot search from a finished game');
         const root: MCTSNode<R, M, S, L, U> = new MCTSNode(0, start);
+        const player: Player = root.node.gameState.getCurrentPlayer();
         const startTime: number = new Date().getTime();
         for (let i: number = 0; i < iterations; i++) {
+            // console.log('------ ITERATION ' + i)
             const expansionResult: NodeAndPath<R, M, S, L, U> =
                 this.expand(this.select({ node: root, path: [root] }, i));
-            const win: boolean = this.simulate(expansionResult.node, root.node.gameState.getCurrentPlayer());
-            if (win) console.log('win by player ' + root.node.gameState.getCurrentPlayer() )
+            const win: boolean = this.simulate(expansionResult.node, player);
+            // if (win) console.log(`>>>>> win by player ${player} in node ${expansionResult.node.id}`)
             this.backpropagate(expansionResult.path, win);
         }
+        // console.log('---- DONE')
         console.log('root winRatio: ' + root.winRatio());
         console.log(root.children.map((n) => n.id + ': ' + n.winRatio())); // .filter((n) => n > 0));
         const bestChild: MCTSNode<R, M, S, L, U> =
             ArrayUtils.maximumBy(root.children, (n: MCTSNode<R, M, S, L, U>) => n.winRatio());
-        console.log('best child is ' + bestChild.id);
+        console.log('best child is ' + bestChild.node.move.get().toString());
         const seconds =  (new Date().getTime() - startTime) / 1000;
         console.log('Computed ' + iterations/seconds + ' iterations per second');
         console.log('Best child has a win ratio of: ' + bestChild.winRatio());
+        // root.printDot(this.rules, 0);
         return bestChild.node.move.get();
     }
     /**
@@ -129,11 +171,11 @@ export class MCTS<R extends Rules<M, S, L>,
             return nodeAndPath;
         } else {
             // Select within the child with the highest UCB value.
-            console.log('UCB');
-            console.log(node.children.map((n) => n.id + ': ' + n.ucb(simulations)));
+            // console.log('UCB');
+            // console.log(node.children.map((n) => n.id + ': ' + n.ucb(simulations)));
             const childToVisit: MCTSNode<R, M, S, L, U> =
                 ArrayUtils.maximumBy(node.children, (n: MCTSNode<R, M, S, L, U>) => n.ucb(simulations));
-            console.log('selecting ' + childToVisit.id);
+            // console.log('selecting ' + childToVisit.id);
             return this.select({ node: childToVisit, path: nodeAndPath.path.concat([childToVisit]) }, simulations);
         }
     }
@@ -142,7 +184,12 @@ export class MCTS<R extends Rules<M, S, L>,
      * @returns one of the created child, or the node itself if it is terminal
      */
     private expand(nodeAndPath: NodeAndPath<R, M, S, L, U>): NodeAndPath<R, M, S, L, U> {
-        // console.log('expand')
+        // console.log('expand node ' + nodeAndPath.node.id + ' with current player ' + nodeAndPath.node.node.gameState.getCurrentPlayer());
+        if (this.rules.getGameStatus(nodeAndPath.node.node).isEndGame) {
+            // Even though we haven't explicitly explored this node (that is, selected it for expansion),
+            // it is a terminal node. We won't try to calculate its child.
+            return nodeAndPath;
+        }
         const node: MCTSNode<R, M, S, L, U> = nodeAndPath.node;
         const moves: M[] = this.minimax.getListMoves(node.node);
         // console.log('there are ' + moves.length);
@@ -153,7 +200,9 @@ export class MCTS<R extends Rules<M, S, L>,
             const children: MCTSNode<R, M, S, L, U>[] = [];
             // Create the children and pick the first one
             for (const move of moves) {
-                children.push(new MCTSNode(++this.id, this.play(node.node, move)));
+                const childId: number = ++this.id;
+                // console.log('child ' + childId + ' is: ' + move.toString())
+                children.push(new MCTSNode(childId, this.play(node.node, move)));
             }
             node.children = children;
             const pickedChild: MCTSNode<R, M, S, L, U> = ArrayUtils.getRandomElement(children);
@@ -166,13 +215,14 @@ export class MCTS<R extends Rules<M, S, L>,
      * @returns true if the simulation was a win
      */
     private simulate(node: MCTSNode<R, M, S, L, U>, player: Player): boolean {
-        console.log('simulate ' + node.node.gameState.turn)
+        // console.log('simulate from node ' + node.id + ' which has a last move of ' + node.node.move.get().toString())
         let current: MGPNode<R, M, S, L, U> = node.node;
         let steps: number = 0;
         do {
             const status: GameStatus = this.rules.getGameStatus(current);
-            console.log(status)
+            // console.log(status)
             if (status.isEndGame) {
+                // console.log('!!!!! end game, winner is ' + status.winner);
                 return status.winner === player;
             }
             steps++;
@@ -186,11 +236,12 @@ export class MCTS<R extends Rules<M, S, L>,
      */
     private playRandomStep(node: MGPNode<R, M, S, L, U>): MGPNode<R, M, S, L, U> {
         let move: M;
+        // console.log('PLAYING')
         if (MCTS.useMinimaxInsteadOfRandomMove) {
             move = node.findBestMove(1, this.minimax);
         } else {
             move = ArrayUtils.getRandomElement(this.minimax.getListMoves(node));
-            console.log('playing: ' + move)
+            // console.log('playing: ' + move.toString())
         }
         return this.play(node, move);
     }
@@ -214,6 +265,7 @@ export class MCTS<R extends Rules<M, S, L>,
         for (const node of path) {
             node.simulations++;
             if (win) node.wins++;
+            // console.log(`backpropagate to node ${node.id} which now has ${node.wins/node.simulations}`);
         }
     }
 }

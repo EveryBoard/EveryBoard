@@ -1,4 +1,5 @@
 import { QuartoMinimax } from 'src/app/games/quarto/QuartoMinimax';
+import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoNode, QuartoRules } from 'src/app/games/quarto/QuartoRules';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
@@ -7,13 +8,11 @@ import { Coord } from '../Coord';
 import { MCTS } from '../MCTS';
 
 fdescribe('MCTS on quarto', () => {
-    let rules: QuartoRules;
-    let minimax: QuartoMinimax;
-    let mcts;
+    let mcts: MCTS<QuartoRules, QuartoMove, QuartoState>;
 
     beforeEach(() => {
-        rules = new QuartoRules(QuartoState);
-        minimax = new QuartoMinimax(rules, 'QuartoMinimax');
+        const rules: QuartoRules = QuartoRules.get();
+        const minimax: QuartoMinimax = new QuartoMinimax(rules, 'QuartoMinimax');
         mcts = new MCTS(minimax, rules);
     });
     it('should not be stupid', () => {
@@ -24,7 +23,7 @@ fdescribe('MCTS on quarto', () => {
             [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
             [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABB, QuartoPiece.EMPTY],
         ];
-        const state: QuartoState = new QuartoState(board, 3, QuartoPiece.BBAA);
+        const state: QuartoState = new QuartoState(board, 14, QuartoPiece.BBAA);
         const node = new QuartoNode(state);
 
         // When computing the best move
@@ -33,22 +32,20 @@ fdescribe('MCTS on quarto', () => {
         console.log(move.piece)
         expect(move.piece).not.toBe(QuartoPiece.AABA);
     });
-    fit('should clearly know how to win', () => {
-        // Given a board where we have to make a choice between possibly losing, or definitely winning
+    fit('should know how to win multiple turns in advance', () => {
+        // Given a board where we have to make a choice between possibly losing or winning, but multiple turns in advance
         const board: Table<QuartoPiece> = [
             [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.EMPTY],
-            [QuartoPiece.BABB, QuartoPiece.ABAA, QuartoPiece.ABAB, QuartoPiece.BAAB],
-            [QuartoPiece.ABBA, QuartoPiece.BBAA, QuartoPiece.BAAA, QuartoPiece.BABA],
+            [QuartoPiece.BABB, QuartoPiece.BAAB, QuartoPiece.ABAA, QuartoPiece.BBAB],
+            [QuartoPiece.ABBA, QuartoPiece.BBAA, QuartoPiece.BABA, QuartoPiece.EMPTY],
             [QuartoPiece.AABB, QuartoPiece.ABBB, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
-        const state: QuartoState = new QuartoState(board, 0, QuartoPiece.BBAB);
+        const state: QuartoState = new QuartoState(board, 12, QuartoPiece.BBBB);
         const node = new QuartoNode(state);
         // When computing the best move
-        // Remaining pieces: BBBA, BBBB
-        // We cannot put it in (3, 0) nor in (3, 3), otherwise opponent gets a 50% random win.
-        // If we put it in (2, 3), we get a 100% win chance.
-        const move = mcts.search(node, 10);
-        // Then it should place it in (2,3)
-        expect(move.coord).toEqual(new Coord(2, 3));
+        const move = mcts.search(node, 1000);
+        // Then it should place it in (3,0) in order to definitely win
+        // otherwise we definitely lose
+        expect(move).toEqual(new QuartoMove(3, 0, QuartoPiece.ABAB));
     });
 });

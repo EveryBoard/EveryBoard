@@ -135,7 +135,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
         const turn: number = this.gameComponent.node.gameState.turn % 2;
         const currentAiDepth: number = Number.parseInt(this.aiDepths[turn % 2]);
-        const aiMove: Move = this.gameComponent.node.findBestMove(currentAiDepth, playingMinimax, true, true, true); // last one is MCTS
+        const aiMove: Move = this.gameComponent.node.findBestMove(currentAiDepth, playingMinimax, true, true, true); // TODO: last one is MCTS
         const nextNode: MGPOptional<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
         if (nextNode.isPresent()) {
             this.gameComponent.node = nextNode.get();
