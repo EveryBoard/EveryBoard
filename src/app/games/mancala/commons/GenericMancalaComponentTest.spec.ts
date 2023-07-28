@@ -25,6 +25,10 @@ export class MancalaTestEntries<C extends MancalaComponent<R, M>,
     capturableState: MancalaState;
     capturingMove: M; // Must be a move that capture 'capturableState',
     capturedCoords: Cell<string>[]; // The houses refs that'll get captured by capturingMove
+
+    fillableThenCapturableState: MancalaState; // A state on which a case is emptied, then filled, then captured
+    fillingThenCapturingMove: M;
+    filledThenCapturedCoords: Cell<string>[];
 }
 export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
                                         R extends MancalaRules<M>,
@@ -33,10 +37,9 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
 {
     let testUtils: ComponentTestUtils<C>;
     describe(entries.gameName + ' component generic tests', () => {
-
         async function expectMoveSuccess(click: string, move: M): Promise<void> {
             const component: C = testUtils.getComponent();
-            const state: MancalaState = component.constructedState.get();
+            const state: MancalaState = component.constructedState;
             const playerY: number = component.getCurrentOpponent().value;
             const lastDistribution: MancalaDistribution = move.subMoves[move.subMoves.length - 1];
             let lastDistributionSeedNumber: number = state.getPieceAtXY(lastDistribution.x, playerY);
@@ -46,11 +49,13 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
             const moveDuration: number = (lastDistributionSeedNumber + 1) * 200; // The time to move the seeds
             await testUtils.expectMoveSuccess(click, move, undefined, undefined, moveDuration);
         }
-        function expectToBeCaptured(cell: Cell<string>): void {
-            const coordSuffix: string = cell.x + '_' + cell.y;
-            const content: DebugElement = testUtils.findElement('#secondary_message_' + coordSuffix);
-            expect(content.nativeElement.innerHTML).toBe(cell.content);
-            testUtils.expectElementToHaveClasses('#circle_' + coordSuffix, ['base', 'moved-stroke', 'captured-fill']);
+        function expectToBeCaptured(cells: Cell<string>[]): void {
+            for (const cell of cells) {
+                const coordSuffix: string = cell.x + '_' + cell.y;
+                const content: DebugElement = testUtils.findElement('#secondary_message_' + coordSuffix);
+                expect(content.nativeElement.innerHTML).toBe(cell.content);
+                testUtils.expectElementToHaveClasses('#circle_' + coordSuffix, ['base', 'moved-stroke', 'captured-fill']);
+            }
         }
         beforeEach(fakeAsync(async() => {
             testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);
@@ -160,9 +165,7 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
             await expectMoveSuccess('#click_' + startingSuffix, entries.mansooningMove);
 
             // Then the space in question should be marked as "captured"
-            for (const mansooned of entries.mansoonedCoords) {
-                expectToBeCaptured(mansooned);
-            }
+            expectToBeCaptured(entries.mansoonedCoords);
         }));
         it('should display capture', fakeAsync(async() => {
             // Given a state where player zero can capture
@@ -177,9 +180,20 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
             // Initial element
             testUtils.expectElementToHaveClasses('#circle_' + startingSuffix, ['base', 'moved-stroke', 'last-move-stroke', 'player0-fill']);
             // as well as the captured spaces
-            for (const captured of entries.capturedCoords) {
-                expectToBeCaptured(captured);
-            }
+            expectToBeCaptured(entries.capturedCoords);
+        }));
+        it('should display filled-then-captured capture', fakeAsync(async() => {
+            // Given a board where some empty space could filled then captured
+            await testUtils.setupState(entries.fillableThenCapturableState);
+
+            // When doing the capturing move
+            const move: M = entries.fillingThenCapturingMove;
+            const lastMoveX: number = entries.fillingThenCapturingMove.subMoves[0].x;
+            const startingSuffix: string = lastMoveX + '_' + (entries.fillableThenCapturableState.turn + 1) % 2;
+            await expectMoveSuccess('#click_' + startingSuffix, move);
+
+            // Then the space in question should be marked as "captured"
+            expectToBeCaptured(entries.filledThenCapturedCoords);
         }));
         describe('Move Animation', () => {
             it('should immediately highlight last move clicked house', fakeAsync(async() => {

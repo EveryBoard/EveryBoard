@@ -4,10 +4,6 @@ import { BrandhubState } from './BrandhubState';
 import { BrandhubRules } from './BrandhubRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { TaflMinimax } from '../TaflMinimax';
-import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
-import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
 import { BrandhubTutorial } from './BrandhubTutorial';
 
 @Component({
@@ -21,16 +17,11 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
         super(messageDisplayer, false, BrandhubMove.from);
         this.rules = BrandhubRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new TaflMinimax(this.rules, 'DummyBot'),
-            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
-            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
-        ];
+        this.availableMinimaxes = this.createMinimaxes();
         this.encoder = BrandhubMove.encoder;
         this.tutorial = new BrandhubTutorial().tutorial;
     }
     public ngOnInit(): void {
-        this.updateBoard();
+        void this.updateBoard(); // TODO: remove ?
     }
 }

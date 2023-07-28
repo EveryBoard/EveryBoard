@@ -13,6 +13,10 @@ import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
+import { TaflMinimax } from './TaflMinimax';
+import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
 
 export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
     extends RectangularGameComponent<R, M, S, TaflPawn>
@@ -191,5 +195,13 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
+    }
+    protected createMinimaxes(): TaflMinimax[] {
+        return [
+            new TaflMinimax(this.rules, 'DummyBot'),
+            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
+            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
+            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
+        ];
     }
 }

@@ -46,6 +46,20 @@ export class KalahTutorial extends Tutorial {
             $localize`Congratulations!`,
         ),
         // 5. Capture
+        TutorialStep.fromMove(
+            $localize`Capture`,
+            $localize`When the last seed of a distribution end up in one of your empty houses, if the house over it is filled, then you capture both houses. On this board, such a move is possible.<br/><br/>You're playing Dark, do a capture!`,
+            new MancalaState([
+                [0, 4, 4, 4, 4, 4],
+                [0, 2, 0, 2, 4, 0],
+            ], 4, [0, 0]),
+            [
+                KalahMove.of(MancalaDistribution.FIVE),
+                KalahMove.of(MancalaDistribution.FIVE)
+            ],
+            $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.`,
+            $localize`Failed. Choose the righter house on the bottom.`,
+        ),
         // 6. Here: you can starve !
     ];
 }
