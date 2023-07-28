@@ -15,7 +15,7 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
     public override getBoardValue(node: TaflNode): BoardValue {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node); // TODO
         if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
+            throw new Error('tachatte hamdoulah!')
         }
         const state: TaflState = node.gameState;
         const width: number = this.ruler.config.WIDTH;

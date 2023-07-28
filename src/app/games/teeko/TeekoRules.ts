@@ -78,11 +78,8 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
     }
     public getGameStatus(node: TeekoNode): GameStatus {
         const state: TeekoState = node.gameState;
-        // const victoriousCoord: Coord[] = TeekoRules.TEEKO_HELPER.getVictoriousCoord(state);
         const victoriousCoord: Coord[] = this.getVictoryCoord(state);
         if (victoriousCoord.length > 0) {
-            return GameStatus.getVictory(state.getCurrentOpponent());
-        } else if (this.getSquareInfo(state).victoriousCoords.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         } else {
             return GameStatus.ONGOING;
@@ -114,7 +111,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
                 const neutralCount: number = this.count(pieces, PlayerOrNone.NONE);
                 const zeroCount: number = this.count(pieces, PlayerOrNone.ZERO);
                 const oneCount: number = this.count(pieces, PlayerOrNone.ONE);
-                if (neutralCount === 4) { // TODO: recommencer un partie terminée en phase 2 ne cache pas le last move !!
+                if (neutralCount === 4) {
                     continue; // Cause four empty space brings nothing to no one
                 } else if (zeroCount + neutralCount === 4) {
                     if (neutralCount === 0) { // this square is full of Player.ZERO, victory !
