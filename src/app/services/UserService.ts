@@ -6,7 +6,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreTime } from '../domain/Time';
 import { assert } from '../utils/assert';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
 /**
   * The aim of this service is to:
@@ -33,8 +33,18 @@ export class UserService {
     public async markAsVerified(uid: string): Promise<void> {
         await this.userDAO.update(uid, { verified: true });
     }
-    public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Subscription {
-        return this.userDAO.subscribeToChanges(userId, callback);
+    /**
+     * Observes an user, ignoring local updates.
+     */
+    public observeUserOnServer(userId: string, callback: (user: MGPOptional<User>) => void): Subscription {
+        return this.userDAO.subscribeToChanges(userId, (user: MGPOptional<User>): void => {
+            if (user.isPresent() && user.get().lastUpdateTime === null) {
+                // Ignore this update as it does not come from firebase but from ourselves
+                // We will get the firebase update later.
+                return;
+            }
+            callback(user);
+        });
     }
     public async getUserLastUpdateTime(id: string): Promise<MGPOptional<FirestoreTime>> {
         const user: MGPOptional<User> = await this.userDAO.read(id);
@@ -49,6 +59,28 @@ export class UserService {
     public updatePresenceToken(userId: string): Promise<void> {
         return this.userDAO.update(userId, {
             lastUpdateTime: serverTimestamp(),
+        });
+    }
+    /**
+     * Gets the server time by relying on the presence token of the user.
+     * Can only be called if there is a logged in user.
+     * @returns the "current" time of the server
+     */
+    public async getServerTime(userId: string): Promise<Timestamp> {
+        // We force the presence token update, and once we receive it, check the time written by firebase
+        return new Promise((resolve: (result: Timestamp) => void) => {
+            let updateSent: boolean = false;
+            const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>): void => {
+                if (user.get().lastUpdateTime == null) {
+                    // We know that the update has been sent when we actually see a null here
+                    updateSent = true;
+                } else if (updateSent) {
+                    subscription.unsubscribe();
+                    resolve(user.get().lastUpdateTime as Timestamp);
+                }
+            };
+            const subscription: Subscription = this.userDAO.subscribeToChanges(userId, callback);
+            void this.updatePresenceToken(userId);
         });
     }
 }
