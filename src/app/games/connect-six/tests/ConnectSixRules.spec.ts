@@ -7,9 +7,16 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ConnectSixMinimax } from '../ConnectSixMinimax';
 
 describe('ConnectSixRules', () => {
-
+    /**
+     * Naming of cases, some of them will be used
+     * A. double open: _ _ X X X X _ _
+     * B. open: O _ X X X X _ O
+     * C. cross-open: O _ X X X X _ _
+     * D. closed: O X X X X _ O
+     */
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -21,6 +28,7 @@ describe('ConnectSixRules', () => {
     beforeEach(() => {
         rules = ConnectSixRules.get();
         minimaxes = [
+            new ConnectSixMinimax(rules, 'minimax'),
         ];
     });
     describe('first turn', () => {

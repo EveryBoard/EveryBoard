@@ -144,7 +144,6 @@ export class Coord extends Vector {
         }
         return coords;
     }
-
     public override equals(obj: Coord): boolean {
         if (this === obj) return true;
         if (obj.x !== this.x) return false;

@@ -8,7 +8,7 @@ import { Utils } from 'src/app/utils/utils';
 export class ConnectSixFirstMove extends MoveCoord {
 
     public static isInRange(coord: Coord): boolean {
-        return coord.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH);
+        return coord.isInRange(ConnectSixState.WIDTH, ConnectSixState.HEIGHT);
     }
     public static of(coord: Coord): ConnectSixFirstMove {
         Utils.assert(ConnectSixFirstMove.isInRange(coord), 'FIRST_COORD_IS_OUT_OF_RANGE');
@@ -28,8 +28,8 @@ export class ConnectSixDrops extends MoveWithTwoCoords {
     public static encoder: Encoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.of);
 
     public static of(first: Coord, second: Coord): ConnectSixDrops {
-        Utils.assert(first.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH), 'FIRST_COORD_IS_OUT_OF_RANGE');
-        Utils.assert(second.isInRange(ConnectSixState.WIDTH, ConnectSixState.WIDTH), 'SECOND_COORD_IS_OUT_OF_RANGE');
+        Utils.assert(first.isInRange(ConnectSixState.WIDTH, ConnectSixState.HEIGHT), 'FIRST_COORD_IS_OUT_OF_RANGE');
+        Utils.assert(second.isInRange(ConnectSixState.WIDTH, ConnectSixState.HEIGHT), 'SECOND_COORD_IS_OUT_OF_RANGE');
         Utils.assert(first.equals(second) === false, 'COORDS_SHOULD_BE_DIFFERENT');
         return new ConnectSixDrops(first, second);
     }

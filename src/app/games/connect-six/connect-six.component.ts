@@ -4,12 +4,13 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectS
 import { ConnectSixState } from './ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ConnectSixTutorial } from './ConnectSixTutorial.spec';
+import { ConnectSixTutorial } from './ConnectSixTutorial';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
+import { ConnectSixMinimax } from './ConnectSixMinimax';
 
 @Component({
     selector: 'app-connect-six',
@@ -32,6 +33,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.rules = ConnectSixRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
+            new ConnectSixMinimax(this.rules, 'Minimax'),
         ];
         this.encoder = ConnectSixMove.encoder;
         this.tutorial = new ConnectSixTutorial().tutorial;

@@ -1,6 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
@@ -13,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
+import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export class SixState extends OpenHexagonalGameState<Player> {
 
@@ -70,8 +70,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
         }
     }
     public isCoordConnected(coord: Coord, except: MGPOptional<Coord>): boolean {
-        for (const dir of HexaDirection.factory.all) {
-            const neighbor: Coord = coord.getNext(dir, 1);
+        for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
             if (this.pieces.containsKey(neighbor) &&
                 (except.equalsValue(neighbor) === false))
             {
