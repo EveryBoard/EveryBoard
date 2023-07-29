@@ -37,7 +37,7 @@ describe('OnlineGameSelectionComponent', () => {
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         spyOn(messageDisplayer, 'criticalMessage').and.callFake((m: string) => null);
         const reason: string = 'some refusal reason from the service';
-        spyOn(component.observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
+        spyOn(component.currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
 
         // When clicking on 'play'
         await testUtils.clickElement('#launchGame');
