@@ -46,21 +46,37 @@ export class KalahTutorial extends Tutorial {
             $localize`Congratulations!`,
         ),
         // 5. Capture
-        TutorialStep.fromMove(
+        TutorialStep.fromPredicate(
             $localize`Capture`,
             $localize`When the last seed of a distribution end up in one of your empty houses, if the house over it is filled, then you capture both houses. On this board, such a move is possible.<br/><br/>You're playing Dark, do a capture!`,
             new MancalaState([
                 [0, 4, 4, 4, 4, 4],
                 [0, 2, 0, 2, 4, 0],
             ], 4, [0, 0]),
-            [
-                KalahMove.of(MancalaDistribution.FIVE),
-                KalahMove.of(MancalaDistribution.FIVE)
-            ],
+            KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.ZERO, MancalaDistribution.THREE]),
+            (move: KalahMove, state: MancalaState) => {
+                if (state.getPieceAtXY(1, 0) === 0) {
+                    return MGPValidation.SUCCESS;
+                } else {
+                    return MGPValidation.failure('You did not capture, try again!');
+                }
+            },
             $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.`,
-            $localize`Failed. Choose the righter house on the bottom.`,
         ),
         // 6. Here: you can starve !
+        TutorialStep.fromMove(
+            $localize`End Game`,
+            $localize`At any moment, when one player have more than 24 seeds in their kalah, they win. That can happend before the board is emptied, but, there is also a second way. When, at teh beginning of your turn, you don't have any seed in your house, the game is over and your opponent takes all the remaining seeds from his house, which automatically leads to the opponent's victory. Here, the opponent's just gave you their last seed, if you manage not to distribute any seeds in their houses, you win.<br/><br/>You're playing Dark, win!`,
+            new MancalaState([
+                [0, 0, 0, 0, 0, 0],
+                [0, 3, 0, 1, 0, 1],
+            ], 0, [22, 23]),
+            [
+                KalahMove.of(MancalaDistribution.THREE),
+                KalahMove.of(MancalaDistribution.FIVE),
+            ],
+            $localize`Congratulations, you won!`,
+            $localize`Failed, you gave the opponent a seed! Try again.`),
     ];
 }
 // TODO: make it throw when you create a game without minimax !
