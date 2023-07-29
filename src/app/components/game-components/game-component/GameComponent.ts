@@ -85,9 +85,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public isPlayerTurn: () => boolean;
 
-    public chooseMove: (move: M,
-                        state: S,
-                        scores?: readonly [number, number]) => Promise<MGPValidation>;
+    public chooseMove: (move: M) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => MGPValidation;
 

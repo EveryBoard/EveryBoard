@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -41,5 +42,47 @@ describe('TrexoState', () => {
         // Then it should be dropped at the lowest level
         const piece: TrexoPiece = new TrexoPiece(owner, dropTurn);
         expect(nextState.getPieceAt(coord)).toEqual(TrexoPieceStack.of([piece]));
+    });
+    describe('toString', () => {
+        const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
+        const O1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);
+        const O1__T1: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 1)]);
+        const O2__T2: TrexoPieceStack = TrexoPieceStack.of([
+            new TrexoPiece(Player.ZERO, 0),
+            new TrexoPiece(Player.ZERO, 2),
+        ]);
+        const O1__T3: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 3)]);
+        const X1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
+        const X1__T1: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 1)]);
+        const X2__T2: TrexoPieceStack = TrexoPieceStack.of([
+            new TrexoPiece(Player.ONE, 0),
+            new TrexoPiece(Player.ONE, 2),
+        ]);
+        const X1__T3: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 3)]);
+        it('should display state', () => {
+            const state: TrexoState = TrexoState.of([
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, O1__T0, ______, O2__T2, ______, ______, ______, ______],
+                [______, ______, ______, X1__T0, X1__T1, X2__T2, X1__T3, ______, ______, ______],
+                [______, ______, ______, ______, O1__T1, ______, O1__T3, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+            ], 4);
+            const representation: string = `[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
+,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
+,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([(TrexoPiece(PLAYER_ZERO, 0))]), TrexoPieceStack.of([]), TrexoPieceStack.of([(TrexoPiece(PLAYER_ZERO, 0)) (TrexoPiece(PLAYER_ZERO, 2))]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
+,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([(TrexoPiece(PLAYER_ONE, 0))]), TrexoPieceStack.of([(TrexoPiece(PLAYER_ONE, 1))]), TrexoPieceStack.of([(TrexoPiece(PLAYER_ONE, 0)) (TrexoPiece(PLAYER_ONE, 2))]), TrexoPieceStack.of([(TrexoPiece(PLAYER_ONE, 3))]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
+,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([(TrexoPiece(PLAYER_ZERO, 1))]), TrexoPieceStack.of([]), TrexoPieceStack.of([(TrexoPiece(PLAYER_ZERO, 3))]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
+,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
+,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
+,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
+,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
+,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]`;
+            expect(state.toString()).toBe(representation);
+        });
     });
 });

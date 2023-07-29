@@ -178,19 +178,15 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return this.concludeMoveWithCapture([this.chosenFirstCapture.get(), this.chosenSecondCapture.get()]);
     }
     private async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
-        let move: PylosMove;
         if (this.chosenStartingCoord.isAbsent()) {
-            move = PylosMove.ofDrop(this.chosenLandingCoord.get(), captures);
+            const move: PylosMove = PylosMove.ofDrop(this.chosenLandingCoord.get(), captures);
+            return this.chooseMove(move);
         } else {
-            move = PylosMove.ofClimb(this.chosenStartingCoord.get(),
-                                     this.chosenLandingCoord.get(),
-                                     captures);
+            const move: PylosMove = PylosMove.ofClimb(this.chosenStartingCoord.get(),
+                                                      this.chosenLandingCoord.get(),
+                                                      captures);
+            return this.chooseMove(move);
         }
-        return this.tryMove(move, this.state);
-    }
-    private async tryMove(move: PylosMove, state: PylosState): Promise<MGPValidation> {
-        this.cancelMove();
-        return this.chooseMove(move, state);
     }
     public override cancelMoveAttempt(): void {
         this.constructedState = this.state;

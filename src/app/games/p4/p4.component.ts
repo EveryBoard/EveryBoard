@@ -41,7 +41,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: P4Move = P4Move.of(x);
-        return await this.chooseMove(chosenMove, this.getState());
+        return await this.chooseMove(chosenMove);
     }
     public updateBoard(): void {
         const state: P4State = this.getState();

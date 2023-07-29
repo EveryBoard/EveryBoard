@@ -314,7 +314,7 @@ describe('GameService', () => {
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
             const scores: [number, number] = [5, 0];
-            await gameService.updatePart('partId', scores);
+            await gameService.updatePart('partId', MGPOptional.of(scores));
             // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {
                 turn: 2,
@@ -331,7 +331,7 @@ describe('GameService', () => {
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             // When updating the board to notify of a draw
             spyOn(partDAO, 'update').and.resolveTo();
-            await gameService.drawPart('partId', Player.ONE);
+            await gameService.drawPart('partId', Player.ONE, MGPOptional.empty());
             // Then the result is set to draw in the update
             const expectedUpdate: Partial<Part> = {
                 turn: 2,

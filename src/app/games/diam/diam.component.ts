@@ -128,7 +128,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     return this.cancelMove(DiamFailure.MUST_SHIFT_TO_NEIGHBOR());
                 }
             }
-            return this.chooseMove(move, this.getState());
+            return this.chooseMove(move);
         } else {
             return this.cancelMove(DiamFailure.MUST_SELECT_PIECE_FIRST());
         }

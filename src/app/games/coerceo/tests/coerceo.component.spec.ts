@@ -18,9 +18,6 @@ describe('CoerceoComponent', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
 
-    function getScores(): readonly [number, number] {
-        return testUtils.getComponent().scores.get();
-    }
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = testUtils.getComponent();
         expect(gameComponent.isEmptySpace(x, y)).toBeTrue();
@@ -134,9 +131,7 @@ describe('CoerceoComponent', () => {
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
             await testUtils.expectMoveFailure('#click_6_9',
                                               CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
-                                              move,
-                                              undefined,
-                                              getScores());
+                                              move);
         }));
         it('should show possibles destination after choosing your own piece', fakeAsync(async() => {
             // Given any board
@@ -162,7 +157,7 @@ describe('CoerceoComponent', () => {
             // Given a state with a last move
             await testUtils.expectClickSuccess('#click_6_2');
             const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
-            await testUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
+            await testUtils.expectMoveSuccess('#click_7_3', move);
 
             // When clicking on the piece to move
             await testUtils.expectClickSuccess('#click_4_3');
@@ -176,7 +171,7 @@ describe('CoerceoComponent', () => {
         it('should allow simple move', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_6_2');
             const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
-            await testUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
+            await testUtils.expectMoveSuccess('#click_7_3', move);
         }));
         it('should switch of selected piece when clicking another player piece', fakeAsync(async() => {
             // Given a board where a first piece has been selected
@@ -218,7 +213,7 @@ describe('CoerceoComponent', () => {
 
             // When finishing the move
             const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
-            await testUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
+            await testUtils.expectMoveSuccess('#click_7_3', move);
 
             // Then the highlight of the last move should be present
             testUtils.expectElementToHaveClass('#last_start_6_2', 'last-move-stroke');
@@ -247,9 +242,7 @@ describe('CoerceoComponent', () => {
 
             // When applying a tile exchange
             await testUtils.expectMoveSuccess('#click_6_9',
-                                              CoerceoTileExchangeMove.of(new Coord(6, 9)),
-                                              undefined,
-                                              [0, 0]);
+                                              CoerceoTileExchangeMove.of(new Coord(6, 9)));
 
             // Then the start and end of penultimate move should be gone
             testUtils.expectElementNotToExist('#last_end_6_9');

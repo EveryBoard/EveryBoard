@@ -97,7 +97,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         const clickedPiece: FourStatePiece = this.state.getPieceAt(coord);
         if (clickedPiece.is(this.state.getCurrentOpponent())) {
             const move: CoerceoMove = CoerceoTileExchangeMove.of(coord);
-            return this.chooseMove(move, this.state, this.state.captures);
+            return this.chooseMove(move);
         } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
@@ -109,7 +109,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     private async secondClick(coord: Coord): Promise<MGPValidation> {
         if (this.possibleLandings.some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoRegularMove.of(this.chosenCoord.get(), coord);
-            return this.chooseMove(move, this.state, this.state.captures);
+            return this.chooseMove(move);
         } else {
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE());
         }

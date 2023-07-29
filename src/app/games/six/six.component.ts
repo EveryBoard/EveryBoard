@@ -152,7 +152,7 @@ export class SixComponent
             const cuttingMove: SixMove = SixMove.ofCut(this.selectedPiece.get(),
                                                        this.chosenLanding.get(),
                                                        piece);
-            return this.chooseMove(cuttingMove, this.state);
+            return this.chooseMove(cuttingMove);
         }
     }
     public async onNeighborClick(neighbor: Coord): Promise<MGPValidation> {
@@ -164,7 +164,7 @@ export class SixComponent
             return this.cancelMove(SixFailure.MUST_CUT());
         }
         if (this.state.turn < 40) {
-            return this.chooseMove(SixMove.ofDrop(neighbor), this.state);
+            return this.chooseMove(SixMove.ofDrop(neighbor));
         } else {
             if (this.selectedPiece.isAbsent()) {
                 return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP());
@@ -179,7 +179,7 @@ export class SixComponent
                     this.nextClickShouldSelectGroup = true;
                     return MGPValidation.SUCCESS;
                 } else {
-                    return this.chooseMove(movement, this.state);
+                    return this.chooseMove(movement);
                 }
             }
         }

@@ -216,7 +216,7 @@ export class LodestoneComponent
         const coord: Coord = this.selectedCoord.get();
         const lodestone: LodestoneDescription = this.selectedLodestone.get();
         const move: LodestoneMove = new LodestoneMove(coord, lodestone.direction, lodestone.orientation, this.captures);
-        return this.chooseMove(move, this.getState());
+        return this.chooseMove(move);
     }
     public onPressurePlateClick(temporary: boolean, position: LodestonePressurePlatePosition, index: number)
     : Promise<MGPValidation> {
