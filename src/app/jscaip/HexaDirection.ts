@@ -1,25 +1,8 @@
 import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BaseDirection, DirectionFactory } from './Direction';
-import { MoveEncoder } from '../utils/Encoder';
+import { Encoder } from '../utils/Encoder';
 
-class HexaDirectionEncoder extends MoveEncoder<HexaDirection> {
-    public encodeMove(direction: HexaDirection): number {
-        switch (direction) {
-            case (HexaDirection.UP): return 0;
-            case (HexaDirection.UP_RIGHT): return 1;
-            case (HexaDirection.RIGHT): return 2;
-            case (HexaDirection.DOWN): return 3;
-            case (HexaDirection.DOWN_LEFT): return 4;
-            default: return 5;
-        }
-    }
-    public decodeMove(encoded: number): HexaDirection {
-        assert(0 <= encoded && encoded <= 5, 'Invalid encoded number for HexaDirection ' + encoded);
-        return HexaDirection.factory.all[encoded];
-    }
-}
 
 /** Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons */
 export class HexaDirection extends BaseDirection {
@@ -47,8 +30,22 @@ export class HexaDirection extends BaseDirection {
                 HexaDirection.LEFT,
             ];
         };
-    public static readonly encoder: MoveEncoder<HexaDirection> = new HexaDirectionEncoder();
-
+    public static readonly encoder: Encoder<HexaDirection> = Encoder.fromFunctions(
+        (direction: HexaDirection): number => {
+            switch (direction) {
+                case (HexaDirection.UP): return 0;
+                case (HexaDirection.UP_RIGHT): return 1;
+                case (HexaDirection.RIGHT): return 2;
+                case (HexaDirection.DOWN): return 3;
+                case (HexaDirection.DOWN_LEFT): return 4;
+                default: return 5;
+            }
+        },
+        (encoded: number): HexaDirection => {
+            Utils.assert(0 <= encoded && encoded <= 5, 'Invalid encoded number for HexaDirection ' + encoded);
+            return HexaDirection.factory.all[encoded];
+        },
+    );
     public static getAngle(direction: HexaDirection): number {
         switch (direction) {
             case HexaDirection.UP: return 0;
@@ -65,7 +62,7 @@ export class HexaDirection extends BaseDirection {
         super(x, y);
     }
     public getOpposite(): HexaDirection {
-        const opposite: MGPFallible<HexaDirection> = HexaDirection.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<HexaDirection> = HexaDirection.factory.from(-this.x, -this.y);
         return opposite.get();
     }
 }

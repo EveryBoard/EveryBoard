@@ -237,7 +237,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         switch (this.board[y][x]) {
             case PlayerOrNone.NONE:
                 if (distance === 1) {
-                    return this.tryMove(new EpaminondasMove(firstPiece.x, firstPiece.y, 1, 1, direction));
+                    return this.chooseMove(new EpaminondasMove(firstPiece.x, firstPiece.y, 1, 1, direction));
                 } else {
                     return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE());
                 }
@@ -299,7 +299,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                               phalanxSize,
                                                               stepSize,
                                                               phalanxDirection);
-            return this.tryMove(move);
+            return this.chooseMove(move);
         }
     }
     private async thirdClickOnPlayerPiece(clicked: Coord,
@@ -356,10 +356,6 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.phalanxMiddles = [];
         this.phalanxValidLandings = this.getPhalanxValidLandings();
         return MGPValidation.SUCCESS;
-    }
-    public tryMove(move: EpaminondasMove): Promise<MGPValidation> {
-        this.cancelMove();
-        return this.chooseMove(move);
     }
     public getPieceClasses(x: number, y: number): string[] {
         const player: string = this.getPlayerClass(this.board[y][x]);

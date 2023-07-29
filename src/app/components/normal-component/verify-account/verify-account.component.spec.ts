@@ -24,7 +24,11 @@ describe('VerifyAccountComponent', () => {
     describe('google user', () => {
         beforeEach(() => {
             // Given a user that registered through google
-            ConnectedUserServiceMock.setUser(new AuthUser('kd5457d', MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), true));
+            const authUser: AuthUser = new AuthUser('kd5457d',
+                                                    MGPOptional.of('jeanjaja@gmail.com'),
+                                                    MGPOptional.empty(),
+                                                    true);
+            ConnectedUserServiceMock.setUser(authUser);
             testUtils.detectChanges();
         });
         it('should ask the username if the user has none', fakeAsync(async() => {

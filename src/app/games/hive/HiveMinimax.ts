@@ -3,7 +3,7 @@ import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { HiveMove, HiveMoveCoordToCoord } from './HiveMove';
+import { HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HivePiece } from './HivePiece';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
@@ -46,7 +46,7 @@ export class HiveMinimax extends PlayerMetricsMinimax<HiveMove, HiveState> {
     private queenBeeMobility(state: HiveState, player: Player): number {
         const queenBee: MGPOptional<Coord> = state.queenBeeLocation(player);
         if (queenBee.isPresent()) {
-            const possibleMoves: MGPSet<HiveMoveCoordToCoord> =
+            const possibleMoves: MGPSet<HiveCoordToCoordMove> =
                 HiveRules.get().getPossibleMovesFrom(state, queenBee.get());
             return possibleMoves.size();
         } else {

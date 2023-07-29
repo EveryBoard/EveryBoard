@@ -1,18 +1,13 @@
 import { assert } from 'src/app/utils/assert';
-import { MoveEncoder } from 'src/app/utils/Encoder';
-import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { Encoder } from 'src/app/utils/Encoder';
 
 export class ApagosCoord {
 
-    public static encoder: MoveEncoder<ApagosCoord> = new class extends MoveEncoder<ApagosCoord> {
-        public encodeMove(coord: ApagosCoord): JSONValueWithoutArray {
-            return coord.x;
-        }
-        public decodeMove(encoded: JSONValueWithoutArray): ApagosCoord {
-            Utils.assert(encoded != null, 'Invalid encoded ApagosCoord: ' + encoded);
-            return ApagosCoord.from(encoded as number);
-        }
-    };
+    public static encoder: Encoder<ApagosCoord> = Encoder.tuple(
+        [Encoder.identity<number>()],
+        (coord: ApagosCoord) => [coord.x],
+        (value: [number]) => ApagosCoord.of(value[0]),
+    );
     public static ZERO: ApagosCoord = new ApagosCoord(0);
 
     public static ONE: ApagosCoord = new ApagosCoord(1);
@@ -21,7 +16,7 @@ export class ApagosCoord {
 
     public static THREE: ApagosCoord = new ApagosCoord(3);
 
-    public static from(x: number): ApagosCoord {
+    public static of(x: number): ApagosCoord {
         switch (x) {
             case 0: return ApagosCoord.ZERO;
             case 1: return ApagosCoord.ONE;

@@ -1,4 +1,4 @@
-import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
+import { CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -33,7 +33,7 @@ export class CoerceoTutorial extends Tutorial {
         You're playing first, hence you're playing Dark.
         Perform any move.`,
             CoerceoState.getInitialState(),
-            CoerceoMove.fromCoordToCoord(new Coord(3, 5), new Coord(5, 5)),
+            CoerceoRegularMove.of(new Coord(3, 5), new Coord(5, 5)),
             $localize`Congratulations! Let's see captures now.`,
         ),
         TutorialStep.fromMove(
@@ -55,8 +55,8 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
             ], 3, [0, 0], [0, 0]),
             [
-                CoerceoMove.fromCoordToCoord(new Coord(5, 2), new Coord(4, 1)),
-                CoerceoMove.fromCoordToCoord(new Coord(3, 4), new Coord(4, 3)),
+                CoerceoRegularMove.of(new Coord(5, 2), new Coord(4, 1)),
+                CoerceoRegularMove.of(new Coord(3, 4), new Coord(4, 3)),
             ],
             $localize`Congratulations!`,
             $localize`Failed, you have not captured any piece.`,
@@ -82,9 +82,9 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
             ], 2, [0, 0], [0, 0]),
             [
-                CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(4, 6)),
-                CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(3, 5)),
-                CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(3, 7)),
+                CoerceoRegularMove.of(new Coord(2, 6), new Coord(4, 6)),
+                CoerceoRegularMove.of(new Coord(2, 6), new Coord(3, 5)),
+                CoerceoRegularMove.of(new Coord(2, 6), new Coord(3, 7)),
             ],
             $localize`Congratulations!`,
             $localize`Failed, you have not gained the two tiles that you could, try again!`,
@@ -109,7 +109,7 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
             ], 1, [0, 2], [0, 0]),
             [
-                CoerceoMove.fromTilesExchange(new Coord(5, 5)),
+                CoerceoTileExchangeMove.of(new Coord(5, 5)),
             ],
             $localize`Congratulations!`,
             $localize`It's nice to move a piece, but you could have had the opponent's piece immediately by clicking on it!`,
@@ -132,8 +132,8 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ], 1, [0, 0], [0, 0]),
             [
-                CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(6, 5)),
-                CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(8, 5)),
+                CoerceoRegularMove.of(new Coord(7, 6), new Coord(6, 5)),
+                CoerceoRegularMove.of(new Coord(7, 6), new Coord(8, 5)),
             ],
             $localize`Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent's piece has disappeared because the tile's capture has removed its last empty neighboring space.`,

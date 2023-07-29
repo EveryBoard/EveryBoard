@@ -12,7 +12,7 @@ export class FourStatePiece implements ComparableObject {
 
     public static UNREACHABLE: FourStatePiece = new FourStatePiece(3);
 
-    public static from(value: number): FourStatePiece {
+    public static of(value: number): FourStatePiece {
         switch (value) {
             case FourStatePiece.ZERO.value:
                 return FourStatePiece.ZERO;

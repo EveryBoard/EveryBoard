@@ -32,10 +32,10 @@ describe('TaflMove', () => {
         const a: Coord = new Coord(0, 0);
         const b: Coord = new Coord(0, 1);
         const c: Coord = new Coord(0, 2);
-        const move: TaflMove = MyTaflMove.from(a, b);
-        const neighbors: TaflMove = MyTaflMove.from(a, c);
-        const cousin: TaflMove = MyTaflMove.from(c, b);
-        const twin: TaflMove = MyTaflMove.from(a, b);
+        const move: TaflMove = MyTaflMove.from(a, b).get();
+        const neighbors: TaflMove = MyTaflMove.from(a, c).get();
+        const cousin: TaflMove = MyTaflMove.from(c, b).get();
+        const twin: TaflMove = MyTaflMove.from(a, b).get();
         expect(move.equals(move)).toBeTrue();
         expect(move.equals(neighbors)).toBeFalse();
         expect(move.equals(cousin)).toBeFalse();

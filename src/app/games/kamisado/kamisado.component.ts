@@ -74,7 +74,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         }
     }
     public override showLastMove(move: KamisadoMove): void {
-        if (move.isPieceMove()) {
+        if (KamisadoMove.isPiece(move)) {
             this.lastPieceMove = MGPOptional.of(move);
         }
     }

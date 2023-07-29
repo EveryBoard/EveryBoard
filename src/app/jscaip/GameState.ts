@@ -5,7 +5,7 @@ export abstract class GameState {
     public constructor(public readonly turn: number) {
     }
     public getCurrentPlayer(): Player {
-        return Player.fromTurn(this.turn);
+        return Player.ofTurn(this.turn);
     }
     public getCurrentOpponent(): Player {
         return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;

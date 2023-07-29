@@ -10,7 +10,7 @@ import { MartianChessPiece } from './MartianChessPiece';
 
 export class MartianChessCapture {
 
-    public static from(pieces: MartianChessPiece[]): MartianChessCapture {
+    public static of(pieces: MartianChessPiece[]): MartianChessCapture {
         const map: MGPMap<MartianChessPiece, number> = new MGPMap<MartianChessPiece, number>();
         for (const piece of pieces) {
             MartianChessCapture.addToMap(map, piece);
@@ -75,8 +75,8 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         super(board, turn);
         if (captured == null) {
             captured = new MGPMap([
-                { key: Player.ZERO, value: MartianChessCapture.from([]) },
-                { key: Player.ONE, value: MartianChessCapture.from([]) },
+                { key: Player.ZERO, value: MartianChessCapture.of([]) },
+                { key: Player.ONE, value: MartianChessCapture.of([]) },
             ]);
         }
         captured.makeImmutable();

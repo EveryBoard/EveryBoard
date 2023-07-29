@@ -32,7 +32,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {
-            return this.applyLegalShift(move, state);
+            return this.applyLegalShift(move as DiamMoveShift, state);
         }
     }
     private applyLegalDrop(drop: DiamMoveDrop, state: DiamState): DiamState {
@@ -60,7 +60,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         if (move.isDrop()) {
             return this.isDropLegal(move, state);
         } else {
-            return this.isShiftLegal(move, state);
+            return this.isShiftLegal(move as DiamMoveShift, state);
         }
     }
     private isDropLegal(drop: DiamMoveDrop, state: DiamState): MGPValidation {

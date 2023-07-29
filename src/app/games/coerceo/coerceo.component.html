@@ -7,6 +7,7 @@
            id="click_{{ x }}_{{ y }}"
            (click)="onClick(x, y)">
             <polygon *ngIf="isPyramid(x, y) else emptySpace"
+                     id="pyramid_{{ x }}_{{ y }}"
                      [attr.points]="getPyramidCoordinate(x, y)"
                      [ngClass]="getPyramidClass(x, y)"
                      class="base mid-stroke"
@@ -21,16 +22,16 @@
                          stroke-linecap="round"
                 />
             </ng-template>
-            <polygon *ngIf="spaceContent !== NONE"
-                     id="dark_line_{{ x }}_{{ y }}"
+            <g *ngIf="spaceContent !== NONE">
+                <polygon id="base_line_{{ x }}_{{ y }}"
                      [attr.points]="getLineCoordinate(x, y)"
                      class="base"
-            />
-            <polygon *ngIf="spaceContent !== NONE"
-                     id="dark_line_{{ x }}_{{ y }}"
+                />
+                <polygon id="white_stroke_line_{{ x }}_{{ y }}"
                      [attr.points]="getLineCoordinate(x, y)"
                      class="white-stroke"
-            />
+                />
+            </g>
         </g>
     </g>
     <g *ngIf="chosenCoord.isPresent() else lastMove">

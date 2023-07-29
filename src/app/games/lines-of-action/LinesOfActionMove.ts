@@ -1,14 +1,14 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class LinesOfActionMove extends MoveCoordToCoord {
-    public static encoder: MoveEncoder<LinesOfActionMove> =
+
+    public static encoder: Encoder<LinesOfActionMove> =
         MoveWithTwoCoords.getFallibleEncoder<LinesOfActionMove>(LinesOfActionMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {
@@ -28,19 +28,7 @@ export class LinesOfActionMove extends MoveCoordToCoord {
         super(start, end);
         this.direction = Direction.factory.fromMove(start, end).get();
     }
-    public equals(other: LinesOfActionMove): boolean {
-        if (other === this) return true;
-        if (!other.getStart().equals(this.getStart())) return false;
-        return other.getEnd().equals(this.getEnd());
-    }
     public override toString(): string {
         return 'LinesOfActionMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
-    public encode(): JSONValue {
-        return LinesOfActionMove.encoder.encode(this);
-    }
-    public decode(encodedMove: JSONValue): LinesOfActionMove {
-        return LinesOfActionMove.encoder.decode(encodedMove);
-    }
-
 }
