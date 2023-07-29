@@ -4,6 +4,7 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MoveEncoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { TeekoState } from './TeekoState';
 
 export type TeekoMove = TeekoDropMove | TeekoTranslationMove;
 
@@ -63,7 +64,7 @@ export class TeekoTranslationMove extends MoveCoordToCoord {
 export namespace TeekoMove {
 
     export function isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(5, 5);
+        return coord.isInRange(TeekoState.WIDTH, TeekoState.WIDTH);
     }
     export const encoder: MoveEncoder<TeekoMove> =
         MoveEncoder.disjunction(TeekoDropMove.encoder,

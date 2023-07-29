@@ -4,8 +4,11 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 
 export class TeekoState extends GameStateWithTable<PlayerOrNone> {
 
+    public static readonly WIDTH: number = 5;
+
     public static getInitialState(): TeekoState {
-        const board: Table<PlayerOrNone> = ArrayUtils.createTable(5, 5, PlayerOrNone.NONE);
+        const board: Table<PlayerOrNone> =
+            ArrayUtils.createTable(TeekoState.WIDTH, TeekoState.WIDTH, PlayerOrNone.NONE);
         return new TeekoState(board, 0);
     }
     public isInDropPhase(): boolean {

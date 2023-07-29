@@ -94,10 +94,9 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
     }
     public getSquareInfo(state: TeekoState): { score: number, victoriousCoords: Coord[] } {
         const victoriousCoords: Coord[] = [];
-        let zeroSquarePossibilities: number = 0;
-        let oneSquarePossibilities: number = 0;
-        for (let cx: number = 0; cx < 4; cx++) {
-            for (let cy: number = 0; cy < 4; cy++) {
+        const possibilies: [number, number] = [0, 0];
+        for (let cx: number = 0; cx < TeekoState.WIDTH - 1; cx++) {
+            for (let cy: number = 0; cy < TeekoState.WIDTH - 1; cy++) {
                 const upLeft: Coord = new Coord(cx, cy);
                 const upRight: Coord = new Coord(cx + 1, cy);
                 const downLeft: Coord = new Coord(cx, cy + 1);
@@ -111,23 +110,20 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
                 const neutralCount: number = this.count(pieces, PlayerOrNone.NONE);
                 const zeroCount: number = this.count(pieces, PlayerOrNone.ZERO);
                 const oneCount: number = this.count(pieces, PlayerOrNone.ONE);
-                if (neutralCount === 4) {
-                    continue; // Cause four empty space brings nothing to no one
-                } else if (zeroCount + neutralCount === 4) {
-                    if (neutralCount === 0) { // this square is full of Player.ZERO, victory !
+                if (neutralCount < 4) { // If the square has pieces
+                    if (zeroCount === 4 || oneCount === 4) { // There is one player who won, in this square
                         victoriousCoords.push(upLeft, upRight, downLeft, downRight);
                     }
-                    zeroSquarePossibilities++; // +1 square only occupied by Player.ZERO
-                } else if (oneCount + neutralCount === 4) {
-                    if (neutralCount === 0) { // this square is full of Player.ONE, victory !
-                        victoriousCoords.push(upLeft, upRight, downLeft, downRight);
+                    else if (zeroCount > 0) { // Only Player.ZERO has piece in this square
+                        possibilies[0] = possibilies[0] + 1;
+                    } else { // Only Player.ONE has piece in this square
+                        possibilies[1] = possibilies[1] + 1;
                     }
-                    oneSquarePossibilities++; // +1 square only occupied by Player.ONE
                 }
             }
         }
         return {
-            score: oneSquarePossibilities - zeroSquarePossibilities,
+            score: possibilies[1] - possibilies[0],
             victoriousCoords,
         };
     }

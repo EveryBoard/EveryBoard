@@ -25,8 +25,8 @@ describe('TeekoMinimax', () => {
         // When computing the list of moves
         const moves: TeekoMove[] = minimax.getListMoves(node);
 
-        // Then there should be 25 move, one by space
-        expect(moves.length).toBe(25);
+        // Then there should be (TeekoState.WIDTH * TeekoState.WIDTH) move, one by space
+        expect(moves.length).toBe(TeekoState.WIDTH * TeekoState.WIDTH);
     });
     it('should have all move options in translation phase', () => {
         // Given an node in translation phase

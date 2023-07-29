@@ -13,27 +13,27 @@ export class TeekoMinimax extends Minimax<TeekoMove, TeekoState, void, BoardValu
     }
     public getListMoves(node: TeekoNode): TeekoMove[] {
         if (node.gameState.isInDropPhase()) {
-            return this.getListDrops(node);
+            return this.getListDrops(node.gameState);
         } else {
-            return this.getListTranslations(node);
+            return this.getListTranslations(node.gameState);
         }
     }
-    private getListDrops(node: TeekoNode): TeekoMove[] {
+    private getListDrops(state: TeekoState): TeekoMove[] {
         const moves: TeekoMove[] = [];
-        for (const coordAndContent of node.gameState.getCoordsAndContents()) {
+        for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
-            if (node.gameState.getPieceAt(coord).isPlayer() === false) {
+            if (state.getPieceAt(coord).isPlayer() === false) {
                 const newMove: TeekoDropMove = TeekoDropMove.from(coord).get();
                 moves.push(newMove);
             }
         }
         return moves;
     }
-    private getListTranslations(node: TeekoNode): TeekoMove[] {
+    private getListTranslations(state: TeekoState): TeekoMove[] {
         const moves: TeekoTranslationMove[] = [];
-        const currentPlayer: PlayerOrNone = node.gameState.getCurrentPlayer();
-        const listPieces: Coord[] = this.getCoordsContaining(node.gameState, currentPlayer);
-        const listEmptySpaces: Coord[] = this.getCoordsContaining(node.gameState, PlayerOrNone.NONE);
+        const currentPlayer: PlayerOrNone = state.getCurrentPlayer();
+        const listPieces: Coord[] = this.getCoordsContaining(state, currentPlayer);
+        const listEmptySpaces: Coord[] = this.getCoordsContaining(state, PlayerOrNone.NONE);
         for (const piece of listPieces) {
             for (const emptySpace of listEmptySpaces) {
                 const newMove: TeekoTranslationMove = TeekoTranslationMove.from(piece, emptySpace).get();

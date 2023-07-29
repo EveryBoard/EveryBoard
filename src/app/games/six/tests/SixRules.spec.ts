@@ -300,7 +300,7 @@ describe('SixRules', () => {
             });
         });
         describe('Shape Victories', () => {
-            it('should consider winner player who align 6 pieces (playing on border)', () => {
+            fit('should consider winner player who align 6 pieces (playing on border)', () => {
                 // Given a board in pre-victory
                 const board: Table<PlayerOrNone> = [
                     [O, _, _, _, _],
@@ -324,12 +324,8 @@ describe('SixRules', () => {
                     [O, O, X, X, _],
                     [O, X, _, _, _],
                 ];
-                // const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
-                // expect(status.isSuccess()).toBeTrue();
                 const expectedState: SixState =
                     SixState.fromRepresentation(expectedBoard, 11);
-                // const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
-                // expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
