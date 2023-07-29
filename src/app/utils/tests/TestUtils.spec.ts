@@ -397,56 +397,35 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             tick(3000); // needs to be > 2999
         }
     }
-    public async expectMoveSuccess(elementName: string,
-                                   move: Move,
-                                   state?: GameState,
-                                   scores?: readonly [number, number])
-    : Promise<void>
-    {
+    public async expectMoveSuccess(elementName: string, move: Move) : Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state ?? this.gameComponent.getState();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            if (scores) {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
-            } else {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
-            }
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
             this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
             this.onLegalUserMoveSpy.calls.reset();
         }
     }
-    public async expectMoveFailure(elementName: string,
-                                   reason: string,
-                                   move: Move,
-                                   state?: GameState,
-                                   scores?: readonly [number, number])
-    : Promise<void>
-    {
+    public async expectMoveFailure(elementName: string, reason: string, move: Move): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state ?? this.gameComponent.getState();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            if (scores) {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
-            } else {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
-            }
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
             this.chooseMoveSpy.calls.reset();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
@@ -457,23 +436,18 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public expectPassToBeForbidden(): void {
         this.expectElementNotToExist('#passButton');
     }
-    public async expectPassSuccess(move: Move, scores?: readonly [number, number]): Promise<void> {
+    public async expectPassSuccess(move: Move): Promise<void> {
         const passButton: DebugElement = this.findElement('#passButton');
         expect(passButton).withContext('Pass button is expected to be shown, but it is not').toBeTruthy();
         if (passButton == null) {
             return;
         } else {
-            const state: GameState = this.gameComponent.getState();
             passButton.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
-            if (scores) {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state, scores);
-            } else {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state);
-            }
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
             this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
             this.onLegalUserMoveSpy.calls.reset();
         }
     }

@@ -86,7 +86,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
     public override async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
-        return await this.chooseMove(DvonnMove.PASS, this.getState());
+        return await this.chooseMove(DvonnMove.PASS);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -131,7 +131,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             if (legality.isFailure() && this.rules.isMovablePiece(state, chosenDestination).isSuccess()) {
                 return this.choosePiece(x, y);
             } else {
-                return this.chooseMove(move.get(), state);
+                return this.chooseMove(move.get());
             }
         }
     }

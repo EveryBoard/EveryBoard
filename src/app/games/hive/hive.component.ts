@@ -167,7 +167,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
     public override async pass(): Promise<MGPValidation> {
         Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
-        return await this.chooseMove(HiveMove.PASS, this.getState());
+        return await this.chooseMove(HiveMove.PASS);
     }
     private computeViewBox(): void {
         const coords: Coord[] = this.getPieceCoords().union(this.getAllNeighbors()).toList();
@@ -330,7 +330,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         const stack: HivePieceStack = state.getAt(coord);
         if (this.selectedRemaining.isPresent()) {
             const move: HiveMove = HiveMove.drop(this.selectedRemaining.get(), coord);
-            return this.chooseMove(move, state);
+            return this.chooseMove(move);
         }
         if (this.selectedStart.isPresent()) {
             const topPiece: HivePiece = state.getAt(this.selectedStart.get()).topPiece();
@@ -354,7 +354,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             const move: MGPFallible<HiveMove> = HiveMove.move(this.selectedStart.get(), coord);
             // static moves are prevented in selectSpace
             assert(move.isSuccess(), 'Hive: the only forbidden moves are static moves');
-            return this.chooseMove(move.get(), this.getState());
+            return this.chooseMove(move.get());
         }
     }
     private async selectStart(coord: Coord, stack: HivePieceStack): Promise<MGPValidation> {
@@ -420,7 +420,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.selectedSpiderCoords.push(coord);
         if (this.selectedSpiderCoords.length === 4) {
             const move: HiveMove = HiveMove.spiderMove(this.selectedSpiderCoords as [Coord, Coord, Coord, Coord]);
-            return this.chooseMove(move, this.getState());
+            return this.chooseMove(move);
         }
         const validity: MGPValidation =
             HiveSpiderRules.get().prefixLegality(this.selectedSpiderCoords, this.getState());
