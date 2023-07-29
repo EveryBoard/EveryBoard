@@ -2,7 +2,7 @@ import { Move } from './Move';
 import { SCORE } from './SCORE';
 import { Rules } from './Rules';
 import { MGPMap } from '../utils/MGPMap';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { BoardValue } from './BoardValue';
 import { Minimax } from './Minimax';
@@ -12,10 +12,236 @@ import { Player } from './Player';
 import { GameState } from './GameState';
 import { MGPFallible } from '../utils/MGPFallible';
 import { MCTS } from './MCTS';
+import { ArrayUtils } from '../utils/ArrayUtils';
 
 export class MGPNodeStats {
     public static createdNodes: number = 0;
     public static minimaxTime: number = 0;
+}
+
+/**
+ * A node of the game tree.
+ * A node has a state, and may have a parent and previous move.
+ * This is only a tree datastructure, we don't need any logic in here.
+ * As an extra, a node may contain cached values used by AIs.
+ */
+export class GameNode<M extends Move, S extends GameState> {
+    /**
+     * The children of this node.
+     * It is a map keyed with moves, with as value the child that corresponds to applying that move to the current state.
+     */
+    private readonly children: MGPMap<M, GameNode<M, S>> = new MGPMap();
+
+    /**
+     * A cache that AIs can use. It is up to the AIs to properly name and type the values in the cache.
+     */
+    private readonly cache: MGPMap<string, object> = new MGPMap();
+
+    public constructor(public readonly gameState: S,
+                       public readonly parent: MGPOptional<GameNode<M, S>> = MGPOptional.empty(),
+                       public readonly move: MGPOptional<M> = MGPOptional.empty()) {
+    }
+    /**
+     * Return the child corresponding to applying the given move to the current state,
+     * or empty if it has not yet been calculated.
+     */
+    public getChild(move: M): MGPOptional<GameNode<M, S>> {
+        return this.children.get(move);
+    }
+    /**
+     * Adds a child to this node.
+     */
+    public addChild(move: M, node: GameNode<M, S>): void {
+        this.children.set(move, node);
+    }
+    /**
+     * Get a value from the cache, or MGPOptional if it does not exist in the cache.
+     */
+    public getCache<T>(key: string): MGPOptional<T> {
+        return this.cache.get(key) as MGPOptional<T>;
+    }
+    /**
+     * Set or replace a value from the cache.
+     */
+    public setCache(key: string, value: object) {
+        this.cache.set(key, value);
+    }
+}
+
+/**
+ * A move generator should have a method that generates move from a node.
+ * It may generate all possible moves, but may also just filter out some uninteresting moves.
+ */
+export abstract class MoveGenerator<M extends Move, S extends GameState> {
+    /**
+     * Gives the list of all the possible moves.
+     * Has to be implemented for each rule so that the AI can choose among theses moves.
+     * This function could give an incomplete set of data if some of them are redundant
+     * or if some of them are too bad to be interesting to count, as a matter of performance.
+     */
+    public abstract getListMoves(node: GameNode<M, S>): M[];
+}
+
+/**
+ * Most AIs can be parameterized. This is where the parameters would be stored.
+ */
+export interface AIOptions {
+}
+
+/**
+ * These are options for AIs that have a depth limit, such as minimax.
+ */
+export class AIDepthLimitOptions implements AIOptions {
+    public readonly maxDepth: number;
+}
+
+/**
+ * These are options for AI that can be iteration-constrained, such as MCTS.
+ */
+export class AIIterationLimitOptions implements AIOptions {
+    public readonly maxIterations: number;
+}
+
+/**
+ * An AI selects a move from a game node.
+ */
+export abstract class AI<M extends Move, S extends GameState, Opts extends AIOptions> {
+    public abstract chooseNextMove(node: GameNode<M, S>, options: Opts): M;
+}
+
+/**
+ * A heuristic assigns a specific value for a node.
+ * This is used for example by minimax-based AIs.
+ * The value assigned to a node can be more than just a number, and is thus a `BoardValue`
+ */
+export abstract class Heuristic<M extends Move, S extends GameState, B extends BoardValue = BoardValue> {
+    public abstract getBoardValue(node: GameNode<M, S>): B;
+}
+
+/**
+ * This implements the minimax algorithm with alpha-beta pruning.
+ */
+export class MinimaxAI<M extends Move, S extends GameState, B extends BoardValue = BoardValue,L = void> implements AI<M, S, AIDepthLimitOptions> {
+    // States whether the minimax takes random moves from the list of best moves.
+    private readonly RANDOM: boolean = false;
+    // States whether alpha-beta pruning must be done. It probably is never useful to set it to false.
+    private readonly PRUNE: boolean = true;
+
+    public constructor(public readonly name: string,
+                       private readonly rules: Rules<M, S, L>,
+                       private readonly heuristic: Heuristic<M, S, B>,
+                       private readonly moveGenerator: MoveGenerator<M, S>) {
+    }
+    public chooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions): M {
+        Utils.assert(this.rules.getGameStatus(node).isEndGame === false, 'MinimaxAI has been asked to choose a move from a finished game');
+        let bestDescendant: GameNode<M, S> = this.alphaBeta(node,
+                                                            options.maxDepth,
+                                                            Number.MIN_SAFE_INTEGER,
+                                                            Number.MAX_SAFE_INTEGER);
+        while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
+            bestDescendant = bestDescendant.parent.get();
+        }
+        return bestDescendant.move.get();
+    }
+
+    public alphaBeta(node: GameNode<M, S>, depth: number, alpha: number, beta: number): GameNode<M, S> {
+        // const LOCAL_VERBOSE: boolean = false;
+        if (depth < 1) {
+            // display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf-Calculation : ' + this.myToString() + ' at depth ' + depth);
+            return node; // leaf by calculation
+        } else if (this.rules.getGameStatus(node).isEndGame) {
+            // display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf-EndGame(' + minimax.ruler.getGameStatus(this).winner.toString() + ') : ' + this.myToString() + ' at depth ' + depth);
+            return node; // rules - leaf or calculation - leaf
+        }
+        const possibleMoves: MGPSet<M> = this.getPossibleMoves(node);
+        Utils.assert(possibleMoves.size() > 0, 'Minimax ' + this.name + ' should give move, received none!');
+        const bestChildren: GameNode< M, S>[] = this.getBestChildren(node, possibleMoves, depth, alpha, beta);
+        const bestChild: GameNode<M, S> = this.getBestChildAmong(bestChildren);
+        const bestChildScore: B = this.getScore(bestChild);
+        this.setScore(node, bestChildScore);
+        return bestChild;
+    }
+    private getPossibleMoves(node: GameNode<M, S>): MGPSet<M> {
+        const currentMoves: MGPOptional<MGPSet<M>> = this.getMoves(node);
+        if (currentMoves.isAbsent()) {
+            const moves: M[] = this.moveGenerator.getListMoves(node);
+            this.setMoves(node, new MGPSet(moves));
+            return new MGPSet(moves);
+        } else {
+            return currentMoves.get();
+        }
+    }
+    private getBestChildren(node: GameNode<M, S>,
+                            possibleMoves: MGPSet<M>,
+                            depth: number,
+                            alpha: number,
+                            beta: number)
+    : GameNode<M, S>[]
+    {
+        let bestChildren: GameNode<M, S>[] = [];
+        const currentPlayer: Player = node.gameState.getCurrentPlayer();
+        let extremumExpected: number =
+            currentPlayer === Player.ZERO ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
+        const newValueIsBetter: (newValue: number, currentValue: number) => boolean =
+            currentPlayer === Player.ZERO ?
+                ((a: number, b: number): boolean => a < b) :
+                ((a: number, b: number): boolean => b < a);
+        for (const move of possibleMoves) {
+            const child: GameNode<M, S> = this.getOrCreateChild(node, move);
+            const bestChildDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta);
+            const bestChildValue: number = this.getScore(bestChildDescendant).value;
+            if (newValueIsBetter(bestChildValue, extremumExpected) || bestChildren.length === 0) {
+                extremumExpected = bestChildValue;
+                bestChildren = [bestChildDescendant];
+            } else if (bestChildValue === extremumExpected) {
+                bestChildren.push(bestChildDescendant);
+            }
+            if (this.PRUNE && newValueIsBetter(extremumExpected, currentPlayer === Player.ZERO ? alpha : beta)) {
+                // cut-off, no need to explore the other childs
+                break;
+            }
+            if (currentPlayer === Player.ZERO) {
+                beta = Math.min(extremumExpected, beta);
+            } else {
+                alpha = Math.max(extremumExpected, alpha);
+            }
+        }
+        return bestChildren;
+    }
+    private getBestChildAmong(bestChildren: GameNode<M, S>[]): GameNode<M, S> {
+        if (this.RANDOM) {
+            return ArrayUtils.getRandomElement(bestChildren);
+        } else {
+            return bestChildren[0];
+        }
+    }
+    private getOrCreateChild(node: GameNode<M, S>, move: M): GameNode<M, S> {
+        let child: MGPOptional<GameNode<M, S>> = node.getChild(move);
+        if (child.isAbsent()) {
+            const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState);
+            const moveString: string = move.toString();
+            assert(legality.isSuccess(), 'The minimax "' + this.name + '" has proposed an illegal move (' + moveString + '), refusal reason: ' + legality.getReasonOr('') + ' this should not happen.');
+            const state: S = this.rules.applyLegalMove(move, node.gameState, legality.get());
+            const newChild = new GameNode(state, MGPOptional.of(node), MGPOptional.of(move));
+            node.addChild(move, newChild)
+            this.setScore(newChild, this.heuristic.getBoardValue(newChild));
+            return newChild;
+        }
+        return child.get();
+    }
+    private setScore(node: GameNode<M, S>, score: B): void {
+        node.setCache(this.name + '-score', score);
+    }
+    private getScore(node: GameNode<M, S>): B {
+        // Scores are created during node creation, so they are always present
+        return node.getCache<B>(this.name + '-score').get();
+    }
+    private setMoves(node: GameNode<M, S>, moves: MGPSet<M>): void {
+        node.setCache(this.name + '-moves', moves);
+    }
+    private getMoves(node: GameNode<M, S>): MGPOptional<MGPSet<M>> {
+        return node.getCache(this.name + '-moves');
+    }
 }
 
 export class MGPNode<R extends Rules<M, S, L>,
@@ -26,6 +252,7 @@ export class MGPNode<R extends Rules<M, S, L>,
 
     public static VERBOSE: boolean = false;
 
+                         // TODO: Minimax should become AI<Move, GameState>
     public static minimaxes: MGPMap<string, Minimax<Move, GameState>> = new MGPMap();
 
     private childs: MGPOptional<MGPNode<R, M, S, L, B>[]> = MGPOptional.empty();
@@ -36,6 +263,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     * otherwise, an ArrayList of all nodes that we can obtain from this node.
     */
 
+                         // TODO: move into MinimaxAI
     private readonly hopedValue: MGPMap<string, number> = new MGPMap();
     /* key is the name of the Minimax
      * value: if it's a leaf: its own board value
@@ -44,11 +272,13 @@ export class MGPNode<R extends Rules<M, S, L>,
 
     private readonly ownValue: MGPMap<string, B> = new MGPMap();
 
+                         // TODO: keep it for the moment, maybe name it "cachedMoves"
     private readonly possibleMoves: MGPMap<string, MGPSet<M>> = new MGPMap();
     /* Can contain more move than childs, in case of pruning
      * should be only calculated once
      */
 
+                         // TODO: probably better somewhere else?
     public static getScoreStatus(score: number): SCORE {
         /* the score status is VICTORY if the score is minValue or MaxValue,
          * because it's how we encode the boardValue if there's a victory
@@ -73,6 +303,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
         return SCORE.DEFAULT;
     }
+                         // TODO: keep GameState, parent, and move
     public constructor(public readonly gameState: S,
                        public readonly mother: MGPOptional<MGPNode<R, M, S, L, B>> = MGPOptional.empty(),
                        public readonly move: MGPOptional<M> = MGPOptional.empty(),
@@ -91,6 +322,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         MGPNodeStats.createdNodes++;
         display(MGPNode.VERBOSE, 'creating ' + this.myToString());
     }
+                         // TODO: take AI as argument instead, probably refactor a bit -> no, that's pure AI
     public findBestMove(readingDepth: number,
                         minimax: Minimax<M, S, L, B>,
                         random: boolean = false,
@@ -102,7 +334,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             const mcts = new MCTS(minimax, minimax.ruler);
             return mcts.search(this);
         }
-        const startTime: number = new Date().getTime();
+        const startTime: number = new Date().getTime(); // TODO: move time computation to local game wrapper?
         let bestDescendant: MGPNode<R, M, S, L, B> = this.alphaBeta(readingDepth,
                                                                     Number.MIN_SAFE_INTEGER,
                                                                     Number.MAX_SAFE_INTEGER,
@@ -116,39 +348,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         MGPNodeStats.minimaxTime += new Date().getTime() - startTime;
         return bestDescendant.move.get();
     }
-    public alphaBeta(depth: number,
-                     alpha: number,
-                     beta: number,
-                     minimax: Minimax<M, S, L, B>,
-                     random: boolean,
-                     prune: boolean)
-    : MGPNode<R, M, S, L, B>
-    {
-        const LOCAL_VERBOSE: boolean = false;
-        if (depth < 1) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf-Calculation : ' + this.myToString() + ' at depth ' + depth);
-            return this; // leaf by calculation
-        } else if (minimax.ruler.getGameStatus(this).isEndGame) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf-EndGame(' + minimax.ruler.getGameStatus(this).winner.toString() + ') : ' + this.myToString() + ' at depth ' + depth);
-            return this; // rules - leaf or calculation - leaf
-        }
-        const possibleMoves: MGPSet<M> = this.getPossibleMoves(minimax);
-        assert(possibleMoves.size() > 0, 'Minimax ' + minimax.name + ' should give move, received none!');
-        if (this.childs.isAbsent()) {
-            this.childs = MGPOptional.of([]);
-        }
-        const bestChilds: MGPNode<R, M, S, L, B>[] = this.getBestChilds(possibleMoves,
-                                                                        depth,
-                                                                        alpha,
-                                                                        beta,
-                                                                        minimax,
-                                                                        random,
-                                                                        prune);
-        const bestChild: MGPNode<R, M, S, L, B> = this.getBestChildAmongst(bestChilds, random);
-        const bestChildHopedValue: number = bestChild.hopedValue.get(minimax.toString()).get();
-        this.hopedValue.put(minimax.toString(), bestChildHopedValue);
-        return bestChild;
-    }
+                         // TODO: This is MinimaxAI's main method
     private getPossibleMoves(minimax: Minimax<M, S, L, B>): MGPSet<M> {
         const currentMoves: MGPOptional<MGPSet<M>> = this.possibleMoves.get(minimax.name);
         if (currentMoves.isAbsent()) {
@@ -159,6 +359,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             return currentMoves.get();
         }
     }
+                         // TODO: this seems to be MinimaxAI
     private getBestChilds(possibleMoves: MGPSet<M>,
                           depth: number,
                           alpha: number,
@@ -208,18 +409,6 @@ export class MGPNode<R extends Rules<M, S, L>,
             return bestChilds[0];
         }
     }
-    private getOrCreateChild(move: M, minimax: Minimax<M, S, L, B>): MGPNode<R, M, S, L, B> {
-        let child: MGPOptional<MGPNode<R, M, S, L, B>> = this.getSonByMove(move);
-        if (child.isAbsent()) {
-            const legality: MGPFallible<L> = minimax.ruler.isLegal(move, this.gameState);
-            const moveString: string = move.toString();
-            assert(legality.isSuccess(), 'The minimax "' + minimax.name + '" has proposed an illegal move (' + moveString + '), refusal reason: ' + legality.getReasonOr('') + ' this should not happen.');
-            const state: S = minimax.ruler.applyLegalMove(move, this.gameState, legality.get());
-            child = MGPOptional.of(new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax));
-            this.childs.get().push(child.get());
-        }
-        return child.get();
-    }
     public getSonByMove(move: M): MGPOptional<MGPNode<R, M, S, L, B>> {
         assert(this.childs.isPresent(), 'Cannot get son of uncalculated node');
         for (const node of this.childs.get()) {
@@ -258,6 +447,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
         return 'Node: ' + genealogy;
     }
+                         // TODO: rename hasComputedMoves? hasComputedChildren?
     public hasMoves(): boolean {
         return this.childs.isPresent();
     }

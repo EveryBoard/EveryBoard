@@ -1,4 +1,4 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode, MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { Type } from '@angular/core';
 import { display } from '../utils/utils';
@@ -24,9 +24,7 @@ export abstract class Rules<M extends Move,
      * the remaining pawn that you can put on the board...
      */
 
-    public choose(node: MGPNode<Rules<M, S, L, B>, M, S, L, B>, move: M)
-    : MGPOptional<MGPNode<Rules<M, S, L, B>, M, S, L, B>>
-    {
+    public choose(node: GameNode<M, S>, move: M) : MGPOptional<GameNode<M, S>> {
         /* used by the rules to update board
          * return true if the move was legal, and the node updated
          * return false otherwise
@@ -36,7 +34,7 @@ export abstract class Rules<M extends Move,
         const legality: MGPFallible<L> = this.isLegal(move, node.gameState);
         if (node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choice: MGPOptional<MGPNode<Rules<M, S, L, B>, M, S, L, B>> = node.getSonByMove(move);
+            const choice: MGPOptional<GameNode<M, S>> = node.getChild(move);
             // let's not create the node twice
             if (choice.isPresent()) {
                 assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
