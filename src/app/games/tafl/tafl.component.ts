@@ -64,6 +64,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
+        this.board = this.getState().getCopiedBoard();
         for (let y: number = 0; y < this.board.length; y++) {
             const newLine: string[][] = [];
             for (let x: number = 0; x < this.board[0].length; x++) {
