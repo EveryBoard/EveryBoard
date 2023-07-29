@@ -128,11 +128,6 @@ export abstract class GameWrapper<P extends Comparable> {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
                 { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
-        const userPlayValidity: MGPValidation = this.canUserPlay('none');
-        if (userPlayValidity.isFailure()) {
-            this.gameComponent.cancelMove(userPlayValidity.getReason());
-            return userPlayValidity;
-        }
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state);
         if (legality.isFailure()) {
             this.gameComponent.cancelMove(legality.getReason());
@@ -199,6 +194,7 @@ export abstract class GameWrapper<P extends Comparable> {
         return [];
     }
     protected updateBoardAndShowLastMove(): void {
+        this.gameComponent.cancelMoveAttempt();
         this.gameComponent.updateBoard();
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();

@@ -8,15 +8,10 @@ import { TaflPieceAndControlMinimax, TaflPieceAndControlMinimaxMetrics } from '.
 import { TaflNode } from './TaflMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMinimax {
 
     public override getBoardValue(node: TaflNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node); // TODO
-        if (gameStatus.isEndGame) {
-            throw new Error('tachatte hamdoulah!')
-        }
         const state: TaflState = node.gameState;
         const width: number = this.ruler.config.WIDTH;
 

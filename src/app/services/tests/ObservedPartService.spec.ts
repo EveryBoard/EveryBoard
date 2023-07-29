@@ -69,7 +69,7 @@ export class ObservedPartServiceMock {
     }
 }
 
-xdescribe('ObservedPartService', () => {
+describe('ObservedPartService', () => {
 
     let observedPartService: ObservedPartService;
     let connectedUserService: ConnectedUserService;

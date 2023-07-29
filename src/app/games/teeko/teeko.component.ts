@@ -52,7 +52,6 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.victory = this.rules.getVictoryCoord(this.getState());
     }
     public hideLastMove(): void {
-        // TODO: recommencer un partie terminée en phase 2 ne cache pas le last move !!
         this.last = MGPOptional.empty();
         this.moved = [];
         this.victory = [];

@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { UserService } from 'src/app/services/UserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { FocusedPart } from 'src/app/domain/User';
+import { CurrentGame } from 'src/app/domain/User';
 
 @Component({
     selector: 'app-header',
@@ -21,15 +21,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public faSpinner: IconDefinition = faSpinner;
 
     private userSubscription: Subscription;
-    private observedPartSubscription: Subscription;
+    private currentGameSubscription: Subscription;
 
     public showMenu: boolean = false;
 
-    public observedPart: MGPOptional<FocusedPart> = MGPOptional.empty();
+    public currentGame: MGPOptional<CurrentGame> = MGPOptional.empty();
 
     public constructor(public router: Router,
                        public connectedUserService: ConnectedUserService,
-                       public observedPartService: ObservedPartService,
+                       public currentGameService: CurrentGameService,
                        public userService: UserService)
     {
     }
@@ -41,9 +41,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
             } else {
                 this.username = user.email;
             }});
-        this.observedPartSubscription =
-            this.observedPartService.subscribeToObservedPart((focusedPart: MGPOptional<FocusedPart>) => {
-                this.observedPart = focusedPart;
+        this.currentGameSubscription =
+            this.currentGameService.subscribeToCurrentGame((focusedPart: MGPOptional<CurrentGame>) => {
+                this.currentGame = focusedPart;
             });
     }
     public async logout(): Promise<void> {
@@ -51,10 +51,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         await this.router.navigate(['/']);
     }
     public async navigateToPart(): Promise<boolean> {
-        return this.router.navigate(['/play', this.observedPart.get().typeGame, this.observedPart.get().id]);
+        return this.router.navigate(['/play', this.currentGame.get().typeGame, this.currentGame.get().id]);
     }
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
-        this.observedPartSubscription.unsubscribe();
+        this.currentGameSubscription.unsubscribe();
     }
 }

@@ -8,7 +8,7 @@ import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserService } from 'src/app/services/UserService';
 
-xdescribe('UserDAO', () => {
+describe('UserDAO', () => {
 
     let userDAO: UserDAO;
     let userService: UserService;
@@ -50,7 +50,7 @@ xdescribe('UserDAO', () => {
                 await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                                     FireAuth.GoogleAuthProvider.credential(token));
             // When setting the user in DB
-            const result: Promise<void> = userDAO.set(credential.user.uid, { verified: false });
+            const result: Promise<void> = userDAO.set(credential.user.uid, { verified: false, currentGame: null });
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -58,7 +58,7 @@ xdescribe('UserDAO', () => {
             // Given an existing, logged in user
             await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to set another user in the DB
-            const result: Promise<void> = userDAO.set('some-other-uid', { verified: false });
+            const result: Promise<void> = userDAO.set('some-other-uid', { verified: false, currentGame: null });
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -84,7 +84,7 @@ xdescribe('UserDAO', () => {
             const credential: FireAuth.UserCredential =
                 await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                                     FireAuth.GoogleAuthProvider.credential(token));
-            await userDAO.set(credential.user.uid, { verified: false, username: 'user' });
+            await userDAO.set(credential.user.uid, { verified: false, username: 'user', currentGame: null });
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);
@@ -97,7 +97,7 @@ xdescribe('UserDAO', () => {
             const credential: FireAuth.UserCredential =
                 await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                                     FireAuth.GoogleAuthProvider.credential(token));
-            await userDAO.set(credential.user.uid, { verified: false });
+            await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);
@@ -110,7 +110,7 @@ xdescribe('UserDAO', () => {
                 await FireAuth.createUserWithEmailAndPassword(TestBed.inject(FireAuth.Auth),
                                                               'foo@bar.com',
                                                               'jeanjaja123');
-            await userDAO.set(credential.user.uid, { verified: false, username: 'foo' });
+            await userDAO.set(credential.user.uid, { verified: false, username: 'foo', currentGame: null });
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);

@@ -15,8 +15,8 @@ import { PartDocument } from 'src/app/domain/Part';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { LobbyComponent } from './lobby.component';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 
 describe('LobbyComponent', () => {
 
@@ -40,9 +40,9 @@ describe('LobbyComponent', () => {
         it('should display online-game-selection component when clicking on it when allowed by connectedUserService', fakeAsync(async() => {
             // Given a server page
             testUtils.detectChanges();
-            // where you are allowed by observedPartService
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
+            // where you are allowed by currentGameService
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
 
             // When clicking on the 'create game' tab
             await testUtils.clickElement('#tab-create');
@@ -57,9 +57,9 @@ describe('LobbyComponent', () => {
             // where you are forbidden by connectedUserService
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
             spyOn(messageDisplayer, 'criticalMessage').and.resolveTo();
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
             const error: string = `Si je dit non, c'est non!!!`;
-            spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
+            spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
 
             // When clicking on the 'create game' tab
             await testUtils.clickElement('#tab-create');
@@ -125,7 +125,7 @@ describe('LobbyComponent', () => {
         describe('as a user participating to no games', () => {
             beforeEach(() => {
                 // Given an user not part of any part
-                ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
             });
             it('should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
@@ -135,7 +135,7 @@ describe('LobbyComponent', () => {
         describe('as a player', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Player
-                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
                     id: startedPartUserPlay.id,
                     role: 'Player',
                     typeGame: 'P4',
@@ -154,7 +154,7 @@ describe('LobbyComponent', () => {
         describe('as an observer', () => {
             beforeEach(() => {
                 // Given an user observing a part as an Observer
-                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
                     id: startedPartUserDoNotPlay.id,
                     role: 'Observer',
                     typeGame: 'P4',
@@ -172,7 +172,7 @@ describe('LobbyComponent', () => {
         describe('as a creator', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Creator
-                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
                     id: unstartedPartUserCreated.id,
                     role: 'Creator',
                     typeGame: 'P4',
@@ -187,7 +187,7 @@ describe('LobbyComponent', () => {
         describe('as a candidate', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Candidate
-                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
                     id: unstartedPartUserDidNotCreate.id,
                     role: 'Candidate',
                     typeGame: 'P4',
@@ -202,7 +202,7 @@ describe('LobbyComponent', () => {
         describe('as chosen opponent', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Candidate
-                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
                     id: unstartedPartUserDidNotCreate.id,
                     role: 'ChosenOpponent',
                     typeGame: 'P4',
@@ -232,7 +232,7 @@ describe('LobbyComponent', () => {
         describe('as a user part of no games', () => {
             beforeEach(() => {
                 // Given an user not part of any part
-                ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
             });
             it('should redirect to /play', fakeAsync(async() => {
                 // And a server with one active part
@@ -242,7 +242,7 @@ describe('LobbyComponent', () => {
         describe('as a player', () => {
             beforeEach(() => {
                 // Given an user already playing a part
-                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
                     id: startedPartUserPlay.id,
                     role: 'Player',
                     typeGame: 'P4',
@@ -257,7 +257,7 @@ describe('LobbyComponent', () => {
         describe('as a creator', () => {
             beforeEach(() => {
                 // Given an user already creator of a part
-                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
                     id: unstartedPartUserCreated.id,
                     role: 'Creator',
                     typeGame: 'P4',
@@ -276,7 +276,7 @@ describe('LobbyComponent', () => {
         describe('as a chosen opponent', () => {
             beforeEach(() => {
                 // Given an user observing a part as a chosen opponent
-                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
                     id: unstartedPartUserDidNotCreate.id,
                     role: 'ChosenOpponent',
                     typeGame: 'P4',
@@ -295,7 +295,7 @@ describe('LobbyComponent', () => {
         describe('as a candidate', () => {
             beforeEach(() => {
                 // Given an user observing a part as a Candidate
-                ObservedPartServiceMock.setObservedPart(MGPOptional.of({
+                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
                     id: unstartedPartUserDidNotCreate.id,
                     role: 'Candidate',
                     typeGame: 'P4',
@@ -322,6 +322,18 @@ describe('LobbyComponent', () => {
         component.ngOnDestroy();
 
         // Then it should have unsubscribed from active parts
+        expectUnsubscribeToHaveBeenCalled();
+    }));
+    it('should unsubscribe from observed part when destroying component', fakeAsync(async() => {
+        // Given an initialized lobby
+        const expectUnsubscribeToHaveBeenCalled: () => void =
+            prepareUnsubscribeCheck(TestBed.inject(CurrentGameService), 'subscribeToCurrentGame');
+        testUtils.detectChanges();
+
+        // When it is destroyed
+        component.ngOnDestroy();
+
+        // Then it should have unsubscirbed from active users
         expectUnsubscribeToHaveBeenCalled();
     }));
     it('should display turn for humans', fakeAsync(async() => {

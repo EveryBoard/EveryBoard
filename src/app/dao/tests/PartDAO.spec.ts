@@ -14,8 +14,8 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
-import { FocusedPart } from 'src/app/domain/User';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { CurrentGame } from 'src/app/domain/User';
+import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameEventService } from '../../services/GameEventService';
 import { IFirestoreDAO } from '../FirestoreDAO';
@@ -27,7 +27,7 @@ type PartInfo = {
     candidate: MinimalUser,
 }
 
-xdescribe('PartDAO security', () => {
+describe('PartDAO security', () => {
 
     let partDAO: PartDAO;
     let gameEventService: GameEventService;
@@ -216,13 +216,13 @@ xdescribe('PartDAO security', () => {
             // Given a non-started part and its creator that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const currentGame: CurrentGame = {
+                ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
-            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
+            await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -238,13 +238,13 @@ xdescribe('PartDAO security', () => {
             // Given a non-started part with its creator who has timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const currentGame: CurrentGame = {
+                ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(0, 0); // creator is stuck in 1970
-            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
+            await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -260,13 +260,13 @@ xdescribe('PartDAO security', () => {
             // Given a started part and its creator that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const currentGame: CurrentGame = {
+                ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
-            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
+            await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -282,13 +282,13 @@ xdescribe('PartDAO security', () => {
             // Given a started part and its creator that has timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const currentGame: CurrentGame = {
+                ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(0, 0); // creator is stuck in 1970
-            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
+            await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -733,7 +733,7 @@ xdescribe('PartDAO security', () => {
                     time: serverTimestamp(),
                     player: 0,
                     move: 42,
-                };
+                } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
@@ -779,7 +779,7 @@ xdescribe('PartDAO security', () => {
                     time: serverTimestamp(),
                     player: 1,
                     move: 42,
-                };
+                } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail

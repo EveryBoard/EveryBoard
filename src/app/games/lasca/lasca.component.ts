@@ -361,7 +361,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const parallelogramCenter: Coord = this.getParallelogramCenter();
         const cy: number = parallelogramCenter.y;
         // We want to center the full piece, which is width=80, height=45, so here are it's center
-        // See the define to confirm theses
+        // See the define to confirm these
         const pieceCy: number = (50 + 15) / 2;
         // We the need "pieceCx + offsetX" to equal "cx"
         // and "pieceCy + offsetY" to equal "cy", so :

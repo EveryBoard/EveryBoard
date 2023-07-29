@@ -24,7 +24,7 @@ import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
 
-xdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
 
@@ -67,9 +67,9 @@ xdescribe('GameService', () => {
         await partDAO.set('partId', part);
 
         let calledCallback: boolean = false;
-        const myCallback: (observedPart: MGPOptional<Part>) => void = (observedPart: MGPOptional<Part>) => {
-            expect(observedPart.isPresent()).toBeTrue();
-            expect(observedPart.get()).toEqual(part);
+        const myCallback: (currentGame: MGPOptional<Part>) => void = (currentGame: MGPOptional<Part>) => {
+            expect(currentGame.isPresent()).toBeTrue();
+            expect(currentGame.get()).toEqual(part);
             calledCallback = true;
         };
         spyOn(partDAO, 'subscribeToChanges').and.callThrough();

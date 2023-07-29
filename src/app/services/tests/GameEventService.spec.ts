@@ -10,7 +10,7 @@ import { JSONValue } from 'src/app/utils/utils';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 
-xdescribe('GameEventService', () => {
+describe('GameEventService', () => {
 
     let gameEventService: GameEventService;
     let partDAO: PartDAO;
