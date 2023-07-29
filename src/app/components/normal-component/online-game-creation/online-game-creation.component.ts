@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class OnlineGameCreationComponent implements OnInit {
     public constructor(private readonly route: ActivatedRoute,
                        private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
-                       private readonly observedPartService: ObservedPartService,
+                       private readonly currentGameService: CurrentGameService,
                        private readonly messageDisplayer: MessageDisplayer,
                        private readonly gameService: GameService) {
     }
@@ -38,7 +38,7 @@ export class OnlineGameCreationComponent implements OnInit {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
             return false;
         }
-        const canCreateOnlineGame: MGPValidation = this.observedPartService.canUserCreate();
+        const canCreateOnlineGame: MGPValidation = this.currentGameService.canUserCreate();
         if (canCreateOnlineGame.isSuccess()) {
             const gameId: string = await this.gameService.createPartConfigRoomAndChat(game);
             await this.router.navigate(['/play', game, gameId]);
