@@ -35,8 +35,13 @@ export class ConnectedUserServiceMock {
         this.userRS = new ReplaySubject<AuthUser>(1);
     }
     public setUser(userId: string, user: AuthUser, notifyObservers: boolean = true): void {
-        this.user = MGPOptional.of(user);
-        this.uid = MGPOptional.of(userId);
+        if (user === AuthUser.NOT_CONNECTED) {
+            this.user = MGPOptional.empty();
+            this.uid = MGPOptional.empty();
+        } else {
+            this.user = MGPOptional.of(user);
+            this.uid = MGPOptional.of(userId);
+        }
         // In some very specific cases, changing the status of a user in firebase does not notify the observers.
         // This is the case if a user becomes verified.
         if (notifyObservers) {
@@ -107,7 +112,7 @@ export async function createConnectedGoogleUser(email: string, username?: string
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    await userDAO.set(credential.user.uid, { verified: false });
+    await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
     if (username != null) {
         // This needs to happen in multiple updates to match the security rules
         await userDAO.update(credential.user.uid, { username });
@@ -139,7 +144,7 @@ export async function createUnverifiedUser(email: string, username: string): Pro
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    await userDAO.set(credential.user.uid, { verified: false });
+    await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
     await userDAO.update(credential.user.uid, { username });
     return { id: credential.user.uid, name: username };
 }
