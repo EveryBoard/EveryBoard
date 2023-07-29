@@ -9,7 +9,6 @@ import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -90,25 +89,23 @@ export abstract class GameWrapper<P extends Comparable> {
             Utils.getNonNullable(this.boardRef).createComponent(component.get());
         this.gameComponent = componentRef.instance;
 
-        this.gameComponent.chooseMove = // so that when the game component do a move
-            (m: Move, s: GameState, scores?: [number, number]): Promise<MGPValidation> => {
-                return this.receiveValidMove(m, s, scores);
-            };
-        // the game wrapper can then act accordingly to the chosen move.
-        this.gameComponent.canUserPlay =
-            // So that when the game component click
-            (elementName: string): MGPValidation => {
-                return this.canUserPlay(elementName);
-            };
-        // the game wrapper can act accordly
+
+        // chooseMove is called by the game component when a move is done
+        this.gameComponent.chooseMove = (m: Move): Promise<MGPValidation> => {
+            // the game wrapper can then act accordingly to the chosen move.
+            return this.receiveValidMove(m);
+        };
+        // canUserPlay is called upon a click by the user
+        this.gameComponent.canUserPlay = (elementName: string): MGPValidation => {
+            return this.canUserPlay(elementName);
+        };
         this.gameComponent.isPlayerTurn = (): boolean => {
             return this.isPlayerTurn();
         };
-        this.gameComponent.cancelMoveOnWrapper =
-            // Mostly for interception by TutorialGameWrapper
-            (reason?: string): void => {
-                this.onCancelMove(reason);
-            };
+        // Mostly for interception by TutorialGameWrapper
+        this.gameComponent.cancelMoveOnWrapper = (reason?: string): void => {
+            this.onCancelMove(reason);
+        };
         this.setRole(this.role);
         return true;
     }
@@ -120,21 +117,16 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
-    public async receiveValidMove(move: Move,
-                                  state: GameState,
-                                  scores?: [number, number])
-    : Promise<MGPValidation>
-    {
+    public async receiveValidMove(move: Move): Promise<MGPValidation> {
         const LOCAL_VERBOSE: boolean = false;
-        display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
-                { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
-        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state);
+        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, { gameWrapper_receiveValidMove_AKA_chooseMove: { move } });
+        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, this.gameComponent.getState());
         if (legality.isFailure()) {
             this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);
         }
         this.gameComponent.cancelMoveAttempt();
-        await this.onLegalUserMove(move, scores);
+        await this.onLegalUserMove(move);
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;
     }

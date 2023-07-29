@@ -403,7 +403,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         });
         return opponent;
     }
-    public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {
+    public async onLegalUserMove(move: Move): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.onLegalUserMove');
         if (this.mustReply()) {
             this.gameComponent.message(GameWrapperMessages.MUST_ANSWER_REQUEST());
@@ -423,10 +423,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // To adhere to security rules, we must add the move before updating the part
             const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
             await this.gameService.addMove(this.currentPartId, this.role as Player, encodedMove);
-            return this.updatePartWithStatusAndScores(gameStatus, scores);
+            return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
         }
     }
-    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores?: [number, number])
+    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<readonly [number, number]>)
     : Promise<void>
     {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updatePartWithStatusAndScores');
@@ -446,7 +446,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const player: Player = this.role as Player;
         await this.gameService.notifyTimeout(this.currentPartId, player, victoriousPlayer, loser);
     }
-    private async notifyVictory(winner: Player, scores?: [number, number]): Promise<void> {
+    private async notifyVictory(winner: Player, scores: MGPOptional<readonly [number, number]>): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);

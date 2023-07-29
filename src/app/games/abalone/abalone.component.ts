@@ -288,16 +288,15 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return this._chooseDirection(dir);
     }
     private async _chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
-        const state: AbaloneState = this.getState();
-        let move: AbaloneMove;
         const firstPiece: Coord = this.selecteds[0];
         if (this.selecteds.length === 1) {
-            move = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
+            const move: AbaloneMove = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
+            return this.chooseMove(move);
         } else {
             const lastPiece: Coord = this.selecteds[this.selecteds.length - 1];
-            move = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
+            const move: AbaloneMove = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
+            return this.chooseMove(move);
         }
-        return this.chooseMove(move, state, this.scores.get());
     }
     public async onSpaceClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);

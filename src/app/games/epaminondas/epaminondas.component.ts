@@ -358,9 +358,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         return MGPValidation.SUCCESS;
     }
     public tryMove(move: EpaminondasMove): Promise<MGPValidation> {
-        const state: EpaminondasState = this.getState();
         this.cancelMove();
-        return this.chooseMove(move, state);
+        return this.chooseMove(move);
     }
     public getPieceClasses(x: number, y: number): string[] {
         const player: string = this.getPlayerClass(this.board[y][x]);
