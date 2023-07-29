@@ -103,7 +103,7 @@ export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
     public override toString(): string {
         return this.board.map((list: TrexoPieceStack[]) => {
             return '[' + list.map((space: TrexoPieceStack) => {
-                return 'TrexoPieceStack.from(' + space.toString() + ')';
+                return 'TrexoPieceStack.of(' + space.toString() + ')';
             }).join(', ') + ']';
         }).join('\n,');
     }

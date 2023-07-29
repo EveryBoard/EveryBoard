@@ -82,6 +82,9 @@ describe('TrexoState', () => {
 ,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
 ,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]
 ,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]`;
+            console.log(state.toString())
+            console.log('vs')
+            console.log(representation)
             expect(state.toString()).toBe(representation);
         });
     });
