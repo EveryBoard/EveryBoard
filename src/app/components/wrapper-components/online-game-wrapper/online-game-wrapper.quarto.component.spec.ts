@@ -980,6 +980,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
+        it('should call cancelMoveAttempt', fakeAsync(async() => {
+            // Given an initial board where it's opponent's [second] turn, and user just asked for take back
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await doMove(FIRST_MOVE, true);
+            await askTakeBack();
+
+            // When opponent accept user's take back
+            spyOn(testUtils.getComponent(), 'cancelMoveAttempt').and.callThrough();
+            await receiveReply(Player.ONE, 'Accept', 'TakeBack');
+
+            // Then cancelMoveAttempt should have been called
+            expect(testUtils.getComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
     });
     describe('Agreed Draw', () => {
         it('should send draw request when player asks to', fakeAsync(async() => {
