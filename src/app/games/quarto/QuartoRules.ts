@@ -1,5 +1,5 @@
 import { Rules } from '../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
@@ -114,7 +114,7 @@ class QuartoLine {
         return coords;
     }
 }
-export class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
+export class QuartoNode extends GameNode<QuartoMove, QuartoState> {}
 
 interface LineInfos {
 

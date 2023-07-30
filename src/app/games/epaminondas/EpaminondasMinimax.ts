@@ -4,15 +4,23 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 
-export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
+export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState> {
 
-    public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
+    public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
+        const moves: EpaminondasMove[] = this.getUnorderedListMoves(node);
+        ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
+            return move.stepSize; // Best for normal, might not be best for others!
+        });
+        return moves;
+    }
+    public getUnorderedListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const opponent: Player = node.gameState.getCurrentOpponent();
         const empty: PlayerOrNone = PlayerOrNone.NONE;
@@ -54,26 +62,19 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
         }
         return moves;
     }
-    public static addMove(moves: EpaminondasMove[],
-                          move: EpaminondasMove,
-                          state: EpaminondasState)
-    : EpaminondasMove[]
-    {
+    public addMove(moves: EpaminondasMove[], move: EpaminondasMove, state: EpaminondasState): EpaminondasMove[] {
         const legality: MGPFallible<EpaminondasLegalityInformation> = EpaminondasRules.isLegal(move, state);
         if (legality.isSuccess()) {
             moves.push(move);
         }
         return moves;
     }
-    public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
-        const moves: EpaminondasMove[] = EpaminondasMinimax.getListMoves(node);
-        ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
-            return move.stepSize; // Best for normal, might not be best for others!
-        });
-        return moves;
-    }
+}
+
+export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
+
     public getBoardValue(node: EpaminondasNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = EpaminondasRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
@@ -113,5 +114,12 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
             total += wasPresent.reduce((sum: number, newElement: number) => sum + newElement) * SCORE_BY_PRESENCE;
         }
         return total;
+    }
+}
+
+export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
+
+    public constructor() {
+        super('EpaminondasMinimax', EpaminondasRules.get(), new EpaminondasHeuristic(), new EpaminondasMoveGenerator());
     }
 }

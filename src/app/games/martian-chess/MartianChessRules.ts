@@ -1,4 +1,4 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -20,10 +20,7 @@ export interface MartianChessMoveResult {
     finalPiece: MartianChessPiece;
 }
 
-export class MartianChessNode extends MGPNode<MartianChessRules,
-                                              MartianChessMove,
-                                              MartianChessState,
-                                              MartianChessMoveResult> {}
+export class MartianChessNode extends GameNode<MartianChessMove, MartianChessState> {}
 
 export class MartianChessRules extends Rules<MartianChessMove, MartianChessState, MartianChessMoveResult> {
 

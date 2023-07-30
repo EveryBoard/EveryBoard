@@ -6,37 +6,38 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflPawn } from './TaflPawn';
-import { TaflMinimax, TaflNode } from './TaflMinimax';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameNode } from 'src/app/jscaip/MGPNode';
+import { TaflHeuristic } from './TaflMinimax';
 
-export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
+export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflState> extends TaflHeuristic<M, S> {
 
-    public width: number;
+    protected width: number;
 
-    public maxInfluence: number;
+    private maxInfluence: number;
 
-    public scoreByThreatenedPiece: number;
+    private scoreByThreatenedPiece: number;
 
-    public scoreBySafePiece: number;
+    private scoreBySafePiece: number;
 
-    public constructor(ruler: TaflRules<TaflMove, TaflState>, name: string) {
-        super(ruler, name);
-        this.width = this.ruler.config.WIDTH;
+    public constructor(rules: TaflRules<M, S>) {
+        super(rules);
+        this.width = this.rules.config.WIDTH;
         this.maxInfluence = 16 * ((this.width * 2) - 2);
         this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
         this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
     }
-    public override getBoardValue(node: TaflNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+    public override getBoardValue(node: GameNode<M, S>): BoardValue {
+        const gameStatus: GameStatus = this.rules.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
-        const state: TaflState = node.gameState;
+        const state: S = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let score: number = 0;
@@ -65,7 +66,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         }
         return new BoardValue(score);
     }
-    public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
+    protected getPiecesMap(state: S): MGPMap<Player, MGPSet<Coord>> {
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
@@ -89,10 +90,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         ]);
         return map;
     }
-    public getThreatMap(state: TaflState,
-                        pieces: MGPMap<Player, MGPSet<Coord>>)
-    : MGPMap<Coord, MGPSet<SandwichThreat>>
-    {
+    protected getThreatMap(state: S, pieces: MGPMap<Player, MGPSet<Coord>>): MGPMap<Coord, MGPSet<SandwichThreat>> {
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
         for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
@@ -104,7 +102,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         }
         return threatMap;
     }
-    private getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
+    private getThreats(coord: Coord, state: S): SandwichThreat[] {
         const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
         assert(owner.isPlayer(), 'TaflPieceAndInfluenceMinimax.getThreats should be called with an occupied coordinate');
         const threatenerPlayer: Player = (owner as Player).getOpponent();
@@ -135,14 +133,14 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         }
         return threats;
     }
-    public isAThreat(coord: Coord, state: TaflState, opponent: Player): boolean {
+    protected isAThreat(coord: Coord, state: S, opponent: Player): boolean {
         if (coord.isNotInRange(this.width, this.width)) {
             return false;
         }
         if (state.getAbsoluteOwner(coord) === opponent) {
             return true;
         }
-        if (this.ruler.isThrone(state, coord)) {
+        if (this.rules.isThrone(state, coord)) {
             if (opponent === Player.ONE) { // Defender
                 return true;
             } else {
@@ -151,7 +149,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         }
         return false;
     }
-    public isThreatReal(coord: Coord, state: TaflState, threats: SandwichThreat[]): boolean {
+    protected isThreatReal(coord: Coord, state: S, threats: SandwichThreat[]): boolean {
         if (threats.length === 0) {
             return false;
         }
@@ -166,7 +164,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
             return false;
         }
     }
-    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: TaflState)
+    protected filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: S)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();

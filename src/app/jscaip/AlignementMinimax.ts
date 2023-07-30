@@ -12,6 +12,7 @@ export interface BoardInfo {
     preVictory: MGPOptional<Coord>,
     sum: number,
 }
+// TODO: rename to AlignmentMinimax
 export abstract class AlignementMinimax<M extends Move,
                                         S extends GameState,
                                         L,

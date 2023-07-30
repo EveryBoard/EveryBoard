@@ -47,7 +47,7 @@ export abstract class BaseGameComponent {
     template: '',
     styleUrls: ['./game-component.scss'],
 })
-export abstract class GameComponent<R extends Rules<M, S, L, B>,
+export abstract class GameComponent<R extends Rules<M, S, L>,
                                     M extends Move,
                                     S extends GameState,
                                     L = void,
@@ -68,7 +68,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public node: MGPNode<R, M, S, L, B>;
 
-    public availableMinimaxes: Minimax<M, S, L>[];
+    public availableMinimaxes: Minimax<R, M, S, L, B>[];
 
     public canPass: boolean = false;
 

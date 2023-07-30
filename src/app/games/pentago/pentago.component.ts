@@ -51,7 +51,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.rules = PentagoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new PentagoMinimax(this.rules, 'PentagoMinimax'),
+            new PentagoMinimax(),
         ];
         this.encoder = PentagoMove.encoder;
         this.tutorial = new PentagoTutorial().tutorial;

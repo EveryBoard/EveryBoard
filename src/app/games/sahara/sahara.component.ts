@@ -41,7 +41,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.rules = SaharaRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new SaharaMinimax(this.rules, 'SaharaMinimax'),
+            new SaharaMinimax(),
         ];
         this.encoder = SaharaMove.encoder;
         this.tutorial = new SaharaTutorial().tutorial;

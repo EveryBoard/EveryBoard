@@ -65,7 +65,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.rules = GipfRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new GipfMinimax(this.rules, 'GipfMinimax'),
+            new GipfMinimax(),
         ];
         this.encoder = GipfMove.encoder;
         this.tutorial = new GipfTutorial().tutorial;

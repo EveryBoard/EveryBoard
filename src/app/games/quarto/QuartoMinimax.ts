@@ -3,26 +3,15 @@ import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
+export class QuartoMoveGenerator extends MoveGenerator<QuartoMove, QuartoState> {
 
-    public static scoreToBoardValue(score: SCORE, turn: number): BoardValue {
-        if (score === SCORE.DEFAULT) {
-            return new BoardValue(0);
-        } else {
-            const player: Player = Player.of(turn % 2);
-            if (score === SCORE.PRE_VICTORY) {
-                return new BoardValue(player.getPreVictory());
-            } else {
-                return new BoardValue(player.getDefeatValue());
-            }
-        }
-    }
     public getListMoves(node: QuartoNode): QuartoMove[] {
         const listMoves: QuartoMove[] = [];
 
@@ -54,6 +43,22 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
         }
         return listMoves;
     }
+}
+
+export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
+
+    private scoreToBoardValue(score: SCORE, turn: number): BoardValue {
+        if (score === SCORE.DEFAULT) {
+            return new BoardValue(0);
+        } else {
+            const player: Player = Player.of(turn % 2);
+            if (score === SCORE.PRE_VICTORY) {
+                return new BoardValue(player.getPreVictory());
+            } else {
+                return new BoardValue(player.getDefeatValue());
+            }
+        }
+    }
     public getBoardValue(node: QuartoNode): BoardValue {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
@@ -66,6 +71,13 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
                 break;
             }
         }
-        return QuartoMinimax.scoreToBoardValue(boardStatus.score, state.turn);
+        return this.scoreToBoardValue(boardStatus.score, state.turn);
+    }
+}
+
+export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
+
+    public constructor() {
+        super('QuartoMinimax', QuartoRules.get(), new QuartoHeuristic(), new QuartoMoveGenerator());
     }
 }

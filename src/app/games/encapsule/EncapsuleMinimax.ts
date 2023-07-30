@@ -5,16 +5,13 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class EncapsuleMinimax
-    extends PlayerMetricsMinimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
+export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, EncapsuleState> {
 
-    public getMetrics(_node: EncapsuleNode): [number, number] {
-        return [0, 0];
-    }
     public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];
         const state: EncapsuleState = n.gameState;
@@ -50,5 +47,19 @@ export class EncapsuleMinimax
             }
         }
         return moves;
+    }
+}
+
+export class EncapsuleHeuristic extends PlayerMetricHeuristic<EncapsuleMove, EncapsuleState> {
+
+    public getMetrics(_node: EncapsuleNode): [number, number] {
+        return [0, 0];
+    }
+}
+
+export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
+
+    public constructor() {
+        super('DummyMinimax', EncapsuleRules.get(), new EncapsuleHeuristic(), new EncapsuleMoveGenerator());
     }
 }

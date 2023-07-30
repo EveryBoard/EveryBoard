@@ -1,20 +1,19 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { Combinatorics } from 'src/app/utils/Combinatorics';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GipfMinimax } from '../gipf/GipfMinimax';
+import { GipfMoveGenerator } from '../gipf/GipfMinimax';
 import { GipfCapture } from '../gipf/GipfMove';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshNode, YinshRules } from './YinshRules';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 
-export class YinshMinimax
-    extends PlayerMetricsMinimax<YinshMove, YinshState, YinshLegalityInformation, YinshRules> {
+export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
 
-    public getMetrics(node: YinshNode): [number, number] {
-        return node.gameState.sideRings;
-    }
+    private readonly rules: YinshRules = YinshRules.get();
+
     public getListMoves(node: YinshNode): YinshMove[] {
         const moves: YinshMove[] = [];
         const state: YinshState = node.gameState;
@@ -26,13 +25,12 @@ export class YinshMinimax
                 }
             }
         } else {
-            const rules: YinshRules = this.ruler;
             this.getPossibleCaptureCombinations(state)
                 .forEach((initialCaptures: ReadonlyArray<YinshCapture>): void => {
-                    const stateAfterCapture: YinshState = rules.applyCaptures(initialCaptures, state);
+                    const stateAfterCapture: YinshState = this.rules.applyCaptures(initialCaptures, state);
                     this.getRingMoves(stateAfterCapture).forEach((ringMove: {start: Coord, end: Coord}): void => {
                         const stateAfterRingMove: YinshState =
-                            rules.applyRingMoveAndFlip(ringMove.start, ringMove.end, stateAfterCapture);
+                            this.rules.applyRingMoveAndFlip(ringMove.start, ringMove.end, stateAfterCapture);
                         this.getPossibleCaptureCombinations(stateAfterRingMove)
                             .forEach((finalCaptures: ReadonlyArray<YinshCapture>): void => {
                                 const move: YinshMove = new YinshMove(initialCaptures,
@@ -47,10 +45,9 @@ export class YinshMinimax
         return moves;
     }
     private getPossibleCaptureCombinations(state: YinshState): ReadonlyArray<ReadonlyArray<YinshCapture>> {
-        const rules: YinshRules = this.ruler;
-        const possibleCaptures: YinshCapture[] = rules.getPossibleCaptures(state);
+        const possibleCaptures: YinshCapture[] = this.rules.getPossibleCaptures(state);
         const ringCoords: Coord[] = this.getRingCoords(state);
-        return GipfMinimax.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures)
+        return GipfMoveGenerator.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures)
             .map((captureCombination: GipfCapture[]): YinshCapture[][] => {
                 return Combinatorics.getCombinations(ringCoords, captureCombination.length)
                     .map((ringsTaken: Coord[]): YinshCapture[] => {
@@ -63,10 +60,9 @@ export class YinshMinimax
             }, []);
     }
     private getRingMoves(state: YinshState): {start: Coord, end: Coord}[] {
-        const rules: YinshRules = this.ruler;
         const moves: {start: Coord, end: Coord}[] = [];
         for (const start of this.getRingCoords(state)) {
-            for (const end of rules.getRingTargets(state, start)) {
+            for (const end of this.rules.getRingTargets(state, start)) {
                 moves.push({ start, end });
             }
         }
@@ -81,5 +77,19 @@ export class YinshMinimax
             }
         });
         return coords;
+    }
+}
+
+export class YinshHeuristic extends PlayerMetricHeuristic<YinshMove, YinshState> {
+
+    public getMetrics(node: YinshNode): [number, number] {
+        return node.gameState.sideRings;
+    }
+}
+
+export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityInformation> {
+
+    public constructor() {
+        super('YinshMinimax', YinshRules.get(), new YinshHeuristic(), new YinshMoveGenerator());
     }
 }

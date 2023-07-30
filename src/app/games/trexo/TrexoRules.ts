@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -11,7 +11,7 @@ import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
 
-export class TrexoNode extends MGPNode<Rules<TrexoMove, TrexoState>, TrexoMove, TrexoState> {}
+export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 
 export class TrexoRules extends Rules<TrexoMove, TrexoState> {
 
@@ -77,7 +77,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                if (NInARowHelper.isVictory(squareScore)) {
                     if (pieceOwner === lastPlayer) {
                         victoryOfLastPlayer.push(coord);
                     } else {
@@ -103,7 +103,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                if (NInARowHelper.isVictory(squareScore)) {
                     if (pieceOwner === lastPlayer) {
                         // Cannot return right away
                         // because the last player only wins if the other does not get an alignment

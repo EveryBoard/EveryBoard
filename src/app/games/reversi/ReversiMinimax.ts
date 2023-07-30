@@ -1,12 +1,14 @@
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiLegalityInformation } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class ReversiMinimax extends PlayerMetricsMinimax<ReversiMove, ReversiState, ReversiLegalityInformation> {
+
+export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiState> {
 
     public static readonly bestCoords: Coord[] = [
         new Coord(0, 0),
@@ -14,6 +16,24 @@ export class ReversiMinimax extends PlayerMetricsMinimax<ReversiMove, ReversiSta
         new Coord(ReversiState.BOARD_WIDTH - 1, 0),
         new Coord(ReversiState.BOARD_WIDTH - 1, ReversiState.BOARD_HEIGHT - 1),
     ];
+    public getListMoves(n: ReversiNode): ReversiMove[] {
+        const moves: ReversiMoveWithSwitched[] = ReversiRules.getListMoves(n.gameState);
+        // Best moves are on the corner, otherwise moves are sorted by number of pieces switched
+        ArrayUtils.sortByDescending(moves, (moveWithSwitched: ReversiMoveWithSwitched): number => {
+            if (ReversiMoveGenerator.bestCoords.some((coord: Coord): boolean => moveWithSwitched.move.coord.equals(coord))) {
+                return 100;
+            } else {
+                return moveWithSwitched.switched;
+            }
+        });
+        return moves.map((moveWithSwitched: ReversiMoveWithSwitched): ReversiMove => {
+            return moveWithSwitched.move;
+        });
+    }
+}
+
+export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState> {
+
     public getMetrics(node: ReversiNode): [number, number] {
         const state: ReversiState = node.gameState;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
@@ -35,18 +55,11 @@ export class ReversiMinimax extends PlayerMetricsMinimax<ReversiMove, ReversiSta
         }
         return [player0Count, player1Count];
     }
-    public getListMoves(n: ReversiNode): ReversiMove[] {
-        const moves: ReversiMoveWithSwitched[] = ReversiRules.getListMoves(n.gameState);
-        // Best moves are on the corner, otherwise moves are sorted by number of pieces switched
-        ArrayUtils.sortByDescending(moves, (moveWithSwitched: ReversiMoveWithSwitched): number => {
-            if (ReversiMinimax.bestCoords.some((coord: Coord): boolean => moveWithSwitched.move.coord.equals(coord))) {
-                return 100;
-            } else {
-                return moveWithSwitched.switched;
-            }
-        });
-        return moves.map((moveWithSwitched: ReversiMoveWithSwitched): ReversiMove => {
-            return moveWithSwitched.move;
-        });
+}
+
+export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiLegalityInformation> {
+
+    public constructor() {
+        super('ReversiMinimax', ReversiRules.get(), new ReversiHeuristic(), new ReversiMoveGenerator());
     }
 }

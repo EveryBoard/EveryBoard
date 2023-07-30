@@ -5,10 +5,10 @@ import { TablutRules } from './TablutRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TablutTutorial } from './TablutTutorial';
 import { TaflComponent } from '../tafl.component';
-import { TaflMinimax } from '../TaflMinimax';
-import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
-import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
+import { TaflHeuristic, TaflMinimax } from '../TaflMinimax';
+import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
 
 @Component({
     selector: 'app-tablut',
@@ -22,10 +22,10 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
         this.rules = TablutRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new TaflMinimax(this.rules, 'DummyBot'),
-            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
-            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
+            new TaflMinimax('DummyBot', new TaflHeuristic(this.rules)),
+            new TaflMinimax('Piece > Influence', new TaflPieceAndInfluenceHeuristic(this.rules)),
+            new TaflMinimax('Piece > Control', new TaflPieceAndControlHeuristic(this.rules)),
+            new TaflMinimax('Escape > Piece > Control', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
         ];
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;

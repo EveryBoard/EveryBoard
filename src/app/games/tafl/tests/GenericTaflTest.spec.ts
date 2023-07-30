@@ -159,7 +159,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             const encoder: MoveEncoder<M> = testUtils.getComponent().encoder;
             const minimax: TaflMinimax = new TaflMinimax(rules, 'TaflMinimax');
             const firstTurnMoves: M[] = minimax
-                .getListMoves(rules.getInitialNode())
+                .getListMoves({ node: rules.getInitialNode() })
                 .map((move: TaflMove) => {
                     return entries.moveProvider(move.getStart(), move.getEnd());
                 });

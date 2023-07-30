@@ -53,8 +53,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.rules = PylosRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new PylosMinimax(this.rules, 'PylosMinimax'),
-            new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
+            new PylosMinimax(),
+            new PylosOrderedMinimax(),
         ];
         this.encoder = PylosMove.encoder;
         this.tutorial = new PylosTutorial().tutorial;

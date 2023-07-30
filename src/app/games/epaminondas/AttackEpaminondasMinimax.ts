@@ -2,12 +2,14 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { EpaminondasMinimax } from './EpaminondasMinimax';
+import { EpaminondasHeuristic, EpaminondasMoveGenerator } from './EpaminondasMinimax';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { EpaminondasMove } from './EpaminondasMove';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
-export class AttackEpaminondasMinimax extends EpaminondasMinimax {
+export class AttackEpaminondasHeuristic extends EpaminondasHeuristic {
 
     private readonly DOMINANCE_FACTOR: number = 20;
     private readonly DEFENSE_FACTOR: number = 5;
@@ -15,6 +17,21 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     private readonly OFFENSE_FACTOR: number = 10;
     private readonly CENTER_FACTOR: number = 5;
     private readonly MOBILITY_FACTOR: number = 0.12;
+
+    public override getBoardValue(node: EpaminondasNode): BoardValue {
+        const state: EpaminondasState = node.gameState;
+        const gameStatus: GameStatus = EpaminondasRules.get().getGameStatus(node);
+        if (gameStatus.isEndGame) {
+            return gameStatus.toBoardValue();
+        }
+        const dominance: number = this.getDominance(state);
+        const defense: number = this.getDefense(state);
+        const territory: number = this.getTerritory(state);
+        const center: number = this.getCenter(state);
+        const winning: number = this.getOffense(state);
+        const mobility: number = this.getMobility(state);
+        return new BoardValue(dominance + defense + territory + center + winning + mobility);
+    }
 
     public getDominance(state: EpaminondasState): number {
         let score: number = 0;
@@ -128,18 +145,13 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
             biggestZero * Player.ZERO.getScoreModifier() +
             biggestOne * Player.ONE.getScoreModifier()) * this.MOBILITY_FACTOR;
     }
-    public override getBoardValue(node: EpaminondasNode): BoardValue {
-        const state: EpaminondasState = node.gameState;
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
-        const dominance: number = this.getDominance(state);
-        const defense: number = this.getDefense(state);
-        const territory: number = this.getTerritory(state);
-        const center: number = this.getCenter(state);
-        const winning: number = this.getOffense(state);
-        const mobility: number = this.getMobility(state);
-        return new BoardValue(dominance + defense + territory + center + winning + mobility);
+}
+
+export class AttackEpaminondasMinimax
+    extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation>
+{
+
+    public constructor() {
+        super('AttackEpaminondasMinimax', EpaminondasRules.get(), new AttackEpaminondasHeuristic(), new EpaminondasMoveGenerator());
     }
 }

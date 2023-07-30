@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { assert } from 'src/app/utils/assert';
@@ -17,7 +17,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type GipfLegalityInformation = GipfState
 
-export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, GipfLegalityInformation> {}
+export class GipfNode extends GameNode<GipfMove, GipfState> {}
 
 export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformation> {
 

@@ -52,9 +52,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.rules = EpaminondasRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new EpaminondasMinimax(this.rules, 'Normal'),
-            new PositionalEpaminondasMinimax(this.rules, 'Positional'),
-            new AttackEpaminondasMinimax(this.rules, 'Attack'),
+            new EpaminondasMinimax(),
+            new PositionalEpaminondasMinimax(),
+            new AttackEpaminondasMinimax(),
         ];
         this.encoder = EpaminondasMove.encoder;
         this.tutorial = new EpaminondasTutorial().tutorial;

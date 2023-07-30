@@ -58,7 +58,7 @@ describe('TaflMinimax', () => {
         const node: TaflNode = new BrandhubNode(state) as TaflNode;
 
         // When asking the list of legal move
-        const moves: BrandhubMove[] = minimax.getListMoves(node);
+        const moves: BrandhubMove[] = minimax.getListMoves({ node });
 
         // Then going back on throne should not be part of it
         const kingBackOnThrone: BrandhubMove = BrandhubMove.of(new Coord(3, 2), new Coord(3, 3));

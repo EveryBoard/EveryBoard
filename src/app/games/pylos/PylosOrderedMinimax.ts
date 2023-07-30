@@ -1,10 +1,25 @@
 import { PylosMove } from './PylosMove';
-import { PylosNode } from './PylosRules';
-import { PylosMinimax } from './PylosMinimax';
+import { PylosNode, PylosRules } from './PylosRules';
+import { PylosHeuristic, PylosMoveGenerator } from './PylosMinimax';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { PylosState } from './PylosState';
 
-export class PylosOrderedMinimax extends PylosMinimax {
+export class PylosOrderedMoveGenerator extends PylosMoveGenerator {
 
-    public static countStoneUsed(move: PylosMove): number {
+    public override getListMoves(node: PylosNode): PylosMove[] {
+        const moves: PylosMove[] = super.getListMoves(node);
+        return this.orderMoves(moves);
+    }
+    private orderMoves(moves: PylosMove[]): PylosMove[] {
+        return moves.sort((a: PylosMove, b: PylosMove) => {
+            const captureA: number = 12 * this.countStoneUsed(a);
+            const captureB: number = 12 * this.countStoneUsed(b);
+            const emplacementA: number = this.sumMoveEmplacementByValue(a);
+            const emplacementB: number = this.sumMoveEmplacementByValue(b);
+            return (captureA + emplacementA) - (captureB + emplacementB);
+        });
+    }
+    private countStoneUsed(move: PylosMove): number {
         let stoneUsed: number = move.isClimb() ? 0 : 1;
         if (move.firstCapture.isPresent()) {
             stoneUsed -= 1;
@@ -14,7 +29,7 @@ export class PylosOrderedMinimax extends PylosMinimax {
         }
         return stoneUsed;
     }
-    public static sumMoveEmplacementByValue(move: PylosMove): number {
+    private sumMoveEmplacementByValue(move: PylosMove): number {
         let value: number = move.landingCoord.z;
         if (move.startingCoord.isPresent()) {
             value += (3 - move.startingCoord.get().z);
@@ -27,17 +42,11 @@ export class PylosOrderedMinimax extends PylosMinimax {
         }
         return value;
     }
-    public override getListMoves(node: PylosNode): PylosMove[] {
-        const moves: PylosMove[] = PylosMinimax.getListMoves(node);
-        return this.orderMoves(moves);
-    }
-    public orderMoves(moves: PylosMove[]): PylosMove[] {
-        return moves.sort((a: PylosMove, b: PylosMove) => {
-            const captureA: number = 12 * PylosOrderedMinimax.countStoneUsed(a);
-            const captureB: number = 12 * PylosOrderedMinimax.countStoneUsed(b);
-            const emplacementA: number = PylosOrderedMinimax.sumMoveEmplacementByValue(a);
-            const emplacementB: number = PylosOrderedMinimax.sumMoveEmplacementByValue(b);
-            return (captureA + emplacementA) - (captureB + emplacementB);
-        });
+}
+
+export class PylosOrderedMinimax extends Minimax<PylosMove, PylosState> {
+
+    public constructor() {
+        super('PylosOrderedMinimax', PylosRules.get(), new PylosHeuristic(), new PylosOrderedMoveGenerator());
     }
 }

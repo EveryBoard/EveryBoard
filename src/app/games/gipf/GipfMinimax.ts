@@ -2,14 +2,13 @@ import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { GipfRules, GipfNode, GipfLegalityInformation } from './GipfRules';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class GipfMinimax extends PlayerMetricsMinimax<GipfMove, GipfState, GipfLegalityInformation> {
-    public static getPossibleCaptureCombinationsFromPossibleCaptures(
-        possibleCaptures: GipfCapture[],
-    ): Table<GipfCapture> {
-        const intersections: number[][] = GipfMinimax.computeIntersections(possibleCaptures);
+export class GipfMoveGenerator extends MoveGenerator<GipfMove, GipfState> {
+    public static getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures: GipfCapture[]): Table<GipfCapture> {
+        const intersections: number[][] = this.computeIntersections(possibleCaptures);
         let captureCombinations: number[][] = [[]];
         possibleCaptures.forEach((_capture: GipfCapture, index: number) => {
             if (intersections[index].length === 0) {
@@ -64,17 +63,8 @@ export class GipfMinimax extends PlayerMetricsMinimax<GipfMove, GipfState, GipfL
         });
         return intersections;
     }
-    public getMetrics(node: GipfNode): [number, number] {
-        const state: GipfState = node.gameState;
-        return [
-            GipfRules.getPlayerScore(state, Player.ZERO).get(),
-            GipfRules.getPlayerScore(state, Player.ONE).get(),
-        ];
-    }
     public getListMoves(node: GipfNode): GipfMove[] {
-        return this.getListMoveFromState(node.gameState);
-    }
-    private getListMoveFromState(state: GipfState): GipfMove[] {
+        const state: GipfState = node.gameState;
         const moves: GipfMove[] = [];
 
         if (GipfRules.isGameOver(state)) {
@@ -96,6 +86,24 @@ export class GipfMinimax extends PlayerMetricsMinimax<GipfMove, GipfState, GipfL
     }
     private getPossibleCaptureCombinations(state: GipfState): Table<GipfCapture> {
         const possibleCaptures: GipfCapture[] = GipfRules.getPossibleCaptures(state);
-        return GipfMinimax.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures);
+        return GipfMoveGenerator.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures);
+    }
+}
+
+export class GipfHeuristic extends PlayerMetricHeuristic<GipfMove, GipfState> {
+
+    public getMetrics(node: GipfNode): [number, number] {
+        const state: GipfState = node.gameState;
+        return [
+            GipfRules.getPlayerScore(state, Player.ZERO).get(),
+            GipfRules.getPlayerScore(state, Player.ONE).get(),
+        ];
+    }
+}
+
+export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityInformation> {
+
+    public constructor() {
+        super('GipfMinimax', GipfRules.get(), new GipfHeuristic(), new GipfMoveGenerator());
     }
 }

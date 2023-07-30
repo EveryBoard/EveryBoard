@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -13,7 +13,7 @@ import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
-export class LinesOfActionNode extends MGPNode<LinesOfActionRules, LinesOfActionMove, LinesOfActionState> {}
+export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 
@@ -27,27 +27,6 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     private constructor() {
         super(LinesOfActionState);
-    }
-    public static getListMovesFromState(state: LinesOfActionState): LinesOfActionMove[] {
-        const moves: LinesOfActionMove[] = [];
-
-        if (LinesOfActionRules.getVictory(state).isPresent()) {
-            return moves;
-        }
-
-        for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
-            for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
-                const coord: Coord = new Coord(x, y);
-                const piece: PlayerOrNone = state.getPieceAt(coord);
-                if (piece.isPlayer()) {
-                    for (const target of LinesOfActionRules.possibleTargets(state, coord)) {
-                        const move: LinesOfActionMove = LinesOfActionMove.from(coord, target).get();
-                        moves.push(move);
-                    }
-                }
-            }
-        }
-        return moves;
     }
     public static getNumberOfGroups(state: LinesOfActionState): [number, number] {
         const groups: number[][] = ArrayUtils.createTable(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);

@@ -4,10 +4,10 @@ import { BrandhubState } from './BrandhubState';
 import { BrandhubRules } from './BrandhubRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { TaflMinimax } from '../TaflMinimax';
-import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
-import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
+import { TaflHeuristic, TaflMinimax } from '../TaflMinimax';
+import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
 import { BrandhubTutorial } from './BrandhubTutorial';
 
 @Component({
@@ -22,10 +22,10 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
         this.rules = BrandhubRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new TaflMinimax(this.rules, 'DummyBot'),
-            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
-            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
+            new TaflMinimax('DummyBot', new TaflHeuristic(this.rules)),
+            new TaflMinimax('Piece > Influence', new TaflPieceAndInfluenceHeuristic(this.rules)),
+            new TaflMinimax('Piece > Control', new TaflPieceAndControlHeuristic(this.rules)),
+            new TaflMinimax('Escape > Piece > Control', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
         ];
         this.encoder = BrandhubMove.encoder;
         this.tutorial = new BrandhubTutorial().tutorial;

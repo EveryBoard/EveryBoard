@@ -131,7 +131,7 @@ export class LodestoneComponent
         this.node = this.rules.getInitialNode();
         this.tutorial = new LodestoneTutorial().tutorial;
         this.availableMinimaxes = [
-            new LodestoneDummyMinimax(this.rules, 'LodestoneDummyMinimax'),
+            new LodestoneDummyMinimax(),
         ];
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;

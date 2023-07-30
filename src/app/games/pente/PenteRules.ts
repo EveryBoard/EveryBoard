@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -12,9 +12,7 @@ import { Utils } from 'src/app/utils/utils';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 
-export class PenteNode extends MGPNode<Rules<PenteMove, PenteState>,
-                                       PenteMove,
-                                       PenteState> {}
+export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
 export class PenteRules extends Rules<PenteMove, PenteState> {
 

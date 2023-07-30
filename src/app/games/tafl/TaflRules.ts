@@ -12,11 +12,9 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
 import { TaflConfig } from './TaflConfig';
 import { Type } from '@angular/core';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-
-class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
 export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S> {
 
@@ -286,7 +284,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return state.from(board, turn + 1);
     }
-    public getGameStatus(node: TaflNode): GameStatus {
+    public getGameStatus(node: GameNode<M, S>): GameStatus {
         const state: S = node.gameState as S;
 
         const winner: MGPOptional<Player> = this.getWinner(state);

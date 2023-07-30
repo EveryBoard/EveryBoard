@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -8,7 +9,7 @@ import { HivePiece } from './HivePiece';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 
-export class HiveMinimax extends PlayerMetricsMinimax<HiveMove, HiveState> {
+export class HiveMoveGenerator extends MoveGenerator<HiveMove, HiveState> {
 
     public getListMoves(node: HiveNode): HiveMove[] {
         const dropMoves: HiveMove[] = this.getListDrops(node.gameState);
@@ -37,6 +38,10 @@ export class HiveMinimax extends PlayerMetricsMinimax<HiveMove, HiveState> {
         }
         return drops;
     }
+}
+
+export class HiveHeuristic extends PlayerMetricHeuristic<HiveMove, HiveState> {
+
     public getMetrics(node: HiveNode): [number, number] {
         // The board value is based on the number of neighbors to the queen
         const scoreZero: number = this.queenBeeMobility(node.gameState, Player.ZERO);
@@ -52,5 +57,12 @@ export class HiveMinimax extends PlayerMetricsMinimax<HiveMove, HiveState> {
         } else {
             return 0;
         }
+    }
+}
+
+export class HiveMinimax extends Minimax<HiveMove, HiveState> {
+
+    public constructor() {
+        super('HiveMinimax', HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator());
     }
 }

@@ -153,7 +153,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.rules = MartianChessRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new MartianChessDummyMinimax(this.rules, 'Martian Chess Dummy Minimax'),
+            new MartianChessDummyMinimax(),
         ];
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();
@@ -348,7 +348,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             if (move.getStart().equals(square)) {
                 classes.push('moved-fill');
             } else if (move.getEnd().equals(square)) {
-                const previousPiece: MartianChessPiece = node.mother.get().gameState.getPieceAt(square);
+                const previousPiece: MartianChessPiece = node.parent.get().gameState.getPieceAt(square);
                 const wasEmpty: boolean = previousPiece === MartianChessPiece.EMPTY;
                 if (wasEmpty) {
                     classes.push('moved-fill');

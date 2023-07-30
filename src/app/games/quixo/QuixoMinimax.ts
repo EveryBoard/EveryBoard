@@ -3,10 +3,11 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { QuixoNode, QuixoRules } from './QuixoRules';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class QuixoMinimax extends PlayerMetricsMinimax<QuixoMove, QuixoState> {
+export class QuixoMoveGenerator extends MoveGenerator<QuixoMove, QuixoState> {
 
     public getListMoves(node: QuixoNode): QuixoMove[] {
         const moves: QuixoMove[] = [];
@@ -22,6 +23,10 @@ export class QuixoMinimax extends PlayerMetricsMinimax<QuixoMove, QuixoState> {
         }
         return moves;
     }
+}
+
+export class QuixoHeuristic extends PlayerMetricHeuristic<QuixoMove, QuixoState> {
+
     public getMetrics(node: QuixoNode): [number, number] {
         const state: QuixoState = node.gameState;
         const linesSums: { [key: string]: { [key: number]: number[]; }; } = QuixoRules.getLinesSums(state);
@@ -29,4 +34,12 @@ export class QuixoMinimax extends PlayerMetricsMinimax<QuixoMove, QuixoState> {
         const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
         return [zerosFullestLine, onesFullestLine];
     }
+}
+
+export class QuixoMinimax extends Minimax<QuixoMove, QuixoState> {
+
+    public constructor() {
+        super('QuixoMinimax', QuixoRules.get(), new QuixoHeuristic(), new QuixoMoveGenerator());
+    }
+
 }

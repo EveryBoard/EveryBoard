@@ -1,11 +1,11 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { hnefataflConfig } from './hnefataflConfig';
 import { HnefataflState } from './HnefataflState';
 import { TaflRules } from '../TaflRules';
 import { HnefataflMove } from './HnefataflMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class HnefataflNode extends MGPNode<HnefataflRules, HnefataflMove, HnefataflState> {}
+export class HnefataflNode extends GameNode<HnefataflMove, HnefataflState> {}
 
 export class HnefataflRules extends TaflRules<HnefataflMove, HnefataflState> {
 

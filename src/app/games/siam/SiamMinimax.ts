@@ -3,15 +3,13 @@ import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
 import { display } from 'src/app/utils/utils';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode, SiamLegalityInformation } from './SiamRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInformation> {
+export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
 
-    public getBoardValue(node: SiamNode): BoardValue {
-        return new BoardValue(SiamRules.get().getBoardValueInfo(node.move, node.gameState).boardValue);
-    }
     public getListMoves(node: SiamNode): SiamMove[] {
         let moves: SiamMove[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
@@ -49,5 +47,19 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInform
                insertion.coord.x === 4 ||
                insertion.coord.y === 0 ||
                insertion.coord.y === 4;
+    }
+}
+
+export class SiamHeuristic extends Heuristic<SiamMove, SiamState> {
+
+    public getBoardValue(node: SiamNode): BoardValue {
+        return new BoardValue(SiamRules.get().getBoardValueInfo(node.move, node.gameState).boardValue);
+    }
+}
+
+export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInformation> {
+
+    public constructor() {
+        super('SiamMinimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator());
     }
 }

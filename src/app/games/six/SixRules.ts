@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -12,24 +12,19 @@ import { display } from 'src/app/utils/utils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { SixBoardValue } from './SixMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
-export class SixNode extends MGPNode<SixRules, SixMove, SixState, SixLegalityInformation, SixBoardValue> {
+export class SixNode extends GameNode<SixMove, SixState> {
 }
 export interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
     index: number,
 }
 
-export class SixRules extends Rules<SixMove,
-                                    SixState,
-                                    SixLegalityInformation,
-                                    SixBoardValue>
-{
+export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
 
     public VERBOSE: boolean = false;
 

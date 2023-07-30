@@ -1,22 +1,19 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { EpaminondasMinimax } from './EpaminondasMinimax';
+import { EpaminondasMoveGenerator } from './EpaminondasMinimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasLegalityInformation, EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
-export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
-                                                          EpaminondasState,
-                                                          EpaminondasLegalityInformation>
-{
+export class PhalanxSizeAndFilterEpaminondasMoveGenerator extends EpaminondasMoveGenerator {
 
-    public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
-        const moves: EpaminondasMove[] = EpaminondasMinimax.getListMoves(node);
+    public override getListMoves(node: EpaminondasNode): EpaminondasMove[] {
+        const moves: EpaminondasMove[] = super.getListMoves(node);
         return this.orderMovesByPhalanxSizeAndFilter(moves, node.gameState);
     }
     private orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], state: EpaminondasState): EpaminondasMove[] {
@@ -39,8 +36,12 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         const landing: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
         return state.board[landing.y][landing.x] === state.getCurrentOpponent();
     }
+}
+
+export class PositionalEpaminondasHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
+
     public getBoardValue(node: EpaminondasNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = EpaminondasRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
@@ -57,17 +58,17 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                 const coord: Coord = new Coord(x, y);
                 const player: PlayerOrNone = state.getPieceAt(coord);
                 if (player.isPlayer()) {
-                    let avancement: number; // entre 0 et 11
+                    let progress: number; // between 0 et 11
                     let dirs: Direction[];
                     if (player === Player.ZERO) {
-                        avancement = 12 - y;
+                        progress = 12 - y;
                         dirs = [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT];
                     } else {
-                        avancement = y + 1;
+                        progress = y + 1;
                         dirs = [Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT];
                     }
                     const mod: number = player.getScoreModifier();
-                    total += avancement * mod;
+                    total += progress * mod;
                     total += SCORE_BY_PIECE * mod;
                     for (const dir of dirs) {
                         let neighbor: Coord = coord.getNext(dir, 1);
@@ -82,5 +83,16 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
             }
         }
         return total;
+    }
+}
+
+export class PositionalEpaminondasMinimax
+    extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
+
+    public constructor() {
+        super('PositionalEpaminondasMinimax',
+              EpaminondasRules.get(),
+              new PositionalEpaminondasHeuristic(),
+              new PhalanxSizeAndFilterEpaminondasMoveGenerator());
     }
 }

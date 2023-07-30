@@ -1,11 +1,11 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { brandhubConfig } from './brandhubConfig';
 import { BrandhubState } from './BrandhubState';
 import { TaflRules } from '../TaflRules';
 import { BrandhubMove } from './BrandhubMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class BrandhubNode extends MGPNode<BrandhubRules, BrandhubMove, BrandhubState> {}
+export class BrandhubNode extends GameNode<BrandhubMove, BrandhubState> {}
 
 export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
 

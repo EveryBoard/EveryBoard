@@ -1,17 +1,23 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { SCORE } from 'src/app/jscaip/SCORE';
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';
 import { TrexoState } from './TrexoState';
 
-export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
+export class TrexoMoveGenerator extends MoveGenerator<TrexoMove, TrexoState> {
+
+    private readonly rules: TrexoRules = TrexoRules.get();
 
     public getListMoves(node: TrexoNode): TrexoMove[] {
-        return TrexoRules.get().getLegalMoves(node.gameState);
+        return this.rules.getLegalMoves(node.gameState);
     }
+}
+
+export class TrexoHeuristic extends Heuristic<TrexoMove, TrexoState> {
+
     public getBoardValue(node: TrexoNode): BoardValue {
         let score: number = 0;
         const state: TrexoState = node.gameState;
@@ -23,7 +29,7 @@ export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = state.getPieceAt(coordPiece.key).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coordPiece.key);
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                if (NInARowHelper.isVictory(squareScore)) {
                     if (pieceOwner === lastPlayer) {
                         // Cannot return right away
                         // because the last player only wins if the other does not get an alignment
@@ -40,5 +46,13 @@ export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
             return new BoardValue(lastPlayer.getVictoryValue());
         }
         return new BoardValue(score);
+    }
+}
+
+export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
+
+    public constructor() {
+        const rules: TrexoRules = TrexoRules.get();
+        super('TrexoMinimax', rules, new TrexoHeuristic(), new TrexoMoveGenerator());
     }
 }

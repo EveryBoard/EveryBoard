@@ -1,5 +1,5 @@
 import { Rules } from '../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
@@ -23,7 +23,7 @@ export class ReversiMoveWithSwitched {
     }
 }
 
-export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiState, ReversiLegalityInformation> {}
+export class ReversiNode extends GameNode<ReversiMove, ReversiState> {}
 
 export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegalityInformation> {
 

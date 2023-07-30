@@ -1,6 +1,6 @@
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';
@@ -14,11 +14,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
-
-export class EpaminondasNode extends MGPNode<EpaminondasRules,
-                                             EpaminondasMove,
-                                             EpaminondasState,
-                                             EpaminondasLegalityInformation> {}
+export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState> {}
 
 export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
 

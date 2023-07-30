@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -8,8 +8,10 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestoneOrientation, LodestonePiece } from './LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
 import { LodestoneState } from './LodestoneState';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState, LodestoneInfos> {
+export class LodestoneMoveGenerator extends MoveGenerator<LodestoneMove, LodestoneState> {
+
     public getListMoves(node: LodestoneNode): LodestoneMove[] {
         const state: LodestoneState = node.gameState;
         return this.flatMapEmptyCoords(state, (coord: Coord): LodestoneMove[] => {
@@ -81,6 +83,10 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
             return ['push', 'pull'];
         }
     }
+}
+
+export class LodestoneDummyHeuristic extends Heuristic<LodestoneMove, LodestoneState> {
+
     public getBoardValue(node: LodestoneNode): BoardValue {
         const scores: [number, number] = node.gameState.getScores();
         let score: number;
@@ -92,5 +98,15 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
             score = BoardValue.from(scores[0], scores[1]).value;
         }
         return new BoardValue(score);
+    }
+}
+
+export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState, LodestoneInfos> {
+
+    public constructor() {
+        super('LodestoneDummyMinimax',
+              LodestoneRules.get(),
+              new LodestoneDummyHeuristic(),
+              new LodestoneMoveGenerator());
     }
 }

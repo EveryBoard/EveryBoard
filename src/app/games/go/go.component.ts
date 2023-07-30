@@ -41,7 +41,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         this.rules = GoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new GoMinimax(this.rules, 'GoMinimax'),
+            new GoMinimax(),
         ];
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;

@@ -1,11 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PentagoMove } from './PentagoMove';
-import { PentagoNode } from './PentagoRules';
+import { PentagoNode, PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
 
-export class PentagoMinimax extends PlayerMetricsMinimax<PentagoMove, PentagoState> {
+export class PentagoMoveGenerator extends MoveGenerator<PentagoMove, PentagoState> {
 
     public static readonly FIRST_TURN_MOVES: PentagoMove[] = [
         PentagoMove.rotationless(0, 0),
@@ -19,7 +20,7 @@ export class PentagoMinimax extends PlayerMetricsMinimax<PentagoMove, PentagoSta
         const moves: PentagoMove[] = [];
         const preDropNeutralBlocks: number[] = node.gameState.neutralBlocks;
         if (node.gameState.turn === 0) {
-            return PentagoMinimax.FIRST_TURN_MOVES;
+            return PentagoMoveGenerator.FIRST_TURN_MOVES;
         }
         const legalDrops: Coord[] = this.getLegalDrops(node.gameState);
         for (const legalDrop of legalDrops) {
@@ -68,7 +69,18 @@ export class PentagoMinimax extends PlayerMetricsMinimax<PentagoMove, PentagoSta
         }
         return legalRotations;
     }
+}
+
+export class PentagoHeuristic extends PlayerMetricHeuristic<PentagoMove, PentagoState> {
+
     public getMetrics(_node: PentagoNode): [number, number] {
         return [0, 0];
+    }
+}
+
+export class PentagoMinimax extends Minimax<PentagoMove, PentagoState> {
+
+    public constructor() {
+        super('PentagoDummyMinimax', PentagoRules.get(), new PentagoHeuristic(), new PentagoMoveGenerator());
     }
 }

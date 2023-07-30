@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -14,10 +13,11 @@ import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 
 export type YinshLegalityInformation = YinshState
 
-export class YinshNode extends MGPNode<YinshRules, YinshMove, YinshState, YinshLegalityInformation> { }
+export class YinshNode extends GameNode<YinshMove, YinshState> { }
 
 export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInformation> {
 

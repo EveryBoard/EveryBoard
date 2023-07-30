@@ -4,25 +4,26 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
-import { TaflPieceAndControlMinimax, TaflPieceAndControlMinimaxMetrics } from './TaflPieceAndControlMinimax';
-import { TaflNode } from './TaflMinimax';
+import { TaflPieceAndControlHeuristic, TaflPieceAndControlMinimaxMetrics } from './TaflPieceAndControlMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { TaflMove } from './TaflMove';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 
-export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMinimax {
+export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove, S extends TaflState>
+    extends TaflPieceAndControlHeuristic<M, S>
+{
 
-    public override getBoardValue(node: TaflNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+    public override getBoardValue(node: GameNode<M, S>): BoardValue {
+        const gameStatus: GameStatus = this.rules.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
-        const state: TaflState = node.gameState;
-        const width: number = this.ruler.config.WIDTH;
 
-        const metrics: TaflPieceAndControlMinimaxMetrics =
-            this.getControlScoreAndPieceScores(width, state);
-        const defender: Player = state.getPieceAt(this.ruler.getKingCoord(state).get()).getOwner() as Player;
+        const state: S = node.gameState;
+        const metrics: TaflPieceAndControlMinimaxMetrics = this.getControlScoreAndPieceScores(state);
+        const defender: Player = state.getPieceAt(this.rules.getKingCoord(state).get()).getOwner() as Player;
         const stepForEscape: number = this.getStepForEscape(state) * defender.getScoreModifier();
         if (stepForEscape === -1) {
             return new BoardValue(defender.getOpponent().getPreVictory());
@@ -36,11 +37,11 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
                               (metrics.threatenedScore * (maxControl + 1)) +
                               metrics.controlScore);
     }
-    private getStepForEscape(state: TaflState): number {
-        const king: Coord = this.ruler.getKingCoord(state).get();
+    private getStepForEscape(state: S): number {
+        const king: Coord = this.rules.getKingCoord(state).get();
         return this._getStepForEscape(state, 1, [king], []).getOrElse(-1);
     }
-    private _getStepForEscape(state: TaflState,
+    private _getStepForEscape(state: S,
                               step: number,
                               previousGen: Coord[],
                               handledCoords: Coord[])
@@ -52,7 +53,7 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
             // not found:
             return MGPOptional.empty();
         }
-        if (nextGen.some((coord: Coord) => this.ruler.isExternalThrone(coord))) {
+        if (nextGen.some((coord: Coord) => this.rules.isExternalThrone(coord))) {
             return MGPOptional.of(step);
         } else {
             step++;
@@ -65,7 +66,7 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {
                 let landing: Coord = piece.getNext(dir, 1);
-                while (landing.isInRange(this.ruler.config.WIDTH, this.ruler.config.WIDTH) &&
+                while (landing.isInRange(this.width, this.width) &&
                        state.getPieceAt(landing) === TaflPawn.UNOCCUPIED)
                 {
                     if (handledCoords.every((coord: Coord) => coord.equals(landing) === false)) {

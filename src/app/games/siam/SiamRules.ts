@@ -1,7 +1,6 @@
 import { Rules } from 'src/app/jscaip/Rules';
 import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { SiamPiece } from './SiamPiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -15,6 +14,7 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 
 export class SiamLegalityInformation {
     public constructor(public readonly resultingBoard: Table<SiamPiece>,
@@ -22,7 +22,7 @@ export class SiamLegalityInformation {
     }
 }
 
-export class SiamNode extends MGPNode<SiamRules, SiamMove, SiamState, SiamLegalityInformation> {}
+export class SiamNode extends GameNode<SiamMove, SiamState> {}
 
 export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformation> {
 

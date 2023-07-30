@@ -1,13 +1,14 @@
 import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
 import { display } from 'src/app/utils/utils';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GoLegalityInformation> {
+export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
 
     public getListMoves(node: GoNode): GoMove[] {
         const LOCAL_VERBOSE: boolean = false;
@@ -119,6 +120,10 @@ export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GoLegalityI
         }
         return resultingState;
     }
+}
+
+export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
+
     public getMetrics(node: GoNode): [number, number] {
         const goState: GoState = GoRules.markTerritoryAndCount(node.gameState);
         const goScore: number[] = goState.getCapturedCopy();
@@ -139,5 +144,12 @@ export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GoLegalityI
             }
         }
         return killed;
+    }
+}
+
+export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
+
+    public constructor() {
+        super('GoMinimax', GoRules.get(), new GoHeuristic(), new GoMoveGenerator());
     }
 }

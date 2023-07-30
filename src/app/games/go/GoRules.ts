@@ -1,4 +1,4 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { GoState, Phase, GoPiece } from './GoState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
@@ -17,7 +17,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type GoLegalityInformation = Coord[];
 
-export class GoNode extends MGPNode<GoRules, GoMove, GoState, GoLegalityInformation> {}
+export class GoNode extends GameNode<GoMove, GoState> {}
 
 export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
 

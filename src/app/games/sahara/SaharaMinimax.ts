@@ -3,12 +3,13 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { SaharaNode, SaharaRules } from './SaharaRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class SaharaMinimax extends PlayerMetricsMinimax<SaharaMove, SaharaState> {
+export class SaharaMoveGenerator extends MoveGenerator<SaharaMove, SaharaState> {
 
     public getListMoves(node: SaharaNode): SaharaMove[] {
         const moves: SaharaMove[] = [];
@@ -46,6 +47,10 @@ export class SaharaMinimax extends PlayerMetricsMinimax<SaharaMove, SaharaState>
         }
         return moves;
     }
+}
+
+export class SaharaHeuristic extends PlayerMetricHeuristic<SaharaMove, SaharaState> {
+
     public getMetrics(node: SaharaNode): [number, number] {
         const board: Table<FourStatePiece> = node.gameState.board;
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
@@ -55,5 +60,12 @@ export class SaharaMinimax extends PlayerMetricsMinimax<SaharaMove, SaharaState>
             i++;
         }
         return [zeroFreedoms[i % 6], oneFreedoms[i % 6]];
+    }
+}
+
+export class SaharaMinimax extends Minimax<SaharaMove, SaharaState> {
+
+    public constructor() {
+        super('SaharaMinimax', SaharaRules.get(), new SaharaHeuristic(), new SaharaMoveGenerator());
     }
 }

@@ -4,10 +4,10 @@ import { HnefataflState } from './HnefataflState';
 import { HnefataflRules } from './HnefataflRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { TaflMinimax } from '../TaflMinimax';
-import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
-import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
+import { TaflHeuristic, TaflMinimax } from '../TaflMinimax';
+import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
 import { HnefataflTutorial } from './HnefataflTutorial';
 
 @Component({
@@ -22,10 +22,10 @@ export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflM
         this.rules = HnefataflRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new TaflMinimax(this.rules, 'DummyBot'),
-            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
-            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
+            new TaflMinimax('DummyBot', new TaflHeuristic(this.rules)),
+            new TaflMinimax('Piece > Influence', new TaflPieceAndInfluenceHeuristic(this.rules)),
+            new TaflMinimax('Piece > Control', new TaflPieceAndControlHeuristic(this.rules)),
+            new TaflMinimax('Escape > Piece > Control', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
         ];
         this.encoder = HnefataflMove.encoder;
         this.tutorial = new HnefataflTutorial().tutorial;

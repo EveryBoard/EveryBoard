@@ -99,7 +99,7 @@ export class YinshComponent
         this.rules = YinshRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new YinshMinimax(this.rules, 'YinshMinimax'),
+            new YinshMinimax(),
         ];
         this.encoder = YinshMove.encoder;
         this.tutorial = new YinshTutorial().tutorial;

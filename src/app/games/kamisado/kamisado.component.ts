@@ -39,7 +39,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         this.rules = KamisadoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
+            new KamisadoMinimax(),
         ];
         this.encoder = KamisadoMove.encoder;
         this.tutorial = new KamisadoTutorial().tutorial;

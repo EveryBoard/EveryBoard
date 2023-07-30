@@ -1,4 +1,4 @@
-import { GameNode, MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { Type } from '@angular/core';
 import { display } from '../utils/utils';
@@ -9,11 +9,7 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { BoardValue } from './BoardValue';
 import { GameStatus } from './GameStatus';
 
-export abstract class Rules<M extends Move,
-                            S extends GameState,
-                            L = void,
-                            B extends BoardValue = BoardValue>
-{
+export abstract class Rules<M extends Move, S extends GameState, L = void> {
 
     public constructor(public readonly stateType: Type<S>) {
     }
@@ -32,29 +28,20 @@ export abstract class Rules<M extends Move,
         const LOCAL_VERBOSE: boolean = false;
         display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
         const legality: MGPFallible<L> = this.isLegal(move, node.gameState);
-        if (node.hasMoves()) { // if calculation has already been done by the AI
-            display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choice: MGPOptional<GameNode<M, S>> = node.getChild(move);
-            // let's not create the node twice
-            if (choice.isPresent()) {
-                assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
-                display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
-                return MGPOptional.of(choice.get());
-            }
-        }
-        display(LOCAL_VERBOSE, `Rules.choose: current node has no moves or is pruned, let's verify ourselves`);
+        const choice: MGPOptional<GameNode<M, S>> = node.getChild(move);
         if (legality.isFailure()) {
             display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + legality.getReason());
             return MGPOptional.empty();
-        } else {
-            display(LOCAL_VERBOSE, `Rules.choose: Move is legal, let's apply it`);
         }
-
+        // let's not create the node twice
+        if (choice.isPresent()) {
+            assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
+            display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
+            return MGPOptional.of(choice.get());
+        }
         const resultingState: GameState = this.applyLegalMove(move, node.gameState, legality.get());
-        const son: MGPNode<Rules<M, S, L, B>, M, S, L, B> = new MGPNode(resultingState as S,
-                                                                        MGPOptional.of(node),
-                                                                        MGPOptional.of(move));
-        return MGPOptional.of(son);
+        const child: GameNode<M, S> = new GameNode(resultingState as S, MGPOptional.of(node), MGPOptional.of(move));
+        return MGPOptional.of(child);
     }
     /**
      * Applies a legal move, given the precomputed information `info`
@@ -66,10 +53,10 @@ export abstract class Rules<M extends Move,
      */
     public abstract isLegal(move: M, state: S): MGPFallible<L>;
 
-    public getInitialNode(): MGPNode<Rules<M, S, L, B>, M, S, L, B> {
+    public getInitialNode(): GameNode<M, S> {
         // eslint-disable-next-line dot-notation
         const initialState: S = this.stateType['getInitialState']();
-        return new MGPNode(initialState);
+        return new GameNode(initialState);
     }
     public applyMoves(encodedMoves: number[], state: S, moveDecoder: (em: number) => M): S {
         let i: number = 0;
@@ -82,7 +69,7 @@ export abstract class Rules<M extends Move,
         }
         return state;
     }
-    public abstract getGameStatus(node: MGPNode<Rules<M, S, L>, M, S, L>): GameStatus;
+    public abstract getGameStatus(node: GameNode<M, S>): GameStatus;
 }
 
 export abstract class AbstractRules extends Rules<Move, GameState, unknown> {

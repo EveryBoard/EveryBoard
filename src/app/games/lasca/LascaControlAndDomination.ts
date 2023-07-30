@@ -1,21 +1,16 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { LascaControlMinimax } from './LascaControlMinimax';
+import { LascaControlHeuristic, LascaMoveGenerator } from './LascaControlMinimax';
 import { LascaMove } from './LascaMove';
-import { LascaRules } from './LascaRules';
+import { LascaNode, LascaRules } from './LascaRules';
 import { LascaStack, LascaState } from './LascaState';
 
-class LascaNode extends MGPNode<LascaRules, LascaMove, LascaState> {}
+export class LascaControlAndDominationHeuristic extends LascaControlHeuristic {
 
-export class LascaControlAndDominationMinimax extends LascaControlMinimax {
-
-    constructor() {
-        super('Lasca Control And Domination Minimax');
-    }
     public override getBoardValue(node: LascaNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = LascaRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
@@ -36,5 +31,15 @@ export class LascaControlAndDominationMinimax extends LascaControlMinimax {
             }
         }
         return new BoardValue(controlValue + dominatingPiecesCount);
+    }
+}
+
+export class LascaControlAndDominationMinimax extends Minimax<LascaMove, LascaState> {
+
+    public constructor() {
+        super('LascaControlAndDominationMinimax',
+              LascaRules.get(),
+              new LascaControlAndDominationHeuristic(),
+              new LascaMoveGenerator());
     }
 }

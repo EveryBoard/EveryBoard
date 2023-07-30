@@ -38,7 +38,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         this.rules = QuixoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new QuixoMinimax(this.rules, 'QuixoMinimax'),
+            new QuixoMinimax(),
         ];
         this.encoder = QuixoMove.encoder;
         this.tutorial = new QuixoTutorial().tutorial;

@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessMove } from './MartianChessMove';
@@ -8,13 +8,11 @@ import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './M
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class MartianChessDummyMinimax
-    extends PlayerMetricsMinimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
 
-    public constructor(ruler: MartianChessRules, name: string) {
-        super(ruler, name);
-    }
+export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, MartianChessState> {
+
     public getListMoves(node: MartianChessNode): MartianChessMove[] {
         const state: MartianChessState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
@@ -128,9 +126,23 @@ export class MartianChessDummyMinimax
     private getLandingCoordsForQueen(startingCoord: Coord, state: MartianChessState): Coord[] {
         return this.getLandingCoordsForLinearMove(startingCoord, state, 8);
     }
+}
+
+export class MartianChessDummyHeuristic extends PlayerMetricHeuristic<MartianChessMove, MartianChessState> {
+
     public getMetrics(node: MartianChessNode): [number, number] {
         const zeroScore: number = node.gameState.getScoreOf(Player.ZERO);
         const oneScore: number = node.gameState.getScoreOf(Player.ONE);
         return [zeroScore, oneScore];
+    }
+}
+
+export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
+
+    public constructor() {
+        super('MartianChessDummyMinimax',
+              MartianChessRules.get(),
+              new MartianChessDummyHeuristic(),
+              new MartianChessMoveGenerator());
     }
 }

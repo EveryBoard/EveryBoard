@@ -1,5 +1,5 @@
 import { Rules } from '../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -14,8 +14,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 
-export class EncapsuleNode
-    extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {}
+export class EncapsuleNode extends GameNode<EncapsuleMove, EncapsuleState> {}
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
 

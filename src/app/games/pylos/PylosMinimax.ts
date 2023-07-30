@@ -2,13 +2,14 @@ import { Player } from 'src/app/jscaip/Player';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { PylosNode, PylosRules } from './PylosRules';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class PylosMinimax extends PlayerMetricsMinimax<PylosMove, PylosState> {
+export class PylosMoveGenerator extends MoveGenerator<PylosMove, PylosState> {
 
-    public static getListMoves(node: PylosNode): PylosMove[] {
+    public getListMoves(node: PylosNode): PylosMove[] {
         const state: PylosState = node.gameState;
         const result: PylosMove[] = [];
         const stateInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[]; } = PylosRules.getStateInfo(state);
@@ -30,11 +31,19 @@ export class PylosMinimax extends PlayerMetricsMinimax<PylosMove, PylosState> {
         }
         return result;
     }
-    public getListMoves(node: PylosNode): PylosMove[] {
-        return PylosMinimax.getListMoves(node);
-    }
+}
+
+export class PylosHeuristic extends PlayerMetricHeuristic<PylosMove, PylosState> {
+
     public getMetrics(node: PylosNode): [number, number] {
         const ownershipMap: { [owner: number]: number; } = node.gameState.getPiecesRepartition();
         return [ownershipMap[Player.ZERO.value], ownershipMap[Player.ONE.value]];
+    }
+}
+
+export class PylosMinimax extends Minimax<PylosMove, PylosState> {
+
+    public constructor() {
+        super('PylosMinimax', PylosRules.get(), new PylosHeuristic(), new PylosMoveGenerator());
     }
 }

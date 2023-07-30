@@ -12,7 +12,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { LascaControlAndDominationMinimax } from './LascaControlAndDomination';
-import { LascaControlMinimax } from './LascaControlMinimax';
+import { LascaControlMinimax, LascaMoveGenerator } from './LascaControlMinimax';
 import { LascaFailure } from './LascaFailure';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
@@ -62,6 +62,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private currentMoveClicks: Coord[] = [];
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
     private legalMoves: LascaMove[] = [];
+    private moveGenerator: LascaMoveGenerator = new LascaMoveGenerator();
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -69,7 +70,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.rules = LascaRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new LascaControlMinimax('Lasca Control Minimax'),
+            new LascaControlMinimax(),
             new LascaControlAndDominationMinimax(),
         ];
         this.encoder = LascaMove.encoder;
@@ -81,7 +82,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.lastMove = this.node.move;
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
-        this.legalMoves = LascaControlMinimax.getListMoves(this.node);
+        this.legalMoves = this.moveGenerator.getListMoves(this.node);
         this.createAdaptedBoardFrom(state);
         this.showPossibleMoves();
         this.rotateAdaptedBoardIfNeeded();
