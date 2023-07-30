@@ -1,8 +1,14 @@
 import { Move } from 'src/app/jscaip/Move';
+import { Encoder } from 'src/app/utils/Encoder';
 import { Utils } from 'src/app/utils/utils';
 
 export class MancalaDistribution {
 
+    public static encoder: Encoder<MancalaDistribution> = Encoder.tuple(
+        [Encoder.identity<number>()],
+        (distribution: MancalaDistribution) => [distribution.x],
+        (value: [number]) => MancalaDistribution.of(value[0]),
+    );
     public static readonly ZERO: MancalaDistribution = new MancalaDistribution(0);
 
     public static readonly ONE: MancalaDistribution = new MancalaDistribution(1);

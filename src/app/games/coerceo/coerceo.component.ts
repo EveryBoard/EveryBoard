@@ -65,7 +65,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.chosenCoord = MGPOptional.empty();
         this.possibleLandings = [];
     }
-    public override showLastMove(move: CoerceoMove): void {
+    public override async showLastMove(move: CoerceoMove): Promise<void> {
         if (move instanceof CoerceoRegularMove) {
             this.lastStart = MGPOptional.of(move.getStart());
             this.lastEnd = MGPOptional.of(move.getEnd());

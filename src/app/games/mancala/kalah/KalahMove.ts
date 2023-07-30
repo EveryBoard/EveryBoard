@@ -1,11 +1,14 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MancalaDistribution, MancalaMove } from '../commons/MancalaMove';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class KalahMove extends MancalaMove {
 
-    public static encoder: MoveEncoder<KalahMove> = undefined as any; // TODO
-
+    public static encoder: Encoder<KalahMove> = Encoder.tuple(
+        [Encoder.list(MancalaDistribution.encoder)],
+        (move: KalahMove) => [move.subMoves],
+        (value: [MancalaDistribution[]]) => KalahMove.of(value[0][0], value[0].slice(1)),
+    );
     public static of(mandatoryMove: MancalaDistribution, bonusMoves: MancalaDistribution[] = []): KalahMove {
         const subMoves: MancalaDistribution[] = [mandatoryMove];
         subMoves.push(...bonusMoves);

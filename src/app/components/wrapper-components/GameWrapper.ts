@@ -135,7 +135,7 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public abstract getPlayer(): P;
 
-    public canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
+    public async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
             return MGPValidation.failure(message);

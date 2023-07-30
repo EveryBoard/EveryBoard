@@ -1428,13 +1428,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('rematch', () => {
-        fit('should show propose button only when game is ended', fakeAsync(async() => {
+        it('should show propose button only when game is ended', fakeAsync(async() => {
             // Given a game that is not finished
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             testUtils.expectElementToBeDisabled('#proposeRematch');
 
             // When it is finished
-            await testUtils.expectInterfaceClickSuccess('#resignButton', 1);
             await testUtils.expectInterfaceClickSuccess('#resign', 1);
 
             // Then it should allow to propose rematch

@@ -1,29 +1,26 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
+import { Utils } from 'src/app/utils/utils';
 import { MancalaDistribution, MancalaMove } from '../commons/MancalaMove';
-import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
 export class AwaleMove extends MancalaMove {
 
-    public static readonly ZERO: AwaleMove = new AwaleMove(MancalaDistribution.ZERO);
+    public static readonly ZERO: AwaleMove = new AwaleMove(0);
 
-    public static readonly ONE: AwaleMove = new AwaleMove(MancalaDistribution.ONE);
+    public static readonly ONE: AwaleMove = new AwaleMove(1);
 
-    public static readonly TWO: AwaleMove = new AwaleMove(MancalaDistribution.TWO);
+    public static readonly TWO: AwaleMove = new AwaleMove(2);
 
-    public static readonly THREE: AwaleMove = new AwaleMove(MancalaDistribution.THREE);
+    public static readonly THREE: AwaleMove = new AwaleMove(3);
 
-    public static readonly FOUR: AwaleMove = new AwaleMove(MancalaDistribution.FOUR);
+    public static readonly FOUR: AwaleMove = new AwaleMove(4);
 
-    public static readonly FIVE: AwaleMove = new AwaleMove(MancalaDistribution.FIVE);
+    public static readonly FIVE: AwaleMove = new AwaleMove(5);
 
-    public static encoder: MoveEncoder<AwaleMove> = new class extends MoveEncoder<AwaleMove> {
-        public encodeMove(move: AwaleMove): JSONValueWithoutArray {
-            return move.x;
-        }
-        public decodeMove(encoded: JSONValueWithoutArray): AwaleMove {
-            return AwaleMove.of(encoded as number);
-        }
-    };
+    public static encoder: Encoder<AwaleMove> = Encoder.tuple(
+        [Encoder.identity<number>()],
+        (coord: AwaleMove) => [coord.x],
+        (value: [number]) => AwaleMove.of(value[0]),
+    );
     public static of(x: number): AwaleMove {
         switch (x) {
             case 0: return AwaleMove.ZERO;
@@ -32,21 +29,18 @@ export class AwaleMove extends MancalaMove {
             case 3: return AwaleMove.THREE;
             case 4: return AwaleMove.FOUR;
             default:
-                Utils.assert(x === 5, 'Invalid x for AwaleMove: ' + x);
+                Utils.expectToBe(x, 5, 'Invalid x for AwaleMove: ' + x);
                 return AwaleMove.FIVE;
         }
     }
-    public readonly x: number;
-
-    protected constructor(distribution: MancalaDistribution) {
-        super([distribution]);
-        this.x = distribution.x;
+    private constructor(public readonly x: number) {
+        super([MancalaDistribution.of(x)]);
     }
     public equals(other: AwaleMove): boolean {
         if (other === this) return true;
-        return other.subMoves[0].x === this.subMoves[0].x;
+        return other.x === this.x;
     }
     public toString(): string {
-        return 'AwaleMove(' + this.subMoves[0].x + ')';
+        return 'AwaleMove(' + this.x + ')';
     }
 }
