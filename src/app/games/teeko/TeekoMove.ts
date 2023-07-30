@@ -66,7 +66,10 @@ export namespace TeekoMove {
         Encoder.disjunction(
             [
                 (move: TeekoMove): move is TeekoDropMove => move instanceof TeekoDropMove,
-                (move: TeekoMove): move is TeekoDropMove => move instanceof TeekoTranslationMove
+                (move: TeekoMove): move is TeekoDropMove => move instanceof TeekoTranslationMove,
             ],
-            [TeekoDropMove.encoder, TeekoTranslationMove.encoder]);
+            [
+                TeekoDropMove.encoder,
+                TeekoTranslationMove.encoder,
+            ]);
 }

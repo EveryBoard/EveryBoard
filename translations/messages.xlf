@@ -63,13 +63,13 @@
         <source>Learn the rules</source>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (waiting for opponent)</source>
+        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> (waiting for opponent)</source>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
@@ -2804,10 +2804,10 @@
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
-      <trans-unit id="6938841492013420599" datatype="html">
+      <trans-unit id="6388473964053708590" datatype="html">
         <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
       </trans-unit>
-      <trans-unit id="6387234418172087558" datatype="html">
+      <trans-unit id="55131761932515685" datatype="html">
         <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
       </trans-unit>
       <trans-unit id="322267404708379069" datatype="html">
