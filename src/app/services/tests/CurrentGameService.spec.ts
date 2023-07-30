@@ -73,7 +73,7 @@ export class CurrentGameServiceMock {
     }
 }
 
-xdescribe('CurrentGameService', () => {
+describe('CurrentGameService', () => {
 
     let currentGameService: CurrentGameService;
     let connectedUserService: ConnectedUserService;

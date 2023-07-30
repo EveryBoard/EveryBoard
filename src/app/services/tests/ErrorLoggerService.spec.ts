@@ -12,7 +12,7 @@ import { ErrorDAO, MGPError } from 'src/app/dao/ErrorDAO';
 import { ErrorDAOMock } from 'src/app/dao/tests/ErrorDAOMock.spec';
 import { MessageDisplayer } from '../MessageDisplayer';
 
-xdescribe('ErrorLoggerService', () => {
+describe('ErrorLoggerService', () => {
 
     let errorLoggerService: ErrorLoggerService;
     let errorDAO: ErrorDAO;

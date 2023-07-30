@@ -17,7 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 
-xdescribe('ConfigRoomService', () => {
+describe('ConfigRoomService', () => {
 
     let configRoomDAO: ConfigRoomDAO;
 
