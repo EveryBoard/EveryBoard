@@ -36,7 +36,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         super(messageDisplayer);
         this.rules = LinesOfActionRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new LinesOfActionMinimax(),
         ];
         this.encoder = LinesOfActionMove.encoder;

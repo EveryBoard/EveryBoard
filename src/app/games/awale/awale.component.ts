@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { AwaleRules, CaptureResult } from './AwaleRules';
-import { AwaleMinimax } from './AwaleMinimax';
+import { AwaleCaptureMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from './AwaleState';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -38,7 +38,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.rules = AwaleRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new AwaleMinimax(this.rules, 'AwaleMinimax'),
+            new AwaleCaptureMinimax(),
         ];
         this.encoder = AwaleMove.encoder;
         this.tutorial = new AwaleTutorial().tutorial;

@@ -85,7 +85,7 @@ export class LodestoneMoveGenerator extends MoveGenerator<LodestoneMove, Lodesto
     }
 }
 
-export class LodestoneDummyHeuristic extends Heuristic<LodestoneMove, LodestoneState> {
+export class LodestoneScoreHeuristic extends Heuristic<LodestoneMove, LodestoneState> {
 
     public getBoardValue(node: LodestoneNode): BoardValue {
         const scores: [number, number] = node.gameState.getScores();
@@ -101,12 +101,12 @@ export class LodestoneDummyHeuristic extends Heuristic<LodestoneMove, LodestoneS
     }
 }
 
-export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState, LodestoneInfos> {
+export class LodestoneScoreMinimax extends Minimax<LodestoneMove, LodestoneState, LodestoneInfos> {
 
     public constructor() {
-        super('LodestoneDummyMinimax',
+        super('Score Minimax',
               LodestoneRules.get(),
-              new LodestoneDummyHeuristic(),
+              new LodestoneScoreHeuristic(),
               new LodestoneMoveGenerator());
     }
 }

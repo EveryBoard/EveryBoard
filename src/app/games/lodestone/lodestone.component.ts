@@ -11,7 +11,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
-import { LodestoneDummyMinimax } from './LodestoneDummyMinimax';
+import { LodestoneScoreMinimax } from './LodestoneDummyMinimax';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
@@ -130,8 +130,8 @@ export class LodestoneComponent
         this.rules = LodestoneRules.get();
         this.node = this.rules.getInitialNode();
         this.tutorial = new LodestoneTutorial().tutorial;
-        this.availableMinimaxes = [
-            new LodestoneDummyMinimax(),
+        this.availableAIs = [
+            new LodestoneScoreMinimax(),
         ];
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;

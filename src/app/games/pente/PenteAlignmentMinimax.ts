@@ -37,6 +37,6 @@ export class PenteAlignmentHeuristic extends Heuristic<PenteMove, PenteState> {
 export class PenteAlignmentMinimax extends Minimax<PenteMove, PenteState> {
 
     public constructor() {
-        super('PenteAlignmentMinimax', PenteRules.get(), new PenteAlignmentHeuristic(), new PenteMoveGenerator());
+        super('Alignment Minimax', PenteRules.get(), new PenteAlignmentHeuristic(), new PenteMoveGenerator());
     }
 }

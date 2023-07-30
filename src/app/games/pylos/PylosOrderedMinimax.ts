@@ -47,6 +47,6 @@ export class PylosOrderedMoveGenerator extends PylosMoveGenerator {
 export class PylosOrderedMinimax extends Minimax<PylosMove, PylosState> {
 
     public constructor() {
-        super('PylosOrderedMinimax', PylosRules.get(), new PylosHeuristic(), new PylosOrderedMoveGenerator());
+        super('OrderedMinimax', PylosRules.get(), new PylosHeuristic(), new PylosOrderedMoveGenerator());
     }
 }

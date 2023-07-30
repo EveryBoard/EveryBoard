@@ -5,9 +5,10 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from '../../utils/MGPValidation';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, AwaleState> {
+export class AwaleMoveGenerator extends MoveGenerator<AwaleMove, AwaleState> {
 
     public getListMoves(node: AwaleNode): AwaleMove[] {
         const moves: AwaleMove[] = [];
@@ -60,8 +61,19 @@ export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, AwaleState> {
         });
         return moves;
     }
+}
+
+export class AwaleCaptureHeuristic extends PlayerMetricHeuristic<AwaleMove, AwaleState> {
+
     public getMetrics(node: AwaleNode): [number, number] {
         const captured: number[] = node.gameState.getCapturedCopy();
         return [captured[0], captured[1]];
+    }
+}
+
+export class AwaleCaptureMinimax extends Minimax<AwaleMove, AwaleState> {
+
+    public constructor() {
+        super('CaptureMinimax', AwaleRules.get(), new AwaleCaptureHeuristic(), new AwaleMoveGenerator());
     }
 }

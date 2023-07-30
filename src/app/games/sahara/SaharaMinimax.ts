@@ -66,6 +66,6 @@ export class SaharaHeuristic extends PlayerMetricHeuristic<SaharaMove, SaharaSta
 export class SaharaMinimax extends Minimax<SaharaMove, SaharaState> {
 
     public constructor() {
-        super('SaharaMinimax', SaharaRules.get(), new SaharaHeuristic(), new SaharaMoveGenerator());
+        super('Minimax', SaharaRules.get(), new SaharaHeuristic(), new SaharaMoveGenerator());
     }
 }

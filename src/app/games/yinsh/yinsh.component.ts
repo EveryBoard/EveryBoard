@@ -98,7 +98,7 @@ export class YinshComponent
         this.scores = MGPOptional.of([0, 0]);
         this.rules = YinshRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new YinshMinimax(),
         ];
         this.encoder = YinshMove.encoder;

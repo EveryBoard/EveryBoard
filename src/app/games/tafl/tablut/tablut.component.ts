@@ -21,11 +21,11 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
         super(messageDisplayer, false, TablutMove.from);
         this.rules = TablutRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new TaflMinimax('DummyBot', new TaflHeuristic(this.rules)),
-            new TaflMinimax('Piece > Influence', new TaflPieceAndInfluenceHeuristic(this.rules)),
-            new TaflMinimax('Piece > Control', new TaflPieceAndControlHeuristic(this.rules)),
-            new TaflMinimax('Escape > Piece > Control', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
+        this.availableAIs = [
+            new TaflMinimax('Dummy Minimax', new TaflHeuristic(this.rules)),
+            new TaflMinimax('Piece > Influence Minimax', new TaflPieceAndInfluenceHeuristic(this.rules)),
+            new TaflMinimax('Piece > Control Minimax', new TaflPieceAndControlHeuristic(this.rules)),
+            new TaflMinimax('Escape > Piece > Control Minimax', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
         ];
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;

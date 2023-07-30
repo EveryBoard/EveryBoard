@@ -78,6 +78,6 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
 export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
 
     public constructor() {
-        super('QuartoMinimax', QuartoRules.get(), new QuartoHeuristic(), new QuartoMoveGenerator());
+        super('Minimax', QuartoRules.get(), new QuartoHeuristic(), new QuartoMoveGenerator());
     }
 }

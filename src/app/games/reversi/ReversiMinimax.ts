@@ -60,6 +60,6 @@ export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, Reversi
 export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiLegalityInformation> {
 
     public constructor() {
-        super('ReversiMinimax', ReversiRules.get(), new ReversiHeuristic(), new ReversiMoveGenerator());
+        super('Minimax', ReversiRules.get(), new ReversiHeuristic(), new ReversiMoveGenerator());
     }
 }

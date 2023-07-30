@@ -57,6 +57,8 @@ export class GameNode<M extends Move, S extends GameState> {
     }
 }
 
+export class AbstractNode extends GameNode<Move, GameState> {}
+
 /**
  * A move generator should have a method that generates move from a node.
  * It may generate all possible moves, but may also just filter out some uninteresting moves.
@@ -95,5 +97,9 @@ export class AIIterationLimitOptions implements AIOptions {
  * An AI selects a move from a game node.
  */
 export abstract class AI<M extends Move, S extends GameState, Opts extends AIOptions> {
+    public abstract readonly name: string;
     public abstract chooseNextMove(node: GameNode<M, S>, options: Opts): M;
+}
+
+export abstract class AbstractAI extends AI<Move, GameState, object> {
 }

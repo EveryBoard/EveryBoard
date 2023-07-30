@@ -42,6 +42,6 @@ export class P4Heuristic extends Heuristic<P4Move, P4State> {
 export class P4Minimax extends Minimax<P4Move, P4State> {
 
     public constructor() {
-        super('P4Minimax', P4Rules.get(), new P4Heuristic(), new P4MoveGenerator());
+        super('Minimax', P4Rules.get(), new P4Heuristic(), new P4MoveGenerator());
     }
 }

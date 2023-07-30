@@ -60,6 +60,6 @@ export class SiamHeuristic extends Heuristic<SiamMove, SiamState> {
 export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInformation> {
 
     public constructor() {
-        super('SiamMinimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator());
+        super('Minimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator());
     }
 }

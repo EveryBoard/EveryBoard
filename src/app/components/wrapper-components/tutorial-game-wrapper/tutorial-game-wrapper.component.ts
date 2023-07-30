@@ -3,7 +3,7 @@ import {
     Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { AbstractNode, MGPNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode, GameNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { display, Utils } from 'src/app/utils/utils';
@@ -95,9 +95,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        this.gameComponent.node = new MGPNode(currentStep.state,
-                                              MGPOptional.empty(),
-                                              currentStep.previousMove);
+        this.gameComponent.node = new GameNode(currentStep.state,
+                                               MGPOptional.empty<AbstractNode>(),
+                                               currentStep.previousMove);
         // Set role will update view with updateBoardAndShowLastMove
         this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();

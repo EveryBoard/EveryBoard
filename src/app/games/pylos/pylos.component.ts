@@ -52,7 +52,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.hasAsymmetricBoard = true;
         this.rules = PylosRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new PylosMinimax(),
             new PylosOrderedMinimax(),
         ];

@@ -64,6 +64,6 @@ export class KamisadoHeuristic extends PlayerMetricHeuristic<KamisadoMove, Kamis
 export class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoState> {
 
     public constructor() {
-        super('KamisadoMinimax', KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator());
+        super('Minimax', KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator());
     }
 }

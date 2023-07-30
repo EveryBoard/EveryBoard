@@ -1,5 +1,5 @@
 import { Rules } from '../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
@@ -12,7 +12,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState> {}
+export class AwaleNode extends GameNode<AwaleMove, AwaleState> {}
 
 export interface CaptureResult {
 

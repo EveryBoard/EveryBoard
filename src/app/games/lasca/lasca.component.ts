@@ -69,7 +69,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.hasAsymmetricBoard = true;
         this.rules = LascaRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new LascaControlMinimax(),
             new LascaControlAndDominationMinimax(),
         ];

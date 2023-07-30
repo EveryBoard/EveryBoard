@@ -48,7 +48,7 @@ export class SixComponent
         super(messageDisplayer);
         this.rules = SixRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             // TODO new SixMinimax(this.rules, 'SixMinimax'),
         ];
         this.encoder = SixMove.encoder;

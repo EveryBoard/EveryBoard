@@ -79,7 +79,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         super(messageDisplayer);
         this.rules = TrexoRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new TrexoMinimax(),
         ];
         this.encoder = TrexoMove.encoder;

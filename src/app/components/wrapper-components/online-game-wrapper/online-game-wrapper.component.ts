@@ -24,12 +24,11 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { GameEventService } from 'src/app/services/GameEventService';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode, GameNode } from 'src/app/jscaip/MGPNode';
 import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
-import { AbstractNode } from 'src/app/jscaip/MGPNode';
 
 export class OnlineGameWrapperMessages {
 
@@ -416,8 +415,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
             const stateAfterMove: GameState =
                 this.gameComponent.rules.applyLegalMove(move, this.gameComponent.node.gameState, legality.get());
-            const node: MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> =
-                new MGPNode(stateAfterMove, MGPOptional.of(this.gameComponent.node), MGPOptional.of(move));
+            const node: AbstractNode =
+                new GameNode(stateAfterMove, MGPOptional.of(this.gameComponent.node), MGPOptional.of(move));
             const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
 
             // To adhere to security rules, we must add the move before updating the part

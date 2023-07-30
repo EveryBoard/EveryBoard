@@ -78,7 +78,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.node = this.rules.getInitialNode();
         this.hasAsymmetricBoard = true;
         this.availableMinimaxes = [
-            new ApagosDummyMinimax(this.rules, 'ApagosDummyMinimax'),
+            new ApagosDummyMinimax(),
         ];
         this.encoder = ApagosMove.encoder;
         this.tutorial = new ApagosTutorial().tutorial;

@@ -1,13 +1,12 @@
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
+import { AbstractAI, AbstractNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from 'src/app/jscaip/GameState';
-import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -105,15 +104,15 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public proposeAIToPlay(): void {
         // check if ai's turn has come, if so, make her start after a delay
-        const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
-        if (playingMinimax.isPresent()) {
+        const playingAI: MGPOptional<AbstractAI> = this.getPlayingAI();
+        if (playingAI.isPresent()) {
             // bot's turn
             window.setTimeout(async() => {
-                await this.doAIMove(playingMinimax.get());
+                await this.doAIMove(playingAI.get());
             }, this.botTimeOut);
         }
     }
-    private getPlayingAI(): MGPOptional<AbstractMinimax> {
+    private getPlayingAI(): MGPOptional<AbstractAI> {
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.node).isEndGame) {
             // No AI is playing when the game is finished
             return MGPOptional.empty();
@@ -124,11 +123,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             return MGPOptional.empty();
         }
         return MGPOptional.ofNullable(
-            this.gameComponent.availableMinimaxes.find((a: AbstractMinimax) => {
+            this.gameComponent.availableMinimaxes.find((a: AbstractAI) => {
                 return this.players[playerIndex].equalsValue(a.name);
             }));
     }
-    public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
+    public async doAIMove(playingMinimax: AbstractAI): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);

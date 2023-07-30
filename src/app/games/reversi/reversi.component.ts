@@ -35,7 +35,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.scores = MGPOptional.of([2, 2]);
         this.rules = ReversiRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new ReversiMinimax(),
         ];
         this.encoder = ReversiMove.encoder;

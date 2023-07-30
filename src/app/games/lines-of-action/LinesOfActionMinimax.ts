@@ -46,7 +46,7 @@ export class LinesOfActionHeuristic extends PlayerMetricHeuristic<LinesOfActionM
 export class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActionState> {
 
     public constructor() {
-        super('LinesOfActionMinimax',
+        super('Minimax',
               LinesOfActionRules.get(),
               new LinesOfActionHeuristic(),
               new LinesOfActionMoveGenerator());

@@ -63,6 +63,6 @@ export class HiveHeuristic extends PlayerMetricHeuristic<HiveMove, HiveState> {
 export class HiveMinimax extends Minimax<HiveMove, HiveState> {
 
     public constructor() {
-        super('HiveMinimax', HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator());
+        super('QueenMobility Minimax', HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator());
     }
 }

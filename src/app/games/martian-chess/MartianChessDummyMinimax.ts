@@ -128,7 +128,7 @@ export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, M
     }
 }
 
-export class MartianChessDummyHeuristic extends PlayerMetricHeuristic<MartianChessMove, MartianChessState> {
+export class MartianChessScoreHeuristic extends PlayerMetricHeuristic<MartianChessMove, MartianChessState> {
 
     public getMetrics(node: MartianChessNode): [number, number] {
         const zeroScore: number = node.gameState.getScoreOf(Player.ZERO);
@@ -137,12 +137,12 @@ export class MartianChessDummyHeuristic extends PlayerMetricHeuristic<MartianChe
     }
 }
 
-export class MartianChessDummyMinimax extends Minimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
+export class MartianChessScoreMinimax extends Minimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
 
     public constructor() {
-        super('MartianChessDummyMinimax',
+        super('Score Minimax',
               MartianChessRules.get(),
-              new MartianChessDummyHeuristic(),
+              new MartianChessScoreHeuristic(),
               new MartianChessMoveGenerator());
     }
 }

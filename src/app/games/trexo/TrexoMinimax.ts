@@ -53,6 +53,6 @@ export class TrexoMinimax extends Minimax<TrexoMove, TrexoState> {
 
     public constructor() {
         const rules: TrexoRules = TrexoRules.get();
-        super('TrexoMinimax', rules, new TrexoHeuristic(), new TrexoMoveGenerator());
+        super('Alignment Minimax', rules, new TrexoHeuristic(), new TrexoMoveGenerator());
     }
 }

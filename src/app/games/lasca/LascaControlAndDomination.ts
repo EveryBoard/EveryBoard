@@ -37,7 +37,7 @@ export class LascaControlAndDominationHeuristic extends LascaControlHeuristic {
 export class LascaControlAndDominationMinimax extends Minimax<LascaMove, LascaState> {
 
     public constructor() {
-        super('LascaControlAndDominationMinimax',
+        super('ControlAndDomination Minimax',
               LascaRules.get(),
               new LascaControlAndDominationHeuristic(),
               new LascaMoveGenerator());

@@ -21,7 +21,7 @@ export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflM
         super(messageDisplayer, false, HnefataflMove.from);
         this.rules = HnefataflRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new TaflMinimax('DummyBot', new TaflHeuristic(this.rules)),
             new TaflMinimax('Piece > Influence', new TaflPieceAndInfluenceHeuristic(this.rules)),
             new TaflMinimax('Piece > Control', new TaflPieceAndControlHeuristic(this.rules)),

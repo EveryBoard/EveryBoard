@@ -44,6 +44,6 @@ export class PylosHeuristic extends PlayerMetricHeuristic<PylosMove, PylosState>
 export class PylosMinimax extends Minimax<PylosMove, PylosState> {
 
     public constructor() {
-        super('PylosMinimax', PylosRules.get(), new PylosHeuristic(), new PylosMoveGenerator());
+        super('Minimax', PylosRules.get(), new PylosHeuristic(), new PylosMoveGenerator());
     }
 }

@@ -12,7 +12,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
+import { AbaloneScoreMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
@@ -52,7 +52,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.rules = AbaloneRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new AbaloneDummyMinimax(this.rules, 'Dummy'),
+            new AbaloneScoreMinimax(),
         ];
         this.encoder = AbaloneMove.encoder;
         this.tutorial = new AbaloneTutorial().tutorial;

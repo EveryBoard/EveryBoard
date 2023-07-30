@@ -74,6 +74,6 @@ export class PentagoMoveGenerator extends MoveGenerator<PentagoMove, PentagoStat
 export class PentagoMinimax extends Minimax<PentagoMove, PentagoState> {
 
     public constructor() {
-        super('PentagoDummyMinimax', PentagoRules.get(), new DummyHeuristic(), new PentagoMoveGenerator());
+        super('Dummy', PentagoRules.get(), new DummyHeuristic(), new PentagoMoveGenerator());
     }
 }

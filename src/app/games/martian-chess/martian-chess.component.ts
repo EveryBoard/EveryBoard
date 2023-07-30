@@ -8,7 +8,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MartianChessDummyMinimax } from './MartianChessDummyMinimax';
+import { MartianChessScoreMinimax } from './MartianChessDummyMinimax';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
@@ -152,8 +152,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.hasAsymmetricBoard = true;
         this.rules = MartianChessRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new MartianChessDummyMinimax(),
+        this.availableAIs = [
+            new MartianChessScoreMinimax(),
         ];
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();

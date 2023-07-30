@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
@@ -65,22 +65,22 @@ export class DemoPageComponent {
             const solution: Move | string = step.getSolution();
             if (typeof solution === 'string') {
                 return {
-                    node: new MGPNode(step.state),
+                    node: new GameNode(step.state),
                     click: MGPOptional.of(solution as string),
                 };
             } else {
                 const move: Move = solution as Move;
                 const node: AbstractNode =
-                    new MGPNode(rules.applyLegalMove(move,
+                    new GameNode(rules.applyLegalMove(move,
                                                      step.state,
                                                      rules.isLegal(move, step.state).get()),
-                                MGPOptional.of(new MGPNode(step.state)),
+                                MGPOptional.of(new GameNode(step.state)),
                                 MGPOptional.of(move));
                 return { node, click: MGPOptional.empty() };
             }
         } else {
             return {
-                node: new MGPNode(step.state),
+                node: new GameNode(step.state),
                 click: MGPOptional.empty(),
             };
         }

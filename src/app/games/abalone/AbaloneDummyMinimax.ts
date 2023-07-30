@@ -1,14 +1,15 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class AbaloneDummyMinimax extends PlayerMetricsMinimax<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
+export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneState> {
 
     public getListMoves(node: AbaloneNode): AbaloneMove[] {
         const moves: AbaloneMove[] = [];
@@ -64,7 +65,19 @@ export class AbaloneDummyMinimax extends PlayerMetricsMinimax<AbaloneMove, Abalo
             return false;
         }
     }
+}
+
+export class AbaloneScoreHeuristic extends PlayerMetricHeuristic<AbaloneMove, AbaloneState> {
+
     public getMetrics(node: AbaloneNode): [number, number] {
         return node.gameState.getScores();
+    }
+}
+
+export class AbaloneScoreMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
+
+    public constructor() {
+        // TODO FOR REVIEW: j'ai renommé certains minimax, hésite pas si t'en vois d'autres qui méritent renommage !
+        super('ScoreMinimax', AbaloneRules.get(), new AbaloneScoreHeuristic(), new AbaloneMoveGenerator());
     }
 }

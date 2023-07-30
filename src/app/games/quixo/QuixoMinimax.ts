@@ -39,7 +39,7 @@ export class QuixoHeuristic extends PlayerMetricHeuristic<QuixoMove, QuixoState>
 export class QuixoMinimax extends Minimax<QuixoMove, QuixoState> {
 
     public constructor() {
-        super('QuixoMinimax', QuixoRules.get(), new QuixoHeuristic(), new QuixoMoveGenerator());
+        super('Minimax', QuixoRules.get(), new QuixoHeuristic(), new QuixoMoveGenerator());
     }
 
 }
