@@ -43,6 +43,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.board = this.node.gameState.board;
     }
     public override showLastMove(move: TeekoMove): void {
+        this.hideLastMove();
         this.last = MGPOptional.of(this.rules.getLastCoord(move));
         if (move instanceof TeekoTranslationMove) {
             this.moved = [move.getStart(), move.getEnd()];
