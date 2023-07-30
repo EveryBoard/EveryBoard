@@ -247,12 +247,11 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(entrance, coord);
         return this.selectPlacementDirection(direction.toOptional());
     }
-    private async tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
-                          placement: GipfPlacement,
-                          finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
+    private tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
+                    placement: GipfPlacement,
+                    finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
         const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.getState(), this.scores.get());
-        return validity;
+        return this.chooseMove(move);
     }
     public override cancelMoveAttempt(): void {
         this.constructedState = this.getState();

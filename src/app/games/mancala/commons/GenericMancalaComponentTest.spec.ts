@@ -47,7 +47,7 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
                 lastDistributionSeedNumber++; // it'll take 200ms skipping the initial house
             }
             const moveDuration: number = (lastDistributionSeedNumber + 1) * 200; // The time to move the seeds
-            await testUtils.expectMoveSuccess(click, move, undefined, undefined, moveDuration);
+            await testUtils.expectMoveSuccess(click, move, moveDuration);
         }
         function expectToBeCaptured(cells: Cell<string>[]): void {
             for (const cell of cells) {

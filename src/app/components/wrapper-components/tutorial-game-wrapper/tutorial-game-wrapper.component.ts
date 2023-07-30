@@ -144,8 +144,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.moveAttemptMade = false;
         await this.showStep(this.stepIndex);
     }
-    public override async onUserClick(elementName: string): Promise<MGPValidation> {
-        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onUserClick(' + elementName + ')');
+    public override async canUserPlay(elementName: string): Promise<MGPValidation> {
+        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.canUserPlay(' + elementName + ')');
         this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
             return MGPValidation.failure(TutorialFailure.STEP_FINISHED());

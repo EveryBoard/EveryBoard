@@ -117,7 +117,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             if (distributionResult.endUpInKalah) {
                 return MGPValidation.SUCCESS;
             } else {
-                return this.chooseMove(this.currentMove.get(), this.getState());
+                return this.chooseMove(this.currentMove.get());
             }
         }
     }
@@ -229,7 +229,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.cdr.detectChanges();
     }
     protected addToMove(x: number): MGPOptional<M> {
-        return MGPOptional.empty();
+        return MGPOptional.empty(); // If the game is a multidistribution, this must be overriden
     }
     public abstract generateMove(x: number): M;
 }

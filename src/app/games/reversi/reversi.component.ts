@@ -49,7 +49,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: ReversiMove = new ReversiMove(x, y);
-        return await this.chooseMove(chosenMove, this.getState(), this.scores.get());
+        return await this.chooseMove(chosenMove);
     }
     public async updateBoard(): Promise<void> {
         const state: ReversiState = this.getState();

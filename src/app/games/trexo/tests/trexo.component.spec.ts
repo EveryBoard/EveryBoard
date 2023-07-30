@@ -96,7 +96,7 @@ describe('TrexoComponent', () => {
                         testUtils.expectElementToExist('#dropped_piece_5_5_0');
                     }));
                     it(`should fail when clicking on an isolated piece`, fakeAsync(async() => {
-                        // Given a board on which 1 space is higher than all its neighbooring space (except its "twin")
+                        // Given a board on which 1 space is higher than all its neighboring space (except its "twin")
                         const state: TrexoState = TrexoState.from([
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -118,7 +118,7 @@ describe('TrexoComponent', () => {
                     }));
                     it('should show possible next click amongst the possible neigbhors', fakeAsync(async() => {
                         // Given any board
-                        // When clicking on a possible first coord (whose neighboor are empty spaces)
+                        // When clicking on a possible first coord (whose neighbor are empty spaces)
                         await testUtils.expectClickSuccess('#space_5_5');
                         // Then the possible next click should be highlighted
                         testUtils.expectElementToHaveClass('#space_4_5', 'darker');
@@ -153,7 +153,7 @@ describe('TrexoComponent', () => {
                         // When selecting a piece on that level
                         await testUtils.expectClickSuccess('#space_0_0');
 
-                        // Then the neighbooring piece should be darker
+                        // Then the neighboring piece should be darker
                         testUtils.expectElementToHaveClass('#tile_1_0_0', 'darker');
                     }));
                 });

@@ -90,7 +90,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         if (newMove.isFailure()) {
             return this.cancelMove(newMove.getReason());
         }
-        return await this.chooseMove(newMove.get(), this.getState());
+        return await this.chooseMove(newMove.get());
     }
     public async updateBoard(): Promise<void> {
         const move: MGPOptional<SaharaMove> = this.node.move;

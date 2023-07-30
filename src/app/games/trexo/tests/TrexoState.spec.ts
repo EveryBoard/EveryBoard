@@ -42,4 +42,46 @@ describe('TrexoState', () => {
         const piece: TrexoPiece = new TrexoPiece(owner, dropTurn);
         expect(nextState.getPieceAt(coord)).toEqual(TrexoPieceStack.from([piece]));
     });
+    describe('toString', () => {
+        const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
+        const O1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 0)]);
+        const O1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1)]);
+        const O2__T2: TrexoPieceStack = TrexoPieceStack.from([
+            new TrexoPiece(Player.ZERO, 0),
+            new TrexoPiece(Player.ZERO, 2),
+        ]);
+        const O1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 3)]);
+        const X1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 0)]);
+        const X1__T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1)]);
+        const X2__T2: TrexoPieceStack = TrexoPieceStack.from([
+            new TrexoPiece(Player.ONE, 0),
+            new TrexoPiece(Player.ONE, 2),
+        ]);
+        const X1__T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 3)]);
+        it('should display state', () => {
+            const state: TrexoState = TrexoState.from([
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, O1__T0, ______, O2__T2, ______, ______, ______, ______],
+                [______, ______, ______, X1__T0, X1__T1, X2__T2, X1__T3, ______, ______, ______],
+                [______, ______, ______, ______, O1__T1, ______, O1__T3, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+                [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
+            ], 4).get();
+            const representation: string = `[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]
+,[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]
+,[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([(TrexoPiece(PLAYER_ZERO, 0))]), TrexoPieceStack.from([]), TrexoPieceStack.from([(TrexoPiece(PLAYER_ZERO, 0)) (TrexoPiece(PLAYER_ZERO, 2))]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]
+,[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([(TrexoPiece(PLAYER_ONE, 0))]), TrexoPieceStack.from([(TrexoPiece(PLAYER_ONE, 1))]), TrexoPieceStack.from([(TrexoPiece(PLAYER_ONE, 0)) (TrexoPiece(PLAYER_ONE, 2))]), TrexoPieceStack.from([(TrexoPiece(PLAYER_ONE, 3))]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]
+,[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([(TrexoPiece(PLAYER_ZERO, 1))]), TrexoPieceStack.from([]), TrexoPieceStack.from([(TrexoPiece(PLAYER_ZERO, 3))]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]
+,[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]
+,[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]
+,[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]
+,[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]
+,[TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([]), TrexoPieceStack.from([])]`;
+            expect(state.toString()).toBe(representation);
+        });
+    });
 });

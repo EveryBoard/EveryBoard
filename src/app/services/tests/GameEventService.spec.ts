@@ -123,7 +123,7 @@ xdescribe('GameEventService', () => {
         }));
     });
     describe('subscribeToEvents', () => {
-        it('should receive newly added events', fakeAsync(async() => {
+        it('should receive newly added events exactly once', fakeAsync(async() => {
             // Given a part service with a part without event, and where we subscribed to the part's events
             let receivedEvents: number = 0;
             gameEventService.subscribeToEvents(partId, (events: GameEvent[]) => {
@@ -131,7 +131,8 @@ xdescribe('GameEventService', () => {
             });
             // When a new event is added
             await gameEventService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
-            // Then we receive it
+            // Then we receive it a single time
+            // (firestore gives us two updates, one with a null time, which should be filtered by the service)
             tick(1);
             expect(receivedEvents).toBe(1);
         }));

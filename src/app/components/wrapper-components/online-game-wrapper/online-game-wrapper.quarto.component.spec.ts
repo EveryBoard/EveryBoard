@@ -2,7 +2,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
@@ -12,12 +12,11 @@ import { GameEventService } from 'src/app/services/GameEventService';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { Action, MGPResult, Part, Reply, RequestType } from 'src/app/domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { FocusedPart, User } from 'src/app/domain/User';
+import { CurrentGame, User } from 'src/app/domain/User';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
@@ -29,17 +28,15 @@ import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { UserService } from 'src/app/services/UserService';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
@@ -59,8 +56,8 @@ export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promi
     const OBSERVER: User = {
         username: 'jeanJaja',
         lastUpdateTime: new Timestamp(Date.now() / 1000, Date.now() % 1000),
-        state: 'online',
         verified: true,
+        currentGame: null,
     };
     const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
                                                  MGPOptional.ofNullable(OBSERVER.username),
@@ -120,13 +117,11 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     if (preparationOptions.runClocks === false) {
         spyOn(TestBed.inject(OGWCTimeManagerService), 'resumeClocks').and.callFake(async() => {});
     }
-    const wrapper: OnlineGameWrapperComponent = testUtils.wrapper as OnlineGameWrapperComponent;
     testUtils.detectChanges();
     tick(1);
 
     const partCreationId: DebugElement = testUtils.findElement('#partCreation');
     expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
-    expect(wrapper.partCreation).withContext('partCreation field should also be present').toBeTruthy();
     const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
     await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
     testUtils.detectChanges();
@@ -183,8 +178,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     const OBSERVER: User = {
         username: 'jeanJaja',
         lastUpdateTime: new Timestamp(Date.now() / 1000, Date.now() % 1000),
-        state: 'online',
         verified: true,
+        currentGame: null,
     };
     const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
                                                  MGPOptional.ofNullable(OBSERVER.username),
@@ -206,8 +201,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     const THIRD_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(THIRD_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
-        const state: QuartoState = wrapper.gameComponent.getState() as QuartoState;
-        const result: MGPValidation = await wrapper.gameComponent.chooseMove(move, state);
+        const result: MGPValidation = await wrapper.gameComponent.chooseMove(move);
         const message: string = 'move ' + move.toString() + ' should be legal but failed because: ' + result.getReasonOr('no failure');
         expect(result.isSuccess()).withContext(message).toEqual(legal);
         testUtils.detectChanges();
@@ -242,13 +236,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
     }
     async function askTakeBack(): Promise<void> {
-        return await testUtils.clickElement('#askTakeBackButton');
+        return await testUtils.clickElement('#proposeTakeBack');
     }
     async function acceptTakeBack(): Promise<void> {
-        return await testUtils.clickElement('#acceptTakeBackButton');
+        return await testUtils.clickElement('#accept');
     }
     async function refuseTakeBack(): Promise<void> {
-        return await testUtils.clickElement('#refuseTakeBackButton');
+        return await testUtils.clickElement('#reject');
     }
     async function receiveNewMoves(initialTurn: number,
                                    newMoves: JSONValueWithoutArray[],
@@ -257,8 +251,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     {
         const update: Partial<Part> = {
             turn: initialTurn + newMoves.length,
-            request: null,
-            lastUpdateTime: serverTimestamp(),
         };
         const gameService: GameService = TestBed.inject(GameService);
         let currentPlayer: Player = Player.of(initialTurn % 2);
@@ -354,9 +346,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(quartoTag)
             .withContext('quarto tag should be absent before config accepted and async ms finished')
             .toBeFalsy();
-        expect(wrapper.partCreation)
-            .withContext('partCreation field should be absent after config accepted')
-            .toBeFalsy();
+
+        testUtils.expectElementNotToExist('#partCreation');
         expect(testUtils.getComponent())
             .withContext('gameComponent field should be absent after config accepted and async ms finished')
             .toBeFalsy();
@@ -437,19 +428,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
 
             // When component is initialized
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
             tick(2);
             testUtils.detectChanges();
 
-            // Then updateObservedPart should have been called as Player
-            const update: Partial<FocusedPart> = {
+            // Then updateCurrentGame should have been called as Player
+            const update: Partial<CurrentGame> = {
                 id: 'configRoomId',
                 typeGame: 'Quarto',
                 opponent: null,
                 role: 'Player',
             };
-            expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
+            expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(update);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should mark chosen opponent as Player when arriving', fakeAsync(async() => {
@@ -457,19 +448,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.dontWait);
 
             // When component is initialized
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
             tick(2);
             testUtils.detectChanges();
 
-            // Then updateObservedPart should have been called as Player
-            const update: Partial<FocusedPart> = {
+            // Then updateCurrentGame should have been called as Player
+            const update: Partial<CurrentGame> = {
                 id: 'configRoomId',
                 typeGame: 'Quarto',
                 opponent: UserMocks.CREATOR_MINIMAL_USER,
                 role: 'Player',
             };
-            expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
+            expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(update);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should show player names', fakeAsync(async() => {
@@ -522,29 +513,32 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
     it('should allow player to pass when gameComponent allows it', fakeAsync(async() => {
+        // Given a game where it is possible to pass
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-        testUtils.expectElementNotToExist('#passButton');
+        testUtils.expectElementToBeDisabled('#pass');
 
         wrapper.gameComponent.canPass = true;
-        wrapper.gameComponent.pass = async(): Promise<MGPValidation> => {
-            return MGPValidation.SUCCESS;
-        };
+        spyOn(wrapper.gameComponent, 'pass').and.resolveTo(MGPValidation.SUCCESS);
         testUtils.detectChanges();
 
-        await testUtils.clickElement('#passButton');
+        // When clicking on the pass button
+        testUtils.expectElementToBeEnabled('#pass');
+        await testUtils.clickElement('#pass');
 
+        // Then it should pass
+        expect(wrapper.gameComponent.pass).toHaveBeenCalledOnceWith();
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    describe('ObservedPart Change', () => {
+    describe('CurrentGame Change', () => {
         it('should redirect to lobby when role and partId change', fakeAsync(async() => {
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
-            // When observedPart is updated to inform component that user is now candidate in a game
+            // When currentGame is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            const currentGame: CurrentGame = CurrentGameMocks.OTHER_CANDIDATE;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
 
             // Then a redirection to lobby should be triggered
             expectValidRouting(router, ['/lobby'], LobbyComponent);
@@ -553,11 +547,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
-            // When observedPart is updated to inform component that user is now candidate in a game
+            // When currentGame is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_OBSERVER;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            const currentGame: CurrentGame = CurrentGameMocks.OTHER_OBSERVER;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
 
             // Then a redirection to lobby should not have been triggered
             expect(router.navigate).not.toHaveBeenCalled();
@@ -567,15 +561,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
-            // When observedPart is updated to inform component that user stopped observing some part in another tab
+            // When currentGame is updated to inform component that user stopped observing some part in another tab
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
 
             // Then nothing special should have happened, including no redirection
-            // Though compo.observedPart should have been locally changed
+            // Though compo.currentGame should have been locally changed
             expect(router.navigate).not.toHaveBeenCalled();
-            expect(wrapper['observedPart']).toEqual(MGPOptional.empty());
+            expect(wrapper['currentGame']).toEqual(MGPOptional.empty());
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
@@ -636,23 +630,23 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#youLostIndicator');
             expectGameToBeOver();
         }));
-        it('should removeObservedPart when one player wins', fakeAsync(async() => {
+        it('should removeCurrentGame when one player wins', fakeAsync(async() => {
             // Given a board on which user can win
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             spyOn(wrapper.gameComponent.rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
             testUtils.expectElementNotToExist('#winnerIndicator');
 
             // When doing winning move
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             await doMove(FIRST_MOVE, true);
             // the call to the serverTimeMock() is very close to the update
             // hence, the second update got called while the first update was executing
             tick(1000);
             testUtils.fixture.detectChanges();
 
-            // Then removeObservedPart should have been called
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then removeCurrentGame should have been called
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
         it('should notifyDraw when a draw move from player is done', fakeAsync(async() => {
@@ -679,22 +673,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#hardDrawIndicator');
             expectGameToBeOver();
         }));
-        it('should removeObservedPart when players draw', fakeAsync(async() => {
+        it('should removeCurrentGame when players draw', fakeAsync(async() => {
             // Given a board on which user can draw
             await prepareBoard([new QuartoMove(0, 0, QuartoPiece.AAAB)], Player.ONE);
             spyOn(wrapper.gameComponent.rules, 'getGameStatus').and.returnValue(GameStatus.DRAW);
             testUtils.expectElementNotToExist('#winnerIndicator');
 
             // When doing drawing move
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             await doMove(FIRST_MOVE, true);
             // For some reason doMove call the two update (without time then time only) very close to each other
             // Provoking a call to a timeout workaround so the two update are applied sequencially and not parallelly
             tick(1000);
 
-            // Then removeObservedPart should have been called
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then removeCurrentGame should have been called
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
     });
@@ -724,14 +718,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 testUtils.detectChanges();
 
                 // Then it should not be possible to ask a second time
-                testUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
             }));
             it('should not propose to Player.ONE to take back before any move', fakeAsync(async() => {
                 // Given a board where nobody already played
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
                 // When displaying the page
                 // Then the take back button should not be there
-                testUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
             }));
             it('should not propose to Player.ONE to take back before their first move', fakeAsync(async() => {
                 // Given a board where nobody already played
@@ -739,7 +733,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When receiving a new move
                 await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
                 // Then the take back button should not be there
-                testUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
             }));
             it('should only propose to accept take back when opponent asked', fakeAsync(async() => {
                 // Given a board where opponent did not ask to take back and where both player could have ask
@@ -748,7 +742,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
 
                 // accepting take back should not be proposed
-                testUtils.expectElementNotToExist('#acceptTakeBackButton');
+                testUtils.expectElementNotToExist('#acceptTakeBack');
                 await receiveRequest(Player.ONE, 'TakeBack');
 
                 // Then should allow it after proposing sent
@@ -757,7 +751,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 testUtils.detectChanges();
 
                 // and then again not allowing it
-                testUtils.expectElementNotToExist('#acceptTakeBackButton');
+                testUtils.expectElementNotToExist('#acceptTakeBack');
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
             it('should remove take back rejection button after it has been rejected', fakeAsync(async() => {
@@ -765,7 +759,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
-                testUtils.expectElementNotToExist('#refuseTakeBackButton');
+                testUtils.expectElementNotToExist('#refuseTakeBack');
                 await receiveRequest(Player.ONE, 'TakeBack');
                 spyOn(gameEventService, 'addReply').and.callThrough();
 
@@ -774,7 +768,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 testUtils.detectChanges();
 
                 // Then a TakeBack rejection reply should have been sent
-                testUtils.expectElementNotToExist('#refuseTakeBackButton');
+                testUtils.expectElementNotToExist('#refuseTakeBack');
                 expect(gameEventService.addReply).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'Reject', 'TakeBack');
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -812,7 +806,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await askTakeBack();
                 await receiveReply(Player.ONE, 'Reject', 'TakeBack');
 
-                testUtils.expectElementNotToExist('#askTakeBackButton');
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
@@ -989,6 +983,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
+        it('should call cancelMoveAttempt', fakeAsync(async() => {
+            // Given an initial board where it's opponent's [second] turn, and user just asked for take back
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await doMove(FIRST_MOVE, true);
+            await askTakeBack();
+
+            // When opponent accept user's take back
+            spyOn(testUtils.getComponent(), 'cancelMoveAttempt').and.callThrough();
+            await receiveReply(Player.ONE, 'Accept', 'TakeBack');
+
+            // Then cancelMoveAttempt should have been called
+            expect(testUtils.getComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
     });
     describe('Agreed Draw', () => {
         it('should send draw request when player asks to', fakeAsync(async() => {
@@ -997,7 +1005,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(gameEventService, 'addRequest').and.callThrough();
 
             // When clicking the propose draw button
-            await testUtils.clickElement('#proposeDrawButton');
+            await testUtils.clickElement('#proposeDraw');
 
             // Then a draw request should have been sent
             expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'Draw');
@@ -1006,27 +1014,42 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
             // Given a page where we sent a draw request
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-            await testUtils.clickElement('#proposeDrawButton');
+            await testUtils.clickElement('#proposeDraw');
 
             // When displaying it
             testUtils.detectChanges();
 
             // Then it should not allow us to propose a second draw
-            testUtils.expectElementNotToExist('#proposeDrawButton');
+            testUtils.expectElementToBeDisabled('#proposeDraw');
 
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it('should forbid to play while draw request is waiting', fakeAsync(async() => {
+            // Given a page where we received a draw request
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveRequest(Player.ONE, 'Draw');
+            testUtils.detectChanges();
+            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+            spyOn(messageDisplayer, 'gameMessage').and.callThrough();
+
+            // When ignoring it and trying to play
+            await doMove(FIRST_MOVE, true);
+
+            // Then it should fail
+            expect(messageDisplayer.gameMessage).toHaveBeenCalledWith(GameWrapperMessages.MUST_ANSWER_REQUEST());
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should forbid to propose to draw after refusal', fakeAsync(async() => {
             // Given a page where we sent a draw request
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-            await testUtils.clickElement('#proposeDrawButton');
+            await testUtils.clickElement('#proposeDraw');
             tick(1);
 
             // When it is rejected
             await receiveReply(Player.ONE, 'Reject', 'Draw');
 
             // Then we cannot request to draw anymore
-            testUtils.expectElementNotToExist('#proposeDrawButton');
+            testUtils.expectElementToBeDisabled('#proposeDraw');
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
@@ -1038,7 +1061,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // When accepting the draw
-            await testUtils.clickElement('#acceptDrawButton');
+            await testUtils.clickElement('#accept');
 
             // Then the draw is being accepted
             expect(gameService.acceptDraw).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
@@ -1051,14 +1074,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should finish the game when opponent accepts our proposed draw', fakeAsync(async() => {
             // Given a gameComponent where draw has been proposed
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-            await testUtils.clickElement('#proposeDrawButton');
+            await testUtils.clickElement('#proposeDraw');
             tick(1);
 
             // When draw is accepted
             spyOn(partDAO, 'update').and.callThrough();
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1067,23 +1089,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#yourOpponentAgreedToDrawIndicator');
             expect(partDAO.update).toHaveBeenCalledTimes(1);
         }));
-        it('should removeObservedPart when opponent accepts our proposed draw', fakeAsync(async() => {
+        it('should removeCurrentGame when opponent accepts our proposed draw', fakeAsync(async() => {
             // Given a gameComponent where draw has been proposed
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-            await testUtils.clickElement('#proposeDrawButton');
+            await testUtils.clickElement('#proposeDraw');
             tick(1);
 
             // When draw is accepted
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
-            // Then removeObservedPart should have been called
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then removeCurrentGame should have been called
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
         it('should send refusal when player asks to', fakeAsync(async() => {
@@ -1092,19 +1113,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             spyOn(gameEventService, 'addReply').and.callThrough();
 
-            await testUtils.clickElement('#refuseDrawButton');
+            await testUtils.clickElement('#reject');
             expect(gameEventService.addReply).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'Reject', 'Draw');
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should only propose to accept/refuse draw when asked', fakeAsync(async() => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-            testUtils.expectElementNotToExist('#acceptDrawButton');
-            testUtils.expectElementNotToExist('#refuseDrawButton');
+            testUtils.expectElementNotToExist('#accept');
+            testUtils.expectElementNotToExist('#reject');
             await receiveRequest(Player.ONE, 'Draw');
 
-            testUtils.expectElementToExist('#acceptDrawButton');
-            testUtils.expectElementToExist('#refuseDrawButton');
+            testUtils.expectElementToExist('#accept');
+            testUtils.expectElementToExist('#reject');
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
@@ -1160,8 +1181,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await doMove(FIRST_MOVE, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
-            spyOn(wrapper, 'notifyTimeoutVictory').and.callThrough();
             spyOn(wrapper, 'opponentIsOffline').and.returnValue(true);
+            spyOn(partDAO, 'update').and.callThrough();
 
             // When opponent reach time out locally
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -1169,9 +1190,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
-            const winner: MinimalUser = UserMocks.CREATOR_MINIMAL_USER;
-            const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
-            expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, loser);
+            expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
+                winner: UserMocks.CREATOR_MINIMAL_USER,
+                loser: UserMocks.OPPONENT_MINIMAL_USER,
+                result: MGPResult.TIMEOUT.value,
+            });
         }));
     });
     describe('Add time feature', () => {
@@ -1336,7 +1359,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When clicking on resign button
             spyOn(partDAO, 'update').and.callThrough();
-            await testUtils.clickElement('#resignButton');
+            await testUtils.clickElement('#resign');
             tick(1);
 
             // Then the game should be ended
@@ -1352,7 +1375,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
-            await testUtils.clickElement('#resignButton');
+            await testUtils.clickElement('#resign');
             tick(1);
 
             // When attempting a move
@@ -1362,6 +1385,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then it should be refused
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();
+            tick(3000);
         }));
         it('should display when the opponent resigned', fakeAsync(async() => {
             // Given a board where the opponent has resigned
@@ -1372,7 +1396,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 winner: UserMocks.CREATOR_MINIMAL_USER,
                 loser: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.RESIGN.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
@@ -1383,25 +1406,24 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(resignText).toBe(`firstCandidate has resigned.`);
             expectGameToBeOver();
         }));
-        it('should removeObservedPart when the opponent resigned', fakeAsync(async() => {
+        it('should removeCurrentGame when the opponent resigned', fakeAsync(async() => {
             // Given a board where user has resign
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
 
             // When receiving opponents submission to our greatness and recognition as overlord of their land
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             await receivePartDAOUpdate({
                 winner: UserMocks.CREATOR_MINIMAL_USER,
                 loser: UserMocks.OPPONENT_MINIMAL_USER,
                 result: MGPResult.RESIGN.value,
-                request: null,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
-            // Then removeObservedPart should be called
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then removeCurrentGame should be called
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
     });
@@ -1409,48 +1431,79 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should show propose button only when game is ended', fakeAsync(async() => {
             // Given a game that is not finished
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-            testUtils.expectElementNotToExist('#proposeRematchButton');
+            testUtils.expectElementToBeDisabled('#proposeRematch');
 
             // When it is finished
             await testUtils.expectInterfaceClickSuccess('#resignButton', 1);
 
             // Then it should allow to propose rematch
-            testUtils.expectElementToExist('#proposeRematchButton');
+            testUtils.expectElementToBeEnabled('#proposeRematch');
         }));
         it('should send proposal request when proposing', fakeAsync(async() => {
             // Given an ended game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-            await testUtils.expectInterfaceClickSuccess('#resignButton');
+            await testUtils.expectInterfaceClickSuccess('#resign');
             tick(1);
             testUtils.detectChanges();
 
             // When the propose rematch button is clicked
             const gameService: GameService = TestBed.inject(GameService);
             spyOn(gameService, 'proposeRematch').and.callThrough();
-            await testUtils.expectInterfaceClickSuccess('#proposeRematchButton');
+            await testUtils.expectInterfaceClickSuccess('#proposeRematch');
 
             // Then the gameService must be called
             expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
         }));
-        it('should show accept/refuse button when proposition has been sent', fakeAsync(async() => {
+        it('should send reply when rejecting', fakeAsync(async() => {
+            // Given an ended game with a received proposal request
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
+            await testUtils.expectInterfaceClickSuccess('#resign');
+            await receiveRequest(Player.ONE, 'Rematch');
+            tick(1);
+            testUtils.detectChanges();
+            const gameService: GameService = TestBed.inject(GameService);
+            spyOn(gameService, 'rejectRematch').and.callThrough();
+
+            // When the reject rematch button is clicked
+            await testUtils.expectInterfaceClickSuccess('#reject');
+
+            // Then the gameService's rejectRematch must be called
+            expect(gameService.rejectRematch).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
+        }));
+        it('should show when opponent rejected our rematch proposal', fakeAsync(async() => {
+            // Given an ended game where we propose a rematch
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
+            await testUtils.expectInterfaceClickSuccess('#resign');
+            tick(1);
+            testUtils.detectChanges();
+            await testUtils.expectInterfaceClickSuccess('#proposeRematch');
+            tick(1);
+
+            // When the rematch is rejected by the opponent
+            await receiveReply(Player.ONE, 'Reject', 'Rematch');
+
+            // Then we should be notified
+            testUtils.expectElementToExist('#requestRejected');
+        }));
+        it('should show accept/reject button when proposition has been sent', fakeAsync(async() => {
             // Given an ended game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-            await testUtils.expectInterfaceClickSuccess('#resignButton');
+            await testUtils.expectInterfaceClickSuccess('#resign');
             tick(1);
             testUtils.detectChanges();
 
             // When request is received
-            testUtils.expectElementNotToExist('#acceptRematchButton');
+            testUtils.expectElementNotToExist('#accept');
             await receiveRequest(Player.ONE, 'Rematch');
 
             // Then accept/refuse buttons must be shown
             testUtils.detectChanges();
-            testUtils.expectElementToExist('#acceptRematchButton');
+            testUtils.expectElementToExist('#accept');
         }));
         it('should send accepting request when user accept rematch', fakeAsync(async() => {
             // give a part with rematch request send by opponent
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-            await testUtils.expectInterfaceClickSuccess('#resignButton');
+            await testUtils.expectInterfaceClickSuccess('#resign');
             await receiveRequest(Player.ONE, 'Rematch');
 
             // When accepting it
@@ -1460,7 +1513,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(gameService, 'acceptRematch').and.callThrough();
             tick(1);
             testUtils.detectChanges();
-            await testUtils.expectInterfaceClickSuccess('#acceptRematchButton');
+            await testUtils.expectInterfaceClickSuccess('#accept');
 
             // Then it should have called acceptRematch
             expect(gameService.acceptRematch).toHaveBeenCalledTimes(1);
@@ -1469,10 +1522,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a part lost with rematch request send by user
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
 
-            await testUtils.expectInterfaceClickSuccess('#resignButton');
+            await testUtils.expectInterfaceClickSuccess('#resign');
             tick(1);
             testUtils.detectChanges();
-            await testUtils.expectInterfaceClickSuccess('#proposeRematchButton');
+            await testUtils.expectInterfaceClickSuccess('#proposeRematch');
 
             // When opponent accepts it
             const router: Router = TestBed.inject(Router);
@@ -1491,81 +1544,79 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.dontWaitNoClocks);
 
             // When component is initialized
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
             tick(2);
             testUtils.detectChanges();
 
-            // Then updateObservedPart should have been called as Observer
-            const update: Partial<FocusedPart> = {
+            // Then updateCurrentGame should have been called as Observer
+            const update: Partial<CurrentGame> = {
                 id: 'configRoomId',
                 opponent: UserMocks.CREATOR_MINIMAL_USER,
                 typeGame: 'Quarto',
                 role: 'Observer',
             };
-            expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
+            expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(update);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        it('should remove observedPart when leaving the component', fakeAsync(async() => {
+        it('should remove currentGame when leaving the component', fakeAsync(async() => {
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
             // When user leaves the component (here, destroys it)
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             testUtils.fixture.destroy();
 
-            // Then the observedPart should have been removed
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then the currentGame should have been removed
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
         }));
-        it('should redirect to lobby when observedPart changed to non-observer', fakeAsync(async() => {
+        it('should redirect to lobby when currentGame changed to non-observer', fakeAsync(async() => {
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
-            // When observedPart is updated to inform component that user is now candidate in another game
+            // When currentGame is updated to inform component that user is now candidate in another game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            const currentGame: CurrentGame = CurrentGameMocks.OTHER_CANDIDATE;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
 
-            // Then the observedPart should have been removed
+            // Then the currentGame should have been removed
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
-        it('should not removeObservedPart when destroying component after observedPart changed to non-observer', fakeAsync(async() => {
+        it('should not removeCurrentGame when destroying component after currentGame changed to non-observer', fakeAsync(async() => {
             // Given a part component where user was observer
             // Then receive an update telling that user is now non-observer-elsewhere
             await prepareTestUtilsFor(USER_OBSERVER);
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
+            const currentGame: CurrentGame = CurrentGameMocks.OTHER_CANDIDATE;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
 
             // When destroying the component (should normally be triggered once router is triggered)
             testUtils.fixture.destroy();
 
-            // Then the observedPart should have been removed
-            expect(observedPartService.removeObservedPart).not.toHaveBeenCalled();
+            // Then the currentGame should have been removed
+            expect(currentGameService.removeCurrentGame).not.toHaveBeenCalled();
         }));
         it('should not be able to do anything', fakeAsync(async() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            // Given a part that we are observing
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
-
-            const forbiddenFunctions: { name: string, isAsync: boolean } [] = [
-                { name: 'canProposeDraw', isAsync: false },
-                { name: 'canAskTakeBack', isAsync: false },
-                { name: 'acceptRematch', isAsync: true },
-                { name: 'proposeRematch', isAsync: true },
-                { name: 'canResign', isAsync: false },
+            // which has already some moves
+            await receiveNewMoves(0, [FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED]);
+            // and a request
+            await receiveRequest(Player.ZERO, 'TakeBack');
+            // When displaying the component
+            // Then we don't see any interaction button
+            const forbiddenButtons: string[] = [
+                '#proposeTakeBack',
+                '#proposeDraw',
+                '#resign',
+                '#accept',
+                '#reject',
             ];
-            for (const forbiddenFunction of forbiddenFunctions) {
-                const expectedError: string = 'Non playing should not call ' + forbiddenFunction.name;
-                const expectedMessage: string = 'Assertion failure: ' + expectedError;
-                if (forbiddenFunction.isAsync) {
-                    await expectAsync(wrapper[forbiddenFunction.name]()).toBeRejectedWithError(expectedMessage);
-                } else {
-                    expect(() => wrapper[forbiddenFunction.name]()).toThrowError(expectedMessage);
-                }
-                expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', expectedError);
+            for (const forbiddenButton of forbiddenButtons) {
+                testUtils.expectElementNotToExist(forbiddenButton);
             }
         }));
         it('should display that the game is a draw', fakeAsync(async() => {
@@ -1574,7 +1625,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await gameEventService.addRequest('configRoomId', Player.ZERO, 'Draw');
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
-                request: null,
             });
             await receiveReply(Player.ONE, 'Accept', 'Draw');
             await receiveAction(Player.ONE, 'EndGame');
@@ -1626,7 +1676,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
             // When the game is over
-            await testUtils.clickElement('#resignButton');
+            await testUtils.clickElement('#resign');
             tick(1);
             testUtils.detectChanges();
 

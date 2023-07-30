@@ -70,7 +70,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public availableMinimaxes: Minimax<M, S, L>[];
 
-    public canPass: boolean;
+    public canPass: boolean = false;
 
     public scores: MGPOptional<readonly [number, number]> = MGPOptional.empty();
 
@@ -85,13 +85,11 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public isPlayerTurn: () => boolean;
 
-    public chooseMove: (move: M,
-                        state: S,
-                        scores?: readonly [number, number]) => Promise<MGPValidation>;
+    public chooseMove: (move: M) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => Promise<MGPValidation>;
 
-    public cancelMoveOnWrapper: (reason?: string) => Promise<void>;
+    public cancelMoveOnWrapper: (reason?: string) => void;
 
     public role: PlayerOrNone;
 

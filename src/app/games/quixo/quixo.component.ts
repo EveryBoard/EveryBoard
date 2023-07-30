@@ -108,7 +108,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
                                               chosenCoord.y,
                                               this.chosenDirection);
         await this.cancelMove();
-        return this.chooseMove(move, this.getState());
+        return this.chooseMove(move);
     }
     public getArrowTransform(orientation: Orthogonal): string {
         return GameComponentUtils.getArrowTransform(5 * this.SPACE_SIZE,

@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -189,8 +188,7 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
     }
     public numberOfNeighbors(coord: Coord): number {
         let neighbors: number = 0;
-        for (const direction of HexaDirection.factory.all) {
-            const neighbor: Coord = coord.getNext(direction);
+        for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
             if (this.getAt(neighbor).hasPieces()) {
                 neighbors += 1;
             }

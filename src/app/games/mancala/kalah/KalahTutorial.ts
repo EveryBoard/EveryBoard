@@ -8,7 +8,7 @@ export class KalahTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Kalah`,
-            $localize`Kalah is a game of distribution (sowing) and capture. It belongs to the a family of game named Mancala. But unlike most version of Mancalas, this one has been created in America in 1940 by William Julius Champion Jr. Like the classic international version named Awalé, the board is a 2 row of 6 houses, containing each 4 seeds.`,
+            $localize`Kalah is a game of distribution (sowing) and capture. It belongs to the a family of game named Mancala. But unlike most version of Mancalas, this one has been created in America in 1940 by William Julius Champion Jr. Like the classic international version named Awalé, the board is made of 2 row of 6 houses, containing each 4 seeds.`,
             MancalaState.getInitialState(),
         ),
         TutorialStep.fromMove(
@@ -33,7 +33,7 @@ export class KalahTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`The Kalah (2/2)`,
-            $localize`When ending in the Kalah though, you are allowed to distribute again.<br/><br/>You're playing Dark, play the house that end up in the Kalah then do a second move!`,
+            $localize`When ending in the Kalah, you are allowed to distribute again.<br/><br/>You're playing Dark, play the house that end up in the Kalah then do a second move!`,
             MancalaState.getInitialState(),
             KalahMove.of(MancalaDistribution.THREE, [MancalaDistribution.ONE]),
             (move: KalahMove, _previous: MancalaState, _result: MancalaState) => {
@@ -52,16 +52,16 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 4, 4, 4, 4, 4],
                 [0, 2, 0, 2, 4, 0],
-            ], 4, [0, 0]),
+            ], 4, [0, 0]), // TODO: show solution in tutorial should animate
             KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.ZERO, MancalaDistribution.THREE]),
-            (move: KalahMove, state: MancalaState) => {
-                if (state.getPieceAtXY(1, 0) === 0) {
+            (move: KalahMove, state: MancalaState, resultingState: MancalaState) => {
+                if (resultingState.getPieceAtXY(1, 0) === 0) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure('You did not capture, try again!');
                 }
             },
-            $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.`,
+            $localize`Congrats!`,
         ),
         // 6. Here: you can starve !
         TutorialStep.fromMove(

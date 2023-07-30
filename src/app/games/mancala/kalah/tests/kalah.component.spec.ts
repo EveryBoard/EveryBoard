@@ -25,7 +25,7 @@ describe('KalahComponent', () => {
             lastDistributionSeedNumber++; // it'll take 200ms skipping the initial house
         }
         const moveDuration: number = (lastDistributionSeedNumber + 1) * 200; // The time to move the seeds
-        await testUtils.expectMoveSuccess(click, move, undefined, undefined, moveDuration);
+        await testUtils.expectMoveSuccess(click, move, moveDuration);
     }
     async function expectClickSuccess(coord: Coord): Promise<void> {
         const pieceInHouse: number = testUtils.getComponent().constructedState.getPieceAt(coord);

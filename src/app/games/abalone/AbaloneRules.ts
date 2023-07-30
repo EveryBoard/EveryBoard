@@ -13,7 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export type AbaloneLegalityInformation = Table<FourStatePiece>
+export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
 export class AbaloneNode extends MGPNode<AbaloneRules, AbaloneMove, AbaloneState, AbaloneLegalityInformation> {}
 

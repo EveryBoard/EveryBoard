@@ -189,7 +189,7 @@ export class ConspirateursComponent
         } else if (state.isDropPhase()) {
             const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.from(coord);
             assert(move.isSuccess(), 'ConspirateursMove should be valid by construction');
-            return this.chooseMove(move.get(), state);
+            return this.chooseMove(move.get());
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
@@ -199,7 +199,7 @@ export class ConspirateursComponent
         const state: ConspirateursState = this.getState();
         if (nextTarget.equals(jump.getEndingCoord())) {
             // double clicking on an early destination performs the jump
-            return this.chooseMove(jump, state);
+            return this.chooseMove(jump);
         } else {
             const newJump: MGPFallible<ConspirateursMoveJump> = jump.addJump(nextTarget);
             if (newJump.isFailure()) {
@@ -219,14 +219,14 @@ export class ConspirateursComponent
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         } else {
-            return this.chooseMove(jump, state);
+            return this.chooseMove(jump);
         }
     }
     private async selectNextCoord(coord: Coord): Promise<MGPValidation> {
         const selected: Coord = this.selected.get();
         const move: MGPFallible<ConspirateursMove> = ConspirateursMoveSimple.from(selected, coord);
         if (move.isSuccess()) {
-            return this.chooseMove(move.get(), this.getState());
+            return this.chooseMove(move.get());
         } else {
             const jump: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([selected, coord]);
             if (jump.isFailure()) {

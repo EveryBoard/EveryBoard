@@ -15,7 +15,7 @@ import { BrandhubTutorial } from 'src/app/games/tafl/brandhub/BrandhubTutorial';
 import { BrandhubRules } from 'src/app/games/tafl/brandhub/BrandhubRules';
 
 import { ConnectSixComponent } from 'src/app/games/connect-six/connect-six.component';
-import { ConnectSixTutorial } from 'src/app/games/connect-six/ConnectSixTutorial.spec';
+import { ConnectSixTutorial } from 'src/app/games/connect-six/ConnectSixTutorial';
 import { ConnectSixRules } from 'src/app/games/connect-six/ConnectSixRules';
 import { ConspirateursTutorial } from 'src/app/games/conspirateurs/ConspirateursTutorial';
 import { ConspirateursRules } from 'src/app/games/conspirateurs/ConspirateursRules';

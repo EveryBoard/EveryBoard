@@ -115,7 +115,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             return this.cancelMove(clickValidity.getReason());
         }
         // The player has clicked on an orientation arrow, we know the move directly
-        return this.chooseMove(move, this.getState());
+        return this.chooseMove(move);
     }
     public async clickSquare(x: number, y: number, internalCall: boolean = false): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, 'SiamComponent.clickSquare(' + x + ', ' + y + ')');
@@ -190,7 +190,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         if (availableMoves.length === 1) {
             // There's only one possible move, so perform it
             await this.cancelMove();
-            return this.chooseMove(availableMoves[0], this.getState());
+            return this.chooseMove(availableMoves[0]);
         } else {
             // Since there's more than a single move, the player will have to select the orientation
             this.clickableCoords = new MGPSet();
@@ -234,7 +234,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
         // The user clicked on an arrow directly instead of a square,
         // we can perform the move without asking for the orientation
-        return this.chooseMove(arrow.move, this.getState());
+        return this.chooseMove(arrow.move);
     }
     public isMountain(piece: SiamPiece): boolean {
         return piece === SiamPiece.MOUNTAIN;

@@ -36,7 +36,7 @@ describe('ReversiComponent', () => {
         await testUtils.setupState(initialState);
 
         const move: ReversiMove = new ReversiMove(0, 4);
-        await testUtils.expectMoveSuccess('#click_0_4', move, undefined, [2, 7]);
+        await testUtils.expectMoveSuccess('#click_0_4', move);
 
         const tablutGameComponent: ReversiComponent = testUtils.getComponent();
         expect(tablutGameComponent.getRectClasses(1, 3)).not.toContain('captured-fill');
@@ -68,6 +68,6 @@ describe('ReversiComponent', () => {
         await testUtils.setupState(state);
 
         // Then the player can pass
-        await testUtils.expectPassSuccess(ReversiMove.PASS, [1, 1]);
+        await testUtils.expectPassSuccess(ReversiMove.PASS);
     }));
 });

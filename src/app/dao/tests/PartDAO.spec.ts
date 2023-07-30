@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { GameEvent, RequestType, Reply, Part, MGPResult } from 'src/app/domain/Part';
+import { GameEvent, RequestType, Reply, Part, MGPResult, GameEventMove, GameEventRequest, GameEventReply, GameEventAction } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedUser, createUnverifiedUser, signOut, reconnectUser, createDisconnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -14,8 +14,8 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
-import { FocusedPart } from 'src/app/domain/User';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { CurrentGame } from 'src/app/domain/User';
+import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameEventService } from '../../services/GameEventService';
 import { IFirestoreDAO } from '../FirestoreDAO';
@@ -216,13 +216,13 @@ xdescribe('PartDAO security', () => {
             // Given a non-started part and its creator that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const currentGame: CurrentGame = {
+                ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
-            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
+            await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -238,13 +238,13 @@ xdescribe('PartDAO security', () => {
             // Given a non-started part with its creator who has timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const currentGame: CurrentGame = {
+                ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(0, 0); // creator is stuck in 1970
-            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
+            await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -260,13 +260,13 @@ xdescribe('PartDAO security', () => {
             // Given a started part and its creator that has not timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const currentGame: CurrentGame = {
+                ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
-            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
+            await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -282,13 +282,13 @@ xdescribe('PartDAO security', () => {
             // Given a started part and its creator that has timed out
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.STARTED, playerZero: creator });
-            const observedPart: FocusedPart = {
-                ...FocusedPartMocks.CREATOR_WITHOUT_OPPONENT,
+            const currentGame: CurrentGame = {
+                ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
             await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
             const lastUpdateTime: Timestamp = new Timestamp(0, 0); // creator is stuck in 1970
-            await userDAO.update(creator.id, { observedPart, lastUpdateTime });
+            await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
 
             // and given another user
@@ -617,7 +617,7 @@ xdescribe('PartDAO security', () => {
             const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
             const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
-            const part: Part = { ...PartMocks.STARTED, remainingMsForOne: 1, playerZero, playerOne };
+            const part: Part = { ...PartMocks.STARTED, playerZero, playerOne };
             const partId: string = await partDAO.create(part);
 
             // Wait 10ms to ensure the player has timed out
@@ -732,11 +732,40 @@ xdescribe('PartDAO security', () => {
                     eventType: 'Invalid' as 'Move',
                     time: serverTimestamp(),
                     player: 0,
-                };
+                    move: 42,
+                } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
                 await expectPermissionToBeDenied(result);
+            });
+            it('should forbid creating an invalid event', async() => {
+                // Given an ongoing part
+                const partId: string = await setupStartedPartAsPlayerZero();
+
+                const eventsWithMissingField: GameEvent[] = [
+                    { time: serverTimestamp(), player: 0, move: 42 } as GameEvent,
+                    { eventType: 'Move', player: 0, move: 42 } as GameEventMove,
+                    { eventType: 'Move', time: serverTimestamp(), move: 42 } as GameEventMove,
+                    { eventType: 'Move', time: serverTimestamp(), player: 0 } as GameEventMove,
+                    { eventType: 'Request', player: 0, requestType: 'Draw' } as GameEventRequest,
+                    { eventType: 'Request', time: serverTimestamp(), requestType: 'Draw' } as GameEventRequest,
+                    { eventType: 'Request', time: serverTimestamp(), player: 0 } as GameEventRequest,
+                    { eventType: 'Reply', player: 0, reply: 'Accept', requestType: 'Draw' } as GameEventReply,
+                    { eventType: 'Reply', time: serverTimestamp(), reply: 'Accept', requestType: 'Draw' } as GameEventReply,
+                    { eventType: 'Reply', time: serverTimestamp(), player: 0, reply: 'Accept' } as GameEventReply,
+                    { eventType: 'Reply', time: serverTimestamp(), player: 0, requestType: 'Draw' } as GameEventReply,
+                    { eventType: 'Action', player: 0, action: 'AddTurnTime' } as GameEventAction,
+                    { eventType: 'Action', time: serverTimestamp(), action: 'AddTurnTime' } as GameEventAction,
+                    { eventType: 'Action', time: serverTimestamp(), player: 0 } as GameEventAction,
+                ];
+
+                for (const event of eventsWithMissingField) {
+                    // When creating an event missing a required field
+                    const result: Promise<string> = events(partId).create(event);
+                    // Then it should fail
+                    await expectPermissionToBeDenied(result);
+                }
             });
             it('should forbid creating an event as the other player', async() => {
                 // Given an ongoing part
@@ -746,10 +775,11 @@ xdescribe('PartDAO security', () => {
                 const event: GameEvent = {
                     // We can't represent such invalid types properly with our typing
                     // but malicious clients could, so we need to make an ugly cast
-                    eventType: 'Action',
+                    eventType: 'Move',
                     time: serverTimestamp(),
                     player: 1,
-                };
+                    move: 42,
+                } as GameEvent;
                 const result: Promise<string> = events(partId).create(event);
 
                 // Then it should fail
@@ -863,7 +893,7 @@ xdescribe('PartDAO security', () => {
                 it('should forbid creating StartGame action at non-0 turn', async() => {
                     // Given an ongoing part mid-game
                     const partId: string = await setupStartedPartAsPlayerZero();
-                    await expectAsync(partDAO.update(partId, { turn: 1 }));
+                    await expectAsync(partDAO.update(partId, { turn: 1 })).toBeResolved();
 
                     // When creating a StartGame action at turn > 0
                     const result: Promise<string> = gameEventService.startGame(partId, Player.ZERO);
@@ -926,7 +956,7 @@ xdescribe('PartDAO security', () => {
                 it('should allow requesting take back in in-progress game', async() => {
                     // Given a part at turn >= 1
                     const partId: string = await setupStartedPartAsPlayerZero();
-                    await expectAsync(partDAO.update(partId, { turn: 1 }));
+                    await expectAsync(partDAO.update(partId, { turn: 1 })).toBeResolvedTo();
 
                     // When requesting a take back in-game
                     const result: Promise<string> = gameEventService.addRequest(partId, Player.ZERO, 'TakeBack');

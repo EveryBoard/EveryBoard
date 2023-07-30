@@ -215,7 +215,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
                 const first: Coord = isPlayerZero ? clicked : dropped;
                 const second: Coord = isPlayerZero ? dropped : clicked;
                 const move: TrexoMove = TrexoMove.from(first, second).get();
-                return this.chooseMove(move, this.getState());
+                return this.chooseMove(move);
             } else {
                 this.deselectPiece();
             }
