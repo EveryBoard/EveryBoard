@@ -31,10 +31,7 @@ interface DropArrow {
     templateUrl: './apagos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class ApagosComponent extends GameComponent<ApagosRules,
-                                                   ApagosMove,
-                                                   ApagosState>
-{
+export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState> {
     public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
 
     public readonly BOARD_WIDTH: number = 4 * this.SPACE_SIZE;
@@ -77,7 +74,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.rules = ApagosRules.get();
         this.node = this.rules.getInitialNode();
         this.hasAsymmetricBoard = true;
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new ApagosDummyMinimax(),
         ];
         this.encoder = ApagosMove.encoder;

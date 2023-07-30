@@ -76,21 +76,22 @@ export abstract class MoveGenerator<M extends Move, S extends GameState> {
 /**
  * Most AIs can be parameterized. This is where the parameters would be stored.
  */
-export interface AIOptions {
+export type AIOptions = {
+    readonly name: string;
 }
 
 /**
  * These are options for AIs that have a depth limit, such as minimax.
  */
-export class AIDepthLimitOptions implements AIOptions {
-    public readonly maxDepth: number;
+export type AIDepthLimitOptions = AIOptions & {
+    readonly maxDepth: number;
 }
 
 /**
  * These are options for AI that can be iteration-constrained, such as MCTS.
  */
-export class AIIterationLimitOptions implements AIOptions {
-    public readonly maxIterations: number;
+export type AIIterationLimitOptions = AIOptions & {
+    readonly maxIterations: number;
 }
 
 /**
@@ -98,8 +99,9 @@ export class AIIterationLimitOptions implements AIOptions {
  */
 export abstract class AI<M extends Move, S extends GameState, Opts extends AIOptions> {
     public abstract readonly name: string;
+    public abstract possibleOptions: Opts[];
     public abstract chooseNextMove(node: GameNode<M, S>, options: Opts): M;
 }
 
-export abstract class AbstractAI extends AI<Move, GameState, object> {
+export abstract class AbstractAI extends AI<Move, GameState, AIOptions> {
 }

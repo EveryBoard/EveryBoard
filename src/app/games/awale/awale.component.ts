@@ -37,7 +37,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.scores = MGPOptional.of([0, 0]);
         this.rules = AwaleRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new AwaleCaptureMinimax(),
         ];
         this.encoder = AwaleMove.encoder;

@@ -74,6 +74,6 @@ export class AwaleCaptureHeuristic extends PlayerMetricHeuristic<AwaleMove, Awal
 export class AwaleCaptureMinimax extends Minimax<AwaleMove, AwaleState> {
 
     public constructor() {
-        super('CaptureMinimax', AwaleRules.get(), new AwaleCaptureHeuristic(), new AwaleMoveGenerator());
+        super('Capture Minimax', AwaleRules.get(), new AwaleCaptureHeuristic(), new AwaleMoveGenerator());
     }
 }

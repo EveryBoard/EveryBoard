@@ -78,6 +78,6 @@ export class AbaloneScoreMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
 
     public constructor() {
         // TODO FOR REVIEW: j'ai renommé certains minimax, hésite pas si t'en vois d'autres qui méritent renommage !
-        super('ScoreMinimax', AbaloneRules.get(), new AbaloneScoreHeuristic(), new AbaloneMoveGenerator());
+        super('Score Minimax', AbaloneRules.get(), new AbaloneScoreHeuristic(), new AbaloneMoveGenerator());
     }
 }

@@ -108,6 +108,6 @@ export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, Conn
 export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> {
 
     public constructor() {
-        super('AlignmentMinimax', ConnectSixRules.get(), new ConnectSixAlignmentHeuristic(), new ConnectSixMoveGenerator());
+        super('Alignment Minimax', ConnectSixRules.get(), new ConnectSixAlignmentHeuristic(), new ConnectSixMoveGenerator());
     }
 }

@@ -70,6 +70,6 @@ export class DiamMoveGenerator extends MoveGenerator<DiamMove, DiamState> {
 export class DiamDummyMinimax extends Minimax<DiamMove, DiamState> {
 
     public constructor() {
-        super('DummyMinimax', DiamRules.get(), new DummyHeuristic(), new DiamMoveGenerator());
+        super('Dummy Minimax', DiamRules.get(), new DummyHeuristic(), new DiamMoveGenerator());
     }
 }

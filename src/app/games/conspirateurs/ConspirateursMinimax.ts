@@ -133,7 +133,7 @@ export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursM
 export class ConspirateursMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
 
     public constructor() {
-        super('JumpMinimax',
+        super('Jump Minimax',
               ConspirateursRules.get(),
               new ConspirateursHeuristic(),
               new ConspirateursOrderedMoveGenerator());

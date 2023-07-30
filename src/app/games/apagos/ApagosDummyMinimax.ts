@@ -31,6 +31,6 @@ export class ApagosDummyHeuristic extends PlayerMetricHeuristic<ApagosMove, Apag
 export class ApagosDummyMinimax extends Minimax<ApagosMove, ApagosState> {
 
     public constructor() {
-        super('DummyMinimax', ApagosRules.get(), new ApagosDummyHeuristic(), new ApagosMoveGenerator());
+        super('Dummy Minimax', ApagosRules.get(), new ApagosDummyHeuristic(), new ApagosMoveGenerator());
     }
 }

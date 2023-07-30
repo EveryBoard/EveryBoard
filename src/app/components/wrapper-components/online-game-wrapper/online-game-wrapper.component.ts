@@ -303,10 +303,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private takeBackToPreviousPlayerTurn(player: Player): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.takeBackToPreviousPlayerTurn');
         // Take back once, in any case
-        this.gameComponent.node = this.gameComponent.node.mother.get();
+        this.gameComponent.node = this.gameComponent.node.parent.get();
         if (this.gameComponent.getCurrentPlayer() !== player) {
             // Take back a second time to make sure it end up on player's turn
-            this.gameComponent.node = this.gameComponent.node.mother.get();
+            this.gameComponent.node = this.gameComponent.node.parent.get();
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.updateBoardAndShowLastMove();

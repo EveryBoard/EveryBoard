@@ -13,8 +13,8 @@
                                 [(ngModel)]="playerSelection[0]">
                             <option selected
                                     value="human" i18n>Human</option>
-                            <option *ngFor="let minimax of gameComponent.availableMinimaxes"
-                                    [value]="minimax.name">{{ minimax.name }}</option>
+                            <option *ngFor="let ai of gameComponent.availableAIs"
+                                    [value]="ai.name">{{ ai.name }}</option>
                         </select>
                     </div>
                     <div class="select">
@@ -25,7 +25,7 @@
                             <option selected
                                     value="0" i18n>Pick the level</option>
                             <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"
-                                    [value]="i" i18n>Level {{ i }}</option>
+                                    [value]="i" i18n>TODO Level {{ i }}</option>
                         </select>
                     </div>
                     <p id="scoreOne"
@@ -39,8 +39,8 @@
                                 [(ngModel)]="playerSelection[1]">
                             <option selected
                                     value="human" i18n>Human</option>
-                            <option *ngFor="let minimax of gameComponent.availableMinimaxes"
-                                    [value]="minimax.name">{{ minimax.name }}</option>
+                            <option *ngFor="let ai of gameComponent.availableAIs"
+                                    [value]="ai.name">{{ ai.name }}</option>
                         </select>
                     </div>
                     <div class="select">
@@ -84,9 +84,11 @@
             >Start a new game</button>
             <div *ngIf="gameComponent.node.move.isPresent() && displayAIMetrics"
                  id="AIMetrics">
-                <ng-container *ngFor="let minimax of gameComponent.availableMinimaxes">
+                <!-- TODO: restore and add "debugInfo" to AIs
+                <ng-container *ngFor="let minimax of gameComponent.availableAIs">
                     {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.node) }} <br/>
                 </ng-container>
+                -->
                 Created {{ getCreatedNodes() }} nodes.<br/>
                 Minimax time: {{ getMinimaxTime() }}ms.<br/>
             </div>

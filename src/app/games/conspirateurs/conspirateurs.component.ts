@@ -66,7 +66,7 @@ export class ConspirateursComponent
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
         this.rules = ConspirateursRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new ConspirateursMinimax(),
         ];
         this.encoder = ConspirateursMoveEncoder;

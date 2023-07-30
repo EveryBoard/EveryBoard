@@ -34,7 +34,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         super(messageDisplayer);
         this.rules = DvonnRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new DvonnMinimax(),
             new MaxStacksDvonnMinimax(),
         ];

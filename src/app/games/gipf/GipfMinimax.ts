@@ -104,6 +104,6 @@ export class GipfHeuristic extends PlayerMetricHeuristic<GipfMove, GipfState> {
 export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityInformation> {
 
     public constructor() {
-        super('GipfMinimax', GipfRules.get(), new GipfHeuristic(), new GipfMoveGenerator());
+        super('Minimax', GipfRules.get(), new GipfHeuristic(), new GipfMoveGenerator());
     }
 }

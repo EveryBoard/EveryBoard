@@ -11,7 +11,7 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { AI, GameNode } from 'src/app/jscaip/MGPNode';
+import { AI, AIOptions, GameNode } from 'src/app/jscaip/MGPNode';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 
 /**
@@ -66,7 +66,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public node: GameNode<M, S>;
 
-    public availableAIs: AI<M, S, object>[];
+    public availableAIs: AI<M, S, AIOptions>[];
 
     public canPass: boolean = false;
 

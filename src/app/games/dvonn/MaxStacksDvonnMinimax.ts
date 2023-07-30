@@ -49,6 +49,6 @@ export class DvonnMaxStacksHeuristic extends PlayerMetricHeuristic<DvonnMove, Dv
 export class MaxStacksDvonnMinimax extends Minimax<DvonnMove, DvonnState> {
 
     public constructor() {
-        super('MaxStacksMinimax', DvonnRules.get(), new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator());
+        super('MaxStacks Minimax', DvonnRules.get(), new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator());
     }
 }

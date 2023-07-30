@@ -41,7 +41,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         super(messageDisplayer);
         this.rules = EncapsuleRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+        this.availableAIs = [
             new EncapsuleMinimax(),
         ];
         this.encoder = EncapsuleMove.encoder;

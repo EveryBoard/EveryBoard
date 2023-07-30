@@ -150,6 +150,6 @@ export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
 export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
 
     public constructor() {
-        super('GoMinimax', GoRules.get(), new GoHeuristic(), new GoMoveGenerator());
+        super('Minimax', GoRules.get(), new GoHeuristic(), new GoMoveGenerator());
     }
 }

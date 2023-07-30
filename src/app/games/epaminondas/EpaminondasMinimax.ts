@@ -120,6 +120,6 @@ export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, Epaminondas
 export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
 
     public constructor() {
-        super('EpaminondasMinimax', EpaminondasRules.get(), new EpaminondasHeuristic(), new EpaminondasMoveGenerator());
+        super('Minimax', EpaminondasRules.get(), new EpaminondasHeuristic(), new EpaminondasMoveGenerator());
     }
 }

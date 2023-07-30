@@ -152,6 +152,6 @@ export class AttackEpaminondasMinimax
 {
 
     public constructor() {
-        super('AttackEpaminondasMinimax', EpaminondasRules.get(), new AttackEpaminondasHeuristic(), new EpaminondasMoveGenerator());
+        super('Attack Minimax', EpaminondasRules.get(), new AttackEpaminondasHeuristic(), new EpaminondasMoveGenerator());
     }
 }

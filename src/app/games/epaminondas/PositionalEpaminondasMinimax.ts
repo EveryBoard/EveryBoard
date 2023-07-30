@@ -90,7 +90,7 @@ export class PositionalEpaminondasMinimax
     extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
 
     public constructor() {
-        super('PositionalEpaminondasMinimax',
+        super('Positional Minimax',
               EpaminondasRules.get(),
               new PositionalEpaminondasHeuristic(),
               new PhalanxSizeAndFilterEpaminondasMoveGenerator());
