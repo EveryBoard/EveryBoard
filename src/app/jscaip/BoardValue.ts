@@ -2,6 +2,8 @@ import { Player, PlayerOrNone } from './Player';
 
 export class BoardValue {
 
+    public static VICTORIES: number[] = [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
+
     public static fromWinner(player: PlayerOrNone): BoardValue {
         if (player.isPlayer()) {
             return new BoardValue(player.getVictoryValue());

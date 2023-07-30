@@ -7,7 +7,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasLegalityInformation, EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
@@ -40,7 +40,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         return state.board[landing.y][landing.x] === state.getCurrentOpponent();
     }
     public getBoardValue(node: EpaminondasNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = EpaminondasRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
