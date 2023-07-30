@@ -5,7 +5,7 @@ import { GameInfo } from '../pick-game/pick-game.component';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 @Component({
@@ -24,7 +24,7 @@ export class WelcomeComponent {
 
     public constructor(public readonly router: Router,
                        public readonly messageDisplayer: MessageDisplayer,
-                       public readonly observedPartService: ObservedPartService,
+                       public readonly currentGameService: CurrentGameService,
                        themeService: ThemeService)
     {
         this.theme = themeService.getTheme();
@@ -39,7 +39,7 @@ export class WelcomeComponent {
         }
     }
     public async createGame(game?: string): Promise<boolean> {
-        const canCreateGame: MGPValidation = this.observedPartService.canUserCreate();
+        const canCreateGame: MGPValidation = this.currentGameService.canUserCreate();
         if (canCreateGame.isSuccess()) {
             if (game == null) {
                 return this.router.navigate(['/play']);

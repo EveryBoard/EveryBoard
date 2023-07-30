@@ -208,16 +208,15 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const clicked: ApagosCoord = ApagosCoord.from(x);
-        let move: ApagosMove;
+        const clicked: ApagosCoord = ApagosCoord.of(x);
         if (this.selectedPiece.isPresent()) {
             const square: number = this.selectedPiece.get().square;
-            move = ApagosMove.transfer(ApagosCoord.from(square), clicked).get();
+            const move: ApagosMove = ApagosMove.transfer(ApagosCoord.of(square), clicked).get();
+            return this.chooseMove(move);
         } else {
-            move = ApagosMove.drop(clicked, player);
+            const move: ApagosMove = ApagosMove.drop(clicked, player);
+            return this.chooseMove(move);
         }
-        const state: ApagosState = this.getState();
-        return this.chooseMove(move, state);
     }
     public getPieceClasses(x: number, i: number, square: ApagosSquare): string[] {
         const pieceLocation: PieceLocation = { square: x, piece: i };

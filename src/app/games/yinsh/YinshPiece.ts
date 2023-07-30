@@ -1,4 +1,4 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { Utils } from 'src/app/utils/utils';
@@ -6,9 +6,9 @@ import { assert } from 'src/app/utils/assert';
 
 export class YinshPiece implements ComparableObject {
 
-    public static encoder: MoveEncoder<YinshPiece> =
-        MoveEncoder.tuple<YinshPiece, [PlayerOrNone, boolean]>(
-            [PlayerOrNone.encoder, MoveEncoder.identity<boolean>()],
+    public static encoder: Encoder<YinshPiece> =
+        Encoder.tuple<YinshPiece, [PlayerOrNone, boolean]>(
+            [PlayerOrNone.encoder, Encoder.identity<boolean>()],
             (piece: YinshPiece): [PlayerOrNone, boolean] => [piece.player, piece.isRing],
             (fields: [PlayerOrNone, boolean]): YinshPiece => YinshPiece.of(fields[0], fields[1]));
 

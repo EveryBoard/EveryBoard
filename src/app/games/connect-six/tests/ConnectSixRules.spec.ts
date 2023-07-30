@@ -7,9 +7,16 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ConnectSixMinimax } from '../ConnectSixMinimax';
 
 describe('ConnectSixRules', () => {
-
+    /**
+     * Naming of cases, some of them will be used
+     * A. double open: _ _ X X X X _ _
+     * B. open: O _ X X X X _ O
+     * C. cross-open: O _ X X X X _ _
+     * D. closed: O X X X X _ O
+     */
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -21,6 +28,7 @@ describe('ConnectSixRules', () => {
     beforeEach(() => {
         rules = ConnectSixRules.get();
         minimaxes = [
+            new ConnectSixMinimax(rules, 'minimax'),
         ];
     });
     describe('first turn', () => {
@@ -29,7 +37,7 @@ describe('ConnectSixRules', () => {
             const state: ConnectSixState = ConnectSixState.getInitialState();
 
             // When dropping one piece
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
             const expectedState: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -59,8 +67,7 @@ describe('ConnectSixRules', () => {
             // Given the first turn
             const state: ConnectSixState = ConnectSixState.getInitialState();
             // When dropping two pieces
-            const move: ConnectSixMove =
-                ConnectSixDrops.from(new Coord(11, 11), new Coord(10, 10)).get() as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(11, 11), new Coord(10, 10));
             // Then the attempt would have throw
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state);
@@ -95,7 +102,7 @@ describe('ConnectSixRules', () => {
 
             // When dropping piece on it with the first coord already occupied
             const move: ConnectSixMove =
-                ConnectSixDrops.from(new Coord(9, 9), new Coord(10, 10)).get() as ConnectSixMove;
+                ConnectSixDrops.of(new Coord(9, 9), new Coord(10, 10)) as ConnectSixMove;
 
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
             // Then the move should be forbidden
@@ -126,7 +133,7 @@ describe('ConnectSixRules', () => {
             ], 1);
 
             // When dropping piece on it with the second coord already occupied
-            const move: ConnectSixMove = ConnectSixDrops.from(new Coord(8, 8), new Coord(9, 9)).get() as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(8, 8), new Coord(9, 9)) as ConnectSixMove;
 
             // Then the move should be forbidden
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
@@ -157,7 +164,7 @@ describe('ConnectSixRules', () => {
             ], 1);
 
             // When dropping pieces on empty squares
-            const move: ConnectSixMove = ConnectSixDrops.from(new Coord(7, 7), new Coord(8, 8)).get() as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(7, 7), new Coord(8, 8)) as ConnectSixMove;
             const expectedState: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -207,7 +214,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             // When dropping only one piece
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9)) as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
 
             // Then the move should be forbidden
             function trySingleDropAfterFirstTurn(): void {
@@ -265,7 +272,7 @@ describe('ConnectSixRules', () => {
             ], 180);
             // When playing the last 181st turn
             const move: ConnectSixMove =
-                ConnectSixDrops.from(new Coord(17, 18), new Coord(18, 18)).get() as ConnectSixMove;
+                ConnectSixDrops.of(new Coord(17, 18), new Coord(18, 18)) as ConnectSixMove;
             const expectedState: ConnectSixState = new ConnectSixState([
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],

@@ -27,23 +27,23 @@ describe('PylosOrderedMinimax', () => {
     describe('orderMoves', () => {
         it('should order move from lowest stone use to highest', () => {
             const moves: PylosMove[] = [
-                PylosMove.fromClimb(coord0, coord1, [coord1]), // -1 stone used
-                PylosMove.fromClimb(coord0, coord1, [coord1, coord2]), // -2 stone used
-                PylosMove.fromClimb(coord0, coord1, []), // 0 stone used
-                PylosMove.fromDrop(coord0, [coord0, coord1]), // -1 stone used
-                PylosMove.fromDrop(coord0, []), // 1 stone used
-                PylosMove.fromDrop(coord0, [coord1]), // 0 stone used
+                PylosMove.ofClimb(coord0, coord1, [coord1]), // -1 stone used
+                PylosMove.ofClimb(coord0, coord1, [coord1, coord2]), // -2 stone used
+                PylosMove.ofClimb(coord0, coord1, []), // 0 stone used
+                PylosMove.ofDrop(coord0, [coord0, coord1]), // -1 stone used
+                PylosMove.ofDrop(coord0, []), // 1 stone used
+                PylosMove.ofDrop(coord0, [coord1]), // 0 stone used
             ].sort(() => Math.random() - 0.5);
 
             const orderedMoves: PylosMove[] = minimax.orderMoves(moves);
 
             const expectedOrderedMoves: PylosMove[] = [
-                PylosMove.fromClimb(coord0, coord1, [coord1, coord2]), // -2 stone used
-                PylosMove.fromDrop(coord0, [coord0, coord1]), // -1 stone used
-                PylosMove.fromClimb(coord0, coord1, [coord1]), // -1 stone used
-                PylosMove.fromDrop(coord0, [coord1]), // 0 stone used
-                PylosMove.fromClimb(coord0, coord1, []), // 0 stone used
-                PylosMove.fromDrop(coord0, []), // 1 stone used
+                PylosMove.ofClimb(coord0, coord1, [coord1, coord2]), // -2 stone used
+                PylosMove.ofDrop(coord0, [coord0, coord1]), // -1 stone used
+                PylosMove.ofClimb(coord0, coord1, [coord1]), // -1 stone used
+                PylosMove.ofDrop(coord0, [coord1]), // 0 stone used
+                PylosMove.ofClimb(coord0, coord1, []), // 0 stone used
+                PylosMove.ofDrop(coord0, []), // 1 stone used
             ];
 
             expect(orderedMoves).toEqual(expectedOrderedMoves);

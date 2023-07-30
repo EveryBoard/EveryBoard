@@ -136,7 +136,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                 this.currentReason = MGPOptional.of(currentStepMove.getFailureMessage());
             }
         }
-        // We don't cover the click case here, it is covered in onUserClick
+        // We don't cover the click case here, it is covered in canUserPlay
         this.cdr.detectChanges();
     }
     public retry(): void {
@@ -144,8 +144,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.moveAttemptMade = false;
         this.showStep(this.stepIndex);
     }
-    public override onUserClick(elementName: string): MGPValidation {
-        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onUserClick(' + elementName + ')');
+    public override canUserPlay(elementName: string): MGPValidation {
+        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.canUserPlay(' + elementName + ')');
         this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
             return MGPValidation.failure(TutorialFailure.STEP_FINISHED());

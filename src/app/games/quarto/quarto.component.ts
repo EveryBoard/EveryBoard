@@ -71,13 +71,13 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
                 const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoPiece.EMPTY);
-                return this.chooseMove(chosenMove, this.getState());
+                return this.chooseMove(chosenMove);
             } else if (this.pieceToGive.isAbsent()) {
                 return MGPValidation.SUCCESS; // the user has just chosen his coord
             } else {
                 // the user has already chosen his piece before his coord
                 const chosenMove: QuartoMove = new QuartoMove(x, y, this.pieceToGive.get());
-                return this.chooseMove(chosenMove, this.getState());
+                return this.chooseMove(chosenMove);
             }
         } else {
             // the user chose an occupied place of the board, so an illegal move, so we cancel all
@@ -92,18 +92,18 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
-        if (this.pieceToGive.equalsValue(QuartoPiece.fromInt(givenPiece))) {
+        if (this.pieceToGive.equalsValue(QuartoPiece.ofInt(givenPiece))) {
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        this.pieceToGive = MGPOptional.of(QuartoPiece.fromInt(givenPiece));
+        this.pieceToGive = MGPOptional.of(QuartoPiece.ofInt(givenPiece));
         if (this.chosen.isAbsent()) {
             return MGPValidation.SUCCESS; // the user has just chosen his piece
         } else {
             // the user has chosen the coord before the piece
             const chosen: Coord = this.chosen.get();
             const chosenMove: QuartoMove = new QuartoMove(chosen.x, chosen.y, this.pieceToGive.get());
-            return this.chooseMove(chosenMove, this.node.gameState);
+            return this.chooseMove(chosenMove);
         }
     }
     private hideLastMove(): void {
@@ -129,7 +129,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.chosen = MGPOptional.of(new Coord(x, y));
     }
     public isRemaining(pawn: number): boolean {
-        return QuartoState.isGivable(QuartoPiece.fromInt(pawn), this.board, this.pieceInHand);
+        return QuartoState.isGivable(QuartoPiece.ofInt(pawn), this.board, this.pieceInHand);
     }
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

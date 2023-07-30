@@ -125,13 +125,13 @@ describe('GameComponent', () => {
             Sahara: { onClick: [0, 0] },
             Siam: {
                 selectPieceForInsertion: [Player.ZERO, 0],
-                selectOrientation: [SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
+                selectOrientation: [SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
                 clickSquare: [0, 0],
                 clickArrow: [{
                     source: MGPOptional.empty(),
                     target: new Coord(0, 0),
                     direction: Orthogonal.DOWN,
-                    move: SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
+                    move: SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
                 }],
             },
             Six: {
@@ -139,12 +139,13 @@ describe('GameComponent', () => {
                 onNeighborClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
+            Teeko: { onClick: [0, 0] },
             Trexo: {
                 onClick: [0, 0],
             },
             Yinsh: { onClick: [0, 0] },
         };
-        const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());
+        const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
         for (const gameInfo of GameInfo.ALL_GAMES()) {
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {

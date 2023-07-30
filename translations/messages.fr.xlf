@@ -286,6 +286,10 @@
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
         <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
+      <trans-unit id="6432141756227180076" datatype="html">
+        <source>Align your 4 pieces or form a square with them to win!</source>
+        <target>Alignez vos 4 pièces ou placez les en carré pour gagner !</target>
+      </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
         <target>Alignez 5 pièces de votre couleur en ligne droite, mais attention, les pièces peuvent s'empiler !</target>
@@ -414,6 +418,10 @@
         <source>Pente</source>
         <target>Pente</target>
       </trans-unit>
+      <trans-unit id="6202245590217996824" datatype="html">
+        <source>Teeko</source>
+        <target>Teeko</target>
+      </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
         <target>Trexo</target>
@@ -506,10 +514,6 @@
         <source>Waiting for opponent</source>
         <target>En attente d&apos;adversaire</target>
       </trans-unit>
-      <trans-unit id="1670632975695309948" datatype="html">
-        <source>Connected users:</source>
-        <target>Utilisateurs connectés :</target>
-      </trans-unit>
       <trans-unit id="7103588127254721505" datatype="html">
         <source>Theme</source>
         <target>Thème</target>
@@ -594,10 +598,6 @@
         <source>It is not your turn!</source>
         <target>Ce n&apos;est pas votre tour !</target>
       </trans-unit>
-      <trans-unit id="4691729121764741641" datatype="html">
-        <source>You cannot clone a game. This feature might be implemented later.</source>
-        <target>Clôner une partie n&apos;est pas encore possible. Cette fonctionnalité pourrait être implémentée dans un futur incertain.</target>
-      </trans-unit>
       <trans-unit id="443650994975920138" datatype="html">
         <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
         <target>Ce jeu (<x id="PH" equiv-text="gameName"/>) n'existe pas.</target>
@@ -606,9 +606,9 @@
         <source>The game you tried to join does not exist.</source>
         <target>La partie que vous essayez de rejoindre n'existe pas.</target>
       </trans-unit>
-      <trans-unit id="3568920234618711065" datatype="html">
-        <source>The game has ended.</source>
-        <target>La partie est terminée.</target>
+      <trans-unit id="7285945849261218681" datatype="html">
+        <source>This game has ended.</source>
+        <target>Cette partie est terminée.</target>
       </trans-unit>
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
@@ -686,22 +686,6 @@
         <source>Propose a draw</source>
         <target>Proposer un match nul</target>
       </trans-unit>
-      <trans-unit id="1567596634391812351" datatype="html">
-        <source>Accept draw</source>
-        <target>Accepter un match nul</target>
-      </trans-unit>
-      <trans-unit id="2010898711320853661" datatype="html">
-        <source>Reject draw</source>
-        <target>Refuser le match nul</target>
-      </trans-unit>
-      <trans-unit id="789643613466585719" datatype="html">
-        <source>Accept take back</source>
-        <target>Autoriser à reprendre un coup</target>
-      </trans-unit>
-      <trans-unit id="762521529756212572" datatype="html">
-        <source>Reject take back</source>
-        <target>Refuser de reprendre un coup</target>
-      </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit. You won.</source>
         <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a épuisé son temps. Vous avez gagné.</target>
@@ -742,17 +726,9 @@
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
         <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a abandonné.</target>
       </trans-unit>
-      <trans-unit id="5206964189980535511" datatype="html">
-        <source>Propose to play again</source>
-        <target>Proposer une revanche</target>
-      </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>
         <target>Vous avez gagné.</target>
-      </trans-unit>
-      <trans-unit id="4237132455292972929" datatype="html">
-        <source>Accept to play again</source>
-        <target>Accepter la revanche</target>
       </trans-unit>
       <trans-unit id="1487672983218679675" datatype="html">
         <source>5 minutes</source>
@@ -3092,17 +3068,17 @@
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
         <target>Bravo ! Note : si tout les quadrants sont neutres après que vous ayez déposé votre pièce, il n&apos;y aura pas de rotation !</target>
       </trans-unit>
-      <trans-unit id="1301553003354246210" datatype="html">
-        <source>Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.</source>
+      <trans-unit id="481364308060927522" datatype="html">
+        <source>Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.</source>
         <target>Pente se joue sur un plateau 19x19, sur lequel on dépose les pierres aux intersections des cases. Le but du jeu est d'aligner 5 de vos pièces, ou de capturer 10 pièces de votre adversaire. Initialement, une pièce du joueur clair est placée au centre du plateau.</target>
       </trans-unit>
-      <trans-unit id="730381467241225928" datatype="html">
-        <source>Dropping a stone</source>
-        <target>Déposer une pierre</target>
+      <trans-unit id="4134686113968191036" datatype="html">
+        <source>At your turn, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+        <target>Durant vos tour, vous devez déposer une pièce sur n'importe quelle case vide. Il n'y a pas d'autre restriction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déposez une pièce.</target>
       </trans-unit>
-      <trans-unit id="254985125186363895" datatype="html">
-        <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
-        <target>Lors de votre tour, vous devez déposer une pierre sur le plateau. Il n'y a pas de restriction : vous pouvez la placer sur n'importe quel emplacement libre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pierre sur le plateau.</target>
+      <trans-unit id="55131761932515685" datatype="html">
+        <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+        <target>Durant vos quatre premiers tours, vous devez déposer une pièce sur n'importe quelle case vide. Il n'y a pas d'autre restriction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déposez une pièce.</target>
       </trans-unit>
       <trans-unit id="6622643035593861381" datatype="html">
         <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
@@ -3941,6 +3917,18 @@
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
       </trans-unit>
+      <trans-unit id="6388473964053708590" datatype="html">
+        <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
+        <target>Le but du jeu est d'aligner vos 4 pièces, ou de les placer en carré.</target>
+      </trans-unit>
+      <trans-unit id="322267404708379069" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+        <target>Après avoir déposé vos quatre pièces, vous devez déplacer vos pièces à un emplacement vide. Le but reste le même : être le premier à créer une ligne ou un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
+      </trans-unit>
+      <trans-unit id="366926106758793789" datatype="html">
+        <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
+        <target>Sur ce plateau, vous pouvez gagner en créant soit une ligne, soit un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
+      </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>
         <target>Ces deux cases ne sont pas voisines !</target>
@@ -4286,6 +4274,58 @@
       <trans-unit id="2152425747573072542" datatype="html">
         <source>You are already observing another game.</source>
         <target>Vous observez déjà une autre partie.</target>
+      </trans-unit>
+      <trans-unit id="4517991218544205155" datatype="html">
+        <source>You are an observer in this game, you cannot play.</source>
+        <target>Vous observez cette partie, vous ne pouvez pas jouer.</target>
+      </trans-unit>
+      <trans-unit id="7360329324887745743" datatype="html">
+        <source>You must answer your opponent&apos;s request.</source>
+        <target>Vous devez répondre à la requête de votre adversaire.</target>
+      </trans-unit>
+      <trans-unit id="7083786305815159719" datatype="html">
+        <source>Your opponent is asking for a take back.</source>
+        <target>Votre adversaire demande à reprendre un coup.</target>
+      </trans-unit>
+      <trans-unit id="2898142484935641522" datatype="html">
+        <source>take back</source>
+        <target>reprendre un coup</target>
+      </trans-unit>
+      <trans-unit id="7538850744297505720" datatype="html">
+        <source>Your opponent is proposing a draw.</source>
+        <target>Votre adversaire vous propose un match nul.</target>
+      </trans-unit>
+      <trans-unit id="9006692347877947091" datatype="html">
+        <source>draw</source>
+        <target>match nul</target>
+      </trans-unit>
+      <trans-unit id="1922042518455293613" datatype="html">
+        <source>Propose a rematch</source>
+        <target>Proposer une revanche</target>
+      </trans-unit>
+      <trans-unit id="8683762452219964182" datatype="html">
+        <source>Your opponent is proposing a rematch.</source>
+        <target>Votre adversaire propose une revanche.</target>
+      </trans-unit>
+      <trans-unit id="4486051017462631053" datatype="html">
+        <source>rematch</source>
+        <target>revanche</target>
+      </trans-unit>
+      <trans-unit id="8905995985388209337" datatype="html">
+        <source>Accept</source>
+        <target>Accepter</target>
+      </trans-unit>
+      <trans-unit id="7378878529334768232" datatype="html">
+        <source>Reject</source>
+        <target>Refuser</target>
+      </trans-unit>
+      <trans-unit id="2875203763744324408" datatype="html">
+        <source>Your <x id="INTERPOLATION" equiv-text="{{ requestInfos[deniedRequest().get()].name() }}"/> request has been rejected.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[deniedRequest().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
+        <target>Votre requête (<x id="INTERPOLATION" equiv-text="{{ requestInfos[deniedRequest().get()].name() }}"/>) a été refusée.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[deniedRequest().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></target>
+      </trans-unit>
+      <trans-unit id="1802530168433258138" datatype="html">
+        <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[requestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[requestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
+        <target>Votre requête (<x id="INTERPOLATION" equiv-text="{{ requestInfos[requestAwaitingReplyFromOpponent().get()].name() }}"/>) a été envoyée.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[requestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></target>
       </trans-unit>
     </body>
   </file>

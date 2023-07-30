@@ -34,7 +34,7 @@ describe('NewGameRules', () => {
         const expectedState: NewGameState = new NewGameState(1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('should compute the expected status', () => {
+    it('should be a draw', () => {
         // This is how you would test the game status computation:
 
         // Given some state
@@ -43,5 +43,7 @@ describe('NewGameRules', () => {
         // Then it should be a draw
         const node: NewGameNode = new NewGameNode(state);
         RulesUtils.expectToBeDraw(rules, node, minimaxes);
+        // Or you could use this
+        // RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
 });

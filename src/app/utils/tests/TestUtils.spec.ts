@@ -43,8 +43,8 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirebaseError } from 'firebase/app';
 import { Comparable } from '../Comparable';
 import { Subscription } from 'rxjs';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 
 @Component({})
@@ -110,7 +110,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
@@ -172,6 +172,14 @@ export class SimpleComponentTestUtils<T> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         return element;
+    }
+    public expectElementToBeEnabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+    }
+    public expectElementToBeDisabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
     }
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
@@ -249,7 +257,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: ObservedPartService, useClass: ObservedPartServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
@@ -389,56 +397,35 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             tick(3000); // needs to be > 2999
         }
     }
-    public async expectMoveSuccess(elementName: string,
-                                   move: Move,
-                                   state?: GameState,
-                                   scores?: readonly [number, number])
-    : Promise<void>
-    {
+    public async expectMoveSuccess(elementName: string, move: Move) : Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state ?? this.gameComponent.getState();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            if (scores) {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
-            } else {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
-            }
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
             this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
             this.onLegalUserMoveSpy.calls.reset();
         }
     }
-    public async expectMoveFailure(elementName: string,
-                                   reason: string,
-                                   move: Move,
-                                   state?: GameState,
-                                   scores?: readonly [number, number])
-    : Promise<void>
-    {
+    public async expectMoveFailure(elementName: string, reason: string, move: Move): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state ?? this.gameComponent.getState();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            if (scores) {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
-            } else {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
-            }
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
             this.chooseMoveSpy.calls.reset();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
@@ -449,23 +436,18 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public expectPassToBeForbidden(): void {
         this.expectElementNotToExist('#passButton');
     }
-    public async expectPassSuccess(move: Move, scores?: readonly [number, number]): Promise<void> {
+    public async expectPassSuccess(move: Move): Promise<void> {
         const passButton: DebugElement = this.findElement('#passButton');
         expect(passButton).withContext('Pass button is expected to be shown, but it is not').toBeTruthy();
         if (passButton == null) {
             return;
         } else {
-            const state: GameState = this.gameComponent.getState();
             passButton.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
-            if (scores) {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state, scores);
-            } else {
-                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state);
-            }
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
             this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
             this.onLegalUserMoveSpy.calls.reset();
         }
     }
@@ -517,6 +499,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
         const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
+    }
+    public expectElementToBeEnabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+    }
+    public expectElementToBeDisabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
     }
     public findElement(elementName: string): DebugElement {
         return this.debugElement.query(By.css(elementName));

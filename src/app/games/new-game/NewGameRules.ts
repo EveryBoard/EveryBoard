@@ -94,6 +94,10 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
      */
     public getGameStatus(node: NewGameNode): GameStatus {
-        return GameStatus.DRAW;
+        if (node.gameState.turn < 42) {
+            return GameStatus.ONGOING;
+        } else {
+            return GameStatus.DRAW;
+        }
     }
 }

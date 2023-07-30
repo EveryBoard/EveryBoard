@@ -64,6 +64,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
+        this.board = this.getState().getCopiedBoard();
         for (let y: number = 0; y < this.board.length; y++) {
             const newLine: string[][] = [];
             for (let x: number = 0; x < this.board[0].length; x++) {
@@ -105,7 +106,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const chosenDestination: Coord = new Coord(x, y);
         const move: MGPFallible<M> = this.generateMove(chosenPiece, chosenDestination);
         if (move.isSuccess()) {
-            return await this.chooseMove(move.get(), this.getState());
+            return await this.chooseMove(move.get());
         } else {
             return this.cancelMove(move.getReason());
         }

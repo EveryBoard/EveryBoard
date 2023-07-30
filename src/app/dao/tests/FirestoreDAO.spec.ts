@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import * as Firestore from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 
-interface Foo extends FirestoreJSONObject {
+type Foo = {
     value: string,
     otherValue: number,
 }

@@ -1,6 +1,6 @@
 import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { MoveEncoder } from '../utils/Encoder';
+import { Encoder } from '../utils/Encoder';
 
 class PlayerNone implements ComparableObject {
 
@@ -23,28 +23,25 @@ class PlayerNone implements ComparableObject {
 
 export class Player implements ComparableObject {
 
-    public static encoder: MoveEncoder<Player> = new class extends MoveEncoder<Player> {
-        public encodeMove(player: Player): JSONValueWithoutArray {
-            return player.value;
-        }
-        public decodeMove(encoded: JSONValueWithoutArray): Player {
-            Utils.assert(encoded === 0 || encoded === 1, 'Invalid encoded player: ' + encoded);
-            return Player.of(encoded as 0|1);
-        }
-    };
+    public static encoder: Encoder<Player> = Encoder.tuple(
+        [Encoder.identity<number>()],
+        (player: Player) => [player.value],
+        (fields: [number]) => Player.of(fields[0]),
+    );
     public static readonly ZERO: Player = new Player(0);
     public static readonly ONE: Player = new Player(1);
     public static readonly PLAYERS: Player[] = [Player.ZERO, Player.ONE];
 
     public static of(value: number): Player {
         switch (value) {
-            case 0: return Player.ZERO;
+            case 0:
+                return Player.ZERO;
             default:
                 Utils.expectToBe(value, 1);
                 return Player.ONE;
         }
     }
-    public static fromTurn(turn: number): Player {
+    public static ofTurn(turn: number): Player {
         return turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
     protected constructor(public readonly value: number) {}
@@ -102,11 +99,11 @@ export namespace PlayerOrNone {
     export const ONE: Player = Player.ONE;
     export const NONE: PlayerNone = PlayerNone.NONE;
 
-    export const encoder: MoveEncoder<PlayerOrNone> = new class extends MoveEncoder<PlayerOrNone> {
-        public encodeMove(player: PlayerOrNone): JSONValueWithoutArray {
+    export const encoder: Encoder<PlayerOrNone> = new class extends Encoder<PlayerOrNone> {
+        public encode(player: PlayerOrNone): JSONValueWithoutArray {
             return player.value;
         }
-        public decodeMove(encoded: JSONValueWithoutArray): PlayerOrNone {
+        public decode(encoded: JSONValueWithoutArray): PlayerOrNone {
             if (encoded === 2) return PlayerOrNone.NONE;
             Utils.assert(encoded === 0 || encoded === 1, 'Invalid encoded player: ' + encoded);
             return Player.of(encoded as 0|1);

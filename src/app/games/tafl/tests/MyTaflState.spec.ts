@@ -25,7 +25,7 @@ export class MyTaflState extends TaflState {
 
         return new MyTaflState(board, 0);
     }
-    public from(board: Table<TaflPawn>, turn: number): this {
+    public of(board: Table<TaflPawn>, turn: number): this {
         return new MyTaflState(board, turn) as this;
     }
     public override isCentralThrone(coord: Coord): boolean {
