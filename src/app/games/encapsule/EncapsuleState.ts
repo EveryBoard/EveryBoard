@@ -128,11 +128,6 @@ export class EncapsuleSpace {
                 return new EncapsuleSpace(piecePlayer, this.medium, this.big);
         }
     }
-    public encode(): number {
-        return this.small.value +
-               this.medium.value*3 +
-               this.big.value*9;
-    }
     public belongsTo(player: Player): boolean {
         return this.getBiggest().getPlayer() === player;
     }

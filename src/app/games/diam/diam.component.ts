@@ -248,7 +248,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     classes.push('moved-fill');
                 }
             } else {
-                if (move.getTarget() === x || move.start.x === x) {
+                const shift: DiamMoveShift = move as DiamMoveShift;
+                if (shift.getTarget() === x || shift.start.x === x) {
                     classes.push('moved-fill');
                 }
             }
@@ -261,7 +262,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         if (move.isDrop()) {
             lastMoved = this.getLastMovedFromDrop(move, previousState);
         } else {
-            lastMoved = this.getLastMovedFromShift(move, previousState);
+            lastMoved = this.getLastMovedFromShift(move as DiamMoveShift, previousState);
         }
         for (const movedPiece of lastMoved) {
             const x: number = movedPiece.end.x;

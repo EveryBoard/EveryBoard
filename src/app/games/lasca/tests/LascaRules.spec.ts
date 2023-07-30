@@ -62,7 +62,7 @@ describe('LascaRules', () => {
         });
         it('should forbid moving normal piece backward', () => {
             // Given any board
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__v, ___, __v, ___, __v, ___, __v],
                 [___, __v, ___, __v, ___, __v, ___],
                 [__v, ___, __v, ___, __v, ___, __v],
@@ -98,7 +98,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(3, 3)).get();
 
             // Then it should succeed
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [__v, ___, __v, ___, __v, ___, __v],
                 [___, __v, ___, __v, ___, __v, ___],
                 [__v, ___, __v, ___, __v, ___, __v],
@@ -113,7 +113,7 @@ describe('LascaRules', () => {
     describe('Capture', () => {
         it('should forbid continuing move after last capture', () => {
             // Given a board with a possible capture
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__v, ___, __v, ___, __v, ___, __v],
                 [___, __v, ___, __v, ___, __v, ___],
                 [__v, ___, __v, ___, __v, ___, __v],
@@ -132,7 +132,7 @@ describe('LascaRules', () => {
         });
         it('should forbid skipping capture', () => {
             // Given a board with a possible capture
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__v, ___, __v, ___, __v, ___, __v],
                 [___, __v, ___, __v, ___, __v, ___],
                 [__v, ___, __v, ___, __v, ___, __v],
@@ -151,7 +151,7 @@ describe('LascaRules', () => {
         });
         it('should forbid partial-capture', () => {
             // Given a board on which a capture of two pieces is possible
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__v, ___, __v, ___, __v, ___, __v],
                 [___, __v, ___, __v, ___, __v, ___],
                 [__v, ___, __u, ___, __v, ___, __v],
@@ -170,7 +170,7 @@ describe('LascaRules', () => {
         });
         it('should forbid self-capturing', () => {
             // Given a board on which a piece could try to capture its ally
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, __v, ___, ___, ___, ___, ___],
                 [___, ___, __v, ___, ___, ___, ___],
@@ -189,7 +189,7 @@ describe('LascaRules', () => {
         });
         it('should forbid backward capture with normal piece', () => {
             // Given a board on which a normal-piece could try to capture backward
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, __u, ___, ___],
@@ -208,7 +208,7 @@ describe('LascaRules', () => {
         });
         it('should allow backward capture with officer', () => {
             // Given a board on which an officer can capture backward
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, __v, ___],
                 [___, ___, ___, ___, __O, ___, ___],
@@ -222,7 +222,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]).get();
 
             // Then it should be a success
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, _Ov],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -235,7 +235,7 @@ describe('LascaRules', () => {
         });
         it('should allow to do small capture when big capture available', () => {
             // Given a board where two different sized captures are possible
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, __v, ___, ___, ___, ___],
@@ -249,7 +249,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
             // Then it should succeed
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -262,7 +262,7 @@ describe('LascaRules', () => {
         });
         it('should allow to do big capture when small capture available', () => {
             // Given a board where two different sized captures are possible
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, __v, ___, ___, ___, ___],
@@ -277,7 +277,7 @@ describe('LascaRules', () => {
 
             // Then it should succeed
             const Xoo: LascaStack = new LascaStack([LascaPiece.ONE_OFFICER, LascaPiece.ZERO, LascaPiece.ZERO]);
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -290,7 +290,7 @@ describe('LascaRules', () => {
         });
         it('should allow capturing standalone opponent piece', () => {
             // Given a board with a possible single-capture
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__v, ___, __v, ___, __v, ___, __v],
                 [___, __v, ___, __v, ___, __v, ___],
                 [__v, ___, __v, ___, __v, ___, __v],
@@ -304,7 +304,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
             // Then it should succeed
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [__v, ___, __v, ___, __v, ___, __v],
                 [___, __v, ___, __v, ___, __v, ___],
                 [__v, ___, ___, ___, __v, ___, __v],
@@ -317,7 +317,7 @@ describe('LascaRules', () => {
         });
         it('should allow capturing commander of an opponent stack', () => {
             // Given a board with a possible stack-capture
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__v, ___, __v, ___, __v, ___, __v],
                 [___, __v, ___, __v, ___, __v, ___],
                 [__v, ___, __v, ___, __v, ___, __v],
@@ -331,7 +331,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
             // Then it should succeed
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [__v, ___, __v, ___, __v, ___, __v],
                 [___, __v, ___, __v, ___, __v, ___],
                 [__v, ___, ___, ___, __v, ___, __v],
@@ -344,7 +344,7 @@ describe('LascaRules', () => {
         });
         it('should allow multiple-capture', () => {
             // Given a board where a multiple captures is possible
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [___, ___, __v, ___, ___, ___, ___],
                 [___, ___, ___, __u, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -362,7 +362,7 @@ describe('LascaRules', () => {
 
             // Then it should succeed
             const vuu: LascaStack = new LascaStack([LascaPiece.ONE, LascaPiece.ZERO, LascaPiece.ZERO]);
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -377,7 +377,7 @@ describe('LascaRules', () => {
     describe('Promotion', () => {
         it('should promote the commander of a stack that reached last line', () => {
             // Given a board where a stack is about to reach final line
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [___, ___, ___, ___, __v, ___, __v],
                 [___, _uv, ___, __v, ___, __v, ___],
                 [___, ___, __v, ___, __v, ___, __v],
@@ -391,7 +391,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromStep(new Coord(1, 1), new Coord(0, 0)).get();
 
             // Then the commander of the stack should be promoted
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [_Ov, ___, ___, ___, __v, ___, __v],
                 [___, ___, ___, __v, ___, __v, ___],
                 [___, ___, __v, ___, __v, ___, __v],
@@ -404,7 +404,7 @@ describe('LascaRules', () => {
         });
         it('should promote piece that reached last line', () => {
             // Given a board where a single piece is about to reach final line
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [___, ___, ___, ___, __v, ___, __v],
                 [___, __u, ___, __v, ___, __v, ___],
                 [___, ___, __v, ___, __v, ___, __v],
@@ -418,7 +418,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromStep(new Coord(1, 1), new Coord(0, 0)).get();
 
             // Then the piece should be promoted
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [__O, ___, ___, ___, __v, ___, __v],
                 [___, ___, ___, __v, ___, __v, ___],
                 [___, ___, __v, ___, __v, ___, __v],
@@ -435,7 +435,7 @@ describe('LascaRules', () => {
             // Given a board where Player.ONE have no more commander
             // When evaluating its value
             // Then the current Player.ZERO should win
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [_uv, ___, ___, ___, ___, ___, ___],
@@ -451,7 +451,7 @@ describe('LascaRules', () => {
             // Given a board where the last commander(s) of Player.ZERO are stucked
             // When evaluating its value
             // Then the board should be considered as a victory of Player.ONE
-            const expectedState: LascaState = LascaState.from([
+            const expectedState: LascaState = LascaState.of([
                 [__O, ___, __X, ___, ___, ___, ___],
                 [___, __X, ___, ___, ___, ___, ___],
                 [___, ___, __X, ___, ___, ___, ___],

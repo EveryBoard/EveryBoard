@@ -90,8 +90,10 @@ describe('TeekoMove', () => {
                 expect(move.equals(move)).toBeTrue();
             });
             it('should return false for another move', () => {
-                const move: TeekoTranslationMove = TeekoTranslationMove.from(new Coord(1, 2), new Coord(3, 4)).get();
-                const otherMove: TeekoTranslationMove = TeekoTranslationMove.from(new Coord(2, 2), new Coord(3, 4)).get();
+                const move: TeekoTranslationMove =
+                    TeekoTranslationMove.from(new Coord(1, 2), new Coord(3, 4)).get();
+                const otherMove: TeekoTranslationMove =
+                    TeekoTranslationMove.from(new Coord(2, 2), new Coord(3, 4)).get();
                 expect(move.equals(otherMove)).toBeFalse();
             });
             it('should return false for a drop move', () => {

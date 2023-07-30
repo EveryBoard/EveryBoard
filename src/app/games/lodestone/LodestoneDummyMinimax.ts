@@ -89,7 +89,7 @@ export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState
         } else if (scores[0] !== 24 && scores[1] === 24) {
             score = Player.ONE.getVictoryValue();
         } else {
-            score = BoardValue.from(scores[0], scores[1]).value;
+            score = BoardValue.of(scores[0], scores[1]).value;
         }
         return new BoardValue(score);
     }

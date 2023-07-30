@@ -23,7 +23,7 @@ export class TablutState extends TaflState {
 
         return new TablutState(board, 0);
     }
-    public from(board: Table<TaflPawn>, turn: number): this {
+    public of(board: Table<TaflPawn>, turn: number): this {
         return new TablutState(board, turn) as this;
     }
 }

@@ -52,8 +52,7 @@ export class TeekoTranslationMove extends MoveCoordToCoord {
     }
     public override equals(other: TeekoMove): boolean {
         if (other instanceof TeekoTranslationMove) {
-            return this.getStart().equals(other.getStart()) &&
-                   this.getEnd().equals(other.getEnd()); // TODO: refactor after move-reuse-tuple
+            return super.equals(other as this);
         } else {
             return false;
         }

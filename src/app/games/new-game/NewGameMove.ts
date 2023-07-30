@@ -1,5 +1,5 @@
 import { Move } from 'src/app/jscaip/Move';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 
 /**
   * This class represents the moves of your game.
@@ -18,7 +18,7 @@ export class NewGameMove extends Move {
      *   - `MoveEncoder.tuple` to get an encoder for a move that has multiple fields
      *   - `MoveEncoder.disjunction` to get an encoder for a move that may be of different types
      */
-    public static encoder: MoveEncoder<NewGameMove> = undefined as any;
+    public static encoder: Encoder<NewGameMove> = undefined as any;
 
     public toString(): string {
         throw new Error('This method is really more debug oriented');

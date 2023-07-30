@@ -55,7 +55,7 @@ export class YinshMinimax
                 return Combinatorics.getCombinations(ringCoords, captureCombination.length)
                     .map((ringsTaken: Coord[]): YinshCapture[] => {
                         return captureCombination.map((capture: GipfCapture, index: number): YinshCapture => {
-                            return new YinshCapture(capture.capturedSpaces, ringsTaken[index]);
+                            return new YinshCapture(capture.capturedSpaces, MGPOptional.of(ringsTaken[index]));
                         });
                     });
             }).reduce((accumulator: YinshCapture[][], captures: YinshCapture[][]): YinshCapture[][] => {

@@ -30,16 +30,16 @@ describe('QuartoPiece', () => {
         it('should throw if called with invalid number', () => {
             // Given an invalid number
             const piece: number = -1;
-            // When calling QuartoPiece.fromInt
+            // When calling QuartoPiece.ofInt
             // Then it should throw
-            expect(() => QuartoPiece.fromInt(piece)).toThrowError('Invalid piece (' + piece + ')');
+            expect(() => QuartoPiece.ofInt(piece)).toThrowError('Invalid piece (' + piece + ')');
         });
         it('should succeed for all valid pieces', () => {
             // Given any valid piece number
             for (let piece: number = 0; piece <= 16; piece++) {
-                // When calling QuartoPiece.fromInt
+                // When calling QuartoPiece.ofInt
                 // Then it should suceed
-                expect(() => QuartoPiece.fromInt(piece)).not.toThrowError();
+                expect(() => QuartoPiece.ofInt(piece)).not.toThrowError();
             }
         });
     });

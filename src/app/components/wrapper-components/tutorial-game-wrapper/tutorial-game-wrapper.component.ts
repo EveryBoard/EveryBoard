@@ -136,7 +136,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                 this.currentReason = MGPOptional.of(currentStepMove.getFailureMessage());
             }
         }
-        // We don't cover the click case here, it is covered in onUserClick
+        // We don't cover the click case here, it is covered in canUserPlay
         this.cdr.detectChanges();
     }
     public retry(): void {

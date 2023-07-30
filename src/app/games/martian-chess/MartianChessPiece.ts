@@ -15,12 +15,12 @@ export class MartianChessPiece {
         assert(noEmptyPieces, 'tryMerge cannot be called with empty pieces');
         const totalValue: number = left.value + right.value;
         if (totalValue === 2 || totalValue === 3) {
-            return MGPOptional.of(MartianChessPiece.from(totalValue));
+            return MGPOptional.of(MartianChessPiece.of(totalValue));
         } else {
             return MGPOptional.empty();
         }
     }
-    private static from(value: 0 | 1 | 2 | 3): MartianChessPiece {
+    private static of(value: 0 | 1 | 2 | 3): MartianChessPiece {
         switch (value) {
             case MartianChessPiece.DRONE.value: return MartianChessPiece.DRONE;
             default:

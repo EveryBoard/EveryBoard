@@ -24,7 +24,7 @@ export class HnefataflState extends TaflState {
         ];
         return new HnefataflState(board, 0);
     }
-    public from(board: Table<TaflPawn>, turn: number): this {
+    public of(board: Table<TaflPawn>, turn: number): this {
         return new HnefataflState(board, turn) as this;
     }
 }

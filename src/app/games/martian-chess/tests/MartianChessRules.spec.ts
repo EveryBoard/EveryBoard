@@ -23,8 +23,8 @@ describe('MartianChessRules', () => {
     const B: MartianChessPiece = MartianChessPiece.DRONE;
     const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
-    const capturedPawn: MartianChessCapture = MartianChessCapture.from([A]);
-    const noCapture: MartianChessCapture = MartianChessCapture.from([]);
+    const capturedPawn: MartianChessCapture = MartianChessCapture.of([A]);
+    const noCapture: MartianChessCapture = MartianChessCapture.of([]);
 
     let rules: MartianChessRules;
 
@@ -323,7 +323,7 @@ describe('MartianChessRules', () => {
 
         // Then the captured piece should have been added
         const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
-        const capturedPawns: MartianChessCapture = MartianChessCapture.from([A, A]);
+        const capturedPawns: MartianChessCapture = MartianChessCapture.of([A, A]);
         captured.set(Player.ZERO, noCapture);
         captured.set(Player.ONE, capturedPawns);
         const expectedState: MartianChessState = new MartianChessState(expectedBoardAfterCapture,
