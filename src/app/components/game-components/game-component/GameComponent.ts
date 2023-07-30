@@ -107,7 +107,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     }
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
-        await this.cancelMoveOnWrapper(reason);
+        this.cancelMoveOnWrapper(reason);
         if (this.node.move.isPresent()) {
             await this.showLastMove(this.node.move.get());
         }

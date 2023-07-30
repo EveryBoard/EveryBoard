@@ -288,7 +288,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const success: MGPOptional<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
         Utils.assert(success.isPresent(), 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.node = success.get();
-        await this.updateBoardAndShowLastMove(false);
+        const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value; // TODO: test this
+        await this.updateBoardAndShowLastMove(triggerAnimation);
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
