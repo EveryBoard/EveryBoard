@@ -48,7 +48,7 @@ describe('SiamComponent', () => {
         // When inserting a piece
         await testUtils.expectClickSuccess('#remainingPieces_0');
         await testUtils.expectClickSuccess('#square_2_0');
-        const move: SiamMove = SiamMove.of(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
+        const move: SiamMove = SiamMove.from(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
         // Then it should succeed
         await testUtils.expectMoveSuccess('#orientation_DOWN', move);
     }));
@@ -103,7 +103,7 @@ describe('SiamComponent', () => {
 
         // When performing a rotation
         // Then it should succeed
-        const move: SiamMove = SiamMove.of(0, 0, MGPOptional.empty(), Orthogonal.DOWN).get();
+        const move: SiamMove = SiamMove.from(0, 0, MGPOptional.empty(), Orthogonal.DOWN).get();
         await expectMoveToBeLegal(Player.ZERO, move);
     }));
     it('should allow normal move', fakeAsync(async() => {
@@ -120,7 +120,7 @@ describe('SiamComponent', () => {
 
         // When moving forward
         // Then it should succeed
-        const move: SiamMove = SiamMove.of(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
+        const move: SiamMove = SiamMove.from(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
         await expectMoveToBeLegal(Player.ZERO, move);
     }));
     it('should highlight all moved pieces upon move', fakeAsync(async() => {
@@ -136,7 +136,7 @@ describe('SiamComponent', () => {
         await testUtils.setupState(state);
 
         // When performing a move
-        const move: SiamMove = SiamMove.of(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
+        const move: SiamMove = SiamMove.from(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
         await expectMoveToBeLegal(Player.ZERO, move);
 
         // Then the moved piece and departed square should be shown as moved
@@ -159,7 +159,7 @@ describe('SiamComponent', () => {
         // When making the piece exit the board
         // Then the orientation of the piece does not have to be chosen
         await testUtils.expectClickSuccess('#square_4_4');
-        const move: SiamMove = SiamMove.of(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
+        const move: SiamMove = SiamMove.from(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
         await testUtils.expectMoveSuccess('#square_4_5', move);
     }));
     it('should toast when clicking as first click on an empty square', fakeAsync(async() => {
@@ -212,7 +212,7 @@ describe('SiamComponent', () => {
 
         // Then a new move should be in creation and the player can finish the move
         await testUtils.expectClickSuccess('#square_3_4');
-        const move: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
+        const move: SiamMove = SiamMove.from(3, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
         await testUtils.expectMoveSuccess('#orientation_DOWN', move);
     }));
     it('should cancel the move attempt when clicking on invalid target instead of selecting orientation', fakeAsync(async() => {
@@ -269,7 +269,7 @@ describe('SiamComponent', () => {
         await testUtils.expectClickSuccess('#remainingPieces_0');
 
         // Then the corresponding move should be done directly
-        const move: SiamMove = SiamMove.of(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
+        const move: SiamMove = SiamMove.from(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
         await testUtils.expectMoveSuccess('#indicator_4_4_LEFT', move);
     }));
 });

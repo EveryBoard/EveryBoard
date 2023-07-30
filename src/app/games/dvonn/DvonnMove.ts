@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { DvonnState } from './DvonnState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
@@ -10,7 +10,7 @@ export class DvonnMove extends MoveCoordToCoord {
 
     public static PASS: DvonnMove = new DvonnMove(new Coord(-1, -1), new Coord(-2, -2));
 
-    public static encoder: MoveEncoder<DvonnMove> = MoveWithTwoCoords.getFallibleEncoder(DvonnMove.from);
+    public static encoder: Encoder<DvonnMove> = MoveWithTwoCoords.getFallibleEncoder(DvonnMove.from);
 
     private constructor(start: Coord, end: Coord) {
         super(start, end);
@@ -55,10 +55,5 @@ export class DvonnMove extends MoveCoordToCoord {
         } else {
             return Math.abs(this.getStart().y - this.getEnd().y);
         }
-    }
-    public equals(other: DvonnMove): boolean {
-        if (other === this) return true;
-        if (!other.getStart().equals(this.getStart())) return false;
-        return other.getEnd().equals(this.getEnd());
     }
 }

@@ -39,7 +39,7 @@ describe('LascaState', () => {
     const ___: LascaStack = LascaStack.EMPTY;
     describe('toString', () => {
         it('should display state', () => {
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [_uv, ___, __v, ___, __v, ___, __v],
                 [___, _vu, ___, __v, ___, __v, ___],
                 [_Ov, ___, __O, ___, __v, ___, __v],

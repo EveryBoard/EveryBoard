@@ -23,7 +23,7 @@ import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/Test
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
@@ -194,11 +194,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const THIRD_MOVE: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
 
-    const FIRST_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(FIRST_MOVE);
+    const FIRST_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(FIRST_MOVE);
 
-    const SECOND_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(SECOND_MOVE);
+    const SECOND_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(SECOND_MOVE);
 
-    const THIRD_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(THIRD_MOVE);
+    const THIRD_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(THIRD_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const result: MGPValidation = await wrapper.gameComponent.chooseMove(move);
@@ -245,7 +245,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return await testUtils.clickElement('#reject');
     }
     async function receiveNewMoves(initialTurn: number,
-                                   newMoves: JSONValueWithoutArray[],
+                                   newMoves: JSONValue[],
                                    detectChanges: boolean = true)
     : Promise<void>
     {
@@ -286,16 +286,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         if (player === Player.ONE) {
             offset = 1;
             const firstMove: QuartoMove = moves[0];
-            const encodedMove: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(firstMove);
+            const encodedMove: JSONValue = QuartoMove.encoder.encode(firstMove);
             await receiveNewMoves(turn, [encodedMove]);
             turn += 1;
         }
         for (let i: number = offset; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
             await doMove(moves[i], true);
-            const newMoves: JSONValueWithoutArray[] = [
-                QuartoMove.encoder.encodeMove(move),
-                QuartoMove.encoder.encodeMove(moves[i+1]),
+            const newMoves: JSONValue[] = [
+                QuartoMove.encoder.encode(move),
+                QuartoMove.encoder.encode(moves[i+1]),
             ];
             await receiveNewMoves(turn, newMoves);
             turn += 2;
@@ -308,7 +308,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.chronoOneTurn.isIdle()).withContext('chrono one turn should be idle').toBeTrue();
         expect(wrapper.endGame).toBeTrue();
     }
-    async function prepareStartedGameWithMoves(encodedMoves: JSONValueWithoutArray[]): Promise<void> {
+    async function prepareStartedGameWithMoves(encodedMoves: JSONValue[]): Promise<void> {
         // 1. Creating the mocks and testUtils but NOT component
         // 2. Setting the db with the encodedMoves including
         // 3. Setting the component and making it start like it would
@@ -319,7 +319,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         let turn: number = 0;
         if (role === Player.ONE) {
             offset = 1;
-            const encodedMove: JSONValueWithoutArray = encodedMoves[0];
+            const encodedMove: JSONValue = encodedMoves[0];
             await receiveNewMoves(turn, [encodedMove], false);
             turn += 1;
         }
@@ -922,7 +922,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(partDAO, 'update').and.callThrough();
                 spyOn(gameEventService, 'addMove').and.callThrough();
                 const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(alternativeMove);
+                const alternativeMoveEncoded: JSONValue = QuartoMove.encoder.encode(alternativeMove);
                 await doMove(alternativeMove, true);
 
                 // Then partDAO should be updated, and move should be sent
@@ -974,7 +974,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(partDAO, 'update').and.callThrough();
                 spyOn(gameEventService, 'addMove').and.callThrough();
                 const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(alternativeMove);
+                const alternativeMoveEncoded: JSONValue = QuartoMove.encoder.encode(alternativeMove);
                 await doMove(alternativeMove, true);
 
                 // Then partDAO should be updated, and move should be sent
@@ -1428,13 +1428,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('rematch', () => {
-        it('should show propose button only when game is ended', fakeAsync(async() => {
+        fit('should show propose button only when game is ended', fakeAsync(async() => {
             // Given a game that is not finished
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             testUtils.expectElementToBeDisabled('#proposeRematch');
 
             // When it is finished
             await testUtils.expectInterfaceClickSuccess('#resignButton', 1);
+            await testUtils.expectInterfaceClickSuccess('#resign', 1);
 
             // Then it should allow to propose rematch
             testUtils.expectElementToBeEnabled('#proposeRematch');

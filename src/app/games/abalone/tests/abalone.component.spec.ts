@@ -323,6 +323,8 @@ describe('AbaloneComponent', () => {
                 AbaloneMove.fromDoubleCoord(new Coord(2, 6), new Coord(3, 6), HexaDirection.UP).get();
             await testUtils.expectMoveSuccess('#direction_UP', move);
         }));
+    });
+    describe('showLastMove', () => {
         it('should show last move moved pieces (push)', fakeAsync(async() => {
             // Given a board with a previous move
             await testUtils.expectClickSuccess('#piece_0_7');

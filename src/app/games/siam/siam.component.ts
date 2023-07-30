@@ -189,7 +189,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         assert(availableMoves.length > 0, 'SiamComponent.performMoveOrShowOrientationArrows expects at least one move');
         if (availableMoves.length === 1) {
             // There's only one possible move, so perform it
-            await this.cancelMove();
             return this.chooseMove(availableMoves[0]);
         } else {
             // Since there's more than a single move, the player will have to select the orientation

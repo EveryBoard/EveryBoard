@@ -84,7 +84,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -93,7 +93,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         }
         this.last = MGPOptional.empty(); // now the user stop try to do a move
         // we stop showing him the last move
-        const chosenMove: AwaleMove = AwaleMove.from(x);
+        const chosenMove: AwaleMove = AwaleMove.of(x);
         return this.chooseMove(chosenMove);
     }
     public getSpaceClasses(x: number, y: number): string[] {

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { CoerceoComponent } from '../coerceo.component';
-import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
@@ -70,7 +70,7 @@ describe('CoerceoComponent', () => {
             ];
             const previousState: CoerceoState = new CoerceoState(previousBoard, 2, [2, 0], [0, 0]);
             const state: CoerceoState = new CoerceoState(board, 3, [0, 0], [1, 0]);
-            const previousMove: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(8, 6));
+            const previousMove: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(8, 6));
 
             // When rendering the board
             await testUtils.setupState(state, previousState, previousMove);
@@ -112,7 +112,7 @@ describe('CoerceoComponent', () => {
                 [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
             ];
             const previousState: CoerceoState = new CoerceoState(previousBoard, 2, [0, 0], [0, 0]);
-            const previousMove: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(8, 6));
+            const previousMove: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(8, 6));
             const state: CoerceoState = new CoerceoState(board, 3, [0, 0], [1, 0]);
 
             // When rendering the board
@@ -124,9 +124,14 @@ describe('CoerceoComponent', () => {
         }));
     });
     describe('First click', () => {
-        it('should accept tiles exchange proposal as first click', fakeAsync(async() => {
-            const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 9));
-            await testUtils.expectMoveFailure('#click_6_9', CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(), move);
+        it('should refuse tiles exchange when player have no tiles', fakeAsync(async() => {
+            // Given a board without tiles (the initial one here)
+            // When clicking on an opponent piece
+            // Then the move should fail
+            const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
+            await testUtils.expectMoveFailure('#click_6_9',
+                                              CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
+                                              move);
         }));
         it('should show possibles destination after choosing your own piece', fakeAsync(async() => {
             // Given any board
@@ -151,7 +156,7 @@ describe('CoerceoComponent', () => {
         it('should hide last move when selecting first piece', fakeAsync(async() => {
             // Given a state with a last move
             await testUtils.expectClickSuccess('#click_6_2');
-            const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
+            const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
             await testUtils.expectMoveSuccess('#click_7_3', move);
 
             // When clicking on the piece to move
@@ -165,7 +170,7 @@ describe('CoerceoComponent', () => {
     describe('Second click', () => {
         it('should allow simple move', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_6_2');
-            const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
+            const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
             await testUtils.expectMoveSuccess('#click_7_3', move);
         }));
         it('should switch of selected piece when clicking another player piece', fakeAsync(async() => {
@@ -207,12 +212,42 @@ describe('CoerceoComponent', () => {
             await testUtils.expectClickSuccess('#click_6_2');
 
             // When finishing the move
-            const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
+            const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
             await testUtils.expectMoveSuccess('#click_7_3', move);
 
             // Then the highlight of the last move should be present
             testUtils.expectElementToHaveClass('#last_start_6_2', 'last-move-stroke');
             testUtils.expectElementToHaveClass('#last_end_7_3', 'last-move-stroke');
+        }));
+    });
+    describe('showLastMove', () => {
+        it('should work for tile exchange', fakeAsync(async() => {
+            // Given a board where last move was a piece move
+            const board: FourStatePiece[][] = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
+                [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
+            ];
+            const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
+            testUtils.setupState(state, undefined, CoerceoRegularMove.of(new Coord(8, 9), new Coord(6, 9)));
+            testUtils.expectElementToHaveClasses('#last_end_6_9', ['base', 'no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#last_start_8_9', ['base', 'no-fill', 'last-move-stroke']);
+
+            // When applying a tile exchange
+            await testUtils.expectMoveSuccess('#click_6_9',
+                                              CoerceoTileExchangeMove.of(new Coord(6, 9)));
+
+            // Then the start and end of penultimate move should be gone
+            testUtils.expectElementNotToExist('#last_end_6_9');
+            testUtils.expectElementNotToExist('#last_start_8_9');
+            testUtils.expectElementToHaveClass('#pyramid_6_9', 'captured-fill');
         }));
     });
 });

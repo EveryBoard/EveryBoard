@@ -6,8 +6,8 @@ import { TrexoMinimax } from '../TrexoMinimax';
 import { TrexoRules } from '../TrexoRules';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
-const X1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 0)]);
-const O1__T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 0)]);
+const X1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
+const O1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);
 
 describe('TrexoMinimax', () => {
 
@@ -19,7 +19,7 @@ describe('TrexoMinimax', () => {
     });
     it('should prefer to have more visible pieces aligned than less', () => {
         // Given a board where two pieces of player zero are aligned
-        const weakState: TrexoState = TrexoState.from([
+        const weakState: TrexoState = TrexoState.of([
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, O1__T0, ______, ______, ______, ______],
@@ -30,10 +30,10 @@ describe('TrexoMinimax', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
-        ], 1).get();
+        ], 1);
 
         // And a board where three piece of player zero are aligned
-        const strongState: TrexoState = TrexoState.from([
+        const strongState: TrexoState = TrexoState.of([
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, O1__T0, ______, ______, ______, ______],
@@ -44,7 +44,7 @@ describe('TrexoMinimax', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
-        ], 1).get();
+        ], 1);
 
         // When comparing them
         // Then the second one should be deemed better

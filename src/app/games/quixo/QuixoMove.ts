@@ -1,13 +1,13 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { QuixoFailure } from './QuixoFailure';
 
 export class QuixoMove extends MoveCoord {
 
-    public static encoder: MoveEncoder<QuixoMove> = MoveEncoder.tuple(
+    public static encoder: Encoder<QuixoMove> = Encoder.tuple(
         [Coord.encoder, Orthogonal.encoder],
         (m: QuixoMove): [Coord, Orthogonal] => [m.coord, m.direction],
         (fields: [Coord, Orthogonal]): QuixoMove => new QuixoMove(fields[0].x, fields[0].y, fields[1]));

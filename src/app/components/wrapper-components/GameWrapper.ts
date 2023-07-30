@@ -131,7 +131,11 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
+    public abstract onCancelMove(_reason?: string): void;
+
+    public abstract getPlayer(): P;
+
+    public canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
             return MGPValidation.failure(message);
@@ -144,8 +148,6 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         return MGPValidation.SUCCESS;
     }
-    public abstract onCancelMove(_reason?: string): void;
-
     public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {
             return false;
@@ -172,8 +174,6 @@ export abstract class GameWrapper<P extends Comparable> {
             return true;
         }
     }
-    public abstract getPlayer(): P
-
     public getBoardHighlight(): string[] {
         if (this.endGame) {
             return ['endgame-bg'];

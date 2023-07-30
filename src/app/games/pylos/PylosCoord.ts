@@ -3,23 +3,24 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { Encoder } from 'src/app/utils/Encoder';
+import { Utils } from 'src/app/utils/utils';
 
 export class PylosCoord extends Coord3D {
 
-    public static coordEncoder: Encoder<PylosCoord> = Coord3D.getEncoder(PylosCoord.from);
+    public static coordEncoder: Encoder<PylosCoord> = Coord3D.getCoord3DEncoder(PylosCoord.of);
 
     public static optionalEncoder: Encoder<MGPOptional<PylosCoord>> = MGPOptional.getEncoder(PylosCoord.coordEncoder);
 
-    public static from(x: number, y: number, z: number): PylosCoord {
+    public static override of(x: number, y: number, z: number): PylosCoord {
         return new PylosCoord(x, y, z);
     }
     public constructor(x: number, y: number, z: number) {
         super(x, y, z);
-        if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
-        if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);
-        if (z < 0 || z > 3) throw new Error(`PylosCoord: Invalid Z: ${z}.`);
+        Utils.assert(0 <= x && x <= 3, `PylosCoord: Invalid X: ${x}.`);
+        Utils.assert(0 <= y && y <= 3, `PylosCoord: Invalid Y: ${y}.`);
+        Utils.assert(0 <= z && z <= 3, `PylosCoord: Invalid Z: ${z}.`);
         const floorSize: number = 4 - z;
-        if (this.isNotInRange(floorSize, floorSize)) throw new Error(this.toString() + ' is not in range.');
+        Utils.assert(this.isInRange(floorSize, floorSize), this.toString() + ' is not in range.');
     }
     public override toString(): string {
         return 'PylosCoord' + this.toShortString();

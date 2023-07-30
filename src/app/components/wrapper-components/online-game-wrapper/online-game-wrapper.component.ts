@@ -13,7 +13,7 @@ import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -297,7 +297,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.timeManager.beforeEventsBatch(this.endGame);
     }
     private async afterEventsBatch(): Promise<void> {
-        const player: Player = Player.fromTurn(this.gameComponent.getTurn());
+        const player: Player = Player.ofTurn(this.gameComponent.getTurn());
         const serverTime: Timestamp = await this.userService.getServerTime(this.connectedUserService.user.get().id);
         this.timeManager.afterEventsBatch(this.endGame, player, serverTime);
     }
@@ -421,7 +421,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
 
             // To adhere to security rules, we must add the move before updating the part
-            const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
+            const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
             await this.gameService.addMove(this.currentPartId, this.role as Player, encodedMove);
             return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
         }

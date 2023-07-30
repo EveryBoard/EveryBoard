@@ -27,7 +27,7 @@ describe('ConspirateursRules', () => {
     });
 
     function drop(coord: Coord): ConspirateursMove {
-        return ConspirateursMoveDrop.from(coord).get();
+        return ConspirateursMoveDrop.of(coord);
     }
     function simpleMove(start: Coord, end: Coord): ConspirateursMove {
         return ConspirateursMoveSimple.from(start, end).get();

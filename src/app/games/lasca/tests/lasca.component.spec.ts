@@ -48,7 +48,7 @@ describe('LascaComponent', () => {
         });
         it('should highlight piece that can move this turn (when forced capture)', async() => {
             // Given a board where current player have 3 "mobile" pieces but one must capture
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [_v, __, _v, __, _v, __, _v],
                 [__, _v, __, _v, __, _v, __],
                 [_v, __, _v, __, _v, __, _v],
@@ -175,7 +175,7 @@ describe('LascaComponent', () => {
         }));
         it('should allow simple capture', fakeAsync(async() => {
             // Given a board with a selected piece and a possible capture
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [_v, __, _v, __, _v, __, _v],
                 [__, _v, __, _v, __, _v, __],
                 [_v, __, _v, __, _v, __, _v],
@@ -195,7 +195,7 @@ describe('LascaComponent', () => {
         }));
         it(`should have an officer's symbol on the piece that just got promoted`, fakeAsync(async() => {
             // Given any board with a selected soldier about to become officer
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__, __, __, __, _v, __, _v],
                 [__, uv, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
@@ -216,7 +216,7 @@ describe('LascaComponent', () => {
         }));
         it('should highlight next possible capture and show the captured piece as captured already', fakeAsync(async() => {
             // Given any board with a selected piece that could do a multiple capture
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __],
@@ -236,7 +236,7 @@ describe('LascaComponent', () => {
         }));
         it('should cancel capturing a piece you cannot capture', fakeAsync(async() => {
             // Given a board on which an illegal capture could be made
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __],
@@ -271,7 +271,7 @@ describe('LascaComponent', () => {
     describe('multiple capture', () => {
         it('should perform capture when no more piece can be captured', fakeAsync(async() => {
             // Given a board on which a piece is selected and already captured
-            const state: LascaState = LascaState.from([
+            const state: LascaState = LascaState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __],

@@ -26,7 +26,7 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
         const height: number = ConnectSixState.HEIGHT;
         const cx: number = Math.floor(width/2);
         const cy: number = Math.floor(height/2);
-        return [ConnectSixFirstMove.from(new Coord(cx, cy))];
+        return [ConnectSixFirstMove.of(new Coord(cx, cy))];
     }
     private getListDrops(node: ConnectSixNode): ConnectSixMove[] {
         const availableFirstCoords: Coord[] = this.getAvailableCoords(node.gameState);
@@ -37,7 +37,7 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
             const stateAfterFirstDrops: ConnectSixState = new ConnectSixState(board, node.gameState.turn);
             const availableSecondCoords: Coord[] = this.getAvailableCoords(stateAfterFirstDrops);
             for (const secondCoord of availableSecondCoords) {
-                const newMove: ConnectSixDrops = ConnectSixDrops.from(firstCoord, secondCoord).get();
+                const newMove: ConnectSixDrops = ConnectSixDrops.of(firstCoord, secondCoord);
                 moves.push(newMove);
             }
         }

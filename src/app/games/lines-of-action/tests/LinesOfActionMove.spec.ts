@@ -3,7 +3,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 
 describe('LinesOfActionMove', () => {
@@ -41,21 +40,12 @@ describe('LinesOfActionMove', () => {
             expect(move.equals(move2)).toBeFalse();
         });
     });
-    describe('encode/decode', () => {
-        it('should delegate encoding to encoder', () => {
-            spyOn(LinesOfActionMove.encoder, 'encode').and.callThrough();
-            const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(6, 4)).get();
-            move.encode();
-
-            expect(LinesOfActionMove.encoder.encode).toHaveBeenCalledTimes(1);
-        });
-        it('should delegate decoding to encoder', () => {
-            spyOn(LinesOfActionMove.encoder, 'decode').and.callThrough();
-            const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(6, 4)).get();
-            const encoded: JSONValue = move.encode();
-            move.decode(encoded);
-
-            expect(LinesOfActionMove.encoder.decode).toHaveBeenCalledTimes(1);
-        });
+    it('should have a bijective encoder', () => {
+        const moves: LinesOfActionMove[] = [
+            LinesOfActionMove.from(new Coord(5, 3), new Coord(6, 4)).get(),
+        ];
+        for (const move of moves) {
+            EncoderTestUtils.expectToBeBijective(LinesOfActionMove.encoder, move);
+        }
     });
 });

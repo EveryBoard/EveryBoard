@@ -102,7 +102,11 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], [8, 8], 7),
-            [PenteMove.of(new Coord(9, 6)), PenteMove.of(new Coord(8, 9)), PenteMove.of(new Coord(13, 9))],
+            [
+                PenteMove.of(new Coord(9, 6)),
+                PenteMove.of(new Coord(8, 9)),
+                PenteMove.of(new Coord(13, 9)),
+            ],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
         ),

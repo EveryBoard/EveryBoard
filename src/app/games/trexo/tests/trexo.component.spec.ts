@@ -10,20 +10,20 @@ import { TrexoMove } from '../TrexoMove';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 
 const _____: TrexoPieceStack = TrexoPieceStack.EMPTY;
-const O1_T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 0)]);
-const O1_T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1)]);
-const O2_T2: TrexoPieceStack = TrexoPieceStack.from([
+const O1_T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);
+const O1_T1: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 1)]);
+const O2_T2: TrexoPieceStack = TrexoPieceStack.of([
     new TrexoPiece(Player.ZERO, 0),
     new TrexoPiece(Player.ZERO, 2),
 ]);
-const O1_T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 3)]);
-const X1_T0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 0)]);
-const X1_T1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1)]);
-const X2_T2: TrexoPieceStack = TrexoPieceStack.from([
+const O1_T3: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 3)]);
+const X1_T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
+const X1_T1: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 1)]);
+const X2_T2: TrexoPieceStack = TrexoPieceStack.of([
     new TrexoPiece(Player.ONE, 0),
     new TrexoPiece(Player.ONE, 2),
 ]);
-const X1_T3: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 3)]);
+const X1_T3: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 3)]);
 
 describe('TrexoComponent', () => {
 
@@ -46,23 +46,23 @@ describe('TrexoComponent', () => {
 
                 it('should create a third level', fakeAsync(async() => {
                     // Given a board with two level
-                    const X0_X2: TrexoPieceStack = TrexoPieceStack.from([
+                    const X0_X2: TrexoPieceStack = TrexoPieceStack.of([
                         new TrexoPiece(Player.ZERO, 0),
                         new TrexoPiece(Player.ZERO, 2),
                     ]);
-                    const X0_O3: TrexoPieceStack = TrexoPieceStack.from([
+                    const X0_O3: TrexoPieceStack = TrexoPieceStack.of([
                         new TrexoPiece(Player.ONE, 0),
                         new TrexoPiece(Player.ZERO, 3),
                     ]);
-                    const O1_X2: TrexoPieceStack = TrexoPieceStack.from([
+                    const O1_X2: TrexoPieceStack = TrexoPieceStack.of([
                         new TrexoPiece(Player.ZERO, 1),
                         new TrexoPiece(Player.ONE, 2),
                     ]);
-                    const O1_X3: TrexoPieceStack = TrexoPieceStack.from([
+                    const O1_X3: TrexoPieceStack = TrexoPieceStack.of([
                         new TrexoPiece(Player.ONE, 1),
                         new TrexoPiece(Player.ONE, 3),
                     ]);
-                    const state: TrexoState = TrexoState.from([
+                    const state: TrexoState = TrexoState.of([
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -73,7 +73,7 @@ describe('TrexoComponent', () => {
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                         [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                    ], 4).get();
+                    ], 4);
                     await testUtils.setupState(state);
 
                     // When dropping a piece on the third level
@@ -96,8 +96,8 @@ describe('TrexoComponent', () => {
                         testUtils.expectElementToExist('#dropped_piece_5_5_0');
                     }));
                     it(`should fail when clicking on an isolated piece`, fakeAsync(async() => {
-                        // Given a board on which 1 space is higher than all its neighboring space (except its "twin")
-                        const state: TrexoState = TrexoState.from([
+                        // Given a board on which 1 space is higher than all its neighbooring space (except its "twin")
+                        const state: TrexoState = TrexoState.of([
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -108,7 +108,7 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                        ], 1).get();
+                        ], 1);
                         await testUtils.setupState(state);
 
                         // When trying to choose it as first coord
@@ -173,7 +173,7 @@ describe('TrexoComponent', () => {
                     }));
                     it('should allow dropping on second level', fakeAsync(async() => {
                         // Given any board where two neighboring tiles are on the same level
-                        const state: TrexoState = TrexoState.from([
+                        const state: TrexoState = TrexoState.of([
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -184,7 +184,7 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                        ], 2).get();
+                        ], 2);
                         await testUtils.setupState(state);
                         // And a first click has been done on that level
                         await testUtils.expectClickSuccess('#space_4_4');
@@ -240,7 +240,7 @@ describe('TrexoComponent', () => {
                     }));
                     it('should highlight victory', fakeAsync(async() => {
                         // Given any board on which a 4 moves have already been done, aligning piece of Player.ZERO
-                        const state: TrexoState = TrexoState.from([
+                        const state: TrexoState = TrexoState.of([
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, X1_T0, _____, X2_T2, _____, _____, _____, _____],
@@ -251,7 +251,7 @@ describe('TrexoComponent', () => {
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                             [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-                        ], 4).get();
+                        ], 4);
                         await testUtils.setupState(state);
                         await testUtils.expectClickSuccess('#space_7_2');
 
@@ -305,15 +305,15 @@ describe('TrexoComponent', () => {
         }));
         it('should not transfer upper piece style to lower piece', fakeAsync(async() => {
             // Given one 3D display with one Stack in two color
-            const O0_X2: TrexoPieceStack = TrexoPieceStack.from([
+            const O0_X2: TrexoPieceStack = TrexoPieceStack.of([
                 new TrexoPiece(Player.ZERO, 0),
                 new TrexoPiece(Player.ONE, 2),
             ]);
-            const O1_X2: TrexoPieceStack = TrexoPieceStack.from([
+            const O1_X2: TrexoPieceStack = TrexoPieceStack.of([
                 new TrexoPiece(Player.ZERO, 1),
                 new TrexoPiece(Player.ONE, 2),
             ]);
-            const state: TrexoState = TrexoState.from([
+            const state: TrexoState = TrexoState.of([
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
@@ -324,7 +324,7 @@ describe('TrexoComponent', () => {
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
                 [_____, _____, _____, _____, _____, _____, _____, _____, _____, _____],
-            ], 2).get();
+            ], 2);
 
             // When displaying it
             await testUtils.setupState(state);

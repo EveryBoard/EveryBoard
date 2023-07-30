@@ -12,14 +12,16 @@ import { SCORE } from '../SCORE';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { GameStatus } from '../GameStatus';
+import { BoardValue } from '../BoardValue';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 
 export class RulesUtils {
 
-    public static expectMoveSuccess<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
-        rules: R,
-        state: S,
-        move: M,
-        expectedState: S)
+    public static expectMoveSuccess<R extends Rules<M, S, L, B>,
+                                    M extends Move,
+                                    S extends GameState,
+                                    L,
+                                    B extends BoardValue>(rules: R, state: S, move: M, expectedState: S)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state);
@@ -149,5 +151,28 @@ export class RulesUtils {
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         expect(func).toThrowError('Assertion failure: ' + error);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
+    }
+    /**
+     * @param ruler the rules of the game you need to debug
+     * @param encodedMoves the encoded moves that caused the bug
+     * @param state the board on which these moves have to be applied
+     * @param moveDecoder the move decoder
+     * @returns the state creates from applying the moves, enjoy you debug !
+     */
+    public static applyMoves<S extends GameState, M extends Move, L>(ruler: Rules<M, S, L>,
+                                                                     encodedMoves: JSONValue[],
+                                                                     state: S,
+                                                                     moveDecoder: (em: JSONValue) => M)
+    : S
+    {
+        let i: number = 0;
+        for (const encodedMove of encodedMoves) {
+            const move: M = moveDecoder(encodedMove);
+            const legality: MGPFallible<L> = ruler.isLegal(move, state);
+            Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
+            state = ruler.applyLegalMove(move, state, legality.get());
+            i++;
+        }
+        return state;
     }
 }

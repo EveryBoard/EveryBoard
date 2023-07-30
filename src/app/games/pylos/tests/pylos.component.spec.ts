@@ -64,7 +64,7 @@ describe('PylosComponent', () => {
             // Given a board where a drop is possible
             // When clicking on it
             // Then the move should be accepted
-            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
+            const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0), []);
             await testUtils.expectMoveSuccess('#drop_0_0_0', move);
         }));
         it('should forbid clicking on opponent piece', fakeAsync(async() => {
@@ -239,7 +239,7 @@ describe('PylosComponent', () => {
 
             // When clicking the first piece then its landing place
             await testUtils.expectClickSuccess('#piece_3_3_0');
-            const move: PylosMove = PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), []);
+            const move: PylosMove = PylosMove.ofClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), []);
 
             // Then the climb should be legal
             await testUtils.expectMoveSuccess('#drop_0_0_1', move);
@@ -391,7 +391,7 @@ describe('PylosComponent', () => {
 
             // When clicking on the capture validation button
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)];
-            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
+            const move: PylosMove = PylosMove.ofDrop(new PylosCoord(1, 1, 0), captures);
             await testUtils.expectMoveSuccess('#capture_validation', move);
 
             // Then the two captures should be displayed as captured
@@ -407,7 +407,7 @@ describe('PylosComponent', () => {
 
             // When clicking on the capture validation button
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 0)];
-            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
+            const move: PylosMove = PylosMove.ofDrop(new PylosCoord(1, 1, 0), captures);
             await testUtils.expectMoveSuccess('#capture_validation', move);
 
             // Then the second capture should be displayed as captured (but not the first, eh !)
@@ -424,7 +424,7 @@ describe('PylosComponent', () => {
 
             // When clicking on the capture validation button
             const captures: PylosCoord[] = [new PylosCoord(0, 1, 0)];
-            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
+            const move: PylosMove = PylosMove.ofDrop(new PylosCoord(1, 1, 0), captures);
             await testUtils.expectMoveSuccess('#capture_validation', move);
 
             // Then the second capture should be displayed as captured (but not the first, eh !)
@@ -470,7 +470,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0_1');
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(1, 1, 0)];
             await testUtils.expectClickSuccess('#piece_1_1_0');
-            const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 0), captures);
+            const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 0), captures);
             await testUtils.expectMoveSuccess('#capture_validation', move);
 
             // Then the non longer landable square should be displayed
@@ -533,7 +533,7 @@ describe('PylosComponent', () => {
             // When clicking on the newly capturable piece then validating the capture
             // Then the move should be legal
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)];
-            const move: PylosMove = PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(1, 1, 1), captures);
+            const move: PylosMove = PylosMove.ofClimb(new PylosCoord(3, 3, 0), new PylosCoord(1, 1, 1), captures);
             await testUtils.expectClickSuccess('#piece_0_0_0');
             await testUtils.expectMoveSuccess('#capture_validation', move);
         }));

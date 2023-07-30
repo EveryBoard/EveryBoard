@@ -25,7 +25,7 @@ describe('DiamMinimax', () => {
     });
     it('should detect shift moves', () => {
         // Given a state there can be a shift
-        const state: DiamState = DiamState.fromRepresentation([
+        const state: DiamState = DiamState.ofRepresentation([
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, A1],
             [B1, __, __, __, __, __, __, B2],
@@ -37,7 +37,7 @@ describe('DiamMinimax', () => {
     });
     it('should correctly filter moves to full columns', () => {
         // Given a state there can be a shift
-        const state: DiamState = DiamState.fromRepresentation([
+        const state: DiamState = DiamState.ofRepresentation([
             [__, __, __, __, __, __, __, A1],
             [__, __, __, __, __, __, __, B1],
             [__, __, __, __, __, __, __, A2],

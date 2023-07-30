@@ -1,11 +1,15 @@
 import { Player } from 'src/app/jscaip/Player';
 
-export type LodestoneDirection = 'push' | 'pull'
-export type LodestoneOrientation = 'orthogonal' | 'diagonal'
+export type LodestoneDirection = 'push' | 'pull';
+
+export type LodestoneOrientation = 'orthogonal' | 'diagonal';
 
 export class LodestonePieceNone {
+
     public static UNREACHABLE: LodestonePieceNone = new LodestonePieceNone(true);
+
     public static EMPTY: LodestonePieceNone = new LodestonePieceNone(false);
+
     private constructor(private readonly unreachable: boolean) {
     }
     public isLodestone(): this is LodestonePieceLodestone {
@@ -26,8 +30,11 @@ export class LodestonePieceNone {
 }
 
 export class LodestonePiecePlayer {
+
     public static ZERO: LodestonePiecePlayer = new LodestonePiecePlayer(Player.ZERO);
+
     public static ONE: LodestonePiecePlayer = new LodestonePiecePlayer(Player.ONE);
+
     public static of(player: Player): LodestonePiecePlayer {
         if (player === Player.ZERO) {
             return LodestonePiecePlayer.ZERO;
@@ -59,8 +66,10 @@ type LodestoneDirectionMap = Record<LodestoneDirection, LodestoneOrientationMap>
 type LodestoneMap = Record<0 | 1, LodestoneDirectionMap>;
 
 export interface LodestoneDescription {
-    direction: LodestoneDirection
-    orientation: LodestoneOrientation
+
+    direction: LodestoneDirection;
+
+    orientation: LodestoneOrientation;
 }
 
 export class LodestonePieceLodestone {
@@ -114,4 +123,4 @@ export class LodestonePieceLodestone {
     }
 }
 
-export type LodestonePiece = LodestonePiecePlayer | LodestonePieceLodestone | LodestonePieceNone
+export type LodestonePiece = LodestonePiecePlayer | LodestonePieceLodestone | LodestonePieceNone;

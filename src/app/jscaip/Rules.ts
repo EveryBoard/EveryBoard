@@ -73,17 +73,6 @@ export abstract class Rules<M extends Move,
         const initialState: S = this.stateType['getInitialState']();
         return new MGPNode(initialState);
     }
-    public applyMoves(encodedMoves: number[], state: S, moveDecoder: (em: number) => M): S {
-        let i: number = 0;
-        for (const encodedMove of encodedMoves) {
-            const move: M = moveDecoder(encodedMove);
-            const legality: MGPFallible<L> = this.isLegal(move, state);
-            assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
-            state = this.applyLegalMove(move, state, legality.get());
-            i++;
-        }
-        return state;
-    }
     public abstract getGameStatus(node: MGPNode<Rules<M, S, L>, M, S, L>): GameStatus;
 }
 

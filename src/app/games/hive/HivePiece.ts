@@ -1,29 +1,23 @@
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { Encoder } from 'src/app/utils/Encoder';
-import { JSONValue, Utils } from 'src/app/utils/utils';
+import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
 export type HivePieceKind = 'QueenBee' | 'Beetle' | 'Grasshopper' | 'Spider' | 'SoldierAnt';
 
+const HivePieceKindEncoder: Encoder<HivePieceKind> =
+    Encoder.fromFunctions(
+        (value: HivePieceKind) => value,
+        (json: JSONValueWithoutArray) => json as HivePieceKind);
+
 export class HivePiece implements ComparableObject {
 
-    public static encoder: Encoder<HivePiece> = new class extends Encoder<HivePiece> {
-
-        public encode(piece: HivePiece): JSONValue {
-            return { owner: piece.owner.value, kind: piece.kind };
-        }
-        public decode(encoded: JSONValue): HivePiece {
-            // eslint-disable dot-notation
-            assert(Utils.getNonNullable(encoded)['kind'] !== null, 'invalid encoded HivePiece');
-            assert(Utils.getNonNullable(encoded)['owner'] !== null, 'invalid encoded HivePiece');
-            const kind: HivePieceKind = Utils.getNonNullable(encoded)['kind'] as HivePieceKind;
-            const owner: Player = Player.of(Utils.getNonNullable(encoded)['owner']);
-            return new HivePiece(owner, kind);
-            // eslint-enable dot-notation
-        }
-    };
+    public static encoder: Encoder<HivePiece> = Encoder.tuple(
+        [Player.encoder, HivePieceKindEncoder],
+        (piece: HivePiece): [Player, HivePieceKind] => [piece.owner, piece.kind],
+        (fields: [Player, HivePieceKind]): HivePiece => new HivePiece(fields[0], fields[1]),
+    );
     public constructor(public readonly owner: Player, public readonly kind: HivePieceKind) {
     }
     public toString(): string {

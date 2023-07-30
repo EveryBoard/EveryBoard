@@ -6,6 +6,8 @@ import { GameStateWithTable } from '../GameStateWithTable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from '../GameStatus';
+import { JSONValue } from 'src/app/utils/utils';
+import { RulesUtils } from './RulesUtils.spec';
 
 class MyAbstractState extends GameStateWithTable<number> {
 
@@ -64,13 +66,17 @@ describe('Rules', () => {
     it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
         // Given an initial list of encoded moves and an initial state
         const initialState: MyAbstractState = MyAbstractState.getInitialState();
-        const encodedMoveList: number[] = [0, 1, 2, 3];
+        const moveValues: number[] = [0, 1, 2, 3];
+        const encodedMoveList: JSONValue[] = moveValues.map((n: number) => P4Move.encoder.encode(P4Move.of(n)));
 
         // When calling applyMoves
-        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeMove);
+        const state: MyAbstractState = RulesUtils.applyMoves(rules,
+                                                             encodedMoveList,
+                                                             initialState,
+                                                             P4Move.encoder.decode);
 
         // Then last move should be the last one encoded and state should be adapted
-        expect(state.board).toEqual([encodedMoveList]);
+        expect(state.board).toEqual([moveValues]);
         expect(state.turn).toBe(4);
     });
     describe('choose', () => {
