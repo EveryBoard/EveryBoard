@@ -13,7 +13,7 @@ export class TeekoDropMove extends MoveCoord {
     public static encoder: Encoder<TeekoDropMove> = MoveCoord.getFallibleEncoder(TeekoDropMove.from);
 
     public static from(coord: Coord): MGPFallible<TeekoDropMove> {
-        if (TeekoMove.isOnBoard(coord)) {
+        if (TeekoState.isOnBoard(coord)) {
             return MGPFallible.success(new TeekoDropMove(coord.x, coord.y));
         } else {
             return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
@@ -37,9 +37,9 @@ export class TeekoTranslationMove extends MoveCoordToCoord {
         MoveCoordToCoord.getFallibleEncoder(TeekoTranslationMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<TeekoTranslationMove> {
-        if (TeekoMove.isOnBoard(start) === false) {
+        if (TeekoState.isOnBoard(start) === false) {
             return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
-        } else if (TeekoMove.isOnBoard(end) === false) {
+        } else if (TeekoState.isOnBoard(end) === false) {
             return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(end));
         } else if (start.equals(end)) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
@@ -62,9 +62,6 @@ export class TeekoTranslationMove extends MoveCoordToCoord {
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace TeekoMove {
 
-    export function isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(TeekoState.WIDTH, TeekoState.WIDTH);
-    }
     export const encoder: Encoder<TeekoMove> =
         Encoder.disjunction(
             [(move: TeekoMove): move is TeekoDropMove => move instanceof TeekoDropMove],

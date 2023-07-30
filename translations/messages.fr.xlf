@@ -3927,7 +3927,7 @@
       </trans-unit>
       <trans-unit id="366926106758793789" datatype="html">
         <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
-        <target>Sur ce plateau, vous pouvez gagner soit en créant une ligne, soit un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
+        <target>Sur ce plateau, vous pouvez gagner en créant soit une ligne, soit un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>

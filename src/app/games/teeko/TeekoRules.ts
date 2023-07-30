@@ -18,7 +18,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
     private static singleton: MGPOptional<TeekoRules> = MGPOptional.empty();
 
     public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(TeekoMove.isOnBoard, Utils.identity, 4);
+        new NInARowHelper(TeekoState.isOnBoard, Utils.identity, 4);
 
     public static get(): TeekoRules {
         if (TeekoRules.singleton.isAbsent()) {
@@ -137,7 +137,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
         return total;
     }
     public getVictoryCoord(state: TeekoState): Coord[] {
-        // Concatene line victories to square victories
+        // Concatenate line victories to square victories
         const linesVictories: Coord[] = TeekoRules.TEEKO_HELPER.getVictoriousCoord(state);
         linesVictories.push(...this.getSquareInfo(state).victoriousCoords);
         return linesVictories;

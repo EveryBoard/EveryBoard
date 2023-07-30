@@ -238,7 +238,7 @@ export class GameInfo {
         new GameInfo($localize`Lasca`, 'Lasca', LascaComponent, new LascaTutorial(), LascaRules.get(), new Date('2023-05-11'), GameDescription.LASCA()),
         new GameInfo($localize`Connect Six`, 'ConnectSix', ConnectSixComponent, new ConnectSixTutorial(), ConnectSixRules.get(), new Date('2023-05-13'), GameDescription.CONNECT_SIX()),
         new GameInfo($localize`Pente`, 'Pente', PenteComponent, new PenteTutorial(), PenteRules.get(), new Date('2023-05-20'), GameDescription.PENTE()),
-        new GameInfo($localize`Teeko`, 'Teeko', TeekoComponent, new TeekoTutorial(), TeekoRules.get(), new Date('2023-07-19'), GameDescription.TEEKO()),
+        new GameInfo($localize`Teeko`, 'Teeko', TeekoComponent, new TeekoTutorial(), TeekoRules.get(), new Date('2023-07-30'), GameDescription.TEEKO()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
