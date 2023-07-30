@@ -5,7 +5,7 @@ import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-fdescribe('TeekoMove', () => {
+describe('TeekoMove', () => {
     describe('TeekoDropMove', () => {
         describe('from', () => {
             it('should fail when not in range', () => {

@@ -300,7 +300,7 @@ describe('SixRules', () => {
             });
         });
         describe('Shape Victories', () => {
-            fit('should consider winner player who align 6 pieces (playing on border)', () => {
+            it('should consider winner player who align 6 pieces (playing on border)', () => {
                 // Given a board in pre-victory
                 const board: Table<PlayerOrNone> = [
                     [O, _, _, _, _],
