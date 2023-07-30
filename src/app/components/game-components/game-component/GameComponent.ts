@@ -3,7 +3,7 @@ import { Rules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -12,7 +12,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { AI, AIOptions, GameNode } from 'src/app/jscaip/MGPNode';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -52,7 +51,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
                                     L = void>
     extends BaseGameComponent
 {
-    public encoder: MoveEncoder<M>;
+    public encoder: Encoder<M>;
 
     public Player: typeof Player = Player;
 

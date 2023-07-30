@@ -33,7 +33,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Capture`,
             $localize`A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.<br/><br/>You're playing Dark, go ahead.`,
-            LascaState.from([
+            LascaState.of([
                 [_v, __, __, __, _v, __, _v],
                 [__, __, __, _v, __, _v, __],
                 [__, __, _v, __, _v, __, _v],
@@ -48,7 +48,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Multiple captures`,
             $localize`If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same stack.<br/><br/>You are playing Dark, a double capture is possible, go ahead.`,
-            LascaState.from([
+            LascaState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [_v, __, __, __, _v, __, _v],
@@ -63,7 +63,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Minority capture is allowed`,
             $localize`If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.`,
-            LascaState.from([
+            LascaState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, _v, __],
                 [__, __, __, __, __, __, __],
@@ -76,7 +76,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Promotion`,
             $localize`When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
-            LascaState.from([
+            LascaState.of([
                 [__, __, __, __, __, __, _v],
                 [__, __, __, uv, __, _v, __],
                 [__, __, __, __, __, __, __],
@@ -95,7 +95,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Officer move`,
             $localize`Officers can move and capture backward as well as forward.<br/><br/>You're playing Dark, move your officier!`,
-            LascaState.from([
+            LascaState.of([
                 [__, __, __, __, Uv, __, _v],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, _v, __, __],

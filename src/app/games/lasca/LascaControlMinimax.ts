@@ -33,7 +33,7 @@ export class LascaControlHeuristic extends Heuristic<LascaMove, LascaState> {
         const pieceUnderZeroControl: number = this.getNumberOfMobileCoords(state, Player.ZERO);
         const pieceUnderOneControl: number = this.getNumberOfMobileCoords(state, Player.ONE);
         // TODO: this is a player metric heuristic
-        return BoardValue.from(pieceUnderZeroControl, pieceUnderOneControl);
+        return BoardValue.of(pieceUnderZeroControl, pieceUnderOneControl);
     }
     public getNumberOfMobileCoords(state: LascaState, player: Player): number {
         const potentialMoves: LascaMove[] = this.getCapturesAndSteps(state, player);

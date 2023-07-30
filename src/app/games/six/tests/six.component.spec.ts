@@ -29,13 +29,13 @@ describe('SixComponent', () => {
             const board: Table<PlayerOrNone> = [
                 [O],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 41);
+            const state: SixState = SixState.ofRepresentation(board, 41);
             testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));
         it('should drop before 40th turn', fakeAsync(async() => {
-            const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
+            const move: SixMove = SixMove.ofDrop(new Coord(0, 2));
             await testUtils.expectMoveSuccess('#neighbor_0_2', move);
         }));
         it('should cancel move when clicking on empty space as first click after 40th turn', fakeAsync(async() => {
@@ -47,7 +47,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#neighbor_1_1', SixFailure.CAN_NO_LONGER_DROP());
@@ -65,7 +65,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             // When clicking on one of the user's pieces
@@ -85,13 +85,13 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             const gameComponent: SixComponent = testUtils.getComponent();
             await testUtils.expectClickSuccess('#piece_0_0');
             testUtils.expectElementToExist('#selectedPiece_0_0');
-            const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(0, 6));
+            const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(0, 6));
             await testUtils.expectMoveSuccess('#neighbor_0_6', move);
 
             testUtils.expectElementToExist('#leftCoord_0_0');
@@ -108,7 +108,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_0');
 
@@ -127,7 +127,7 @@ describe('SixComponent', () => {
                 [O, O, X],
                 [X, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             // Choosing piece
@@ -151,7 +151,7 @@ describe('SixComponent', () => {
             testUtils.expectElementToExist('#cuttable_2_1');
             testUtils.expectElementToExist('#cuttable_2_2');
             testUtils.expectElementToExist('#cuttable_2_3');
-            const move: SixMove = SixMove.fromCut(new Coord(1, 2), new Coord(2, 3), new Coord(2, 0));
+            const move: SixMove = SixMove.ofCut(new Coord(1, 2), new Coord(2, 3), new Coord(2, 0));
             await testUtils.expectMoveSuccess('#piece_2_0', move);
             testUtils.expectElementToExist('#disconnected_0_0');
             testUtils.expectElementToExist('#disconnected_0_1');
@@ -165,7 +165,7 @@ describe('SixComponent', () => {
                 [O, O, X],
                 [X, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             // Choosing piece
@@ -173,7 +173,7 @@ describe('SixComponent', () => {
 
             // Choosing landing space
             await testUtils.expectClickSuccess('#neighbor_2_3');
-            const move: SixMove = SixMove.fromCut(new Coord(1, 2), new Coord(2, 3), new Coord(0, 0));
+            const move: SixMove = SixMove.ofCut(new Coord(1, 2), new Coord(2, 3), new Coord(0, 0));
             await testUtils.expectMoveSuccess('#piece_0_0', move);
             testUtils.expectElementToExist('#disconnected_2_0');
             testUtils.expectElementToExist('#disconnected_2_1');
@@ -190,7 +190,7 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
@@ -208,12 +208,12 @@ describe('SixComponent', () => {
                 [O],
                 [X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 40);
+            const state: SixState = SixState.ofRepresentation(board, 40);
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
-            const move: SixMove = SixMove.fromCut(new Coord(0, 2), new Coord(0, -1), new Coord(0, 1));
+            const move: SixMove = SixMove.ofCut(new Coord(0, 2), new Coord(0, -1), new Coord(0, 1));
             await testUtils.expectMoveSuccess('#piece_0_1', move);
         }));
     });
@@ -224,11 +224,11 @@ describe('SixComponent', () => {
                 [O, O, O, O, O, X, X, X, X, X],
                 [_, _, _, _, _, _, _, _, _, X],
             ];
-            const state: SixState = SixState.fromRepresentation(board, 42);
+            const state: SixState = SixState.ofRepresentation(board, 42);
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece_0_0');
-            const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(-1, 1));
+            const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(-1, 1));
             await testUtils.expectMoveSuccess('#neighbor_-1_1', move);
             testUtils.expectElementToHaveClass('#victoryCoord_-1_1', 'victory-stroke');
             testUtils.expectElementToHaveClass('#victoryCoord_4_1', 'victory-stroke');

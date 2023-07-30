@@ -32,7 +32,7 @@ describe('ConnectSixMinimax', () => {
         const cx: number = Math.floor(width/2);
         const cy: number = Math.floor(height/2);
         expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(ConnectSixFirstMove.from(new Coord(cx, cy)));
+        expect(moves[0]).toEqual(ConnectSixFirstMove.of(new Coord(cx, cy)));
     });
     it('should do winning move when one is possible', () => {
         // Given a board where there is place for a victory of first player
@@ -64,7 +64,7 @@ describe('ConnectSixMinimax', () => {
         const bestMove: ConnectSixMove = node.findBestMove(1, minimax);
 
         // Then it should be that victory
-        expect(bestMove).toEqual(ConnectSixDrops.from(new Coord(4, 0), new Coord(5, 0)).get());
+        expect(bestMove).toEqual(ConnectSixDrops.of(new Coord(4, 0), new Coord(5, 0)));
     });
     it('should block double-open fives at level two', () => {
         // Given a minimax at level two
@@ -97,7 +97,7 @@ describe('ConnectSixMinimax', () => {
         const bestMove: ConnectSixMove = node.findBestMove(2, minimax);
 
         // Then the minimax level two should block
-        expect(bestMove).toEqual(ConnectSixDrops.from(new Coord(1, 18), new Coord(7, 18)).get());
+        expect(bestMove).toEqual(ConnectSixDrops.of(new Coord(1, 18), new Coord(7, 18)));
     });
     it('should count all possible moves including only neighboring-coord', () => {
         // Given a board with 60 possibles combinations of two coords
@@ -164,6 +164,6 @@ describe('ConnectSixMinimax', () => {
         const bestMove: ConnectSixMove = node.findBestMove(2, minimax);
 
         // Then the minimax level two should block
-        expect(bestMove).toEqual(ConnectSixDrops.from(new Coord(1, 18), new Coord(6, 18)).get());
+        expect(bestMove).toEqual(ConnectSixDrops.of(new Coord(1, 18), new Coord(6, 18)));
     });
 });

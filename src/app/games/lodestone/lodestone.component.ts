@@ -151,11 +151,9 @@ export class LodestoneComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-
         if (this.capturesToPlace > 0) {
             return this.cancelMove(LodestoneFailure.MUST_PLACE_CAPTURES());
         }
-
         const targetValidity: MGPValidation = LodestoneRules.get().isTargetLegal(this.getState(), coord);
         if (targetValidity.isFailure()) {
             return this.cancelMove(targetValidity.getReason());
@@ -177,9 +175,7 @@ export class LodestoneComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-
         assert(this.capturesToPlace === 0, 'should not be able to click on a lodestone when captures need to be placed');
-
         const player: Player = this.getCurrentPlayer();
         const playerLodestone: LodestonePieceLodestone = LodestonePieceLodestone.of(player, lodestone);
         if (this.selectedLodestone.equalsValue(playerLodestone)) {
@@ -235,11 +231,9 @@ export class LodestoneComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-
         if (this.capturesToPlace === 0) {
             return this.cancelMove(LodestoneFailure.NO_CAPTURES_TO_PLACE_YET());
         }
-
         this.capturesToPlace--;
         this.captures[position]++;
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
@@ -249,7 +243,6 @@ export class LodestoneComponent
         const lodestones: LodestonePositions = state.lodestones.getCopy();
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
         this.displayedState = new LodestoneState(board, state.turn, lodestones, pressurePlates);
-
         if (this.capturesToPlace === 0) {
             return this.applyMove();
         } else {
@@ -265,10 +258,8 @@ export class LodestoneComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-
         this.capturesToPlace++;
         this.captures[position]--;
-
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
         const opponent: Player = this.getCurrentPlayer().getOpponent();
         const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
@@ -276,7 +267,6 @@ export class LodestoneComponent
         const lodestones: LodestonePositions = state.lodestones.getCopy();
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
         this.displayedState = new LodestoneState(board, state.turn, lodestones, pressurePlates);
-
         this.updateViewInfo();
         this.showPressurePlateDifferences(this.getState(), this.displayedState, true);
         return MGPValidation.SUCCESS;

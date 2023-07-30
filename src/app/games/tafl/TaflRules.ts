@@ -15,6 +15,7 @@ import { Type } from '@angular/core';
 import { GameNode } from 'src/app/jscaip/MGPNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S> {
 
@@ -22,7 +23,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
 
     protected constructor(stateType: Type<S>,
                           public readonly config: TaflConfig,
-                          public generateMove: (start: Coord, end: Coord) => M)
+                          public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
         super(stateType);
     }
@@ -282,7 +283,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                 board[captured.get().y][captured.get().x] = TaflPawn.UNOCCUPIED;
             }
         }
-        return state.from(board, turn + 1);
+        return state.of(board, turn + 1);
     }
     public getGameStatus(node: GameNode<M, S>): GameStatus {
         const state: S = node.gameState as S;
@@ -348,7 +349,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         for (const pawn of listPawns) {
             const pawnDestinations: Coord[] = this.getPossibleDestinations(pawn, state);
             for (const destination of pawnDestinations) {
-                const newMove: M = this.generateMove(pawn, destination);
+                const newMove: M = this.generateMove(pawn, destination).get();
                 listMoves.push(newMove);
             }
         }

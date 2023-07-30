@@ -13,9 +13,9 @@
 // import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 // import { BoardValue } from 'src/app/jscaip/BoardValue';
 // import { CoordSet } from 'src/app/utils/OptimizedSet';
-// 
+//
 // export class SixBoardValue extends BoardValue {
-// 
+//
 //     public constructor(value: number,
 //                        public readonly preVictory: MGPOptional<Coord>) {
 //         super(value);
@@ -30,9 +30,9 @@
 // {
 //
 //     private static singleton: MGPOptional<SixMinimax> = MGPOptional.empty();
-// 
+//
 //     public VERBOSE: boolean = false;
-// 
+//
 //     public static get(): SixMinimax {
 //         if (SixMinimax.singleton.isAbsent()) {
 //             const rules: SixRules = SixRules.get();
@@ -41,7 +41,7 @@
 //         return SixMinimax.singleton.get();
 //     }
 //     private currentVictorySource: SixVictorySource;
-// 
+//
 //     public getListMoves(node: SixNode): SixMove[] {
 //         const minimax: SixMinimax = SixMinimax.get();
 //         const unheritance: SixBoardValue = node.getOwnValue(minimax);
@@ -66,7 +66,7 @@
 //     private createForcedDrop(unheritance: SixBoardValue): SixMove[] {
 //         display(this.VERBOSE, { called: 'SixMinimax.createForceDrop', unheritance });
 //         const forcedMove: SixMove[] = [];
-//         const move: SixMove = SixMove.fromDrop(unheritance.preVictory.get());
+//         const move: SixMove = SixMove.ofDrop(unheritance.preVictory.get());
 //         forcedMove.push(move);
 //         return forcedMove;
 //     }
@@ -80,18 +80,18 @@
 //         const deplacements: SixMove[] = [];
 //         for (const start of starts) {
 //             for (const landing of landings) {
-//                 const move: SixMove = SixMove.fromMovement(start, landing);
+//                 const move: SixMove = SixMove.ofMovement(start, landing);
 //                 if (state.isCoordConnected(landing, MGPOptional.of(start))) {
 //                     const stateAfterMove: SixState = state.movePiece(move);
 //                     const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
 //                     if (SixRules.isSplit(groupsAfterMove)) {
 //                         const largestGroups: MGPSet<MGPSet<Coord>> = SixRules.getLargestGroups(groupsAfterMove);
 //                         if (largestGroups.size() === 1) {
-//                             deplacements.push(SixMove.fromMovement(start, landing));
+//                             deplacements.push(SixMove.ofMovement(start, landing));
 //                         } else {
 //                             for (const group of largestGroups) {
 //                                 const subGroup: Coord = group.getAnyElement().get();
-//                                 const cut: SixMove = SixMove.fromCut(start, landing, subGroup);
+//                                 const cut: SixMove = SixMove.ofCut(start, landing, subGroup);
 //                                 deplacements.push(cut);
 //                             }
 //                         }
@@ -108,7 +108,7 @@
 //         const currentPlayer: Player = state.getCurrentPlayer();
 //         const playerPieces: MGPSet<Coord> = allPieces.get(currentPlayer).get();
 //         const firstPiece: Coord = playerPieces.getAnyElement().get();
-// 
+//
 //         const safePieces: Coord[] = [];
 //         for (const playerPiece of playerPieces) {
 //             if (this.isPieceBlockingAVictory(state, playerPiece) === false) {
@@ -123,8 +123,8 @@
 //     }
 //     private isPieceBlockingAVictory(state: SixState, playerPiece: Coord): boolean {
 //         const hypotheticalState: SixState = state.switchPiece(playerPiece);
-// 
-//         const fakeDropMove: SixMove = SixMove.fromDrop(playerPiece);
+//
+//         const fakeDropMove: SixMove = SixMove.ofDrop(playerPiece);
 //         this.startSearchingVictorySources();
 //         while (this.hasNextVictorySource()) {
 //             this.currentVictorySource = this.getNextVictorySource();
@@ -140,7 +140,7 @@
 //     public getListDrop(legalLandings: Coord[]): SixMove[] {
 //         const drops: SixMove[] = [];
 //         for (const landing of legalLandings) {
-//             const drop: SixMove = SixMove.fromDrop(landing);
+//             const drop: SixMove = SixMove.ofDrop(landing);
 //             drops.push(drop);
 //         }
 //         return drops;
@@ -568,7 +568,7 @@
 //                                        lastDrop: Coord,
 //                                        state: SixState,
 //                                        boardInfo: BoardInfo): BoardInfo {
-// 
+//
 //         display(this.VERBOSE, { called: 'SixRules.getBoardInfoForTriangleEdge', index, lastDrop, state, boardInfo });
 //         const LAST_OPPONENT: Player = state.getCurrentPlayer();
 //         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];

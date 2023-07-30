@@ -18,6 +18,6 @@ export class HnefataflRules extends TaflRules<HnefataflMove, HnefataflState> {
         return HnefataflRules.singleton.get();
     }
     private constructor() {
-        super(HnefataflState, hnefataflConfig, HnefataflMove.of);
+        super(HnefataflState, hnefataflConfig, HnefataflMove.from);
     }
 }

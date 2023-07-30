@@ -151,7 +151,7 @@ describe('MartianChessDummyMinimax', () => {
         const empty: MGPOptional<MartianChessMove> = MGPOptional.empty();
         const strongBoard: Table<MartianChessPiece> = weakState.getCopiedBoard();
         const captured: MGPMap<Player, MartianChessCapture> = weakState.captured.getCopy();
-        const capturedPawn: MartianChessCapture = MartianChessCapture.from([MartianChessPiece.PAWN]);
+        const capturedPawn: MartianChessCapture = MartianChessCapture.of([MartianChessPiece.PAWN]);
         captured.replace(Player.ZERO, capturedPawn);
         const strongState: MartianChessState = new MartianChessState(strongBoard,
                                                                      0,

@@ -21,13 +21,13 @@ export class AwaleMoveGenerator extends MoveGenerator<AwaleMove, AwaleState> {
             // for each house that might be playable
             if (state.getPieceAtXY(x, player) !== 0) {
                 // if the house is not empty
-                newMove = AwaleMove.from(x);
+                newMove = AwaleMove.of(x);
                 // see if the move is legal
                 const legality: MGPValidation = AwaleRules.isLegal(newMove, state);
 
                 if (legality.isSuccess()) {
                     // if the move is legal, we add it to the listMoves
-                    newMove = AwaleMove.from(x);
+                    newMove = AwaleMove.of(x);
 
                     moves.push(newMove);
                 }

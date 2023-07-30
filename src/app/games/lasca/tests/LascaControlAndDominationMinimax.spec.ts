@@ -17,7 +17,7 @@ describe('LascaControlAndDominateMinimax', () => {
     });
     it('should not count the immobilized stacks', () => {
         // Given two boards with the exact same stacks, one having blocked stacks
-        const immobilizedState: LascaState = LascaState.from([
+        const immobilizedState: LascaState = LascaState.of([
             [X, _, _, _, _, _, _],
             [_, O, _, _, _, _, _],
             [_, _, O, _, _, _, _],
@@ -26,7 +26,7 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ], 0);
-        const mobileState: LascaState = LascaState.from([
+        const mobileState: LascaState = LascaState.of([
             [X, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
             [_, _, O, _, _, _, _],
@@ -47,7 +47,7 @@ describe('LascaControlAndDominateMinimax', () => {
     });
     it('should count the potential mobility as primary board value', () => {
         // Given two boards with the same stacks, one with an unique forced capture, the other without
-        const forcedState: LascaState = LascaState.from([
+        const forcedState: LascaState = LascaState.of([
             [X, _, _, _, _, _, _],
             [_, O, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -56,7 +56,7 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ], 0); // O has 1 stack, X has 2
-        const freeState: LascaState = LascaState.from([
+        const freeState: LascaState = LascaState.of([
             [X, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
             [_, _, _, _, _, _, _],
@@ -75,7 +75,7 @@ describe('LascaControlAndDominateMinimax', () => {
         // Given two boards with the same potential mobility, one with more "dominant pieces" than the other
         // (dominant = that is of the same color as the commander)
         const d: LascaStack = new LascaStack([LascaPiece.ONE, LascaPiece.ZERO, LascaPiece.ZERO]);
-        const dominatedState: LascaState = LascaState.from([
+        const dominatedState: LascaState = LascaState.of([
             [d, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -85,7 +85,7 @@ describe('LascaControlAndDominateMinimax', () => {
             [_, _, _, _, _, _, _],
         ], 0);
         const D: LascaStack = new LascaStack([LascaPiece.ONE, LascaPiece.ONE, LascaPiece.ONE]);
-        const dominatingState: LascaState = LascaState.from([
+        const dominatingState: LascaState = LascaState.of([
             [D, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],

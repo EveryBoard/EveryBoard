@@ -116,7 +116,7 @@ export class LascaState extends GameStateWithTable<LascaStack> {
         ];
         return new LascaState(board, 0);
     }
-    public static from(board: Table<LascaStack>, turn: number): LascaState {
+    public static of(board: Table<LascaStack>, turn: number): LascaState {
         return new LascaState(board, turn);
     }
     public static isNotOnBoard(coord: Coord): boolean {

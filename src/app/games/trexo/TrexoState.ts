@@ -3,7 +3,7 @@ import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Utils } from 'src/app/utils/utils';
 
 /**
  * Represent half a tile
@@ -24,9 +24,9 @@ export class TrexoPiece {
 
 export class TrexoPieceStack {
 
-    public static EMPTY: TrexoPieceStack = TrexoPieceStack.from([]);
+    public static EMPTY: TrexoPieceStack = TrexoPieceStack.of([]);
 
-    public static from(pieces: ReadonlyArray<TrexoPiece>): TrexoPieceStack {
+    public static of(pieces: ReadonlyArray<TrexoPiece>): TrexoPieceStack {
         let previousTurn: number = -1;
         for (const piece of pieces) {
             assert(previousTurn < piece.tileId, 'TrexoPieceStack: dropped turn should be ascending');
@@ -58,7 +58,7 @@ export class TrexoPieceStack {
         }
     }
     public add(piece: TrexoPiece): TrexoPieceStack {
-        return TrexoPieceStack.from(this.pieces.concat(piece));
+        return TrexoPieceStack.of(this.pieces.concat(piece));
     }
     public getPieceAt(z: number): TrexoPiece {
         assert(z < this.pieces.length, 'no element ' + z + 'in piece!');
@@ -84,12 +84,12 @@ export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
                                                                   TrexoPieceStack.EMPTY);
         return new TrexoState(board, 0);
     }
-    public static from(board: TrexoPieceStack[][], turn: number): MGPFallible<TrexoState> {
-        assert(board.length === TrexoState.SIZE, 'Invalid board dimensions');
+    public static of(board: TrexoPieceStack[][], turn: number): TrexoState {
+        Utils.assert(board.length === TrexoState.SIZE, 'Invalid board dimensions');
         for (const lines of board) {
-            assert(lines.length === TrexoState.SIZE, 'Invalid board dimensions');
+            Utils.assert(lines.length === TrexoState.SIZE, 'Invalid board dimensions');
         }
-        return MGPFallible.success(new TrexoState(board, turn));
+        return new TrexoState(board, turn);
     }
     public drop(coord: Coord, player: Player): TrexoState {
         const newBoard: TrexoPieceStack[][] = this.getCopiedBoard();
@@ -103,7 +103,7 @@ export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
     public override toString(): string {
         return this.board.map((list: TrexoPieceStack[]) => {
             return '[' + list.map((space: TrexoPieceStack) => {
-                return 'TrexoPieceStack.from(' + space.toString() + ')';
+                return 'TrexoPieceStack.of(' + space.toString() + ')';
             }).join(', ') + ']';
         }).join('\n,');
     }

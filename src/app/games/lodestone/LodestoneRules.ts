@@ -140,7 +140,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         if (validityBeforeCaptures.isFailure()) {
             return MGPFallible.failure(validityBeforeCaptures.getReason());
         }
-
         const infos: LodestoneInfos =
             this.applyMoveWithoutPlacingCaptures(state, move.coord, move);
         const numberOfCapturesInMove: number =
@@ -155,7 +154,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                 return MGPFallible.failure(LodestoneFailure.TOO_MANY_CAPTURES_ON_SAME_PRESSURE_PLATE());
             }
         }
-
         return MGPFallible.success(infos);
     }
     public applyMoveWithoutPlacingCaptures(state: LodestoneState,

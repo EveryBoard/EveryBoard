@@ -18,11 +18,18 @@ export class NInARowHelper<T> {
     }
     public getBoardValue(state: GameStateWithTable<T>): BoardValue {
         let score: number = 0;
-        state.forEachCoord((coord: Coord, piece: T) => {
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const piece: T = coordAndContent.content;
+            const coord: Coord = coordAndContent.coord;
             if (this.getOwner(piece, state).isPlayer()) {
-                score += this.getSquareScore(state, coord);
+                const squareScore: number = this.getSquareScore(state, coord);
+                if (BoardValue.VICTORIES.some((victory: number) => victory === squareScore)) {
+                    return new BoardValue(squareScore);
+                } else {
+                    score += squareScore;
+                }
             }
-        });
+        }
         return new BoardValue(score);
     }
     public getSquareScore(state: GameStateWithTable<T>, coord: Coord): number {
@@ -51,13 +58,13 @@ export class NInARowHelper<T> {
             const directionAllies: number = alliesByDirs.get(dir).get();
             const oppositeDirectionAllies: number = alliesByDirs.get(dir.getOpposite()).get();
             const lineAllies: number = directionAllies + oppositeDirectionAllies;
-            if (lineAllies + 1 >= this.N) {
+            if (this.N <= lineAllies + 1) {
                 return Number.MAX_SAFE_INTEGER;
             }
             const directionFreeSpaces: number = freeSpaceByDirs.get(dir).get();
             const oppositeDirectionFreeSpaces: number = freeSpaceByDirs.get(dir.getOpposite()).get();
             const lineFreeSpaces: number = directionFreeSpaces + oppositeDirectionFreeSpaces;
-            if (lineFreeSpaces + 1 >= this.N) {
+            if (this.N <= lineFreeSpaces + 1) {
                 score += 2 + lineFreeSpaces - this.N;
             }
         }

@@ -12,8 +12,6 @@ import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 
 export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
 
-    private readonly rules: YinshRules = YinshRules.get();
-
     public getListMoves(node: YinshNode): YinshMove[] {
         const moves: YinshMove[] = [];
         const state: YinshState = node.gameState;
@@ -25,12 +23,13 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
                 }
             }
         } else {
+            const rules: YinshRules = YinshRules.get();
             this.getPossibleCaptureCombinations(state)
                 .forEach((initialCaptures: ReadonlyArray<YinshCapture>): void => {
-                    const stateAfterCapture: YinshState = this.rules.applyCaptures(initialCaptures, state);
+                    const stateAfterCapture: YinshState = rules.applyCaptures(initialCaptures, state);
                     this.getRingMoves(stateAfterCapture).forEach((ringMove: {start: Coord, end: Coord}): void => {
                         const stateAfterRingMove: YinshState =
-                            this.rules.applyRingMoveAndFlip(ringMove.start, ringMove.end, stateAfterCapture);
+                            rules.applyRingMoveAndFlip(ringMove.start, ringMove.end, stateAfterCapture);
                         this.getPossibleCaptureCombinations(stateAfterRingMove)
                             .forEach((finalCaptures: ReadonlyArray<YinshCapture>): void => {
                                 const move: YinshMove = new YinshMove(initialCaptures,
@@ -45,14 +44,15 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
         return moves;
     }
     private getPossibleCaptureCombinations(state: YinshState): ReadonlyArray<ReadonlyArray<YinshCapture>> {
-        const possibleCaptures: YinshCapture[] = this.rules.getPossibleCaptures(state);
+        const rules: YinshRules = YinshRules.get();
+        const possibleCaptures: YinshCapture[] = rules.getPossibleCaptures(state);
         const ringCoords: Coord[] = this.getRingCoords(state);
         return GipfMoveGenerator.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures)
             .map((captureCombination: GipfCapture[]): YinshCapture[][] => {
                 return Combinatorics.getCombinations(ringCoords, captureCombination.length)
                     .map((ringsTaken: Coord[]): YinshCapture[] => {
                         return captureCombination.map((capture: GipfCapture, index: number): YinshCapture => {
-                            return new YinshCapture(capture.capturedSpaces, ringsTaken[index]);
+                            return new YinshCapture(capture.capturedSpaces, MGPOptional.of(ringsTaken[index]));
                         });
                     });
             }).reduce((accumulator: YinshCapture[][], captures: YinshCapture[][]): YinshCapture[][] => {
@@ -60,9 +60,10 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
             }, []);
     }
     private getRingMoves(state: YinshState): {start: Coord, end: Coord}[] {
+        const rules: YinshRules = YinshRules.get();
         const moves: {start: Coord, end: Coord}[] = [];
         for (const start of this.getRingCoords(state)) {
-            for (const end of this.rules.getRingTargets(state, start)) {
+            for (const end of rules.getRingTargets(state, start)) {
                 moves.push({ start, end });
             }
         }

@@ -12,17 +12,17 @@ describe('Direction', () => {
     describe('factory', () => {
         describe('of', () => {
             it('should construct a direction', () => {
-                expect(Direction.factory.of(1, 0).get()).toBe(Direction.RIGHT);
-                expect(Direction.factory.of(-1, 0).get()).toBe(Direction.LEFT);
-                expect(Direction.factory.of(0, 1).get()).toBe(Direction.DOWN);
-                expect(Direction.factory.of(0, -1).get()).toBe(Direction.UP);
-                expect(Direction.factory.of(1, -1).get()).toBe(Direction.UP_RIGHT);
-                expect(Direction.factory.of(-1, -1).get()).toBe(Direction.UP_LEFT);
-                expect(Direction.factory.of(-1, 1).get()).toBe(Direction.DOWN_LEFT);
-                expect(Direction.factory.of(1, 1).get()).toBe(Direction.DOWN_RIGHT);
+                expect(Direction.factory.from(1, 0).get()).toBe(Direction.RIGHT);
+                expect(Direction.factory.from(-1, 0).get()).toBe(Direction.LEFT);
+                expect(Direction.factory.from(0, 1).get()).toBe(Direction.DOWN);
+                expect(Direction.factory.from(0, -1).get()).toBe(Direction.UP);
+                expect(Direction.factory.from(1, -1).get()).toBe(Direction.UP_RIGHT);
+                expect(Direction.factory.from(-1, -1).get()).toBe(Direction.UP_LEFT);
+                expect(Direction.factory.from(-1, 1).get()).toBe(Direction.DOWN_LEFT);
+                expect(Direction.factory.from(1, 1).get()).toBe(Direction.DOWN_RIGHT);
             });
             it('should not construct an invalid direction', () => {
-                expect(Direction.factory.of(2, 1))
+                expect(Direction.factory.from(2, 1))
                     .toEqual(MGPFallible.failure('Invalid x and y in direction construction'));
             });
         });
@@ -152,14 +152,14 @@ describe('Orthogonal', () => {
     describe('factory', () => {
         describe('of', () => {
             it('should construct a direction', () => {
-                expect(Orthogonal.factory.of(1, 0).get()).toBe(Orthogonal.RIGHT);
-                expect(Orthogonal.factory.of(-1, 0).get()).toBe(Orthogonal.LEFT);
-                expect(Orthogonal.factory.of(0, 1).get()).toBe(Orthogonal.DOWN);
-                expect(Orthogonal.factory.of(0, -1).get()).toBe(Orthogonal.UP);
+                expect(Orthogonal.factory.from(1, 0).get()).toBe(Orthogonal.RIGHT);
+                expect(Orthogonal.factory.from(-1, 0).get()).toBe(Orthogonal.LEFT);
+                expect(Orthogonal.factory.from(0, 1).get()).toBe(Orthogonal.DOWN);
+                expect(Orthogonal.factory.from(0, -1).get()).toBe(Orthogonal.UP);
             });
             it('should fail when constructing an invalid orthogonal', () => {
-                expect(Orthogonal.factory.of(2, 1)).toEqual(MGPFallible.failure('Invalid orthogonal from x and y'));
-                expect(Orthogonal.factory.of(1, 1)).toEqual(MGPFallible.failure('Invalid orthogonal from x and y'));
+                expect(Orthogonal.factory.from(2, 1)).toEqual(MGPFallible.failure('Invalid orthogonal from x and y'));
+                expect(Orthogonal.factory.from(1, 1)).toEqual(MGPFallible.failure('Invalid orthogonal from x and y'));
             });
         });
     });

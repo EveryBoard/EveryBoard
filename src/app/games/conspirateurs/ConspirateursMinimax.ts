@@ -24,7 +24,7 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
         for (let y: number = start.y; y <= end.y; y++) {
             for (let x: number = start.x; x <= end.x; x++) {
                 if (state.getPieceAtXY(x, y) === PlayerOrNone.NONE) {
-                    moves.push(ConspirateursMoveDrop.from(new Coord(x, y)).get());
+                    moves.push(ConspirateursMoveDrop.of(new Coord(x, y)));
                 }
             }
         }
@@ -94,8 +94,10 @@ export class ConspirateursOrderedMoveGenerator extends ConspirateursMoveGenerato
     }
     public sortByNumberOfJumps(moves: ConspirateursMove[]): ConspirateursMove[] {
         return moves.sort((a: ConspirateursMove, b: ConspirateursMove) => {
-            const leftSize: number = a.isDrop() ? 1 : (a.isSimple() ? 2 : a.coords.length);
-            const rightSize: number = b.isDrop() ? 1 : (b.isSimple() ? 2 : b.coords.length);
+            const leftSize: number =
+                ConspirateursMove.isDrop(a) ? 1 : (ConspirateursMove.isSimple(a) ? 2 : a.coords.length);
+            const rightSize: number =
+                ConspirateursMove.isDrop(b) ? 1 : (ConspirateursMove.isSimple(b) ? 2 : b.coords.length);
             return rightSize - leftSize;
         });
     }

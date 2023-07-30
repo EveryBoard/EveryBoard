@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '../DiamMove';
+import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 
 describe('DiamMove', () => {
@@ -49,8 +49,13 @@ describe('DiamMove', () => {
         });
     });
     it('should have a bijective encoder', () => {
-        EncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
-        EncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'clockwise'));
-        EncoderTestUtils.expectToBeBijective(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'counterclockwise'));
+        const moves: DiamMove[] = [
+            new DiamMoveDrop(3, DiamPiece.ZERO_FIRST),
+            new DiamMoveShift(new Coord(3, 3), 'clockwise'),
+            new DiamMoveShift(new Coord(3, 3), 'counterclockwise'),
+        ];
+        for (const move of moves) {
+            EncoderTestUtils.expectToBeBijective(DiamMoveEncoder, move);
+        }
     });
 });

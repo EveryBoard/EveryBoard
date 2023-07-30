@@ -1,13 +1,16 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 
 export class ReversiMove extends MoveCoord {
-    public static encoder: MoveEncoder<ReversiMove> =
-        MoveCoord.getEncoder((c: Coord) => new ReversiMove(c.x, c.y));
+
+    public static encoder: Encoder<ReversiMove> = MoveCoord.getEncoder(ReversiMove.of);
 
     public static readonly PASS: ReversiMove = new ReversiMove(-1, -1);
 
+    public static of(coord: Coord): ReversiMove {
+        return new ReversiMove(coord.x, coord.y);
+    }
     public toString(): string {
         return 'ReversiMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }

@@ -4,6 +4,7 @@ import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfCapture, GipfMove, GipfPlacement } from '../GipfMove';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('GipfCapture', () => {
 
@@ -38,11 +39,11 @@ describe('GipfCapture', () => {
         });
     });
     describe('encoder', () => {
-        it('should correctly encode and decode captures of length 4', () => {
+        it('should have a bijective encoder', () => {
             const capture: GipfCapture = new GipfCapture([
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
             ]);
-            expect(GipfCapture.encoder.decode(GipfCapture.encoder.encode(capture)).equals(capture)).toBeTrue();
+            EncoderTestUtils.expectToBeBijective(GipfCapture.encoder, capture);
         });
     });
     describe('size', () => {
@@ -125,11 +126,11 @@ describe('GipfPlacement', () => {
     describe('encoder', () => {
         it('should correctly encode and decode placements with a direction', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN));
-            expect(GipfPlacement.encoder.decode(GipfPlacement.encoder.encode(placement)).equals(placement)).toBeTrue();
+            EncoderTestUtils.expectToBeBijective(GipfPlacement.encoder, placement);
         });
         it('should correctly encode and decode placements without a direction', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.empty());
-            expect(GipfPlacement.encoder.decode(GipfPlacement.encoder.encode(placement)).equals(placement)).toBeTrue();
+            EncoderTestUtils.expectToBeBijective(GipfPlacement.encoder, placement);
         });
     });
     describe('equals', () => {
@@ -170,59 +171,32 @@ describe('GipfMove', () => {
             expect(move.toString()).toBe('GipfMove([[(-2, 0),(-1, -1),(0, -2),(1, -3)],[(0, -3),(0, -2),(0, -1),(0, 0),(0, 1)]], (-3, 0)@DOWN, [])');
         });
     });
-    describe('encoder', () => {
-        it('should correctly encode and decode moves with only a placement', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
-                                                               MGPOptional.of(HexaDirection.DOWN));
-            const move: GipfMove = new GipfMove(placement, [], []);
-            expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
-        });
-        it('should correctly encode and decode moves with captures before and after', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(1, -3),
-                                                               MGPOptional.of(HexaDirection.DOWN_LEFT));
-            const initialCapture: GipfCapture = new GipfCapture([
-                new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
-            ]);
-            const finalCapture: GipfCapture = new GipfCapture([
-                new Coord(0, -3), new Coord(0, -2), new Coord(0, -1), new Coord(0, 0), new Coord(0, 1),
-            ]);
-            const move: GipfMove = new GipfMove(placement, [initialCapture], [finalCapture]);
-            expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
-        });
-        it('should correctly encode and decode moves with multiple captures before', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(1, -3),
-                                                               MGPOptional.of(HexaDirection.DOWN_LEFT));
-            const capture1: GipfCapture = new GipfCapture([
-                new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
-            ]);
-            const capture2: GipfCapture = new GipfCapture([
-                new Coord(0, -3), new Coord(0, -2), new Coord(0, -1), new Coord(0, 0), new Coord(0, 1),
-            ]);
-            const move: GipfMove = new GipfMove(placement, [capture1, capture2], []);
-            expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
-        });
-    });
-    describe('encode', () => {
-        it('should delegate encoding to encoder', () => {
-            spyOn(GipfMove.encoder, 'encode').and.callThrough();
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
-                                                               MGPOptional.of(HexaDirection.DOWN));
-            const move: GipfMove = new GipfMove(placement, [], []);
-            move.encode();
-
-            expect(GipfMove.encoder.encode).toHaveBeenCalledTimes(1);
-        });
-    });
-    describe('decode', () => {
-        it('should delegate decoding to encoder', () => {
-            spyOn(GipfMove.encoder, 'decode').and.callThrough();
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
-                                                               MGPOptional.of(HexaDirection.DOWN));
-            const move: GipfMove = new GipfMove(placement, [], []);
-            move.decode(move.encode());
-
-            expect(GipfMove.encoder.decode).toHaveBeenCalledTimes(1);
-        });
+    it('should have bijective encoder', () => {
+        const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
+                                                           MGPOptional.of(HexaDirection.DOWN));
+        const placement0: GipfPlacement = new GipfPlacement(new Coord(1, -3),
+                                                            MGPOptional.of(HexaDirection.DOWN_LEFT));
+        const initialCapture: GipfCapture = new GipfCapture([
+            new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
+        ]);
+        const finalCapture: GipfCapture = new GipfCapture([
+            new Coord(0, -3), new Coord(0, -2), new Coord(0, -1), new Coord(0, 0), new Coord(0, 1),
+        ]);
+        const placement1: GipfPlacement = new GipfPlacement(new Coord(1, -3), MGPOptional.of(HexaDirection.DOWN_LEFT));
+        const capture1: GipfCapture = new GipfCapture([
+            new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
+        ]);
+        const capture2: GipfCapture = new GipfCapture([
+            new Coord(0, -3), new Coord(0, -2), new Coord(0, -1), new Coord(0, 0), new Coord(0, 1),
+        ]);
+        const moves: GipfMove[] = [
+            new GipfMove(placement, [], []),
+            new GipfMove(placement0, [initialCapture], [finalCapture]),
+            new GipfMove(placement1, [capture1, capture2], []),
+        ];
+        for (const move of moves) {
+            EncoderTestUtils.expectToBeBijective(GipfMove.encoder, move);
+        }
     });
     describe('equals', () => {
         const placement: GipfPlacement = new GipfPlacement(new Coord(1, -3),

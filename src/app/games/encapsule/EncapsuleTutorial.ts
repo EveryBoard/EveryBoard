@@ -37,7 +37,7 @@ export class EncapsuleTutorial extends Tutorial {
             $localize`This is the initial board.<br/><br/>
         You're playing Dark. Pick one of your piece on the side of the board and put it on the board.`,
             EncapsuleState.getInitialState(),
-            EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(1, 1)),
+            EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(1, 1)),
             $localize`Congratulations!`),
         TutorialStep.fromMove(
             $localize`Moving`,
@@ -49,13 +49,13 @@ export class EncapsuleTutorial extends Tutorial {
                 [_, _, _],
             ], 0, []),
             [
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 0)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(0, 1)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 1)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 1)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(0, 2)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 2)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 0)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(0, 1)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 1)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 1)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(0, 2)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 2)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 2)),
             ],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`),
@@ -77,7 +77,7 @@ export class EncapsuleTutorial extends Tutorial {
                 EncapsulePiece.MEDIUM_DARK, EncapsulePiece.BIG_DARK,
                 EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT,
             ]),
-            EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
+            EncapsuleMove.ofMove(new Coord(0, 1), new Coord(0, 2)),
             (move: EncapsuleMove, _previous: EncapsuleState, _result: EncapsuleState) => {
                 const isCorrectLandingCoord: boolean = move.landingCoord.equals(new Coord(0, 2));
                 if (isCorrectLandingCoord) {

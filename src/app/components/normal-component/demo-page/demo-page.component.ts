@@ -66,10 +66,10 @@ export class DemoPageComponent {
             if (typeof solution === 'string') {
                 return {
                     node: new GameNode(step.state),
-                    click: MGPOptional.of(solution as string),
+                    click: MGPOptional.of(solution),
                 };
             } else {
-                const move: Move = solution as Move;
+                const move: Move = solution;
                 const node: AbstractNode =
                     new GameNode(rules.applyLegalMove(move,
                                                      step.state,

@@ -23,7 +23,7 @@ export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, Encapsu
                 const coord: Coord = new Coord(x, y);
                 // each drop
                 for (const piece of puttablePieces) {
-                    const move: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
+                    const move: EncapsuleMove = EncapsuleMove.ofDrop(piece, coord);
                     const status: MGPFallible<EncapsuleLegalityInformation> = EncapsuleRules.isLegal(move, state);
                     if (status.isSuccess()) {
                         moves.push(move);
@@ -34,7 +34,7 @@ export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, Encapsu
                         for (let lx: number = 0; lx < 3; lx++) {
                             const landingCoord: Coord = new Coord(lx, ly);
                             if (!landingCoord.equals(coord)) {
-                                const newMove: EncapsuleMove = EncapsuleMove.fromMove(coord, landingCoord);
+                                const newMove: EncapsuleMove = EncapsuleMove.ofMove(coord, landingCoord);
                                 const status: MGPFallible<EncapsuleLegalityInformation> =
                                     EncapsuleRules.isLegal(newMove, state);
                                 if (status.isSuccess()) {

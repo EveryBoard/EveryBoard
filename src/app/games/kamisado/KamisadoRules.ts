@@ -99,7 +99,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         return [furthest0, furthest1];
     }
     public static isLegal(move: KamisadoMove, state: KamisadoState): MGPValidation {
-        if (move.isPieceMove()) {
+        if (KamisadoMove.isPiece(move)) {
             const start: Coord = move.getStart();
             const end: Coord = move.getEnd();
             const colorToPlay: KamisadoColor = state.colorToPlay;
@@ -159,7 +159,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
     // Apply the move by only relying on tryMove
     public applyLegalMove(move: KamisadoMove, state: KamisadoState, _info: void): KamisadoState {
-        if (move.isPieceMove()) {
+        if (KamisadoMove.isPiece(move)) {
             const start: Coord = move.getStart();
             const end: Coord = move.getEnd();
 

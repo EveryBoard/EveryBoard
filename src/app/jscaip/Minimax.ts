@@ -25,7 +25,7 @@ export abstract class PlayerMetricHeuristic<M extends Move, S extends GameState>
     public abstract getMetrics(node: GameNode<M, S>): [number, number];
     public getBoardValue(node: GameNode<M, S>): BoardValue {
         const metrics: [number, number] = this.getMetrics(node);
-        return BoardValue.from(metrics[0], metrics[1]);
+        return BoardValue.of(metrics[0], metrics[1]);
     }
 }
 

@@ -45,7 +45,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         if (move.landing === ApagosCoord.THREE) {
             return nextTurnState.updateAt(move.landing, newSquare);
         } else {
-            const upperCoord: ApagosCoord = ApagosCoord.from(move.landing.x + 1);
+            const upperCoord: ApagosCoord = ApagosCoord.of(move.landing.x + 1);
             const descendingSquare: ApagosSquare = nextTurnState.getPieceAt(upperCoord);
             const intermediaryState: ApagosState = nextTurnState.updateAt(move.landing, descendingSquare);
             return intermediaryState.updateAt(upperCoord, newSquare);
@@ -87,7 +87,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
     public getGameStatus(node: ApagosNode): GameStatus {
         const state: ApagosState = node.gameState;
         for (let x: number = 0; x < 4; x++) {
-            if (state.getPieceAt(ApagosCoord.from(x)).isFull() === false) {
+            if (state.getPieceAt(ApagosCoord.of(x)).isFull() === false) {
                 return GameStatus.ONGOING;
             }
         }

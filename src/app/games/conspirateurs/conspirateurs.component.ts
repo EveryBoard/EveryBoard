@@ -8,9 +8,8 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/assert';
 import { ConspirateursMinimax } from './ConspirateursMinimax';
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveEncoder, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
+import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { ConspirateursTutorial } from './ConspirateursTutorial';
@@ -69,7 +68,7 @@ export class ConspirateursComponent
         this.availableAIs = [
             new ConspirateursMinimax(),
         ];
-        this.encoder = ConspirateursMoveEncoder;
+        this.encoder = ConspirateursMove.encoder;
         this.tutorial = new ConspirateursTutorial().tutorial;
     }
     public ngOnInit(): void {
@@ -145,9 +144,9 @@ export class ConspirateursComponent
         }
     }
     public override showLastMove(move: ConspirateursMove): void {
-        if (move.isDrop()) {
+        if (ConspirateursMove.isDrop(move)) {
             this.viewInfo.boardInfo[move.coord.y][move.coord.x].squareClasses.push('moved-fill');
-        } else if (move.isSimple()) {
+        } else if (ConspirateursMove.isSimple(move)) {
             this.viewInfo.boardInfo[move.getStart().y][move.getStart().x].squareClasses.push('moved-fill');
             this.viewInfo.boardInfo[move.getEnd().y][move.getEnd().x].squareClasses.push('moved-fill');
         } else {
@@ -187,9 +186,8 @@ export class ConspirateursComponent
         } else if (this.selected.isPresent()) {
             return this.selectNextCoord(coord);
         } else if (state.isDropPhase()) {
-            const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.from(coord);
-            assert(move.isSuccess(), 'ConspirateursMove should be valid by construction');
-            return this.chooseMove(move.get());
+            const move: ConspirateursMove = ConspirateursMoveDrop.of(coord);
+            return this.chooseMove(move);
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }

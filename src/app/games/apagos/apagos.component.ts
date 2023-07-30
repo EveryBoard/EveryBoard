@@ -205,10 +205,10 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const clicked: ApagosCoord = ApagosCoord.from(x);
+        const clicked: ApagosCoord = ApagosCoord.of(x);
         if (this.selectedPiece.isPresent()) {
             const square: number = this.selectedPiece.get().square;
-            const move: ApagosMove = ApagosMove.transfer(ApagosCoord.from(square), clicked).get();
+            const move: ApagosMove = ApagosMove.transfer(ApagosCoord.of(square), clicked).get();
             return this.chooseMove(move);
         } else {
             const move: ApagosMove = ApagosMove.drop(clicked, player);
