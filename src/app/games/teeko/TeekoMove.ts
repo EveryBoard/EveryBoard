@@ -2,7 +2,7 @@ import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TeekoState } from './TeekoState';
 
@@ -10,7 +10,7 @@ export type TeekoMove = TeekoDropMove | TeekoTranslationMove;
 
 export class TeekoDropMove extends MoveCoord {
 
-    public static encoder: MoveEncoder<TeekoDropMove> = MoveCoord.getFallibleEncoder(TeekoDropMove.from);
+    public static encoder: Encoder<TeekoDropMove> = MoveCoord.getFallibleEncoder(TeekoDropMove.from);
 
     public static from(coord: Coord): MGPFallible<TeekoDropMove> {
         if (TeekoMove.isOnBoard(coord)) {
@@ -33,7 +33,7 @@ export class TeekoDropMove extends MoveCoord {
 
 export class TeekoTranslationMove extends MoveCoordToCoord {
 
-    public static encoder: MoveEncoder<TeekoTranslationMove> =
+    public static encoder: Encoder<TeekoTranslationMove> =
         MoveCoordToCoord.getFallibleEncoder(TeekoTranslationMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<TeekoTranslationMove> {
@@ -65,8 +65,8 @@ export namespace TeekoMove {
     export function isOnBoard(coord: Coord): boolean {
         return coord.isInRange(TeekoState.WIDTH, TeekoState.WIDTH);
     }
-    export const encoder: MoveEncoder<TeekoMove> =
-        MoveEncoder.disjunction(TeekoDropMove.encoder,
-                                TeekoTranslationMove.encoder,
-                                (move: TeekoMove): move is TeekoDropMove => move instanceof TeekoDropMove);
+    export const encoder: Encoder<TeekoMove> =
+        Encoder.disjunction(
+            [(move: TeekoMove): move is TeekoDropMove => move instanceof TeekoDropMove],
+            [TeekoDropMove.encoder, TeekoTranslationMove.encoder]);
 }
