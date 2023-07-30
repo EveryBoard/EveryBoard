@@ -13,12 +13,12 @@ export class TeekoTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
-            $localize`The goal of the game is to align your 4 pieces, or form a square with them.`,
+            $localize`The goal of the game is to align your 4 pieces, or to form a square with them.`,
             TeekoState.getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Dropping a piece`,
-            $localize`For your four first turns, you must drop one piece on any empty space of the board. There is no other restriction.<br/><br/>You're playing Dark, put a piece on the board.`,
+            $localize`During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.<br/><br/>You're playing Dark, put a piece on the board.`,
             TeekoState.getInitialState(),
             TeekoDropMove.from(new Coord(2, 2)).get(),
             $localize`Congratulations!`,

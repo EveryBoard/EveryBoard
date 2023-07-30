@@ -3077,7 +3077,7 @@
         <target>Durant vos tour, vous devez déposer une pièce sur n'importe quelle case vide. Il n'y a pas d'autre restriction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déposez une pièce.</target>
       </trans-unit>
       <trans-unit id="6387234418172087558" datatype="html">
-        <source>For your four first turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+        <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
         <target>Lors de votre tour, vous devez déposer une pièce sur n'importe quel case vide du plateau. Il n'y a pas d'autres restrictions.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pièce sur le plateau.</target>
       </trans-unit>
       <trans-unit id="6622643035593861381" datatype="html">
@@ -3918,7 +3918,7 @@
         <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
       </trans-unit>
       <trans-unit id="6938841492013420599" datatype="html">
-        <source>The goal of the game is to align your 4 pieces, or form a square with them.</source>
+        <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
         <target>Le but du jeu est d'aligner vos 4 pièces, ou de les placer en carré.</target>
       </trans-unit>
       <trans-unit id="322267404708379069" datatype="html">

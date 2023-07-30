@@ -2805,10 +2805,10 @@
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
       <trans-unit id="6938841492013420599" datatype="html">
-        <source>The goal of the game is to align your 4 pieces, or form a square with them.</source>
+        <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
       </trans-unit>
       <trans-unit id="6387234418172087558" datatype="html">
-        <source>For your four first turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+        <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
       </trans-unit>
       <trans-unit id="322267404708379069" datatype="html">
         <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>

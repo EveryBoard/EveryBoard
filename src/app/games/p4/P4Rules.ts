@@ -20,21 +20,18 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
     private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
 
+    public static readonly P4_HELPER: NInARowHelper<PlayerOrNone> =
+        new NInARowHelper(P4Rules.isInRange, Utils.identity, 4);
+
     public static get(): P4Rules {
         if (P4Rules.singleton.isAbsent()) {
             P4Rules.singleton = MGPOptional.of(new P4Rules());
         }
         return P4Rules.singleton.get();
     }
-    private constructor() {
-        super(P4State);
-    }
     public static isInRange(coord: Coord): boolean {
         return coord.isInRange(7, 6);
     }
-    private static readonly P4_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(P4Rules.isInRange, Utils.identity, 4);
-
     public static getVictoriousCoords(state: P4State): Coord[] {
         return P4Rules.P4_HELPER.getVictoriousCoord(state);
     }
@@ -59,6 +56,9 @@ export class P4Rules extends Rules<P4Move, P4State> {
             }
         }
         return moves;
+    }
+    private constructor() {
+        super(P4State);
     }
     public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
         const x: number = move.x;

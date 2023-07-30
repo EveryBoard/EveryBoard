@@ -62,7 +62,7 @@ describe('TeekoMinimax', () => {
             // When calculating the board value
             const boardValue: number = minimax.getBoardValue(node).value;
 
-            // Then it should be minus the number of possible victory of Player.ZERO in negative
+            // Then it should be the negative number of possible victories for Player.ZERO
             expect(boardValue).toBe(-12);
         });
     });

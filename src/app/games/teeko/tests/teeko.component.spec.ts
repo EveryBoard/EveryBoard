@@ -189,7 +189,7 @@ describe('TeekoComponent', () => {
                 const move: TeekoMove = TeekoTranslationMove.from(new Coord(0, 0), new Coord(2, 2)).get();
                 await testUtils.expectMoveSuccess('#click_2_2', move);
 
-                // Then it should should display as moved starting coord and landing coord
+                // it should display starting coord and landing coord as moved
                 testUtils.expectElementToHaveClasses('#space_0_0', ['base', 'moved-fill']);
                 testUtils.expectElementToHaveClasses('#space_2_2', ['base', 'moved-fill']);
                 // And display the piece as last-move

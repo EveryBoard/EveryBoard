@@ -67,7 +67,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().isInDropPhase()) {
             const move: TeekoDropMove = TeekoDropMove.from(clickedCoord).get();
-            return this.chooseMove(move, this.getState());
+            return this.chooseMove(move);
         } else {
             if (this.selected.isPresent()) {
                 if (this.selected.equalsValue(clickedCoord)) {
@@ -76,7 +76,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
                 } else {
                     const move: TeekoTranslationMove =
                         TeekoTranslationMove.from(this.selected.get(), clickedCoord).get();
-                    return this.chooseMove(move, this.getState());
+                    return this.chooseMove(move);
                 }
             } else {
                 const currentPlayer: Player = this.getState().getCurrentPlayer();
