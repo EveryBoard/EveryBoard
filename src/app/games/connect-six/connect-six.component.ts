@@ -33,7 +33,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.rules = ConnectSixRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new ConnectSixMinimax(this.rules, 'Minimax'),
+            new ConnectSixMinimax(),
         ];
         this.encoder = ConnectSixMoveEncoder;
         this.tutorial = new ConnectSixTutorial().tutorial;

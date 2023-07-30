@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { ConnectSixState } from './ConnectSixState';
 import { ConnectSixNode, ConnectSixRules } from './ConnectSixRules';
 import { ConnectSixMove } from './ConnectSixMove';
@@ -6,15 +6,15 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixFirstMove } from './ConnectSixMove';
 import { ConnectSixDrops } from './ConnectSixMove';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { SCORE } from 'src/app/jscaip/SCORE';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 
-export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> {
+export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, ConnectSixState> {
 
-    public override getListMoves(node: ConnectSixNode): ConnectSixMove[] {
+    public getListMoves(node: ConnectSixNode): ConnectSixMove[] {
         if (node.gameState.turn === 0) {
             return this.getFirstMove();
         } else {
@@ -84,6 +84,10 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
             }
         }
     }
+}
+
+export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, ConnectSixState> {
+
     public getBoardValue(node: ConnectSixNode): BoardValue {
         const state: ConnectSixState = node.gameState;
         let score: number = 0;
@@ -91,13 +95,19 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
             if (coordAndContent.content.isPlayer()) {
                 const squareScore: number =
                     ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coordAndContent.coord);
-                const coordScore: SCORE = MGPNode.getScoreStatus(squareScore);
-                if (coordScore === SCORE.VICTORY) {
+                if (NInARowHelper.isVictory(squareScore)) {
                     return new BoardValue(squareScore);
                 }
                 score += squareScore;
             }
         }
         return new BoardValue(score);
+    }
+}
+
+export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> {
+
+    public constructor() {
+        super('AlignmentMinimax', ConnectSixRules.get(), new ConnectSixAlignmentHeuristic(), new ConnectSixMoveGenerator());
     }
 }

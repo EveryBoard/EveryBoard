@@ -5,21 +5,22 @@ import { Player } from 'src/app/jscaip/Player';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { CoerceoMinimax } from './CoerceoMinimax';
-import { CoerceoStep } from './CoerceoMove';
+import { CoerceoMoveGenerator } from './CoerceoMinimax';
+import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
-import { CoerceoNode } from './CoerceoRules';
+import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { Vector } from 'src/app/jscaip/Vector';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 
-export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
+export class CoerceoPiecesThreatTilesHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
 
     public static readonly SCORE_BY_THREATENED_PIECE: number = 1000;
 
     public static readonly SCORE_BY_SAFE_PIECE: number = 1000 * 1000;
 
-    public override getMetrics(node: CoerceoNode): [number, number] {
+    public getMetrics(node: CoerceoNode): [number, number] {
         const state: CoerceoState = node.gameState;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
@@ -28,9 +29,9 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    scores[owner.value] += CoerceoPiecesThreatTilesMinimax.SCORE_BY_THREATENED_PIECE;
+                    scores[owner.value] += CoerceoPiecesThreatTilesHeuristic.SCORE_BY_THREATENED_PIECE;
                 } else {
-                    scores[owner.value] += CoerceoPiecesThreatTilesMinimax.SCORE_BY_SAFE_PIECE;
+                    scores[owner.value] += CoerceoPiecesThreatTilesHeuristic.SCORE_BY_SAFE_PIECE;
                 }
             }
             scores[owner.value] += state.tiles[owner.value];
@@ -196,5 +197,15 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             filteredThreatMap.set(threatenedOpponentPiece, threatSet);
         }
         return filteredThreatMap;
+    }
+}
+
+export class CoerceoPiecesThreatTilesMinimax extends Minimax<CoerceoMove, CoerceoState> {
+
+    public constructor() {
+        super('Piece > Threat > Tiles Minimax',
+              CoerceoRules.get(),
+              new CoerceoPiecesThreatTilesHeuristic(),
+              new CoerceoMoveGenerator());
     }
 }

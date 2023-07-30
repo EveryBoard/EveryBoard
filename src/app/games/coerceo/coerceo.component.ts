@@ -43,8 +43,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.rules = CoerceoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new CoerceoMinimax(this.rules, 'Normal'),
-            new CoerceoPiecesThreatTilesMinimax(this.rules, 'Piece > Threat > Tiles'),
+            new CoerceoMinimax(),
+            new CoerceoPiecesThreatTilesMinimax(),
         ];
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;

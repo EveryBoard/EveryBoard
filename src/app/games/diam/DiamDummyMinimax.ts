@@ -1,12 +1,14 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamNode, DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
 
-export class DiamDummyMinimax extends PlayerMetricsMinimax<DiamMove, DiamState> {
+export class DiamMoveGenerator extends MoveGenerator<DiamMove, DiamState> {
+
     public getListMoves(node: DiamNode): DiamMove[] {
         const state: DiamState = node.gameState;
         const drops: DiamMove[] = this.getListDrops(state);
@@ -63,8 +65,11 @@ export class DiamDummyMinimax extends PlayerMetricsMinimax<DiamMove, DiamState> 
         }
         return sources;
     }
-    public getMetrics(_node: DiamNode): [number, number] {
-        // I'm a real dummy minimax
-        return [0, 0];
+}
+
+export class DiamDummyMinimax extends Minimax<DiamMove, DiamState> {
+
+    public constructor() {
+        super('DummyMinimax', DiamRules.get(), new DummyHeuristic(), new DiamMoveGenerator());
     }
 }

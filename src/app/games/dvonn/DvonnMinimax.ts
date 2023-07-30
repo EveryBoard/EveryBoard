@@ -1,11 +1,12 @@
 import { DvonnMove } from './DvonnMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class DvonnMinimax extends PlayerMetricsMinimax<DvonnMove, DvonnState> {
+export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
 
     public getListMoves(node: DvonnNode): DvonnMove[] {
         const lastMove: MGPOptional<DvonnMove> = node.move;
@@ -24,8 +25,19 @@ export class DvonnMinimax extends PlayerMetricsMinimax<DvonnMove, DvonnState> {
         }
         return moves;
     }
+}
+
+export class DvonnHeuristic extends PlayerMetricHeuristic<DvonnMove, DvonnState> {
+
     public getMetrics(node: DvonnNode): [number, number] {
         // The metric the total number of pieces controlled by a player
         return DvonnRules.getScores(node.gameState);
+    }
+}
+
+export class DvonnMinimax extends Minimax<DvonnMove, DvonnState> {
+
+    public constructor() {
+        super('Minimax', DvonnRules.get(), new DvonnHeuristic(), new DvonnMoveGenerator());
     }
 }

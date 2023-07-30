@@ -1,13 +1,15 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
-import { CoerceoNode } from './CoerceoRules';
+import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class CoerceoMinimax extends PlayerMetricsMinimax<CoerceoMove, CoerceoState> {
+
+export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState> {
 
     public getListMoves(node: CoerceoNode): CoerceoMove[] {
         let moves: CoerceoMove[] = this.getListExchanges(node);
@@ -51,6 +53,27 @@ export class CoerceoMinimax extends PlayerMetricsMinimax<CoerceoMove, CoerceoSta
         }
         return movements;
     }
+    public putCaptureFirst(node: CoerceoNode, moves: CoerceoMove[]): CoerceoMove[] {
+        ArrayUtils.sortByDescending(moves, (move: CoerceoMove) => {
+            return this.moveCapturesList(node, move).length;
+        });
+        return moves;
+    }
+    public moveCapturesList(node: CoerceoNode, move: CoerceoMove): Coord[] {
+        if (move.isTileExchange()) {
+            return [move.capture.get()];
+        } else {
+            // Move the piece
+            const afterMovement: CoerceoState = node.gameState.applyLegalMovement(move);
+            // removes emptied tiles
+            const afterTilesRemoved: CoerceoState = afterMovement.removeTilesIfNeeded(move.start.get(), true);
+            return afterTilesRemoved.getCapturedNeighbors(move.landingCoord.get());
+        }
+    }
+}
+
+export class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
+
     public getMetrics(node: CoerceoNode): [number, number] {
         const state: CoerceoState = node.gameState;
         const piecesByFreedom: number[][] = state.getPiecesByFreedom();
@@ -71,21 +94,11 @@ export class CoerceoMinimax extends PlayerMetricsMinimax<CoerceoMove, CoerceoSta
             (3 * piecesScores[2]) +
             (3 * piecesScores[3]);
     }
-    public putCaptureFirst(node: CoerceoNode, moves: CoerceoMove[]): CoerceoMove[] {
-        ArrayUtils.sortByDescending(moves, (move: CoerceoMove) => {
-            return this.moveCapturesList(node, move).length;
-        });
-        return moves;
-    }
-    public moveCapturesList(node: CoerceoNode, move: CoerceoMove): Coord[] {
-        if (move.isTileExchange()) {
-            return [move.capture.get()];
-        } else {
-            // Move the piece
-            const afterMovement: CoerceoState = node.gameState.applyLegalMovement(move);
-            // removes emptied tiles
-            const afterTilesRemoved: CoerceoState = afterMovement.removeTilesIfNeeded(move.start.get(), true);
-            return afterTilesRemoved.getCapturedNeighbors(move.landingCoord.get());
-        }
+}
+
+export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
+
+    public constructor() {
+        super('Minimax', CoerceoRules.get(), new CoerceoHeuristic(), new CoerceoMoveGenerator());
     }
 }

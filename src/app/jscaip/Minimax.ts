@@ -29,6 +29,13 @@ export abstract class PlayerMetricHeuristic<M extends Move, S extends GameState>
     }
 }
 
+export class DummyHeuristic<M extends Move, S extends GameState> extends PlayerMetricHeuristic<M, S> {
+    public getMetrics(node: GameNode<M, S>): [number, number] {
+        // This is really a dummy heuristic: boards have no value
+        return [0, 0];
+    }
+}
+
 /**
  * This implements the minimax algorithm with alpha-beta pruning.
  */
@@ -159,4 +166,3 @@ export class Minimax<M extends Move, S extends GameState, L = void, B extends Bo
         return node.getCache(this.name + '-moves');
     }
 }
-

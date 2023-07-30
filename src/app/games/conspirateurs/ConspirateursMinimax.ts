@@ -1,26 +1,21 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-export class ConspirateursMinimax extends PlayerMetricsMinimax<ConspirateursMove, ConspirateursState> {
+export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove, ConspirateursState> {
+
     public getListMoves(node: ConspirateursNode): ConspirateursMove[] {
         if (node.gameState.turn < 40) {
-            return this.sortByNumberOfJump(this.getListMovesDrop(node.gameState));
+            return this.getListMovesDrop(node.gameState);
         } else {
-            return this.sortByNumberOfJump(this.getListMovesAfterDrop(node.gameState));
+            return this.getListMovesAfterDrop(node.gameState);
         }
-    }
-    public sortByNumberOfJump(moves: ConspirateursMove[]): ConspirateursMove[] {
-        return moves.sort((a: ConspirateursMove, b: ConspirateursMove) => {
-            const leftSize: number = a.isDrop() ? 1 : (a.isSimple() ? 2 : a.coords.length);
-            const rightSize: number = b.isDrop() ? 1 : (b.isSimple() ? 2 : b.coords.length);
-            return rightSize - leftSize;
-        });
     }
     private getListMovesDrop(state: ConspirateursState): ConspirateursMoveDrop[] {
         const moves: ConspirateursMoveDrop[] = [];
@@ -90,6 +85,24 @@ export class ConspirateursMinimax extends PlayerMetricsMinimax<ConspirateursMove
         }
         return jumps;
     }
+}
+
+export class ConspirateursOrderedMoveGenerator extends ConspirateursMoveGenerator {
+
+    public override getListMoves(node: ConspirateursNode): ConspirateursMove[] {
+        return this.sortByNumberOfJumps(super.getListMoves(node));
+    }
+    public sortByNumberOfJumps(moves: ConspirateursMove[]): ConspirateursMove[] {
+        return moves.sort((a: ConspirateursMove, b: ConspirateursMove) => {
+            const leftSize: number = a.isDrop() ? 1 : (a.isSimple() ? 2 : a.coords.length);
+            const rightSize: number = b.isDrop() ? 1 : (b.isSimple() ? 2 : b.coords.length);
+            return rightSize - leftSize;
+        });
+    }
+}
+
+export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursMove, ConspirateursState> {
+
     public getMetrics(node: ConspirateursNode): [number, number] {
         const state: ConspirateursState = node.gameState;
         const scores: [number, number] = [0, 0];
@@ -114,5 +127,15 @@ export class ConspirateursMinimax extends PlayerMetricsMinimax<ConspirateursMove
             }
         }
         return scores;
+    }
+}
+
+export class ConspirateursMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
+
+    public constructor() {
+        super('JumpMinimax',
+              ConspirateursRules.get(),
+              new ConspirateursHeuristic(),
+              new ConspirateursOrderedMoveGenerator());
     }
 }

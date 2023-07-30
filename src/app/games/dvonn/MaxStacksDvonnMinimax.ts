@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { DvonnMinimax } from './DvonnMinimax';
+import { DvonnMoveGenerator } from './DvonnMinimax';
 import { DvonnState } from './DvonnState';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnPieceStack } from './DvonnPieceStack';
@@ -7,8 +7,9 @@ import { Player } from 'src/app/jscaip/Player';
 import { DvonnMove } from './DvonnMove';
 import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 
-export class MaxStacksDvonnMinimax extends DvonnMinimax {
+export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
 
     public override getListMoves(node: DvonnNode): DvonnMove[] {
         const state: DvonnState = node.gameState;
@@ -26,7 +27,11 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
         });
         return moves;
     }
-    public override getMetrics(node: DvonnNode): [number, number] {
+}
+
+export class DvonnMaxStacksHeuristic extends PlayerMetricHeuristic<DvonnMove, DvonnState> {
+
+    public getMetrics(node: DvonnNode): [number, number] {
         const state: DvonnState = node.gameState;
         // The metric is percentage of the stacks controlled by the player
         const scores: [number, number] = DvonnRules.getScores(state);
@@ -38,5 +43,12 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
             scores[player.value] = scores[player.value] * playerStacks / numberOfStacks;
         }
         return scores;
+    }
+}
+
+export class MaxStacksDvonnMinimax extends Minimax<DvonnMove, DvonnState> {
+
+    public constructor() {
+        super('MaxStacksMinimax', DvonnRules.get(), new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator());
     }
 }

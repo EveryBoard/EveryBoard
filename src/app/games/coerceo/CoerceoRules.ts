@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils, display } from 'src/app/utils/utils';
@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
+export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
 export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 

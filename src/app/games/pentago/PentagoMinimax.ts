@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
-import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { DummyHeuristic, Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PentagoMove } from './PentagoMove';
 import { PentagoNode, PentagoRules } from './PentagoRules';
@@ -71,16 +71,9 @@ export class PentagoMoveGenerator extends MoveGenerator<PentagoMove, PentagoStat
     }
 }
 
-export class PentagoHeuristic extends PlayerMetricHeuristic<PentagoMove, PentagoState> {
-
-    public getMetrics(_node: PentagoNode): [number, number] {
-        return [0, 0];
-    }
-}
-
 export class PentagoMinimax extends Minimax<PentagoMove, PentagoState> {
 
     public constructor() {
-        super('PentagoDummyMinimax', PentagoRules.get(), new PentagoHeuristic(), new PentagoMoveGenerator());
+        super('PentagoDummyMinimax', PentagoRules.get(), new DummyHeuristic(), new PentagoMoveGenerator());
     }
 }

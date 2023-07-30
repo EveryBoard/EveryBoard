@@ -67,7 +67,7 @@ export class ConspirateursComponent
         this.rules = ConspirateursRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new ConspirateursMinimax(this.rules, 'ConspirateursMinimax'),
+            new ConspirateursMinimax(),
         ];
         this.encoder = ConspirateursMoveEncoder;
         this.tutorial = new ConspirateursTutorial().tutorial;
