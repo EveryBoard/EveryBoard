@@ -245,6 +245,9 @@
       <trans-unit id="1177593339964527523" datatype="html">
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
+      <trans-unit id="6432141756227180076" datatype="html">
+        <source>Align your 4 pieces or form a square with them to win!</source>
+      </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
       </trans-unit>
@@ -349,6 +352,9 @@
       </trans-unit>
       <trans-unit id="7128132932954450153" datatype="html">
         <source>Pente</source>
+      </trans-unit>
+      <trans-unit id="6202245590217996824" datatype="html">
+        <source>Teeko</source>
       </trans-unit>
       <trans-unit id="4321462166273172721" datatype="html">
         <source>Kalah</source>
@@ -1954,17 +1960,26 @@
       <trans-unit id="1645842992024065193" datatype="html">
         <source>This is not the winning move. Try again.</source>
       </trans-unit>
+      <trans-unit id="7409362923921756680" datatype="html">
+        <source>Mancala</source>
+      </trans-unit>
+      <trans-unit id="3263956491690387831" datatype="html">
+        <source>Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you&apos;re playing Dark, the 6 houses on the bottom are yours.</source>
+      </trans-unit>
+      <trans-unit id="590668854902440450" datatype="html">
+        <source>Bonus fact: Awalé is the more common of all Mancalas.</source>
+      </trans-unit>
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="3154408998321446758" datatype="html">
-        <source>Awalé is a game of distribution (sowing) and capture. It belongs to the a family of game named Mancala. Its goal is to capture the most seeds.
-         Let&apos;s see how seeds are sown. The spaces in Awalé are called the houses.
-         As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
-         Click on any of the bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
+      <trans-unit id="7856229390539793235" datatype="html">
+        <source>The main move in mancala games is sowing, let&apos;s see how seeds are sown. As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the righter bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the righter house!</source>
       </trans-unit>
       <trans-unit id="6994033934467498174" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
+      </trans-unit>
+      <trans-unit id="7973986792987103756" datatype="html">
+        <source>Failed. Choose the righter house on the bottom.</source>
       </trans-unit>
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
@@ -2050,20 +2065,14 @@
       <trans-unit id="271201472468525420" datatype="html">
         <source>You should distribute but you do not.</source>
       </trans-unit>
-      <trans-unit id="2664083271089226583" datatype="html">
-        <source>Kalah is a game of distribution (sowing) and capture. It belongs to the a family of game named Mancala. But unlike most version of Mancalas, this one has been created in America in 1940 by William Julius Champion Jr. Like the classic international version named Awalé, the board is a 2 row of 6 houses, containing each 4 seeds.</source>
-      </trans-unit>
-      <trans-unit id="3867780705619130876" datatype="html">
-        <source>The mains move in mancala games is sowing, let&apos;s see how seeds are sown. The spaces in mancalas are called the houses. As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the righter bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
-      </trans-unit>
-      <trans-unit id="7973986792987103756" datatype="html">
-        <source>Failed. Choose the righter house on the bottom.</source>
+      <trans-unit id="1854732749925914827" datatype="html">
+        <source>Bonus fact: Kalah has been created in America in 1940 by William Julius Champion Jr.</source>
       </trans-unit>
       <trans-unit id="7111322038810092184" datatype="html">
         <source>The Kalah (1/2)</source>
       </trans-unit>
       <trans-unit id="8481451983567223767" datatype="html">
-        <source>The house on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, your seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass threw your kalah then feed opponent&apos;s houses.</source>
+        <source>The house on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, your seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your kalah then feed opponent&apos;s houses.</source>
       </trans-unit>
       <trans-unit id="5407801196980144019" datatype="html">
         <source>As you see, three houses have been fed in addition to your kalah.</source>
@@ -2074,8 +2083,8 @@
       <trans-unit id="6340571023242332704" datatype="html">
         <source>The Kalah (2/2)</source>
       </trans-unit>
-      <trans-unit id="2084780658530992787" datatype="html">
-        <source>When ending in the Kalah though, you are allowed to distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that end up in the Kalah then do a second move!</source>
+      <trans-unit id="1588751806685340935" datatype="html">
+        <source>When ending in the Kalah, you are allowed to distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that end up in the Kalah then do a second move!</source>
       </trans-unit>
       <trans-unit id="8173280937607745120" datatype="html">
         <source>This move only distributed one house, do one distribution that end in the Kalah then a second one!</source>
@@ -2083,11 +2092,8 @@
       <trans-unit id="4131193328352974552" datatype="html">
         <source>When the last seed of a distribution end up in one of your empty houses, if the house over it is filled, then you capture both houses. On this board, such a move is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
       </trans-unit>
-      <trans-unit id="2545094043869515939" datatype="html">
-        <source>End Game</source>
-      </trans-unit>
-      <trans-unit id="4124587720453620175" datatype="html">
-        <source>At any moment, when one player have more than 24 seeds in their kalah, they win. That can happend before the board is emptied, but, there is also a second way. When, at teh beginning of your turn, you don&apos;t have any seed in your house, the game is over and your opponent takes all the remaining seeds from his house, which automatically leads to the opponent&apos;s victory. Here, the opponent&apos;s just gave you their last seed, if you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
+      <trans-unit id="6105563494631333109" datatype="html">
+        <source>At any moment, when one player have more than 24 seeds in their kalah, they win. That can happend before the board is emptied, but, there is also a second way. When, at the beginning of your turn, you don&apos;t have any seed in your house, the game is over and your opponent takes all the remaining seeds from his houses. Here, the opponent&apos;s just gave you their last seed, if you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
       </trans-unit>
       <trans-unit id="902849596357033257" datatype="html">
         <source>Failed, you gave the opponent a seed! Try again.</source>
@@ -2270,14 +2276,11 @@
       <trans-unit id="2426029962112596303" datatype="html">
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
       </trans-unit>
-      <trans-unit id="1301553003354246210" datatype="html">
-        <source>Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.</source>
+      <trans-unit id="481364308060927522" datatype="html">
+        <source>Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.</source>
       </trans-unit>
-      <trans-unit id="730381467241225928" datatype="html">
-        <source>Dropping a stone</source>
-      </trans-unit>
-      <trans-unit id="254985125186363895" datatype="html">
-        <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
+      <trans-unit id="4134686113968191036" datatype="html">
+        <source>At your turn, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
       </trans-unit>
       <trans-unit id="6622643035593861381" datatype="html">
         <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
@@ -2846,6 +2849,18 @@
       </trans-unit>
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      </trans-unit>
+      <trans-unit id="6388473964053708590" datatype="html">
+        <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
+      </trans-unit>
+      <trans-unit id="55131761932515685" datatype="html">
+        <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+      </trans-unit>
+      <trans-unit id="322267404708379069" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+      </trans-unit>
+      <trans-unit id="366926106758793789" datatype="html">
+        <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
       </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>

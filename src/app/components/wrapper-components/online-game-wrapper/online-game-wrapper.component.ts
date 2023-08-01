@@ -13,7 +13,7 @@ import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { display, JSONValue, Utils } from 'src/app/utils/utils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -288,7 +288,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const success: MGPOptional<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
         Utils.assert(success.isPresent(), 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.node = success.get();
-        await this.updateBoardAndShowLastMove(false);
+        if (this.role === PlayerOrNone.NONE) {
+            await this.updateBoardAndShowLastMove(true);
+        } else {
+            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value;
+            await this.updateBoardAndShowLastMove(triggerAnimation);
+        }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();

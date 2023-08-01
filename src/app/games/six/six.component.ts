@@ -57,16 +57,15 @@ export class SixComponent
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        void this.updateBoard();
     }
     public override async cancelMoveAttempt(): Promise<void> {
         this.selectedPiece = MGPOptional.empty();
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
         this.nextClickShouldSelectGroup = false;
-        await this.updateBoard(); // Need to refresh the board in case we showed virtual moves for cuts
+        await this.updateBoard(false); // Need to refresh the board in case we showed virtual moves for cuts
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.node.gameState;
         const lastMove: MGPOptional<SixMove> = this.node.move;
         if (lastMove.isAbsent()) {

@@ -38,7 +38,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.encoder = ConnectSixMove.encoder;
         this.tutorial = new ConnectSixTutorial().tutorial;
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);

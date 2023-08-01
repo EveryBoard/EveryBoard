@@ -286,6 +286,10 @@
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
         <target>La version lapone de la famille de jeux Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
+      <trans-unit id="6432141756227180076" datatype="html">
+        <source>Align your 4 pieces or form a square with them to win!</source>
+        <target>Alignez vos 4 pièces ou placez les en carré pour gagner !</target>
+      </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
         <target>Alignez 5 pièces de votre couleur en ligne droite, mais attention, les pièces peuvent s'empiler !</target>
@@ -293,6 +297,10 @@
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
         <target>Le jeu de plateau des Vikings ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
+      </trans-unit>
+      <trans-unit id="504259640490128380" datatype="html">
+        <source>Modern version of the Mancala board game family.</source>
+        <target>Adaptation moderne d'un jeu de la famille des Mancalas.</target>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
@@ -413,6 +421,14 @@
       <trans-unit id="7128132932954450153" datatype="html">
         <source>Pente</source>
         <target>Pente</target>
+      </trans-unit>
+      <trans-unit id="6202245590217996824" datatype="html">
+        <source>Teeko</source>
+        <target>Teeko</target>
+      </trans-unit>
+      <trans-unit id="4321462166273172721" datatype="html">
+        <source>Kalah</source>
+        <target>Kalah</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -1062,26 +1078,65 @@
         <source>You should distribute but you do not.</source>
         <target>Vous devez égréner mais ne le faites pas.</target>
       </trans-unit>
+      <trans-unit id="1854732749925914827" datatype="html">
+        <source>Bonus fact: Kalah has been created in America in 1940 by William Julius Champion Jr.</source>
+        <target>Info bonus: Kalah a été crée aux U.S.A en 1940 par William Julius Champion Jr.</target>
+      </trans-unit>
+      <trans-unit id="7111322038810092184" datatype="html">
+        <source>The Kalah (1/2)</source>
+        <target>Le Kalah (1/2)</target>
+      </trans-unit>
+      <trans-unit id="8481451983567223767" datatype="html">
+        <source>The house on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, your seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your kalah then feed opponent&apos;s houses.</source>
+        <target>Les maisons à l'extrême gauche et droite, non alignées sur les autres, sont les kalah, le vôtre est à gauche, celui de l'adversaire à droite. Quand vous distrubez, avant de passer de votre dernière maison à la première de l'adversaire, vous devez déposer une graine dans votre kalah. Mais vous ne devrai pas distribuer dans le kalah adverse. Quand vous capturez, les graines sont déposées dans votre kalah.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faite un mouveent qui apsse par votre kalah puis par les maisons adverses.</target>
+      </trans-unit>
+      <trans-unit id="5407801196980144019" datatype="html">
+        <source>As you see, three houses have been fed in addition to your kalah.</source>
+        <target>Voilà, trois maisons on été remplies en plus de votre kalah.</target>
+      </trans-unit>
+      <trans-unit id="5368214167812589514" datatype="html">
+        <source>Failed. Choose the three lefter house on the bottom.</source>
+        <target>Raté. Distribuez une des trois maisons du bas les plus à gauche.</target>
+      </trans-unit>
+      <trans-unit id="6340571023242332704" datatype="html">
+        <source>The Kalah (2/2)</source>
+        <target>Le Kalah (2/2)</target>
+      </trans-unit>
+      <trans-unit id="1588751806685340935" datatype="html">
+        <source>When ending in the Kalah, you are allowed to distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that end up in the Kalah then do a second move!</source>
+        <target>Quand votre distribution fini dans le kalah, vous êtes authorisé à distribuer à nouveau.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite la distribution qui termine dans votre kalah, puis une seconde distribution!</target>
+      </trans-unit>
+      <trans-unit id="8173280937607745120" datatype="html">
+        <source>This move only distributed one house, do one distribution that end in the Kalah then a second one!</source>
+        <target>Ce coup ne distribue qu'une seule maison, faites une distribution qui finit dans le kalah puis une deuxième!</target>
+      </trans-unit>
+      <trans-unit id="4131193328352974552" datatype="html">
+        <source>When the last seed of a distribution end up in one of your empty houses, if the house over it is filled, then you capture both houses. On this board, such a move is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+        <target>Quand votre dernière graine fini dans une de vos maisons vides, si la maison au dessus est remplie, alors vous capturez le graines de ces deux maisons. Sur ce plateau, c'est faisable.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture!</target>
+      </trans-unit>
+      <trans-unit id="6105563494631333109" datatype="html">
+        <source>At any moment, when one player have more than 24 seeds in their kalah, they win. That can happend before the board is emptied, but, there is also a second way. When, at the beginning of your turn, you don&apos;t have any seed in your house, the game is over and your opponent takes all the remaining seeds from his houses. Here, the opponent&apos;s just gave you their last seed, if you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
+        <target>À n'importe quel moment, si un joueur a plus de 24 graines dans son kalah, il gagne. Cela peut arriver avant que le plateau soit vide, mais, il peut aussi avoir un autre moyen. Quand au début de votre tour, vous n'avez plus de graine dans vos maisons, la partie est finie et votre adversaire récoltes toutes ses maisons, ce qui automatiquement mène à sa victoire. Ici, votre adversaire vous a juste donné sa dernière graine, si vous réussissez à ne pas lui donner de graine, vous gagnez.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez!</target>
+      </trans-unit>
+      <trans-unit id="902849596357033257" datatype="html">
+        <source>Failed, you gave the opponent a seed! Try again.</source>
+        <target>Raté, vous avez donné un graine à l'adversaire! Réessayez!</target>
+      </trans-unit>
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
         <target>Égrénage</target>
       </trans-unit>
-      <trans-unit id="4554834958359154581" datatype="html">
-        <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
-         Let&apos;s see how seeds are sown. The spaces in Awalé are called the houses.
-         As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;
-         Click on any of the bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
-        <target>L’Awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
-        Nous allons voir comment s'égrènent (se distribuent) les graines. Les cases à l'Awalé sont appelées les maisons.
-        Comme vous jouez Foncé, les 6 maisons du bas vous appartiennent.&lt;br/&gt;&lt;br/&gt;
-        Cliquez sur l&apos;une des maisons du bas pour en distribuer les graines, elles seront distribués dans le sens horaires, à raison d&apos;une graine par maison.</target>
+      <trans-unit id="7856229390539793235" datatype="html">
+        <source>The main move in mancala games is sowing, let&apos;s see how seeds are sown. As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the righter bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the righter house!</source>
+        <target>Le mouvement principal aux mancalas est la distribution. Voyons voir comment les graines sont distribuées. Vous jouez Foncé, les 6 maisons du bas sont les votres.&lt;br/&gt;&lt;br&gt;Cliquez sur la maison la plus à droite pour distribuer les graines qu'elle contient: elles seront égrenée dans le sens horloger, une graine par maison!</target>
       </trans-unit>
-      <trans-unit id="8638152355669938683" datatype="html">
-        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
-        This is how seeds are sown:
-        one by one from the house next to the one they come from, clockwise.</source>
-        <target>Voilà, regardez les 4 maisons suivant la maison choisie dans le sens horaire, elle comptent maintenant 5 graines.
-         C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans le sens horaire depuis la maison d’où elles viennent.</target>
+      <trans-unit id="6994033934467498174" datatype="html">
+        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
+        <target>Voilà, regardez les 4 maisons suivant la maison choisie dans le sens horaire, elle comptent maintenant 5 graines. C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans le sens horaire depuis la maison d’où elles viennent.</target>
+      </trans-unit>
+      <trans-unit id="7973986792987103756" datatype="html">
+        <source>Failed. Choose the righter house on the bottom.</source>
+        <target>Raté. Distribuez la maison en bas à droite.</target>
       </trans-unit>
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
@@ -2951,6 +3006,18 @@
         <source>This is not the winning move. Try again.</source>
         <target>Ce n'est pas le mouvement gagnant. Essayez encore.</target>
       </trans-unit>
+      <trans-unit id="7409362923921756680" datatype="html">
+        <source>Mancala</source>
+        <target>Mancala</target>
+      </trans-unit>
+      <trans-unit id="3263956491690387831" datatype="html">
+        <source>Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you&apos;re playing Dark, the 6 houses on the bottom are yours.</source>
+        <target>Mancala est le nom d'une famille de jeux de plateau datant au moins du troisième siècle. Les mancalas sont des jeux de distribution (égrenage) et captures. Leur but est de capturer le plus de graines. Les cases sont appelées des maisons. Comme vous jouez Foncé, vous 6 maisons sont celles du bas.</target>
+      </trans-unit>
+      <trans-unit id="590668854902440450" datatype="html">
+        <source>Bonus fact: Awalé is the more common of all Mancalas.</source>
+        <target>Info bonus: L'awalé est le plus populaire des mancalas.</target>
+      </trans-unit>
       <trans-unit id="6266016430504496647" datatype="html">
         <source>Please put your piece in an incomplete column.</source>
         <target>Veuillez placer votre pièce dans une colonne incomplète.</target>
@@ -3060,17 +3127,17 @@
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
         <target>Bravo ! Note : si tout les quadrants sont neutres après que vous ayez déposé votre pièce, il n&apos;y aura pas de rotation !</target>
       </trans-unit>
-      <trans-unit id="1301553003354246210" datatype="html">
-        <source>Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.</source>
+      <trans-unit id="481364308060927522" datatype="html">
+        <source>Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.</source>
         <target>Pente se joue sur un plateau 19x19, sur lequel on dépose les pierres aux intersections des cases. Le but du jeu est d'aligner 5 de vos pièces, ou de capturer 10 pièces de votre adversaire. Initialement, une pièce du joueur clair est placée au centre du plateau.</target>
       </trans-unit>
-      <trans-unit id="730381467241225928" datatype="html">
-        <source>Dropping a stone</source>
-        <target>Déposer une pierre</target>
+      <trans-unit id="4134686113968191036" datatype="html">
+        <source>At your turn, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+        <target>Durant vos tour, vous devez déposer une pièce sur n'importe quelle case vide. Il n'y a pas d'autre restriction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déposez une pièce.</target>
       </trans-unit>
-      <trans-unit id="254985125186363895" datatype="html">
-        <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
-        <target>Lors de votre tour, vous devez déposer une pierre sur le plateau. Il n'y a pas de restriction : vous pouvez la placer sur n'importe quel emplacement libre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez une pierre sur le plateau.</target>
+      <trans-unit id="55131761932515685" datatype="html">
+        <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+        <target>Durant vos quatre premiers tours, vous devez déposer une pièce sur n'importe quelle case vide. Il n'y a pas d'autre restriction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déposez une pièce.</target>
       </trans-unit>
       <trans-unit id="6622643035593861381" datatype="html">
         <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
@@ -3908,6 +3975,18 @@
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
+      </trans-unit>
+      <trans-unit id="6388473964053708590" datatype="html">
+        <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
+        <target>Le but du jeu est d'aligner vos 4 pièces, ou de les placer en carré.</target>
+      </trans-unit>
+      <trans-unit id="322267404708379069" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+        <target>Après avoir déposé vos quatre pièces, vous devez déplacer vos pièces à un emplacement vide. Le but reste le même : être le premier à créer une ligne ou un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
+      </trans-unit>
+      <trans-unit id="366926106758793789" datatype="html">
+        <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
+        <target>Sur ce plateau, vous pouvez gagner en créant soit une ligne, soit un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>

@@ -25,22 +25,40 @@ describe('KalahRules', () => {
             simpleMove: KalahMove.of(MancalaDistribution.FIVE),
         });
     });
-    it('should allow simple move', () => {
-        // Given any board
-        const state: MancalaState = MancalaState.getInitialState();
-
-        // When doing a simple move
-        const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
-
-        // Then the seed should be distributed
-        const expectedBoard: Table<number> = [
-            [4, 4, 4, 4, 4, 4],
-            [4, 5, 5, 5, 5, 0],
-        ];
-        const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-    });
     describe('distribution', () => {
+        it('should allow simple move', () => {
+            // Given any board
+            const state: MancalaState = MancalaState.getInitialState();
+
+            // When doing a simple move
+            const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
+
+            // Then the seed should be distributed
+            const expectedBoard: Table<number> = [
+                [4, 4, 4, 4, 4, 4],
+                [4, 5, 5, 5, 5, 0],
+            ];
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        });
+        it('should feed initial house', () => {
+            // Given a board where one house of current player is full enough to feed itself
+            const state: MancalaState = new MancalaState([
+                [0, 0, 0, 0, 0, 0],
+                [13, 0, 0, 0, 0, 0],
+            ], 0, [0, 0]);
+
+            // When doing a simple move
+            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
+
+            // Then the seed should be distributed (and then by default that means a capture)
+            const expectedBoard: Table<number> = [
+                [0, 1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1],
+            ];
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [3, 0]);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        });
         it('should allow to distribute twice when first landing end up in the kalah', () => {
             // Given a move with the first sub-move landing in the kalah
             const state: MancalaState = MancalaState.getInitialState();
@@ -265,5 +283,4 @@ describe('KalahRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
     });
-    // TODO: check if we must or not, refill the starting house
 });

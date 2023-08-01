@@ -140,6 +140,7 @@ describe('GameComponent', () => {
                 onNeighborClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
+            Teeko: { onClick: [0, 0] },
             Trexo: {
                 onClick: [0, 0],
             },
@@ -168,7 +169,7 @@ describe('GameComponent', () => {
         }
         tick(3000); // needs to be >2999
     }));
-    it('should have an encoder and a tutorial for every game', fakeAsync(async() =>{
+    it('should have an encoder, tutorial and minimax for every game', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES()) {
             // Given a game
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
@@ -184,6 +185,7 @@ describe('GameComponent', () => {
             expect(component.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
+            expect(component.availableMinimaxes.length).withContext('minimax list empty for ' + gameInfo.urlName).toBeGreaterThan(0);
         }
     }));
 });

@@ -124,7 +124,7 @@ export class YinshComponent
             };
         });
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         const state: YinshState = this.getState();
         this.scores = MGPOptional.of(state.countScores());

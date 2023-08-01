@@ -57,9 +57,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         ];
         this.encoder = SiamMove.encoder;
         this.tutorial = new SiamTutorial().tutorial;
-        void this.updateBoard();
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         display(SiamComponent.VERBOSE, 'updateBoard');
         const state: SiamState = this.getState();
         this.board = state.board;

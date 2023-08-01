@@ -35,7 +35,7 @@ describe('KamisadoComponent', () => {
     it('should remove chosen coord when calling updateBoard without move', async() => {
         // Given the game component
         // When calling updateBoard()
-        await testUtils.getComponent().updateBoard();
+        await testUtils.getComponent().updateBoard(false);
         // Then the chosen piece should be absent, and nothing should be highlighted
         expect(testUtils.getComponent().chosen.isAbsent()).toBeTrue();
         testUtils.expectElementNotToExist('.highlight');

@@ -9,9 +9,8 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from './MancalaRules';
 import { ChangeDetectorRef } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MancalaFailure } from './MancalaFailure';
-import { Utils } from 'src/app/utils/utils';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { MancalaFailure } from './MancalaFailure';
 
 export abstract class MancalaComponent<R extends MancalaRules<M>, M extends MancalaMove>
     extends RectangularGameComponent<R, M, MancalaState, number>
@@ -23,8 +22,6 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     public currentMove: MGPOptional<M> = MGPOptional.empty();
 
     private clickOngoing: boolean = false;
-
-    public readonly multipleDistribution: boolean = false;
 
     public captured: Table<number> = [
         [0, 0, 0, 0, 0, 0],
@@ -60,7 +57,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.droppedInKalah = [0, 0];
         this.changeVisibleState(this.getState());
     }
-    public async updateBoard(triggerAnimation: boolean = false): Promise<void> {
+    public async updateBoard(triggerAnimation: boolean): Promise<void> {
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
             this.changeVisibleState(this.node.mother.get().gameState);
@@ -80,48 +77,47 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.changeVisibleState(state);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        if (this.clickOngoing === true) {
-            return MGPValidation.SUCCESS;
-        } else {
-            this.clickOngoing = true;
-            const result: MGPValidation = await this._onClick(x, y);
-            this.clickOngoing = false;
-            return result;
-        }
-    }
-    private async _onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        if (this.clickOngoing === true) {
+            return MGPValidation.SUCCESS;
+        } else {
+            this.clickOngoing = true;
+            const result: MGPValidation = await this.onLegalClick(x, y);
+            this.clickOngoing = false;
+            return result;
+        }
+    }
+    public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
         if (y === this.getState().getCurrentPlayer().value) {
             return this.cancelMove(MancalaFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
         }
-        if (this.multipleDistribution) {
-            if (this.currentMove.isAbsent()) {
-                this.hideLastMove();
-                this.currentMove = MGPOptional.of(this.generateMove(x));
-            } else {
-                const newMove: MGPOptional<M> = this.addToMove(x);
-                Utils.assert(newMove.isPresent(), 'TODO test failure: addToMove should provide a move');
-                this.currentMove = newMove;
-            }
-        } else {
-            this.currentMove = MGPOptional.of(this.generateMove(x));
-        }
+        this.updateOrCreateCurrentMove(x);
         if (this.constructedState.getPieceAtXY(x, y) === 0) {
             return this.cancelMove(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         } else {
-            const distributionResult: MancalaDistributionResult =
-                await this.showSimpleDistribution(MancalaDistribution.of(x));
-            if (distributionResult.endUpInKalah) {
-                return MGPValidation.SUCCESS;
-            } else {
-                return this.chooseMove(this.currentMove.get());
-            }
+            return this.continueMoveConstruction(x);
         }
     }
-    private async showSimpleDistribution(distribution: MancalaDistribution): Promise<MancalaDistributionResult> {
+    protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
+        const distributionResult: MancalaDistributionResult =
+            await this.showSimpleDistribution(MancalaDistribution.of(x));
+        if (distributionResult.endUpInKalah) {
+            const player: Player = this.constructedState.getCurrentPlayer();
+            if (MancalaRules.isStarving(player, distributionResult.resultingState.board)) {
+                // Player has no longer seed to distribute
+                return this.chooseMove(this.currentMove.get());
+            } else {
+                // Player can still distribute
+                return MGPValidation.SUCCESS;
+            }
+        } else {
+            return this.chooseMove(this.currentMove.get());
+        }
+    }
+    protected async showSimpleDistribution(distribution: MancalaDistribution): Promise<MancalaDistributionResult> {
         const state: MancalaState = this.constructedState;
         const lastPlayer: Player = state.getCurrentOpponent();
         const playerY: number = lastPlayer.value;
@@ -160,7 +156,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
                 this.droppedInKalah[player.value] += 1;
             } else {
                 coord = nextCoord.get();
-                if (i.equals(coord) === false) {
+                if (i.equals(coord) === false) { // TODO: adapt the fillInitHouseOrNot
                     // not to distribute on our starting space
                     resultingBoard[coord.y][coord.x] += 1;
                     this.filledHouses.push(coord);
@@ -228,8 +224,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.board = this.constructedState.board;
         this.cdr.detectChanges();
     }
-    protected addToMove(x: number): MGPOptional<M> {
-        return MGPOptional.empty(); // If the game is a multidistribution, this must be overriden
-    }
+    protected abstract updateOrCreateCurrentMove(x: number): void;
+
     public abstract generateMove(x: number): M;
 }

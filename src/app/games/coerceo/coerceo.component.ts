@@ -49,9 +49,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
         this.SPACE_SIZE = 70;
-        void this.updateBoard();
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.chosenCoord = MGPOptional.empty();
         this.state = this.getState();
         this.scores = MGPOptional.of(this.state.captures);

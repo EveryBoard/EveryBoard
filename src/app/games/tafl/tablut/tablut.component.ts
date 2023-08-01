@@ -20,6 +20,5 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
         this.availableMinimaxes = this.createMinimaxes();
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;
-        void this.updateBoard();
     }
 }

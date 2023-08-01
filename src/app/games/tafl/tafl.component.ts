@@ -43,7 +43,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         return begin + ' ' + begin + ' ' + width + ' ' + width;
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         display(this.VERBOSE, 'taflComponent.updateBoard');
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];

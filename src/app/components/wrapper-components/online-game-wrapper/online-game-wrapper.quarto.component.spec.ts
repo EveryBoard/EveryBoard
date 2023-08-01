@@ -382,6 +382,33 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
+    describe('Animation', () => {
+        it(`should trigger animation when receiving opponent's move`, fakeAsync(async() => {
+            // Given a board where it's the opponent's turn
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await doMove(FIRST_MOVE, true);
+
+            // When receiving opponent's move
+            spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
+            await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
+
+            // Then gameComponent.updateBoard should have been called with (true)
+            expect(testUtils.getComponent().updateBoard).toHaveBeenCalledOnceWith(true);
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it(`should not trigger animation when receiving you own move`, fakeAsync(async() => {
+            // Given a board where it's player's turn
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+
+            // When doing you move
+            spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
+            await doMove(FIRST_MOVE, true);
+
+            // Then gameComponent.updateBoard should have been called with (false)
+            expect(testUtils.getComponent().updateBoard).toHaveBeenCalledOnceWith(false);
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+    });
     it('should allow sending and receiving moves (opponent)', fakeAsync(async() => {
         // Given a started part
         await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
@@ -1644,6 +1671,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then we should not notify the timeout
             expect(gameService.notifyTimeout).not.toHaveBeenCalled();
         }));
+        describe('Animation', () => {
+            it(`should trigger animation when receiving player move (observer)`, fakeAsync(async() => {
+                // Given any turn
+                await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
+
+                // When receiving players's move
+                spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
+                await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
+
+                // Then gameComponent.updateBoard should have been called with (true)
+                expect(testUtils.getComponent().updateBoard).toHaveBeenCalledOnceWith(true);
+                tick(wrapper.configRoom.maximalMoveDuration * 1000);
+            }));
+        });
     });
     describe('Visuals', () => {
         it('should highlight each player name in their respective color', fakeAsync(async() => {

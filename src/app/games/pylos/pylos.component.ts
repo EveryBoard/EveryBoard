@@ -58,7 +58,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         ];
         this.encoder = PylosMove.encoder;
         this.tutorial = new PylosTutorial().tutorial;
-        void this.updateBoard();
     }
     public getPiecesCyForPlayer(player: Player): number {
         if (player === Player.ONE) {
@@ -292,7 +291,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
         return pieces;
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.constructedState = this.state;
         this.lastMove = this.node.move;

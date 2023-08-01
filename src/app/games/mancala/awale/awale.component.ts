@@ -4,16 +4,14 @@ import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from './AwaleMove';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AwaleTutorial } from './AwaleTutorial';
-import { MancalaComponent } from '../commons/MancalaComponent';
+import { MancalaSingleSowComponent } from '../commons/MancalaSingleSowComponent';
 
 @Component({
     selector: 'app-awale-component',
     templateUrl: './../commons/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })
-export class AwaleComponent extends MancalaComponent<AwaleRules, AwaleMove> {
-
-    public override readonly multipleDistribution: boolean = false;
+export class AwaleComponent extends MancalaSingleSowComponent<AwaleRules, AwaleMove> {
 
     public constructor(messageDisplayer: MessageDisplayer,
                        cdr: ChangeDetectorRef)

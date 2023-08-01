@@ -4,7 +4,7 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class AttackEpaminondasMinimax extends EpaminondasMinimax {
@@ -130,7 +130,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     }
     public override getBoardValue(node: EpaminondasNode): BoardValue {
         const state: EpaminondasState = node.gameState;
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = EpaminondasRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }

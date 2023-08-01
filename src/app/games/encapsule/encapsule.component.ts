@@ -46,9 +46,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         ];
         this.encoder = EncapsuleMove.encoder;
         this.tutorial = new EncapsuleTutorial().tutorial;
-        void this.updateBoard();
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
         const move: MGPOptional<EncapsuleMove> = this.node.move;

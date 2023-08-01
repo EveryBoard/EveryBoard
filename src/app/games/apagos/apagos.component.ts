@@ -83,13 +83,12 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.encoder = ApagosMove.encoder;
         this.tutorial = new ApagosTutorial().tutorial;
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
-        void this.updateBoard();
     }
     public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.showPossibleDrops();
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
         this.remainingZero = state.remaining.get(Player.ZERO).get();

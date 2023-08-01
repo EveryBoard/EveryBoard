@@ -44,7 +44,6 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         this.encoder = KamisadoMove.encoder;
         this.tutorial = new KamisadoTutorial().tutorial;
         this.canPass = false;
-        void this.updateBoard();
     }
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;
@@ -58,7 +57,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public piecePlayerClass(piece: KamisadoPiece): string {
         return this.getPlayerClass(piece.player);
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: KamisadoState = this.getState();
         this.board = state.getCopiedBoard();
         this.lastPieceMove = MGPOptional.empty();

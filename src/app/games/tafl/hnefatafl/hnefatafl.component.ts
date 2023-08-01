@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HnefataflMove } from 'src/app/games/tafl/hnefatafl/HnefataflMove';
 import { HnefataflState } from './HnefataflState';
 import { HnefataflRules } from './HnefataflRules';
@@ -11,7 +11,7 @@ import { HnefataflTutorial } from './HnefataflTutorial';
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })
-export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove, HnefataflState> implements OnInit {
+export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove, HnefataflState> {
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer, false, HnefataflMove.from);
@@ -20,8 +20,5 @@ export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflM
         this.availableMinimaxes = this.createMinimaxes();
         this.encoder = HnefataflMove.encoder;
         this.tutorial = new HnefataflTutorial().tutorial;
-    }
-    public ngOnInit(): void {
-        void this.updateBoard();
     }
 }

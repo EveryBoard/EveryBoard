@@ -39,9 +39,6 @@ export class MancalaDistribution {
         if (other === this) return true;
         return other.x === this.x;
     }
-    public toString(): string {
-        return 'MancalaDistribution(' + this.x + ')';
-    }
 }
 
 export abstract class MancalaMove extends Move {

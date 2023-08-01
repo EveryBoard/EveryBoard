@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { MancalaComponent } from '../commons/MancalaComponent';
+import { MancalaMultipleSowComponent } from '../commons/MancalaMultipleSowComponent';
 import { KalahRules } from './KalahRules';
 import { KalahMove } from './KalahMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { KalahDummyMinimax } from './KalahDummyMinimax';
 import { KalahTutorial } from './KalahTutorial';
@@ -14,9 +13,7 @@ import { MancalaDistribution } from '../commons/MancalaMove';
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KalahComponent extends MancalaComponent<KalahRules, KalahMove> {
-
-    public override readonly multipleDistribution: boolean = true;
+export class KalahComponent extends MancalaMultipleSowComponent<KalahRules, KalahMove> {
 
     public constructor(messageDisplayer: MessageDisplayer,
                        cdr: ChangeDetectorRef)
@@ -33,7 +30,7 @@ export class KalahComponent extends MancalaComponent<KalahRules, KalahMove> {
     public generateMove(x: number): KalahMove {
         return KalahMove.of(MancalaDistribution.of(x));
     }
-    protected override addToMove(x: number): MGPOptional<KalahMove> {
-        return MGPOptional.of(this.currentMove.get().add(MancalaDistribution.of(x)));
+    protected override addToMove(x: number): KalahMove {
+        return this.currentMove.get().add(MancalaDistribution.of(x));
     }
 }

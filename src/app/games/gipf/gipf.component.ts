@@ -76,7 +76,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                                    - this.hexagonWidth),
                                          FlatHexaOrientation.INSTANCE);
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
     }
     public override async showLastMove(move: GipfMove): Promise<void> {

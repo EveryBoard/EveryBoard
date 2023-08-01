@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -38,10 +38,8 @@ interface SquareInfo {
     templateUrl: './conspirateurs.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class ConspirateursComponent
-    extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState>
-    implements OnInit
-{
+export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
+
     public PIECE_RADIUS: number;
     public ALL_SHELTERS: Coord[] = ConspirateursState.ALL_SHELTERS;
     public CENTRAL_ZONE_START: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
@@ -71,10 +69,7 @@ export class ConspirateursComponent
         this.encoder = ConspirateursMove.encoder;
         this.tutorial = new ConspirateursTutorial().tutorial;
     }
-    public ngOnInit(): void {
-        void this.updateBoard();
-    }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
     }
     private updateViewInfo(): void {
@@ -163,7 +158,7 @@ export class ConspirateursComponent
     public override async cancelMoveAttempt(): Promise<void> {
         this.jumpInConstruction = MGPOptional.empty();
         this.selected = MGPOptional.empty();
-        await this.updateBoard();
+        await this.updateBoard(false);
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);

@@ -9,7 +9,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
+import { ReversibleMap } from 'src/app/utils/MGPMap';
 
 export interface MancalaCaptureResult {
 
@@ -34,10 +34,20 @@ export interface MancalaDistributionResult {
 export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState> {
 
     public static FAKE_KALAH_COORD: ReversibleMap<Player, Coord> = new ReversibleMap([
-        { key: Player.ZERO, value: new Coord(-1, -1)},
-        { key: Player.ONE, value: new Coord(+2, +2)},
+        { key: Player.ZERO, value: new Coord(-1, -1) },
+        { key: Player.ONE, value: new Coord(+2, +2) },
     ]);
-    public constructor(public readonly config: MancalaConfig) {
+    public static isStarving(player: Player, board: Table<number>): boolean {
+        let i: number = 0;
+        const playerY: number = player.getOpponent().value; // For player 0 has row 1
+        do {
+            if (board[playerY][i++] > 0) {
+                return false; // found some food there, so not starving
+            }
+        } while (i < 6);
+        return true;
+    }
+    protected constructor(public readonly config: MancalaConfig) {
         super(MancalaState);
     }
     public abstract override isLegal(move: M, state: MancalaState): MGPFallible<void>;
@@ -60,13 +70,13 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         const opponent: Player = postCaptureState.getCurrentOpponent();
         const player: Player = postCaptureState.getCurrentPlayer();
         if (this.config.mustFeed) {
-            if (this.isStarving(player, postCaptureBoard) &&
+            if (MancalaRules.isStarving(player, postCaptureBoard) &&
                 this.canDistribute(opponent, postCaptureBoard) === false)
             {
                 return opponent;
                 // Opponent takes all his last piece for himself
             }
-        } else if (this.isStarving(opponent, postCaptureBoard)) {
+        } else if (MancalaRules.isStarving(opponent, postCaptureBoard)) {
             return player;
         }
         return PlayerOrNone.NONE;
@@ -129,7 +139,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
                 filledHouses.push(MancalaRules.FAKE_KALAH_COORD.get(player).get());
             } else {
                 coord = nextCoord.get();
-                if (i.equals(coord) === false) {
+                if (i.equals(coord) === false || this.config.feedOriginalHouse) {
                     // not to distribute on our starting space
                     resultingBoard[coord.y][coord.x] += 1;
                     filledHouses.push(coord);
@@ -148,7 +158,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         if (coord.y === 0) {
             if (coord.x === 5) {
                 if (this.config.passByPlayerKalah && player === Player.ONE && previousDropWasKalah === false) {
-                    return MGPOptional.empty();
+                    return MGPOptional.empty(); // This seed is dropped in the Kalah
                 } else {
                     return MGPOptional.of(new Coord(coord.x, 1)); // go from the bottom row to the top row
                 }
@@ -158,7 +168,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         } else {
             if (coord.x === 0) {
                 if (this.config.passByPlayerKalah && player === Player.ZERO && previousDropWasKalah === false) {
-                    return MGPOptional.empty();
+                    return MGPOptional.empty(); // This seed is dropped in the Kalah
                 } else {
                     return MGPOptional.of(new Coord(coord.x, 0)); // go from the bottom row to the top
                 }
@@ -181,16 +191,6 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         }
         return false;
     }
-    public isStarving(player: Player, board: Table<number>): boolean {
-        let i: number = 0;
-        const playerY: number = player.getOpponent().value; // For player 0 has row 1
-        do {
-            if (board[playerY][i++] > 0) {
-                return false; // found some food there, so not starving
-            }
-        } while (i < 6);
-        return true;
-    }
     /**
       * Captures all the seeds of the mansooning player.
       * Returns the sum of all captured seeds.
@@ -199,7 +199,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     public mansoon(mansooningPlayer: Player, postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
         const state: MancalaState = postCaptureResult.resultingState;
         const resultingBoard: number[][] = state.getCopiedBoard();
-        const captured: [number, number] = state.getCapturedCopy()
+        const captured: [number, number] = state.getCapturedCopy();
         let capturedSum: number = 0;
         const captureMap: number[][] = ArrayUtils.copyBiArray(postCaptureResult.captureMap);
         let x: number = 0;

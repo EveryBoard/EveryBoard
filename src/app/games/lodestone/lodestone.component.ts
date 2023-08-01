@@ -267,7 +267,7 @@ export class LodestoneComponent
         this.showPressurePlateDifferences(this.getState(), this.displayedState, true);
         return MGPValidation.SUCCESS;
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         this.scores = MGPOptional.of(this.getState().getScores());
     }

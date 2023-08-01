@@ -34,13 +34,15 @@ describe('KalahComponent', () => {
         await testUtils.expectClickSuccess(click);
         tick(timeToWait);
     }
-    function checkKalahSecondaryMessage(text?: string): void {
-        if (text === undefined) {
+    function expectKalahContentToBe(value: string, secondaryMessage?: string): void {
+        const content: DebugElement = testUtils.findElement('#number_-1_-1');
+        expect(content.nativeElement.innerHTML).toBe(value);
+        if (secondaryMessage === undefined) {
             const content: DebugElement = testUtils.findElement('#secondary_message_-1_-1');
             expect(content).toBeNull();
         } else {
             const content: DebugElement = testUtils.findElement('#secondary_message_-1_-1');
-            expect(content.nativeElement.innerHTML).toBe(text);
+            expect(content.nativeElement.innerHTML).toBe(secondaryMessage);
         }
     }
     // TODO: put selectAIPlayer, choosingAIOrHuman, choosingAILevel in LGWC/testUtils
@@ -102,13 +104,13 @@ describe('KalahComponent', () => {
                 expect(element).withContext('Element "#click_1_1" should exist').toBeTruthy();
                 element.triggerEventHandler('click', null);
                 tick(200);
-                checkKalahSecondaryMessage();
+                expectKalahContentToBe(' 0 ');
 
                 // When passing right after the last house in player's territory
                 tick(200);
 
                 // Then the next fed house should be the kalah
-                checkKalahSecondaryMessage(' +1 ');
+                expectKalahContentToBe(' 1 ', ' +1 ');
                 testUtils.expectElementToHaveClass('#circle_-1_-1', 'moved-stroke');
                 tick(600);
             }));
@@ -117,14 +119,34 @@ describe('KalahComponent', () => {
                 await expectClickSuccess(new Coord(3, 1));
                 const element: DebugElement = testUtils.findElement('#click_0_1');
                 element.triggerEventHandler('click', null);
-                checkKalahSecondaryMessage(' +1 ');
+                expectKalahContentToBe(' 1 ', ' +1 ');
 
                 // When waiting for the first sub-move (in kalah) to happend
                 tick(200);
 
                 // Then the kalah should be fed a second time
-                checkKalahSecondaryMessage(' +2 ');
+                expectKalahContentToBe(' 2 ', ' +2 ');
                 tick(1000);
+            }));
+            it('should wait one sec between each sub-distribution when receiving move', fakeAsync(async() => {
+                // Given a board where AI move is sure to be two distributions (here, the initial state)
+                // When AI play
+                await selectAIPlayer(Player.ZERO);
+
+                // Then the 1000ms pause of the AI should be done first
+                tick(1000);
+                // Then it should take 200ms to empty the initial house
+                tick(200);
+                // Then 4*200ms to sow the 4 seeds
+                tick(4*200);
+                // Then second turn start, 1000ms pause that this test is about
+                tick(1000);
+                // and to optimise gain, AI will still play a move that pass through the kalah
+                // hence a move in column 0 1 or 2, which will all be of 5 seeds now
+                // so again 200ms to empty the second initial house
+                tick(200);
+                // Then 5*200ms to sow the final 5 seeds
+                tick(5*200);
             }));
         });
         it('should show constructed move during multi-distribution move', fakeAsync(async() => {
@@ -232,7 +254,21 @@ describe('KalahComponent', () => {
             tick(2000); // 1000ms for AI to take action + 1000 for the distribution
 
             // Then the " +1 " in Kalah secondary message should have disappeared
-            checkKalahSecondaryMessage();
+            expectKalahContentToBe(' 1 ');
+        }));
+        it('should allow to stop distribution in the kalah when no more piece available', fakeAsync(async() => {
+            // Given a move where current player has no more non-kalah sub-moves
+            const state: MancalaState = new MancalaState([
+                [0, 0, 1, 9, 0, 0],
+                [1, 0, 0, 0, 0, 0],
+            ], 10, [13, 9]);
+            await testUtils.setupState(state);
+
+            // When doing the only move possible for the remaining sub-move
+            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
+
+            // Then that normally-illegal move should be accepted
+            await expectMoveSuccess('#click_0_1', move);
         }));
     });
 });

@@ -61,12 +61,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
                                          new Coord(- 8 * this.SPACE_SIZE, 2 * this.SPACE_SIZE),
                                          PointyHexaOrientation.INSTANCE);
-
-        void this.updateBoard();
     }
-    public async updateBoard(): Promise<void> {
-        this.cancelMoveAttempt();
-        this.hideLastMove();
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.hexaBoard = this.getState().getCopiedBoard();
         this.scores = MGPOptional.of(this.getState().getScores());
     }

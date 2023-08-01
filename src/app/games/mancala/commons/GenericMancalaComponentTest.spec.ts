@@ -9,6 +9,9 @@ import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MancalaState } from './MancalaState';
 import { Cell, Table } from 'src/app/utils/ArrayUtils';
 import { MancalaFailure } from './MancalaFailure';
+import { Encoder } from 'src/app/utils/Encoder';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 
 export class MancalaTestEntries<C extends MancalaComponent<R, M>,
@@ -241,20 +244,42 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
                 // Then it should take 200ms by seed to finish distribute it, + 200ms
                 tick((4 + 1) * 200);
             }));
+            it('should make click possible when no distribution are ongoing', fakeAsync(async() => {
+                // Given a space where no click have been done yet
+                spyOn(testUtils.getComponent() as MancalaComponent<R, M>, 'onLegalClick').and.callThrough();
+
+                // When clicking
+                await testUtils.expectClickSuccess('#click_2_1');
+                tick(200); // so that it is started but bot finished yet
+
+                // Then onLegalUserClick should have been called
+                expect(testUtils.getComponent().onLegalClick).toHaveBeenCalledOnceWith(2, 1);
+                tick(4*200);
+            }));
+            it('should make click impossible during distribution', fakeAsync(async() => {
+                // Given a move where a first click has been done but is not finished
+                await testUtils.expectClickSuccess('#click_2_1');
+                tick(200); // so that it is started but bot finished yet
+                spyOn(testUtils.getComponent() as MancalaComponent<R, M>, 'onLegalClick').and.callThrough();
+
+                // When clicking again
+                await testUtils.expectClickSuccess('#click_3_1');
+                tick(200);
+
+                // Then onLegalUserClick should not have been called
+                expect(testUtils.getComponent().onLegalClick).not.toHaveBeenCalled();
+                tick(3*200);
+            }));
         });
         it('should have a bijective encoder', () => {
-            // const rules: R = testUtils.getComponent().rules;
-            // const encoder: MoveEncoder<M> = testUtils.getComponent().encoder;
-            // const minimax: MancalaMinimax = new MancalaMinimax(rules, 'MancalaMinimax');
-            // const firstTurnMoves: M[] = minimax
-            //     .getListMoves(rules.getInitialNode())
-            //     .map((move: MancalaMove) => {
-            //         return entries.moveProvider(move.getStart(), move.getEnd());
-            //     });
-            // for (const move of firstTurnMoves) {
-            //     EncoderTestUtils.expectToBeBijective(encoder, move);
-            // }
-            // TODO
+            const rules: R = testUtils.getComponent().rules;
+            const encoder: Encoder<M> = testUtils.getComponent().encoder;
+            const minimax: Minimax<M, MancalaState> = testUtils.getComponent().availableMinimaxes[0];
+            const firstTurnMoves: M[] = minimax
+                .getListMoves(rules.getInitialNode());
+            for (const move of firstTurnMoves) {
+                EncoderTestUtils.expectToBeBijective(encoder, move);
+            }
         });
         it('should hide first move when taking back', fakeAsync(async() => {
             // TODO

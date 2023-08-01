@@ -5,15 +5,23 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 export class AwaleTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
-        TutorialStep.anyMove(
-            $localize`Sowing`,
-            $localize`Awalé is a game of distribution (sowing) and capture. It belongs to the a family of game named Mancala. Its goal is to capture the most seeds.
-         Let's see how seeds are sown. The spaces in Awalé are called the houses.
-         As you're playing Dark, the 6 houses on the bottom are yours.<br/><br>
-         Click on any of the bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.`,
+        TutorialStep.informational(
+            $localize`Mancala`,
+            $localize`Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you're playing Dark, the 6 houses on the bottom are yours.`,
             MancalaState.getInitialState(),
-            AwaleMove.ZERO,
+        ),
+        TutorialStep.informational(
+            $localize`Awalé`,
+            $localize`Bonus fact: Awalé is the more common of all Mancalas.`,
+            MancalaState.getInitialState(),
+        ),
+        TutorialStep.fromMove(
+            $localize`Sowing`,
+            $localize`The main move in mancala games is sowing, let's see how seeds are sown. As you're playing Dark, the 6 houses on the bottom are yours.<br/><br>Click on the righter bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.<br/><br/>Click on the righter house!`,
+            MancalaState.getInitialState(),
+            [AwaleMove.FIVE],
             $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.`,
+            $localize`Failed. Choose the righter house on the bottom.`,
         ),
         TutorialStep.anyMove(
             $localize`Big sowing`,

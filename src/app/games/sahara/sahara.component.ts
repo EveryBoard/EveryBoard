@@ -45,7 +45,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         ];
         this.encoder = SaharaMove.encoder;
         this.tutorial = new SaharaTutorial().tutorial;
-        void this.updateBoard();
     }
     public override cancelMoveAttempt(): void {
         this.possibleLandings = [];
@@ -92,7 +91,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         }
         return await this.chooseMove(newMove.get());
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const move: MGPOptional<SaharaMove> = this.node.move;
         this.lastCoord = move.map((move: SaharaMove) => move.getStart());
         this.lastMoved = move.map((move: SaharaMove) => move.getEnd());

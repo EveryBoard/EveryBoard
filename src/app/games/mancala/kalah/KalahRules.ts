@@ -28,6 +28,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         super({
             passByPlayerKalah: true,
             mustFeed: false,
+            feedOriginalHouse: true,
         });
     }
     public isLegal(move: KalahMove, state: MancalaState): MGPValidation {
@@ -57,8 +58,8 @@ export class KalahRules extends MancalaRules<KalahMove> {
             return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
         const distributionResult: MancalaDistributionResult = this.distributeHouse(subMove.x, playerY, state);
-        const isStarving: boolean = this.isStarving(distributionResult.resultingState.getCurrentPlayer(),
-                                                    distributionResult.resultingState.board) === false;
+        const isStarving: boolean = MancalaRules.isStarving(distributionResult.resultingState.getCurrentPlayer(),
+                                                            distributionResult.resultingState.board) === false;
         return MGPFallible.success(distributionResult.endUpInKalah && isStarving);
     }
     public distributeMove(move: KalahMove, state: MancalaState): MancalaDistributionResult {

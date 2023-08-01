@@ -75,9 +75,8 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.encoder = LascaMove.encoder;
         this.tutorial = new LascaTutorial().tutorial;
         this.canPass = false;
-        void this.updateBoard();
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.lastMove = this.node.move;
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();

@@ -42,9 +42,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         ];
         this.encoder = QuixoMove.encoder;
         this.tutorial = new QuixoTutorial().tutorial;
-        void this.updateBoard();
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
         this.lastMoveCoord = this.node.move.map((move: QuixoMove) => move.coord);

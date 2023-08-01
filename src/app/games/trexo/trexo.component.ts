@@ -86,7 +86,6 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.tutorial = new TrexoTutorial().tutorial;
         TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
-        void this.updateBoard();
     }
     public switchToMode(mode: ModeType): void {
         this.chosenMode = mode;
@@ -131,7 +130,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         const pieceBonus: number = maxZ * mode.pieceHeightRatio * this.SPACE_SIZE;
         return pieceBonus;
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TrexoState = this.getState();
         this.board = state.getCopiedBoard();
         this.currentOpponentClass = this.getPlayerClass(state.getCurrentOpponent());
@@ -270,7 +269,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public override async cancelMoveAttempt(): Promise<void> {
         this.droppedPiece = MGPOptional.empty();
         this.possibleNextClicks = [];
-        await this.updateBoard();
+        await this.updateBoard(false);
     }
     public getPieceClasses(x: number, y: number, z: number): string[] {
         const piece: Coord = new Coord(x, y);

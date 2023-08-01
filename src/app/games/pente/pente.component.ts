@@ -33,7 +33,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
             new PenteAlignmentMinimax(this.rules, 'Alignment'),
         ];
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: PenteState = this.getState();
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);

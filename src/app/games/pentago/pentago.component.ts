@@ -59,9 +59,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
         this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.SPACE_SIZE;
         this.ARROWS = this.generateArrowsCoord();
-        void this.updateBoard();
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
         this.lastDrop = MGPOptional.empty();

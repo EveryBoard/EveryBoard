@@ -58,9 +58,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         ];
         this.encoder = EpaminondasMove.encoder;
         this.tutorial = new EpaminondasTutorial().tutorial;
-        void this.updateBoard();
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.firstPiece = MGPOptional.empty();
         this.lastPiece = MGPOptional.empty();
         this.hideLastMove();

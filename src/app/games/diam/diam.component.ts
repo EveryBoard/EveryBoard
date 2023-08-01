@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -51,7 +51,7 @@ interface LastMoved {
     templateUrl: './diam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> implements OnInit {
+export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
     private static readonly CENTER: Coord[] = [
         new Coord(40, 160),
         new Coord(100, 50),
@@ -101,9 +101,6 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         ];
         this.encoder = DiamMoveEncoder;
         this.tutorial = new DiamTutorial().tutorial;
-    }
-    public ngOnInit(): void {
-        void this.updateBoard();
     }
     public async onSpaceClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);
@@ -189,7 +186,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             return selected.piece === piece;
         }
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
     }
     private getLastMovedFromDrop(drop: DiamMoveDrop, stateBefore: DiamState): LastMoved[] {
@@ -382,6 +379,6 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     }
     public override async cancelMoveAttempt(): Promise<void> {
         this.selected = MGPOptional.empty();
-        await this.updateBoard();
+        await this.updateBoard(false);
     }
 }

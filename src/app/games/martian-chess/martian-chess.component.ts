@@ -162,7 +162,6 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.encoder = MartianChessMove.encoder;
         this.tutorial = new MartianChessTutorial().tutorial;
         this.scores = MGPOptional.of([0, 0]);
-        void this.updateBoard();
     }
     public getConfigViewTranslation(): string {
         const padding: number = 0;
@@ -186,7 +185,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const right: string = (0.75 * this.SPACE_SIZE) + ' ' + c;
         return up + ', ' + center + ', ' + right;
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
         const scoreZero: number = this.state.getScoreOf(Player.ZERO);

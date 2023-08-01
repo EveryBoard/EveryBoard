@@ -44,9 +44,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.encoder = QuartoMove.encoder;
         this.tutorial = new QuartoTutorial().tutorial;
         this.pieceInHand = this.getState().pieceInHand;
-        void this.updateBoard();
     }
-    public async updateBoard(): Promise<void> {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
         const move: MGPOptional<QuartoMove> = this.node.move;
         this.board = state.getCopiedBoard();

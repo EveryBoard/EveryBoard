@@ -15,7 +15,7 @@ export class LascaControlAndDominationMinimax extends LascaControlMinimax {
         super('Lasca Control And Domination Minimax');
     }
     public override getBoardValue(node: LascaNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = LascaRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }

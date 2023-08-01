@@ -27,6 +27,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         super({
             passByPlayerKalah: false,
             mustFeed: true,
+            feedOriginalHouse: false,
         });
     }
     public distributeMove(move: AwaleMove, state: MancalaState): MancalaDistributionResult {
@@ -53,7 +54,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         if (state.getPieceAtXY(x, playerY) === 0) {
             return MGPValidation.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
-        const opponentIsStarving: boolean = this.isStarving(opponent, state.board);
+        const opponentIsStarving: boolean = MancalaRules.isStarving(opponent, state.board);
         const playerDoesNotDistribute: boolean = this.doesDistribute(x, playerY, state.board) === false;
         if (opponentIsStarving && playerDoesNotDistribute) {
             return MGPValidation.failure(MancalaFailure.SHOULD_DISTRIBUTE());
@@ -121,8 +122,8 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
             return captureLessResult;
         } else {
             const captureResult: MancalaCaptureResult = this.capture(x, y, state);
-            const isStarving: boolean = this.isStarving(player.getOpponent(),
-                                                        captureResult.resultingState.board);
+            const isStarving: boolean = MancalaRules.isStarving(player.getOpponent(),
+                                                                captureResult.resultingState.board);
             if (captureResult.capturedSum > 0 && isStarving) {
                 /* if the distribution would capture all seeds
                  * the capture is forbidden and cancelled

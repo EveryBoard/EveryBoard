@@ -2,7 +2,7 @@ import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { KalahMove } from './KalahMove';
 import { MancalaState } from './../commons/MancalaState';
 import { KalahNode, KalahRules } from './KalahRules';
-import { MancalaDistributionResult } from '../commons/MancalaRules';
+import { MancalaDistributionResult, MancalaRules } from '../commons/MancalaRules';
 import { MancalaDistribution } from '../commons/MancalaMove';
 
 export class KalahDummyMinimax extends PlayerMetricsMinimax<KalahMove,
@@ -32,7 +32,7 @@ export class KalahDummyMinimax extends PlayerMetricsMinimax<KalahMove,
         const moves: KalahMove[] = [];
         const distributionResult: MancalaDistributionResult = this.ruler.distributeHouse(x, y, state);
         state = distributionResult.resultingState;
-        const playerHasPieces: boolean = this.ruler.isStarving(state.getCurrentPlayer(), state.board) === false;
+        const playerHasPieces: boolean = MancalaRules.isStarving(state.getCurrentPlayer(), state.board) === false;
         if (distributionResult.endUpInKalah && playerHasPieces) {
             for (let x: number = 0; x < 6; x++) {
                 if (state.getPieceAtXY(x, y) > 0) {
