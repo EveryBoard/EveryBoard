@@ -3,24 +3,23 @@ import { P4Node, P4Rules } from '../P4Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4State } from '../P4State';
 import { P4Move } from '../P4Move';
-import { P4Minimax } from '../P4Minimax';
+import { P4Heuristic } from '../P4Minimax';
 import { P4Failure } from '../P4Failure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('P4Rules', () => {
 
     let rules: P4Rules;
-    let minimaxes: Minimax<P4Move, P4State>[];
+    let heuristics: P4Heuristic[];
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = P4Rules.get();
-        minimaxes = [
-            new P4Minimax(rules, 'P4Minimax'),
+        heuristics = [
+            new P4Heuristic(),
         ];
     });
     it('should be created', () => {
@@ -72,7 +71,7 @@ describe('P4Rules', () => {
         const expectedState: P4State = new P4State(expectedBoard, 7);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: P4Node = new P4Node(expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
     });
     it('Second player should win vertically', () => {
         // Given a board with 3 aligned pieces
@@ -101,7 +100,7 @@ describe('P4Rules', () => {
         const expectedState: P4State = new P4State(expectedBoard, 8);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: P4Node = new P4Node(expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
     });
     it('should be a draw', () => {
         // Given a penultian board without victory
@@ -130,7 +129,7 @@ describe('P4Rules', () => {
         const expectedState: P4State = new P4State(expectedBoard, 42);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: P4Node = new P4Node(expectedState);
-        RulesUtils.expectToBeDraw(rules, node, minimaxes);
+        RulesUtils.expectToBeDraw(rules, node, heuristics);
     });
     it('should forbid placing a piece on a full column', () => {
         // Given a board with a full column

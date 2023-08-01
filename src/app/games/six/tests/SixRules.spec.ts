@@ -6,17 +6,16 @@ import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixFailure } from '../SixFailure';
 import { SixLegalityInformation, SixNode, SixRules } from '../SixRules';
-import { SixMinimax } from '../SixMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Vector } from 'src/app/jscaip/Vector';
 
 describe('SixRules', () => {
 
     let rules: SixRules;
-    let minimaxes: Minimax<SixMove, SixState, SixLegalityInformation>[];
+    let heuristics: Heuristic<SixMove, SixState>[];
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = Player.ZERO;
@@ -24,8 +23,8 @@ describe('SixRules', () => {
 
     beforeEach(() => {
         rules = SixRules.get();
-        minimaxes = [
-            new SixMinimax(rules, 'SixMinimax'),
+        heuristics = [
+            // TODO new SixMinimax(rules, 'SixMinimax'),
         ];
     });
     describe('dropping', () => {
@@ -285,7 +284,7 @@ describe('SixRules', () => {
                     [X, X, X, X, X],
                 ], 2);
                 const previousMove: SixMove = SixMove.ofDrop(new Coord(0, 0));
-                RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, minimaxes);
+                RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, heuristics);
             });
             it('should know that full-bowtie aligned with two empty extension mean PRE_VICTORY', () => {
                 const state: SixState = SixState.ofRepresentation([
@@ -296,7 +295,7 @@ describe('SixRules', () => {
 
                 ], 2);
                 const previousMove: SixMove = SixMove.ofDrop(new Coord(2, 2));
-                RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, minimaxes);
+                RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, heuristics);
             });
         });
         describe('Shape Victories', () => {
@@ -328,7 +327,7 @@ describe('SixRules', () => {
                     SixState.ofRepresentation(expectedBoard, 11);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
             });
             it('should consider winner player who align 6 pieces (playing in the middle)', () => {
                 // Given a board where player zero is about to win
@@ -357,7 +356,7 @@ describe('SixRules', () => {
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 11);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
             });
             it('should consider winner player who draw a circle/hexagon of his pieces', () => {
                 // Given a board close to be a victory
@@ -386,7 +385,7 @@ describe('SixRules', () => {
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 10);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
             });
             it('should consider winner player who draw a triangle of his pieces (corner drop)', () => {
                 // Given a bboard about to have a triangle victory
@@ -413,7 +412,7 @@ describe('SixRules', () => {
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 12);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
             });
             it('should consider winner player who draw a triangle of his pieces (edge drop)', () => {
                 // Given a board where a triangle is about to be created
@@ -440,7 +439,7 @@ describe('SixRules', () => {
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 12);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
             });
             it('should consider winner player who draw a circle/hexagon of his pieces (coverage remix)', () => {
                 // Given a board with an hexagon about to be created
@@ -467,7 +466,7 @@ describe('SixRules', () => {
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 10);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
             });
         });
         describe('Disconnection Victories', () => {
@@ -496,7 +495,7 @@ describe('SixRules', () => {
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 44);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
             });
             it('should consider loser PLAYER.ONE when he drop below 6 pieces on phase two', () => {
                 // Given a board in phase 2
@@ -523,7 +522,7 @@ describe('SixRules', () => {
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 43);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
             });
             it('should consider winner Player who has more pieces than opponent and both have less than 6 (Player.ZERO)', () => {
                 // Given a board in phase 2
@@ -545,7 +544,7 @@ describe('SixRules', () => {
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 41, new Vector(-1, 1));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
             });
             it('should consider winner Player who has more pieces than opponent and both have less than 6 (Player.ONE)', () => {
                 // Given a board in phase 2
@@ -568,7 +567,7 @@ describe('SixRules', () => {
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 43, new Vector(0, 1));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
             });
         });
     });

@@ -4,6 +4,13 @@ export class BoardValue {
 
     public static VICTORIES: number[] = [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
 
+    public static isVictory(score: number): boolean {
+        return score === Number.MAX_SAFE_INTEGER || score === Number.MIN_SAFE_INTEGER;
+    }
+    public static isPreVictory(score: number): boolean {
+        return score === Number.MAX_SAFE_INTEGER - 1 || score === Number.MIN_SAFE_INTEGER + 1;
+    }
+
     public static fromWinner(player: PlayerOrNone): BoardValue {
         if (player.isPlayer()) {
             return new BoardValue(player.getVictoryValue());

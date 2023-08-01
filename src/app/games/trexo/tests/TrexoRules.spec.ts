@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { GameNode } from 'src/app/jscaip/MGPNode';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { TrexoFailure } from '../TrexoFailure';
-import { TrexoMinimax } from '../TrexoMinimax';
+import { TrexoHeuristic } from '../TrexoMinimax';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
@@ -32,12 +32,12 @@ const X1__T4: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 4
 describe('TrexoRules', () => {
 
     let rules: TrexoRules;
-    let minimaxes: Minimax<TrexoMove, TrexoState>[];
+    let heuristics: Heuristic<TrexoMove, TrexoState>[];
 
     beforeEach(() => {
         rules = TrexoRules.get();
-        minimaxes = [
-            new TrexoMinimax(rules, 'Trexo Minimax'),
+        heuristics = [
+            new TrexoHeuristic(),
         ];
     });
     it('should accept to drop piece on the floor', () => {
@@ -180,9 +180,9 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
-        const node: TrexoNode = new MGPNode(expectedState);
+        const node: TrexoNode = new GameNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
     });
@@ -217,9 +217,9 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 4);
-        const node: TrexoNode = new MGPNode(expectedState);
+        const node: TrexoNode = new GameNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
     });
     it('should declare loser the player who align 5 piece of both players', () => {
         // Given a board where two players have 4 pieces aligned
@@ -252,9 +252,9 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
-        const node: TrexoNode = new MGPNode(expectedState);
+        const node: TrexoNode = new GameNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
     });

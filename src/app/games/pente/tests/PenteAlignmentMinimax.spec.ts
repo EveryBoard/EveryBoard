@@ -2,29 +2,37 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { PenteAlignmentMinimax } from '../PenteAlignmentMinimax';
+import { PenteAlignmentHeuristic, PenteAlignmentMinimax, PenteMoveGenerator } from '../PenteAlignmentMinimax';
 import { PenteMove } from '../PenteMove';
-import { PenteNode, PenteRules } from '../PenteRules';
+import { PenteNode } from '../PenteRules';
 import { PenteState } from '../PenteState';
 
-describe('PenteAlignmentMinimax', () => {
-    let rules: PenteRules;
-    let minimax: PenteAlignmentMinimax;
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
 
-    const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = PlayerOrNone.ZERO;
+describe('PenteMoveGenerator', () => {
+
+    let moveGenerator: PenteMoveGenerator;
 
     beforeEach(() => {
-        rules = PenteRules.get();
-        minimax = new PenteAlignmentMinimax(rules, 'PenteAlignmentMinimax');
+        moveGenerator = new PenteMoveGenerator();
     });
     it('should propose exactly 360 moves at first turn', () => {
         // Given the initial state
         const node: PenteNode = new PenteNode(PenteState.getInitialState());
         // When computing all possible moves
-        const moves: PenteMove[] = minimax.getListMoves(node);
+        const moves: PenteMove[] = moveGenerator.getListMoves(node);
         // Then it should have one move per empty space, i.e., 19x19 - 1 = 360
         expect(moves.length).toBe(360);
+    });
+});
+
+describe('PenteAlignmentHeuristic', () => {
+
+    let heuristic: PenteAlignmentHeuristic;
+
+    beforeEach(() => {
+        heuristic = new PenteAlignmentHeuristic();
     });
     it('should prefer longer alignments', () => {
         // Given two states, one of which has "better" alignments
@@ -72,9 +80,15 @@ describe('PenteAlignmentMinimax', () => {
         ], [0, 0], 6);
         // When using the minimax
         // Then it should consider the better aligned state stronger
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakerState, MGPOptional.empty(),
                                                            strongerState, MGPOptional.empty(),
                                                            Player.ZERO);
+    });
+});
+
+describe('PenteAlignmentMinimaxMinimax', () => {
+    it('should create', () => {
+        expect(new PenteAlignmentMinimax()).toBeTruthy();
     });
 });

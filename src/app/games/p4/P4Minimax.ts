@@ -5,7 +5,6 @@ import { P4State } from './P4State';
 import { P4Node, P4Rules } from './P4Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 
 export class P4MoveGenerator extends MoveGenerator<P4Move, P4State> {
 
@@ -29,7 +28,7 @@ export class P4Heuristic extends Heuristic<P4Move, P4State> {
             for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {
                 // while we haven't reached the top or an empty space
                 const squareScore: number = P4Rules.P4_HELPER.getSquareScore(state, new Coord(x, y));
-                if (NInARowHelper.isVictory(squareScore)) {
+                if (BoardValue.isVictory(squareScore)) {
                     return new BoardValue(squareScore);
                 }
                 score += squareScore;

@@ -1,16 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { SaharaMinimax } from '../SaharaMinimax';
+import { SaharaHeuristic, SaharaMinimax } from '../SaharaMinimax';
 import { SaharaState } from '../SaharaState';
-import { SaharaRules } from '../SaharaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 
-describe('SaharaMinimax', () => {
+describe('SaharaTeuristic', () => {
 
-    let minimax: SaharaMinimax;
-    let rules: SaharaRules;
+    let heuristic: SaharaHeuristic;
 
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
@@ -18,8 +16,7 @@ describe('SaharaMinimax', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     beforeEach(() => {
-        rules = SaharaRules.get();
-        minimax = new SaharaMinimax(rules, 'SaharaMinimax');
+        heuristic = new SaharaHeuristic();
     });
     it('should prefer having more freedoms', () => {
         const weakBoard: FourStatePiece[][] = [
@@ -40,9 +37,15 @@ describe('SaharaMinimax', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const strongState: SaharaState = new SaharaState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
+    });
+});
+
+describe('SaharaMinimax', () => {
+    it('should create', () => {
+        expect(new SaharaMinimax()).toBeTruthy();
     });
 });

@@ -8,7 +8,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TaflComponent } from '../tafl.component';
 import { TaflFailure } from '../TaflFailure';
-import { TaflMinimax } from '../TaflMinimax';
+import { TaflMinimax, TaflMoveGenerator } from '../TaflMinimax';
 import { TaflMove } from '../TaflMove';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
@@ -157,9 +157,9 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
         it('should have a bijective encoder', () => {
             const rules: R = testUtils.getComponent().rules;
             const encoder: Encoder<M> = testUtils.getComponent().encoder;
-            const minimax: TaflMinimax = new TaflMinimax(rules, 'TaflMinimax');
-            const firstTurnMoves: M[] = minimax
-                .getListMoves({ node: rules.getInitialNode() })
+            const moveGenerator: TaflMoveGenerator<M, S> = new TaflMoveGenerator(rules);
+            const firstTurnMoves: M[] = moveGenerator
+                .getListMoves(rules.getInitialNode())
                 .map((move: TaflMove) => {
                     return entries.moveProvider(move.getStart(), move.getEnd());
                 });

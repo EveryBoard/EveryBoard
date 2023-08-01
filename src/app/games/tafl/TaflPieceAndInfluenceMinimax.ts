@@ -66,7 +66,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
         }
         return new BoardValue(score);
     }
-    protected getPiecesMap(state: S): MGPMap<Player, MGPSet<Coord>> {
+    public getPiecesMap(state: S): MGPMap<Player, MGPSet<Coord>> {
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
@@ -90,7 +90,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
         ]);
         return map;
     }
-    protected getThreatMap(state: S, pieces: MGPMap<Player, MGPSet<Coord>>): MGPMap<Coord, MGPSet<SandwichThreat>> {
+    public getThreatMap(state: S, pieces: MGPMap<Player, MGPSet<Coord>>): MGPMap<Coord, MGPSet<SandwichThreat>> {
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
         for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
@@ -164,7 +164,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
             return false;
         }
     }
-    protected filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: S)
+    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: S)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();

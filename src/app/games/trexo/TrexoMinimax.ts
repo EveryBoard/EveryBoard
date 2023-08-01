@@ -1,7 +1,6 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';
@@ -29,7 +28,7 @@ export class TrexoHeuristic extends Heuristic<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = state.getPieceAt(coordPiece.key).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coordPiece.key);
-                if (NInARowHelper.isVictory(squareScore)) {
+                if (BoardValue.isVictory(squareScore)) {
                     if (pieceOwner === lastPlayer) {
                         // Cannot return right away
                         // because the last player only wins if the other does not get an alignment

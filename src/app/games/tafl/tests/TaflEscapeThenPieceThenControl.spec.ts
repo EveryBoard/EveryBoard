@@ -3,14 +3,15 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { BrandhubState } from '../brandhub/BrandhubState';
-import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
+import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
+import { BrandhubMove } from '../brandhub/BrandhubMove';
 
 describe('TaflEscapeThenPieceThenControlMinimax', () => {
 
-    let minimax: TaflEscapeThenPieceThenControlMinimax;
+    let heuristic: TaflEscapeThenPieceThenControlHeuristic<BrandhubMove, BrandhubState>;
 
     let rules: BrandhubRules;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
@@ -20,7 +21,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
 
     beforeEach(() => {
         rules = BrandhubRules.get();
-        minimax = new TaflEscapeThenPieceThenControlMinimax(rules, 'Escape > Piece > Control');
+        heuristic = new TaflEscapeThenPieceThenControlHeuristic(rules);
     });
     it('should be better when king can escape than when he cannot', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -43,7 +44,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
         ];
         const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -69,7 +70,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
         ];
         const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);

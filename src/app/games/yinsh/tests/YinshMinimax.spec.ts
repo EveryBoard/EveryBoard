@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
 import { YinshState } from '../YinshState';
-import { YinshMinimax } from '../YinshMinimax';
+import { YinshMoveGenerator, YinshHeuristic, YinshMinimax } from '../YinshMinimax';
 import { YinshCapture } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('YinshMinimax', () => {
+describe('YinshMoveGenerator', () => {
 
     const _: YinshPiece = YinshPiece.EMPTY;
     const N: YinshPiece = YinshPiece.UNREACHABLE;
@@ -17,16 +17,16 @@ describe('YinshMinimax', () => {
 
     let rules: YinshRules;
 
-    let minimax: YinshMinimax;
+    let moveGenerator: YinshMoveGenerator;
 
     beforeEach(() => {
         rules = YinshRules.get();
-        minimax = new YinshMinimax(rules, 'YinshMinimax');
+        moveGenerator = new YinshMoveGenerator()
     });
     describe('getListMoves', () => {
         it('should have 85 moves on first turn', () => {
             const node: YinshNode = rules.getInitialNode();
-            expect(minimax.getListMoves(node).length).toBe(85);
+            expect(moveGenerator.getListMoves(node).length).toBe(85);
         });
         it('should have 84 moves on second placement in initial phase', () => {
             const board: Table<YinshPiece> = [
@@ -45,12 +45,12 @@ describe('YinshMinimax', () => {
             const state: YinshState = new YinshState(board, [0, 0], 1);
 
             const node: YinshNode = new YinshNode(state);
-            expect(minimax.getListMoves(node).length).toBe(84);
+            expect(moveGenerator.getListMoves(node).length).toBe(84);
         });
         it('should have no moves at the end of the game', () => {
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [3, 2], 20);
             const node: YinshNode = new YinshNode(state);
-            expect(minimax.getListMoves(node).length).toBe(0);
+            expect(moveGenerator.getListMoves(node).length).toBe(0);
         });
         it('should have 18 moves on a specific state after the placement phase', () => {
             const board: Table<YinshPiece> = [
@@ -69,7 +69,7 @@ describe('YinshMinimax', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
 
             const node: YinshNode = new YinshNode(state);
-            expect(minimax.getListMoves(node).length).toBe(18);
+            expect(moveGenerator.getListMoves(node).length).toBe(18);
         });
         it('should have 11 moves on a board with a possible capture', () => {
             const board: Table<YinshPiece> = [
@@ -88,7 +88,7 @@ describe('YinshMinimax', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
 
             const node: YinshNode = new YinshNode(state);
-            expect(minimax.getListMoves(node).length).toBe(11);
+            expect(moveGenerator.getListMoves(node).length).toBe(11);
         });
         it('should list moves that try to flip a ring', () => {
             const board: Table<YinshPiece> = [
@@ -107,7 +107,7 @@ describe('YinshMinimax', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
 
             const node: YinshNode = new YinshNode(state);
-            expect(minimax.getListMoves(node).length).toBe(10);
+            expect(moveGenerator.getListMoves(node).length).toBe(10);
 
         });
         it('should not list moves that jump over two non-joined groups of pieces', () => {
@@ -127,7 +127,7 @@ describe('YinshMinimax', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
 
             const node: YinshNode = new YinshNode(state);
-            expect(minimax.getListMoves(node).length).toBe(11);
+            expect(moveGenerator.getListMoves(node).length).toBe(11);
         });
         it('should take a ring when it is capturing', () => {
             const board: Table<YinshPiece> = [
@@ -146,7 +146,7 @@ describe('YinshMinimax', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
 
             const node: YinshNode = new YinshNode(state);
-            for (const move of minimax.getListMoves(node)) {
+            for (const move of moveGenerator.getListMoves(node)) {
                 move.initialCaptures.forEach((capture: YinshCapture) =>
                     expect(capture.ringTaken.isPresent()).toBeTrue());
                 move.finalCaptures.forEach((capture: YinshCapture) =>
@@ -154,11 +154,26 @@ describe('YinshMinimax', () => {
             }
         });
     });
+});
+
+describe('YinshHeuristic', () => {
+
+    let heuristic: YinshHeuristic;
+
+    beforeEach(() => {
+        heuristic = new YinshHeuristic();
+    });
     describe('getBoardValue', () => {
         it('should assign higher values for the player with most rings', () => {
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [2, 1], 20);
             const node: YinshNode = new YinshNode(state);
-            expect(minimax.getBoardValue(node).value * Player.ZERO.getScoreModifier()).toBeGreaterThan(0);
+            expect(heuristic.getBoardValue(node).value * Player.ZERO.getScoreModifier()).toBeGreaterThan(0);
         });
+    });
+});
+
+describe('YinshMinimax', () => {
+    it('should create', () => {
+        expect(new YinshMinimax()).toBeTruthy();
     });
 });

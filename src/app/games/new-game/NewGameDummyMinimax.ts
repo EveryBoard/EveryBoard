@@ -1,23 +1,13 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { NewGameBoardValue, NewGameLegalityInfo, NewGameNode, NewGameRules } from './NewGameRules';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
-/**
- * What is called "minimaxes" here are heuristic calculators.
- * They assign a score to a state so that the `LocalGameWrappercomponent` can
- * use it within the AI system to know which move to play.
- *
- * By convention, we call such a class a "dummy minimax" if:
- *   - it doesn't filter any move in `getListMoves`
- *   - it has a simplistic `getBoardValue`, only relying the score stored in the state
- */
-export class NewGameDummyMinimax extends Minimax<NewGameMove,
-                                                 NewGameState,
-                                                 NewGameLegalityInfo,
-                                                 NewGameBoardValue,
-                                                 NewGameRules>
-{
+// TODO: update documentation
+
+export class NewGameMoveGenerator extends MoveGenerator<NewGameMove, NewGameState> {
+
     /**
      * This method lists all useful moves to consider in the move exploration.
      * In general, you can list all possible moves.
@@ -28,6 +18,9 @@ export class NewGameDummyMinimax extends Minimax<NewGameMove,
     public getListMoves(node: NewGameNode): NewGameMove[] {
         return [];
     }
+}
+
+export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
     /**
      * This function assigns a score to a state, in the form of a `BoardValue`.
      * Most of the time, you want to use `BoardValue` directly. It is simply a number wrapper.
@@ -43,5 +36,21 @@ export class NewGameDummyMinimax extends Minimax<NewGameMove,
      */
     public getBoardValue(node: NewGameNode): NewGameBoardValue {
         return new NewGameBoardValue(0);
+    }
+}
+
+/**
+ * What is called "minimaxes" here are heuristic calculators.
+ * They assign a score to a state so that the `LocalGameWrappercomponent` can
+ * use it within the AI system to know which move to play.
+ *
+ * By convention, we call such a class a "dummy minimax" if:
+ *   - it doesn't filter any move in `getListMoves`
+ *   - it has a simplistic `getBoardValue`, only relying the score stored in the state
+ */
+export class NewGameDummyMinimax extends Minimax<NewGameMove, NewGameState, NewGameLegalityInfo, NewGameBoardValue> {
+
+    public constructor() {
+        super('Dummy Minimax', NewGameRules.get(), new NewGameHeuristic(), new NewGameMoveGenerator());
     }
 }

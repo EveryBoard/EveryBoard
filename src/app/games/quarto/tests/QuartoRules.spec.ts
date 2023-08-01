@@ -1,27 +1,27 @@
 /* eslint-disable max-lines-per-function */
 import { QuartoNode, QuartoRules } from '../QuartoRules';
-import { QuartoMinimax } from '../QuartoMinimax';
+import { QuartoHeuristic } from '../QuartoMinimax';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { QuartoFailure } from '../QuartoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 
 describe('QuartoRules', () => {
 
     let rules: QuartoRules;
-    let minimaxes: Minimax<QuartoMove, QuartoState>[];
+    let heuristics: Heuristic<QuartoMove, QuartoState>[];
 
     beforeEach(() => {
         rules = QuartoRules.get();
-        minimaxes = [
-            new QuartoMinimax(rules, 'QuartoMinimax'),
+        heuristics = [
+            new QuartoHeuristic(),
         ];
     });
     it('should create', () => {
@@ -59,9 +59,9 @@ describe('QuartoRules', () => {
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.BAAB],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.EMPTY);
-        const node: QuartoNode = new MGPNode(expectedState);
+        const node: QuartoNode = new GameNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeDraw(rules, node, minimaxes);
+        RulesUtils.expectToBeDraw(rules, node, heuristics);
     });
     it('should forbid to give a piece already on the board', () => {
         // Given a board with AAAA on it
@@ -149,7 +149,7 @@ describe('QuartoRules', () => {
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
     });
     it('should consider Player.ONE winner when doing a full line', () => {
         // Given a board with 3 piece with common criterion aligned
@@ -175,7 +175,7 @@ describe('QuartoRules', () => {
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
     });
     it('should recognize ongoing games', () => {
         // Given an ongoing game
@@ -186,11 +186,11 @@ describe('QuartoRules', () => {
             [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.AAAB],
         ];
         const state: QuartoState = new QuartoState(board, 9, QuartoPiece.BAAA);
-        const node: QuartoNode = new MGPNode(state);
+        const node: QuartoNode = new GameNode(state);
 
         // When evaluating board value
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node, heuristics);
     });
     describe('updateBoardStatus', () => {
         it('should recognize "3 3" as pre-victory', () => {
@@ -207,7 +207,7 @@ describe('QuartoRules', () => {
             // When evaluating board value
             // Then it should be evaluated as Ongoing
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            RulesUtils.expectStateToBePreVictory(state, move, Player.ZERO, minimaxes);
+            RulesUtils.expectStateToBePreVictory(state, move, Player.ZERO, heuristics);
         });
     });
 });

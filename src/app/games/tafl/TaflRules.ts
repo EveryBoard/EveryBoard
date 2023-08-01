@@ -17,6 +17,8 @@ import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
+export class TaflNode extends GameNode<TaflMove, TaflState> {}
+
 export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S> {
 
     public static VERBOSE: boolean = false;

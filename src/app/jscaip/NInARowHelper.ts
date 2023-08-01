@@ -113,7 +113,7 @@ export class NInARowHelper<T> {
             if (this.getOwner(coordAndContents.content, state).isPlayer()) {
                 const coord: Coord = coordAndContents.coord;
                 const squareScore: number = this.getSquareScore(state, coord);
-                if (NInARowHelper.isVictory(squareScore)) {
+                if (BoardValue.isVictory(squareScore)) {
                     if (squareScore === Player.ZERO.getVictoryValue() ||
                         squareScore === Player.ONE.getVictoryValue())
                     {
@@ -123,8 +123,5 @@ export class NInARowHelper<T> {
             }
         }
         return coords;
-    }
-    public static isVictory(score: number): boolean {
-        return score === Number.MAX_SAFE_INTEGER || score === Number.MIN_SAFE_INTEGER;
     }
 }

@@ -7,16 +7,18 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { TaflPawn } from '../TaflPawn';
 import { TablutState } from '../tablut/TablutState';
-import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TaflMoveGenerator } from '../TaflMinimax';
 
-describe('TablutPieceAndInfluenceMinimax', () => {
+describe('TablutPieceAndInfluenceHeuristic', () => {
 
-    let minimax: TaflPieceAndInfluenceMinimax;
+    let heuristic: TaflPieceAndInfluenceHeuristic<TablutMove, TablutState>;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;
     const X: TaflPawn = TaflPawn.DEFENDERS;
@@ -24,7 +26,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
 
     beforeEach(() => {
         const rules: TablutRules = TablutRules.get();
-        minimax = new TaflPieceAndInfluenceMinimax(rules, 'TablutPieceAndInfluenceMinimax');
+        heuristic = new TaflPieceAndInfluenceHeuristic(rules);
     });
     it('should be better of with more piece', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -51,7 +53,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -81,7 +83,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -111,7 +113,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -141,7 +143,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -171,7 +173,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -190,9 +192,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 0);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 1))).toBeTrue();
         });
         it('should see threats coming straight', () => {
@@ -208,9 +210,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 0);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
         });
         it('should see threats coming sideways', () => {
@@ -226,9 +228,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 0);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
         });
         it('should not consider king threatened by one piece only', () => {
@@ -244,9 +246,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 0);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(3, 4))).toBeFalse();
         });
         it(`should not consider neighbors opponent's threatened pieces as threatening`, () => {
@@ -262,9 +264,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 1);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.filterThreatMap(threatMap, state);
             const expectedThreats: SandwichThreat[] = [
                 new SandwichThreat(new Coord(4, 3), new CoordSet([new Coord(2, 4)])),
                 new SandwichThreat(new Coord(3, 4), new CoordSet([new Coord(4, 2)])),
@@ -288,11 +290,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 1);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
 
             // When checking the threat list
-            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.filterThreatMap(threatMap, state);
 
             // Then (4, 3) should not be deemed threaten since (6, 3) could be killed
             expect(filteredThreatMap.containsKey(new Coord(4, 3))).toBeFalse();
@@ -310,9 +312,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 0);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(4, 5))).toBeFalse();
         });
     });
@@ -332,8 +334,12 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             const state: TablutState = new TablutState(board, 1);
             const node: TablutNode = new TablutNode(state);
             const expectedMove: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(0, 0));
+            const minimax: Minimax<TablutMove, TablutState> = new Minimax('PieceAndInfluence',
+                                                                          TablutRules.get(),
+                                                                          heuristic,
+                                                                          new TaflMoveGenerator(TablutRules.get()));
             for (let depth: number = 1; depth < 4; depth++) {
-                const chosenMove: TablutMove = node.findBestMove(depth, minimax);
+                const chosenMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level', maxDepth: depth });
                 expect(chosenMove).toEqual(expectedMove);
             }
         });

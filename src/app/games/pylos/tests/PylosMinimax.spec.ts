@@ -4,25 +4,25 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
-import { PylosMinimax } from '../PylosMinimax';
+import { PylosHeuristic, PylosMinimax, PylosMoveGenerator } from '../PylosMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('PylosMinimax', () => {
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
+
+describe('PylosMoveGenerator', () => {
 
     let rules: PylosRules;
-    let minimax: PylosMinimax;
-
-    const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = PlayerOrNone.ZERO;
-    const X: PlayerOrNone = PlayerOrNone.ONE;
+    let moveGenerator: PylosMoveGenerator;
 
     beforeEach(() => {
         rules = PylosRules.get();
-        minimax = new PylosMinimax(rules, 'PylosMinimax');
+        moveGenerator = new PylosMoveGenerator();
     });
     it('should provide 16 drops at first turn', () => {
         const node: PylosNode = rules.getInitialNode();
-        expect(minimax.getListMoves(node).length).toBe(16);
+        expect(moveGenerator.getListMoves(node).length).toBe(16);
     });
     it('should provide drops without capture, drops with one capture, drops with two captures and climbings', () => {
         // Given a board on which all kind of moves are possible
@@ -47,7 +47,7 @@ describe('PylosMinimax', () => {
         const node: PylosNode = new PylosNode(state);
 
         // When listing all possibles moves
-        const choices: PylosMove[] = minimax.getListMoves(node);
+        const choices: PylosMove[] = moveGenerator.getListMoves(node);
 
         // Then the minimax should provide them all
         const climbing: number = choices.filter((move: PylosMove) => move.isClimb()).length;
@@ -61,29 +61,6 @@ describe('PylosMinimax', () => {
         const dualCapture: number = choices.filter((move: PylosMove) => move.secondCapture.isPresent()).length;
         expect(dualCapture).toBe(12);
         expect(choices.length).toBe(climbing + dropWithoutCapture + monoCapture + dualCapture);
-    });
-    it('should calculate board value according to number of pawn of each player', () => {
-        const board: PlayerOrNone[][][] = [
-            [
-                [O, X, O, X],
-                [O, X, O, X],
-                [O, X, O, X],
-                [O, X, O, X],
-            ], [
-                [X, _, _],
-                [_, O, _],
-                [_, _, _],
-            ], [
-                [_, _],
-                [_, _],
-            ], [
-                [_],
-            ],
-        ];
-
-        const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
-        expect(minimax.getBoardValue(new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move))).value).toBe(0);
     });
     it('should not include uncapturable pieces in captures', () => {
         // Given a node of a board with a climbing as last move
@@ -108,7 +85,7 @@ describe('PylosMinimax', () => {
         const node: PylosNode = new PylosNode(state);
 
         // When listing all possibles moves
-        const choices: PylosMove[] = minimax.getListMoves(node);
+        const choices: PylosMove[] = moveGenerator.getListMoves(node);
 
         // Then the minimax should not provide one that capture the startingCoord
         const climbs: PylosMove[] = choices.filter((move: PylosMove) => move.isClimb());
@@ -120,5 +97,38 @@ describe('PylosMinimax', () => {
                    move.secondCapture.equalsValue(uncapturable);
         });
         expect(wrongChoices.length).toBe(0);
+    });
+});
+
+describe('PylosHeuristic', () => {
+
+    let heuristic: PylosHeuristic;
+
+    beforeEach(() => {
+        heuristic = new PylosHeuristic();
+    });
+    it('should calculate board value according to number of pawn of each player', () => {
+        const board: PlayerOrNone[][][] = [
+            [
+                [O, X, O, X],
+                [O, X, O, X],
+                [O, X, O, X],
+                [O, X, O, X],
+            ], [
+                [X, _, _],
+                [_, O, _],
+                [_, _, _],
+            ], [
+                [_, _],
+                [_, _],
+            ], [
+                [_],
+            ],
+        ];
+
+        const state: PylosState = new PylosState(board, 0);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
+        const node: PylosNode = new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        expect(heuristic.getBoardValue(node).value).toBe(0);
     });
 });

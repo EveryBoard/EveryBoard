@@ -5,7 +5,7 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { TrexoFailure } from '../TrexoFailure';
-import { TrexoMinimax } from '../TrexoMinimax';
+import { TrexoMoveGenerator } from '../TrexoMinimax';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
 
@@ -59,9 +59,9 @@ describe('TrexoMove', () => {
     });
     it('should have a bijective encoder', () => {
         const rules: TrexoRules = TrexoRules.get();
-        const minimax: TrexoMinimax = new TrexoMinimax(rules, 'dummy');
+        const moveGenerator: TrexoMoveGenerator = new TrexoMoveGenerator();
         const node: TrexoNode = rules.getInitialNode();
-        const firstTurnMoves: TrexoMove[] = minimax.getListMoves(node);
+        const firstTurnMoves: TrexoMove[] = moveGenerator.getListMoves(node);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(TrexoMove.encoder, move);
         }

@@ -7,36 +7,37 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { SiamMinimax } from '../../siam/SiamMinimax';
+import { SiamHeuristic, SiamMinimax, SiamMoveGenerator } from '../../siam/SiamMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
 
-describe('SiamMinimax', () => {
+const _: SiamPiece = SiamPiece.EMPTY;
+const M: SiamPiece = SiamPiece.MOUNTAIN;
+
+const U: SiamPiece = SiamPiece.LIGHT_UP;
+const L: SiamPiece = SiamPiece.LIGHT_LEFT;
+const R: SiamPiece = SiamPiece.LIGHT_RIGHT;
+
+const u: SiamPiece = SiamPiece.DARK_UP;
+const l: SiamPiece = SiamPiece.DARK_LEFT;
+const r: SiamPiece = SiamPiece.DARK_RIGHT;
+const d: SiamPiece = SiamPiece.DARK_DOWN;
+
+describe('SiamMoveGenerator', () => {
 
     let rules: SiamRules;
-    let minimax: SiamMinimax;
-
-    const _: SiamPiece = SiamPiece.EMPTY;
-    const M: SiamPiece = SiamPiece.MOUNTAIN;
-
-    const U: SiamPiece = SiamPiece.LIGHT_UP;
-    const L: SiamPiece = SiamPiece.LIGHT_LEFT;
-    const R: SiamPiece = SiamPiece.LIGHT_RIGHT;
-
-    const u: SiamPiece = SiamPiece.DARK_UP;
-    const l: SiamPiece = SiamPiece.DARK_LEFT;
-    const r: SiamPiece = SiamPiece.DARK_RIGHT;
-    const d: SiamPiece = SiamPiece.DARK_DOWN;
+    let moveGenerator: SiamMoveGenerator;
 
     beforeEach(() => {
         rules = SiamRules.get();
-        minimax = new SiamMinimax(rules, 'SiamMinimax');
+        moveGenerator = new SiamMoveGenerator();
     });
     describe('list of moves', () => {
         it('should provide 44 possible moves on initial board', () => {
             // Given the initial board
             const node: SiamNode = new SiamNode(SiamState.getInitialState());
             // When computing the list of moves
-            const firstTurnMoves: SiamMove[] = minimax.getListMoves(node);
+            const firstTurnMoves: SiamMove[] = moveGenerator.getListMoves(node);
             // Then there should be exactly 44 moves
             expect(firstTurnMoves.length).toEqual(44);
         });
@@ -52,7 +53,7 @@ describe('SiamMinimax', () => {
             const state: SiamState = new SiamState(board, 0);
             const node: SiamNode = new SiamNode(state);
             // When computing all moves
-            const moves: SiamMove[] = minimax.getListMoves(node);
+            const moves: SiamMove[] = moveGenerator.getListMoves(node);
             // Then all expected moves are returned
             const moveType: { [moveTYpe: string]: number} = {
                 moving: 0,
@@ -87,13 +88,24 @@ describe('SiamMinimax', () => {
             const state: SiamState = new SiamState(board, 1);
             const node: SiamNode = new SiamNode(state);
             // When computing the moves
-            const moves: SiamMove[] = minimax.getListMoves(node);
+            const moves: SiamMove[] = moveGenerator.getListMoves(node);
             for (const move of moves) {
                 // Then no move should insert a new piece
                 expect(move.isInsertion()).toBeFalse();
             }
         });
     });
+});
+
+describe('SiamMinimax', () => {
+
+    let minimax: SiamMinimax;
+    const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
+
+    beforeEach(() => {
+        minimax = new SiamMinimax();
+    });
+
     describe('best choices', () => {
         it('should choose victory immediately', () => {
             // Given a board where victory can be achieved
@@ -107,7 +119,7 @@ describe('SiamMinimax', () => {
             const state: SiamState = new SiamState(board, 0);
             const node: SiamNode = new SiamNode(state);
             // When computing the best move
-            const chosenMove: SiamMove = node.findBestMove(1, minimax);
+            const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions);
             // Then it should go for victory
             const bestMove: SiamMove = SiamMove.from(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             expect(chosenMove).toEqual(bestMove);
@@ -124,7 +136,7 @@ describe('SiamMinimax', () => {
             const state: SiamState = new SiamState(board, 0);
             const node: SiamNode = new SiamNode(state);
             // When computing the best move
-            const chosenMove: SiamMove = node.findBestMove(1, minimax);
+            const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions);
             // Then it should push
             const bestMove: SiamMove = SiamMove.from(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             expect(chosenMove).toEqual(bestMove);
@@ -141,11 +153,21 @@ describe('SiamMinimax', () => {
             const state: SiamState = new SiamState(board, 0);
             const node: SiamNode = new SiamNode(state);
             // When computing the best move
-            const chosenMove: SiamMove = node.findBestMove(1, minimax);
+            const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions);
             // Then the best move should push from outside
             const bestMove: SiamMove = SiamMove.from(3, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             expect(chosenMove).toEqual(bestMove);
         });
+    });
+});
+
+
+describe('SiamHeuristic', () => {
+
+    let heuristic: SiamHeuristic;
+
+    beforeEach(() => {
+        heuristic = new SiamHeuristic();
     });
     describe('board value test', () => {
         it('should know who is closer to victory (with pieces of both players)', () => {
@@ -161,7 +183,7 @@ describe('SiamMinimax', () => {
             const move: SiamMove = SiamMove.from(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             // When computing the value of the board
             // Then it should consider player zero as closer to victory
-            expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
+            expect(heuristic.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
                 .withContext('First player should be considered as closer to victory')
                 .toBeLessThan(0);
         });
@@ -178,7 +200,7 @@ describe('SiamMinimax', () => {
             const move: SiamMove = SiamMove.from(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
             // When computing the value of the board
             // Then it should consider player zero as closer to victory
-            expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
+            expect(heuristic.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
                 .withContext('First player should be considered as closer to victory')
                 .toBeLessThan(0);
         });
@@ -196,7 +218,7 @@ describe('SiamMinimax', () => {
             const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // When computing the board value
             // Then player zero should have a higher score because it is their turn
-            expect(minimax.getBoardValue(node).value).toBeLessThan(0);
+            expect(heuristic.getBoardValue(node).value).toBeLessThan(0);
         });
         it('should assign same absolute value to states that only differ in turn', () => {
             // Given two states that only differ in their turn
@@ -210,11 +232,11 @@ describe('SiamMinimax', () => {
             const state: SiamState = new SiamState(board, 0);
             const move: SiamMove = SiamMove.from(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
             const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            const boardValue: number = minimax.getBoardValue(node).value;
+            const boardValue: number = heuristic.getBoardValue(node).value;
 
             const turnOneState: SiamState = new SiamState(board, 1);
             const turnOneNode: SiamNode = new SiamNode(turnOneState, MGPOptional.empty(), MGPOptional.of(move));
-            const turnOneBoardValue: number = minimax.getBoardValue(turnOneNode).value;
+            const turnOneBoardValue: number = heuristic.getBoardValue(turnOneNode).value;
             expect(turnOneBoardValue).withContext('Both board value should have same absolute value').toEqual(-1 * boardValue);
         });
     });

@@ -1,28 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { PylosCoord } from '../PylosCoord';
-import { PylosMinimax } from '../PylosMinimax';
 import { PylosMove } from '../PylosMove';
-import { PylosOrderedMinimax } from '../PylosOrderedMinimax';
-import { PylosState } from '../PylosState';
-import { PylosNode, PylosRules } from '../PylosRules';
+import { PylosOrderedMinimax, PylosOrderedMoveGenerator } from '../PylosOrderedMinimax';
+import { PylosRules } from '../PylosRules';
 
-describe('PylosOrderedMinimax', () => {
+describe('PylosOrderedMoveGenerator', () => {
 
-    let minimax: PylosOrderedMinimax;
+    let moveGenerator: PylosOrderedMoveGenerator;
     const coord0: PylosCoord = new PylosCoord(0, 0, 0);
     const coord1: PylosCoord = new PylosCoord(0, 0, 1);
     const coord2: PylosCoord = new PylosCoord(0, 0, 2);
 
     beforeEach(() => {
         const rules: PylosRules = PylosRules.get();
-        minimax = new PylosOrderedMinimax(rules, 'PylosOrderMinimax');
-    });
-    it('should delegate getListMoves to PylosMinimax', () => {
-        spyOn(PylosMinimax, 'getListMoves').and.callThrough();
-
-        minimax.getListMoves(new PylosNode(PylosState.getInitialState()));
-
-        expect(PylosMinimax.getListMoves).toHaveBeenCalledTimes(1);
+        moveGenerator = new PylosOrderedMoveGenerator();
     });
     describe('orderMoves', () => {
         it('should order move from lowest stone use to highest', () => {
@@ -35,7 +26,7 @@ describe('PylosOrderedMinimax', () => {
                 PylosMove.ofDrop(coord0, [coord1]), // 0 stone used
             ].sort(() => Math.random() - 0.5);
 
-            const orderedMoves: PylosMove[] = minimax.orderMoves(moves);
+            const orderedMoves: PylosMove[] = moveGenerator['orderMoves'](moves);
 
             const expectedOrderedMoves: PylosMove[] = [
                 PylosMove.ofClimb(coord0, coord1, [coord1, coord2]), // -2 stone used
@@ -48,5 +39,11 @@ describe('PylosOrderedMinimax', () => {
 
             expect(orderedMoves).toEqual(expectedOrderedMoves);
         });
+    });
+});
+
+describe('PylosOrderedMinimax', () => {
+    it('should create', () => {
+        expect(new PylosOrderedMinimax()).toBeTruthy();
     });
 });

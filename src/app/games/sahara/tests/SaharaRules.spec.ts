@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaNode, SaharaRules } from '../SaharaRules';
-import { SaharaMinimax } from '../SaharaMinimax';
+import { SaharaHeuristic, SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaState } from '../SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
@@ -11,7 +11,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaFailure } from '../SaharaFailure';
 
-describe('SaharaRules', () => {
+describe('SaharaHeuristic', () => {
 
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
@@ -19,12 +19,12 @@ describe('SaharaRules', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     let rules: SaharaRules;
-    let minimaxes: SaharaMinimax[];
+    let heuristics: SaharaHeuristic[];
 
     beforeEach(() => {
         rules = SaharaRules.get();
-        minimaxes = [
-            new SaharaMinimax(rules, 'SaharaMinimax'),
+        heuristics = [
+            new SaharaHeuristic(),
         ];
     });
     it('SaharaRules should be created', () => {
@@ -38,10 +38,10 @@ describe('SaharaRules', () => {
         }
     });
     it('Bouncing on occupied space should be illegal', () => {
-        // Given a board where two piece are neigbhoor
+        // Given a board where two piece are neighbor
         const state: SaharaState = SaharaState.getInitialState();
 
-        // When trying to rebounce on occupied piece
+        // When trying to rebound on occupied piece
         const move: SaharaMove = SaharaMove.from(new Coord(7, 0), new Coord(8, 1)).get();
 
         // Then it should be illegal
@@ -65,6 +65,6 @@ describe('SaharaRules', () => {
         ];
         const state: SaharaState = new SaharaState(board, 4);
         const node: SaharaNode = new SaharaNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
     });
 });

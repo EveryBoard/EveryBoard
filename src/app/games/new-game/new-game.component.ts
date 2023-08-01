@@ -41,8 +41,8 @@ export class NewGameComponent extends GameComponent<NewGameRules,
         this.node = this.rules.getInitialNode();
         this.encoder = NewGameMove.encoder;
         this.tutorial = new NewGameTutorial().tutorial;
-        this.availableMinimaxes = [
-            new NewGameDummyMinimax(this.rules, 'New Game Dummy Minimax'),
+        this.availableAIs = [
+            new NewGameDummyMinimax(),
         ];
     }
     /**

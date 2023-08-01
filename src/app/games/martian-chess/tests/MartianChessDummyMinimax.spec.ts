@@ -5,9 +5,9 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
+import { MartianChessMoveGenerator, MartianChessScoreHeuristic } from '../MartianChessDummyMinimax';
 import { MartianChessMove } from '../MartianChessMove';
-import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
+import { MartianChessNode } from '../MartianChessRules';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 
@@ -18,8 +18,7 @@ describe('MartianChessDummyMinimax', () => {
     const B: MartianChessPiece = MartianChessPiece.DRONE;
     const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
-    let rules: MartianChessRules;
-    let minimax: MartianChessDummyMinimax;
+    let moveGenerator: MartianChessMoveGenerator;
 
     function isPawnMove(move: MartianChessMove, state: MartianChessState): boolean {
         return state.getPieceAt(move.getStart()) === MartianChessPiece.PAWN;
@@ -28,8 +27,7 @@ describe('MartianChessDummyMinimax', () => {
         return state.getPieceAt(move.getStart()) === MartianChessPiece.DRONE;
     }
     beforeEach(() => {
-        rules = MartianChessRules.get();
-        minimax = new MartianChessDummyMinimax(rules, 'MartianChessDummyMinimax');
+        moveGenerator = new MartianChessMoveGenerator();
     });
     it('should includes all moves at first turn (but no call the clock)', () => {
         // Given the initial state
@@ -37,7 +35,7 @@ describe('MartianChessDummyMinimax', () => {
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When asking the list of moves
-        const moves: MartianChessMove[] = minimax.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be a total of 13 moves, all, not calling the clock
         const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock === false);
@@ -68,7 +66,7 @@ describe('MartianChessDummyMinimax', () => {
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When asking the list of moves
-        const moves: MartianChessMove[] = minimax.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then 6 moves should be included
         const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock === false);
@@ -92,7 +90,7 @@ describe('MartianChessDummyMinimax', () => {
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When asking the list of moves
-        const moves: MartianChessMove[] = minimax.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then the 15 moves should be included, 2 for the pawn and 13 for the drone
         const pawn: MartianChessMove[] = moves.filter((m: MartianChessMove) => isPawnMove(m, state));
@@ -119,7 +117,7 @@ describe('MartianChessDummyMinimax', () => {
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When asking the list of moves
-        const moves: MartianChessMove[] = minimax.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then the reverse last move should not be in it
         const reverse: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.isUndoneBy(optLast));
@@ -141,10 +139,19 @@ describe('MartianChessDummyMinimax', () => {
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When asking the list of moves
-        const moves: MartianChessMove[] = minimax.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then the 13 moves should be included, but only once (not with clock called)
         expect(moves.length).toBe(13);
+    });
+});
+
+describe('MartianChessScoreHeuristic', () => {
+
+    let heuristic: MartianChessScoreHeuristic;
+
+    beforeEach(() => {
+        heuristic = new MartianChessScoreHeuristic();
     });
     it('should simply prefer higher score', () => {
         const weakState: MartianChessState = MartianChessState.getInitialState();
@@ -158,6 +165,6 @@ describe('MartianChessDummyMinimax', () => {
                                                                      MGPOptional.empty(),
                                                                      MGPOptional.empty(),
                                                                      captured);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax, weakState, empty, strongState, empty, Player.ZERO);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic, weakState, empty, strongState, empty, Player.ZERO);
     });
 });

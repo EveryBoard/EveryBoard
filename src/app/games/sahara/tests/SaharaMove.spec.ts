@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { SaharaNode, SaharaRules } from '../SaharaRules';
-import { SaharaMinimax } from '../SaharaMinimax';
+import { SaharaMoveGenerator } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
@@ -13,10 +13,10 @@ describe('SaharaMoves', () => {
 
     it('should have a bijective encoder', () => {
         const rules: SaharaRules = SaharaRules.get();
-        const minimax: SaharaMinimax = new SaharaMinimax(rules, 'SaharaMinimax');
+        const moveGenerator: SaharaMoveGenerator = new SaharaMoveGenerator();
         const node: SaharaNode = rules.getInitialNode();
         expect(rules).toBeTruthy();
-        const moves: SaharaMove[] = minimax.getListMoves(node);
+        const moves: SaharaMove[] = moveGenerator.getListMoves(node);
         expect(moves.length).toEqual(12);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(SaharaMove.encoder, move);

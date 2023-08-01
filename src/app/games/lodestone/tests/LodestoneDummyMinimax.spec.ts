@@ -4,14 +4,13 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { LodestoneDummyMinimax } from '../LodestoneDummyMinimax';
+import { LodestoneMoveGenerator, LodestoneScoreMinimax } from '../LodestoneDummyMinimax';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
-describe('LodestoneDummyMinimax', () => {
-    let rules: LodestoneRules;
-    let minimax: LodestoneDummyMinimax;
+describe('LodestoneMoveGenerator', () => {
+    let moveGenerator: LodestoneMoveGenerator;
 
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
     const _: LodestonePiece = LodestonePieceNone.EMPTY;
@@ -19,8 +18,7 @@ describe('LodestoneDummyMinimax', () => {
     const B: LodestonePiece = LodestonePiecePlayer.ONE;
 
     beforeEach(() => {
-        rules = LodestoneRules.get();
-        minimax = new LodestoneDummyMinimax(rules, 'LodestoneDummyMinimax');
+        moveGenerator = new LodestoneMoveGenerator();
     });
     it('should propose at least 618 moves at first turn', () => {
         // Given the initial state
@@ -31,7 +29,7 @@ describe('LodestoneDummyMinimax', () => {
         // For each empty coord, each lodestone can be placed in 4 different position
         // For each position, we have to count the possible captures and how they can be placed
         // The total amounts to 618
-        expect(minimax.getListMoves(node).length).toBeGreaterThanOrEqual(618);
+        expect(moveGenerator.getListMoves(node).length).toBeGreaterThanOrEqual(618);
     });
     it('should propose 8 moves on a specific minimal board', () => {
         // Given a state with 4 empty spaces and no remaining pressure plate
@@ -64,7 +62,7 @@ describe('LodestoneDummyMinimax', () => {
         const node: LodestoneNode = new LodestoneNode(state);
         // When computing all possible moves
         // Then there should be 4*2 possible moves
-        expect(minimax.getListMoves(node).length).toBe(8);
+        expect(moveGenerator.getListMoves(node).length).toBe(8);
     });
     it('should not propose illegal moves when there is only one spot left in pressure plates', () => {
         // Given a state with one remaining spot per pressure plate
@@ -89,10 +87,16 @@ describe('LodestoneDummyMinimax', () => {
 
         const node: LodestoneNode = new LodestoneNode(state);
         // When computing all possible moves
-        for (const move of minimax.getListMoves(node)) {
+        for (const move of moveGenerator.getListMoves(node)) {
             // Then all moves should be legal
             expect(LodestoneRules.get().isLegal(move, state).isSuccess()).toBeTrue();
         }
 
+    });
+});
+
+describe('LodestoneScoreMinimax', () => {
+    it('should create', () => {
+        expect(new LodestoneScoreMinimax()).toBeTruthy();
     });
 });

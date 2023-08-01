@@ -1,15 +1,16 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
-import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
+import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlMinimax';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { BrandhubState } from '../brandhub/BrandhubState';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { BrandhubMove } from '../brandhub/BrandhubMove';
 
 describe('TaflPieceAndControlMinimax', () => {
 
-    let minimax: TaflPieceAndControlMinimax;
+    let heuristic: TaflPieceAndControlHeuristic<BrandhubMove, BrandhubState>;
 
     let rules: BrandhubRules;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
@@ -19,7 +20,7 @@ describe('TaflPieceAndControlMinimax', () => {
 
     beforeEach(() => {
         rules = BrandhubRules.get();
-        minimax = new TaflPieceAndControlMinimax(rules, 'Piece > Control');
+        heuristic = new TaflPieceAndControlHeuristic(rules);
     });
     it('should prefer to be threatened by false threat than by real one', () => {
         // Given a board where you are threatened by an uncapturable piece
@@ -48,8 +49,8 @@ describe('TaflPieceAndControlMinimax', () => {
         ];
         const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
 
-        // Then the strong board should be preffered
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        // Then the strong board should be preferred
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);

@@ -12,7 +12,7 @@ import { MGPValidation } from '../MGPValidation';
 import { AppModule, FirebaseProviders } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
-import { MGPNode } from '../../jscaip/MGPNode';
+import { GameNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { OnlineGameWrapperComponent }
@@ -302,10 +302,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                       previousMove?: Move)
     : void
     {
-        this.gameComponent.node = new MGPNode(
+        this.gameComponent.node = new GameNode(
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
-                new MGPNode(previousState)),
+                new GameNode(previousState)),
             MGPOptional.ofNullable(previousMove),
         );
         this.gameComponent.updateBoard();
