@@ -7,26 +7,26 @@ import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { Player } from 'src/app/jscaip/Player';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
-const ONE__0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 0)]);
-const ZERO_0: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 0)]);
-const ONE__1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 1)]);
-const ZERO_1: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 1)]);
-const ZERO_2: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 2)]);
-const ONE__2: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 2)]);
-const ZERO_3: TrexoPieceStack = TrexoPieceStack.from([
+const ONE__0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
+const ZERO_0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);
+const ONE__1: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 1)]);
+const ZERO_1: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 1)]);
+const ZERO_2: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 2)]);
+const ONE__2: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 2)]);
+const ZERO_3: TrexoPieceStack = TrexoPieceStack.of([
     new TrexoPiece(Player.ZERO, 0),
     new TrexoPiece(Player.ZERO, 3),
 ]);
-const ONE__3: TrexoPieceStack = TrexoPieceStack.from([
+const ONE__3: TrexoPieceStack = TrexoPieceStack.of([
     new TrexoPiece(Player.ONE, 1),
     new TrexoPiece(Player.ONE, 3),
 ]);
-const ZERO_4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 4)]);
-const ONE__4: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 4)]);
-const ZERO_5: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 5)]);
-const ONE__5: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 5)]);
-const ONE__6: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ONE, 6)]);
-const ZERO_6: TrexoPieceStack = TrexoPieceStack.from([new TrexoPiece(Player.ZERO, 6)]);
+const ZERO_4: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 4)]);
+const ONE__4: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 4)]);
+const ZERO_5: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 5)]);
+const ONE__5: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 5)]);
+const ONE__6: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 6)]);
+const ZERO_6: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 6)]);
 
 export class TrexoTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

@@ -7,12 +7,10 @@ import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneCaptures } from './LodestoneMove';
-
 export class LodestonePressurePlate {
     public static POSITIONS: LodestonePressurePlatePosition[] = ['top', 'bottom', 'left', 'right'];
     public static EMPTY_5: LodestonePressurePlate = new LodestonePressurePlate(5, []);
     public static EMPTY_3: LodestonePressurePlate = new LodestonePressurePlate(3, []);
-
     public constructor(public readonly width: 3 | 5,
                        private readonly pieces: readonly LodestonePiecePlayer[]) {
     }
@@ -50,16 +48,11 @@ export class LodestonePressurePlate {
         }
     }
 }
-
 export type LodestonePressurePlatePosition = 'top' | 'bottom' | 'left' | 'right';
 export type LodestonePressurePlates = Record<LodestonePressurePlatePosition, MGPOptional<LodestonePressurePlate>>
-
 export type LodestonePositions = MGPMap<Player, Coord>
-
 export class LodestoneState extends GameStateWithTable<LodestonePiece> {
-
     public static readonly SIZE: number = 8;
-
     public static getInitialState(): LodestoneState {
         const _: LodestonePiece = LodestonePieceNone.EMPTY;
         const O: LodestonePiece = LodestonePiecePlayer.ZERO;
@@ -84,7 +77,6 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
                                       right: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
                                   });
     }
-
     public constructor(board: Table<LodestonePiece>,
                        turn: number,
                        public readonly lodestones: LodestonePositions,

@@ -149,10 +149,10 @@ export class SixComponent
             }
             return MGPValidation.SUCCESS;
         } else {
-            const cuttingMove: SixMove = SixMove.fromCut(this.selectedPiece.get(),
-                                                         this.chosenLanding.get(),
-                                                         piece);
-            return this.chooseMove(cuttingMove, this.state);
+            const cuttingMove: SixMove = SixMove.ofCut(this.selectedPiece.get(),
+                                                       this.chosenLanding.get(),
+                                                       piece);
+            return this.chooseMove(cuttingMove);
         }
     }
     public async onNeighborClick(neighbor: Coord): Promise<MGPValidation> {
@@ -164,12 +164,12 @@ export class SixComponent
             return this.cancelMove(SixFailure.MUST_CUT());
         }
         if (this.state.turn < 40) {
-            return this.chooseMove(SixMove.fromDrop(neighbor), this.state);
+            return this.chooseMove(SixMove.ofDrop(neighbor));
         } else {
             if (this.selectedPiece.isAbsent()) {
                 return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP());
             } else {
-                const movement: SixMove = SixMove.fromMovement(this.selectedPiece.get(), neighbor);
+                const movement: SixMove = SixMove.ofMovement(this.selectedPiece.get(), neighbor);
                 const legality: MGPFallible<SixLegalityInformation> =
                     SixRules.isLegalPhaseTwoMove(movement, this.state);
                 if (this.neededCutting(legality)) {
@@ -179,7 +179,7 @@ export class SixComponent
                     this.nextClickShouldSelectGroup = true;
                     return MGPValidation.SUCCESS;
                 } else {
-                    return this.chooseMove(movement, this.state);
+                    return this.chooseMove(movement);
                 }
             }
         }
@@ -193,7 +193,7 @@ export class SixComponent
         this.neighbors = this.getEmptyNeighbors();
     }
     private showCuttable(): void {
-        const movement: SixMove = SixMove.fromMovement(this.selectedPiece.get(), this.chosenLanding.get());
+        const movement: SixMove = SixMove.ofMovement(this.selectedPiece.get(), this.chosenLanding.get());
         const stateAfterMove: SixState = this.state.movePiece(movement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
         const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getLargestGroups(groupsAfterMove);

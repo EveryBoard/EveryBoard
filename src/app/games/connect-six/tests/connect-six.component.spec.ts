@@ -27,7 +27,7 @@ describe('ConnectSixComponent', () => {
             // Given the initial state of the component
             // When clicking anywhere
             // Then a first move should be done
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9));
+            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
             await testUtils.expectMoveSuccess('#click_9_9', move);
         }));
         it('should cancel move when clicking on occupied stone from previous turns', fakeAsync(async() => {
@@ -150,7 +150,7 @@ describe('ConnectSixComponent', () => {
             await testUtils.expectClickSuccess('#click_8_8');
 
             // When clicking on a second empty square
-            const move: ConnectSixMove = ConnectSixDrops.from(new Coord(8, 8), new Coord(7, 7)).get();
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(8, 8), new Coord(7, 7));
 
             // Then the move should be done
             await testUtils.expectMoveSuccess('#click_7_7', move);
@@ -184,7 +184,7 @@ describe('ConnectSixComponent', () => {
             await testUtils.expectClickSuccess('#click_6_8');
 
             // When finishing your move
-            const move: ConnectSixMove = ConnectSixDrops.from(new Coord(6, 8), new Coord(5, 8)).get() as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(6, 8), new Coord(5, 8));
 
             // Then the victory squares should be highlighted
             await testUtils.expectMoveSuccess('#click_5_8', move);
@@ -220,7 +220,7 @@ describe('ConnectSixComponent', () => {
             ], 1);
 
             // When displaying it
-            testUtils.setupState(state, undefined, ConnectSixFirstMove.from(new Coord(9, 9)));
+            testUtils.setupState(state, undefined, ConnectSixFirstMove.of(new Coord(9, 9)));
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece_9_9', 'last-move-stroke');
@@ -250,7 +250,7 @@ describe('ConnectSixComponent', () => {
             ], 1);
 
             // When displaying it
-            testUtils.setupState(state, undefined, ConnectSixDrops.from(new Coord(10, 9), new Coord(11, 9)).get());
+            testUtils.setupState(state, undefined, ConnectSixDrops.of(new Coord(10, 9), new Coord(11, 9)));
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece_10_9', 'last-move-stroke');

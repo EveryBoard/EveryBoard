@@ -12,12 +12,12 @@ export class PenteTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Initial board and object of the game`,
-            $localize`Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.`,
+            $localize`Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.`,
             PenteState.getInitialState(),
         ),
         TutorialStep.anyMove(
-            $localize`Dropping a stone`,
-            $localize`At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.<br/><br/>You're playing Dark, put a stone on the board.`,
+            $localize`Dropping a piece`,
+            $localize`At your turn, you must drop one piece on any empty space of the board. There is no other restriction.<br/><br/>You're playing Dark, put a piece on the board.`,
             PenteState.getInitialState(),
             PenteMove.of(new Coord(9, 8)),
             $localize`Congratulations!`,
@@ -102,7 +102,11 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], [8, 8], 7),
-            [PenteMove.of(new Coord(9, 6)), PenteMove.of(new Coord(8, 9)), PenteMove.of(new Coord(13, 9))],
+            [
+                PenteMove.of(new Coord(9, 6)),
+                PenteMove.of(new Coord(8, 9)),
+                PenteMove.of(new Coord(13, 9)),
+            ],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
         ),

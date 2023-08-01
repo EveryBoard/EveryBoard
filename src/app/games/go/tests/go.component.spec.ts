@@ -23,10 +23,10 @@ describe('GoComponent', () => {
         testUtils.expectToBeCreated();
     });
     it('should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
-        await testUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Passed
-        await testUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Counting
-        await testUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Accept
-        await testUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Finished
+        await testUtils.expectPassSuccess(GoMove.PASS); // Passed
+        await testUtils.expectPassSuccess(GoMove.PASS); // Counting
+        await testUtils.expectPassSuccess(GoMove.ACCEPT); // Accept
+        await testUtils.expectPassSuccess(GoMove.ACCEPT); // Finished
         testUtils.expectPassToBeForbidden();
     }));
     it('should show captures', fakeAsync(async() => {
@@ -41,15 +41,15 @@ describe('GoComponent', () => {
         testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
-        await testUtils.expectMoveSuccess('#click_0_1', move, undefined, [0, 0]);
+        await testUtils.expectMoveSuccess('#click_0_1', move);
         const goComponent: GoComponent = testUtils.getGameComponent();
         expect(goComponent.captures).toEqual([new Coord(0, 0)]);
     }));
     it('should allow simple clicks', fakeAsync(async() => {
         const move: GoMove = new GoMove(1, 1);
-        await testUtils.expectMoveSuccess('#click_1_1', move, undefined, [0, 0]);
+        await testUtils.expectMoveSuccess('#click_1_1', move);
         const secondMove: GoMove = new GoMove(2, 2);
-        await testUtils.expectMoveSuccess('#click_2_2', secondMove, undefined, [0, 0]);
+        await testUtils.expectMoveSuccess('#click_2_2', secondMove);
     }));
     describe('hoshi', () => {
         it('shoud be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {

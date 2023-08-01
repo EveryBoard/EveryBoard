@@ -7,6 +7,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { SaharaFailure } from '../SaharaFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('SaharaMoves', () => {
 
@@ -23,15 +24,21 @@ describe('SaharaMoves', () => {
     });
     it('should throw error when starting coord is outside the board', () => {
         const start: Coord = new Coord(-1, 0);
-        const end: Coord = new Coord(0, 0);
-        const expectedError: string = 'Move must start inside the board not at '+ start.toString() + '.';
-        expect(() => SaharaMove.from(start, end)).toThrowError(expectedError);
+        function createMoveWithOutOfRangeStart(): void {
+            const end: Coord = new Coord(0, 0);
+            SaharaMove.from(start, end);
+        }
+        const error: string = 'Move must start inside the board not at '+ start.toString() + '.';
+        RulesUtils.expectToThrowAndLog(createMoveWithOutOfRangeStart, error);
     });
     it('should throw error when move end outside the board', () => {
-        const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(-1, 0);
-        const expectedError: string = 'Move must end inside the board not at '+ end.toString() + '.';
-        expect(() => SaharaMove.from(start, end)).toThrowError(expectedError);
+        function createMoveWithOutOfRangeEnd(): void {
+            const start: Coord = new Coord(0, 0);
+            SaharaMove.from(start, end);
+        }
+        const error: string = 'Move must end inside the board not at '+ end.toString() + '.';
+        RulesUtils.expectToThrowAndLog(createMoveWithOutOfRangeEnd, error);
     });
     it('should throw error when start and end are too far away', () => {
         const start: Coord = new Coord(0, 0);

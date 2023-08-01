@@ -151,17 +151,17 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
-                    EncapsuleMove.fromDrop(EncapsulePiece.BIG_DARK, new Coord(0, 2)),
+                    EncapsuleMove.ofDrop(EncapsulePiece.BIG_DARK, new Coord(0, 2)),
                     MGPValidation.failure(`You won, but the exercise is to win while moving a piece!`),
                 ], [
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
-                    EncapsuleMove.fromMove(new Coord(0, 0), new Coord(0, 2)),
+                    EncapsuleMove.ofMove(new Coord(0, 0), new Coord(0, 2)),
                     MGPValidation.failure(`Failed. Try again.`),
                 ], [
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
-                    EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 0)),
+                    EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 0)),
                     MGPValidation.failure(`Failed. Try again.`),
                 ], [
                     EpaminondasRules.get(),
@@ -241,12 +241,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     PylosRules.get(),
                     pylosTutorial[4],
-                    PylosMove.fromDrop(new PylosCoord(3, 3, 0), []),
+                    PylosMove.ofDrop(new PylosCoord(3, 3, 0), []),
                     MGPValidation.failure(TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
                 ], [
                     PylosRules.get(),
                     pylosTutorial[4],
-                    PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0)]),
+                    PylosMove.ofDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0)]),
                     MGPValidation.failure(`Failed, you only captured one piece.`),
                 ], [
                     SaharaRules.get(),
@@ -261,27 +261,27 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     SixRules.get(),
                     sixTutorial[4],
-                    SixMove.fromMovement(new Coord(6, 1), new Coord(7, 1)),
+                    SixMove.ofMovement(new Coord(6, 1), new Coord(7, 1)),
                     MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING()),
                 ], [
                     SixRules.get(),
                     sixTutorial[4],
-                    SixMove.fromMovement(new Coord(6, 1), new Coord(6, 0)),
+                    SixMove.ofMovement(new Coord(6, 1), new Coord(6, 0)),
                     MGPValidation.failure(SixTutorialMessages.MOVEMENT_SELF_DISCONNECTING()),
                 ], [
                     SixRules.get(),
                     sixTutorial[5],
-                    SixMove.fromMovement(new Coord(0, 6), new Coord(1, 6)),
+                    SixMove.ofMovement(new Coord(0, 6), new Coord(1, 6)),
                     MGPValidation.failure(`This move does not disconnect your opponent's pieces. Try again with another piece.`),
                 ], [
                     SixRules.get(),
                     sixTutorial[6],
-                    SixMove.fromMovement(new Coord(2, 3), new Coord(3, 3)),
+                    SixMove.ofMovement(new Coord(2, 3), new Coord(3, 3)),
                     MGPValidation.failure(`This move has not cut the board in two equal halves.`),
                 ], [
                     SixRules.get(),
                     sixTutorial[6],
-                    SixMove.fromCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
+                    SixMove.ofCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
                     MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`),
                 ], [
                     TrexoRules.get(),
@@ -296,7 +296,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     YinshRules.get(),
                     yinshTutorial[4],
-                    new YinshMove([YinshCapture.of(new Coord(5, 4), new Coord(5, 8), new Coord(3, 2))],
+                    new YinshMove([YinshCapture.of(new Coord(5, 4), new Coord(5, 8), MGPOptional.of(new Coord(3, 2)))],
                                   new Coord(4, 1), MGPOptional.of(new Coord(6, 1)),
                                   []),
                     MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO()),

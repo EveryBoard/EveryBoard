@@ -20,7 +20,7 @@ describe('LascaControlMinimax', () => {
     });
     it('should return full list of captures when capture must be done', () => {
         // Given a state where current player should capture
-        const state: LascaState = LascaState.from([
+        const state: LascaState = LascaState.of([
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, v, _, _, _, _],
@@ -50,7 +50,7 @@ describe('LascaControlMinimax', () => {
     });
     it('should not count the immobilized stacks', () => {
         // Given two boards with the exact same stacks, one having blocked stacks
-        const immobilizedState: LascaState = LascaState.from([
+        const immobilizedState: LascaState = LascaState.of([
             [v, _, _, _, _, _, _],
             [_, u, _, _, _, _, _],
             [_, _, u, _, _, _, _],
@@ -59,7 +59,7 @@ describe('LascaControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ], 0);
-        const mobileState: LascaState = LascaState.from([
+        const mobileState: LascaState = LascaState.of([
             [v, _, _, _, _, _, _],
             [_, _, _, u, _, _, _],
             [_, _, u, _, _, _, _],
@@ -80,7 +80,7 @@ describe('LascaControlMinimax', () => {
     });
     it('should count the potential mobility as primary board value', () => {
         // Given two boards with the same stacks, one with an unique forced capture, the other without
-        const forcedState: LascaState = LascaState.from([
+        const forcedState: LascaState = LascaState.of([
             [v, _, _, _, _, _, _],
             [_, u, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -89,7 +89,7 @@ describe('LascaControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ], 0); // O has 1 stack, X has 2
-        const freeState: LascaState = LascaState.from([
+        const freeState: LascaState = LascaState.of([
             [v, _, _, _, _, _, _],
             [_, _, _, u, _, _, _],
             [_, _, _, _, _, _, _],

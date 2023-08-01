@@ -3,6 +3,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { PylosCoord } from '../PylosCoord';
 import { PylosFailure } from '../PylosFailure';
 import { PylosMove, PylosMoveFailure } from '../PylosMove';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('PylosMove', () => {
 
@@ -12,16 +13,19 @@ describe('PylosMove', () => {
     it('should forbid horizontal climb creation', () => {
         // Given two coord on the same Z level
         // When creating a move going horizontally
+        function creatingAMoveGoingHorizontally(): void {
+            PylosMove.ofClimb(coord, new PylosCoord(1, 1, 0), []);
+        }
         // Then it should throw
-        expect(() => PylosMove.fromClimb(coord, new PylosCoord(1, 1, 0), []))
-            .toThrowError(PylosFailure.MUST_MOVE_UPWARD());
+        const error: string = PylosFailure.MUST_MOVE_UPWARD();
+        RulesUtils.expectToThrowAndLog(creatingAMoveGoingHorizontally, error);
     });
     it('should allow move creation', () => {
         // From Climb
-        expect(PylosMove.fromClimb(coord, highCoord, [])).toBeDefined();
+        expect(PylosMove.ofClimb(coord, highCoord, [])).toBeDefined();
 
         // From Drop
-        expect(PylosMove.fromDrop(coord, [coord])).toBeDefined();
+        expect(PylosMove.ofDrop(coord, [coord])).toBeDefined();
     });
     it('should check and change captures correctly', () => {
         // Check capture
@@ -32,37 +36,37 @@ describe('PylosMove', () => {
         expect(() => PylosMove.checkCaptures([coord, highCoord])).not.toThrowError();
 
         // Change capture
-        const move: PylosMove = PylosMove.fromDrop(coord, [coord]);
-        const otherMove: PylosMove = PylosMove.fromDrop(coord, [highCoord]);
+        const move: PylosMove = PylosMove.ofDrop(coord, [coord]);
+        const otherMove: PylosMove = PylosMove.ofDrop(coord, [highCoord]);
         expect(PylosMove.changeCapture(move, [highCoord])).toEqual(otherMove);
     });
     it('should have a bijective encoder', () => {
         const initialMoves: PylosMove[] = [
-            PylosMove.fromClimb(coord, highCoord, []),
-            PylosMove.fromClimb(coord, highCoord, [coord]),
-            PylosMove.fromClimb(coord, highCoord, [coord, highCoord]),
-            PylosMove.fromDrop(coord, []),
-            PylosMove.fromDrop(coord, [coord]),
-            PylosMove.fromDrop(coord, [highCoord]),
+            PylosMove.ofClimb(coord, highCoord, []),
+            PylosMove.ofClimb(coord, highCoord, [coord]),
+            PylosMove.ofClimb(coord, highCoord, [coord, highCoord]),
+            PylosMove.ofDrop(coord, []),
+            PylosMove.ofDrop(coord, [coord]),
+            PylosMove.ofDrop(coord, [highCoord]),
         ];
         for (const move of initialMoves) {
             EncoderTestUtils.expectToBeBijective(PylosMove.encoder, move);
         }
     });
     it('should override toString correctly', () => {
-        const lightMove: PylosMove = PylosMove.fromDrop(coord, []);
-        const heavyMove: PylosMove = PylosMove.fromClimb(coord, highCoord, [highCoord, coord]);
+        const lightMove: PylosMove = PylosMove.ofDrop(coord, []);
+        const heavyMove: PylosMove = PylosMove.ofClimb(coord, highCoord, [highCoord, coord]);
         expect(lightMove.toString()).toEqual('PylosMove(-, (0, 0, 0), -, -)');
         expect(heavyMove.toString()).toEqual('PylosMove((0, 0, 0), (0, 0, 2), (0, 0, 2), (0, 0, 0))');
     });
     it('should override equals correctly', () => {
         const badCoord: PylosCoord = new PylosCoord(1, 1, 1);
-        const move: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
-        const sameMove: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
-        const otherMove1: PylosMove = PylosMove.fromClimb(badCoord, highCoord, [coord, highCoord]);
-        const otherMove2: PylosMove = PylosMove.fromClimb(coord, badCoord, [coord, highCoord]);
-        const otherMove3: PylosMove = PylosMove.fromClimb(coord, highCoord, [badCoord, highCoord]);
-        const otherMove4: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, badCoord]);
+        const move: PylosMove = PylosMove.ofClimb(coord, highCoord, [coord, highCoord]);
+        const sameMove: PylosMove = PylosMove.ofClimb(coord, highCoord, [coord, highCoord]);
+        const otherMove1: PylosMove = PylosMove.ofClimb(badCoord, highCoord, [coord, highCoord]);
+        const otherMove2: PylosMove = PylosMove.ofClimb(coord, badCoord, [coord, highCoord]);
+        const otherMove3: PylosMove = PylosMove.ofClimb(coord, highCoord, [badCoord, highCoord]);
+        const otherMove4: PylosMove = PylosMove.ofClimb(coord, highCoord, [coord, badCoord]);
 
         expect(move.equals(move)).toBeTrue();
         expect(move.equals(sameMove)).toBeTrue();
@@ -72,7 +76,7 @@ describe('PylosMove', () => {
         expect(move.equals(otherMove4)).toBeFalse();
     });
     it('should create [low, high] equal to [high, low]', () => {
-        const moveAB: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
+        const moveAB: PylosMove = PylosMove.ofClimb(coord, highCoord, [coord, highCoord]);
         expect(moveAB.firstCapture.get()).toEqual(highCoord);
     });
 });

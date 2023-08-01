@@ -12,7 +12,8 @@ describe('Coord3D', () => {
             MGPOptional.empty(),
             MGPOptional.of(new Coord3D(0, 0, 0)),
         ];
-        const encoder: Encoder<MGPOptional<Coord3D>> = MGPOptional.getEncoder(Coord3D.getEncoder(Coord3D.of));
+        const encoder: Encoder<MGPOptional<Coord3D>> =
+            MGPOptional.getEncoder(Coord3D.getCoord3DEncoder(Coord3D.of));
         for (const value of values) {
             EncoderTestUtils.expectToBeBijective(encoder, value);
         }

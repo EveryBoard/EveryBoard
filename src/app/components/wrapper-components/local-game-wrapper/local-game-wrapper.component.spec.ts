@@ -59,8 +59,10 @@ describe('LocalGameWrapperComponent', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));
-    it('should create', () => {
+    it('should create the component at turn 0', () => {
         expect(testUtils.getGameComponent()).toBeTruthy();
+        const state: P4State = testUtils.getGameComponent().getState();
+        expect(state.turn).toBe(0);
     });
     it('should have game included after view init', () => {
         let p4Tag: DebugElement = testUtils.findElement('app-p4');
@@ -72,7 +74,11 @@ describe('LocalGameWrapperComponent', () => {
             .withContext('gameComponent should be present once component view init').toBeTruthy();
     });
     it('connected user should be able to play', fakeAsync(async() => {
+        // Given the initial board
+        // When doing a move
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+        // Then the turn should be incremented
+        expect(testUtils.getGameComponent().getTurn()).toBe(1);
     }));
     it('should allow to go back one move', fakeAsync(async() => {
         const state: P4State = testUtils.getGameComponent().getState();
@@ -341,20 +347,16 @@ describe('LocalGameWrapperComponent', () => {
             // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
         }));
-        it('should reject human move if it tries to play (without click) when it is not its turn', fakeAsync(async() => {
+        it('should reject human move if it tries to play when it is not its turn', fakeAsync(async() => {
             // Given a game against an AI
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             wrapper.players[0] = MGPOptional.of('P4Minimax');
             wrapper.aiDepths[0] = '1';
 
-            // When receiveValidMove is called
-            const state: P4State = testUtils.getGameComponent().getState();
-            const result: MGPValidation = await wrapper.receiveValidMove(P4Move.ZERO, state);
-            tick(1);
-
-            // Then it should display a message
-            expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe(GameWrapperMessages.NOT_YOUR_TURN());
+            // When trying to click
+            // Then it should fail
+            await testUtils.expectClickFailure('#click_3', GameWrapperMessages.NOT_YOUR_TURN());
+            tick(3000);
         }));
     });
     describe('winner indicator', () => {
@@ -474,4 +476,31 @@ describe('LocalGameWrapperComponent', () => {
         // Then the AI metrics are shown
         testUtils.expectElementToExist('#AIMetrics');
     }));
+    describe('takeBack', () => {
+        it('should allow to go back one move', fakeAsync(async() => {
+            // Given a board with a move already done
+            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+
+            // When taking back
+            spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
+            await testUtils.expectInterfaceClickSuccess('#takeBack');
+
+            // Then we should be back on turn 0 and board should have been updated
+            expect(testUtils.getGameComponent().getTurn()).toBe(0);
+            expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledTimes(1);
+        }));
+        it('should cancelMoveAttempt when taking back', fakeAsync(async() => {
+            // Given a board where a move could be in construction
+            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+
+            // When calling take back
+            const component: P4Component = testUtils.getGameComponent();
+            spyOn(component, 'cancelMoveAttempt').and.callThrough();
+            await testUtils.expectInterfaceClickSuccess('#takeBack');
+
+            // Then gameComponent.cancelMoveAttempt should have been called
+            // And hence the potentially move in construction undone from the board
+            expect(component.cancelMoveAttempt).toHaveBeenCalledOnceWith();
+        }));
+    });
 });

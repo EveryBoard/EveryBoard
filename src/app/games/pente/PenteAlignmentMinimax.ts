@@ -19,7 +19,7 @@ export class PenteAlignmentMinimax extends Minimax<PenteMove, PenteState> {
         return moves;
     }
     public getBoardValue(node: PenteNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = PenteRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return BoardValue.fromWinner(gameStatus.winner);
         } else {

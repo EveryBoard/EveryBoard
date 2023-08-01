@@ -1,9 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { assert } from 'src/app/utils/assert';
 import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
-import { LodestoneOrientation, LodestoneDirection } from './LodestonePiece';
+import { LodestoneDirection, LodestoneOrientation } from './LodestonePiece';
 
 export type LodestoneCaptures = {
     top: number,
@@ -14,8 +14,8 @@ export type LodestoneCaptures = {
 
 export class LodestoneMove extends MoveCoord {
 
-    public static encoder: MoveEncoder<LodestoneMove> = new class extends MoveEncoder<LodestoneMove> {
-        public encodeMove(move: LodestoneMove): JSONValueWithoutArray {
+    public static encoder: Encoder<LodestoneMove> = new class extends Encoder<LodestoneMove> {
+        public encode(move: LodestoneMove): JSONValueWithoutArray {
             return {
                 coord: Coord.encoder.encode(move.coord),
                 direction: move.direction,
@@ -23,7 +23,7 @@ export class LodestoneMove extends MoveCoord {
                 captures: move.captures,
             };
         }
-        public decodeMove(encoded: JSONValueWithoutArray): LodestoneMove {
+        public decode(encoded: JSONValueWithoutArray): LodestoneMove {
             const casted: JSONObject = encoded as JSONObject;
             assert(casted.coord != null, 'Invalid encoded LodestoneMove');
             assert(casted.direction != null, 'Invalid encoded LodestoneMove');

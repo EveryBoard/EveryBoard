@@ -36,7 +36,7 @@ describe('SixState', () => {
             expectedPieces.put(new Coord(0, 0), Player.ONE);
             expectedPieces.put(new Coord(1, 1), Player.ZERO);
             expectedPieces.makeImmutable();
-            const state: SixState = SixState.fromRepresentation(representation, 0);
+            const state: SixState = SixState.ofRepresentation(representation, 0);
             expect(state.pieces).toEqual(expectedPieces);
         });
     });
@@ -49,7 +49,7 @@ describe('SixState', () => {
                 [_, O, _, _, _],
                 [O, _, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(representation, 40);
+            const state: SixState = SixState.ofRepresentation(representation, 40);
             const groups: MGPSet<MGPSet<Coord>> = state.getGroups();
             const expectedGroups: MGPSet<MGPSet<Coord>> = new MGPSet([
                 new CoordSet([new Coord(2, 0), new Coord(2, 1)]),
@@ -69,7 +69,7 @@ describe('SixState', () => {
                 [_, O, _, _, _],
                 [O, _, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(representation, 40);
+            const state: SixState = SixState.ofRepresentation(representation, 40);
             // When trying to switch an empty coord
             // Then it should throw and call logError
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);

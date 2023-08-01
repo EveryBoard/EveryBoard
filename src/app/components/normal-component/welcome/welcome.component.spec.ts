@@ -2,7 +2,7 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { expectValidRouting, expectValidRoutingLink, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
@@ -26,8 +26,8 @@ describe('WelcomeComponent', () => {
     it('should redirect to online game creation when clicking on the corresponding button', fakeAsync(async() => {
         // Given a welcome component
         // where ConnectedUserService tells us user can join a game
-        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-        spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
+        const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+        spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
@@ -41,9 +41,9 @@ describe('WelcomeComponent', () => {
     it('should not redirect to online game creation when clicking on the corresponding button while in a game', fakeAsync(async() => {
         // Given a welcome component
         // where ConnectedUserService tells us user cannot join a game
-        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
+        const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
         const error: string = `j'ai dit non!`;
-        spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
+        spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
@@ -86,9 +86,9 @@ describe('WelcomeComponent', () => {
     it('should not redirect to part selection when clicking on the corresponding button while already playing', fakeAsync(async() => {
         // Given a welcome component
         // where ConnectedUserService tells us user cannot join a game
-        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
+        const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
         const error: string = `j'ai dit non!`;
-        spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
+        spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 

@@ -140,7 +140,7 @@
                    (click)="choosePiece((4 * y) + x)"
                    id="choosePiece_{{ (4 * y) + x }}"
                 >
-                    <rect *ngIf="pieceToGive.equalsValue(QuartoPiece.fromInt((4 * y) + x))"
+                    <rect *ngIf="pieceToGive.equalsValue(QuartoPiece.ofInt((4 * y) + x))"
                           id="chosenPiece_{{ (4 * y) + x }}"
                           [attr.x]="SPACE_SIZE * x"
                           [attr.y]="SPACE_SIZE * y"

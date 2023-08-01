@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveMinimax } from '../HiveMinimax';
 import { HiveFailure } from '../HiveFailure';
-import { HiveMove, HiveMoveCoordToCoord } from '../HiveMove';
+import { HiveMove, HiveCoordToCoordMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
@@ -920,7 +920,7 @@ describe('HiveRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 6);
 
         // When computing the possible moves for the spider
-        const moves: MGPSet<HiveMoveCoordToCoord> = rules.getPossibleMovesFrom(state, new Coord(1, 0));
+        const moves: MGPSet<HiveCoordToCoordMove> = rules.getPossibleMovesFrom(state, new Coord(1, 0));
         // Then we should have exactly 4 moves
         expect(moves.size()).toBe(4);
     });

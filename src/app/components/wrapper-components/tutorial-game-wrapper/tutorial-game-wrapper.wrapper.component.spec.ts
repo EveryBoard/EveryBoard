@@ -230,7 +230,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#choosePiece_8');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
-            await testUtils.expectMoveSuccess('#chooseCoord_1_1', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#chooseCoord_1_1', move);
             tick(10);
 
             // When clicking retry
@@ -260,7 +260,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#choosePiece_15');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#chooseCoord_0_0', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#chooseCoord_0_0', move);
             tick(10);
             await testUtils.clickElement('#retryButton');
 
@@ -293,7 +293,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move);
             tick(10);
 
             // When clicking again
@@ -591,7 +591,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move);
             tick(10);
 
             // expect to see steps success message on component
@@ -623,7 +623,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#chooseCoord_1_1');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move);
             tick(10);
 
             // expect to see steps success message on component
@@ -774,7 +774,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move);
             tick(10);
 
             // expect to see steps success message on component
@@ -962,7 +962,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move);
             tick(10);
 
             // expect to see steps success message on component
@@ -991,7 +991,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', move);
             tick(10);
 
             // expect to see steps success message on component
@@ -1021,7 +1021,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const proposedMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', proposedMove, QuartoState.getInitialState());
+            await testUtils.expectMoveSuccess('#choosePiece_15', proposedMove);
             tick(10);
 
             // When clicking "Show Solution"

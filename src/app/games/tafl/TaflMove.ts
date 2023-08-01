@@ -19,11 +19,6 @@ export abstract class TaflMove extends MoveCoordToCoord {
             throw new Error(TaflFailure.MOVE_MUST_BE_ORTHOGONAL());
         }
     }
-    public equals(other: TaflMove): boolean {
-        if (other === this) return true;
-        if (other.getStart().equals(this.getStart()) === false) return false;
-        return other.getEnd().equals(this.getEnd());
-    }
     public override toString(): string {
         return 'TaflMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }

@@ -1,12 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TaflMove } from '../TaflMove';
 
 export class HnefataflMove extends TaflMove {
 
-    public static encoder: MoveEncoder<HnefataflMove> =
+    public static encoder: Encoder<HnefataflMove> =
         MoveWithTwoCoords.getFallibleEncoder<HnefataflMove>(HnefataflMove.from);
 
     public static of(start: Coord, end: Coord): HnefataflMove {

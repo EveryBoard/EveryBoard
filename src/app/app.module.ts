@@ -75,6 +75,7 @@ import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
+import { TeekoComponent } from './games/teeko/teeko.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
 import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
@@ -217,6 +218,7 @@ export class FirebaseProviders {
         SiamComponent,
         SixComponent,
         TablutComponent,
+        TeekoComponent,
         TrexoComponent, TrexoHalfPieceComponent,
         YinshComponent,
 

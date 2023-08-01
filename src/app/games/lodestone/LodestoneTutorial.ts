@@ -20,9 +20,7 @@ const allPressurePlates: LodestonePressurePlates = {
     left: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
     right: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
 };
-
 export class LodestoneTutorial extends Tutorial {
-
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Board and aim of the game`,

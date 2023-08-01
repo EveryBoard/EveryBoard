@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -54,7 +54,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
                                     B extends BoardValue = BoardValue>
     extends BaseGameComponent
 {
-    public encoder: MoveEncoder<M>;
+    public encoder: Encoder<M>;
 
     public Player: typeof Player = Player;
 
@@ -85,9 +85,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public isPlayerTurn: () => boolean;
 
-    public chooseMove: (move: M,
-                        state: S,
-                        scores?: readonly [number, number]) => Promise<MGPValidation>;
+    public chooseMove: (move: M) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => MGPValidation;
 
