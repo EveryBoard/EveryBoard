@@ -25,3 +25,6 @@ export class KalahMove extends MancalaMove {
         return ArrayUtils.compareArray(this.subMoves, other.subMoves);
     }
 }
+// TODO: fin de partie que dans le kalah devrait proposer le move
+// TODO: 15 + 1 serait écrit 16 + 1 à la place (comme les captures sont 0 -2)
+// TODO: Faut voir l'animation lo
