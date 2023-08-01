@@ -162,7 +162,7 @@ export class SimpleComponentTestUtils<T> {
             await this.whenStable();
         }
         if (waitOneMs) {
-            tick(1);
+            tick(0); // Yeah, not really 1ms, but we want to flush asynchronous tasks
         }
         this.detectChanges();
     }
@@ -265,7 +265,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         ConnectedUserServiceMock.setUser(user);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
-        tick(1);
+        tick(1); // Need to be at least 1ms
         testUtils.bindGameComponent();
         testUtils.prepareSpies();
         return testUtils;

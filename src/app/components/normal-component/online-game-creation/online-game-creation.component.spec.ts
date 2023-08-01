@@ -22,7 +22,7 @@ describe('OnlineGameCreationComponent for non-existing game', () => {
 
         // When loading the wrapper
         testUtils.detectChanges();
-        tick(1);
+        tick(0);
 
         // Then it goes to /notFound with the expected error message
         const route: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
@@ -46,7 +46,7 @@ describe('OnlineGameCreationComponent', () => {
 
         // When the page is rendered
         testUtils.detectChanges();
-        tick(1);
+        tick(0);
 
         // Then the user should be redirected to the game
         expectValidRouting(router, ['/play', game, 'PartDAOMock0'], OnlineGameWrapperComponent);

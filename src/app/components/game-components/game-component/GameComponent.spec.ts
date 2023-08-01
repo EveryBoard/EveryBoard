@@ -33,7 +33,7 @@ describe('GameComponent', () => {
         expect(component).toBeDefined();
         testUtils.getWrapper().role = Player.ONE;
         testUtils.detectChanges();
-        tick(1);
+        tick(0);
 
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
@@ -157,7 +157,7 @@ describe('GameComponent', () => {
             const component: AbstractGameComponent = testUtils.getGameComponent();
             testUtils.getWrapper().role = PlayerOrNone.NONE;
             testUtils.detectChanges();
-            tick(1);
+            tick(0);
             expect(component).toBeDefined();
             for (const methodName of Object.keys(game)) {
                 const context: string = `click method ${methodName} should be defined for game ${gameInfo.name}`;
@@ -177,7 +177,7 @@ describe('GameComponent', () => {
             // When displaying the game
             const component: AbstractGameComponent = testUtils.getGameComponent();
             testUtils.detectChanges();
-            tick(1);
+            tick(0);
 
             // Then it should have an encoder and a non-empty tutorial
             expect(component.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();

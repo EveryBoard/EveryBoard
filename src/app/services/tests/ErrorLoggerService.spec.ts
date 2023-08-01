@@ -66,7 +66,7 @@ describe('ErrorLoggerService', () => {
 
         // When logging it
         ErrorLoggerService.logError(component, message, data);
-        tick(1);
+        tick(0);
 
         // Then the error is stored in the DAO with all expected fields
         const expectedError: MGPError = {
@@ -88,7 +88,7 @@ describe('ErrorLoggerService', () => {
 
         // When logging it
         ErrorLoggerService.logError(component, message);
-        tick(1);
+        tick(0);
 
         // Then the error is stored in the DAO with all expected fields
         const expectedError: MGPError = {
@@ -115,7 +115,7 @@ describe('ErrorLoggerService', () => {
 
         // When logging it a second time
         ErrorLoggerService.logError(component, message, data);
-        tick(1);
+        tick(0);
 
         // Then the error is updated in the DAO with all expected fields
         const update: Partial<MGPError> = {

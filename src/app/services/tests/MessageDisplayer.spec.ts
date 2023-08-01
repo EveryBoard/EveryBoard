@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MessageDisplayer } from '../MessageDisplayer';
 
 describe('MessageDisplayer', () => {
@@ -17,6 +17,17 @@ describe('MessageDisplayer', () => {
         // The getDuration method is private, but let's use it to calculate durations here too
         return messageDisplayer['getDuration'](message);
     }
+    it('should display a toast for the requested duration', fakeAsync(() => {
+        // Given a message to display
+        const message: string = 'some message';
+        // We want to make sure that toast is called only in this test
+        toastSpy.and.callThrough();
+        // When displaying it
+        messageDisplayer.infoMessage(message);
+        // Then it should toast for the given duration, not more
+        // if it lasts longer, this test will fail with a remaining timer error
+        tick(duration(message));
+    }));
     it('should display info message with is-info class', () => {
         // Given an info message
         const message: string = 'not so important, just some information';

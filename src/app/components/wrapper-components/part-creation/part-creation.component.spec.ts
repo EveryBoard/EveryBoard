@@ -574,7 +574,7 @@ describe('PartCreationComponent', () => {
                 // When user cancel game creation
                 spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
                 await clickElement('#cancel');
-                tick(1);
+                tick(0);
                 testUtils.expectInfoMessageToHaveBeenDisplayed('The game has been canceled!');
 
                 // Then currentGame should be emptied

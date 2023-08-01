@@ -41,7 +41,7 @@ describe('OnlineGameWrapper for non-existing game', () => {
         testUtils.detectChanges();
 
         // When loading the component
-        tick(1);
+        tick(0);
 
         // Then it goes to /notFound with the expected error message
         const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
@@ -60,7 +60,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
      * stage 1: PartCreationComponent appear
      * startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
      * stage 2: PartCreationComponent disappear, game component appear
-     * tick(1): the async part of startGame is now finished
+     * tick(0): the async part of startGame is now finished
      * stage 3: P4Component appear
      * differents scenarios
      */
@@ -130,7 +130,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             testUtils.detectChanges();
             // Needed so PartCreation is destroyed and game component created
 
-            tick(1);
+            tick(0);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('Some tags are needed before initialization', fakeAsync(async() => {
@@ -168,7 +168,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(partCreationId).withContext('partCreation id should be absent before ngOnInit').toBeFalsy();
 
             testUtils.detectChanges();
-            tick(1);
+            tick(0);
 
             partCreationId = testUtils.findElement('#partCreation');
             expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
@@ -234,7 +234,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
             expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();
             expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
-            tick(1);
+            tick(0);
         }));
     });
     it('should redirect to /notFound if part does not exist', fakeAsync(async() => {
@@ -246,7 +246,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         testUtils.detectChanges();
-        tick(1);
+        tick(0);
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));

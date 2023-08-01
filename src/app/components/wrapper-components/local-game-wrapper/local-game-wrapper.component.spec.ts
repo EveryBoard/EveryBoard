@@ -40,7 +40,7 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
 
         // When loading the wrapper
         testUtils.detectChanges();
-        tick(1);
+        tick(1); // Need to tick at least for 1ms
 
         // Then it goes to /notFound with the expected error message and displays a toast
         expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
