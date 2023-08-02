@@ -419,7 +419,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             if (entrance.isNotInRange(5, 5)) {
                 for (const orientation of Orthogonal.ORTHOGONALS) {
                     const move: MGPFallible<SiamMove> =
-                        SiamMove.of(entrance.x, entrance.y, MGPOptional.of(direction), orientation);
+                        SiamMove.from(entrance.x, entrance.y, MGPOptional.of(direction), orientation);
                     assert(move.isSuccess(), 'SiamRules.getInsertionsAt should only construct valid insertions');
                     const legality: MGPFallible<SiamLegalityInformation> = this.isLegal(move.get(), state);
                     if (legality.isSuccess()) {
@@ -460,7 +460,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const currentOrientation: Orthogonal = piece.getDirection();
         for (const direction of Orthogonal.ORTHOGONALS) {
             if (direction !== currentOrientation) {
-                const newMove: SiamMove = SiamMove.of(coord.x, coord.y, MGPOptional.empty(), direction).get();
+                const newMove: SiamMove = SiamMove.from(coord.x, coord.y, MGPOptional.empty(), direction).get();
                 moves.push(newMove);
             }
         }
@@ -481,7 +481,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             orientations = [direction];
         }
         for (const orientation of orientations) {
-            const move: SiamMove = SiamMove.of(start.x, start.y, MGPOptional.of(direction), orientation).get();
+            const move: SiamMove = SiamMove.from(start.x, start.y, MGPOptional.of(direction), orientation).get();
             const legality: MGPFallible<SiamLegalityInformation> = this.isLegalForwarding(move, state, piece);
             if (legality.isSuccess()) {
                 moves.push(move);

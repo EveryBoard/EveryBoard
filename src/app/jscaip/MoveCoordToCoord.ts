@@ -22,4 +22,9 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
     public getEnd(): Coord {
         return this.getSecond();
     }
+    public equals(other: this): boolean {
+        if (this === other) return true;
+        if (this.getStart().equals(other.getStart()) === false) return false;
+        return this.getEnd().equals(other.getEnd());
+    }
 }

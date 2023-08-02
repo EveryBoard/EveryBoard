@@ -1,6 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
@@ -13,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
+import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export class SixState extends OpenHexagonalGameState<Player> {
 
@@ -22,7 +22,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
 
     public static getInitialState(): SixState {
         const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
-        return SixState.fromRepresentation(board, 0);
+        return SixState.ofRepresentation(board, 0);
     }
     /**
       * @param board the representation of the board
@@ -31,8 +31,9 @@ export class SixState extends OpenHexagonalGameState<Player> {
       * (useful if the upper left coord is in (-5, -9) or (512, 129))
       * @returns the state created from that board
      */
-    public static fromRepresentation(board: Table<PlayerOrNone>, turn: number, origin: Vector = new Vector(0, 0))
-    : SixState {
+    public static ofRepresentation(board: Table<PlayerOrNone>, turn: number, origin: Vector = new Vector(0, 0))
+    : SixState
+    {
         const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
@@ -69,8 +70,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
         }
     }
     public isCoordConnected(coord: Coord, except: MGPOptional<Coord>): boolean {
-        for (const dir of HexaDirection.factory.all) {
-            const neighbor: Coord = coord.getNext(dir, 1);
+        for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
             if (this.pieces.containsKey(neighbor) &&
                 (except.equalsValue(neighbor) === false))
             {

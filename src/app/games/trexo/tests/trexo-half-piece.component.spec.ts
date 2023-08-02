@@ -34,7 +34,7 @@ describe('TrexoHalfSquareComponent', () => {
 
     let component: TrexoHalfPieceComponent;
 
-    /** Thoses are all the points, and line_A_to_B is the name of the line going from point A to point B
+    /** Those are all the points, and line_A_to_B is the name of the line going from point A to point B
      * Pretty complex notation right ?
      *     0------1
      *    /      /|

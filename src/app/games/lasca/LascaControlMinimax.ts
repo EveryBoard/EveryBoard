@@ -28,14 +28,14 @@ export class LascaControlMinimax extends Minimax<LascaMove, LascaState> {
         return LascaControlMinimax.getListMoves(node);
     }
     public getBoardValue(node: LascaNode): BoardValue {
-        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        const gameStatus: GameStatus = LascaRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
         const state: LascaState = node.gameState;
         const pieceUnderZeroControl: number = this.getNumberOfMobileCoords(state, Player.ZERO);
         const pieceUnderOneControl: number = this.getNumberOfMobileCoords(state, Player.ONE);
-        return BoardValue.from(pieceUnderZeroControl, pieceUnderOneControl);
+        return BoardValue.of(pieceUnderZeroControl, pieceUnderOneControl);
     }
     public getNumberOfMobileCoords(state: LascaState, player: Player): number {
         const potentialMoves: LascaMove[] = this.getCapturesAndSteps(state, player);

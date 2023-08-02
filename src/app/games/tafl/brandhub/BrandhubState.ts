@@ -20,7 +20,7 @@ export class BrandhubState extends TaflState {
         ];
         return new BrandhubState(board, 0);
     }
-    public from(board: Table<TaflPawn>, turn: number): this {
+    public of(board: Table<TaflPawn>, turn: number): this {
         return new BrandhubState(board, turn) as this;
     }
 }

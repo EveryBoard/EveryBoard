@@ -82,7 +82,7 @@ describe('PylosMinimax', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
         expect(minimax.getBoardValue(new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move))).value).toBe(0);
     });
     it('should not include uncapturable pieces in captures', () => {

@@ -57,7 +57,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         this.last = MGPOptional.empty(); // now that the user stopped trying to do a move
         // we stop showing the user the last move
         const resultlessMove: GoMove = new GoMove(x, y);
-        return this.chooseMove(resultlessMove, this.getState(), this.scores.get());
+        return this.chooseMove(resultlessMove);
     }
     public updateBoard(): void {
         const state: GoState = this.getState();

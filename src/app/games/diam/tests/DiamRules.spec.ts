@@ -28,14 +28,12 @@ describe('DiamRules', () => {
             new DiamDummyMinimax(rules, 'DiamDummyMinimax'),
         ];
     });
-
     function drop(target: number, piece: DiamPiece): DiamMove {
         return new DiamMoveDrop(target, piece);
     }
     function shift(start: Coord, direction: 'clockwise' | 'counterclockwise'): DiamMove {
-        return DiamMoveShift.fromRepresentation(start, direction);
+        return DiamMoveShift.ofRepresentation(start, direction);
     }
-
     describe('drop moves', () => {
         it('should allow a simple drop on the empty board', () => {
             // Given the initial state
@@ -44,7 +42,7 @@ describe('DiamRules', () => {
             const move: DiamMove = drop(0, A1);
             // Then the piece goes to the bottom of that space
             // and there is one less piece of that type
-            const expectedState: DiamState = DiamState.fromRepresentation([
+            const expectedState: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
@@ -65,7 +63,7 @@ describe('DiamRules', () => {
         });
         it('should forbid dropping on a space that is full', () => {
             // Given a state where one space is already full
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
                 [B1, __, __, __, __, __, __, __],
@@ -79,7 +77,7 @@ describe('DiamRules', () => {
         });
         it('should forbid dropping a piece that is not remaining', () => {
             // Given a state where the player is out of one of its pieces
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [A1, __, B1, __, __, __, __, __],
                 [A1, __, B1, __, __, __, __, __],
                 [A1, __, B1, __, __, __, __, __],
@@ -95,7 +93,7 @@ describe('DiamRules', () => {
     describe('shift moves', () => {
         it('should allow moving a stack where the first piece is owned by the player', () => {
             // Given a state where a shift can be made
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [B1, __, __, __, __, __, __, B2],
@@ -104,7 +102,7 @@ describe('DiamRules', () => {
             // When moving the stack starting at A2 clockwise
             const move: DiamMove = shift(new Coord(7, 3), 'clockwise');
             // Then the move suceeds and the stack is moved on top of the other one
-            const expectedState: DiamState = DiamState.fromRepresentation([
+            const expectedState: DiamState = DiamState.ofRepresentation([
                 [B2, __, __, __, __, __, __, __],
                 [A2, __, __, __, __, __, __, __],
                 [B1, __, __, __, __, __, __, __],
@@ -114,7 +112,7 @@ describe('DiamRules', () => {
         });
         it('should allow moving from the middle of a stack', () => {
             // Given a state where a shift can be made
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, B2],
@@ -123,7 +121,7 @@ describe('DiamRules', () => {
             // When moving the stack starting at A1 counterclockwise
             const move: DiamMove = shift(new Coord(0, 2), 'counterclockwise');
             // Then the move should be legal
-            const expectedState: DiamState = DiamState.fromRepresentation([
+            const expectedState: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, A1],
                 [__, __, __, __, __, __, __, B2],
@@ -133,7 +131,7 @@ describe('DiamRules', () => {
         });
         it('should allow moving a full stack', () => {
             // Given a state where a shift can be made
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [B2, __, __, __, __, __, __, __],
                 [A2, __, __, __, __, __, __, __],
                 [B1, __, __, __, __, __, __, __],
@@ -142,7 +140,7 @@ describe('DiamRules', () => {
             // When moving the stack starting at A1 counterclockwise
             const move: DiamMove = shift(new Coord(0, 3), 'counterclockwise');
             // Then the move should be legal
-            const expectedState: DiamState = DiamState.fromRepresentation([
+            const expectedState: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, B2],
                 [__, __, __, __, __, __, __, A2],
                 [__, __, __, __, __, __, __, B1],
@@ -151,7 +149,7 @@ describe('DiamRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid moving a substack if its lowest piece is not owned by the player', () => {
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, A1],
                 [B1, __, __, __, __, __, __, B2],
@@ -167,7 +165,7 @@ describe('DiamRules', () => {
         });
         it('should forbid moving a stack if the receiving space will become too high', () => {
             // Given a state where a shift would result in a too high stack
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, A1],
                 [B1, __, __, __, __, __, __, B2],
@@ -194,7 +192,7 @@ describe('DiamRules', () => {
     describe('winning configurations', () => {
         it('should not consider ground alignment as win', () => {
             // Given a state where there is an alignment on the first level
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
@@ -206,7 +204,7 @@ describe('DiamRules', () => {
         });
         it('should not consider non-facing alignment as win', () => {
             // Given a state where there is an alignment but not face-to-face
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [A1, A1, __, __, __, __, __, __],
@@ -218,7 +216,7 @@ describe('DiamRules', () => {
         });
         it('should detect player 0 win with face-to-face alignment', () => {
             // Given a state where player zero has a face-to-face alignment
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [A1, __, __, __, A1, __, __, __],
@@ -230,7 +228,7 @@ describe('DiamRules', () => {
         });
         it('should detect win when two alignments happen at the same turn', () => {
             // Given a board where two alignment exist, but player one has a higher alignment
-            const state: DiamState = DiamState.fromRepresentation([
+            const state: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [B2, __, __, __, B2, __, __, __],
                 [A1, __, __, __, A1, __, __, __],

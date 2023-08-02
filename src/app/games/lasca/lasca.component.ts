@@ -231,7 +231,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             if (delta.isDiagonalOfLength(1)) {
                 // It is indeed a step
                 const step: LascaMove = LascaMove.fromStep(this.currentMoveClicks[0], clicked).get();
-                return this.chooseMove(step, this.getState());
+                return this.chooseMove(step);
             }
         }
         // Continuing to capture
@@ -249,7 +249,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             if (this.legalMoves.some((capture: LascaMove) => capture.isPrefix(currentMove))) {
                 return this.applyPartialCapture();
             } else {
-                return this.chooseMove(currentMove, this.getState());
+                return this.chooseMove(currentMove);
             }
         } else {
             return this.cancelMove(LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
@@ -361,7 +361,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const parallelogramCenter: Coord = this.getParallelogramCenter();
         const cy: number = parallelogramCenter.y;
         // We want to center the full piece, which is width=80, height=45, so here are it's center
-        // See the define to confirm theses
+        // See the define to confirm these
         const pieceCy: number = (50 + 15) / 2;
         // We the need "pieceCx + offsetX" to equal "cx"
         // and "pieceCy + offsetY" to equal "cy", so :

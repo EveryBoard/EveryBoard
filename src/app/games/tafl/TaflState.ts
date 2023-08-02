@@ -8,7 +8,7 @@ import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 
 export abstract class TaflState extends GameStateWithTable<TaflPawn> {
 
-    public abstract from(board: Table<TaflPawn>, turn: number): this;
+    public abstract of(board: Table<TaflPawn>, turn: number): this;
 
     public isCentralThrone(coord: Coord): boolean {
         return coord.equals(this.getCentralThrone());

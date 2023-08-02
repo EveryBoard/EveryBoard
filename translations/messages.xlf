@@ -63,13 +63,13 @@
         <source>Learn the rules</source>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (waiting for opponent)</source>
+        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> (waiting for opponent)</source>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
@@ -242,6 +242,9 @@
       <trans-unit id="1177593339964527523" datatype="html">
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
+      <trans-unit id="6432141756227180076" datatype="html">
+        <source>Align your 4 pieces or form a square with them to win!</source>
+      </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
       </trans-unit>
@@ -346,6 +349,9 @@
       </trans-unit>
       <trans-unit id="7128132932954450153" datatype="html">
         <source>Pente</source>
+      </trans-unit>
+      <trans-unit id="6202245590217996824" datatype="html">
+        <source>Teeko</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -2224,14 +2230,11 @@
       <trans-unit id="2426029962112596303" datatype="html">
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
       </trans-unit>
-      <trans-unit id="1301553003354246210" datatype="html">
-        <source>Pente is played on a 19x19 board, on which the stones are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a stone of the second player is in the center location of the board.</source>
+      <trans-unit id="481364308060927522" datatype="html">
+        <source>Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.</source>
       </trans-unit>
-      <trans-unit id="730381467241225928" datatype="html">
-        <source>Dropping a stone</source>
-      </trans-unit>
-      <trans-unit id="254985125186363895" datatype="html">
-        <source>At your turn, you must drop one stone on the board. There is no restriction: you can put it anywhere.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a stone on the board.</source>
+      <trans-unit id="4134686113968191036" datatype="html">
+        <source>At your turn, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
       </trans-unit>
       <trans-unit id="6622643035593861381" datatype="html">
         <source>You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light and you can capture, do it!</source>
@@ -2800,6 +2803,18 @@
       </trans-unit>
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      </trans-unit>
+      <trans-unit id="6388473964053708590" datatype="html">
+        <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
+      </trans-unit>
+      <trans-unit id="55131761932515685" datatype="html">
+        <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
+      </trans-unit>
+      <trans-unit id="322267404708379069" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+      </trans-unit>
+      <trans-unit id="366926106758793789" datatype="html">
+        <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
       </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>

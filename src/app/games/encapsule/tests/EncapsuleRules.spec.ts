@@ -91,7 +91,7 @@ describe('EncapsuleRules', () => {
         ]);
 
         // When doing that "actively losing move"
-        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 0));
+        const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 0));
 
         // Then the active player should have lost
         const expectedBoard: EncapsuleSpace[][] = [
@@ -122,7 +122,7 @@ describe('EncapsuleRules', () => {
         const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
 
         // When moving a single piece elsewhere
-        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
+        const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 2));
 
         // Then the piece should have been moved
         const expectedBoard: EncapsuleSpace[][] = [
@@ -144,7 +144,7 @@ describe('EncapsuleRules', () => {
         const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
 
         // When moving a single piece elsewhere
-        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
+        const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 2));
 
         // Then the piece should have been moved over the smaller one
         const expectedBoard: EncapsuleSpace[][] = [
@@ -167,7 +167,7 @@ describe('EncapsuleRules', () => {
             X0, X0, X1, X2,
         ]);
         // When trying to drop another piece of the same size
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
+        const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
 
         // Then it should be deemed illegal
         const reason: string = EncapsuleFailure.INVALID_PLACEMENT();
@@ -186,7 +186,7 @@ describe('EncapsuleRules', () => {
             EncapsulePiece.SMALL_DARK, EncapsulePiece.MEDIUM_DARK,
             EncapsulePiece.BIG_DARK,
         ]);
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
+        const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
         const reason: string = EncapsuleFailure.INVALID_PLACEMENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -200,7 +200,7 @@ describe('EncapsuleRules', () => {
         const state: EncapsuleState = new EncapsuleState(board, 3, []);
 
         // When trying to drop one
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_LIGHT, new Coord(2, 2));
+        const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_LIGHT, new Coord(2, 2));
 
         // Then it should be illegal
         const reason: string = EncapsuleFailure.PIECE_OUT_OF_STOCK();
@@ -218,7 +218,7 @@ describe('EncapsuleRules', () => {
             X0, X0, X1, X2,
         ]);
         // When trying to put another piece on it
-        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 1));
+        const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 1));
 
         // Then it should be deemed illegal
         const reason: string = EncapsuleFailure.INVALID_PLACEMENT();
@@ -229,7 +229,7 @@ describe('EncapsuleRules', () => {
         const state: EncapsuleState = EncapsuleState.getInitialState();
 
         // When trying to drop a piece of the opponent
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_LIGHT, new Coord(2, 2));
+        const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_LIGHT, new Coord(2, 2));
 
         // Then it should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
@@ -240,7 +240,7 @@ describe('EncapsuleRules', () => {
         const state: EncapsuleState = EncapsuleState.getInitialState();
 
         // When trying to drop "nothing"
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.NONE, new Coord(2, 2));
+        const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.NONE, new Coord(2, 2));
 
         // Then it should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
@@ -251,7 +251,7 @@ describe('EncapsuleRules', () => {
         const state: EncapsuleState = EncapsuleState.getInitialState();
 
         // When trying to drop "nothing"
-        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2));
+        const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 2));
 
         // Then it should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();

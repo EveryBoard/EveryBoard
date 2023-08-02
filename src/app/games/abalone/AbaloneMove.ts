@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from 'src/app/utils/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -11,7 +11,7 @@ type AbaloneMoveFields = [Coord, HexaDirection, MGPOptional<Coord>];
 
 export class AbaloneMove extends MoveCoord {
 
-    public static encoder: MoveEncoder<AbaloneMove> = MoveEncoder.tuple(
+    public static encoder: Encoder<AbaloneMove> = Encoder.tuple(
         [Coord.encoder, HexaDirection.encoder, MGPOptional.getEncoder(Coord.encoder)],
         (m: AbaloneMove): AbaloneMoveFields => [m.coord, m.dir, m.lastPiece],
         (fields: AbaloneMoveFields): AbaloneMove => new AbaloneMove(fields[0], fields[1], fields[2]));

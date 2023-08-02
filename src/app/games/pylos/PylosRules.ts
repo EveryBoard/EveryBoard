@@ -54,7 +54,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             for (const landingCoord of stateInfo.landable) {
                 if (landingCoord.isHigherThan(startingCoord) &&
                     landingCoord.getLowerPieces().some((c: PylosCoord) => startingCoord.equals(c)) === false) {
-                    const newMove: PylosMove = PylosMove.fromClimb(startingCoord, landingCoord, []);
+                    const newMove: PylosMove = PylosMove.ofClimb(startingCoord, landingCoord, []);
                     moves.push(newMove);
                 }
             }
@@ -64,7 +64,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     public static getDropMoves(stateInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] }): PylosMove[] {
         const drops: PylosMove[] = [];
         for (const landableCoord of stateInfo.landable) {
-            const newMove: PylosMove = PylosMove.fromDrop(landableCoord, []);
+            const newMove: PylosMove = PylosMove.ofDrop(landableCoord, []);
             drops.push(newMove);
         }
         return drops;

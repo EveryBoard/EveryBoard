@@ -420,7 +420,7 @@ export class YinshComponent
                                               this.moveStart.get(),
                                               this.moveEnd,
                                               this.finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.getState(), this.scores.get());
+        const validity: MGPValidation = await this.chooseMove(move);
         return validity;
     }
     private async selectMoveStart(coord: Coord): Promise<MGPValidation> {

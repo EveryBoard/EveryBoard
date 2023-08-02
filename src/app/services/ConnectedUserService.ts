@@ -254,9 +254,9 @@ export class ConnectedUserService implements OnDestroy {
      */
     public async createUser(uid: string, username?: string): Promise<void> {
         if (username == null) {
-            await this.userDAO.set(uid, { verified: false });
+            await this.userDAO.set(uid, { verified: false, currentGame: null });
         } else {
-            await this.userDAO.set(uid, { username, verified: false });
+            await this.userDAO.set(uid, { username, verified: false, currentGame: null });
         }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {

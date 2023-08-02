@@ -64,7 +64,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     private createForcedDrop(unheritance: SixBoardValue): SixMove[] {
         const forcedMove: SixMove[] = [];
-        const move: SixMove = SixMove.fromDrop(unheritance.preVictory.get());
+        const move: SixMove = SixMove.ofDrop(unheritance.preVictory.get());
         forcedMove.push(move);
         return forcedMove;
     }
@@ -77,18 +77,18 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const deplacements: SixMove[] = [];
         for (const start of starts) {
             for (const landing of landings) {
-                const move: SixMove = SixMove.fromMovement(start, landing);
+                const move: SixMove = SixMove.ofMovement(start, landing);
                 if (state.isCoordConnected(landing, MGPOptional.of(start))) {
                     const stateAfterMove: SixState = state.movePiece(move);
                     const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
                     if (SixRules.isSplit(groupsAfterMove)) {
                         const largestGroups: MGPSet<MGPSet<Coord>> = SixRules.getLargestGroups(groupsAfterMove);
                         if (largestGroups.size() === 1) {
-                            deplacements.push(SixMove.fromMovement(start, landing));
+                            deplacements.push(SixMove.ofMovement(start, landing));
                         } else {
                             for (const group of largestGroups) {
                                 const subGroup: Coord = group.getAnyElement().get();
-                                const cut: SixMove = SixMove.fromCut(start, landing, subGroup);
+                                const cut: SixMove = SixMove.ofCut(start, landing, subGroup);
                                 deplacements.push(cut);
                             }
                         }
@@ -121,7 +121,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     private isPieceBlockingAVictory(state: SixState, playerPiece: Coord): boolean {
         const hypotheticalState: SixState = state.switchPiece(playerPiece);
 
-        const fakeDropMove: SixMove = SixMove.fromDrop(playerPiece);
+        const fakeDropMove: SixMove = SixMove.ofDrop(playerPiece);
         this.startSearchingVictorySources();
         while (this.hasNextVictorySource()) {
             this.currentVictorySource = this.getNextVictorySource();
@@ -137,7 +137,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     public getListDrop(legalLandings: Coord[]): SixMove[] {
         const drops: SixMove[] = [];
         for (const landing of legalLandings) {
-            const drop: SixMove = SixMove.fromDrop(landing);
+            const drop: SixMove = SixMove.ofDrop(landing);
             drops.push(drop);
         }
         return drops;

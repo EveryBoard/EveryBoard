@@ -12,32 +12,31 @@ import { GameEventService } from 'src/app/services/GameEventService';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { Action, MGPResult, Part, Reply, RequestType } from 'src/app/domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { FocusedPart, User } from 'src/app/domain/User';
+import { CurrentGame, User } from 'src/app/domain/User';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
+import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { UserService } from 'src/app/services/UserService';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { ObservedPartServiceMock } from 'src/app/services/tests/ObservedPartService.spec';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
@@ -58,6 +57,7 @@ export async function prepareMockDBContent(initialConfigRoom: ConfigRoom): Promi
         username: 'jeanJaja',
         lastUpdateTime: new Timestamp(Date.now() / 1000, Date.now() % 1000),
         verified: true,
+        currentGame: null,
     };
     const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
                                                  MGPOptional.ofNullable(OBSERVER.username),
@@ -179,6 +179,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         username: 'jeanJaja',
         lastUpdateTime: new Timestamp(Date.now() / 1000, Date.now() % 1000),
         verified: true,
+        currentGame: null,
     };
     const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
                                                  MGPOptional.ofNullable(OBSERVER.username),
@@ -193,15 +194,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const THIRD_MOVE: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
 
-    const FIRST_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(FIRST_MOVE);
+    const FIRST_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(FIRST_MOVE);
 
-    const SECOND_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(SECOND_MOVE);
+    const SECOND_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(SECOND_MOVE);
 
-    const THIRD_MOVE_ENCODED: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(THIRD_MOVE);
+    const THIRD_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(THIRD_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
-        const state: QuartoState = wrapper.gameComponent.getState() as QuartoState;
-        const result: MGPValidation = await wrapper.gameComponent.chooseMove(move, state);
+        const result: MGPValidation = await wrapper.gameComponent.chooseMove(move);
         const message: string = 'move ' + move.toString() + ' should be legal but failed because: ' + result.getReasonOr('no failure');
         expect(result.isSuccess()).withContext(message).toEqual(legal);
         testUtils.detectChanges();
@@ -245,7 +245,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return await testUtils.clickElement('#reject');
     }
     async function receiveNewMoves(initialTurn: number,
-                                   newMoves: JSONValueWithoutArray[],
+                                   newMoves: JSONValue[],
                                    detectChanges: boolean = true)
     : Promise<void>
     {
@@ -286,16 +286,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         if (player === Player.ONE) {
             offset = 1;
             const firstMove: QuartoMove = moves[0];
-            const encodedMove: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(firstMove);
+            const encodedMove: JSONValue = QuartoMove.encoder.encode(firstMove);
             await receiveNewMoves(turn, [encodedMove]);
             turn += 1;
         }
         for (let i: number = offset; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
             await doMove(moves[i], true);
-            const newMoves: JSONValueWithoutArray[] = [
-                QuartoMove.encoder.encodeMove(move),
-                QuartoMove.encoder.encodeMove(moves[i+1]),
+            const newMoves: JSONValue[] = [
+                QuartoMove.encoder.encode(move),
+                QuartoMove.encoder.encode(moves[i+1]),
             ];
             await receiveNewMoves(turn, newMoves);
             turn += 2;
@@ -308,7 +308,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.chronoOneTurn.isIdle()).withContext('chrono one turn should be idle').toBeTrue();
         expect(wrapper.endGame).toBeTrue();
     }
-    async function prepareStartedGameWithMoves(encodedMoves: JSONValueWithoutArray[]): Promise<void> {
+    async function prepareStartedGameWithMoves(encodedMoves: JSONValue[]): Promise<void> {
         // 1. Creating the mocks and testUtils but NOT component
         // 2. Setting the db with the encodedMoves including
         // 3. Setting the component and making it start like it would
@@ -319,7 +319,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         let turn: number = 0;
         if (role === Player.ONE) {
             offset = 1;
-            const encodedMove: JSONValueWithoutArray = encodedMoves[0];
+            const encodedMove: JSONValue = encodedMoves[0];
             await receiveNewMoves(turn, [encodedMove], false);
             turn += 1;
         }
@@ -428,19 +428,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
 
             // When component is initialized
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
             tick(2);
             testUtils.detectChanges();
 
-            // Then updateObservedPart should have been called as Player
-            const update: Partial<FocusedPart> = {
+            // Then updateCurrentGame should have been called as Player
+            const update: Partial<CurrentGame> = {
                 id: 'configRoomId',
                 typeGame: 'Quarto',
                 opponent: null,
                 role: 'Player',
             };
-            expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
+            expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(update);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should mark chosen opponent as Player when arriving', fakeAsync(async() => {
@@ -448,19 +448,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.dontWait);
 
             // When component is initialized
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
             tick(2);
             testUtils.detectChanges();
 
-            // Then updateObservedPart should have been called as Player
-            const update: Partial<FocusedPart> = {
+            // Then updateCurrentGame should have been called as Player
+            const update: Partial<CurrentGame> = {
                 id: 'configRoomId',
                 typeGame: 'Quarto',
                 opponent: UserMocks.CREATOR_MINIMAL_USER,
                 role: 'Player',
             };
-            expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
+            expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(update);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should show player names', fakeAsync(async() => {
@@ -529,16 +529,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.gameComponent.pass).toHaveBeenCalledOnceWith();
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    describe('ObservedPart Change', () => {
+    describe('CurrentGame Change', () => {
         it('should redirect to lobby when role and partId change', fakeAsync(async() => {
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
-            // When observedPart is updated to inform component that user is now candidate in a game
+            // When currentGame is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            const currentGame: CurrentGame = CurrentGameMocks.OTHER_CANDIDATE;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
 
             // Then a redirection to lobby should be triggered
             expectValidRouting(router, ['/lobby'], LobbyComponent);
@@ -547,11 +547,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
-            // When observedPart is updated to inform component that user is now candidate in a game
+            // When currentGame is updated to inform component that user is now candidate in a game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_OBSERVER;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            const currentGame: CurrentGame = CurrentGameMocks.OTHER_OBSERVER;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
 
             // Then a redirection to lobby should not have been triggered
             expect(router.navigate).not.toHaveBeenCalled();
@@ -561,15 +561,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
-            // When observedPart is updated to inform component that user stopped observing some part in another tab
+            // When currentGame is updated to inform component that user stopped observing some part in another tab
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            ObservedPartServiceMock.setObservedPart(MGPOptional.empty());
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
 
             // Then nothing special should have happened, including no redirection
-            // Though compo.observedPart should have been locally changed
+            // Though compo.currentGame should have been locally changed
             expect(router.navigate).not.toHaveBeenCalled();
-            expect(wrapper['observedPart']).toEqual(MGPOptional.empty());
+            expect(wrapper['currentGame']).toEqual(MGPOptional.empty());
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
@@ -630,23 +630,23 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#youLostIndicator');
             expectGameToBeOver();
         }));
-        it('should removeObservedPart when one player wins', fakeAsync(async() => {
+        it('should removeCurrentGame when one player wins', fakeAsync(async() => {
             // Given a board on which user can win
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             spyOn(wrapper.gameComponent.rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
             testUtils.expectElementNotToExist('#winnerIndicator');
 
             // When doing winning move
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             await doMove(FIRST_MOVE, true);
             // the call to the serverTimeMock() is very close to the update
             // hence, the second update got called while the first update was executing
             tick(1000);
             testUtils.fixture.detectChanges();
 
-            // Then removeObservedPart should have been called
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then removeCurrentGame should have been called
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
         it('should notifyDraw when a draw move from player is done', fakeAsync(async() => {
@@ -673,22 +673,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#hardDrawIndicator');
             expectGameToBeOver();
         }));
-        it('should removeObservedPart when players draw', fakeAsync(async() => {
+        it('should removeCurrentGame when players draw', fakeAsync(async() => {
             // Given a board on which user can draw
             await prepareBoard([new QuartoMove(0, 0, QuartoPiece.AAAB)], Player.ONE);
             spyOn(wrapper.gameComponent.rules, 'getGameStatus').and.returnValue(GameStatus.DRAW);
             testUtils.expectElementNotToExist('#winnerIndicator');
 
             // When doing drawing move
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             await doMove(FIRST_MOVE, true);
             // For some reason doMove call the two update (without time then time only) very close to each other
             // Provoking a call to a timeout workaround so the two update are applied sequencially and not parallelly
             tick(1000);
 
-            // Then removeObservedPart should have been called
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then removeCurrentGame should have been called
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
     });
@@ -921,7 +921,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(partDAO, 'update').and.callThrough();
                 spyOn(gameEventService, 'addMove').and.callThrough();
                 const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(alternativeMove);
+                const alternativeMoveEncoded: JSONValue = QuartoMove.encoder.encode(alternativeMove);
                 await doMove(alternativeMove, true);
 
                 // Then partDAO should be updated, and move should be sent
@@ -973,7 +973,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(partDAO, 'update').and.callThrough();
                 spyOn(gameEventService, 'addMove').and.callThrough();
                 const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-                const alternativeMoveEncoded: JSONValueWithoutArray = QuartoMove.encoder.encodeMove(alternativeMove);
+                const alternativeMoveEncoded: JSONValue = QuartoMove.encoder.encode(alternativeMove);
                 await doMove(alternativeMove, true);
 
                 // Then partDAO should be updated, and move should be sent
@@ -982,6 +982,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
+        it('should call cancelMoveAttempt', fakeAsync(async() => {
+            // Given an initial board where it's opponent's [second] turn, and user just asked for take back
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await doMove(FIRST_MOVE, true);
+            await askTakeBack();
+
+            // When opponent accept user's take back
+            spyOn(testUtils.getComponent(), 'cancelMoveAttempt').and.callThrough();
+            await receiveReply(Player.ONE, 'Accept', 'TakeBack');
+
+            // Then cancelMoveAttempt should have been called
+            expect(testUtils.getComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
     });
     describe('Agreed Draw', () => {
         it('should send draw request when player asks to', fakeAsync(async() => {
@@ -1074,22 +1088,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#yourOpponentAgreedToDrawIndicator');
             expect(partDAO.update).toHaveBeenCalledTimes(1);
         }));
-        it('should removeObservedPart when opponent accepts our proposed draw', fakeAsync(async() => {
+        it('should removeCurrentGame when opponent accepts our proposed draw', fakeAsync(async() => {
             // Given a gameComponent where draw has been proposed
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await testUtils.clickElement('#proposeDraw');
             tick(1);
 
             // When draw is accepted
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
             });
             await receiveAction(Player.ONE, 'EndGame');
 
-            // Then removeObservedPart should have been called
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then removeCurrentGame should have been called
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
         it('should send refusal when player asks to', fakeAsync(async() => {
@@ -1391,15 +1405,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(resignText).toBe(`firstCandidate has resigned.`);
             expectGameToBeOver();
         }));
-        it('should removeObservedPart when the opponent resigned', fakeAsync(async() => {
+        it('should removeCurrentGame when the opponent resigned', fakeAsync(async() => {
             // Given a board where user has resign
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
 
             // When receiving opponents submission to our greatness and recognition as overlord of their land
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             await receivePartDAOUpdate({
                 winner: UserMocks.CREATOR_MINIMAL_USER,
                 loser: UserMocks.OPPONENT_MINIMAL_USER,
@@ -1407,8 +1421,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             });
             await receiveAction(Player.ONE, 'EndGame');
 
-            // Then removeObservedPart should be called
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then removeCurrentGame should be called
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
     });
@@ -1529,60 +1543,60 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.dontWaitNoClocks);
 
             // When component is initialized
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'updateObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
             tick(2);
             testUtils.detectChanges();
 
-            // Then updateObservedPart should have been called as Observer
-            const update: Partial<FocusedPart> = {
+            // Then updateCurrentGame should have been called as Observer
+            const update: Partial<CurrentGame> = {
                 id: 'configRoomId',
                 opponent: UserMocks.CREATOR_MINIMAL_USER,
                 typeGame: 'Quarto',
                 role: 'Observer',
             };
-            expect(observedPartService.updateObservedPart).toHaveBeenCalledOnceWith(update);
+            expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(update);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        it('should remove observedPart when leaving the component', fakeAsync(async() => {
+        it('should remove currentGame when leaving the component', fakeAsync(async() => {
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
             // When user leaves the component (here, destroys it)
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             testUtils.fixture.destroy();
 
-            // Then the observedPart should have been removed
-            expect(observedPartService.removeObservedPart).toHaveBeenCalledOnceWith();
+            // Then the currentGame should have been removed
+            expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
         }));
-        it('should redirect to lobby when observedPart changed to non-observer', fakeAsync(async() => {
+        it('should redirect to lobby when currentGame changed to non-observer', fakeAsync(async() => {
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
 
-            // When observedPart is updated to inform component that user is now candidate in another game
+            // When currentGame is updated to inform component that user is now candidate in another game
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            const currentGame: CurrentGame = CurrentGameMocks.OTHER_CANDIDATE;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
 
-            // Then the observedPart should have been removed
+            // Then the currentGame should have been removed
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
-        it('should not removeObservedPart when destroying component after observedPart changed to non-observer', fakeAsync(async() => {
+        it('should not removeCurrentGame when destroying component after currentGame changed to non-observer', fakeAsync(async() => {
             // Given a part component where user was observer
             // Then receive an update telling that user is now non-observer-elsewhere
             await prepareTestUtilsFor(USER_OBSERVER);
-            const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-            spyOn(observedPartService, 'removeObservedPart').and.callThrough();
-            const observedPart: FocusedPart = FocusedPartMocks.OTHER_CANDIDATE;
-            ObservedPartServiceMock.setObservedPart(MGPOptional.of(observedPart));
+            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+            spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
+            const currentGame: CurrentGame = CurrentGameMocks.OTHER_CANDIDATE;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
 
             // When destroying the component (should normally be triggered once router is triggered)
             testUtils.fixture.destroy();
 
-            // Then the observedPart should have been removed
-            expect(observedPartService.removeObservedPart).not.toHaveBeenCalled();
+            // Then the currentGame should have been removed
+            expect(currentGameService.removeCurrentGame).not.toHaveBeenCalled();
         }));
         it('should not be able to do anything', fakeAsync(async() => {
             // Given a part that we are observing
