@@ -2,7 +2,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
