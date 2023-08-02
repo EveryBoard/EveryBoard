@@ -2071,8 +2071,8 @@
       <trans-unit id="7111322038810092184" datatype="html">
         <source>The Kalah (1/2)</source>
       </trans-unit>
-      <trans-unit id="8481451983567223767" datatype="html">
-        <source>The house on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, your seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your kalah then feed opponent&apos;s houses.</source>
+      <trans-unit id="4509512877416195771" datatype="html">
+        <source>The houses on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, your seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your kalah then feed opponent&apos;s houses.</source>
       </trans-unit>
       <trans-unit id="5407801196980144019" datatype="html">
         <source>As you see, three houses have been fed in addition to your kalah.</source>
@@ -2092,7 +2092,7 @@
       <trans-unit id="4131193328352974552" datatype="html">
         <source>When the last seed of a distribution end up in one of your empty houses, if the house over it is filled, then you capture both houses. On this board, such a move is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
       </trans-unit>
-      <trans-unit id="6105563494631333109" datatype="html">
+      <trans-unit id="4482453877770637601" datatype="html">
         <source>At any moment, when one player have more than 24 seeds in their kalah, they win. That can happend before the board is emptied, but, there is also a second way. When, at the beginning of your turn, you don&apos;t have any seed in your house, the game is over and your opponent takes all the remaining seeds from his houses. Here, the opponent&apos;s just gave you their last seed, if you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
       </trans-unit>
       <trans-unit id="902849596357033257" datatype="html">
@@ -2118,9 +2118,6 @@
       </trans-unit>
       <trans-unit id="4409865504289904426" datatype="html">
         <source>Drones must move one or two steps in any direction.</source>
-      </trans-unit>
-      <trans-unit id="8941261285468529448" datatype="html">
-        <source>This is not a field promotion!</source>
       </trans-unit>
       <trans-unit id="101461993624237538" datatype="html">
         <source>At Martian Chess, the goal is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.</source>
@@ -2169,6 +2166,9 @@
       </trans-unit>
       <trans-unit id="8675845222727327919" datatype="html">
         <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
+      </trans-unit>
+      <trans-unit id="8941261285468529448" datatype="html">
+        <source>This is not a field promotion!</source>
       </trans-unit>
       <trans-unit id="5120415661423244234" datatype="html">
         <source>Field Promotion (2/2)</source>

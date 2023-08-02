@@ -20,15 +20,15 @@ export interface MancalaCaptureResult {
     resultingState: MancalaState;
 }
 
-export interface MancalaDistributionResult {
+export type MancalaDistributionResult = {
 
-    filledHouses: Coord[],
+    filledCoords: Coord[];
 
-    passedByKalahNTimes: number,
+    passedByKalahNTimes: number;
 
-    resultingState: MancalaState,
+    resultingState: MancalaState;
 
-    endUpInKalah: boolean,
+    endUpInKalah: boolean;
 }
 
 export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState> {
@@ -121,7 +121,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         const i: Coord = new Coord(x, y);
         // to remember in order not to sow in the starting space if we make a full turn
         let inHand: number = resultingBoard[y][x];
-        const filledHouses: Coord[] = [];
+        const filledCoords: Coord[] = [];
         resultingBoard[y][x] = 0;
         let passedByKalahNTimes: number = 0;
         let previousDropWasKalah: boolean = false;
@@ -136,19 +136,19 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
             if (endUpInKalah) {
                 passedByKalahNTimes++;
                 inHand--;
-                filledHouses.push(MancalaRules.FAKE_KALAH_COORD.get(player).get());
+                filledCoords.push(MancalaRules.FAKE_KALAH_COORD.get(player).get());
             } else {
                 coord = nextCoord.get();
                 if (i.equals(coord) === false || this.config.feedOriginalHouse) {
                     // not to distribute on our starting space
                     resultingBoard[coord.y][coord.x] += 1;
-                    filledHouses.push(coord);
+                    filledCoords.push(coord);
                     inHand--; // drop in this space a piece we have in hand
                 }
             }
         }
         return {
-            filledHouses,
+            filledCoords: filledCoords,
             passedByKalahNTimes,
             endUpInKalah,
             resultingState: new MancalaState(resultingBoard, state.turn, state.getCapturedCopy()),

@@ -26,7 +26,7 @@ export class KalahTutorial extends Tutorial {
         ),
         TutorialStep.forClick(
             $localize`The Kalah (1/2)`,
-            $localize`The house on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent's on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won't have to drop seed in your opponent's kalah. When you make a capture, your seeds are put in your kalah.<br/><br/>You're playing Dark. Make a move that pass through your kalah then feed opponent's houses.`,
+            $localize`The houses on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent's on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won't have to drop seed in your opponent's kalah. When you make a capture, your seeds are put in your kalah.<br/><br/>You're playing Dark. Make a move that pass through your kalah then feed opponent's houses.`,
             MancalaState.getInitialState(),
             [
                 '#click_0_1',
@@ -56,7 +56,7 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 4, 4, 4, 4, 4],
                 [0, 2, 0, 2, 4, 0],
-            ], 4, [0, 0]), // TODO: show solution in tutorial should animate
+            ], 4, [0, 0]),
             KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.ZERO, MancalaDistribution.THREE]),
             (_move: KalahMove, _state: MancalaState, resultingState: MancalaState) => {
                 if (resultingState.getPieceAtXY(1, 0) === 0) {
@@ -69,7 +69,7 @@ export class KalahTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`End of the game`,
-            $localize`At any moment, when one player have more than 24 seeds in their kalah, they win. That can happend before the board is emptied, but, there is also a second way. When, at teh beginning of your turn, you don't have any seed in your house, the game is over and your opponent takes all the remaining seeds from his houses. Here, the opponent's just gave you their last seed, if you manage not to distribute any seeds in their houses, you win.<br/><br/>You're playing Dark, win!`,
+            $localize`At any moment, when one player have more than 24 seeds in their kalah, they win. That can happend before the board is emptied, but, there is also a second way. When, at the beginning of your turn, you don't have any seed in your house, the game is over and your opponent takes all the remaining seeds from his houses. Here, the opponent's just gave you their last seed, if you manage not to distribute any seeds in their houses, you win.<br/><br/>You're playing Dark, win!`,
             new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 3, 0, 1, 0, 1],

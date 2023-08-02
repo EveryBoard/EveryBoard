@@ -715,6 +715,41 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             testUtils.expectElementNotToExist('#currentReason');
         }));
         it('should propose to see the solution when move attempt done', fakeAsync(async() => {
+            // Given a tutorial awaiting a specific move
+            const awaitedMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BBAA);
+            const stepInitialTurn: number = 0;
+            const tutorial: TutorialStep[] = [
+                TutorialStep.fromMove(
+                    'title 0',
+                    'instruction 0.',
+                    new QuartoState([
+                        [QuartoPiece.AAAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                        [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                    ], stepInitialTurn, QuartoPiece.ABBA),
+                    [awaitedMove],
+                    'Congratulations!',
+                    'Perdu.',
+                ),
+            ];
+            await wrapper.startTutorial(tutorial);
+            testUtils.expectElementNotToExist('#showSolutionButton');
+
+            // When doing a move that is not awaited
+            await testUtils.expectClickSuccess('#chooseCoord_1_1');
+            tick(10);
+            const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
+            await testUtils.expectMoveSuccess('#choosePiece_8', move);
+            tick(10);
+
+            // Then it should have failed
+            expect(wrapper.moveAttemptMade).toBeTrue();
+            expect(wrapper.stepFinished[wrapper.stepIndex]).toBeFalse();
+            // And we shoud now have the option to see solution
+            testUtils.expectElementToExist('#showSolutionButton');
+        }));
+        it('should show solution when asking for it after failure', fakeAsync(async() => {
             // Given a tutorial on which a non-awaited move has been done
             const awaitedMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BBAA);
             const stepInitialTurn: number = 0;
@@ -738,24 +773,22 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
             await testUtils.expectMoveSuccess('#choosePiece_8', move);
-            tick(10);
-            expect(wrapper.moveAttemptMade).toBeTrue();
-            expect(wrapper.stepFinished[wrapper.stepIndex])
-                .toBeFalse();
 
             // When clicking "Show Solution"
+            spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
             await testUtils.clickElement('#showSolutionButton');
+            tick(10);
 
-            // Expect the first awaited move to have been done
+            // Then the first awaited move should have been done
             expect(testUtils.getComponent().node.move.get()).toEqual(awaitedMove);
             expect(testUtils.getComponent().getTurn()).toEqual(stepInitialTurn + 1);
-            // expect 'solution' message to be shown
-            const currentMessage: string =
-                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            // and 'solution' message to be shown
+            const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Congratulations!');
-            // expect step not to be considered a success
-            expect(wrapper.stepFinished[wrapper.stepIndex])
-                .toBeFalse();
+            // and step not to be considered a success
+            expect(wrapper.stepFinished[wrapper.stepIndex]).toBeFalse();
+            // And the move done should have triggered the animation
+            expect(testUtils.getComponent().updateBoard).toHaveBeenCalledWith(true);
         }));
     });
     describe('TutorialStep awaiting any move', () => {

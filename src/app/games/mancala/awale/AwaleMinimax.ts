@@ -49,7 +49,7 @@ export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, MancalaState> 
             const toDistribute: number = board[playerY][move.x];
             const mancalaDistributionResult: MancalaDistributionResult =
                 AwaleRules.get().distributeMove(move, node.gameState);
-            const filledCoords: Coord[] = mancalaDistributionResult.filledHouses;
+            const filledCoords: Coord[] = mancalaDistributionResult.filledCoords;
             const endHouse: Coord = filledCoords[filledCoords.length - 1];
             let captured: number;
             let sameTerritoryValue: number = 0;

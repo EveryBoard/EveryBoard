@@ -35,8 +35,8 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         return this.distributeHouse(move.x, playerY, state);
     }
     public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {
-        const filledHouses: Coord[] = distributionResult.filledHouses;
-        const landingCoord: Coord = filledHouses[filledHouses.length - 1];
+        const filledCoords: Coord[] = distributionResult.filledCoords;
+        const landingCoord: Coord = filledCoords[filledCoords.length - 1];
         const resultingState: MancalaState = distributionResult.resultingState;
         return this.captureIfLegal(landingCoord.x, landingCoord.y, resultingState);
     }

@@ -218,7 +218,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
             this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution).get();
-            await this.updateBoardAndShowLastMove(false);
+            await this.updateBoardAndShowLastMove(true);
         } else {
             await this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;

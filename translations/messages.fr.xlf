@@ -1086,8 +1086,8 @@
         <source>The Kalah (1/2)</source>
         <target>Le Kalah (1/2)</target>
       </trans-unit>
-      <trans-unit id="8481451983567223767" datatype="html">
-        <source>The house on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, your seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your kalah then feed opponent&apos;s houses.</source>
+      <trans-unit id="4509512877416195771" datatype="html">
+        <source>The houses on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, your seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your kalah then feed opponent&apos;s houses.</source>
         <target>Les maisons à l'extrême gauche et droite, non alignées sur les autres, sont les kalah, le vôtre est à gauche, celui de l'adversaire à droite. Quand vous distrubez, avant de passer de votre dernière maison à la première de l'adversaire, vous devez déposer une graine dans votre kalah. Mais vous ne devrai pas distribuer dans le kalah adverse. Quand vous capturez, les graines sont déposées dans votre kalah.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faite un mouveent qui apsse par votre kalah puis par les maisons adverses.</target>
       </trans-unit>
       <trans-unit id="5407801196980144019" datatype="html">
@@ -1114,7 +1114,7 @@
         <source>When the last seed of a distribution end up in one of your empty houses, if the house over it is filled, then you capture both houses. On this board, such a move is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
         <target>Quand votre dernière graine fini dans une de vos maisons vides, si la maison au dessus est remplie, alors vous capturez le graines de ces deux maisons. Sur ce plateau, c'est faisable.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture!</target>
       </trans-unit>
-      <trans-unit id="6105563494631333109" datatype="html">
+      <trans-unit id="4482453877770637601" datatype="html">
         <source>At any moment, when one player have more than 24 seeds in their kalah, they win. That can happend before the board is emptied, but, there is also a second way. When, at the beginning of your turn, you don&apos;t have any seed in your house, the game is over and your opponent takes all the remaining seeds from his houses. Here, the opponent&apos;s just gave you their last seed, if you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
         <target>À n'importe quel moment, si un joueur a plus de 24 graines dans son kalah, il gagne. Cela peut arriver avant que le plateau soit vide, mais, il peut aussi avoir un autre moyen. Quand au début de votre tour, vous n'avez plus de graine dans vos maisons, la partie est finie et votre adversaire récoltes toutes ses maisons, ce qui automatiquement mène à sa victoire. Ici, votre adversaire vous a juste donné sa dernière graine, si vous réussissez à ne pas lui donner de graine, vous gagnez.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez!</target>
       </trans-unit>

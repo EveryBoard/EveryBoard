@@ -21,7 +21,7 @@
                [content]="content"
                [spaceClasses]="getSpaceClasses(x, y)"
                [rotation]="getPieceRotation()"
-               [secondaryContent]="captured[y][x] === 0 ? MGPOptional.empty() : MGPOptional.of(- captured[y][x] + '')"
+               [secondaryContent]="getHouseSecondaryContent(x, y)"
             ></g>
         </g>
     </g>

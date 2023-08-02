@@ -65,7 +65,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
     public distributeMove(move: KalahMove, state: MancalaState): MancalaDistributionResult {
         const playerValue: number = state.getCurrentPlayer().value;
         const playerY: number = state.getCurrentOpponent().value;
-        const filledHouses: Coord[] = [];
+        const filledCoords: Coord[] = [];
         let passedByKalahNTimes: number = 0;
         let endUpInKalah: boolean = false;
         for (const subMove of move) {
@@ -73,7 +73,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
             const captures: [number, number] = state.getCapturedCopy();
             captures[playerValue] += distributionResult.passedByKalahNTimes;
             state = distributionResult.resultingState;
-            filledHouses.push(...distributionResult.filledHouses);
+            filledCoords.push(...distributionResult.filledCoords);
             passedByKalahNTimes += distributionResult.passedByKalahNTimes;
             endUpInKalah = distributionResult.endUpInKalah;
         }
@@ -82,7 +82,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         const distributedState: MancalaState = new MancalaState(state.getCopiedBoard(), state.turn, captured);
         return {
             endUpInKalah,
-            filledHouses,
+            filledCoords: filledCoords,
             passedByKalahNTimes,
             resultingState: distributedState,
         };
@@ -97,7 +97,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         if (distributionResult.endUpInKalah) {
             return capturelessResult;
         } else {
-            const landingSpace: Coord = distributionResult.filledHouses[distributionResult.filledHouses.length - 1];
+            const landingSpace: Coord = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
             const playerY: number = distributionResult.resultingState.getCurrentOpponent().value;
             const opponentY: number = distributionResult.resultingState.getCurrentPlayer().value;
             const landingSeeds: number = distributionResult.resultingState.getPieceAt(landingSpace);

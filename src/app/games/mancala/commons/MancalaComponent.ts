@@ -29,8 +29,12 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     ];
     public droppedInKalah: [number, number] = [0, 0];
 
-    protected filledHouses: Coord[] = [];
+    protected filledCoords: Coord[] = [];
 
+    protected changeOnBoard: number[][] = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+    ];
     public constructedState: MancalaState;
 
     public constructor(messageDisplayer: MessageDisplayer,
@@ -44,7 +48,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         const previousState: MancalaState = this.getPreviousState();
         const distributionResult: MancalaDistributionResult =
             this.rules.distributeMove(move, previousState);
-        this.filledHouses = distributionResult.filledHouses;
+        this.filledCoords = distributionResult.filledCoords;
         let captureResult: MancalaCaptureResult = this.rules.applyCapture(distributionResult);
         this.captured = captureResult.captureMap;
         const playerY: number = previousState.getCurrentOpponent().value;
@@ -136,6 +140,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         // to remember in order not to sow in the starting space if we make a full turn
         let inHand: number = resultingBoard[y][x];
         resultingBoard[y][x] = 0;
+        this.changeOnBoard[y][x] = - inHand;
         let previousDropWasKalah: boolean = false;
         let endUpInKalah: boolean = false;
         // Changing immediately the chosen house
@@ -152,14 +157,15 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
 
             if (endUpInKalah) {
                 inHand--;
-                this.filledHouses.push(MancalaRules.FAKE_KALAH_COORD.get(player).get());
+                this.filledCoords.push(MancalaRules.FAKE_KALAH_COORD.get(player).get());
                 this.droppedInKalah[player.value] += 1;
             } else {
                 coord = nextCoord.get();
-                if (i.equals(coord) === false) { // TODO: adapt the fillInitHouseOrNot
+                if (i.equals(coord) === false || this.rules.config.feedOriginalHouse) {
                     // not to distribute on our starting space
                     resultingBoard[coord.y][coord.x] += 1;
-                    this.filledHouses.push(coord);
+                    this.changeOnBoard[coord.y][coord.x] += 1;
+                    this.filledCoords.push(coord);
                     inHand--; // drop in this space a piece we have in hand
                 }
             }
@@ -175,7 +181,11 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             [0, 0, 0, 0, 0, 0],
         ];
         this.droppedInKalah = [0, 0];
-        this.filledHouses = [];
+        this.filledCoords = [];
+        this.changeOnBoard = [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+        ];
         this.lasts = [];
         this.changeVisibleState(this.getState());
     }
@@ -190,7 +200,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             return ['captured-fill', 'moved-stroke'];
         } else if (this.lasts.some((c: Coord) => c.equals(coord))) {
             return ['moved-stroke', 'last-move-stroke', homeColor];
-        } else if (this.filledHouses.some((c: Coord) => c.equals(coord))) {
+        } else if (this.filledCoords.some((c: Coord) => c.equals(coord))) {
             return ['moved-stroke', homeColor];
         } else {
             return [homeColor];
@@ -218,6 +228,19 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     }
     public getPieceRotation(): string {
         return 'rotate(' + this.role.value * 180 + ')';
+    }
+    public getHouseSecondaryContent(x: number, y: number): MGPOptional<string> {
+        if (this.captured[y][x] > 0) {
+            return MGPOptional.of(- this.captured[y][x] + '');
+        } else if (this.changeOnBoard[y][x] !== 0) {
+            if (this.changeOnBoard[y][x] < 0) { // Emptied house
+                return MGPOptional.of(this.changeOnBoard[y][x] + '');
+            } else {
+                return MGPOptional.of('+' + this.changeOnBoard[y][x]);
+            }
+        } else {
+            return MGPOptional.empty();
+        }
     }
     private changeVisibleState(state: MancalaState): void {
         this.constructedState = state;
