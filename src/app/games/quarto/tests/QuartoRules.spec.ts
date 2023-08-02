@@ -4,7 +4,6 @@ import { QuartoHeuristic } from '../QuartoMinimax';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
-import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -34,7 +33,7 @@ describe('QuartoRules', () => {
         // When giving no piece to next player
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.EMPTY);
 
-        // Then the move should be juged illegal
+        // Then the move should be illegal
         const reason: string = 'You must give a piece.';
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
@@ -59,7 +58,7 @@ describe('QuartoRules', () => {
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.BAAB],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.EMPTY);
-        const node: QuartoNode = new GameNode(expectedState);
+        const node: QuartoNode = new QuartoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeDraw(rules, node, heuristics);
     });
@@ -186,7 +185,7 @@ describe('QuartoRules', () => {
             [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.AAAB],
         ];
         const state: QuartoState = new QuartoState(board, 9, QuartoPiece.BAAA);
-        const node: QuartoNode = new GameNode(state);
+        const node: QuartoNode = new QuartoNode(state);
 
         // When evaluating board value
         // Then it should be considered as ongoing

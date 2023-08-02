@@ -1,22 +1,22 @@
 /* eslint-disable max-lines-per-function */
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { LascaControlMinimax } from '../LascaControlMinimax';
+import { LascaControlHeuristic, LascaControlMinimax, LascaMoveGenerator } from '../LascaControlMinimax';
 import { LascaMove } from '../LascaMove';
 import { LascaNode } from '../LascaRules';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 
-describe('LascaControlMinimax', () => {
+const u: LascaStack = new LascaStack([LascaPiece.ZERO]);
+const v: LascaStack = new LascaStack([LascaPiece.ONE]);
+const _: LascaStack = LascaStack.EMPTY;
 
-    const u: LascaStack = new LascaStack([LascaPiece.ZERO]);
-    const v: LascaStack = new LascaStack([LascaPiece.ONE]);
-    const _: LascaStack = LascaStack.EMPTY;
-    let minimax: LascaControlMinimax;
+describe('LascaControlMoveGenerator', () => {
+
+    let moveGenerator: LascaMoveGenerator;
 
     beforeEach(() => {
-        minimax = new LascaControlMinimax('Lasca Control Minimax');
+        moveGenerator = new LascaMoveGenerator();
     });
     it('should return full list of captures when capture must be done', () => {
         // Given a state where current player should capture
@@ -29,10 +29,10 @@ describe('LascaControlMinimax', () => {
             [_, _, _, _, _, u, _],
             [_, _, _, _, _, _, _],
         ], 1);
-        const node: LascaNode = new MGPNode(state);
+        const node: LascaNode = new LascaNode(state);
 
         // When asking it a list of move for this state
-        const moves: LascaMove[] = minimax.getListMoves(node);
+        const moves: LascaMove[] = moveGenerator.getListMoves(node);
 
         // Then it should return the list of capture
         expect(moves.length).toBe(2);
@@ -40,13 +40,22 @@ describe('LascaControlMinimax', () => {
     it('should return full list of steps when no capture must be done', () => {
         // Given a state where only steps can be made
         const state: LascaState = LascaState.getInitialState();
-        const node: LascaNode = new MGPNode(state);
+        const node: LascaNode = new LascaNode(state);
 
         // When asking it a list of move for that state
-        const moves: LascaMove[] = minimax.getListMoves(node);
+        const moves: LascaMove[] = moveGenerator.getListMoves(node);
 
         // Then it should return the list of steps
         expect(moves.length).toBe(6);
+    });
+});
+
+describe('LascaControlHeuristic', () => {
+
+    let heuristic: LascaControlHeuristic;
+
+    beforeEach(() => {
+        heuristic = new LascaControlHeuristic();
     });
     it('should not count the immobilized stacks', () => {
         // Given two boards with the exact same stacks, one having blocked stacks
@@ -71,7 +80,7 @@ describe('LascaControlMinimax', () => {
 
         // When comparing them
         // Then the one with mobile stacks should be considered better
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            immobilizedState,
                                                            MGPOptional.empty(),
                                                            mobileState,
@@ -102,6 +111,12 @@ describe('LascaControlMinimax', () => {
         // When comparing them
         // Then the two should be of equal value:
         //     the number of non-blocked stacks times the number of piece (which is 11)
-        RulesUtils.expectStatesToBeOfEqualValue(minimax, forcedState, freeState);
+        RulesUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState);
+    });
+});
+
+describe('LascaControlMinimax', () => {
+    it('should create', () => {
+        expect(new LascaControlMinimax()).toBeTruthy();
     });
 });

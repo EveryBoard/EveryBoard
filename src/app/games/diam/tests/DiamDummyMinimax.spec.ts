@@ -1,13 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { DiamDummyMinimax } from '../DiamDummyMinimax';
+import { DiamDummyMinimax, DiamMoveGenerator } from '../DiamDummyMinimax';
 import { DiamPiece } from '../DiamPiece';
-import { DiamNode, DiamRules } from '../DiamRules';
+import { DiamNode } from '../DiamRules';
 import { DiamState } from '../DiamState';
 
-describe('DiamMinimax', () => {
+describe('DiamMoveGenerator', () => {
 
-    let rules: DiamRules;
-    let minimax: DiamDummyMinimax;
+    let moveGenerator: DiamMoveGenerator;
 
     const __: DiamPiece = DiamPiece.EMPTY;
     const A1: DiamPiece = DiamPiece.ZERO_FIRST;
@@ -16,12 +15,11 @@ describe('DiamMinimax', () => {
     const B2: DiamPiece = DiamPiece.ONE_SECOND;
 
     beforeEach(() => {
-        rules = DiamRules.get();
-        minimax = new DiamDummyMinimax(rules, 'DiamDummyMinimax');
+        moveGenerator = new DiamMoveGenerator();
     });
     it('should propose 16 moves at first turn', () => {
         const node: DiamNode = new DiamNode(DiamState.getInitialState());
-        expect(minimax.getListMoves(node).length).toBe(16);
+        expect(moveGenerator.getListMoves(node).length).toBe(16);
     });
     it('should detect shift moves', () => {
         // Given a state there can be a shift
@@ -33,7 +31,7 @@ describe('DiamMinimax', () => {
         ], 4);
         const node: DiamNode = new DiamNode(state);
         // Then there are 16 + 4 move
-        expect(minimax.getListMoves(node).length).toBe(20);
+        expect(moveGenerator.getListMoves(node).length).toBe(20);
     });
     it('should correctly filter moves to full columns', () => {
         // Given a state there can be a shift
@@ -45,6 +43,12 @@ describe('DiamMinimax', () => {
         ], 4);
         const node: DiamNode = new DiamNode( state);
         // Then there are 14 + 4 move
-        expect(minimax.getListMoves(node).length).toBe(18);
+        expect(moveGenerator.getListMoves(node).length).toBe(18);
+    });
+});
+
+describe('DiamDummyMinimax', () => {
+    it('should create', () => {
+        expect(new DiamDummyMinimax()).toBeTruthy();
     });
 });

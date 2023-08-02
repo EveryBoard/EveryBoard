@@ -4,17 +4,17 @@ import { Phase, GoState, GoPiece } from '../GoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GoLegalityInformation, GoNode, GoRules } from '../GoRules';
-import { GoMinimax } from '../GoMinimax';
+import { GoNode, GoRules } from '../GoRules';
+import { GoHeuristic } from '../GoMinimax';
 import { GoFailure } from '../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 
 describe('GoRules', () => {
 
     let rules: GoRules;
-    let minimaxes: Minimax<GoMove, GoState, GoLegalityInformation>[];
+    let heuristics: Heuristic<GoMove, GoState>[];
 
     const X: GoPiece = GoPiece.LIGHT;
     const O: GoPiece = GoPiece.DARK;
@@ -30,8 +30,8 @@ describe('GoRules', () => {
     });
     beforeEach(() => {
         rules = GoRules.get();
-        minimaxes = [
-            new GoMinimax(rules, 'GoMinimax'),
+        heuristics = [
+            new GoHeuristic()
         ];
     });
     it('should be created', () => {
@@ -45,7 +45,7 @@ describe('GoRules', () => {
 
             // When evaluating it
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+            RulesUtils.expectToBeOngoing(rules, node, heuristics);
         });
         it('should allow simple capture', () => {
             // Given board with an atari (capture threat)
@@ -369,7 +369,7 @@ describe('GoRules', () => {
 
             // When evaluating it
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+            RulesUtils.expectToBeOngoing(rules, node, heuristics);
         });
         it('should attribute shared territory to surviving group', () => {
             // Given a board with a shared territory
@@ -584,7 +584,7 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [0, 5], 2, MGPOptional.empty(), Phase.FINISHED);
             const node: GoNode = new GoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
         });
     });
     describe('End Game', () => {
@@ -602,7 +602,7 @@ describe('GoRules', () => {
 
             // When evaluating its value
             // Then it should see the draw
-            RulesUtils.expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node, heuristics);
         });
         it('should recognize victory', () => {
             // Given a board where Player.ZERO win
@@ -618,7 +618,7 @@ describe('GoRules', () => {
 
             // When evaluating it
             // Then it should be recognised as a victory for Player.ZERO
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
         });
     });
     it('AddDeadToScore should be a simple counting method', () => {
@@ -653,6 +653,6 @@ describe('GoRules', () => {
         const node: GoNode = new GoNode(state);
         // When evaluating the board
         // Then it should be a draw
-        RulesUtils.expectToBeDraw(rules, node, minimaxes);
+        RulesUtils.expectToBeDraw(rules, node, heuristics);
     });
 });

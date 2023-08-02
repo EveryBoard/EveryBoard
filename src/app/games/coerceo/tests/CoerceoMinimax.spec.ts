@@ -2,24 +2,49 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { CoerceoState } from '../CoerceoState';
-import { CoerceoMinimax } from '../CoerceoMinimax';
-import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
+import { CoerceoHeuristic, CoerceoMoveGenerator } from '../CoerceoMinimax';
+import { CoerceoNode } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 
-describe('CoerceoMinimax', () => {
+const _: FourStatePiece = FourStatePiece.EMPTY;
+const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+const O: FourStatePiece = FourStatePiece.ZERO;
+const X: FourStatePiece = FourStatePiece.ONE;
 
-    let minimax: CoerceoMinimax;
+describe('CoerceoMoveGenerator', () => {
 
-    const _: FourStatePiece = FourStatePiece.EMPTY;
-    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
-    const O: FourStatePiece = FourStatePiece.ZERO;
-    const X: FourStatePiece = FourStatePiece.ONE;
+    let moveGenerator: CoerceoMoveGenerator;
 
     beforeEach(() => {
-        const rules: CoerceoRules = CoerceoRules.get();
-        minimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
+        moveGenerator = new CoerceoMoveGenerator();
+    });
+    it('should count correct number of moves', () => {
+        const board: FourStatePiece[][] = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+        ];
+        const state: CoerceoState = new CoerceoState(board, 0, [2, 0], [0, 0]);
+        const node: CoerceoNode = new CoerceoNode(state);
+        expect(moveGenerator.getListMoves(node).length).toBe(3);
+    });
+});
+
+describe('CoerceoHeuristic', () => {
+
+    let heuristic: CoerceoHeuristic;
+
+    beforeEach(() => {
+        heuristic = new CoerceoHeuristic();
     });
     it('should prefer a board where he has more freedom', () => {
         const weakBoard: Table<FourStatePiece> = [
@@ -48,26 +73,9 @@ describe('CoerceoMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
-    });
-    it('should count correct number of moves', () => {
-        const board: FourStatePiece[][] = [
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
-            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-        ];
-        const state: CoerceoState = new CoerceoState(board, 0, [2, 0], [0, 0]);
-        const node: CoerceoNode = new CoerceoNode(state);
-        expect(minimax.getListMoves(node).length).toBe(3);
     });
 });

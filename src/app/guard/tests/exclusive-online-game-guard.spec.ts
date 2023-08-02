@@ -43,7 +43,7 @@ describe('ExclusiveOnlineGameGuard', () => {
     it('should create', () => {
         expect(exclusiveOnlineGameGuard).toBeDefined();
     });
-    it('shoud allow to activate when you are not doing anything', fakeAsync(async() => {
+    it('should allow to activate when you are not doing anything', fakeAsync(async() => {
         // Given a connected user not observing any part
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         tick(1);

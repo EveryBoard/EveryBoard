@@ -3,48 +3,23 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
+import { AttackEpaminondasHeuristic, AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode } from '../EpaminondasRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
 
-describe('AttackEpaminondasMinimax', () => {
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
 
-    let rules: EpaminondasRules;
-    let minimax: AttackEpaminondasMinimax;
-    const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = PlayerOrNone.ZERO;
-    const X: PlayerOrNone = PlayerOrNone.ONE;
+describe('AttackEpaminondasHeuristic', () => {
+
+    let heuristic: AttackEpaminondasHeuristic;
 
     beforeEach(() => {
-        rules = EpaminondasRules.get();
-        minimax = new AttackEpaminondasMinimax(rules, 'AttackEpaminondasMinimax');
-    });
-    it('should propose 114 moves at first turn', () => {
-        const node: EpaminondasNode = rules.getInitialNode();
-        expect(minimax.getListMoves(node).length).toBe(114);
-    });
-    it('should consider possible capture the best move', () => {
-        const board: Table<PlayerOrNone> = [
-            [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
-            [_, O, O, _, _, _, X, X, X, X, _, _, _, _],
-            [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
-            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, X, _, _, _, _, _, _, _, _, _],
-            [O, _, _, _, O, _, _, _, _, _, _, _, _, _],
-            [O, _, _, _, O, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ];
-        const state: EpaminondasState = new EpaminondasState(board, 1);
-        const node: EpaminondasNode = new EpaminondasNode(state);
-        const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
-        const bestMove: EpaminondasMove = node.findBestMove(1, minimax);
-        expect(bestMove).toEqual(expectedMove);
+        heuristic = new AttackEpaminondasHeuristic();
     });
     it('should go forward', () => {
         const greaterBoard: Table<PlayerOrNone> = [
@@ -77,9 +52,40 @@ describe('AttackEpaminondasMinimax', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            lesserState, MGPOptional.empty(),
                                                            greaterState, MGPOptional.empty(),
                                                            Player.ONE);
+    });
+});
+
+describe('AttackEpaminondasMinimax', () => {
+
+    let minimax: AttackEpaminondasMinimax;
+    const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
+
+    beforeEach(() => {
+        minimax = new AttackEpaminondasMinimax();
+    });
+    it('should consider possible capture the best move', () => {
+        const board: Table<PlayerOrNone> = [
+            [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
+            [_, O, O, _, _, _, X, X, X, X, _, _, _, _],
+            [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, X, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, O, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, O, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ];
+        const state: EpaminondasState = new EpaminondasState(board, 1);
+        const node: EpaminondasNode = new EpaminondasNode(state);
+        const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
+        const bestMove: EpaminondasMove = minimax.chooseNextMove(node, minimaxOptions);
+        expect(bestMove).toEqual(expectedMove);
     });
 });

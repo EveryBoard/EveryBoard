@@ -1,12 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
 import { Player } from 'src/app/jscaip/Player';
-import { DiamDummyMinimax } from '../DiamDummyMinimax';
 import { DiamFailure } from '../DiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -20,13 +19,11 @@ describe('DiamRules', () => {
 
     let rules: DiamRules;
 
-    let minimaxes: Minimax<DiamMove, DiamState>[];
+    let heuristics: Heuristic<DiamMove, DiamState>[];
 
     beforeEach(() => {
         rules = DiamRules.get();
-        minimaxes = [
-            new DiamDummyMinimax(rules, 'DiamDummyMinimax'),
-        ];
+        heuristics = [];
     });
     function drop(target: number, piece: DiamPiece): DiamMove {
         return new DiamMoveDrop(target, piece);
@@ -200,7 +197,7 @@ describe('DiamRules', () => {
             ], 3);
             const node: DiamNode = new DiamNode(state);
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+            RulesUtils.expectToBeOngoing(rules, node, heuristics);
         });
         it('should not consider non-facing alignment as win', () => {
             // Given a state where there is an alignment but not face-to-face
@@ -212,7 +209,7 @@ describe('DiamRules', () => {
             ], 4);
             const node: DiamNode = new DiamNode(state);
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+            RulesUtils.expectToBeOngoing(rules, node, heuristics);
         });
         it('should detect player 0 win with face-to-face alignment', () => {
             // Given a state where player zero has a face-to-face alignment
@@ -224,7 +221,7 @@ describe('DiamRules', () => {
             ], 4);
             const node: DiamNode = new DiamNode(state);
             // Then it is detected as a v ictory for player zero
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
         });
         it('should detect win when two alignments happen at the same turn', () => {
             // Given a board where two alignment exist, but player one has a higher alignment
@@ -236,7 +233,7 @@ describe('DiamRules', () => {
             ], 4);
             const node: DiamNode = new DiamNode(state);
             // Then the winner is the one with the highest alignment
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
         });
     });
 });

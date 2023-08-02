@@ -8,19 +8,14 @@ import { SaharaFailure } from '../SaharaFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 
 describe('SaharaMoves', () => {
 
     it('should have a bijective encoder', () => {
         const rules: SaharaRules = SaharaRules.get();
         const moveGenerator: SaharaMoveGenerator = new SaharaMoveGenerator();
-        const node: SaharaNode = rules.getInitialNode();
-        expect(rules).toBeTruthy();
-        const moves: SaharaMove[] = moveGenerator.getListMoves(node);
-        expect(moves.length).toEqual(12);
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(SaharaMove.encoder, move);
-        }
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, SaharaMove.encoder);
     });
     it('should throw error when starting coord is outside the board', () => {
         const start: Coord = new Coord(-1, 0);

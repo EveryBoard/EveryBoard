@@ -739,7 +739,7 @@ describe('PartCreationComponent', () => {
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            it('accepting config shoud change configRoom and part', fakeAsync(async() => {
+            it('accepting config should change configRoom and part', fakeAsync(async() => {
                 spyOn(component.gameStartNotification, 'emit').and.callThrough();
                 // Given a part where the config has been proposed with creator as first player
                 awaitComponentInitialization();

@@ -104,10 +104,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // When starting tutorial
             wrapper.startTutorial(tutorial);
 
-            // expect to see setted previous move but no mother to the node
+            // expect to see previous move but no parent to the node
             const componentPreviousMove: QuartoMove = wrapper.gameComponent.node.move.get() as QuartoMove;
             expect(componentPreviousMove).toEqual(tutorialPreviousMove);
-            expect(wrapper.gameComponent.node.mother.isAbsent()).toBeTrue();
+            expect(wrapper.gameComponent.node.parent.isAbsent()).toBeTrue();
         }));
         it('should show title of the steps, the selected one in bold', fakeAsync(async() => {
             // Given a TutorialStep with 3 steps

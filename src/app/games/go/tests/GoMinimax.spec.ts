@@ -1,26 +1,25 @@
 /* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GoMinimax } from '../GoMinimax';
+import { GoHeuristic, GoMinimax, GoMoveGenerator } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { GoState, GoPiece, Phase } from '../GoState';
 import { GoNode, GoRules } from '../GoRules';
 
-describe('GoMinimax', () => {
+const X: GoPiece = GoPiece.LIGHT;
+const O: GoPiece = GoPiece.DARK;
+const u: GoPiece = GoPiece.DEAD_DARK;
+const k: GoPiece = GoPiece.DEAD_LIGHT;
+const w: GoPiece = GoPiece.LIGHT_TERRITORY;
+const b: GoPiece = GoPiece.DARK_TERRITORY;
+const _: GoPiece = GoPiece.EMPTY;
 
-    let minimax: GoMinimax;
+describe('GoMoveGenerator', () => {
 
-    const X: GoPiece = GoPiece.LIGHT;
-    const O: GoPiece = GoPiece.DARK;
-    const u: GoPiece = GoPiece.DEAD_DARK;
-    const k: GoPiece = GoPiece.DEAD_LIGHT;
-    const w: GoPiece = GoPiece.LIGHT_TERRITORY;
-    const b: GoPiece = GoPiece.DARK_TERRITORY;
-    const _: GoPiece = GoPiece.EMPTY;
+    let moveGenerator: GoMoveGenerator;
 
     beforeEach(() => {
-        const rules: GoRules = GoRules.get();
-        minimax = new GoMinimax(rules, 'Dummy');
+        moveGenerator = new GoMoveGenerator();
     });
     describe('getListMove', () => {
         it('should count as many move as empty space in Phase.PLAYING turn, + PASS', () => {
@@ -33,7 +32,7 @@ describe('GoMinimax', () => {
             ];
             const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
             const initialNode: GoNode = new GoNode(state);
-            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves.length).toBe(23);
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });
@@ -41,23 +40,23 @@ describe('GoMinimax', () => {
             const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
-            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
         it('should only have GoMove.ACCEPT in COUNTNG Phase when agreeing on the result', () => {
             const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
-            spyOn(minimax, 'getCountingMovesList').and.returnValue([]);
-            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([]);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
         it('should only have counting moves in COUNTING Phase when not agreeing on the result', () => {
             const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
-            spyOn(minimax, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
-            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves).toEqual([new GoMove(1, 1)]);
         });
         it('should switch dead piece when it consider those pieces alive (Player.ZERO)', () => {
@@ -70,7 +69,7 @@ describe('GoMinimax', () => {
             ];
             const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
-            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
         });
@@ -84,10 +83,19 @@ describe('GoMinimax', () => {
             ];
             const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
-            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
         });
+    });
+});
+
+describe('GoHeuristic', () => {
+
+    let heuristic: GoHeuristic;
+
+    beforeEach(() => {
+        heuristic = new GoHeuristic();
     });
     xit('should getBoardValue according considering alive group who control alone one territory and not considering alive the others', () => {
         const board: Table<GoPiece> = [
@@ -99,7 +107,13 @@ describe('GoMinimax', () => {
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
         const initialNode: GoNode = new GoNode(state);
-        const boardValue: number = minimax.getBoardValue(initialNode).value;
+        const boardValue: number = heuristic.getBoardValue(initialNode).value;
         expect(boardValue).toBe(3);
+    });
+});
+
+describe('GoMinimax', () => {
+    it('should create', () => {
+        expect(new GoMinimax()).toBeTruthy();
     });
 });

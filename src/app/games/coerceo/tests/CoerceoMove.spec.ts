@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
-import { CoerceoMinimax } from '../CoerceoMinimax';
+import { CoerceoMinimax, CoerceoMoveGenerator } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 
 describe('CoerceoMove', () => {
 
@@ -76,12 +77,8 @@ describe('CoerceoMove', () => {
         describe('encoder', () => {
             it('should be bijective with first turn moves', () => {
                 const rules: CoerceoRules = CoerceoRules.get();
-                const minimax: CoerceoMinimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
-                const node: CoerceoNode = rules.getInitialNode();
-                const moves: CoerceoMove[] = minimax.getListMoves(node);
-                for (const move of moves) {
-                    EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
-                }
+                const moveGenerator: CoerceoMoveGenerator = new CoerceoMoveGenerator();
+                MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, CoerceoMove.encoder);
             });
             it('should be bijective with tiles exchanges', () => {
                 const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(5, 7));

@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Heuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -180,13 +179,13 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
-        const node: TrexoNode = new GameNode(expectedState);
+        const node: TrexoNode = new TrexoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
     });
-    it('shoud declare loser the player who align 5 piece of the opponent', () => {
+    it('should declare loser the player who align 5 piece of the opponent', () => {
         // Given a board where a player's opponent has a line of 4
         const state: TrexoState = TrexoState.of([
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
@@ -217,7 +216,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 4);
-        const node: TrexoNode = new GameNode(expectedState);
+        const node: TrexoNode = new TrexoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
     });
@@ -252,7 +251,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
-        const node: TrexoNode = new GameNode(expectedState);
+        const node: TrexoNode = new TrexoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);

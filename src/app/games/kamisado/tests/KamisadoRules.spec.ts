@@ -5,20 +5,20 @@ import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
-import { KamisadoMinimax } from '../KamisadoMinimax';
+import { KamisadoHeuristic } from '../KamisadoMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { KamisadoFailure } from '../KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 
 describe('KamisadoRules', () => {
 
     let rules: KamisadoRules;
 
-    let minimaxes: Minimax<KamisadoMove, KamisadoState>[];
+    let heuristics: Heuristic<KamisadoMove, KamisadoState>[];
 
     let node: KamisadoNode;
 
@@ -35,8 +35,8 @@ describe('KamisadoRules', () => {
 
     beforeEach(() => {
         rules = KamisadoRules.get();
-        minimaxes = [
-            new KamisadoMinimax(rules, 'KamisadoMinimax'),
+        heuristics = [
+            new KamisadoHeuristic(),
         ];
         node = rules.getInitialNode();
     });
@@ -338,54 +338,6 @@ describe('KamisadoRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });
-    describe('getListMovesFromState', () => {
-        it('should return only Kamisado.Move when position is stuck', () => {
-            // Given a stuck board
-            const board: Table<KamisadoPiece> = [
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [b, r, _, _, _, _, _, _],
-                [R, G, _, _, _, _, _, _],
-            ];
-            const state: KamisadoState =
-                new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-
-            // When listing moves
-            const moves: KamisadoMove[] = KamisadoRules.getListMovesFromState(state);
-
-            // Then the only choice should be KamisadoMove.PASS
-            expect(moves.length).toEqual(1);
-            const move: KamisadoMove = moves[0];
-            expect(move).toEqual(KamisadoMove.PASS);
-        });
-        it('should return only one move when only one move is possible', () => {
-            // Given a board where only one move is possible
-            const board: Table<KamisadoPiece> = [
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [b, r, _, _, _, _, _, _],
-                [R, G, _, _, _, _, _, _],
-            ];
-            const state: KamisadoState =
-                new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
-
-            // When listing moves
-            const moves: KamisadoMove[] = KamisadoRules.getListMovesFromState(state);
-
-            // Then there should only be that one legal move
-            expect(moves.length).toEqual(1);
-            const move: KamisadoMove = moves[0];
-            expect(move).toEqual(KamisadoMove.of(new Coord(1, 6), new Coord(2, 7)));
-        });
-    });
     describe('Endgames', () => {
         it('should detect victory for Player.ONE', () => {
             // Given a board where Player.ONE just landed on last line
@@ -404,7 +356,7 @@ describe('KamisadoRules', () => {
             const node: KamisadoNode = new KamisadoNode(state);
 
             // Then it should be a victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
         });
         it('should detect victory for Player.ZERO', () => {
             // Given a board where Player.ZERO just landed on last line
@@ -423,7 +375,7 @@ describe('KamisadoRules', () => {
             const node: KamisadoNode = new KamisadoNode(state);
 
             // Then it should be a victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
         });
         it('should declare blocking player as loser', () => {
             // Given a board where Player.ONE blocked everyone
@@ -444,7 +396,7 @@ describe('KamisadoRules', () => {
             const node: KamisadoNode = new KamisadoNode(state);
 
             // Then it should be victory for Player.ZERO
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
         });
     });
     it('should not allow creating invalid color', () => {

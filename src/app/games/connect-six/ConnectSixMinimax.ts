@@ -95,7 +95,7 @@ export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, Conn
             if (coordAndContent.content.isPlayer()) {
                 const squareScore: number =
                     ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coordAndContent.coord);
-                if (NInARowHelper.isVictory(squareScore)) {
+                if (BoardValue.isVictory(squareScore)) {
                     return new BoardValue(squareScore);
                 }
                 score += squareScore;

@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
+import { AbaloneMoveGenerator } from '../AbaloneDummyMinimax';
 import { AbaloneMove } from '../AbaloneMove';
-import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { AbaloneRules } from '../AbaloneRules';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 
 describe('AbaloneMove', () => {
 
@@ -59,11 +59,7 @@ describe('AbaloneMove', () => {
     });
     it('should have a bijective encoder', () => {
         const rules: AbaloneRules = AbaloneRules.get();
-        const minimax: AbaloneDummyMinimax = new AbaloneDummyMinimax(rules, 'dummy');
-        const node: AbaloneNode = rules.getInitialNode();
-        const firstTurnMoves: AbaloneMove[] = minimax.getListMoves(node);
-        for (const move of firstTurnMoves) {
-            EncoderTestUtils.expectToBeBijective(AbaloneMove.encoder, move);
-        }
+        const moveGenerator: AbaloneMoveGenerator = new AbaloneMoveGenerator();
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, AbaloneMove.encoder);
     });
 });

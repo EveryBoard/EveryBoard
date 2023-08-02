@@ -5,18 +5,18 @@ import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove }
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
-import { CoerceoMinimax } from '../CoerceoMinimax';
+import { CoerceoHeuristic } from '../CoerceoMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { CoerceoPiecesThreatTilesMinimax } from '../CoerceoPiecesThreatTilesMinimax';
+import { Heuristic } from 'src/app/jscaip/Minimax';
+import { CoerceoPiecesThreatTilesHeuristic } from '../CoerceoPiecesThreatTilesMinimax';
 
 describe('CoerceoRules', () => {
 
     let rules: CoerceoRules;
 
-    let minimaxes: Minimax<CoerceoMove, CoerceoState>[];
+    let heuristics: Heuristic<CoerceoMove, CoerceoState>[];
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -29,12 +29,12 @@ describe('CoerceoRules', () => {
 
     beforeEach(() => {
         rules = CoerceoRules.get();
-        minimaxes = [
-            new CoerceoMinimax(rules, 'CoerceoMinimax'),
-            new CoerceoPiecesThreatTilesMinimax(rules, 'CoerceoPiecesThreatTilesMinimax'),
+        heuristics = [
+            new CoerceoHeuristic(),
+            new CoerceoPiecesThreatTilesHeuristic(),
         ];
     });
-    describe('Deplacement', () => {
+    describe('movement', () => {
         it('should forbid to start move from outside the board', () => {
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -370,7 +370,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [18, 17]);
             const node: CoerceoNode = new CoerceoNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
         });
         it('should set minimal value to victory of Player.ONE', () => {
             const board: FourStatePiece[][] = [
@@ -387,7 +387,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [17, 18]);
             const node: CoerceoNode = new CoerceoNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
         });
     });
 });

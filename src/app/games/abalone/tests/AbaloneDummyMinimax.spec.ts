@@ -1,23 +1,24 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
+import { AbaloneMoveGenerator, AbaloneScoreHeuristic } from '../AbaloneDummyMinimax';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 
+const _: FourStatePiece = FourStatePiece.EMPTY;
+const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+const O: FourStatePiece = FourStatePiece.ZERO;
+const X: FourStatePiece = FourStatePiece.ONE;
+
 describe('AbaloneDummyMinimax', () => {
 
-    const _: FourStatePiece = FourStatePiece.EMPTY;
-    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
-    const O: FourStatePiece = FourStatePiece.ZERO;
-    const X: FourStatePiece = FourStatePiece.ONE;
-    let minimax: AbaloneDummyMinimax;
+    let moveGenerator: AbaloneMoveGenerator;
 
     beforeEach(() => {
-        minimax = new AbaloneDummyMinimax(AbaloneRules.get(), 'dummy');
+        moveGenerator = new AbaloneMoveGenerator();
     });
     it('should propose all non-suicidal moved at first turn, there is 42', () => {
         // Given initial node
@@ -25,7 +26,7 @@ describe('AbaloneDummyMinimax', () => {
         const initialNode: AbaloneNode = new AbaloneNode(initialState);
 
         // Then we should have 44 moves
-        expect(minimax.getListMoves(initialNode).length).toEqual(44);
+        expect(moveGenerator.getListMoves(initialNode).length).toEqual(44);
     });
     it('should include pushing moves', () => {
         // Given a simple node
@@ -44,7 +45,16 @@ describe('AbaloneDummyMinimax', () => {
         const node: AbaloneNode = new AbaloneNode(state);
 
         // Then we should have 15 moves
-        expect(minimax.getListMoves(node).length).toEqual(15);
+        expect(moveGenerator.getListMoves(node).length).toEqual(15);
+    });
+});
+
+describe('AbaloneScoreHeuristic', () => {
+
+    let heuristic: AbaloneScoreHeuristic;
+
+    beforeEach(() => {
+        heuristic = new AbaloneScoreHeuristic();
     });
     it('should assign a higher score when one has more pieces on board', () => {
         // Given two boards, one with more player piece than the other
@@ -72,7 +82,7 @@ describe('AbaloneDummyMinimax', () => {
         ];
         // When computing the scores
         // Then the board with the most player pieces should have the highest score
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            new AbaloneState(boardWithLessPieces, 0),
                                                            MGPOptional.empty(),
                                                            new AbaloneState(boardWithMorePieces, 0),

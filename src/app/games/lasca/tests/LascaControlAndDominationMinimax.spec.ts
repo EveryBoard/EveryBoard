@@ -2,18 +2,19 @@
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { LascaControlAndDominationMinimax } from '../LascaControlAndDomination';
+import { LascaControlAndDominationHeuristic, LascaControlAndDominationMinimax } from '../LascaControlAndDomination';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 
-describe('LascaControlAndDominateMinimax', () => {
+describe('LascaControlAndDominationHeuristic', () => {
 
     const O: LascaStack = new LascaStack([LascaPiece.ZERO]);
     const X: LascaStack = new LascaStack([LascaPiece.ONE]);
     const _: LascaStack = LascaStack.EMPTY;
-    let minimax: LascaControlAndDominationMinimax;
+
+    let heuristic: LascaControlAndDominationHeuristic;
 
     beforeEach(() => {
-        minimax = new LascaControlAndDominationMinimax();
+        heuristic = new LascaControlAndDominationHeuristic();
     });
     it('should not count the immobilized stacks', () => {
         // Given two boards with the exact same stacks, one having blocked stacks
@@ -38,7 +39,7 @@ describe('LascaControlAndDominateMinimax', () => {
 
         // When comparing them
         // Then the one with mobile stacks should be considered better
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            immobilizedState,
                                                            MGPOptional.empty(),
                                                            mobileState,
@@ -69,7 +70,7 @@ describe('LascaControlAndDominateMinimax', () => {
         // When comparing them
         // Then the two should be of equal value:
         //     the number of non-blocked stacks times the number of piece (which is 11)
-        RulesUtils.expectStatesToBeOfEqualValue(minimax, forcedState, freeState);
+        RulesUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState);
     });
     it('should count the dominating piece as secondary board value (at equal potential mobility)', () => {
         // Given two boards with the same potential mobility, one with more "dominant pieces" than the other
@@ -97,11 +98,17 @@ describe('LascaControlAndDominateMinimax', () => {
 
         // When comparing them
         // Then the one with more dominant pieces should be prefered
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            dominatedState,
                                                            MGPOptional.empty(),
                                                            dominatingState,
                                                            MGPOptional.empty(),
                                                            Player.ONE);
+    });
+});
+
+describe('LascaControlAndDominationMinimax', () => {
+    it('should create', () => {
+        expect(new LascaControlAndDominationMinimax()).toBeTruthy();
     });
 });

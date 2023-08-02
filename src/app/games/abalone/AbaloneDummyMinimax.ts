@@ -78,6 +78,9 @@ export class AbaloneScoreMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
 
     public constructor() {
         // TODO FOR REVIEW: j'ai renommé certains minimax, hésite pas si t'en vois d'autres qui méritent renommage !
+        // TODO FOR REVIEW: l'idée c'est : un dummy minimax utilise DummyHeuristic (car il est vraiment dummy)
+        // TODO FOR REVIEW:                un score minimax utilise le score
+        // TODO FOR REVIEW:                sinon, il a un nom approprié à ce qu'il fait (tout comme son heuristique) ou juste JeuMinimax quand y'en a qu'un
         super('Score Minimax', AbaloneRules.get(), new AbaloneScoreHeuristic(), new AbaloneMoveGenerator());
     }
 }

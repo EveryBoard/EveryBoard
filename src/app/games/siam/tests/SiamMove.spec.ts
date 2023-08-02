@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { SiamNode, SiamRules } from '../SiamRules';
-import { SiamMinimax, SiamMoveGenerator } from '../SiamMinimax';
+import { SiamNode } from '../SiamRules';
+import { SiamMoveGenerator } from '../SiamMinimax';
 import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -28,7 +28,6 @@ describe('SiamMove', () => {
         const move: SiamMove = SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP).get();
         const state: SiamState = new SiamState(board, 0);
         const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        const rules: SiamRules = SiamRules.get();
         const moveGenerator: SiamMoveGenerator = new SiamMoveGenerator();
         const moves: SiamMove[] = moveGenerator.getListMoves(node);
         for (const move of moves) {

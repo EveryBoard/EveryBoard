@@ -4,20 +4,21 @@ import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
-import { AwaleMinimax } from '../AwaleMinimax';
+import { AwaleCaptureHeuristic } from '../AwaleMinimax';
 import { AwaleFailure } from '../AwaleFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 
 describe('AwaleRules', () => {
 
     let rules: AwaleRules;
-    let minimaxes: AwaleMinimax[];
+    let heuristics: Heuristic<AwaleMove, AwaleState>[];
 
     beforeEach(() => {
         rules = AwaleRules.get();
-        minimaxes = [
-            new AwaleMinimax(rules, 'AwaleMinimax'),
+        heuristics = [
+            new AwaleCaptureHeuristic(),
         ];
     });
     it('should distribute', () => {
@@ -112,7 +113,7 @@ describe('AwaleRules', () => {
             const expectedState: AwaleState = new AwaleState(expectedBoard, 2, [25, 23]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: AwaleNode = new AwaleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
         });
         it('should not mansoon when a distribution is possible', () => {
             // Given a state where the player is about to give his last stone to opponent
@@ -187,7 +188,7 @@ describe('AwaleRules', () => {
         // Then the move should be legal
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('shoud distribute but not capture in case of would-starve move', () => {
+    it('should distribute but not capture in case of would-starve move', () => {
         // Given a state in which the player could capture all opponents seeds
         const board: Table<number> = [
             [1, 0, 0, 0, 0, 2],
@@ -216,7 +217,7 @@ describe('AwaleRules', () => {
             const state: AwaleState = new AwaleState(board, 6, [26, 22]);
             const node: AwaleNode = new AwaleNode(state);
             // Then it should be a victory for player 0
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
         });
         it('should identify victory for player 1', () => {
             // Given a state with no more seeds and where player 1 has captured more seeds
@@ -227,7 +228,7 @@ describe('AwaleRules', () => {
             const state: AwaleState = new AwaleState(board, 6, [22, 26]);
             const node: AwaleNode = new AwaleNode(state);
             // Then it should be a victory for player 1
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
         });
         it('should identify draw', () => {
             // Given a state with no more seeds and both players have captured the same number of seeds
@@ -238,7 +239,7 @@ describe('AwaleRules', () => {
             const state: AwaleState = new AwaleState(board, 6, [24, 24]);
             const node: AwaleNode = new AwaleNode(state);
             // Thin it should be a draw
-            RulesUtils.expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node, heuristics);
         });
     });
 });

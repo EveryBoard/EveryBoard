@@ -1,24 +1,24 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { LinesOfActionMinimax } from '../LinesOfActionMinimax';
+import { LinesOfActionMoveGenerator, LinesOfActionMinimax } from '../LinesOfActionMinimax';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
 
-describe('LinesOfActionMinimax', () => {
+describe('LinesOfActionMoveGenerator', () => {
 
-    let minimax: LinesOfActionMinimax;
+    let moveGenerator: LinesOfActionMoveGenerator;
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         const rules: LinesOfActionRules = LinesOfActionRules.get();
-        minimax = new LinesOfActionMinimax(rules, 'Lines Of Action Minimax');
+        moveGenerator = new LinesOfActionMoveGenerator();
     });
     it('should have 36 moves on the initial state', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        expect(minimax.getListMoves(node).length).toBe(6 * 3 * 2);
+        expect(moveGenerator.getListMoves(node).length).toBe(6 * 3 * 2);
     });
     it('should have 0 moves on a victory state (for Player.ZERO)', () => {
         const board: Table<PlayerOrNone> = [
@@ -33,7 +33,7 @@ describe('LinesOfActionMinimax', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        expect(minimax.getListMoves(node).length).toBe(0);
+        expect(moveGenerator.getListMoves(node).length).toBe(0);
     });
     it('should have 0 moves on a victory state (for Player.ONE)', () => {
         const board: Table<PlayerOrNone> = [
@@ -48,6 +48,12 @@ describe('LinesOfActionMinimax', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        expect(minimax.getListMoves(node).length).toBe(0);
+        expect(moveGenerator.getListMoves(node).length).toBe(0);
+    });
+});
+
+describe('LinesOfActionMinimax', () => {
+    it('should create', () => {
+        expect(new LinesOfActionMinimax()).toBeTruthy();
     });
 });

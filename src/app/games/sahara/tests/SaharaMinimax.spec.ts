@@ -1,10 +1,21 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { SaharaHeuristic, SaharaMinimax } from '../SaharaMinimax';
+import { SaharaHeuristic, SaharaMinimax, SaharaMoveGenerator } from '../SaharaMinimax';
 import { SaharaState } from '../SaharaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
+import { SaharaNode, SaharaRules } from '../SaharaRules';
+import { SaharaMove } from '../SaharaMove';
+
+describe('SaharaMoveGenerator', () => {
+    it('should generate 12 moves at first turn', () => {
+        const moveGenerator: SaharaMoveGenerator = new SaharaMoveGenerator();
+        const node: SaharaNode = SaharaRules.get().getInitialNode();
+        const moves: SaharaMove[] = moveGenerator.getListMoves(node);
+        expect(moves.length).toEqual(12);
+    });
+});
 
 describe('SaharaTeuristic', () => {
 

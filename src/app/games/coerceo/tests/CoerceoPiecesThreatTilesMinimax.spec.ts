@@ -8,13 +8,13 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { CoerceoState } from '../CoerceoState';
-import { CoerceoPiecesThreatTilesMinimax } from '../CoerceoPiecesThreatTilesMinimax';
-import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
+import { CoerceoPiecesThreatTilesHeuristic, CoerceoPiecesThreatTilesMinimax } from '../CoerceoPiecesThreatTilesMinimax';
+import { CoerceoNode } from '../CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('CoerceoPiecesThreatTilesMinimax', () => {
+describe('CoerceoPiecesThreatTilesHeuristic', () => {
 
-    let minimax: CoerceoPiecesThreatTilesMinimax;
+    let heuristic: CoerceoPiecesThreatTilesHeuristic;
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -22,8 +22,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     beforeEach(() => {
-        const rules: CoerceoRules = CoerceoRules.get();
-        minimax = new CoerceoPiecesThreatTilesMinimax(rules, 'Pieces > Threats > Tiles');
+        heuristic = new CoerceoPiecesThreatTilesHeuristic();
     });
     it('should prefer board with more pieces', () => {
         const weakBoard: Table<FourStatePiece> = [
@@ -52,7 +51,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 1]);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -84,7 +83,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -116,7 +115,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -148,7 +147,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 1], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -182,7 +181,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ZERO);
@@ -216,7 +215,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
                                                            Player.ONE);
@@ -241,7 +240,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
 
             // When asking getThreat to list the threats
             const threatenedCoord: Coord = new Coord(8, 7);
-            const threats: MGPOptional<PieceThreat> = minimax.getThreat(threatenedCoord, state);
+            const threats: MGPOptional<PieceThreat> = heuristic.getThreat(threatenedCoord, state);
 
             // Then the piece mentionned upper should be included
             expect(threats.isPresent()).toBeTrue();
@@ -262,9 +261,9 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                 [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, PieceThreat> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, PieceThreat> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(7, 6))).toBeTrue();
         });
         it('should not consider opponent-threatened piece as threats', () => {
@@ -281,9 +280,9 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, PieceThreat> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, PieceThreat> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(6, 6)))
                 .withContext('Current player piece should not be considered threatened')
                 .toBeFalse();
@@ -305,9 +304,9 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                 [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, PieceThreat> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, PieceThreat> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(7, 6))).toBeFalse();
         });
         it('should not consider direct threat as moving threat as well', () => {
@@ -324,17 +323,17 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
                 [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, PieceThreat> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, PieceThreat> = minimax.filterThreatMap(threatMap, state);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(5, 7))).toBeFalse();
         });
     });
     describe('getBoardValue', () => {
 
-        const SAFE: number = CoerceoPiecesThreatTilesMinimax.SCORE_BY_SAFE_PIECE;
+        const SAFE: number = CoerceoPiecesThreatTilesHeuristic.SCORE_BY_SAFE_PIECE;
 
-        const THREATENED: number = CoerceoPiecesThreatTilesMinimax.SCORE_BY_THREATENED_PIECE;
+        const THREATENED: number = CoerceoPiecesThreatTilesHeuristic.SCORE_BY_THREATENED_PIECE;
 
         it('should count one safe piece', () => {
             // Given a state with one piece of player zero
@@ -354,7 +353,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const node: CoerceoNode = new CoerceoNode(state);
 
             // When evaluating its value
-            const value: number = minimax.getBoardValue(node).value;
+            const value: number = heuristic.getBoardValue(node).value;
 
             // Then the value should be the vone attributed to one safe piece
             expect(value).toEqual(SAFE);
@@ -378,7 +377,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const node: CoerceoNode = new CoerceoNode(state);
 
             // When evaluating its value
-            const value: number = minimax.getBoardValue(node).value;
+            const value: number = heuristic.getBoardValue(node).value;
 
             // Then the value should be correct
             expect(value).toEqual((3 * SAFE) - THREATENED);
@@ -403,7 +402,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const node: CoerceoNode = new CoerceoNode(state);
 
             // When evaluating its value
-            const value: number = minimax.getBoardValue(node).value;
+            const value: number = heuristic.getBoardValue(node).value;
 
             // Then the value should be correct
             expect(value).toEqual((3 * SAFE) - (2 * SAFE));
@@ -426,7 +425,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const node: CoerceoNode = new CoerceoNode(state);
 
             // When evaluating its value
-            const value: number = minimax.getBoardValue(node).value;
+            const value: number = heuristic.getBoardValue(node).value;
 
             // Then the value should be correct
             expect(value).toEqual((4 * SAFE) - (3 * SAFE));
@@ -449,7 +448,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const node: CoerceoNode = new CoerceoNode(state);
 
             // When evaluating its value
-            const value: number = minimax.getBoardValue(node).value;
+            const value: number = heuristic.getBoardValue(node).value;
 
             // Then the value should be correct
             expect(value).toEqual((4 * SAFE) - (1 * SAFE));
@@ -474,10 +473,16 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const node: CoerceoNode = new CoerceoNode(state);
 
             // When evaluating its value
-            const value: number = minimax.getBoardValue(node).value;
+            const value: number = heuristic.getBoardValue(node).value;
 
             // Then the value should be correct
             expect(value).toEqual((4 * SAFE) - (1 * THREATENED));
         });
+    });
+});
+
+describe('CoerceoPiecesThreatTilesMinimax', () => {
+    it('should create', () => {
+        expect(new CoerceoPiecesThreatTilesMinimax()).toBeTruthy();
     });
 });

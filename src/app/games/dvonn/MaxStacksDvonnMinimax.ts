@@ -29,7 +29,7 @@ export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
     }
 }
 
-export class DvonnMaxStacksHeuristic extends PlayerMetricHeuristic<DvonnMove, DvonnState> {
+export class MaxStacksDvonnHeuristic extends PlayerMetricHeuristic<DvonnMove, DvonnState> {
 
     public getMetrics(node: DvonnNode): [number, number] {
         const state: DvonnState = node.gameState;
@@ -49,6 +49,6 @@ export class DvonnMaxStacksHeuristic extends PlayerMetricHeuristic<DvonnMove, Dv
 export class MaxStacksDvonnMinimax extends Minimax<DvonnMove, DvonnState> {
 
     public constructor() {
-        super('MaxStacks Minimax', DvonnRules.get(), new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator());
+        super('MaxStacks Minimax', DvonnRules.get(), new MaxStacksDvonnHeuristic(), new DvonnOrderedMoveGenerator());
     }
 }

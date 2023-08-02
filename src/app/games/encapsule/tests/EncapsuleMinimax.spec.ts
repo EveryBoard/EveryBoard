@@ -1,4 +1,4 @@
-import { EncapsuleMinimax } from '../EncapsuleMinimax';
+import { EncapsuleMinimax, EncapsuleMoveGenerator } from '../EncapsuleMinimax';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
@@ -14,15 +14,12 @@ const X0: EncapsulePiece = EncapsulePiece.SMALL_LIGHT;
 const X1: EncapsulePiece = EncapsulePiece.MEDIUM_LIGHT;
 const X2: EncapsulePiece = EncapsulePiece.BIG_LIGHT;
 
-describe('EncapsuleMinimax', () => {
+describe('EncapsuleMoveGenerator', () => {
 
-    let rules: EncapsuleRules;
-
-    let minimax: EncapsuleMinimax;
+    let moveGenerator: EncapsuleMoveGenerator;
 
     beforeEach(() => {
-        rules = EncapsuleRules.get();
-        minimax = new EncapsuleMinimax(rules, 'Encapsule Minimax');
+        moveGenerator = new EncapsuleMoveGenerator();
     });
     describe('getListMoves', () => {
         it('should have 27 moves on first turn', () => {
@@ -30,7 +27,7 @@ describe('EncapsuleMinimax', () => {
             const node: EncapsuleNode = EncapsuleRules.get().getInitialNode();
             // When counting the number of moves
             // 3 pieces x 9 coords = 27 moves
-            expect(minimax.getListMoves(node).length).toBe(27);
+            expect(moveGenerator.getListMoves(node).length).toBe(27);
         });
         it('should have XX moves on a specific third turn', () => {
             // Given a board like this
@@ -50,7 +47,13 @@ describe('EncapsuleMinimax', () => {
             // Drops medium = 9, drops big = 9, drops small = 7
             // Moving the piece on board = 7 possible landing space
             // Total: 32
-            expect(minimax.getListMoves(node).length).toBe(32);
+            expect(moveGenerator.getListMoves(node).length).toBe(32);
         });
+    });
+});
+
+describe('EncapsuleMinimax', () => {
+    it('should create', () => {
+        expect(new EncapsuleMinimax()).toBeTruthy();
     });
 });

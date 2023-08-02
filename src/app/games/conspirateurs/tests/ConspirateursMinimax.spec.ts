@@ -1,22 +1,21 @@
 /* eslint-disable max-lines-per-function */
 import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursRules, ConspirateursNode } from '../ConspirateursRules';
-import { ConspirateursMinimax } from '../ConspirateursMinimax';
+import { ConspirateursHeuristic, ConspirateursMinimax, ConspirateursMoveGenerator } from '../ConspirateursMinimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('ConspirateursMinimax', () => {
-    const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = PlayerOrNone.ZERO;
-    const X: PlayerOrNone = PlayerOrNone.ONE;
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
 
-    let rules: ConspirateursRules;
-    let minimax: ConspirateursMinimax;
+describe('ConspirateursMoveGenerator', () => {
+
+    let moveGenerator: ConspirateursMoveGenerator;
 
     beforeEach(() => {
-        rules = ConspirateursRules.get();
-        minimax = new ConspirateursMinimax(rules, 'ConspirateursMinimax');
+        moveGenerator = new ConspirateursMoveGenerator();
     });
 
     describe('drop phase', () => {
@@ -24,7 +23,7 @@ describe('ConspirateursMinimax', () => {
             // Given the initial state
             const node: ConspirateursNode = new ConspirateursNode(ConspirateursState.getInitialState());
             // Then there should be 45 possible moves
-            expect(minimax.getListMoves(node).length).toBe(45);
+            expect(moveGenerator.getListMoves(node).length).toBe(45);
         });
         it('should propose 44 moves if there is already one piece placed', () => {
             // Given a state with already one piece dropped
@@ -49,7 +48,7 @@ describe('ConspirateursMinimax', () => {
             ], 1);
             const node: ConspirateursNode = new ConspirateursNode(state);
             // Then there should be 44 possible moves
-            expect(minimax.getListMoves(node).length).toBe(44);
+            expect(moveGenerator.getListMoves(node).length).toBe(44);
         });
     });
     describe('main phase', () => {
@@ -76,8 +75,17 @@ describe('ConspirateursMinimax', () => {
             ], 42);
             const node: ConspirateursNode = new ConspirateursNode(state);
             // Then there are 7 simple moves + 2 jump moves
-            expect(minimax.getListMoves(node).length).toBe(9);
+            expect(moveGenerator.getListMoves(node).length).toBe(9);
         });
+    });
+});
+
+describe('ConspirateursHeuristic', () => {
+
+    let heuristic: ConspirateursHeuristic;
+
+    beforeEach(() => {
+        heuristic = new ConspirateursHeuristic();
     });
     describe('getBoardValue', () => {
         it('should assign a higher score to a board with pieces closer to the sides', () => {
@@ -119,7 +127,7 @@ describe('ConspirateursMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
@@ -164,7 +172,7 @@ describe('ConspirateursMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
@@ -210,7 +218,7 @@ describe('ConspirateursMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);

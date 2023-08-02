@@ -6,24 +6,24 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
-import { LinesOfActionMinimax } from '../LinesOfActionMinimax';
+import { LinesOfActionHeuristic } from '../LinesOfActionMinimax';
 import { LinesOfActionState } from '../LinesOfActionState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 
 describe('LinesOfActionRules', () => {
 
     let rules: LinesOfActionRules;
-    let minimaxes: Minimax<LinesOfActionMove, LinesOfActionState>[];
+    let heuristics: Heuristic<LinesOfActionMove, LinesOfActionState>[];
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = LinesOfActionRules.get();
-        minimaxes = [
-            new LinesOfActionMinimax(rules, 'LinesOfActionMinimax'),
+        heuristics = [
+            new LinesOfActionHeuristic(),
         ];
     });
     it('should be created', () => {
@@ -258,7 +258,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
     });
     it(`should win when all the player's pieces are connected, in any direction`, () => {
         const board: Table<PlayerOrNone> = [
@@ -273,7 +273,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
     });
     it('should draw on simultaneous connections', () => {
         const board: Table<PlayerOrNone> = [
@@ -301,7 +301,7 @@ describe('LinesOfActionRules', () => {
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: LinesOfActionNode = new LinesOfActionNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node, heuristics);
         expect(LinesOfActionRules.getVictory(expectedState)).toEqual(MGPOptional.of(PlayerOrNone.NONE));
     });
     it('should list all possible targets', () => {
