@@ -80,7 +80,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     }
     async function finishTest(): Promise<void> {
         testUtils.detectChanges();
-        tick();
+        tick(0);
         await configRoomDAO.set('configRoomId', ConfigRoomMocks.WITH_ACCEPTED_CONFIG);
         testUtils.detectChanges();
         tick(ConfigRoomMocks.INITIAL.maximalMoveDuration * 1000);
@@ -106,7 +106,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             // When ngOnInit runs to completion
             testUtils.detectChanges();
-            tick();
+            tick(0);
 
             // Then joinGame and observe should have been called
             expect(wrapper.currentPartId).withContext('currentPartId should be defined').toBeDefined();
@@ -123,7 +123,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             spyOn(wrapper, 'startGame').and.callThrough();
             expect(wrapper.startGame).not.toHaveBeenCalled();
 
-            tick(); // Finish calling async code from PartCreationComponent initialization
+            tick(0); // Finish calling async code from PartCreationComponent initialization
 
             expect(wrapper.startGame).toHaveBeenCalledTimes(1);
 
@@ -179,7 +179,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         it('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
             testUtils.detectChanges();
-            tick();
+            tick(0);
 
             testUtils.detectChanges();
 
@@ -196,7 +196,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         it('stage three should make the game component appear at last', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
             testUtils.detectChanges();
-            tick();
+            tick(0);
 
             testUtils.detectChanges();
             expect(testUtils.findElement('app-p4'))
@@ -223,7 +223,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // Given a component loaded with non creator
             await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
             testUtils.detectChanges();
-            tick();
+            tick(0);
 
             testUtils.detectChanges();
 
@@ -246,7 +246,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         testUtils.detectChanges();
-        tick(0);
+        await testUtils.expectToDisplayCriticalMessage(ConfigRoomService.GAME_DOES_NOT_EXIST(), async() => {
+            tick(0);
+        });
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));
@@ -261,7 +263,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
         testUtils.detectChanges();
-        tick();
+        tick(0);
         testUtils.detectChanges();
         tick(2); // Need to wait for startPart to be called
 

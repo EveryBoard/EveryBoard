@@ -59,12 +59,13 @@ describe('LobbyComponent', () => {
             spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
 
             // When clicking on the 'create game' tab
-            await testUtils.clickElement('#tab-create');
-            await testUtils.whenStable();
-
             // Then online-game-selection component should not be visible and an error should be toasted
+            await testUtils.expectToDisplayCriticalMessage(error, async() => {
+                await testUtils.clickElement('#tab-create');
+            });
+
+            await testUtils.whenStable();
             testUtils.expectElementNotToExist('#online-game-selection');
-            testUtils.expectCriticalMessageToHaveBeenDisplayed(error);
         }));
     });
 
@@ -92,10 +93,10 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // When clicking on the part
-        await testUtils.clickElement('#part_0');
-
         // Then the refusal reason should be given
-        testUtils.expectCriticalMessageToHaveBeenDisplayed(reason);
+        await testUtils.expectToDisplayCriticalMessage(reason, async() => {
+            await testUtils.clickElement('#part_0');
+        });
     }
     describe('clicking on a started game', () => {
 
@@ -349,7 +350,7 @@ describe('LobbyComponent', () => {
 
         // When clicking on the chat tab
         await testUtils.clickElement('#tab-chat');
-        tick();
+        tick(0);
         testUtils.detectChanges();
 
         // Then it should show the chat

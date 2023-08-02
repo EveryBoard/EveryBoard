@@ -40,7 +40,7 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
 
         // When loading the wrapper
         testUtils.detectChanges();
-        tick(1); // Need to tick at least for 1ms
+        tick(1); // Need to tick at least for 1ms due to ngAfterViewInit's setTimeout
 
         // Then it goes to /notFound with the expected error message and displays a toast
         expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
@@ -316,14 +316,16 @@ describe('LocalGameWrapperComponent', () => {
 
             // When it is the turn of the bugged AI (that performs an illegal move)
             const minimax: P4Minimax = new P4Minimax(P4Rules.get(), 'P4');
-            const result: MGPValidation = await localGameWrapper.doAIMove(minimax);
+            const message: string = 'The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!';
+            const result: MGPValidation = await testUtils.expectToDisplayCriticalMessage(message, async() => {
+                return localGameWrapper.doAIMove(minimax);
+            });
 
             // Then it should fail and an error should be logged
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
             const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
-            testUtils.expectCriticalMessageToHaveBeenDisplayed('The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!');
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;

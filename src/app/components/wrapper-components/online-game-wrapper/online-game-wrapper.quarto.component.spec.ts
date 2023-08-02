@@ -497,8 +497,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(FIRST_MOVE, true);
 
         // Then the player cannot play
-        await testUtils.clickElement('#chooseCoord_0_0');
-        testUtils.expectGameMessageToHaveBeenDisplayed(GameWrapperMessages.NOT_YOUR_TURN());
+        await testUtils.expectToDisplayGameMessage(GameWrapperMessages.NOT_YOUR_TURN(), async() => {
+            await testUtils.clickElement('#chooseCoord_0_0');
+        });
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
@@ -737,7 +738,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then should allow it after proposing sent
                 await acceptTakeBack();
-                tick();
+                tick(0);
                 testUtils.detectChanges();
 
                 // and then again not allowing it
@@ -770,7 +771,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveRequest(Player.ONE, 'TakeBack');
 
                 spyOn(partDAO, 'update').and.callThrough();
-                await doMove(THIRD_MOVE, true);
+                await testUtils.expectToDisplayGameMessage(GameWrapperMessages.MUST_ANSWER_REQUEST(), async() => {
+                    await doMove(THIRD_MOVE, true);
+                });
                 expect(partDAO.update).not.toHaveBeenCalled();
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -1020,10 +1023,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // When ignoring it and trying to play
-            await doMove(FIRST_MOVE, true);
-
             // Then it should fail
-            testUtils.expectGameMessageToHaveBeenDisplayed(GameWrapperMessages.MUST_ANSWER_REQUEST());
+            await testUtils.expectToDisplayGameMessage(GameWrapperMessages.MUST_ANSWER_REQUEST(), async() => {
+                await doMove(FIRST_MOVE, true);
+            });
+
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should forbid to propose to draw after refusal', fakeAsync(async() => {
@@ -1366,13 +1370,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(0);
 
             // When attempting a move
-            spyOn(partDAO, 'update').and.callThrough();
-            await doMove(SECOND_MOVE, false);
-
             // Then it should be refused
+            spyOn(partDAO, 'update').and.callThrough();
+            await testUtils.expectToDisplayGameMessage(GameWrapperMessages.GAME_HAS_ENDED(), async() => {
+                await doMove(SECOND_MOVE, false);
+            });
+
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();
-            testUtils.expectGameMessageToHaveBeenDisplayed(GameWrapperMessages.GAME_HAS_ENDED());
         }));
         it('should display when the opponent resigned', fakeAsync(async() => {
             // Given a board where the opponent has resigned

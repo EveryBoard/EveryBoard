@@ -22,7 +22,7 @@ describe('OnlineGameSelectionComponent', () => {
 
         // When clicking on 'play'
         await testUtils.clickElement('#launchGame');
-        tick();
+        tick(0);
 
         // Then the user is redirected to the game
         expectValidRouting(router, ['/play', 'whateverGame'], OnlineGameCreationComponent);
@@ -37,11 +37,11 @@ describe('OnlineGameSelectionComponent', () => {
         spyOn(component.currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
 
         // When clicking on 'play'
-        await testUtils.clickElement('#launchGame');
-        tick();
-
         // Then refusal should be toasted and router not called
+        await testUtils.expectToDisplayCriticalMessage(reason, async() => {
+            await testUtils.clickElement('#launchGame');
+        });
+        tick(0);
         expect(router.navigate).not.toHaveBeenCalled();
-        testUtils.expectCriticalMessageToHaveBeenDisplayed(reason);
     }));
 });

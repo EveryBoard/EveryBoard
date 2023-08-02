@@ -162,7 +162,10 @@ describe('GameComponent', () => {
             for (const methodName of Object.keys(game)) {
                 const context: string = `click method ${methodName} should be defined for game ${gameInfo.name}`;
                 expect(component[methodName]).withContext(context).toBeDefined();
-                const clickResult: MGPValidation = await component[methodName](...game[methodName]);
+                const clickResult: MGPValidation =
+                    await testUtils.expectToDisplayGameMessage(refusal.getReason(), async() => {
+                        return component[methodName](...game[methodName]);
+                    });
                 expect(clickResult).toEqual(refusal);
             }
         }

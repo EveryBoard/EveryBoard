@@ -61,10 +61,11 @@ describe('OnlineGameCreationComponent', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
 
         // When the page is rendered
-        testUtils.detectChanges();
-
         // Then it should toast, and navigate to server
-        testUtils.expectInfoMessageToHaveBeenDisplayed(refusalReason);
+        await testUtils.expectToDisplayInfoMessage(refusalReason, async() => {
+            testUtils.detectChanges();
+        });
+
         expectValidRouting(router, ['/lobby'], LobbyComponent);
     }));
 });

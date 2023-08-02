@@ -118,33 +118,47 @@ export class SimpleComponentTestUtils<T> {
         if (jasmine.isSpy(messageDisplayer.gameMessage)) {
             this.gameMessageSpy = messageDisplayer.gameMessage as jasmine.Spy;
         } else {
-            this.gameMessageSpy = spyOn(messageDisplayer, 'gameMessage').and.returnValue();
+            this.gameMessageSpy = spyOn(messageDisplayer, 'gameMessage').and.callFake(this.failOn('gameMessage'));
         }
         if (jasmine.isSpy(messageDisplayer.criticalMessage)) {
             this.criticalMessageSpy = messageDisplayer.criticalMessage as jasmine.Spy;
         } else {
-            this.criticalMessageSpy = spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
+            this.criticalMessageSpy = spyOn(messageDisplayer, 'criticalMessage').and.callFake(this.failOn('criticalMessage'));
         }
         if (jasmine.isSpy(messageDisplayer.infoMessage)) {
             this.infoMessageSpy = messageDisplayer.infoMessage as jasmine.Spy;
         } else {
-            this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.returnValue();
+            this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.callFake(this.failOn('infoMessage'));
         }
     }
-    public expectGameMessageToHaveBeenDisplayed(message: string): void {
+    private failOn(typeOfMessage: string): (message: string) => void {
+        return (message: string) => {
+            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToToast!`);
+        };
+    }
+    public async expectToDisplayGameMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
+        this.gameMessageSpy.and.returnValue(undefined);
+        const result: T = await fn();
         expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
         this.gameMessageSpy.calls.reset();
+        this.gameMessageSpy.and.callFake(this.failOn('gameMessage')); // Restore previous spy behavior
+        return result;
     }
-    public expectCriticalMessageToHaveBeenDisplayed(message: string): void {
+    public async expectToDisplayCriticalMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
+        this.criticalMessageSpy.and.returnValue(undefined);
+        const result: T = await fn();
         expect(this.criticalMessageSpy).toHaveBeenCalledOnceWith(message);
         this.criticalMessageSpy.calls.reset();
+        this.criticalMessageSpy.and.callFake(this.failOn('criticalMessage')); // Restore previous spy behavior
+        return result;
     }
-    public expectInfoMessageToHaveBeenDisplayed(message: string): void {
+    public async expectToDisplayInfoMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
+        this.infoMessageSpy.and.returnValue(undefined);
+        const result: T = await fn();
         expect(this.infoMessageSpy).toHaveBeenCalledOnceWith(message);
         this.infoMessageSpy.calls.reset();
-    }
-    public expectInfoMessageNotToHaveBeenDisplayed(): void {
-        expect(this.infoMessageSpy).not.toHaveBeenCalled();
+        this.infoMessageSpy.and.callFake(this.failOn('infoMessage')); // Restore previous spy behavior
+        return result;
     }
 
     public async clickElement(elementName: string, awaitStability:
@@ -359,7 +373,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                                                         reason?: string)
     : Promise<void>
     {
-        await this.clickElement(nameInHtml);
+
+        if (reason == null) {
+            await this.clickElement(nameInHtml);
+        } else {
+            await this.expectToDisplayGameMessage(reason, async() => {
+                await this.clickElement(nameInHtml);
+            });
+        }
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy).not.toHaveBeenCalled();
@@ -367,10 +388,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith();
         } else {
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
-            expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
         }
         this.cancelMoveSpy.calls.reset();
-        this.gameMessageSpy.calls.reset();
     }
     public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
         return this.expectClickFailureWithAsymmetricNaming(elementName, elementName, reason);
@@ -380,14 +399,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(clickValidity.getReason()).toBe(reason);
         this.canUserPlaySpy.calls.reset();
 
-        await this.clickElement(elementName);
+        await this.expectToDisplayGameMessage(reason, async() => {
+            await this.clickElement(elementName);
+        });
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy).not.toHaveBeenCalled();
         expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
-        expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
         this.cancelMoveSpy.calls.reset();
-        this.gameMessageSpy.calls.reset();
     }
     public async expectMoveSuccess(elementName: string, move: Move) : Promise<void> {
         await this.clickElement(elementName);
@@ -399,7 +418,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.onLegalUserMoveSpy.calls.reset();
     }
     public async expectMoveFailure(elementName: string, reason: string, move: Move) : Promise<void> {
-        await this.clickElement(elementName);
+        await this.expectToDisplayGameMessage(reason, async() => {
+            await this.clickElement(elementName);
+        });
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
@@ -407,8 +428,6 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
         this.cancelMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
-        expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(reason);
-        this.gameMessageSpy.calls.reset();
     }
     public expectPassToBeForbidden(): void {
         this.expectElementNotToExist('#passButton');
