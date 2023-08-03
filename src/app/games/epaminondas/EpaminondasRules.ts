@@ -109,9 +109,9 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
     {
         let capturedSoldier: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
         let captured: number = 0;
-        while (capturedSoldier.isInRange(14, 12) &&
-               oldState.getPieceAt(capturedSoldier) === opponent
-        ) {
+        while (EpaminondasState.isOnBoard(capturedSoldier) &&
+               oldState.getPieceAt(capturedSoldier) === opponent)
+        {
             // Capture
             if (captured > 0) {
                 board[capturedSoldier.y][capturedSoldier.x] = PlayerOrNone.NONE;

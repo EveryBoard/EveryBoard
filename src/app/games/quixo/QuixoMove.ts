@@ -4,6 +4,7 @@ import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { QuixoFailure } from './QuixoFailure';
+import { QuixoState } from './QuixoState';
 
 export class QuixoMove extends MoveCoord {
 
@@ -12,11 +13,8 @@ export class QuixoMove extends MoveCoord {
         (m: QuixoMove): [Coord, Orthogonal] => [m.coord, m.direction],
         (fields: [Coord, Orthogonal]): QuixoMove => new QuixoMove(fields[0].x, fields[0].y, fields[1]));
 
-    public static isInRange(coord: Coord): boolean {
-        return coord.isInRange(5, 5);
-    }
     public static isValidCoord(coord: Coord): MGPValidation {
-        if (QuixoMove.isInRange(coord) === false) {
+        if (QuixoState.isOnBoard(coord) === false) {
             return MGPValidation.failure('Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.');
         }
         if (coord.x !== 0 && coord.x !== 4 && coord.y !== 0 && coord.y !== 4) {

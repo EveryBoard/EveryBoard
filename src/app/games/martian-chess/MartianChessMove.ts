@@ -7,6 +7,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Vector } from 'src/app/jscaip/Vector';
+import { MartianChessState } from './MartianChessState';
 
 export class MartianChessMoveFailure {
 
@@ -27,10 +28,10 @@ export class MartianChessMove extends MoveCoordToCoord {
         (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
     );
     public static from(start: Coord, end: Coord, calledTheClock: boolean = false): MGPFallible<MartianChessMove> {
-        if (start.isNotInRange(4, 8)) {
+        if (MartianChessState.isOnBoard(start) === false) {
             return MGPFallible.failure(MartianChessMoveFailure.START_COORD_OUT_OF_RANGE());
         }
-        if (end.isNotInRange(4, 8)) {
+        if (MartianChessState.isOnBoard(end) === false) {
             return MGPFallible.failure(MartianChessMoveFailure.END_COORD_OUT_OF_RANGE());
         }
         if (end.equals(start)) {

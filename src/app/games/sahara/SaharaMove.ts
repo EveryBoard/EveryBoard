@@ -36,9 +36,9 @@ export class SaharaMove extends MoveCoordToCoord {
         return MGPValidation.SUCCESS;
     }
     public static from(start: Coord, end: Coord): MGPFallible<SaharaMove> {
-        Utils.assert(start.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT),
+        Utils.assert(SaharaState.isOnBoard(start),
                      'Move must start inside the board not at ' + start.toString() + '.');
-        Utils.assert(end.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT),
+        Utils.assert(SaharaState.isOnBoard(end),
                      'Move must end inside the board not at ' + end.toString() + '.');
         const validity: MGPValidation = SaharaMove.checkDistanceAndLocation(start, end);
         if (validity.isFailure()) {

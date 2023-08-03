@@ -3,6 +3,7 @@ import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
+import { PentagoState } from './PentagoState';
 
 type PentagoMoveFields = [Coord, MGPOptional<number>, boolean];
 
@@ -34,8 +35,8 @@ export class PentagoMove extends MoveCoord {
                         public readonly turnedClockwise: boolean = false)
     {
         super(x, y);
-        Utils.assert(this.coord.isInRange(6, 6),
-                     'The board is a 6 space wide square, invalid coord: ' + this.coord.toString());
+        Utils.assert(PentagoState.isOnBoard(this.coord),
+                     'The board is a ' + PentagoState.SIZE + ' space wide square, invalid coord: ' + this.coord.toString());
     }
     public override toString(): string {
         if (this.blockTurned.isPresent()) {

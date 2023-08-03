@@ -71,7 +71,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                     total += SCORE_BY_PIECE * mod;
                     for (const dir of dirs) {
                         let neighbor: Coord = coord.getNext(dir, 1);
-                        while (neighbor.isInRange(14, 12) &&
+                        while (EpaminondasState.isOnBoard(neighbor) &&
                                state.getPieceAt(neighbor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;

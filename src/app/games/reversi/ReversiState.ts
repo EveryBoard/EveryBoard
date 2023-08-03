@@ -19,6 +19,9 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
         board[4][3] = Player.ONE;
         return new ReversiState(board, 0);
     }
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT);
+    }
     public static getNeighboringPawnLike(board: PlayerOrNone[][],
                                          searchedValue: Player,
                                          cx: number,
@@ -30,7 +33,7 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
         for (let ny: number = -1; ny < 2; ny++) {
             for (let nx: number = -1; nx < 2; nx++) {
                 coord = new Coord(cx + nx, cy + ny);
-                if (coord.isInRange(this.BOARD_WIDTH, this.BOARD_HEIGHT)) {
+                if (ReversiState.isOnBoard(coord)) {
                     if (board[coord.y][coord.x] === searchedValue) {
                         result.push(coord);
                     }

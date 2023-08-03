@@ -1,3 +1,4 @@
+import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 
@@ -21,5 +22,8 @@ export class SaharaState extends TriangularGameState<FourStatePiece> {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         return new SaharaState(board, 0);
+    }
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT);
     }
 }

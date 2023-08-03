@@ -49,7 +49,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
                     for (let dx: number = -1; dx <= 1; dx++) {
                         for (let dy: number = -1; dy <= 1; dy++) {
                             const coord: Coord = new Coord(x+dx, y+dy);
-                            if (coord.isInRange(14, 12)) {
+                            if (EpaminondasState.isOnBoard(coord)) {
                                 const neighbor: PlayerOrNone = state.getPieceAt(coord);
                                 if (neighbor === owner) {
                                     score += 1 * owner.getScoreModifier();
@@ -101,13 +101,14 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
                     for (const direction of Direction.DIRECTIONS) {
                         let movedPieces: number = 1;
                         let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                        while (nextCoord.isInRange(14, 12) &&
-                            state.getPieceAt(nextCoord) === owner) {
+                        while (EpaminondasState.isOnBoard(nextCoord) &&
+                               state.getPieceAt(nextCoord) === owner)
+                        {
                             movedPieces += 1;
                             nextCoord = nextCoord.getNext(direction, 1);
                         }
                         let stepSize: number = 1;
-                        while (nextCoord.isInRange(14, 12) &&
+                        while (EpaminondasState.isOnBoard(nextCoord) &&
                                stepSize <= movedPieces &&
                                state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
                         {

@@ -1,6 +1,7 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { SiamPiece } from './SiamPiece';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { Coord } from 'src/app/jscaip/Coord';
 
 export class SiamState extends GameStateWithTable<SiamPiece> {
 
@@ -12,6 +13,9 @@ export class SiamState extends GameStateWithTable<SiamPiece> {
         board[2][3] = SiamPiece.MOUNTAIN;
 
         return new SiamState(board, 0);
+    }
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(5, 5);
     }
     public countCurrentPlayerPawn(): number {
         return this.countPlayersPawn()[this.getCurrentPlayer().value];

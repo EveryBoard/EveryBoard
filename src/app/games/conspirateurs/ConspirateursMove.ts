@@ -18,7 +18,7 @@ export class ConspirateursMoveDrop extends MoveCoord {
     public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getEncoder(ConspirateursMoveDrop.of);
 
     public static of(coord: Coord): ConspirateursMoveDrop {
-        Utils.assert(coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT), 'Move out of board');
+        Utils.assert(ConspirateursState.isOnBoard(coord), 'Move out of board');
         return new ConspirateursMoveDrop(coord);
     }
     private constructor(coord: Coord) {
@@ -42,8 +42,8 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
-        const startInRange: boolean = start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
-        const endInRange: boolean = end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
+        const startInRange: boolean = ConspirateursState.isOnBoard(start);
+        const endInRange: boolean = ConspirateursState.isOnBoard(end);
         Utils.assert(startInRange && endInRange, 'Move out of board');
         if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
             return MGPFallible.success(new ConspirateursMoveSimple(start, end));
@@ -79,7 +79,7 @@ export class ConspirateursMoveJump extends Move {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
         for (const coord of coords) {
-            if (coord.isNotInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
+            if (ConspirateursState.isOnBoard(coord) === false) {
                 return MGPFallible.failure('Move out of board');
             }
         }

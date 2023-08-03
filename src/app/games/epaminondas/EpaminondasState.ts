@@ -1,6 +1,7 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Coord } from 'src/app/jscaip/Coord';
 
 export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
@@ -23,6 +24,9 @@ export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         return new EpaminondasState(board, 0);
+    }
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(14, 12);
     }
     public count(piece: Player, row: number): number {
         let result: number = 0;

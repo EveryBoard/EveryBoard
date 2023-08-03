@@ -6,6 +6,7 @@ import { CoerceoFailure } from './CoerceoFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+import { CoerceoState } from './CoerceoState';
 
 export class CoerceoStep {
 
@@ -48,9 +49,9 @@ export class CoerceoRegularMove extends MoveCoordToCoord {
         return move;
     }
     public static ofMovement(start: Coord, step: CoerceoStep): CoerceoRegularMove {
-        Utils.assert(start.isInRange(15, 10), 'Starting coord cannot be out of range (width: 15, height: 10).');
+        Utils.assert(CoerceoState.isOnBoard(start), 'Starting coord cannot be out of range (width: 15, height: 10).');
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
-        Utils.assert(landingCoord.isInRange(15, 10), 'Landing coord cannot be out of range (width: 15, height: 10).');
+        Utils.assert(CoerceoState.isOnBoard(landingCoord), 'Landing coord cannot be out of range (width: 15, height: 10).');
         return new CoerceoRegularMove(start, landingCoord);
     }
     private constructor(start: Coord, end: Coord) {
@@ -73,7 +74,7 @@ export class CoerceoTileExchangeMove extends MoveCoord {
     public static encoder: Encoder<CoerceoTileExchangeMove> = MoveCoord.getEncoder(CoerceoTileExchangeMove.of);
 
     public static of(capture: Coord): CoerceoTileExchangeMove {
-        Utils.assert(capture.isInRange(15, 10), 'Captured coord cannot be out of range (width: 15, height: 10).');
+        Utils.assert(CoerceoState.isOnBoard(capture), 'Captured coord cannot be out of range (width: 15, height: 10).');
         return new CoerceoTileExchangeMove(capture);
     }
     private constructor(capture: Coord) {

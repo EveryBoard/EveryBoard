@@ -5,8 +5,7 @@ import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Utils, display } from 'src/app/utils/utils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -79,7 +78,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
 
         for (const direction of Direction.DIRECTIONS) {
             const firstSpace: Coord = move.coord.getNext(direction);
-            if (firstSpace.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT)) {
+            if (ReversiState.isOnBoard(firstSpace)) {
                 if (board[firstSpace.y][firstSpace.x] === opponent) {
                     // let's test this direction
                     const switchedInDir: Coord[] = ReversiRules.getSandwicheds(player, direction, firstSpace, board);
@@ -104,7 +103,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
 
         const sandwichedsCoord: Coord[] = [start]; // here we know it in range and captured
         let testedCoord: Coord = start.getNext(direction);
-        while (testedCoord.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT)) {
+        while (ReversiState.isOnBoard(testedCoord)) {
             const testedCoordContent: PlayerOrNone = board[testedCoord.y][testedCoord.x];
             if (testedCoordContent === capturer) {
                 // we found a sandwicher, in range, in this direction
@@ -160,7 +159,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                         if (result.length > 0) {
                             // there was switched piece and hence, a legal move
                             for (const switched of result) {
-                                assert(player !== state.getPieceAt(switched), switched + 'was already switched!');
+                                Utils.assert(player !== state.getPieceAt(switched), switched + 'was already switched!');
                                 nextBoard[switched.y][switched.x] = player;
                             }
                             nextBoard[y][x] = player;
