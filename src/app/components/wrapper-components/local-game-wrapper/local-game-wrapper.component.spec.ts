@@ -28,6 +28,7 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { AIDepthLimitOptions, AIOptions } from 'src/app/jscaip/MGPNode';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -47,7 +48,7 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
     }));
 });
 
-fdescribe('LocalGameWrapperComponent', () => {
+describe('LocalGameWrapperComponent', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -188,7 +189,7 @@ fdescribe('LocalGameWrapperComponent', () => {
 
             // Then AI name should be diplayed and the level selectable
             const aiName: string = selectAI.options[selectAI.selectedIndex].label;
-            expect(aiName).toBe('P4Minimax');
+            expect(aiName).toBe('Minimax');
             testUtils.expectElementToExist('#aiZeroDepthSelect');
         });
         it('should show level when non-human player is selected, and propose AI to play', async() => {
@@ -230,8 +231,8 @@ fdescribe('LocalGameWrapperComponent', () => {
         });
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             const wrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
-            wrapper.players[0] = MGPOptional.of('P4Minimax');
-            wrapper.aiDepths[0] = '1';
+            wrapper.players[0] = MGPOptional.of('Minimax');
+            wrapper.aiOptions[0] = 'Level 1';
 
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
 
@@ -306,12 +307,13 @@ fdescribe('LocalGameWrapperComponent', () => {
             spyOn(minimax, 'chooseNextMove').and.returnValue(P4Move.ZERO);
 
             // When it is the turn of the bugged AI
-            const result: MGPValidation = await localGameWrapper.doAIMove(minimax);
+            const aiOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 }
+            const result: MGPValidation = await localGameWrapper.doAIMove(minimax, aiOptions);
 
             // Then it should fail and an error should be logged
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
-            const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
+            const errorData: JSONValue = { game: 'P4', name: 'Minimax', move: 'P4Move(0)' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
             expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith('The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!');
         }));
@@ -340,8 +342,8 @@ fdescribe('LocalGameWrapperComponent', () => {
         it('should reject human move if it tries to play when it is not its turn', fakeAsync(async() => {
             // Given a game against an AI
             const wrapper: LocalGameWrapperComponent = testUtils.wrapper as LocalGameWrapperComponent;
-            wrapper.players[0] = MGPOptional.of('P4Minimax');
-            wrapper.aiDepths[0] = '1';
+            wrapper.players[0] = MGPOptional.of('Minimax');
+            wrapper.aiOptions[0] = 'Level 1';
 
             // When trying to click
             // Then it should fail
@@ -427,7 +429,7 @@ fdescribe('LocalGameWrapperComponent', () => {
 
             // Then 'AI (Player 0) won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
-            expect(winnerTag).toBe('P4Minimax (Player 2) won');
+            expect(winnerTag).toBe('Minimax (Player 2) won');
         }));
     });
     describe('onCancelMove', () => {

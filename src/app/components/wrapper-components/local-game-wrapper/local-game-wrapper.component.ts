@@ -109,7 +109,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (playingAI.isPresent()) {
             // bot's turn
             window.setTimeout(async() => {
-                await this.doAIMove(playingAI.get());
+                const turn: number = this.gameComponent.node.gameState.turn % 2;
+                const options: AIOptions = this.getAIOptions(playingAI.get(), turn % 2).get();
+                await this.doAIMove(playingAI.get(), options);
             }, this.botTimeOut);
         }
     }
@@ -141,13 +143,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 return options.name === optionsName;
             }));
     }
-    private async doAIMove(playingAI: AbstractAI): Promise<MGPValidation> {
+    public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
         assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
-        const turn: number = this.gameComponent.node.gameState.turn % 2;
-        const options: AIOptions = this.getAIOptions(playingAI, turn % 2).get();
         const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options);
         const nextNode: MGPOptional<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
         if (nextNode.isPresent()) {
@@ -158,7 +158,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             return MGPValidation.SUCCESS;
         } else {
             this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
-            return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { name: playingAI.name, move: aiMove.toString() });
+            return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move',
+                                               { game: this.getGameName(), name: playingAI.name, move: aiMove.toString() });
         }
     }
     public availableAIOptions(player: number): AIOptions[] {
