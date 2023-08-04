@@ -1364,17 +1364,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should not allow player to move after resigning', fakeAsync(async() => {
             // Given a component where user has resigned
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-            await doMove(FIRST_MOVE, true);
-            await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
             await testUtils.clickElement('#resign');
             tick(0);
 
             // When attempting a move
             // Then it should be refused
             spyOn(partDAO, 'update').and.callThrough();
-            await testUtils.expectToDisplayGameMessage(GameWrapperMessages.GAME_HAS_ENDED(), async() => {
-                await doMove(SECOND_MOVE, false);
-            });
+            testUtils.expectClickFailure('#choosePiece_1', GameWrapperMessages.GAME_HAS_ENDED());
 
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();

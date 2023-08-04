@@ -396,7 +396,7 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_4_4'); // select first capture
         await testUtils.expectMoveSuccess('#click_2_4', move); // select second capture
     }));
-    it('should remove highlights and arrows upon move cancellation', fakeAsync(async() => {
+    it('should remove highlights and arrows upon move cancelation', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
             [N, N, _, _, _, _, _],

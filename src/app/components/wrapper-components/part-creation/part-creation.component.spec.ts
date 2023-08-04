@@ -157,7 +157,7 @@ describe('PartCreationComponent', () => {
                 spyOn(configRoomService, 'subscribeToChanges').and.callThrough();
 
                 // When the component is loaded
-                // Then observe is not called and a message is displayed
+                // Then subscribeToChange is not called and a message is displayed
                 await testUtils.expectToDisplayCriticalMessage(ConfigRoomService.GAME_DOES_NOT_EXIST(), async() => {
                     awaitComponentInitialization();
                 });
@@ -532,7 +532,7 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
-        describe('Cancelling part creation and component destruction', () => {
+        describe('Canceling part creation and component destruction', () => {
             it('should delete the game, configRoom and chat', fakeAsync(async() => {
                 // Given a part creation
                 awaitComponentInitialization();

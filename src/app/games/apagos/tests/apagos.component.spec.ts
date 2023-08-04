@@ -250,7 +250,7 @@ describe('ApagosComponent', () => {
         await testUtils.expectClickSuccess('#square_2');
 
         // When clicking another VALID square
-        // Then the move should not have been cancelled
+        // Then the move should not have been canceled
         await testUtils.expectClickSuccess('#square_1');
     }));
     it('should not allow to select leftmost space for transfer', fakeAsync(async() => {

@@ -120,11 +120,6 @@ export abstract class GameWrapper<P extends Comparable> {
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, { gameWrapper_receiveValidMove_AKA_chooseMove: { move } });
-        const userPlayValidity: MGPValidation = this.canUserPlay('none');
-        if (userPlayValidity.isFailure()) {
-            this.gameComponent.cancelMove(userPlayValidity.getReason());
-            return userPlayValidity;
-        }
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, this.gameComponent.getState());
         if (legality.isFailure()) {
             this.gameComponent.cancelMove(legality.getReason());

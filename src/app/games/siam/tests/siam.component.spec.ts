@@ -232,7 +232,7 @@ describe('SiamComponent', () => {
         // When the player clicks on a square instead of an orientation arrow
         spyOn(testUtils.getGameComponent(), 'cancelMoveAttempt').and.callThrough();
         await testUtils.expectClickSuccess('#square_2_2');
-        // Then the move should be cancelled
+        // Then the move should be canceled
         expect(testUtils.getGameComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
     }));
     it('should cancel the move when clicking on invalid target for move', fakeAsync(async() => {
@@ -249,7 +249,7 @@ describe('SiamComponent', () => {
         await testUtils.expectClickSuccess('#square_4_4');
 
         // When the player clicks on a mountain
-        // Then the move should be cancelled and an error should be toasted
+        // Then the move should be canceled and an error should be toasted
         await testUtils.expectClickFailure('#square_2_2', SiamFailure.MUST_SELECT_VALID_DESTINATION());
     }));
     it('should directly insert the piece in the desired direction when clicking on an indicator arrow', fakeAsync(async() => {

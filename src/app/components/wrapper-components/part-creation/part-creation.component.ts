@@ -347,8 +347,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                     before: JSON.stringify(this.currentConfigRoom),
                     then: JSON.stringify(configRoomOpt) } });
         if (configRoomOpt.isAbsent()) {
-            display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentConfigRoomUpdate: LAST UPDATE : the game is cancelled');
-            return this.onGameCancelled();
+            display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentConfigRoomUpdate: LAST UPDATE : the game is canceled');
+            return this.onGameCanceled();
         } else {
             const configRoom: ConfigRoom = configRoomOpt.get();
             if (this.chosenOpponentJustLeft(configRoom) &&
@@ -395,7 +395,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const thereIsNoLongerChosenOpponent: boolean = newConfigRoom.chosenOpponent == null;
         return thereWasAChosenOpponent && thereIsNoLongerChosenOpponent;
     }
-    private async onGameCancelled(): Promise<void> {
+    private async onGameCanceled(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
         await this.router.navigate(['/lobby']);

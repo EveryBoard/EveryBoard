@@ -102,7 +102,7 @@ export class ConfigRoomService {
         const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const configRoomOpt: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
         if (configRoomOpt.isAbsent()) {
-            // The part does not exist, so we can consider that we succesfully cancelled joining
+            // The part does not exist, so we can consider that we succesfully canceled joining
             return;
         } else {
             const configRoom: ConfigRoom = configRoomOpt.get();
