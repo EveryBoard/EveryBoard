@@ -167,8 +167,16 @@ export class Minimax<M extends Move, S extends GameState, L = void>
         node.setCache(this.name + '-score', score);
     }
     private getScore(node: GameNode<M, S>): BoardValue {
-        // Scores are created during node creation, so they are always present
-        return node.getCache<BoardValue>(this.name + '-score').get();
+        // Scores are created during node creation, so we might think that they are always present
+        // but other AIs can expand the tree without creating the scores
+        const score: MGPOptional<BoardValue> = node.getCache<BoardValue>(this.name + '-score');
+        if (score.isPresent()) {
+            return score.get();
+        } else {
+            const boardValue = this.heuristic.getBoardValue(node);
+            this.setScore(node, boardValue);
+            return boardValue;
+        }
     }
     private setMoves(node: GameNode<M, S>, moves: MGPSet<M>): void {
         node.setCache(this.name + '-moves', moves);

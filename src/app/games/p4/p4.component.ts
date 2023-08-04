@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { P4State } from './P4State';
 import { P4Rules } from './P4Rules';
-import { P4Minimax } from './P4Minimax';
+import { P4Minimax, P4MoveGenerator } from './P4Minimax';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
@@ -10,6 +10,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { P4Tutorial } from './P4Tutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-p4',
@@ -30,6 +31,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new P4Minimax(),
+            new MCTS('MCTS', new P4MoveGenerator, P4Rules.get()),
         ];
         this.encoder = P4Move.encoder;
         this.tutorial = new P4Tutorial().tutorial;
