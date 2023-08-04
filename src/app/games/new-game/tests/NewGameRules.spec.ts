@@ -1,9 +1,9 @@
-import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { NewGameMove } from '../NewGameMove';
-import { NewGameBoardValue, NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
+import {  NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
-import { NewGameDummyMinimax, NewGameHeuristic } from '../NewGameDummyMinimax';
+import { NewGameHeuristic } from '../NewGameDummyMinimax';
 
 /**
  * This is the test suite for the rules
