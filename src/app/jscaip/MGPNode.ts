@@ -53,7 +53,11 @@ export class GameNode<M extends Move, S extends GameState> {
      * Set or replace a value from the cache.
      */
     public setCache(key: string, value: object) {
-        this.cache.set(key, value);
+        if (this.cache.containsKey(key)) {
+            this.cache.replace(key, value);
+        } else {
+            this.cache.set(key, value);
+        }
     }
 }
 

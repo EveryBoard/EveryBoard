@@ -1,8 +1,9 @@
 import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
-import { NewGameBoardValue, NewGameLegalityInfo, NewGameNode, NewGameRules } from './NewGameRules';
+import { NewGameLegalityInfo, NewGameNode, NewGameRules } from './NewGameRules';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 
 // TODO: update documentation
 
@@ -34,8 +35,8 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
      * You want want to use `PlayerMetricsMinimax` to define a score for each player instead, which
      * is often what you want.
      */
-    public getBoardValue(node: NewGameNode): NewGameBoardValue {
-        return new NewGameBoardValue(0);
+    public getBoardValue(node: NewGameNode): BoardValue {
+        return new BoardValue(0);
     }
 }
 
@@ -48,7 +49,7 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
  *   - it doesn't filter any move in `getListMoves`
  *   - it has a simplistic `getBoardValue`, only relying the score stored in the state
  */
-export class NewGameDummyMinimax extends Minimax<NewGameMove, NewGameState, NewGameLegalityInfo, NewGameBoardValue> {
+export class NewGameDummyMinimax extends Minimax<NewGameMove, NewGameState, NewGameLegalityInfo> {
 
     public constructor() {
         super('Dummy Minimax', NewGameRules.get(), new NewGameHeuristic(), new NewGameMoveGenerator());

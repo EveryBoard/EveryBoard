@@ -56,11 +56,11 @@ export class RulesUtils {
         expect(rules.getGameStatus(node))
             .withContext('Rules should consider gameStatus a victory for player ' + player.value)
             .toEqual(GameStatus.getVictory(player));
-        for (const heuristic of heuristics) {
-            expect(heuristic.getBoardValue(node).value)
-                .withContext(heuristic.constructor.toString() + ' should consider part a victory for player ' + player.value)
-                .toEqual(player.getVictoryValue());
-        }
+        // TODO: not the case anymore ! for (const heuristic of heuristics) {
+        // TODO: not the case anymore !     expect(heuristic.getBoardValue(node).value)
+        // TODO: not the case anymore !         .withContext(heuristic.constructor.name.toString() + ' should consider part a victory for player ' + player.value)
+        // TODO: not the case anymore !         .toEqual(player.getVictoryValue());
+        // TODO: not the case anymore ! }
     }
     public static expectToBeOngoing<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
         rules: R,
@@ -71,12 +71,13 @@ export class RulesUtils {
         expect(rules.getGameStatus(node)).toEqual(GameStatus.ONGOING);
         for (const heuristic of heuristics) {
             const boardValue: number = heuristic.getBoardValue(node).value;
-            expect(boardValue)
-                .withContext(heuristic.constructor.toString() + ' should not consider it a victory for player zero.')
-                .not.toEqual(Player.ZERO.getVictoryValue());
-            expect(boardValue)
-                .withContext(heuristic.constructor.toString() + ' should not consider it a victory for player one.')
-                .not.toEqual(Player.ONE.getVictoryValue());
+            // TODO: not the case anymore ! (heuristic could well see that it is a definite victory in many turns
+            // TODO: not the case anymore ! expect(boardValue)
+            // TODO: not the case anymore !     .withContext(heuristic.constructor.name.toString() + ' should not consider it a victory for player zero.')
+            // TODO: not the case anymore !     .not.toEqual(Player.ZERO.getVictoryValue());
+            // TODO: not the case anymore ! expect(boardValue)
+            // TODO: not the case anymore !     .withContext(heuristic.constructor.name.toString() + ' should not consider it a victory for player one.')
+            // TODO: not the case anymore !     .not.toEqual(Player.ONE.getVictoryValue());
         }
     }
     public static expectToBeDraw<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
@@ -86,11 +87,11 @@ export class RulesUtils {
     : void
     {
         expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
-        for (const heuristic of heuristics) {
-            expect(heuristic.getBoardValue(node).value)
-                .withContext(heuristic.constructor.toString() + ' should consider it a draw')
-                .toBe(0);
-        }
+        // TODO: not the case anymore ! for (const heuristic of heuristics) {
+        // TODO: not the case anymore !     expect(heuristic.getBoardValue(node).value)
+        // TODO: not the case anymore !         .withContext(heuristic.constructor.name.toString() + ' should consider it a draw')
+        // TODO: not the case anymore !         .toBe(0);
+        // TODO: not the case anymore ! }
     }
     public static expectStatesToBeOfEqualValue<M extends Move, S extends GameState>(
         heuristic: Heuristic<M, S>,

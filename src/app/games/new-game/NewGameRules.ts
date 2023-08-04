@@ -21,16 +21,6 @@ export class NewGameLegalityInfo {
 }
 
 /**
- * This class is optional and rarely used.
- * If you don't use it, you can remove it everywhere it is mentioned, including in types.
- *
- * The `BoardValue` denotes the value of a state, for the sake of IA computations.
- * In most cases, the default `BoardValue`, a number wrapper, is enough.
- */
-export class NewGameBoardValue extends BoardValue {
-}
-
-/**
  * Defining the game node class is only for cosmetic purposes. It reduces the length of the argument to `getGameStatus`.
  */
 export class NewGameNode extends GameNode<NewGameMove, NewGameState> {}
