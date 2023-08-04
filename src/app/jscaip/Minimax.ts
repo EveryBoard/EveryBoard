@@ -48,14 +48,14 @@ export class Minimax<M extends Move, S extends GameState, L = void>
     // States whether alpha-beta pruning must be done. It probably is never useful to set it to false.
     private readonly PRUNE: boolean = true;
 
-    public readonly possibleOptions: AIDepthLimitOptions[] = [];
+    public readonly availableOptions: AIDepthLimitOptions[] = [];
 
     public constructor(public readonly name: string,
                        private readonly rules: Rules<M, S, L>,
                        private readonly heuristic: Heuristic<M, S>,
                        private readonly moveGenerator: MoveGenerator<M, S>) {
-        for (let i: number = 0; i < 10; i++) {
-            this.possibleOptions.push({ name: `Level ${i}`, maxDepth: i });
+        for (let i: number = 1; i < 10; i++) {
+            this.availableOptions.push({ name: `Level ${i}`, maxDepth: i });
         }
     }
     public toString(): string {

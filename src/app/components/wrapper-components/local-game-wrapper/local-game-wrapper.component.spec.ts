@@ -47,7 +47,7 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
     }));
 });
 
-xdescribe('LocalGameWrapperComponent', () => {
+fdescribe('LocalGameWrapperComponent', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
     const _: PlayerOrNone = PlayerOrNone.NONE;

@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractAI, AbstractNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
+import { AbstractAI, AbstractNode, AIOptions, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
@@ -23,8 +23,9 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
     public static override VERBOSE: boolean = false;
+    public MGPOptional: typeof MGPOptional = MGPOptional;
 
-    public aiDepths: [string, string] = ['0', '0'];
+    public aiOptions: [string, string] = ['none', 'none'];
 
     public playerSelection: [string, string] = ['human', 'human'];
 
@@ -118,23 +119,35 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             return MGPOptional.empty();
         }
         const playerIndex: number = this.gameComponent.getTurn() % 2;
-        if (this.aiDepths[playerIndex] === '0') {
-            // No AI is playing if its level is set to 0
+        if (this.aiOptions[playerIndex] === 'none') {
+            // No AI is playing if its options have not been selected
             return MGPOptional.empty();
         }
+        return this.findAI(playerIndex);
+    }
+    private findAI(playerIndex: number): MGPOptional<AbstractAI> {
         return MGPOptional.ofNullable(
             this.gameComponent.availableAIs.find((a: AbstractAI) => {
                 return this.players[playerIndex].equalsValue(a.name);
             }));
     }
-    public async doAIMove(playingAI: AbstractAI): Promise<MGPValidation> {
+    private getAIOptions(ai: AbstractAI, playerIndex: number): MGPOptional<AIOptions> {
+        const optionsName: string = this.aiOptions[playerIndex];
+        if (optionsName === 'none') {
+            return MGPOptional.empty();
+        }
+        return MGPOptional.ofNullable(
+            ai.availableOptions.find((options: AIOptions) => {
+                return options.name === optionsName;
+            }));
+    }
+    private async doAIMove(playingAI: AbstractAI): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
         assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
         const turn: number = this.gameComponent.node.gameState.turn % 2;
-        const currentAiDepth: number = Number.parseInt(this.aiDepths[turn % 2]);
-        const options = { name: 'TODO' }; // TODO
+        const options: AIOptions = this.getAIOptions(playingAI, turn % 2).get();
         const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options);
         const nextNode: MGPOptional<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
         if (nextNode.isPresent()) {
@@ -147,6 +160,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
             return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { name: playingAI.name, move: aiMove.toString() });
         }
+    }
+    public availableAIOptions(player: number): AIOptions[] {
+        return this.findAI(player).get().availableOptions;
     }
     public canTakeBack(): boolean {
         return this.gameComponent.getTurn() > 0;

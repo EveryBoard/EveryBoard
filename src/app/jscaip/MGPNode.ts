@@ -103,7 +103,7 @@ export type AIIterationLimitOptions = AIOptions & {
  */
 export abstract class AI<M extends Move, S extends GameState, Opts extends AIOptions> {
     public abstract readonly name: string;
-    public abstract readonly possibleOptions: Opts[];
+    public abstract readonly availableOptions: Opts[];
     public abstract chooseNextMove(node: GameNode<M, S>, options: Opts): M;
 }
 
