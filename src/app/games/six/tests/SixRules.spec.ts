@@ -5,12 +5,13 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixFailure } from '../SixFailure';
-import { SixLegalityInformation, SixNode, SixRules } from '../SixRules';
+import { SixNode, SixRules } from '../SixRules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Heuristic } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Vector } from 'src/app/jscaip/Vector';
+import { SixHeuristic } from '../SixMinimax';
 
 describe('SixRules', () => {
 
@@ -24,7 +25,7 @@ describe('SixRules', () => {
     beforeEach(() => {
         rules = SixRules.get();
         heuristics = [
-            // TODO new SixMinimax(rules, 'SixMinimax'),
+            new SixHeuristic(),
         ];
     });
     describe('dropping', () => {

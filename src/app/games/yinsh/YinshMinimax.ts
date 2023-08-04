@@ -91,6 +91,6 @@ export class YinshHeuristic extends PlayerMetricHeuristic<YinshMove, YinshState>
 export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityInformation> {
 
     public constructor() {
-        super('YinshMinimax', YinshRules.get(), new YinshHeuristic(), new YinshMoveGenerator());
+        super('Minimax', YinshRules.get(), new YinshHeuristic(), new YinshMoveGenerator());
     }
 }

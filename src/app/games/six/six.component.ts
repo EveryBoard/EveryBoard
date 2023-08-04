@@ -3,7 +3,6 @@ import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { SixLegalityInformation, SixRules } from 'src/app/games/six/SixRules';
-// TODO import { SixBoardValue, SixMinimax } from 'src/app/games/six/SixMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
@@ -18,6 +17,7 @@ import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { SixMinimax } from './SixMinimax';
 
 @Component({
     selector: 'app-six',
@@ -49,7 +49,7 @@ export class SixComponent
         this.rules = SixRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            // TODO new SixMinimax(this.rules, 'SixMinimax'),
+            new SixMinimax(),
         ];
         this.encoder = SixMove.encoder;
         this.tutorial = new SixTutorial().tutorial;
