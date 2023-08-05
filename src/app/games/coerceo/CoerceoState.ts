@@ -206,10 +206,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         if (countTiles) {
             newTiles[this.getCurrentPlayer().value] += 1;
         }
-        return new CoerceoState(newBoard,
-                                this.turn,
-                                newTiles,
-                                this.captures);
+        return new CoerceoState(newBoard, this.turn, newTiles, this.captures);
     }
     public getLegalLandings(coord: Coord): Coord[] {
         const legalLandings: Coord[] = [];
