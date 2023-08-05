@@ -29,17 +29,17 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         super(QuixoState);
     }
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(QuixoState.isOnBoard, Utils.identity, 5);
+        new NInARowHelper(QuixoState.isOnBoard, Utils.identity, QuixoState.SIZE);
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();
         const verticalCoords: Coord[] = [];
-        for (let y: number = 0; y < 5; y++) {
+        for (let y: number = 0; y < QuixoState.SIZE; y++) {
             if (node.gameState.getPieceAtXY(0, y) !== currentOpponent) {
                 verticalCoords.push(new Coord(0, y));
             }
-            if (node.gameState.getPieceAtXY(4, y) !== currentOpponent) {
-                verticalCoords.push(new Coord(4, y));
+            if (node.gameState.getPieceAtXY(QuixoState.SIZE - 1, y) !== currentOpponent) {
+                verticalCoords.push(new Coord(QuixoState.SIZE - 1, y));
             }
         }
         return verticalCoords;
@@ -47,12 +47,12 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     public static getHorizontalCenterCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();
         const horizontalCenterCoords: Coord[] = [];
-        for (let x: number = 1; x < 4; x++) {
+        for (let x: number = 1; x < QuixoState.SIZE - 1; x++) {
             if (node.gameState.getPieceAtXY(x, 0) !== currentOpponent) {
                 horizontalCenterCoords.push(new Coord(x, 0));
             }
-            if (node.gameState.getPieceAtXY(x, 4) !== currentOpponent) {
-                horizontalCenterCoords.push(new Coord(x, 4));
+            if (node.gameState.getPieceAtXY(x, QuixoState.SIZE - 1) !== currentOpponent) {
+                horizontalCenterCoords.push(new Coord(x, QuixoState.SIZE - 1));
             }
         }
         return horizontalCenterCoords;
@@ -61,8 +61,8 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         const possibleDirections: Orthogonal[] = [];
         if (coord.x !== 0) possibleDirections.push(Orthogonal.LEFT);
         if (coord.y !== 0) possibleDirections.push(Orthogonal.UP);
-        if (coord.x !== 4) possibleDirections.push(Orthogonal.RIGHT);
-        if (coord.y !== 4) possibleDirections.push(Orthogonal.DOWN);
+        if (coord.x !== (QuixoState.SIZE - 1)) possibleDirections.push(Orthogonal.RIGHT);
+        if (coord.y !== (QuixoState.SIZE - 1)) possibleDirections.push(Orthogonal.DOWN);
         return possibleDirections;
     }
     public static getLinesSums(state: QuixoState): {[player: number]: {[lineType: string]: number[]}} {
@@ -77,16 +77,16 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
             rows: [0, 0, 0, 0, 0],
             diagonals: [0, 0],
         };
-        for (let y: number = 0; y < 5; y++) {
-            for (let x: number = 0; x < 5; x++) {
-                const content: PlayerOrNone = state.getPieceAtXY(x, y);
-                if (content.isPlayer()) {
-                    const c: number = content.value;
-                    sums[c].columns[x] = sums[c].columns[x] + 1;
-                    sums[c].rows[y] = sums[c].rows[y] + 1;
-                    if (x === y) sums[c].diagonals[0] = sums[c].diagonals[0] + 1;
-                    if (x + y === 4) sums[c].diagonals[1] = sums[c].diagonals[1] + 1;
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const content: PlayerOrNone = coordAndContent.content;
+            const x: number = coordAndContent.coord.x;
+            const y: number = coordAndContent.coord.y;
+            if (content.isPlayer()) {
+                const c: number = content.value;
+                sums[c].columns[x] = sums[c].columns[x] + 1;
+                sums[c].rows[y] = sums[c].rows[y] + 1;
+                if (x === y) sums[c].diagonals[0] = sums[c].diagonals[0] + 1;
+                if (x + y === (QuixoState.SIZE - 1)) sums[c].diagonals[1] = sums[c].diagonals[1] + 1;
             }
         }
         return sums;

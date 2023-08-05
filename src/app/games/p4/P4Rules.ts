@@ -34,7 +34,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public static getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
-        while (y < 6 && board[y][x] === PlayerOrNone.NONE) {
+        while (y < P4State.HEIGHT && board[y][x] === PlayerOrNone.NONE) {
             y++;
         }
         return y - 1;
@@ -46,7 +46,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const originalState: P4State = node.gameState;
         const moves: P4Move[] = [];
 
-        for (let x: number = 0; x < 7; x++) {
+        for (let x: number = 0; x < P4State.WIDTH; x++) {
             if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
                 const move: P4Move = P4Move.of(x);
                 moves.push(move);

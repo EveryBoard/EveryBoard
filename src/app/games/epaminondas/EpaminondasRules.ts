@@ -56,7 +56,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         let soldierIndex: number = 0;
         const opponent: Player = state.getCurrentOpponent();
         while (soldierIndex < move.movedPieces) {
-            if (coord.isNotInRange(14, 12)) {
+            if (EpaminondasState.isOnBoard(coord) === false) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
             const spaceContent: PlayerOrNone = state.getPieceAt(coord);
@@ -81,7 +81,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         while (landingIndex + 1 < move.stepSize) {
             newBoard[emptied.y][emptied.x] = PlayerOrNone.NONE;
             newBoard[landingCoord.y][landingCoord.x] = currentPlayer;
-            if (landingCoord.isNotInRange(14, 12)) {
+            if (EpaminondasState.isOnBoard(landingCoord) === false) {
                 return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
             }
             if (state.getPieceAt(landingCoord).isPlayer()) {
@@ -91,7 +91,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             landingCoord = landingCoord.getNext(move.direction, 1);
             emptied = emptied.getNext(move.direction, 1);
         }
-        if (landingCoord.isNotInRange(14, 12)) {
+        if (EpaminondasState.isOnBoard(landingCoord)) {
             return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
         }
         if (state.getPieceAt(landingCoord) === currentPlayer) {
@@ -138,7 +138,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
     public getGameStatus(node: EpaminondasNode): GameStatus {
         const state: EpaminondasState = node.gameState;
         const zerosInFirstLine: number = state.count(Player.ZERO, 0);
-        const onesInLastLine: number = state.count(Player.ONE, 11);
+        const onesInLastLine: number = state.count(Player.ONE, EpaminondasState.HEIGHT - 1);
         if (state.turn % 2 === 0) {
             if (zerosInFirstLine > onesInLastLine) {
                 return GameStatus.ZERO_WON;

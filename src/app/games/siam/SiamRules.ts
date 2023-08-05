@@ -80,7 +80,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
     public getInsertedPiece(entrance: Coord, player: Player): SiamPiece {
         if (entrance.x === -1) return SiamPiece.of(Orthogonal.RIGHT, player);
         if (entrance.y === -1) return SiamPiece.of(Orthogonal.DOWN, player);
-        if (entrance.x === 5) return SiamPiece.of(Orthogonal.LEFT, player);
+        if (entrance.x === SiamState.SIZE) return SiamPiece.of(Orthogonal.LEFT, player);
         return SiamPiece.of(Orthogonal.UP, player);
     }
     public isLegalForwarding(move: SiamMove, state: SiamState, firstPiece: SiamPiece)
@@ -122,7 +122,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                               movingPiece !== SiamPiece.EMPTY &&
                               totalForce > 0;
         }
-        if (landingCoord.isNotInRange(5, 5)) {
+        if (SiamState.isOnBoard(landingCoord) ===false) {
             if (currentDirection.equalsValue(pushingDir)) totalForce++;
             else if (currentDirection.equalsValue(resistingDir)) totalForce--;
         }
@@ -229,13 +229,11 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const rows: number[] = [];
         const columns: number[] = [];
         let nbMountain: number = 0;
-        for (let y: number = 0; y<5; y++) {
-            for (let x: number = 0; x<5; x++) {
-                if (state.getPieceAtXY(x, y) === SiamPiece.MOUNTAIN) {
-                    if (!rows.includes(y)) rows.push(y);
-                    if (!columns.includes(x)) columns.push(x);
-                    nbMountain++;
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            if (coordAndContent.content === SiamPiece.MOUNTAIN) {
+                if (!rows.includes(coordAndContent.coord.y)) rows.push(coordAndContent.coord.y);
+                if (!columns.includes(coordAndContent.coord.x)) columns.push(coordAndContent.coord.x);
+                nbMountain++;
             }
         }
         return { rows, columns, nbMountain };
@@ -396,7 +394,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                 currentDistance--;
             }
         }
-        if (testedCoord.isNotInRange(5, 5)) {
+        if (SiamState.isOnBoard(testedCoord) === false) {
             missingForce -= 1;
             if (state.countCurrentPlayerPawn() === 5) {
                 return MGPOptional.empty();
@@ -425,7 +423,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const moves: SiamMove[] = [];
         for (const direction of Orthogonal.ORTHOGONALS) {
             const entrance: Coord = new Coord(x, y).getPrevious(direction);
-            if (entrance.isNotInRange(5, 5)) {
+            if (SiamState.isOnBoard(entrance) === false) {
                 for (const orientation of Orthogonal.ORTHOGONALS) {
                     const move: MGPFallible<SiamMove> =
                         SiamMove.from(entrance.x, entrance.y, MGPOptional.of(direction), orientation);

@@ -17,7 +17,7 @@ export class QuixoMove extends MoveCoord {
         if (QuixoState.isOnBoard(coord) === false) {
             return MGPValidation.failure('Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.');
         }
-        if (coord.x !== 0 && coord.x !== 4 && coord.y !== 0 && coord.y !== 4) {
+        if (coord.x !== 0 && coord.x !== (QuixoState.SIZE - 1) && coord.y !== 0 && coord.y !== (QuixoState.SIZE - 1)) {
             return MGPValidation.failure(QuixoFailure.NO_INSIDE_CLICK());
         }
         return MGPValidation.SUCCESS;
@@ -29,13 +29,13 @@ export class QuixoMove extends MoveCoord {
         if (x === 0 && direction === Orthogonal.LEFT) {
             throw new Error(`Invalid direction: pawn on the left side can't be moved to the left.`);
         }
-        if (x === 4 && direction === Orthogonal.RIGHT) {
+        if (x === (QuixoState.SIZE - 1) && direction === Orthogonal.RIGHT) {
             throw new Error(`Invalid direction: pawn on the right side can't be moved to the right.`);
         }
         if (y === 0 && direction === Orthogonal.UP) {
             throw new Error(`Invalid direction: pawn on the top side can't be moved up.`);
         }
-        if (y === 4 && direction === Orthogonal.DOWN) {
+        if (y === (QuixoState.SIZE - 1) && direction === Orthogonal.DOWN) {
             throw new Error(`Invalid direction: pawn on the bottom side can't be moved down.`);
         }
     }

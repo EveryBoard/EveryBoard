@@ -220,7 +220,7 @@ describe('ConspirateursMinimax', () => {
         // Given a component where AI plays against AI
         let node: ConspirateursNode = rules.getInitialNode();
 
-        // When waiting 200 hundred turns
+        // When waiting 200 turns
         let turn: number = 0;
         while (turn < 200 && rules.getGameStatus(node).isEndGame === false) {
             const bestMove: ConspirateursMove = node.findBestMove(1, minimax);

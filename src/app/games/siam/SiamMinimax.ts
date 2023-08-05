@@ -15,12 +15,13 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInform
     public getListMoves(node: SiamNode): SiamMove[] {
         let moves: SiamMove[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
-        for (let y: number = 0; y < 5; y++) {
-            for (let x: number = 0; x < 5; x++) {
-                const piece: SiamPiece = node.gameState.getPieceAtXY(x, y);
-                if (piece.belongTo(currentPlayer)) {
-                    moves = moves.concat(SiamRules.get().getMovesFrom(node.gameState, piece, x, y));
-                }
+        for (const coordAndContent of node.gameState.getCoordsAndContents()) {
+            const piece: SiamPiece = coordAndContent.content;
+            if (piece.belongTo(currentPlayer)) {
+                moves = moves.concat(SiamRules.get().getMovesFrom(node.gameState,
+                                                                  piece,
+                                                                  coordAndContent.coord.x,
+                                                                  coordAndContent.coord.y));
             }
         }
         if (node.gameState.countCurrentPlayerPawn() < 5) {

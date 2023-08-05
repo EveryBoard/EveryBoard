@@ -33,7 +33,7 @@ export class AbaloneDummyMinimax extends PlayerMetricsMinimax<AbaloneMove, Abalo
                                 break;
                             }
                             const second: Coord = first.getNext(alignement, distance);
-                            if (AbaloneState.isInBoard(second)) {
+                            if (AbaloneState.isOnBoard(second)) {
                                 const translation: AbaloneMove = AbaloneMove.fromDoubleCoord(first, second, dir).get();
                                 if (AbaloneRules.isLegal(translation, state).isSuccess()) {
                                     moves.push(translation);

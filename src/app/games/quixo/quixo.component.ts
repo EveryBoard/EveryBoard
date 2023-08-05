@@ -23,6 +23,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public static VERBOSE: boolean = false;
 
+    public QuixoState: typeof QuixoState = QuixoState;
+
     public state: QuixoState;
 
     public lastMoveCoord: MGPOptional<Coord> = MGPOptional.empty();
@@ -88,9 +90,9 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     public getPossiblesDirections(): Orthogonal[] {
         const directions: Orthogonal[] = [];
         const chosenCoord: Coord = this.chosenCoord.get();
-        if (chosenCoord.x !== 4) directions.push(Orthogonal.RIGHT);
+        if (chosenCoord.x !== QuixoState.SIZE - 1) directions.push(Orthogonal.RIGHT);
         if (chosenCoord.x !== 0) directions.push(Orthogonal.LEFT);
-        if (chosenCoord.y !== 4) directions.push(Orthogonal.DOWN);
+        if (chosenCoord.y !== QuixoState.SIZE) directions.push(Orthogonal.DOWN);
         if (chosenCoord.y !== 0) directions.push(Orthogonal.UP);
         return directions;
     }
@@ -110,7 +112,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         return this.chooseMove(move);
     }
     public getArrowTransform(orientation: Orthogonal): string {
-        return GameComponentUtils.getArrowTransform(5 * this.SPACE_SIZE,
+        return GameComponentUtils.getArrowTransform(QuixoState.SIZE * this.SPACE_SIZE,
                                                     new Coord(0, 0),
                                                     orientation);
     }

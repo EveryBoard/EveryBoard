@@ -3,6 +3,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { SiamState } from './SiamState';
 
 type SiamMoveFields = [number, number, MGPOptional<Orthogonal>, Orthogonal];
 
@@ -32,13 +33,13 @@ export class SiamMove extends MoveCoord {
     : MGPFallible<SiamMove>
     {
         const move: SiamMove = new SiamMove(x, y, direction, landingOrientation);
-        const startedOutside: boolean = move.coord.isNotInRange(5, 5);
+        const startedOutside: boolean = SiamState.isOnBoard(move.coord) === false;
         if (move.isRotation()) {
             if (startedOutside) {
                 return MGPFallible.failure('Cannot rotate piece outside the board: ' + move.toString());
             }
         } else {
-            const finishedOutside: boolean = move.coord.getNext(move.direction.get()).isNotInRange(5, 5);
+            const finishedOutside: boolean = SiamState.isOnBoard(move.coord.getNext(move.direction.get())) === false;
             if (finishedOutside) {
                 if (startedOutside) {
                     return MGPFallible.failure('SiamMove should end or start on the board: ' + move.toString());
@@ -68,8 +69,8 @@ export class SiamMove extends MoveCoord {
     }
     public isInsertion(): boolean {
         return this.coord.x === -1 ||
-               this.coord.x === +5 ||
+               this.coord.x === +SiamState.SIZE ||
                this.coord.y === -1 ||
-               this.coord.y === +5;
+               this.coord.y === +SiamState.SIZE;
     }
 }
