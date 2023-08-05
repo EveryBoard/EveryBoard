@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { AwaleRules, CaptureResult } from './AwaleRules';
-import { AwaleCaptureMinimax } from './AwaleMinimax';
+import { AwaleCaptureMinimax, AwaleMoveGenerator } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from './AwaleState';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -12,6 +12,7 @@ import { AwaleTutorial } from './AwaleTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-awale-component',
@@ -39,6 +40,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new AwaleCaptureMinimax(),
+            new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get()),
         ];
         this.encoder = AwaleMove.encoder;
         this.tutorial = new AwaleTutorial().tutorial;
