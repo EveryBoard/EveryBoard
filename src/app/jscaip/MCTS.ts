@@ -46,15 +46,15 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         const player: Player = root.gameState.getCurrentPlayer();
         const startTime: number = new Date().getTime();
         for (let i: number = 0; i < options.maxIterations; i++) {
-            // console.log('------ ITERATION ' + i)
+            console.log('------ ITERATION ' + i)
             const expansionResult: NodeAndPath<M, S> = this.expand(this.select({ node: root, path: [root] }, i));
             const win: boolean = this.simulate(expansionResult.node, player);
-            // if (win) console.log(`>>>>> win by player ${player} in node ${expansionResult.node.id}`)
+            if (win) console.log(`>>>>> win by player ${player}`)
             this.backpropagate(expansionResult.path, win);
         }
         // console.log('---- DONE')
         // console.log('root winRatio: ' + this.winRatio(root));
-        // console.log(root.children.map((n) => n.id + ': ' + this.winRatio(n))); // .filter((n) => n > 0));
+        console.log(root.getChildren().map((n) => this.winRatio(n))); // .filter((n) => n > 0));
         const bestChild: GameNode<M, S> =
             ArrayUtils.maximumBy(root.getChildren(), (n: GameNode<M, S>) => this.winRatio(n));
         // console.log('best child is ' + bestChild.move.get().toString());
