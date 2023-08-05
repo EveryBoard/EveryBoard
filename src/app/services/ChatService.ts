@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ChatDAO } from '../dao/ChatDAO';
 import { Message, MessageDocument } from '../domain/Message';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { Localized } from '../utils/LocaleUtils';
 import { Subscription } from 'rxjs';
@@ -14,15 +14,15 @@ export class ChatMessages {
 
     public static readonly FORBIDDEN_MESSAGE: Localized = () => $localize`This message is forbidden.`;
 }
+
 @Injectable({
     providedIn: 'root',
 })
+@Debug.log
 export class ChatService {
-    public static VERBOSE: boolean = false;
 
-    public constructor(private readonly chatDAO: ChatDAO) {
-        display(ChatService.VERBOSE, 'ChatService.constructor');
-    }
+    public constructor(private readonly chatDAO: ChatDAO) {}
+
     public async addMessage(chatId: string, message: Message): Promise<string> {
         return this.chatDAO.subCollectionDAO(chatId, 'messages').create(message);
     }
@@ -34,7 +34,6 @@ export class ChatService {
         return this.chatDAO.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');
     }
     public async deleteChat(chatId: string): Promise<void> {
-        display(ChatService.VERBOSE, 'ChatService.deleteChat ' + chatId);
         return this.chatDAO.delete(chatId);
     }
     public async createNewChat(chatId: string): Promise<void> {

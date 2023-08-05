@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { display, FirestoreJSONObject, FirestoreJSONValue, Utils } from 'src/app/utils/utils';
+import { Debug, FirestoreJSONObject, FirestoreJSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
@@ -12,9 +12,8 @@ import { Timestamp } from 'firebase/firestore';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
 
+@Debug.log
 export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements IFirestoreDAO<T> {
-
-    public static VERBOSE: boolean = false;
 
     public static mockServerTime(): Timestamp {
         const dateNow: number = Date.now();
@@ -28,9 +27,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
 
     private readonly subDAOs: MGPMap<string, IFirestoreDAO<FirestoreJSONObject>> = new MGPMap();
 
-    public constructor(public readonly collectionName: string,
-                       public VERBOSE: boolean)
-    {
+    public constructor(public readonly collectionName: string) {
         this.reset();
     }
     public abstract getStaticDB(): MGPMap<string, DocumentSubject<T>>;
@@ -38,14 +35,9 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     public abstract resetStaticDB(): void;
 
     public reset(): void {
-        const removed: string = this.getStaticDB() != null ? this.getStaticDB().size() + ' removed' : 'not initialized yet';
-        display(this.VERBOSE || FirestoreDAOMock.VERBOSE, this.collectionName + '.reset, ' + removed);
-
         this.resetStaticDB();
     }
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription {
-        display(this.VERBOSE || FirestoreDAOMock.VERBOSE, this.collectionName + '.subscribeToChanges(' + id + ')');
-
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             return optionalOS.get().observable.subscribe((subject: MGPOptional<FirestoreDocument<T>>) =>
@@ -95,8 +87,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         return false;
     }
     public async read(id: string): Promise<MGPOptional<T>> {
-        display(this.VERBOSE || FirestoreDAOMock.VERBOSE, this.collectionName + '.read(' + id + ')');
-
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             return MGPOptional.of(Utils.getNonNullable(optionalOS.get().subject.getValue().get().data));
@@ -105,9 +95,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
     }
     public async set(id: string, data: T): Promise<void> {
-        display(this.VERBOSE || FirestoreDAOMock.VERBOSE,
-                this.collectionName + '.set(' + id + ', ' + JSON.stringify(data) + ')');
-
         const localData: T = this.replaceFieldValueWith(data, null);
         await this.internalSet(id, localData);
         if (this.hasFieldValue(data)) {
@@ -136,9 +123,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         return Promise.resolve();
     }
     public async update(id: string, update: UpdateData<T>): Promise<void> {
-        display(this.VERBOSE || FirestoreDAOMock.VERBOSE,
-                this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
-
         const localUpdate: UpdateData<T> = this.replaceFieldValueWith(update, null);
         await this.internalUpdate(id, localUpdate);
         if (this.hasFieldValue(update)) {
@@ -165,8 +149,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
     }
     public async delete(id: string): Promise<void> {
-        display(this.VERBOSE || FirestoreDAOMock.VERBOSE, `${this.collectionName}.delete(${id})`);
-
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             const removed: FirestoreDocument<T> = optionalOS.get().subject.value.get();
@@ -184,10 +166,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     public observingWhere(conditions: FirestoreCondition[],
                           callback: FirestoreCollectionObserver<T>): Subscription
     {
-        display(this.VERBOSE || FirestoreDAOMock.VERBOSE,
-                { 'FirestoreDAOMock_observingWhere': {
-                    collection: this.collectionName,
-                    conditions } });
         return this.subscribeToMatchers(conditions, callback);
     }
     private subscribeToMatchers(conditions: FirestoreCondition[],
@@ -247,7 +225,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             return this.subDAOs.get(name).get() as IFirestoreDAO<T>;
         } else {
             const superName: string = this.collectionName;
-            const verbosity: boolean = this.VERBOSE;
             type OS = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
             class CustomMock extends FirestoreDAOMock<T> {
                 private static db: MGPMap<string, OS>;
@@ -258,7 +235,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                     CustomMock.db = new MGPMap();
                 }
                 public constructor() {
-                    super(`${superName}/${id}/${name}`, verbosity);
+                    super(`${superName}/${id}/${name}`);
                 }
             }
             const mock: FirestoreDAOMock<T> = new CustomMock();

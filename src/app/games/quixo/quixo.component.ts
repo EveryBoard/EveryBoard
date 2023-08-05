@@ -21,8 +21,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 })
 export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMove, QuixoState, PlayerOrNone> {
 
-    public static VERBOSE: boolean = false;
-
     public QuixoState: typeof QuixoState = QuixoState;
 
     public state: QuixoState;

@@ -2,11 +2,12 @@ import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode, SiamLegalityInformation } from './SiamRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 
+@Debug.log
 export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInformation> {
 
     public getBoardValue(node: SiamNode): BoardValue {
@@ -42,7 +43,6 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInform
                 }
             }
         }
-        display(SiamRules.VERBOSE, { getListMovesResult: moves });
         return moves;
     }
     private isOnBorder(insertion: SiamMove): boolean {

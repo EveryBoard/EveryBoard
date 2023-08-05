@@ -6,6 +6,7 @@ import { Move } from '../Move';
 import { BoardValue } from '../BoardValue';
 import { Rules } from '../Rules';
 import { GameStatus } from '../GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 class GameStateMock extends GameState {
 
@@ -16,7 +17,7 @@ class GameStateMock extends GameState {
 class MoveMock extends Move {
 
     public override toString(): string {
-        throw new Error('MoveMock.toString method not implemented.');
+        return 'MoveMock';
     }
     public equals(other: this): boolean {
         throw new Error('MoveMock.equals method not implemented.');
@@ -58,5 +59,39 @@ describe('MGPNode', () => {
 
         // Then minimax.getBoardValue should not have been called a second time
         expect(minimax.getBoardValue).not.toHaveBeenCalled();
+    });
+    describe('toString', () => {
+        it('should show node turn', () => {
+            // Given a node
+            const state: GameState = new GameStateMock(0);
+            const node: MGPNode<RulesMock, MoveMock, GameStateMock> = new MGPNode(state);
+            // When calling toString
+            const stringified: string = node.myToString();
+            // Then it should contain the node number
+            expect(stringified).toBe('InitialNode: 0');
+        });
+        it('should not show last move when absent', () => {
+            // Given a node with a parent but no last move
+            const parentState: GameState = new GameStateMock(0);
+            const parentNode: MGPNode<RulesMock, MoveMock, GameStateMock> = new MGPNode(parentState);
+            const state: GameState = new GameStateMock(1);
+            const node: MGPNode<RulesMock, MoveMock, GameStateMock> = new MGPNode(state, MGPOptional.of(parentNode));
+            // When calling toString
+            const stringified: string = node.myToString();
+            // Then it should not show last move
+            expect(stringified).toBe('Node:  1 ');
+        });
+        it('should show last move when present', () => {
+            // Given a node with a parent and last move
+            const parentState: GameState = new GameStateMock(0);
+            const parentNode: MGPNode<RulesMock, MoveMock, GameStateMock> = new MGPNode(parentState);
+            const state: GameState = new GameStateMock(1);
+            const node: MGPNode<RulesMock, MoveMock, GameStateMock> =
+                new MGPNode(state, MGPOptional.of(parentNode), MGPOptional.of(new MoveMock()));
+            // When calling toString
+            const stringified: string = node.myToString();
+            // Then it should show the last move
+            expect(stringified).toBe('Node:  > MoveMock> 1 ');
+        });
     });
 });
