@@ -236,7 +236,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         const isStarving: boolean = AwaleRules.isStarving(player.getOpponent(), captureResult.resultingBoard);
         if (captureResult.capturedSum > 0 && isStarving) {
             /* if the distribution would capture all seeds
-             * the capture is forbidden and cancelled
+             * the capture is forbidden and canceled
              */
             return {
                 capturedSum: 0,

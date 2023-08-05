@@ -25,8 +25,7 @@ describe('EncapsuleComponent', () => {
         testUtils = await ComponentTestUtils.forGame<EncapsuleComponent>('Encapsule');
     }));
     it('should create', () => {
-        expect(testUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(testUtils.getComponent()).withContext('EncapsuleComponent should be created').toBeTruthy();
+        testUtils.expectToBeCreated();
     });
     describe('First click', () => {
         it('should forbid clicking directly on the board without selecting a piece', fakeAsync(async() => {

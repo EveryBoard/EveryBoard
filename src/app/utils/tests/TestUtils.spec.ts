@@ -46,6 +46,7 @@ import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 @Component({})
 export class BlankComponent {}
@@ -59,7 +60,7 @@ export class ActivatedRouteStub {
             paramMap: {
                 get: (str: string): string => {
                     // Returns null in case the route does not exist.
-                    // This is the same behaviour than ActivatedRoute
+                    // This is the same behavior than ActivatedRoute
                     return this.route[str];
                 },
             },
@@ -77,12 +78,401 @@ export class ActivatedRouteStub {
 }
 export class SimpleComponentTestUtils<T> {
 
-    private fixture: ComponentFixture<T>;
+    protected fixture: ComponentFixture<T>;
+    protected component: T;
 
-    private component: T;
+    private infoMessageSpy: jasmine.Spy;
+    private criticalMessageSpy: jasmine.Spy;
+    protected gameMessageSpy: jasmine.Spy;
 
     public static async create<T>(componentType: Type<T>, activatedRouteStub?: ActivatedRouteStub)
     : Promise<SimpleComponentTestUtils<T>>
+    {
+        await TestUtils.configureTestingModule(componentType, activatedRouteStub);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
+        testUtils.prepareFixture(componentType);
+        testUtils.prepareMessageDisplayerSpies();
+        return testUtils;
+    }
+    protected constructor() {}
+
+    public prepareFixture(componentType: Type<T>): void {
+        this.fixture = TestBed.createComponent(componentType);
+        this.component = this.fixture.debugElement.componentInstance;
+    }
+    public getComponent(): T {
+        return this.component;
+    }
+    public detectChanges(): void {
+        this.fixture.detectChanges();
+    }
+    public destroy(): void {
+        return this.fixture.destroy();
+    }
+    public async whenStable(): Promise<void> {
+        return this.fixture.whenStable();
+    }
+    public prepareMessageDisplayerSpies(): void {
+        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+        if (jasmine.isSpy(messageDisplayer.gameMessage)) {
+            this.gameMessageSpy = messageDisplayer.gameMessage as jasmine.Spy;
+        } else {
+            this.gameMessageSpy = spyOn(messageDisplayer, 'gameMessage').and.callFake(this.failOn('gameMessage'));
+        }
+        if (jasmine.isSpy(messageDisplayer.criticalMessage)) {
+            this.criticalMessageSpy = messageDisplayer.criticalMessage as jasmine.Spy;
+        } else {
+            this.criticalMessageSpy = spyOn(messageDisplayer, 'criticalMessage').and.callFake(this.failOn('criticalMessage'));
+        }
+        if (jasmine.isSpy(messageDisplayer.infoMessage)) {
+            this.infoMessageSpy = messageDisplayer.infoMessage as jasmine.Spy;
+        } else {
+            this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.callFake(this.failOn('infoMessage'));
+        }
+    }
+    private failOn(typeOfMessage: string): (message: string) => void {
+        return (message: string) => {
+            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToToast!`);
+        };
+    }
+    public async expectToDisplayGameMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
+        this.gameMessageSpy.and.returnValue(undefined);
+        const result: T = await fn();
+        expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
+        this.gameMessageSpy.calls.reset();
+        this.gameMessageSpy.and.callFake(this.failOn('gameMessage')); // Restore previous spy behavior
+        return result;
+    }
+    public async expectToDisplayCriticalMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
+        this.criticalMessageSpy.and.returnValue(undefined);
+        const result: T = await fn();
+        expect(this.criticalMessageSpy).toHaveBeenCalledOnceWith(message);
+        this.criticalMessageSpy.calls.reset();
+        this.criticalMessageSpy.and.callFake(this.failOn('criticalMessage')); // Restore previous spy behavior
+        return result;
+    }
+    public async expectToDisplayInfoMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
+        this.infoMessageSpy.and.returnValue(undefined);
+        const result: T = await fn();
+        expect(this.infoMessageSpy).toHaveBeenCalledOnceWith(message);
+        this.infoMessageSpy.calls.reset();
+        this.infoMessageSpy.and.callFake(this.failOn('infoMessage')); // Restore previous spy behavior
+        return result;
+    }
+
+    public async clickElement(elementName: string, awaitStability:
+                              boolean = true,
+                              waitOneMs: boolean = false)
+    : Promise<void>
+    {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist on the page`).toBeTruthy();
+        if (element == null) {
+            return;
+        }
+        element.triggerEventHandler('click', null);
+        if (awaitStability) {
+            await this.whenStable();
+        }
+        if (waitOneMs) {
+            tick(0); // Yeah, not really 1ms, but we want to flush asynchronous tasks
+        }
+        this.detectChanges();
+    }
+    public findElement(elementName: string): DebugElement {
+        return this.fixture.debugElement.query(By.css(elementName));
+    }
+    public findElements(elementName: string): DebugElement[] {
+        return this.fixture.debugElement.queryAll(By.css(elementName));
+    }
+    public findElementByDirective(directive: Type<unknown>): DebugElement {
+        return this.fixture.debugElement.query(By.directive(directive));
+    }
+    public expectElementToHaveClass(elementName: string, cssClass: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');
+        if (element.attributes.class != null && element.attributes.class !== '') {
+            const elementClasses: string[] = element.attributes.class.split(' ').sort();
+            expect(elementClasses).withContext(`${elementName} should contain CSS class ${cssClass}`).toContain(cssClass);
+        }
+    }
+    public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        if (element.attributes.class != null) {
+            const elementClasses: string[] = element.attributes.class.split(' ').sort();
+            expect(elementClasses).withContext(`${elementName} should not contain CSS class ${cssClass}`).not.toContain(cssClass);
+        }
+    }
+    public expectElementToHaveClasses(elementName: string, classes: string[]): void {
+        const classesSorted: string[] = [...classes].sort();
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
+        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
+        expect(elementClasses).toEqual(classesSorted);
+    }
+    public expectElementNotToExist(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should not exist`).toBeNull();
+    }
+    public expectElementToExist(elementName: string): DebugElement {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        return element;
+    }
+    public expectElementToBeEnabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+    }
+    public expectElementToBeDisabled(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();
+    }
+    public fillInput(elementName: string, value: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist in order to fill its value`).toBeTruthy();
+        element.nativeElement.value = value;
+        element.nativeElement.dispatchEvent(new Event('input'));
+    }
+}
+
+export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string>
+    extends SimpleComponentTestUtils<GameWrapper<P>>
+{
+
+    private gameComponent: AbstractGameComponent;
+
+    private canUserPlaySpy: jasmine.Spy;
+    private cancelMoveSpy: jasmine.Spy;
+    private chooseMoveSpy: jasmine.Spy;
+    private onLegalUserMoveSpy: jasmine.Spy;
+
+    public static async forGame<T extends AbstractGameComponent>(
+        game: string,
+        configureTestingModule: boolean = true)
+    : Promise<ComponentTestUtils<T>>
+    {
+        const gameInfo: MGPOptional<GameInfo> =
+            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === game));
+        if (gameInfo.isAbsent()) {
+            throw new Error(game + ' is not a game developped on MGP, check if its name is in the second param of GameInfo');
+        }
+        return ComponentTestUtils.forGameWithWrapper(game,
+                                                     LocalGameWrapperComponent,
+                                                     AuthUser.NOT_CONNECTED,
+                                                     configureTestingModule);
+    }
+    public static async forGameWithWrapper<T extends AbstractGameComponent, P extends Comparable>(
+        game: string,
+        wrapperKind: Type<GameWrapper<P>>,
+        user: AuthUser = AuthUser.NOT_CONNECTED,
+        configureTestingModule: boolean = true)
+    : Promise<ComponentTestUtils<T, P>>
+    {
+        const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestingModule);
+        ConnectedUserServiceMock.setUser(user);
+        testUtils.prepareFixture(wrapperKind);
+        testUtils.detectChanges();
+        tick(1); // Need to be at least 1ms
+        testUtils.bindGameComponent();
+        testUtils.prepareSpies();
+        return testUtils;
+    }
+    public static async basic<T extends AbstractGameComponent, P extends Comparable>(
+        game?: string,
+        configureTestingModule: boolean = true)
+    : Promise<ComponentTestUtils<T, P>>
+    {
+        const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
+        if (configureTestingModule) {
+            await TestUtils.configureTestingModuleForGame(activatedRouteStub);
+        }
+        const testUtils: ComponentTestUtils<T, P> = new ComponentTestUtils<T, P>();
+        testUtils.prepareMessageDisplayerSpies();
+        return testUtils;
+    }
+
+    public bindGameComponent(): void {
+        expect(this.component.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
+        this.gameComponent = this.component.gameComponent;
+    }
+    public prepareSpies(): void {
+        this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
+        this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
+        this.onLegalUserMoveSpy = spyOn(this.component, 'onLegalUserMove').and.callThrough();
+        this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
+    }
+    public expectToBeCreated(): void {
+        expect(this.getWrapper()).withContext('Wrapper should be created').toBeTruthy();
+        expect(this.getGameComponent()).withContext('Component should be created').toBeTruthy();
+    }
+    public forceChangeDetection(): void {
+        this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        this.detectChanges();
+    }
+    public setRoute(id: string, value: string): void {
+        TestBed.inject(ActivatedRouteStub).setRoute(id, value);
+    }
+    public setupState(state: GameState,
+                      previousState?: GameState,
+                      previousMove?: Move)
+    : void
+    {
+        this.gameComponent.node = new MGPNode(
+            state,
+            MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
+                new MGPNode(previousState)),
+            MGPOptional.ofNullable(previousMove),
+        );
+        this.gameComponent.updateBoard();
+        if (previousMove !== undefined) {
+            this.gameComponent.showLastMove(previousMove);
+        }
+        this.forceChangeDetection();
+    }
+    public getWrapper(): GameWrapper<P> {
+        return this.component;
+    }
+    public getGameComponent(): T {
+        return (this.gameComponent as unknown) as T;
+    }
+    /**
+     * @param nameInHtml The real name (id) of the element in the XML
+     * @param nameInFunction Its name inside the code
+     */
+    public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
+        await this.expectInterfaceClickSuccess(nameInHtml);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
+        this.canUserPlaySpy.calls.reset();
+    }
+    public async expectClickSuccess(elementName: string): Promise<void> {
+        return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
+    }
+    public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {
+        const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
+        await this.clickElement(elementName, false, waitOneMs);
+
+        expect(this.cancelMoveSpy).not
+            .withContext(context)
+            .toHaveBeenCalledWith();
+        expect(this.chooseMoveSpy).not
+            .withContext(context)
+            .toHaveBeenCalledWith();
+        expect(this.onLegalUserMoveSpy).not
+            .withContext(context)
+            .toHaveBeenCalledWith();
+    }
+    public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
+                                                        nameInFunction: string,
+                                                        reason?: string)
+    : Promise<void>
+    {
+
+        if (reason == null) {
+            await this.clickElement(nameInHtml);
+        } else {
+            await this.expectToDisplayGameMessage(reason, async() => {
+                await this.clickElement(nameInHtml);
+            });
+        }
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
+        this.canUserPlaySpy.calls.reset();
+        expect(this.chooseMoveSpy).not.toHaveBeenCalled();
+        if (reason == null) {
+            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith();
+        } else {
+            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+        }
+        this.cancelMoveSpy.calls.reset();
+    }
+    public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
+        return this.expectClickFailureWithAsymmetricNaming(elementName, elementName, reason);
+    }
+    public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
+        const clickValidity: MGPValidation = this.gameComponent.canUserPlay(elementName);
+        expect(clickValidity.getReason()).toBe(reason);
+        this.canUserPlaySpy.calls.reset();
+
+        await this.expectToDisplayGameMessage(reason, async() => {
+            await this.clickElement(elementName);
+        });
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+        expect(this.chooseMoveSpy).not.toHaveBeenCalled();
+        expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+        this.cancelMoveSpy.calls.reset();
+    }
+    public async expectMoveSuccess(elementName: string, move: Move) : Promise<void> {
+        await this.clickElement(elementName);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+        expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
+        this.chooseMoveSpy.calls.reset();
+        expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
+        this.onLegalUserMoveSpy.calls.reset();
+    }
+    public async expectMoveFailure(elementName: string, reason: string, move: Move) : Promise<void> {
+        await this.expectToDisplayGameMessage(reason, async() => {
+            await this.clickElement(elementName);
+        });
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+        expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
+        this.chooseMoveSpy.calls.reset();
+        expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+        this.cancelMoveSpy.calls.reset();
+        expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
+    }
+    public expectPassToBeForbidden(): void {
+        this.expectElementNotToExist('#passButton');
+    }
+    public async expectPassSuccess(move: Move): Promise<void> {
+        await this.clickElement('#passButton');
+        expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
+        this.chooseMoveSpy.calls.reset();
+        expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
+        this.onLegalUserMoveSpy.calls.reset();
+    }
+}
+
+export class TestUtils {
+
+    public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
+        const reason: string = validation.getReason();
+        expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
+    }
+
+    public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
+        await TestBed.configureTestingModule({
+            imports: [
+                AppModule,
+                RouterTestingModule.withRoutes([
+                    { path: 'play', component: OnlineGameWrapperComponent },
+                    { path: 'server', component: BlankComponent },
+                ]),
+            ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            providers: [
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: UserDAO, useClass: UserDAOMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
+                { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
+                { provide: PartDAO, useClass: PartDAOMock },
+                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+            ],
+        }).compileComponents();
+    }
+    public static async configureTestingModule(componentType: object,
+                                               activatedRouteStub?: ActivatedRouteStub)
+    : Promise<void>
     {
         await TestBed.configureTestingModule({
             imports: [
@@ -114,410 +504,6 @@ export class SimpleComponentTestUtils<T> {
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
-        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
-        testUtils.fixture = TestBed.createComponent(componentType);
-        testUtils.component = testUtils.fixture.componentInstance;
-        return testUtils;
-    }
-    private constructor() {}
-
-    public async clickElement(elementName: string, awaitStability: boolean = true): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
-        if (element == null) {
-            return;
-        }
-        element.triggerEventHandler('click', null);
-        if (awaitStability) {
-            await this.fixture.whenStable();
-        }
-        this.detectChanges();
-    }
-    public getComponent(): T {
-        return this.component;
-    }
-    public detectChanges(): void {
-        this.fixture.detectChanges();
-    }
-    public findElement(elementName: string): DebugElement {
-        return this.fixture.debugElement.query(By.css(elementName));
-    }
-    public findElements(elementName: string): DebugElement[] {
-        return this.fixture.debugElement.queryAll(By.css(elementName));
-    }
-    public findElementByDirective(directive: Type<unknown>): DebugElement {
-        return this.fixture.debugElement.query(By.directive(directive));
-    }
-    public destroy(): void {
-        return this.fixture.destroy();
-    }
-    public async whenStable(): Promise<void> {
-        return this.fixture.whenStable();
-    }
-    public expectElementToHaveClass(elementName: string, cssClass: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
-        if (element.attributes.class != null && element.attributes.class !== '') {
-            const elementClasses: string[] = element.attributes.class.split(' ').sort();
-            expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
-        }
-    }
-    public expectElementNotToExist(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should not exist').toBeNull();
-    }
-    public expectElementToExist(elementName: string): DebugElement {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        return element;
-    }
-    public expectElementToBeEnabled(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
-    }
-    public expectElementToBeDisabled(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
-    }
-    public fillInput(elementName: string, value: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist in order to fill its value').toBeTruthy();
-        element.nativeElement.value = value;
-        element.nativeElement.dispatchEvent(new Event('input'));
-    }
-}
-
-export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string> {
-
-    public fixture: ComponentFixture<GameWrapper<P>>;
-    public wrapper: GameWrapper<P>;
-    private debugElement: DebugElement;
-    private gameComponent: AbstractGameComponent;
-
-    private canUserPlaySpy: jasmine.Spy;
-    private cancelMoveSpy: jasmine.Spy;
-    private chooseMoveSpy: jasmine.Spy;
-    private onLegalUserMoveSpy: jasmine.Spy;
-
-    public static async forGame<T extends AbstractGameComponent>(
-        game: string,
-        configureTestModule: boolean = true)
-    : Promise<ComponentTestUtils<T>>
-    {
-        const gameInfo: MGPOptional<GameInfo> =
-            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === game));
-        if (gameInfo.isAbsent()) {
-            throw new Error(game + ' is not a game developped on MGP, check if its name is in the second param of GameInfo');
-        }
-        return ComponentTestUtils.forGameWithWrapper(game,
-                                                     LocalGameWrapperComponent,
-                                                     AuthUser.NOT_CONNECTED,
-                                                     configureTestModule);
-    }
-    public static async forGameWithWrapper<T extends AbstractGameComponent, P extends Comparable>(
-        game: string,
-        wrapperKind: Type<GameWrapper<P>>,
-        user: AuthUser = AuthUser.NOT_CONNECTED,
-        configureTestModule: boolean = true)
-    : Promise<ComponentTestUtils<T, P>>
-    {
-        const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestModule);
-        ConnectedUserServiceMock.setUser(user);
-        testUtils.prepareFixture(wrapperKind);
-        testUtils.detectChanges();
-        tick(1);
-        testUtils.bindGameComponent();
-        testUtils.prepareSpies();
-        return testUtils;
-    }
-    public static async basic<T extends AbstractGameComponent, P extends Comparable>(
-        game?: string,
-        configureTestModule: boolean = true)
-    : Promise<ComponentTestUtils<T, P>>
-    {
-        const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
-        if (configureTestModule) {
-            await ComponentTestUtils.configureTestModule(activatedRouteStub);
-        }
-        return new ComponentTestUtils<T, P>(activatedRouteStub);
-    }
-    public static async configureTestModule(activatedRouteStub: ActivatedRouteStub): Promise<void> {
-        await TestBed.configureTestingModule({
-            imports: [
-                AppModule,
-                RouterTestingModule.withRoutes([
-                    { path: 'play', component: OnlineGameWrapperComponent },
-                    { path: 'server', component: BlankComponent },
-                ]),
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: UserDAO, useClass: UserDAOMock },
-                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-                { provide: PartDAO, useClass: PartDAOMock },
-                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
-            ],
-        }).compileComponents();
-    }
-
-    public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
-
-    public prepareFixture(wrapperKind: Type<GameWrapper<P>>): void {
-        this.fixture = TestBed.createComponent(wrapperKind);
-        this.wrapper = this.fixture.debugElement.componentInstance;
-        this.debugElement = this.fixture.debugElement;
-    }
-    public bindGameComponent(): void {
-        expect(this.wrapper.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
-        this.gameComponent = this.wrapper.gameComponent;
-    }
-    public prepareSpies(): void {
-        this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
-        this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
-        this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
-        this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
-    }
-    public expectToBeCreated(): void {
-        expect(this.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(this.getComponent()).withContext('Component should be created').toBeTruthy();
-    }
-    public detectChanges(): void {
-        this.fixture.detectChanges();
-    }
-    public forceChangeDetection(): void {
-        this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
-        this.detectChanges();
-    }
-    public setRoute(id: string, value: string): void {
-        this.activatedRouteStub.setRoute(id, value);
-    }
-    public setupState(state: GameState,
-                      previousState?: GameState,
-                      previousMove?: Move)
-    : void
-    {
-        this.gameComponent.node = new MGPNode(
-            state,
-            MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
-                new MGPNode(previousState)),
-            MGPOptional.ofNullable(previousMove),
-        );
-        this.gameComponent.updateBoard();
-        if (previousMove !== undefined) {
-            this.gameComponent.showLastMove(previousMove);
-        }
-        this.forceChangeDetection();
-    }
-    public getComponent(): T {
-        return (this.gameComponent as unknown) as T;
-    }
-    /**
-     * @param nameInHtml The real name (id) of the element in the XML
-     * @param nameInFunction Its name inside the code
-     */
-    public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
-        await this.expectInterfaceClickSuccess(nameInHtml);
-        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
-        this.canUserPlaySpy.calls.reset();
-    }
-    public async expectClickSuccess(elementName: string): Promise<void> {
-        return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
-    }
-    public async expectInterfaceClickSuccess(elementName: string, waitOneMs: boolean = false): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
-        element.triggerEventHandler('click', null);
-        if (waitOneMs) {
-            tick(1);
-        }
-
-        await this.fixture.whenStable();
-        this.fixture.detectChanges();
-        expect(this.cancelMoveSpy).not
-            .withContext(context)
-            .toHaveBeenCalledWith();
-        expect(this.chooseMoveSpy).not
-            .withContext(context)
-            .toHaveBeenCalledWith();
-        expect(this.onLegalUserMoveSpy).not
-            .withContext(context)
-            .toHaveBeenCalledWith();
-    }
-    public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
-                                                        nameInFunction: string,
-                                                        reason?: string)
-    : Promise<void>
-    {
-        const element: DebugElement = this.findElement(nameInHtml);
-        expect(element).withContext('Element "' + nameInHtml + '" should exist').toBeTruthy();
-        if (element == null) {
-            return;
-        } else {
-            element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
-            this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).not.toHaveBeenCalled();
-            if (reason == null) {
-                expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith();
-            } else {
-                expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
-            }
-            this.cancelMoveSpy.calls.reset();
-            tick(3000); // needs to be >2999
-        }
-    }
-    public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
-        return this.expectClickFailureWithAsymmetricNaming(elementName, elementName, reason);
-    }
-    public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
-        if (element == null) {
-            return;
-        } else {
-            const clickValidity: MGPValidation = this.gameComponent.canUserPlay(elementName);
-            expect(clickValidity.getReason()).toBe(reason);
-            this.canUserPlaySpy.calls.reset();
-            element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
-            this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).not.toHaveBeenCalled();
-            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.getReason());
-            tick(3000); // needs to be > 2999
-        }
-    }
-    public async expectMoveSuccess(elementName: string, move: Move) : Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
-        if (element == null) {
-            return;
-        } else {
-            element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
-            this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
-            this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
-            this.onLegalUserMoveSpy.calls.reset();
-        }
-    }
-    public async expectMoveFailure(elementName: string, reason: string, move: Move): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
-        if (element == null) {
-            return;
-        } else {
-            element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
-            this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
-            this.chooseMoveSpy.calls.reset();
-            expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
-            this.cancelMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
-            tick(3000); // needs to be >2999
-        }
-    }
-    public expectPassToBeForbidden(): void {
-        this.expectElementNotToExist('#passButton');
-    }
-    public async expectPassSuccess(move: Move): Promise<void> {
-        const passButton: DebugElement = this.findElement('#passButton');
-        expect(passButton).withContext('Pass button is expected to be shown, but it is not').toBeTruthy();
-        if (passButton == null) {
-            return;
-        } else {
-            passButton.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
-            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
-            this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
-            this.onLegalUserMoveSpy.calls.reset();
-        }
-    }
-    public async clickElement(elementName: string): Promise<void> {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
-        if (element == null) {
-            return;
-        }
-        element.triggerEventHandler('click', null);
-        await this.fixture.whenStable();
-        this.detectChanges();
-    }
-    public expectElementNotToExist(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should not exist').toBeNull();
-    }
-    public expectElementToExist(elementName: string): DebugElement {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        return element;
-    }
-    public expectElementToHaveClass(elementName: string, cssClass: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        if (element.attributes.class == null) {
-            expect(false).withContext(elementName + ' should have class attribute').toBeTrue();
-        } else {
-            const classAttribute: string = element.attributes.class;
-            expect(classAttribute).withContext(elementName + ' should have a class attribute').toBeTruthy();
-            const elementClasses: string[] = Utils.getNonNullable(classAttribute).split(' ').sort();
-            expect(elementClasses).withContext(elementName + ' should contain ' + cssClass).toContain(cssClass);
-        }
-    }
-    public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        if (element.attributes.class == null) {
-            throw new Error(`${elementName} should have a class attribute`);
-        } else {
-            const elementClasses: string[] = element.attributes.class.split(' ').sort();
-            expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
-        }
-    }
-    public expectElementToHaveClasses(elementName: string, classes: string[]): void {
-        const classesSorted: string[] = [...classes].sort();
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
-        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
-        expect(elementClasses).toEqual(classesSorted);
-    }
-    public expectElementToBeEnabled(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
-    }
-    public expectElementToBeDisabled(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be disabled').toBeTruthy();
-    }
-    public findElement(elementName: string): DebugElement {
-        return this.debugElement.query(By.css(elementName));
-    }
-}
-
-export class TestUtils {
-
-    public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
-        const reason: string = validation.getReason();
-        expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
     }
 }
 

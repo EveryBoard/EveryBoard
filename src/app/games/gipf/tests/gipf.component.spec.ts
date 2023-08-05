@@ -25,7 +25,7 @@ describe('GipfComponent', () => {
     const P1Turn: number = P0Turn + 1;
 
     function expectToHaveArrow(start: Coord, end: Coord): void {
-        expect(testUtils.getComponent().arrows.some((arrow: Arrow) => {
+        expect(testUtils.getGameComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(start) && arrow.destination.equals(end);
         })).withContext('expected to have an arrow pointing from ' + start.toString() + ' to ' + end.toString())
             .toBeTrue();
@@ -57,7 +57,7 @@ describe('GipfComponent', () => {
             await testUtils.expectClickSuccess('#click_6_3');
 
             // Then the possible pushing direction should be shown
-            expect(testUtils.getComponent().arrows.length).toBe(3);
+            expect(testUtils.getGameComponent().arrows.length).toBe(3);
             expectToHaveArrow(new Coord(6, 3), new Coord(5, 3));
             expectToHaveArrow(new Coord(6, 3), new Coord(6, 2));
             expectToHaveArrow(new Coord(6, 3), new Coord(5, 4));
@@ -121,10 +121,10 @@ describe('GipfComponent', () => {
             await testUtils.expectClickSuccess('#click_3_3');
 
             // Then the piece should be disappeared
-            expect(testUtils.getComponent().isPiece(new Coord(3, 2))).toBeFalse();
-            expect(testUtils.getComponent().isPiece(new Coord(3, 3))).toBeFalse();
-            expect(testUtils.getComponent().isPiece(new Coord(3, 4))).toBeFalse();
-            expect(testUtils.getComponent().isPiece(new Coord(3, 5))).toBeFalse();
+            expect(testUtils.getGameComponent().isPiece(new Coord(3, 2))).toBeFalse();
+            expect(testUtils.getGameComponent().isPiece(new Coord(3, 3))).toBeFalse();
+            expect(testUtils.getGameComponent().isPiece(new Coord(3, 4))).toBeFalse();
+            expect(testUtils.getGameComponent().isPiece(new Coord(3, 5))).toBeFalse();
         }));
         it('should not allow capturing from a coord that is part of intersecting captures', fakeAsync(async() => {
             // Given a board on which two capture touch each other on one common space
@@ -243,9 +243,9 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_1_6');
         await testUtils.expectMoveSuccess('#click_2_5', move);
 
-        expect(testUtils.getComponent().getSpaceClass(new Coord(1, 6))).toEqual('moved-fill');
-        expect(testUtils.getComponent().getSpaceClass(new Coord(2, 5))).toEqual('moved-fill');
-        expect(testUtils.getComponent().getSpaceClass(new Coord(3, 4))).not.toEqual('moved-fill');
+        expect(testUtils.getGameComponent().getSpaceClass(new Coord(1, 6))).toEqual('moved-fill');
+        expect(testUtils.getGameComponent().getSpaceClass(new Coord(2, 5))).toEqual('moved-fill');
+        expect(testUtils.getGameComponent().getSpaceClass(new Coord(3, 4))).not.toEqual('moved-fill');
     }));
     it('should highlight capturable pieces', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
@@ -260,7 +260,7 @@ describe('GipfComponent', () => {
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
         testUtils.setupState(state);
 
-        expect(testUtils.getComponent().possibleCaptures).toContain(new GipfCapture([
+        expect(testUtils.getGameComponent().possibleCaptures).toContain(new GipfCapture([
             new Coord(3, 2),
             new Coord(3, 3),
             new Coord(3, 4),
@@ -314,8 +314,8 @@ describe('GipfComponent', () => {
 
         await testUtils.expectMoveSuccess('#click_0_4', move);
 
-        expect(testUtils.getComponent().getPlayerSidePieces(Player.ZERO).length).toBe(8);
-        expect(testUtils.getComponent().getPlayerSidePieces(Player.ONE).length).toBe(5);
+        expect(testUtils.getGameComponent().getPlayerSidePieces(Player.ZERO).length).toBe(8);
+        expect(testUtils.getGameComponent().getPlayerSidePieces(Player.ONE).length).toBe(5);
     }));
     it('should not accept placement on a complete line', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
@@ -331,7 +331,7 @@ describe('GipfComponent', () => {
         testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_1_6');
-        expect(testUtils.getComponent().arrows.length).toBe(1);
+        expect(testUtils.getGameComponent().arrows.length).toBe(1);
         await testUtils.expectClickFailure('#click_2_5', GipfFailure.PLACEMENT_ON_COMPLETE_LINE());
     }));
     it('should accept moves with two initial captures', fakeAsync(async() => {
@@ -396,7 +396,7 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_4_4'); // select first capture
         await testUtils.expectMoveSuccess('#click_2_4', move); // select second capture
     }));
-    it('should remove highlights and arrows upon move cancellation', fakeAsync(async() => {
+    it('should remove highlights and arrows upon move cancelation', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
             [N, N, _, _, _, _, _],
@@ -416,7 +416,7 @@ describe('GipfComponent', () => {
 
         testUtils.expectElementToHaveClasses('#space_4_5', ['base']);
         testUtils.expectElementToHaveClasses('#space_3_3', ['base']);
-        expect(testUtils.getComponent().arrows.length).toBe(0);
+        expect(testUtils.getGameComponent().arrows.length).toBe(0);
     }));
     it('should recompute captures upon intersecting captures', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
@@ -470,7 +470,7 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_3_6');
 
         // Then the possible pushing direction should be shown
-        expect(testUtils.getComponent().arrows.length).toBe(3);
+        expect(testUtils.getGameComponent().arrows.length).toBe(3);
         expectToHaveArrow(new Coord(3, 6), new Coord(2, 6));
         expectToHaveArrow(new Coord(3, 6), new Coord(3, 5));
         expectToHaveArrow(new Coord(3, 6), new Coord(4, 5));
@@ -483,6 +483,6 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_6_3');
 
         // Then it should no longer be selected
-        expect(testUtils.getComponent().arrows.length).toBe(0);
+        expect(testUtils.getGameComponent().arrows.length).toBe(0);
     }));
 });

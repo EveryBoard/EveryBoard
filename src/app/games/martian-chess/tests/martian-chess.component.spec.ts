@@ -281,7 +281,7 @@ describe('MartianChessComponent', () => {
             testUtils.expectElementNotToExist('#modePanel');
         }));
         it('should test all view mode', fakeAsync(async() => {
-            for (const styleAndName of testUtils.getComponent().listOfStyles) {
+            for (const styleAndName of testUtils.getGameComponent().listOfStyles) {
                 // Given a board in the initial mode with panel mode displayed
                 await testUtils.clickElement('#modeCog');
 
@@ -289,7 +289,7 @@ describe('MartianChessComponent', () => {
                 await testUtils.clickElement('#' + styleAndName.name);
 
                 // Then the mode should have been chosen
-                const currentStyle: MartianChessFace = testUtils.getComponent().style;
+                const currentStyle: MartianChessFace = testUtils.getGameComponent().style;
                 expect(currentStyle).toBe(styleAndName.style);
             }
         }));

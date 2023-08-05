@@ -109,11 +109,11 @@ describe('QuixoComponent', () => {
             const state: QuixoState = new QuixoState(board, 3);
             testUtils.setupState(state);
 
-            expect(testUtils.getComponent().getPieceClasses(0, 0)).toContain('victory-stroke');
-            expect(testUtils.getComponent().getPieceClasses(1, 0)).toContain('victory-stroke');
-            expect(testUtils.getComponent().getPieceClasses(2, 0)).toContain('victory-stroke');
-            expect(testUtils.getComponent().getPieceClasses(3, 0)).toContain('victory-stroke');
-            expect(testUtils.getComponent().getPieceClasses(4, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(0, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(1, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(2, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(3, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(4, 0)).toContain('victory-stroke');
         }));
     });
 });
