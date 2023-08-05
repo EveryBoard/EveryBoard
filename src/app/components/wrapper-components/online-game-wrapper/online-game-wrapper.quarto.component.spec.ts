@@ -1370,7 +1370,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When attempting a move
             // Then it should be refused
             spyOn(partDAO, 'update').and.callThrough();
-            testUtils.expectClickFailure('#choosePiece_1', GameWrapperMessages.GAME_HAS_ENDED());
+            await testUtils.expectClickFailure('#choosePiece_1', GameWrapperMessages.GAME_HAS_ENDED());
 
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();

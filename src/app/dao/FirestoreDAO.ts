@@ -1,4 +1,4 @@
-import { display, FirestoreJSONObject, Utils } from 'src/app/utils/utils';
+import { Debug, FirestoreJSONObject, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import * as Firestore from '@angular/fire/firestore';
 import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
@@ -41,8 +41,6 @@ export interface IFirestoreDAO<T extends FirestoreJSONObject> {
 
 export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFirestoreDAO<T> {
 
-    public static VERBOSE: boolean = false;
-
     public readonly collection: Firestore.CollectionReference<T>;
 
     private readonly subDAOs: Record<string, IFirestoreDAO<FirestoreJSONObject>> = {};
@@ -61,12 +59,10 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
         this.collection = Firestore.collection(firestore, this.collectionName).withConverter<T>(genericConverter);
     }
     public async create(newElement: T): Promise<string> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.create', newElement });
         const docRef: Firestore.DocumentReference = await Firestore.addDoc(this.collection, newElement);
         return docRef.id;
     }
     public async read(id: string): Promise<MGPOptional<T>> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.read', id });
         const docSnapshot: Firestore.DocumentSnapshot<T> = await Firestore.getDoc(Firestore.doc(this.collection, id));
         if (docSnapshot.exists()) {
             return MGPOptional.of(Utils.getNonNullable(docSnapshot.data()));
@@ -75,19 +71,15 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
         }
     }
     public async exists(id: string): Promise<boolean> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.exists', id });
         return (await this.read(id)).isPresent();
     }
     public async update(id: string, update: Firestore.UpdateData<T>): Promise<void> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.update', id, update });
         return Firestore.updateDoc(Firestore.doc(this.collection, id), update);
     }
     public delete(id: string): Promise<void> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.delete', id });
         return Firestore.deleteDoc(Firestore.doc(this.collection, id));
     }
     public set(id: string, element: T): Promise<void> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
         return Firestore.setDoc(Firestore.doc(this.collection, id), element);
     }
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription {
@@ -119,7 +111,6 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
                           order?: string)
     : Subscription
     {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.observingWhere' });
         const query: Firestore.Query<T> = this.constructQuery(conditions, order);
         return new Subscription(Firestore.onSnapshot(query, (snapshot: Firestore.QuerySnapshot<T>) => {
             const createdDocs: FirestoreDocument<T>[] = [];
@@ -144,18 +135,18 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
                     }
                 });
             if (createdDocs.length > 0) {
-                display(FirestoreDAO.VERBOSE,
-                        'firebase gave us ' + createdDocs.length + ' NEW ' + this.collectionName);
+                Debug.display('FirestoreDAO', 'subscription',
+                              'firebase gave us ' + createdDocs.length + ' NEW ' + this.collectionName);
                 callback.onDocumentCreated(createdDocs);
             }
             if (modifiedDocs.length > 0) {
-                display(FirestoreDAO.VERBOSE,
-                        'firebase gave us ' + modifiedDocs.length + ' MODIFIED ' + this.collectionName);
+                Debug.display('FirestoreDAO', 'subscription',
+                              'firebase gave us ' + modifiedDocs.length + ' MODIFIED ' + this.collectionName);
                 callback.onDocumentModified(modifiedDocs);
             }
             if (deletedDocs.length > 0) {
-                display(FirestoreDAO.VERBOSE,
-                        'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
+                Debug.display('FirestoreDAO', 'subscription',
+                              'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
                 callback.onDocumentDeleted(deletedDocs);
             }
         }));
