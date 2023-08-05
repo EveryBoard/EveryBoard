@@ -131,7 +131,7 @@ describe('ConfigRoomService', () => {
 
             spyOn(configRoomService, 'removeCandidate').and.resolveTo();
 
-            // When cancelling our join
+            // When canceling our join
             await configRoomService.cancelJoining('configRoomId');
 
             // Then we are removed from the list

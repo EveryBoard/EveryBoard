@@ -48,13 +48,11 @@ describe('WelcomeComponent', () => {
         spyOn(router, 'navigate').and.callThrough();
 
         // When clicking on the online-button of one game
-        const component: WelcomeComponent = testUtils.getComponent();
-        spyOn(component.messageDisplayer, 'criticalMessage').and.resolveTo(); // Skip 3000ms of toast
-        await testUtils.clickElement('#playOnline_Awale');
-
         // Then the component should not have changed page and should toast the reason
+        await testUtils.expectToDisplayCriticalMessage(error, async() => {
+            await testUtils.clickElement('#playOnline_Awale');
+        });
         expect(router.navigate).not.toHaveBeenCalled();
-        expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
     }));
     it('should redirect to local game when clicking on the corresponding button', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
@@ -95,13 +93,11 @@ describe('WelcomeComponent', () => {
         spyOn(router, 'navigate').and.callThrough();
 
         // When clicking on the online-button of one game
-        const component: WelcomeComponent = testUtils.getComponent();
-        spyOn(component.messageDisplayer, 'criticalMessage').and.resolveTo(); // Skip 3000ms of toast
-        await testUtils.clickElement('#createOnlineGame');
-
         // Then the component should not have changed page and should toast the reason
+        await testUtils.expectToDisplayCriticalMessage(error, async() => {
+            await testUtils.clickElement('#createOnlineGame');
+        });
         expect(router.navigate).not.toHaveBeenCalled();
-        expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
     }));
     describe('game list', () => {
         it('should open a modal dialog when clicking on a game image', fakeAsync(async() => {

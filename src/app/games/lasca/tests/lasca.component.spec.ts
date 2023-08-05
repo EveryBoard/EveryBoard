@@ -261,7 +261,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord_4_4');
             const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
             await testUtils.expectMoveSuccess('#coord_3_3', move);
-            testUtils.wrapper.setRole(PlayerOrNone.ONE);
+            testUtils.getWrapper().setRole(PlayerOrNone.ONE);
 
             // When clicking on one of your piece
             // Then the board should be reversed
@@ -298,7 +298,7 @@ describe('LascaComponent', () => {
     describe('displaying reversed board', () => {
         it('should have first player on top in a reversed board', fakeAsync(async() => {
             // Given a board that been reversed
-            testUtils.wrapper.setRole(Player.ONE);
+            testUtils.getWrapper().setRole(Player.ONE);
 
             // When clicking on (2, 2)
             // Then it should have selected square (4, 4)
@@ -309,7 +309,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord_2_4');
             const move: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(1, 3)).get();
             await testUtils.expectMoveSuccess('#coord_1_3', move); // First move is set
-            testUtils.wrapper.setRole(Player.ONE); // changing role
+            testUtils.getWrapper().setRole(Player.ONE); // changing role
             await testUtils.expectClickSuccessWithAsymmetricNaming('#coord_6_4', '#coord_0_2'); // Making the first click
 
             // When clicking on a invalid landing piece

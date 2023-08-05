@@ -444,7 +444,7 @@ describe('HiveComponent', () => {
         testUtils.expectElementToHaveClass('#stroke_1_1', 'victory-stroke');
         testUtils.expectElementToHaveClass('#stroke_2_1', 'victory-stroke');
     }));
-    it('should show the last move when cancelling a move', fakeAsync(async() => {
+    it('should show the last move when canceling a move', fakeAsync(async() => {
         // Given a state with a last move displayed
         const previousState: HiveState = HiveState.fromRepresentation([
             [[Q]],
@@ -455,7 +455,7 @@ describe('HiveComponent', () => {
         ], 2);
         testUtils.setupState(state, previousState, previousMove);
 
-        // When starting and then cancelling a move
+        // When starting and then canceling a move
         await testUtils.expectClickSuccess('#piece_0_0');
         await testUtils.expectClickFailure('#piece_0_0');
 

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { ActivePartsService } from '../ActivePartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { MGPResult, Part, PartDocument } from 'src/app/domain/Part';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { Utils } from 'src/app/utils/utils';
@@ -65,7 +65,6 @@ describe('ActivePartsService', () => {
                     seenActiveParts = activeParts;
                 });
             activePartsSubscription.unsubscribe();
-            tick(3000);
 
             // When a new part is added
             await partDAO.create(part);

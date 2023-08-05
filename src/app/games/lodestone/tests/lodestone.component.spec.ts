@@ -297,7 +297,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#square_3_3');
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
             // When clicking on the board
-            // Then the move should be cancelled
+            // Then the move should be canceled
             await testUtils.expectClickFailure('#square_0_0', LodestoneFailure.MUST_PLACE_CAPTURES());
         }));
     });
@@ -342,7 +342,7 @@ describe('LodestoneComponent', () => {
             // When displaying the state
             testUtils.setupState(state);
             // Then the score should be the number of pieces captured
-            expect(testUtils.getComponent().scores).toEqual(MGPOptional.of([22, 20]));
+            expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of([22, 20]));
         });
     });
 });

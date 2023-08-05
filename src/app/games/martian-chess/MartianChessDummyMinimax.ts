@@ -90,8 +90,8 @@ export class MartianChessDummyMinimax
                 last: MGPOptional<MartianChessMove>)
     : void
     {
-        const isCancellingLastMove: boolean = move.isUndoneBy(last);
-        if (isCancellingLastMove === false) {
+        const isCancelingLastMove: boolean = move.isUndoneBy(last);
+        if (isCancelingLastMove === false) {
             moves.push(move);
         }
     }
