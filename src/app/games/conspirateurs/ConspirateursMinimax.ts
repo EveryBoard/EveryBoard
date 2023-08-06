@@ -8,6 +8,7 @@ import { ConspirateursState } from './ConspirateursState';
 import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class ConspirateursMinimax extends PlayerMetricsMinimax<ConspirateursMove, ConspirateursState> {
+
     public getListMoves(node: ConspirateursNode): ConspirateursMove[] {
         if (node.gameState.turn < 40) {
             return this.sortByNumberOfJump(this.getListMovesDrop(node.gameState));
@@ -62,7 +63,7 @@ export class ConspirateursMinimax extends PlayerMetricsMinimax<ConspirateursMove
             new Coord(coord.x + 1, coord.y - 1),
             new Coord(coord.x - 1, coord.y + 1),
             new Coord(coord.x - 1, coord.y - 1),
-        ];
+        ].filter((coord: Coord) => ConspirateursState.isOnBoard(coord));
         for (const target of targets) {
             const move: MGPFallible<ConspirateursMoveSimple> = ConspirateursMoveSimple.from(coord, target);
             if (move.isSuccess() && ConspirateursRules.get().simpleMoveLegality(move.get(), state).isSuccess()) {

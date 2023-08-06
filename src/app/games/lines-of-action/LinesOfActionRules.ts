@@ -53,15 +53,12 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         const groups: number[][] = ArrayUtils.createTable(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);
         const numGroups: [number, number] = [0, 0];
         let highestGroup: number = 0;
-        for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
-            for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
-                if (groups[y][x] === -1) {
-                    const content: PlayerOrNone = state.getPieceAt(new Coord(x, y));
-                    if (content.isPlayer()) {
-                        highestGroup += 1;
-                        LinesOfActionRules.markGroupStartingAt(state, groups, new Coord(x, y), highestGroup);
-                        numGroups[content.value] += 1;
-                    }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            if (groups[coordAndContent.coord.y][coordAndContent.coord.x] === -1) {
+                if (coordAndContent.content.isPlayer()) {
+                    highestGroup += 1;
+                    LinesOfActionRules.markGroupStartingAt(state, groups, coordAndContent.coord, highestGroup);
+                    numGroups[coordAndContent.content.value] += 1;
                 }
             }
         }

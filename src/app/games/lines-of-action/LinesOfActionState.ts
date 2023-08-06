@@ -22,7 +22,7 @@ export class LinesOfActionState extends GameStateWithTable<PlayerOrNone> {
         ];
         return new LinesOfActionState(board, 0);
     }
-    public static isOnBoard(c: Coord): boolean {
-        return c.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE);
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE);
     }
 }

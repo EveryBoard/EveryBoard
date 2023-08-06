@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -6,6 +7,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
+import { MartianChessState } from '../MartianChessState';
 
 describe('MartianChessMove', () => {
 
@@ -15,7 +17,10 @@ describe('MartianChessMove', () => {
         expect(move.getReasonOr('')).toBe(expectedResult);
     });
     it('should be illegal to land a move out of the board', () => {
-        const move: MGPFallible<MartianChessMove> = MartianChessMove.from(new Coord(0, 0), new Coord(4, 8));
+        const move: MGPFallible<MartianChessMove> =
+            MartianChessMove.from(
+                new Coord(0, 0),
+                new Coord(MartianChessState.WIDTH, MartianChessState.HEIGHT));
         const expectedResult: string = MartianChessMoveFailure.END_COORD_OUT_OF_RANGE();
         expect(move.getReasonOr('')).toBe(expectedResult);
     });

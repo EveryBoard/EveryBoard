@@ -36,7 +36,7 @@ export class EncapsuleMinimax
                     for (let ly: number = 0; ly < 3; ly++) {
                         for (let lx: number = 0; lx < 3; lx++) {
                             const landingCoord: Coord = new Coord(lx, ly);
-                            if (!landingCoord.equals(coord)) {
+                            if (landingCoord.equals(coord) === false) {
                                 const newMove: EncapsuleMove = EncapsuleMove.ofMove(coord, landingCoord);
                                 const status: MGPFallible<EncapsuleLegalityInformation> =
                                     EncapsuleRules.isLegal(newMove, state);

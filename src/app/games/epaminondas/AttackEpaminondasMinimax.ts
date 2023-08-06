@@ -18,23 +18,20 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
 
     public getDominance(state: EpaminondasState): number {
         let score: number = 0;
-        for (let y: number = 0; y < 12; y++) {
-            for (let x: number = 0; x < 14; x++) {
-                const owner: PlayerOrNone = state.getPieceAt(new Coord(x, y));
-                if (owner.isPlayer()) {
-                    score += owner.getScoreModifier();
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            if (coordAndContent.content.isPlayer()) {
+                score += coordAndContent.content.getScoreModifier();
             }
         }
         return score * this.DOMINANCE_FACTOR;
     }
     public getDefense(state: EpaminondasState): number {
         let score: number = 0;
-        for (let x: number = 0; x < 14; x++) {
-            if (state.getPieceAt(new Coord(x, 11)) === Player.ZERO) {
+        for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
+            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
-            if (state.getPieceAt(new Coord(x, 0)) === Player.ONE) {
+            if (state.getPieceAtXY(x, 0) === Player.ONE) {
                 score += Player.ONE.getScoreModifier();
             }
         }
@@ -42,36 +39,34 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     }
     public getTerritory(state: EpaminondasState): number {
         let score: number = 0;
-        for (let y: number = 0; y < 12; y++) {
-            for (let x: number = 0; x < 14; x++) {
-                const owner: PlayerOrNone = state.getPieceAt(new Coord(x, y));
-                if (owner.isPlayer()) {
-                    for (let dx: number = -1; dx <= 1; dx++) {
-                        for (let dy: number = -1; dy <= 1; dy++) {
-                            const coord: Coord = new Coord(x+dx, y+dy);
-                            if (coord.isInRange(14, 12)) {
-                                const neighbor: PlayerOrNone = state.getPieceAt(coord);
-                                if (neighbor === owner) {
-                                    score += 1 * owner.getScoreModifier();
-                                } else if (neighbor === PlayerOrNone.NONE) {
-                                    score += 1 * owner.getScoreModifier();
-                                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const owner: PlayerOrNone = coordAndContent.content;
+            if (owner.isPlayer()) {
+                for (let dx: number = -1; dx <= 1; dx++) {
+                    for (let dy: number = -1; dy <= 1; dy++) {
+                        const coord: Coord = coordAndContent.coord.getNext(new Coord(dx, dy), 1);
+                        if (EpaminondasState.isOnBoard(coord)) {
+                            const neighbor: PlayerOrNone = state.getPieceAt(coord);
+                            if (neighbor === owner) {
+                                score += 1 * owner.getScoreModifier();
+                            } else if (neighbor === PlayerOrNone.NONE) {
+                                score += 1 * owner.getScoreModifier();
                             }
                         }
                     }
-                    score -= owner.getScoreModifier();
                 }
+                score -= owner.getScoreModifier();
             }
         }
         return score * this.TERRITORY_FACTOR;
     }
     public getOffense(state: EpaminondasState): number {
         let score: number = 0;
-        for (let x: number = 0; x < 14; x++) {
-            if (state.getPieceAt(new Coord(x, 0)) === Player.ZERO) {
+        for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
+            if (state.getPieceAtXY(x, 0) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
-            if (state.getPieceAt(new Coord(x, 11)) === Player.ONE) {
+            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ONE) {
                 score += Player.ONE.getScoreModifier();
             }
         }
@@ -79,12 +74,11 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     }
     public getCenter(state: EpaminondasState): number {
         let score: number = 0;
-        for (let y: number = 0; y < 12; y++) {
-            for (let x: number = 0; x < 14; x++) {
-                const owner: PlayerOrNone = state.getPieceAt(new Coord(x, y));
-                if (owner.isPlayer()) {
-                    score += owner.getScoreModifier()*(Math.sqrt((x - 6.5)*(x - 6.5)));
-                }
+        const cx: number = (EpaminondasState.WIDTH - 1) / 2;
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const owner: PlayerOrNone = coordAndContent.content;
+            if (owner.isPlayer()) {
+                score += owner.getScoreModifier() * Math.abs(coordAndContent.coord.x - cx);
             }
         }
         return score * this.CENTER_FACTOR;
@@ -93,33 +87,32 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         let score: number = 0;
         let biggestZero: number = 0;
         let biggestOne: number = 0;
-        for (let y: number = 0; y < 12; y++) {
-            for (let x: number = 0; x < 14; x++) {
-                const firstCoord: Coord = new Coord(x, y);
-                const owner: PlayerOrNone = state.getPieceAt(firstCoord);
-                if (owner.isPlayer()) {
-                    for (const direction of Direction.DIRECTIONS) {
-                        let movedPieces: number = 1;
-                        let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                        while (nextCoord.isInRange(14, 12) &&
-                            state.getPieceAt(nextCoord) === owner) {
-                            movedPieces += 1;
-                            nextCoord = nextCoord.getNext(direction, 1);
-                        }
-                        let stepSize: number = 1;
-                        while (nextCoord.isInRange(14, 12) &&
-                               stepSize <= movedPieces &&
-                               state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
-                        {
-                            stepSize++;
-                            nextCoord = nextCoord.getNext(direction, 1);
-                        }
-                        score += (stepSize*stepSize) * owner.getScoreModifier();
-                        if (owner === Player.ZERO) {
-                            biggestZero = Math.max(biggestZero, stepSize);
-                        } else if (owner === Player.ONE) {
-                            biggestOne = Math.max(biggestOne, stepSize);
-                        }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const firstCoord: Coord = coordAndContent.coord;
+            const owner: PlayerOrNone = coordAndContent.content;
+            if (owner.isPlayer()) {
+                for (const direction of Direction.DIRECTIONS) {
+                    let movedPieces: number = 1;
+                    let nextCoord: Coord = firstCoord.getNext(direction, 1);
+                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                           state.getPieceAt(nextCoord) === owner)
+                    {
+                        movedPieces += 1;
+                        nextCoord = nextCoord.getNext(direction, 1);
+                    }
+                    let stepSize: number = 1;
+                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                           stepSize <= movedPieces &&
+                           state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
+                    {
+                        stepSize++;
+                        nextCoord = nextCoord.getNext(direction, 1);
+                    }
+                    score += (stepSize * stepSize) * owner.getScoreModifier();
+                    if (owner === Player.ZERO) {
+                        biggestZero = Math.max(biggestZero, stepSize);
+                    } else if (owner === Player.ONE) {
+                        biggestOne = Math.max(biggestOne, stepSize);
                     }
                 }
             }

@@ -129,7 +129,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         return this.chooseMove(move);
     }
     public override cancelMoveAttempt(): void {
-        if (!this.chosenAutomatically) {
+        if (this.chosenAutomatically === false) {
             this.chosen = MGPOptional.empty();
         }
     }

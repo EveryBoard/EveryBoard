@@ -164,7 +164,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         let otherCoord: Coord = new Coord(-2, -2); // Will get erased
         for (const dir of Direction.ORTHOGONALS) {
             const neighborCoord: Coord = pieceCoord.getNext(dir);
-            if (neighborCoord.isInRange(TrexoState.SIZE, TrexoState.SIZE)) {
+            if (TrexoState.isOnBoard(neighborCoord)) {
                 const neighborStack: TrexoPieceStack = this.getState().getPieceAt(neighborCoord);
                 if (neighborStack.getHeight() > z) {
                     const neighborPiece: TrexoPiece = neighborStack.getPieceAt(z);

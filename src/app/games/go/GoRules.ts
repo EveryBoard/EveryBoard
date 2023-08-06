@@ -143,7 +143,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
                 coord = new Coord(x, y);
                 currentSpace = board[y][x];
                 if (condition(currentSpace)) {
-                    if (!groups.some((currentGroup: GoGroupDatas) => currentGroup.selfContains(coord))) {
+                    if (groups.some((currentGroup: GoGroupDatas) => currentGroup.selfContains(coord)) === false) {
                         group = goGroupDatasFactory.getGroupDatas(coord, board) as GoGroupDatas;
                         groups.push(group);
                     }
@@ -277,7 +277,8 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         for (const direction of Orthogonal.ORTHOGONALS) {
             capturedInDirection = GoRules.getCapturedInDirection(move.coord, direction, state);
             if (capturedInDirection.length > 0 &&
-                captureState.capturedCoords.every((coord: Coord) => !capturedInDirection[0].equals(coord))) {
+                captureState.capturedCoords.every((coord: Coord) => capturedInDirection[0].equals(coord) === false))
+            {
                 captureState.capturedCoords = captureState.capturedCoords.concat(capturedInDirection);
             }
         }

@@ -123,7 +123,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         if (victoryFound[1] === true) {
             return GameStatus.ONE_WON;
         }
-        if (state.turn === 36) {
+        if (state.turn === PentagoState.SIZE * PentagoState.SIZE) {
             return GameStatus.DRAW;
         } else {
             return GameStatus.ONGOING;

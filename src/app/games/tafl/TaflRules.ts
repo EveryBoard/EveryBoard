@@ -93,7 +93,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
          * 4: the threatened square is a pawn          -> delegate calculation
          */
         const threatened: Coord = landingPawn.getNext(d);
-        if (!threatened.isInRange(this.config.WIDTH, this.config.WIDTH)) {
+        if (threatened.isNotInRange(this.config.WIDTH, this.config.WIDTH)) {
             return MGPOptional.empty(); // 1: the threatened square dont exist, no capture
         }
         const threatenedPawnOwner: RelativePlayer = state.getRelativeOwner(player, threatened);

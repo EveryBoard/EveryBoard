@@ -75,8 +75,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         const previousNode: EpaminondasNode = this.node.mother.get();
         const PREVIOUS_OPPONENT: Player = previousNode.gameState.getCurrentOpponent();
-        while (moved.isInRange(14, 12) &&
-               previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT) {
+        while (EpaminondasState.isOnBoard(moved) &&
+               previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT)
+        {
             this.capturedCoords.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
@@ -125,8 +126,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const extensions: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
             let coord: Coord = this.firstPiece.get().getNext(direction, 1);
-            while (coord.isInRange(14, 12) &&
-                   this.board[coord.y][coord.x] === PLAYER) {
+            while (EpaminondasState.isOnBoard(coord) &&
+                   this.board[coord.y][coord.x] === PLAYER)
+            {
                 extensions.push(coord);
                 coord = coord.getNext(direction, 1);
             }
@@ -145,8 +147,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     private getExtensionsToward(coord: Coord, direction: Direction, PLAYER: Player): Coord[] {
         const extensions: Coord[] = [];
-        while (coord.isInRange(14, 12) &&
-               this.board[coord.y][coord.x] === PLAYER) {
+        while (EpaminondasState.isOnBoard(coord) &&
+               this.board[coord.y][coord.x] === PLAYER)
+        {
             extensions.push(coord);
             coord = coord.getNext(direction, 1);
         }
@@ -176,8 +179,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const neighbors: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
             const coord: Coord = this.firstPiece.get().getNext(direction, 1);
-            if (coord.isInRange(14, 12) &&
-                this.board[coord.y][coord.x] === PlayerOrNone.NONE) {
+            if (EpaminondasState.isOnBoard(coord) &&
+                this.board[coord.y][coord.x] === PlayerOrNone.NONE)
+            {
                 neighbors.push(coord);
             }
         }
@@ -187,9 +191,10 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
         const landings: Coord[] = [];
-        while (landing.isInRange(14, 12) &&
+        while (EpaminondasState.isOnBoard(landing) &&
                landings.length < phalanxSize &&
-               this.board[landing.y][landing.x] !== player) {
+               this.board[landing.y][landing.x] !== player)
+        {
             if (this.board[landing.y][landing.x] === opponent) {
                 if (this.getPhalanxLength(landing, direction, opponent) < phalanxSize) {
                     landings.push(landing);
@@ -204,7 +209,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     private getPhalanxLength(firstPiece: Coord, direction: Direction, owner: Player): number {
         let length: number = 0;
-        while (firstPiece.isInRange(14, 12) &&
+        while (EpaminondasState.isOnBoard(firstPiece) &&
                this.board[firstPiece.y][firstPiece.x] === owner)
         {
             length++;
@@ -229,7 +234,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         const opponent: Player = this.getState().getCurrentOpponent();
         const player: Player = this.getState().getCurrentPlayer();
-        if (!clicked.isAlignedWith(firstPiece)) {
+        if (clicked.isAlignedWith(firstPiece) === false) {
             return this.cancelMove(EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_SELECTED());
         }
         const distance: number = clicked.getDistance(firstPiece);
@@ -275,7 +280,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         const firstPiece: Coord = this.firstPiece.get();
         const lastPiece: Coord = this.lastPiece.get();
-        if (!clicked.isAlignedWith(firstPiece)) {
+        if (clicked.isAlignedWith(firstPiece) === false) {
             return this.cancelMove(EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_PHALANX());
         }
         // The directions are valid because they are is aligned

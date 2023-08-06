@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 
-import { assert } from 'src/app/utils/assert';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
@@ -15,6 +14,7 @@ import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessTutorial } from './MartianChessTutorial';
 import { Direction } from 'src/app/jscaip/Direction';
+import { Utils } from 'src/app/utils/utils';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,
@@ -55,15 +55,18 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
 {
     public static SPACE_SIZE: number = 100;
     public static STROKE_WIDTH: number = 8;
+
     public INDICATOR_SIZE: number = 20;
-    public readonly HORIZONTAL_CENTER: number = 2 * MartianChessComponent.SPACE_SIZE;
-    public readonly VERTICAL_CENTER: number =
-        (4 * MartianChessComponent.SPACE_SIZE) + MartianChessComponent.STROKE_WIDTH;
+    public readonly HORIZONTAL_CENTER: number = 0.5 * MartianChessState.WIDTH * MartianChessComponent.SPACE_SIZE;
+    private readonly UNSTROKED_HEIGHT: number = MartianChessState.HEIGHT * MartianChessComponent.SPACE_SIZE;
+    public readonly VERTICAL_CENTER: number = (0.5 * this.UNSTROKED_HEIGHT) + MartianChessComponent.STROKE_WIDTH;
 
     public readonly LEFT: number = (MartianChessComponent.SPACE_SIZE / -4) + (MartianChessComponent.STROKE_WIDTH / -2);
+    private readonly UNSTROKED_WIDTH: number = MartianChessState.WIDTH * MartianChessComponent.SPACE_SIZE;
     public readonly UP: number = - MartianChessComponent.STROKE_WIDTH / 2;
-    public readonly WIDTH: number = (6.5 * MartianChessComponent.SPACE_SIZE) + MartianChessComponent.STROKE_WIDTH;
-    public readonly HEIGHT: number = (8 * MartianChessComponent.SPACE_SIZE) + (3 * MartianChessComponent.STROKE_WIDTH);
+    public readonly WIDTH: number =
+        this.UNSTROKED_WIDTH + (2.5 * MartianChessComponent.SPACE_SIZE) + MartianChessComponent.STROKE_WIDTH;
+    public readonly HEIGHT: number = this.UNSTROKED_HEIGHT + (3 * MartianChessComponent.STROKE_WIDTH);
 
     public MartianChessComponent: typeof MartianChessComponent = MartianChessComponent;
 
@@ -258,7 +261,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         } else if (firstPiece === MartianChessPiece.DRONE) {
             landingSquares = this.getValidLinearLandingSquareUntil(coord, 2);
         } else {
-            landingSquares = this.getValidLinearLandingSquareUntil(coord, 8);
+            landingSquares = this.getValidLinearLandingSquareUntil(coord, MartianChessState.HEIGHT);
         }
         return landingSquares.filter((c: Coord) => {
             const moveCreated: MGPFallible<MartianChessMove> = MartianChessMove.from(coord, c);
@@ -274,7 +277,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             const landings: Coord[] = [];
             let landing: Coord = coord.getNext(d);
             let steps: number = 1;
-            while (landing.isInRange(4, 8) && steps <= until) {
+            while (MartianChessState.isOnBoard(landing) && steps <= until) {
                 landings.push(landing);
                 if (this.getState().getPieceAt(landing) === MartianChessPiece.EMPTY) {
                     landing = landing.getNext(d);
@@ -294,7 +297,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         } else if (info.legalLandings.some((c: Coord) => c.equals(endCoord))) {
             const move: MGPFallible<MartianChessMove> =
                 MartianChessMove.from(info.selectedPiece, endCoord, this.callTheClock);
-            assert(move.isSuccess(), 'MartianChessComponent or Rules did a mistake thinking this would have been a legal move!');
+            Utils.assert(move.isSuccess(), 'MartianChessComponent or Rules did a mistake thinking this would have been a legal move!');
             return this.chooseMove(move.get());
         } else if (this.isOneOfUsersPieces(endCoord)) {
             return this.selectAsFirstPiece(endCoord);
@@ -323,7 +326,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         }
         const canCallTheClock: boolean = this.getState().countDown.isAbsent();
         if (canCallTheClock) {
-            this.callTheClock = !this.callTheClock;
+            this.callTheClock = this.callTheClock === false;
         }
         return MGPValidation.SUCCESS;
     }
@@ -365,7 +368,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return classes;
     }
     public onModeCogClick(): void {
-        this.displayModePanel = !this.displayModePanel;
+        this.displayModePanel = this.displayModePanel === false;
     }
     public chooseStyle(n: number): void {
         this.style = this.listOfStyles[n].style;
