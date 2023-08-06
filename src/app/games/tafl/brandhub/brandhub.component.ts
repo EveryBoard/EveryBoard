@@ -18,7 +18,7 @@ import { BrandhubTutorial } from './BrandhubTutorial';
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove, BrandhubState> implements OnInit {
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false, BrandhubMove.from);
+        super(messageDisplayer, BrandhubMove.from);
         this.rules = BrandhubRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [

@@ -18,7 +18,7 @@ import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceT
 export class TablutComponent extends TaflComponent<TablutRules, TablutMove, TablutState> {
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false, TablutMove.from);
+        super(messageDisplayer, TablutMove.from);
         this.rules = TablutRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [

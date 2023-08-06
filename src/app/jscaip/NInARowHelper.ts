@@ -1,13 +1,10 @@
 import { assert } from '../utils/assert';
-import { display } from '../utils/utils';
 import { MGPMap } from '../utils/MGPMap';
 import { BoardValue } from './BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { GameStateWithTable } from './GameStateWithTable';
-import { GameNode } from './MGPNode';
 import { Player, PlayerOrNone } from './Player';
-import { SCORE } from './SCORE';
 
 export class NInARowHelper<T> {
 

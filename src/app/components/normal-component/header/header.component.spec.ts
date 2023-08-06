@@ -46,7 +46,7 @@ describe('HeaderComponent', () => {
             testUtils.detectChanges();
             spyOn(testUtils.getComponent().connectedUserService, 'disconnect').and.callThrough();
             await testUtils.clickElement('#logout');
-            tick();
+            tick(0);
             const component: HeaderComponent = testUtils.getComponent();
             expect(component.connectedUserService.disconnect).toHaveBeenCalledTimes(1);
         }));
@@ -56,7 +56,7 @@ describe('HeaderComponent', () => {
             const currentGame: CurrentGame = CurrentGameMocks.CANDIDATE;
             CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
-            tick();
+            tick(0);
             testUtils.expectElementToExist('#currentGameLink');
 
             // When connectedUserService informs us that user is disconnected
@@ -71,7 +71,7 @@ describe('HeaderComponent', () => {
     it('should have empty username when user is not connected', fakeAsync(async() => {
         ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.detectChanges();
-        tick();
+        tick(0);
         expect(testUtils.getComponent().username).toEqual(MGPOptional.empty());
     }));
     it('should show user email if the user has not set its username yet', fakeAsync(async() => {
@@ -86,7 +86,7 @@ describe('HeaderComponent', () => {
         const currentGame: CurrentGame = CurrentGameMocks.CREATOR_WITH_OPPONENT;
         CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
         testUtils.detectChanges();
-        tick();
+        tick(0);
 
         // When clicking on the info about the part
         const router: Router = TestBed.inject(Router);
@@ -101,13 +101,13 @@ describe('HeaderComponent', () => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
-            tick();
+            tick(0);
             testUtils.expectElementNotToExist('#currentGameLink');
 
             // When user become linked to an currentGame
             CurrentGameServiceMock.setCurrentGame(MGPOptional.of(CurrentGameMocks.CREATOR_WITHOUT_OPPONENT));
             testUtils.detectChanges();
-            tick();
+            tick(0);
 
             // Then "P4 (waiting for opponent)" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
@@ -117,14 +117,14 @@ describe('HeaderComponent', () => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
-            tick();
+            tick(0);
             testUtils.expectElementNotToExist('#currentGameLink');
 
             // When user become linked to an currentGame with an opponent set
             const currentGame: CurrentGame = CurrentGameMocks.CREATOR_WITH_OPPONENT;
             CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
-            tick();
+            tick(0);
 
             // Then "<Game> against <Opponent>" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
@@ -136,14 +136,14 @@ describe('HeaderComponent', () => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
-            tick();
+            tick(0);
             testUtils.expectElementNotToExist('#currentGameLink');
 
             // When user become linked to an currentGame
             const currentGame: CurrentGame = CurrentGameMocks.OBSERVER;
             CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
-            tick();
+            tick(0);
 
             // Then "<TypeGame> by <Opponent, that should contain the creator>" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
@@ -155,14 +155,14 @@ describe('HeaderComponent', () => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
-            tick();
+            tick(0);
             testUtils.expectElementNotToExist('#currentGameLink');
 
             // When user become linked to an currentGame
             const currentGame: CurrentGame = CurrentGameMocks.CANDIDATE;
             CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
-            tick();
+            tick(0);
 
             // Then "Epaminondas by El Creatoro" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');

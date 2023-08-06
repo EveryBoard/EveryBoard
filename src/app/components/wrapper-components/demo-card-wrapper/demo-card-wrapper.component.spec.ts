@@ -18,7 +18,7 @@ describe('DemoCardComponent', () => {
     function loadNode(nodeInfo: DemoNodeInfo): void {
         testUtils.getComponent().demoNodeInfo = nodeInfo;
         testUtils.detectChanges();
-        tick(1); // because of the setTimeout in ngAfterViewInit
+        tick(1); // Need at least 1ms because of the setTimeout in ngAfterViewInit
     }
 
     beforeEach(fakeAsync(async() => {

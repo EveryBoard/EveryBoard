@@ -109,7 +109,7 @@ describe('MartianChessComponent', () => {
         // When cliking on one of your other piece that cannot be your landing coord
         await testUtils.expectClickSuccess('#click_2_6');
 
-        // Then the move should not have been cancelled but the first piece selected changed
+        // Then the move should not have been canceled but the first piece selected changed
         testUtils.expectElementToHaveClass('#drone_2_6', 'selected-stroke');
     }));
     it('should propose illegal move so that a toast is given to explain', fakeAsync(async() => {
@@ -281,7 +281,7 @@ describe('MartianChessComponent', () => {
             testUtils.expectElementNotToExist('#modePanel');
         }));
         it('should test all view mode', fakeAsync(async() => {
-            for (const styleAndName of testUtils.getComponent().listOfStyles) {
+            for (const styleAndName of testUtils.getGameComponent().listOfStyles) {
                 // Given a board in the initial mode with panel mode displayed
                 await testUtils.clickElement('#modeCog');
 
@@ -289,7 +289,7 @@ describe('MartianChessComponent', () => {
                 await testUtils.clickElement('#' + styleAndName.name);
 
                 // Then the mode should have been chosen
-                const currentStyle: MartianChessFace = testUtils.getComponent().style;
+                const currentStyle: MartianChessFace = testUtils.getGameComponent().style;
                 expect(currentStyle).toBe(styleAndName.style);
             }
         }));

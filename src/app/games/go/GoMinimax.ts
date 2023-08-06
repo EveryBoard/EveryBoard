@@ -1,6 +1,6 @@
 import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
@@ -8,11 +8,10 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
+@Debug.log
 export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
 
     public getListMoves(node: GoNode): GoMove[] {
-        const LOCAL_VERBOSE: boolean = false;
-        display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getListMoves');
 
         const currentState: GoState = node.gameState;
         const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);
@@ -21,7 +20,6 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
             playingMoves.push(GoMove.PASS);
             return playingMoves;
         } else {
-            display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getListMoves in counting phase');
             const markingMoves: GoMove[] = this.getCountingMovesList(currentState);
             if (markingMoves.length === 0) {
                 return [GoMove.ACCEPT];

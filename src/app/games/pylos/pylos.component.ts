@@ -21,8 +21,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 })
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 
-    public static VERBOSE: boolean = false;
-
     // 4*100 for each pieces at z=0 level + 2*4 for each direction there is stroke
     public boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
     public pieceRowHeight: number = this.SPACE_SIZE / 2;

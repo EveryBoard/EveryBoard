@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -12,7 +12,7 @@ import { AbstractGameComponent } from '../game-components/game-component/GameCom
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Comparable, comparableEquals } from 'src/app/utils/Comparable';
+import { Comparable } from 'src/app/utils/Comparable';
 
 export class GameWrapperMessages {
 
@@ -33,8 +33,6 @@ export class GameWrapperMessages {
 @Component({ template: '' })
 export abstract class GameWrapper<P extends Comparable> {
 
-    public static VERBOSE: boolean = false;
-
     // This holds the #board html element
     @ViewChild('board', { read: ViewContainerRef })
     public boardRef: ViewContainerRef | null = null;
@@ -54,16 +52,13 @@ export abstract class GameWrapper<P extends Comparable> {
                        protected readonly router: Router,
                        protected readonly messageDisplayer: MessageDisplayer)
     {
-        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.boardRef != null));
     }
     public getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
     protected async afterViewInit(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, 'GameWrapper.afterViewInit');
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.node = this.gameComponent.rules.getInitialNode();
@@ -75,8 +70,6 @@ export abstract class GameWrapper<P extends Comparable> {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
     private async createGameComponent(): Promise<boolean> {
-        display(GameWrapper.VERBOSE, { m: 'GameWrapper.createGameComponent', that: this });
-
         const gameName: string = this.getGameName();
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
         if (component.isAbsent()) {
@@ -118,8 +111,6 @@ export abstract class GameWrapper<P extends Comparable> {
         this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
-        const LOCAL_VERBOSE: boolean = false;
-        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, { gameWrapper_receiveValidMove_AKA_chooseMove: { move } });
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, this.gameComponent.getState());
         if (legality.isFailure()) {
             this.gameComponent.cancelMove(legality.getReason());
@@ -127,7 +118,6 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         this.gameComponent.cancelMoveAttempt();
         await this.onLegalUserMove(move);
-        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
@@ -160,15 +150,6 @@ export abstract class GameWrapper<P extends Comparable> {
         const turn: number = this.gameComponent.getTurn();
         const indexPlayer: number = turn % 2;
         const player: P = this.getPlayer();
-        display(GameWrapper.VERBOSE, { isPlayerTurn: {
-            turn,
-            players: this.players,
-            player,
-            observer: this.role,
-            areYouPlayer: this.players[indexPlayer].isPresent() &&
-                comparableEquals(this.players[indexPlayer].get(), player),
-            isThereAPlayer: this.players[indexPlayer],
-        } });
         if (this.players[indexPlayer].isPresent()) {
             return this.players[indexPlayer].equalsValue(player);
         } else {

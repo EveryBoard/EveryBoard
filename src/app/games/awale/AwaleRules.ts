@@ -3,7 +3,7 @@ import { GameNode } from 'src/app/jscaip/MGPNode';
 import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AwaleFailure } from './AwaleFailure';
@@ -23,9 +23,8 @@ export interface CaptureResult {
     resultingBoard: Table<number>;
 }
 
+@Debug.log
 export class AwaleRules extends Rules<AwaleMove, AwaleState> {
-
-    public static VERBOSE: boolean = false;
 
     private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
@@ -39,7 +38,6 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         super(AwaleState);
     }
     public applyLegalMove(move: AwaleMove, state: AwaleState, _info: void): AwaleState {
-        display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, state });
         const x: number = move.x;
         const player: Player = state.getCurrentPlayer();
         const opponent: Player = state.getCurrentOpponent();
@@ -238,7 +236,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         const isStarving: boolean = AwaleRules.isStarving(player.getOpponent(), captureResult.resultingBoard);
         if (captureResult.capturedSum > 0 && isStarving) {
             /* if the distribution would capture all seeds
-             * the capture is forbidden and cancelled
+             * the capture is forbidden and canceled
              */
             return {
                 capturedSum: 0,

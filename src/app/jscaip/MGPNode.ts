@@ -1,5 +1,6 @@
 import { Move } from './Move';
 import { MGPMap } from '../utils/MGPMap';
+import { Debug } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { GameState } from './GameState';
 import { Rules } from './Rules';
@@ -17,10 +18,12 @@ export class MGPNodeStats {
  * This is only a tree datastructure, we don't need any logic in here.
  * As an extra, a node may contain cached values used by AIs.
  */
+@Debug.log
 export class GameNode<M extends Move, S extends GameState> {
     /**
      * The children of this node.
-     * It is a map keyed with moves, with as value the child that corresponds to applying that move to the current state.
+     * It is a map keyed with moves, with as value the child that corresponds
+     * to applying that move to the current state.
      */
     private readonly children: MGPMap<M, GameNode<M, S>> = new MGPMap();
 

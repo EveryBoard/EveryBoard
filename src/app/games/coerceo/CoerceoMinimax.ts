@@ -24,13 +24,10 @@ export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoStat
         if (state.tiles[PLAYER] < 2) {
             return exchanges;
         }
-        for (let y: number = 0; y < 10; y++) {
-            for (let x: number = 0; x < 15; x++) {
-                const captured: Coord = new Coord(x, y);
-                if (state.getPieceAt(captured) === OPPONENT) {
-                    const move: CoerceoMove = CoerceoTileExchangeMove.of(captured);
-                    exchanges.push(move);
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            if (coordAndContent.content === OPPONENT) {
+                const move: CoerceoMove = CoerceoTileExchangeMove.of(coordAndContent.coord);
+                exchanges.push(move);
             }
         }
         return exchanges;
@@ -39,15 +36,13 @@ export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoStat
         const movements: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
         const player: Player = state.getCurrentPlayer();
-        for (let y: number = 0; y < 10; y++) {
-            for (let x: number = 0; x < 15; x++) {
-                const start: Coord = new Coord(x, y);
-                if (state.getPieceAt(start).is(player)) {
-                    const legalLandings: Coord[] = state.getLegalLandings(start);
-                    for (const end of legalLandings) {
-                        const move: CoerceoMove = CoerceoRegularMove.of(start, end);
-                        movements.push(move);
-                    }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const start: Coord = coordAndContent.coord;
+            if (coordAndContent.content.is(player)) {
+                const legalLandings: Coord[] = state.getLegalLandings(start);
+                for (const end of legalLandings) {
+                    const move: CoerceoMove = CoerceoRegularMove.of(start, end);
+                    movements.push(move);
                 }
             }
         }

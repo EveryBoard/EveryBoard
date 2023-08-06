@@ -7,7 +7,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
@@ -15,6 +15,7 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 
+@Debug.log
 export class SixMoveGenerator extends MoveGenerator<SixMove, SixState> {
     public getListMoves(node: SixNode): SixMove[] {
         const legalLandings: Coord[] = SixRules.getLegalLandings(node.gameState);
@@ -194,7 +195,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
         return boardInfo;
     }
     public startSearchingVictorySources(): void {
-        display(this.VERBOSE, 'SixRules.startSearchingVictorySources()');
         this.currentVictorySource = {
             typeSource: 'LINE',
             index: -1,
@@ -237,7 +237,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
     }
     public searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixState): BoardInfo {
         const lastDrop: Coord = move.landing;
-        display(this.VERBOSE, { called: 'SixRules.searchVictoryOnly', victorySource, move, state });
         switch (victorySource.typeSource) {
             case 'LINE':
                 return this.searchVictoryOnlyForLine(victorySource.index, lastDrop, state);
@@ -250,8 +249,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
         }
     }
     public searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixState): BoardInfo {
-        display(this.VERBOSE,
-                { called: 'SixRules.searchVictoryOnlyForCircle', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -312,8 +309,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
         };
     }
     public searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixState): BoardInfo {
-        display(this.VERBOSE,
-                { called: 'SixRules.searchVictoryTriangleCornerOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -345,8 +340,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
         };
     }
     public searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixState): BoardInfo {
-        display(this.VERBOSE,
-                { called: 'SixRules.searchVictoryTriangleEdgeOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -383,8 +376,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
                         boardInfo: BoardInfo)
     : BoardInfo
     {
-        display(this.VERBOSE,
-                { called: 'SixRules.getBoardInfo', victorySource, move, state, boardInfo });
         const lastDrop: Coord = move.landing;
         switch (victorySource.typeSource) {
             case 'CIRCLE':
@@ -398,8 +389,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
         }
     }
     public getBoardInfoForCircle(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE,
-                { called: 'SixMinimaw.getBoardInfoForCircle', index, lastDrop, state, boardInfo });
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -432,7 +421,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
     {
         let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
         if (subSum === 4.16) {
-            display(this.VERBOSE, '5+1 found!');
             // We found 5 pieces aligned and one space, so that space is a preVictory coord
             if (preVictory.isPresent() && (preVictory.equals(lastEmpty) === false)) {
                 return {
@@ -460,7 +448,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
         };
     }
     public getBoardInfoForLine(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForLine', index, lastDrop, state, boardInfo });
         const dir: HexaDirection = HexaDirection.factory.all[index];
         let testedCoord: Coord = lastDrop.getPrevious(dir, 5);
         let testedCoords: Coord[] = [];
@@ -540,8 +527,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
                                          boardInfo: BoardInfo)
     : BoardInfo
     {
-        display(this.VERBOSE,
-                { called: 'SixRules.getBoardInfoForTriangleCorner', index, lastDrop, state, boardInfo });
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -575,7 +560,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
                                        state: SixState,
                                        boardInfo: BoardInfo): BoardInfo {
 
-        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForTriangleEdge', index, lastDrop, state, boardInfo });
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];

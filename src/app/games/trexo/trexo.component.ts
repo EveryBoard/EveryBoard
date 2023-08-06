@@ -33,7 +33,6 @@ type ModeType = '2D' | '3D';
 })
 export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
 
-    public static VERBOSE: boolean = false;
     public static STROKE_WIDTH: number;
     private static readonly INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
         isDroppedPiece: false,

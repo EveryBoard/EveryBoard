@@ -42,15 +42,13 @@ export class CoerceoPiecesThreatTilesHeuristic extends PlayerMetricHeuristic<Coe
         const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
-        for (let y: number = 0; y < 10; y++) {
-            for (let x: number = 0; x < 15; x++) {
-                const coord: Coord = new Coord(x, y);
-                const piece: FourStatePiece = state.getPieceAt(coord);
-                if (piece === FourStatePiece.ZERO) {
-                    zeroPieces.push(coord);
-                } else if (piece === FourStatePiece.ONE) {
-                    onePieces.push(coord);
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            const piece: FourStatePiece = state.getPieceAt(coord);
+            if (piece === FourStatePiece.ZERO) {
+                zeroPieces.push(coord);
+            } else if (piece === FourStatePiece.ONE) {
+                onePieces.push(coord);
             }
         }
         map.set(Player.ZERO, new CoordSet(zeroPieces));
@@ -128,9 +126,9 @@ export class CoerceoPiecesThreatTilesHeuristic extends PlayerMetricHeuristic<Coe
         let uniqueThreat: MGPOptional<Coord> = MGPOptional.empty();
         // for all coord of the tiles
         const tileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(coord);
-        for (let y: number = 0; y < 2; y++) {
-            for (let x: number = 0; x < 3; x++) {
-                const tileCoord: Coord = tileUpperLeft.getNext(new Vector(x, y), 1);
+        for (let tileY: number = 0; tileY < 2; tileY++) {
+            for (let tileX: number = 0; tileX < 3; tileX++) {
+                const tileCoord: Coord = tileUpperLeft.getNext(new Vector(tileX, tileY), 1);
                 if (state.getPieceAt(tileCoord).is(OPPONENT)) {
                     if (this.pieceCouldLeaveTheTile(tileCoord, state)) {
                         // Then add it to the threat list
@@ -151,6 +149,7 @@ export class CoerceoPiecesThreatTilesHeuristic extends PlayerMetricHeuristic<Coe
             const landing: Coord = piece.getNext(dir.direction, 1);
             const landingTileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(landing);
             if (startingTileUpperLeft.equals(landingTileUpperLeft) === false &&
+                CoerceoState.isInRange(landing) &&
                 state.getPieceAt(landing) === FourStatePiece.EMPTY)
             {
                 return true;

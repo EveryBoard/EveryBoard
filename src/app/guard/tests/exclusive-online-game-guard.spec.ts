@@ -46,7 +46,7 @@ describe('ExclusiveOnlineGameGuard', () => {
     it('should allow to activate when you are not doing anything', fakeAsync(async() => {
         // Given a connected user not observing any part
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        tick(1);
+        tick(0);
         CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
 
         // When asking if user can go to some part id
@@ -73,7 +73,6 @@ describe('ExclusiveOnlineGameGuard', () => {
 
         // Then it should be refused
         await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(true);
-        tick(3000);
     }));
     it(`should refuse to go to another part and redirect to user's part`, fakeAsync(async() => {
         // Given a connected user service indicating user is already player
@@ -91,6 +90,5 @@ describe('ExclusiveOnlineGameGuard', () => {
 
         // Then it should be refused and redirected
         await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(router.parseUrl('/play/P4/I-play'));
-        tick(3000);
     }));
 });

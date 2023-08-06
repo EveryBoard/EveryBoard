@@ -1,7 +1,7 @@
 import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { Type } from '@angular/core';
-import { display } from '../utils/utils';
+import { Debug, Utils } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -25,18 +25,17 @@ export abstract class Rules<M extends Move, S extends GameState, L = void> {
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
-        const LOCAL_VERBOSE: boolean = false;
-        display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
+        Debug.display('Rules', 'choose', move.toString() + ' was proposed');
         const legality: MGPFallible<L> = this.isLegal(move, node.gameState);
         const choice: MGPOptional<GameNode<M, S>> = node.getChild(move);
         if (legality.isFailure()) {
-            display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + legality.getReason());
+            Debug.display('Rules', 'choose', 'Move is illegal: ' + legality.getReason());
             return MGPOptional.empty();
         }
         // let's not create the node twice
         if (choice.isPresent()) {
-            assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
-            display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
+            Utils.assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
+            Debug.display('Rules', 'choose', 'and this proposed move is found in the list, so it is legal');
             return MGPOptional.of(choice.get());
         }
         const resultingState: GameState = this.applyLegalMove(move, node.gameState, legality.get());

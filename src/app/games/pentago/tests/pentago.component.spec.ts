@@ -114,7 +114,7 @@ describe('PentagoComponent', () => {
             await testUtils.expectClickSuccess('#click_5_5');
             const move: PentagoMove = PentagoMove.withRotation(5, 5, 3, true);
             await testUtils.expectMoveSuccess('#rotate_3_clockwise', move);
-            const component: PentagoComponent = testUtils.getComponent();
+            const component: PentagoComponent = testUtils.getGameComponent();
             expect(component.getBlockClasses(1, 1)).toEqual(['last-move-stroke']);
             testUtils.expectElementToHaveClass('#last_rotation_3_clockwise', 'last-move-stroke');
             expect(component.getSquareClasses(3, 5)).toEqual(['player0-fill', 'last-move-stroke']);
@@ -123,7 +123,7 @@ describe('PentagoComponent', () => {
             await testUtils.expectClickSuccess('#click_0_5');
             const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, false);
             await testUtils.expectMoveSuccess('#rotate_2_counterclockwise', move);
-            const component: PentagoComponent = testUtils.getComponent();
+            const component: PentagoComponent = testUtils.getGameComponent();
             expect(component.getBlockClasses(0, 1)).toEqual(['last-move-stroke']);
             expect(component.getSquareClasses(2, 5)).toEqual(['player0-fill', 'last-move-stroke']);
         }));
@@ -141,7 +141,7 @@ describe('PentagoComponent', () => {
             await testUtils.expectClickSuccess('#click_0_1');
             const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
             await testUtils.expectMoveSuccess('#rotate_1_counterclockwise', move);
-            const component: PentagoComponent = testUtils.getComponent();
+            const component: PentagoComponent = testUtils.getGameComponent();
             expect(component.getBlockClasses(1, 0)).toEqual(['last-move-stroke']);
             expect(component.getSquareClasses(0, 1)).toEqual(['player1-fill', 'last-move-stroke']);
         }));

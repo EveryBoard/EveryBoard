@@ -3,9 +3,11 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { P4Move } from './P4Move';
 import { P4State } from './P4State';
 import { P4Node, P4Rules } from './P4Rules';
+import { Debug } from 'src/app/utils/utils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
+@Debug.log
 export class P4MoveGenerator extends MoveGenerator<P4Move, P4State> {
 
     public getListMoves(node: P4Node): P4Move[] {
@@ -22,7 +24,6 @@ export class P4Heuristic extends Heuristic<P4Move, P4State> {
     public getBoardValue(node: P4Node): BoardValue {
         const state: P4State = node.gameState;
         let score: number = 0;
-
         for (let x: number = 0; x < 7; x++) {
             // for every column, starting from the bottom of each column
             for (let y: number = 5; y !== -1 && state.board[y][x].isPlayer(); y--) {

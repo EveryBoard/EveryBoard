@@ -2,7 +2,7 @@ import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode, SiamLegalityInformation } from './SiamRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
@@ -39,7 +39,6 @@ export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
                 }
             }
         }
-        display(SiamRules.VERBOSE, { getListMovesResult: moves });
         return moves;
     }
     private isOnBorder(insertion: SiamMove): boolean {

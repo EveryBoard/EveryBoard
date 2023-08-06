@@ -7,11 +7,11 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessMoveGenerator, MartianChessScoreHeuristic } from '../MartianChessDummyMinimax';
 import { MartianChessMove } from '../MartianChessMove';
-import { MartianChessNode } from '../MartianChessRules';
+import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 
-describe('MartianChessDummyMinimax', () => {
+describe('MartianChessMoveGenerator', () => {
 
     const _: MartianChessPiece = MartianChessPiece.EMPTY;
     const A: MartianChessPiece = MartianChessPiece.PAWN;
@@ -99,8 +99,8 @@ describe('MartianChessDummyMinimax', () => {
         expect(drone.length).toBe(13);
         expect(moves.length).toBe(15);
     });
-    it('should exclude illegal "move cancellation"', () => {
-        // Given a state in which last move could be cancelled
+    it('should exclude illegal "move cancelation"', () => {
+        // Given a state in which last move could be canceled
         const board: Table<MartianChessPiece> = [
             [_, _, _, _],
             [_, _, _, _],
