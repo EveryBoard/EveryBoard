@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic, Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -85,19 +85,10 @@ export class LodestoneMoveGenerator extends MoveGenerator<LodestoneMove, Lodesto
     }
 }
 
-export class LodestoneScoreHeuristic extends Heuristic<LodestoneMove, LodestoneState> {
+export class LodestoneScoreHeuristic extends PlayerMetricHeuristic<LodestoneMove, LodestoneState> {
 
-    public getBoardValue(node: LodestoneNode): BoardValue {
-        const scores: [number, number] = node.gameState.getScores();
-        let score: number;
-        if (scores[0] === 24 && scores[1] !== 24) {
-            score = Player.ZERO.getVictoryValue();
-        } else if (scores[0] !== 24 && scores[1] === 24) {
-            score = Player.ONE.getVictoryValue();
-        } else {
-            score = BoardValue.of(scores[0], scores[1]).value;
-        }
-        return new BoardValue(score);
+    public getMetrics(node: LodestoneNode): [number, number] {
+        return node.gameState.getScores();
     }
 }
 

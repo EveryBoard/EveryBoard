@@ -25,12 +25,7 @@ export class PenteMoveGenerator extends MoveGenerator<PenteMove, PenteState> {
 export class PenteAlignmentHeuristic extends Heuristic<PenteMove, PenteState> {
 
     public getBoardValue(node: PenteNode): BoardValue {
-        const gameStatus: GameStatus = PenteRules.get().getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return BoardValue.fromWinner(gameStatus.winner);
-        } else {
-            return PenteRules.PENTE_HELPER.getBoardValue(node.gameState);
-        }
+        return PenteRules.PENTE_HELPER.getBoardValue(node.gameState);
     }
 }
 

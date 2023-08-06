@@ -1,8 +1,6 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
-import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LascaMove } from './LascaMove';
@@ -21,19 +19,13 @@ export class LascaMoveGenerator extends MoveGenerator<LascaMove, LascaState> {
     }
 }
 
-export class LascaControlHeuristic extends Heuristic<LascaMove, LascaState> {
+export class LascaControlHeuristic extends PlayerMetricHeuristic<LascaMove, LascaState> {
 
-    public getBoardValue(node: LascaNode): BoardValue {
-        // TODO: get rid of these checks
-        const gameStatus: GameStatus = LascaRules.get().getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
+    public getMetrics(node: LascaNode): [number, number] {
         const state: LascaState = node.gameState;
         const pieceUnderZeroControl: number = this.getNumberOfMobileCoords(state, Player.ZERO);
         const pieceUnderOneControl: number = this.getNumberOfMobileCoords(state, Player.ONE);
-        // TODO: this is a player metric heuristic
-        return BoardValue.of(pieceUnderZeroControl, pieceUnderOneControl);
+        return [pieceUnderZeroControl, pieceUnderOneControl];
     }
     public getNumberOfMobileCoords(state: LascaState, player: Player): number {
         const potentialMoves: LascaMove[] = this.getCapturesAndSteps(state, player);

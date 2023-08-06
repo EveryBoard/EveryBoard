@@ -74,10 +74,6 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
 export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
 
     public getBoardValue(node: EpaminondasNode): BoardValue {
-        const gameStatus: GameStatus = EpaminondasRules.get().getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
         return new BoardValue(this.getPieceCountPlusRowDomination(node.gameState));
     }
     public getPieceCountPlusRowDomination(state: EpaminondasState): number {

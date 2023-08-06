@@ -20,10 +20,6 @@ export class AttackEpaminondasHeuristic extends EpaminondasHeuristic {
 
     public override getBoardValue(node: EpaminondasNode): BoardValue {
         const state: EpaminondasState = node.gameState;
-        const gameStatus: GameStatus = EpaminondasRules.get().getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
         const dominance: number = this.getDominance(state);
         const defense: number = this.getDefense(state);
         const territory: number = this.getTerritory(state);

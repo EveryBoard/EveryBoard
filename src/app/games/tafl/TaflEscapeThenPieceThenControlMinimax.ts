@@ -6,7 +6,6 @@ import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlMinimaxMetrics } from './TaflPieceAndControlMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TaflMove } from './TaflMove';
 import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Utils } from 'src/app/utils/utils';
@@ -16,11 +15,6 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove, S exten
 {
 
     public override getBoardValue(node: GameNode<M, S>): BoardValue {
-        const gameStatus: GameStatus = this.rules.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
-
         const state: S = node.gameState;
         const metrics: TaflPieceAndControlMinimaxMetrics = this.getControlScoreAndPieceScores(state);
         const defender: Player = state.getPieceAt(this.rules.getKingCoord(state).get()).getOwner() as Player;

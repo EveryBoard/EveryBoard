@@ -100,42 +100,36 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public proposeAIToPlay(): void {
         // check if ai's turn has come, if so, make her start after a delay
-        const playingAI: MGPOptional<AbstractAI> = this.getPlayingAI();
+        const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
         if (playingAI.isPresent()) {
             // bot's turn
             window.setTimeout(async() => {
-                const turn: number = this.gameComponent.node.gameState.turn % 2;
-                const options: AIOptions = this.getAIOptions(playingAI.get(), turn % 2).get();
-                await this.doAIMove(playingAI.get(), options);
+                await this.doAIMove(playingAI.get().ai, playingAI.get().options);
             }, this.botTimeOut);
         }
     }
-    private getPlayingAI(): MGPOptional<AbstractAI> {
+    private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.node).isEndGame) {
             // No AI is playing when the game is finished
             return MGPOptional.empty();
         }
         const playerIndex: number = this.gameComponent.getTurn() % 2;
-        if (this.aiOptions[playerIndex] === 'none') {
-            // No AI is playing if its options have not been selected
+        const aiOpt: MGPOptional<AbstractAI> = this.findAI(playerIndex);
+        if (aiOpt.isPresent()) {
+            const ai: AbstractAI = aiOpt.get();
+            const optionsName: string = this.aiOptions[playerIndex];
+            return MGPOptional.ofNullable(
+                ai.availableOptions.find((options: AIOptions) => {
+                    return options.name === optionsName;
+                })).map((options) => { return { ai, options } });
+        } else {
             return MGPOptional.empty();
         }
-        return this.findAI(playerIndex);
     }
     private findAI(playerIndex: number): MGPOptional<AbstractAI> {
         return MGPOptional.ofNullable(
             this.gameComponent.availableAIs.find((a: AbstractAI) => {
                 return this.players[playerIndex].equalsValue(a.name);
-            }));
-    }
-    private getAIOptions(ai: AbstractAI, playerIndex: number): MGPOptional<AIOptions> {
-        const optionsName: string = this.aiOptions[playerIndex];
-        if (optionsName === 'none') {
-            return MGPOptional.empty();
-        }
-        return MGPOptional.ofNullable(
-            ai.availableOptions.find((options: AIOptions) => {
-                return options.name === optionsName;
             }));
     }
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {

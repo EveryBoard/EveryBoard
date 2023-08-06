@@ -41,10 +41,6 @@ export class PhalanxSizeAndFilterEpaminondasMoveGenerator extends EpaminondasMov
 export class PositionalEpaminondasHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
 
     public getBoardValue(node: EpaminondasNode): BoardValue {
-        const gameStatus: GameStatus = EpaminondasRules.get().getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
         return new BoardValue(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
     private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {

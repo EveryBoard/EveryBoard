@@ -10,10 +10,6 @@ import { LascaStack, LascaState } from './LascaState';
 export class LascaControlAndDominationHeuristic extends LascaControlHeuristic {
 
     public override getBoardValue(node: LascaNode): BoardValue {
-        const gameStatus: GameStatus = LascaRules.get().getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return gameStatus.toBoardValue();
-        }
         const controlValue: number = super.getBoardValue(node).value * 12;
         let dominatingPiecesCount: number = 0;
         for (let y: number = 0; y < LascaState.SIZE; y++) {

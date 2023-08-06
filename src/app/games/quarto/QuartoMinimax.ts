@@ -9,6 +9,7 @@ import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { Utils } from 'src/app/utils/utils';
 
 export class QuartoMoveGenerator extends MoveGenerator<QuartoMove, QuartoState> {
 
@@ -51,12 +52,9 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
         if (score === SCORE.DEFAULT) {
             return new BoardValue(0);
         } else {
+            Utils.assert(score === SCORE.PRE_VICTORY, 'QuartoHeuristic score can only be pre-victory or default')
             const player: Player = Player.of(turn % 2);
-            if (score === SCORE.PRE_VICTORY) {
-                return new BoardValue(player.getPreVictory());
-            } else {
-                return new BoardValue(player.getDefeatValue());
-            }
+            return new BoardValue(player.getPreVictory());
         }
     }
     public getBoardValue(node: QuartoNode): BoardValue {
@@ -67,9 +65,6 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);
-            if (boardStatus.score === SCORE.VICTORY) {
-                break;
-            }
         }
         return this.scoreToBoardValue(boardStatus.score, state.turn);
     }

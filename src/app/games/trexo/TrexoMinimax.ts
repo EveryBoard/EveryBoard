@@ -28,21 +28,8 @@ export class TrexoHeuristic extends Heuristic<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = state.getPieceAt(coordPiece.key).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coordPiece.key);
-                if (BoardValue.isVictory(squareScore)) {
-                    if (pieceOwner === lastPlayer) {
-                        // Cannot return right away
-                        // because the last player only wins if the other does not get an alignment
-                        lastPlayerAligned5 = true;
-                    } else {
-                        return new BoardValue(lastPlayer.getDefeatValue());
-                    }
-                } else {
-                    score += squareScore;
-                }
+                score += squareScore;
             }
-        }
-        if (lastPlayerAligned5) {
-            return new BoardValue(lastPlayer.getVictoryValue());
         }
         return new BoardValue(score);
     }

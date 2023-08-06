@@ -6,6 +6,7 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState> {
 
@@ -55,19 +56,9 @@ export class TeekoHeuristic extends Heuristic<TeekoMove, TeekoState> {
 
     public getBoardValue(node: TeekoNode): BoardValue {
         const alignmentPossibities: number = TeekoRules.TEEKO_HELPER.getBoardValue(node.gameState).value;
-        if (BoardValue.VICTORIES.some((victory: number) => victory === alignmentPossibities)) {
-            return new BoardValue(alignmentPossibities);
-        } else {
-            const squarePossibilities: {
-                score: number;
-                victoriousCoords: Coord[];
-            } = TeekoRules.get().getSquareInfo(node.gameState);
-            if (squarePossibilities.victoriousCoords.length > 0) {
-                return BoardValue.fromWinner(node.gameState.getCurrentOpponent());
-            } else {
-                return new BoardValue(squarePossibilities.score + alignmentPossibities);
-            }
-        }
+        const squarePossibilities: { score: number; victoriousCoords: Coord[] } =
+            TeekoRules.get().getSquareInfo(node.gameState);
+        return new BoardValue(squarePossibilities.score + alignmentPossibities);
     }
 }
 

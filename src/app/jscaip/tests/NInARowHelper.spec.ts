@@ -5,6 +5,7 @@ import { Coord } from '../Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { BoardValue } from '../BoardValue';
 import { GameStateWithTable } from '../GameStateWithTable';
+import { GameStatus } from '../GameStatus';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -33,7 +34,7 @@ describe('N In A Row Helper', () => {
             const boardValue: BoardValue = helper.getBoardValue(state);
 
             // Then the value should be victory for player 1
-            expect(boardValue).toEqual(BoardValue.fromWinner(Player.ONE));
+            expect(boardValue).toEqual(GameStatus.ONE_WON.toBoardValue());
         });
     });
 });
