@@ -24,8 +24,8 @@ export class AbaloneState extends GameStateWithTable<FourStatePiece> {
         return new AbaloneState(board, 0);
     }
     public static isOnBoard(coord: Coord): boolean {
-        const piece: FourStatePiece = AbaloneState.getInitialState().getPieceAt(coord);
-        return coord.isInRange(9, 9) && piece !== FourStatePiece.UNREACHABLE;
+        return coord.isInRange(9, 9) &&
+               AbaloneState.getInitialState().getPieceAt(coord) !== FourStatePiece.UNREACHABLE;
     }
     public isPiece(coord: Coord): boolean {
         const piece: FourStatePiece = this.getPieceAt(coord);

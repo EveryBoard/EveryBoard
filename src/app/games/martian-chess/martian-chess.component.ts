@@ -326,7 +326,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         }
         const canCallTheClock: boolean = this.getState().countDown.isAbsent();
         if (canCallTheClock) {
-            this.callTheClock = !this.callTheClock;
+            this.callTheClock = this.callTheClock === false;
         }
         return MGPValidation.SUCCESS;
     }
@@ -368,7 +368,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return classes;
     }
     public onModeCogClick(): void {
-        this.displayModePanel = !this.displayModePanel;
+        this.displayModePanel = this.displayModePanel === false;
     }
     public chooseStyle(n: number): void {
         this.style = this.listOfStyles[n].style;

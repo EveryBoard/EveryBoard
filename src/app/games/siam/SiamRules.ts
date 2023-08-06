@@ -8,7 +8,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Debug } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { SiamFailure } from './SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
@@ -39,9 +39,9 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
     }
 
     public isLegal(move: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {
-        if (!move.isInsertion()) {
+        if (move.isInsertion() === false) {
             const movedPiece: SiamPiece = state.getPieceAt(move.coord);
-            if (!movedPiece.belongTo(state.getCurrentPlayer())) {
+            if (movedPiece.belongTo(state.getCurrentPlayer()) === false) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
         }
@@ -116,7 +116,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                               movingPiece !== SiamPiece.EMPTY &&
                               totalForce > 0;
         }
-        if (SiamState.isOnBoard(landingCoord) ===false) {
+        if (SiamState.isOnBoard(landingCoord) === false) {
             if (currentDirection.equalsValue(pushingDir)) totalForce++;
             else if (currentDirection.equalsValue(resistingDir)) totalForce--;
         }
@@ -223,8 +223,12 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         let nbMountain: number = 0;
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content === SiamPiece.MOUNTAIN) {
-                if (!rows.includes(coordAndContent.coord.y)) rows.push(coordAndContent.coord.y);
-                if (!columns.includes(coordAndContent.coord.x)) columns.push(coordAndContent.coord.x);
+                if (rows.includes(coordAndContent.coord.y) === false) {
+                    rows.push(coordAndContent.coord.y);
+                }
+                if (columns.includes(coordAndContent.coord.x) === false) {
+                    columns.push(coordAndContent.coord.x);
+                }
                 nbMountain++;
             }
         }
@@ -357,7 +361,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                     }
                 } else if (playerOrientation === resistance) { // We found a piece resisting the pushing direction
                     missingForce += 1;
-                    if (!mountainEncountered) {
+                    if (mountainEncountered === false) {
                         currentDistance++;
                     }
                 } else {

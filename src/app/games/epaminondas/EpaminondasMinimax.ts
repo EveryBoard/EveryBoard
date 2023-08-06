@@ -19,10 +19,10 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
 
         let moves: EpaminondasMove[] = [];
         const state: EpaminondasState = node.gameState;
-        let move: EpaminondasMove;
         for (const coordAndContent of state.getCoordsAndContents()) {
             const firstCoord: Coord = coordAndContent.coord;
             if (coordAndContent.content === player) {
+                let move: EpaminondasMove;
                 for (const direction of Direction.DIRECTIONS) {
                     let movedPieces: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
@@ -85,7 +85,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
         const SCORE_BY_PRESENCE: number = 1;
         const SCORE_BY_ALIGNEMENT: number = 1;
         let total: number = 0;
-        for (let y: number = 0; y < EpaminondasState.WIDTH; y++) {
+        for (let y: number = 0; y < EpaminondasState.HEIGHT; y++) {
             let row: number = 0;
             const wasPresent: number[] = [0, 0];
             for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {

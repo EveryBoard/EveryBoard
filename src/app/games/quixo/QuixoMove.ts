@@ -44,7 +44,7 @@ export class QuixoMove extends MoveCoord {
     }
     public override equals(other: QuixoMove): boolean {
         if (other === this) return true;
-        if (!other.coord.equals(this.coord)) return false;
+        if (other.coord.equals(this.coord) === false) return false;
         return other.direction === this.direction;
     }
 }

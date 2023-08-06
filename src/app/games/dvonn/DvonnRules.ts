@@ -64,7 +64,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         const stackSize: number = state.getPieceAt(coord).getSize();
         const possibleTargets: Coord[] = HexagonalUtils.getNeighbors(coord, stackSize);
         return possibleTargets.find((c: Coord): boolean =>
-            state.isOnBoard(c) && !state.getPieceAt(c).isEmpty()) !== undefined;
+            state.isOnBoard(c) && state.getPieceAt(c).hasPieces()) !== undefined;
     }
     public static pieceTargets(state: DvonnState, coord: Coord): Coord[] {
         const stackSize: number = state.getPieceAt(coord).getSize();
@@ -92,13 +92,13 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         if (stack.getSize() < 1) {
             return MGPValidation.failure(DvonnFailure.EMPTY_STACK());
         }
-        if (!stack.belongsTo(state.getCurrentPlayer())) {
+        if (stack.belongsTo(state.getCurrentPlayer()) === false) {
             return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE());
         }
         if (state.numberOfNeighbors(coord) >= 6) {
             return MGPValidation.failure(DvonnFailure.TOO_MANY_NEIGHBORS());
         }
-        if (!DvonnRules.pieceHasTarget(state, coord)) {
+        if (DvonnRules.pieceHasTarget(state, coord) === false) {
             return MGPValidation.failure(DvonnFailure.CANT_REACH_TARGET());
         }
         return MGPValidation.SUCCESS;
@@ -115,7 +115,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         // For each neighbor, mark it as connected (if it contains something),
         // and recurse from there (only if it was not already marked)
         HexagonalUtils.getNeighbors(coord, 1).forEach((c: Coord) => {
-            if (state.isOnBoard(c) && !markBoard[c.y][c.x] && !state.getPieceAt(c).isEmpty()) {
+            if (state.isOnBoard(c) && markBoard[c.y][c.x] === false && state.getPieceAt(c).hasPieces()) {
                 // This piece has not been marked as connected, but it is connected, and not empty
                 markBoard[c.y][c.x] = true; // mark it as connected
                 this.markPiecesConnectedTo(state, c, markBoard); // find all pieces connected to this one
@@ -131,7 +131,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         });
         let newState: DvonnState = state;
         newState.getAllPieces().forEach((c: Coord) => {
-            if (!markBoard[c.y][c.x]) {
+            if (markBoard[c.y][c.x] === false) {
                 newState = newState.setAt(c, DvonnPieceStack.EMPTY);
             }
         });
@@ -157,7 +157,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself
-            if (move === DvonnMove.PASS && !state.alreadyPassed) {
+            if (move === DvonnMove.PASS && state.alreadyPassed === false) {
                 return MGPValidation.SUCCESS;
             } else {
                 return MGPValidation.failure(RulesFailure.MUST_PASS());

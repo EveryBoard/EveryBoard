@@ -106,7 +106,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         if (this.board[coord.y][coord.x] === TaflPawn.UNOCCUPIED) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        if (!this.pieceBelongToCurrentPlayer(coord)) {
+        if (this.pieceBelongToCurrentPlayer(coord) === false) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
 

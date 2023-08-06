@@ -45,7 +45,7 @@ export class KamisadoBoard {
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (!KamisadoBoard.isEmptyAt(board, coord)) {
+                if (KamisadoBoard.isEmptyAt(board, coord) === false) {
                     l.push(coord);
                 }
             }

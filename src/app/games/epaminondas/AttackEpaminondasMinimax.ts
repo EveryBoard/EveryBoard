@@ -28,10 +28,10 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     public getDefense(state: EpaminondasState): number {
         let score: number = 0;
         for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
-            if (state.getPieceAt(new Coord(x, EpaminondasState.WIDTH - 1)) === Player.ZERO) {
+            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
-            if (state.getPieceAt(new Coord(x, 0)) === Player.ONE) {
+            if (state.getPieceAtXY(x, 0) === Player.ONE) {
                 score += Player.ONE.getScoreModifier();
             }
         }
@@ -63,10 +63,10 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     public getOffense(state: EpaminondasState): number {
         let score: number = 0;
         for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
-            if (state.getPieceAt(new Coord(x, 0)) === Player.ZERO) {
+            if (state.getPieceAtXY(x, 0) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
-            if (state.getPieceAt(new Coord(x, EpaminondasState.HEIGHT - 1)) === Player.ONE) {
+            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ONE) {
                 score += Player.ONE.getScoreModifier();
             }
         }

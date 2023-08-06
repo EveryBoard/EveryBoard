@@ -234,7 +234,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         const opponent: Player = this.getState().getCurrentOpponent();
         const player: Player = this.getState().getCurrentPlayer();
-        if (!clicked.isAlignedWith(firstPiece)) {
+        if (clicked.isAlignedWith(firstPiece) === false) {
             return this.cancelMove(EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_SELECTED());
         }
         const distance: number = clicked.getDistance(firstPiece);
@@ -280,7 +280,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         const firstPiece: Coord = this.firstPiece.get();
         const lastPiece: Coord = this.lastPiece.get();
-        if (!clicked.isAlignedWith(firstPiece)) {
+        if (clicked.isAlignedWith(firstPiece) === false) {
             return this.cancelMove(EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_PHALANX());
         }
         // The directions are valid because they are is aligned
