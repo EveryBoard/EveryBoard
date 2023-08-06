@@ -1,7 +1,7 @@
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPFallible } from '../utils/MGPFallible';
 import { MGPOptional } from '../utils/MGPOptional';
-import { Utils } from '../utils/utils';
+import { Debug, Utils } from '../utils/utils';
 import { GameState } from './GameState';
 import { GameStatus } from './GameStatus';
 import { AI, AIIterationLimitOptions, GameNode, MoveGenerator } from './MGPNode';
@@ -23,7 +23,10 @@ type NodeAndPath<M extends Move, S extends GameState> = {
 export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M, S, AIIterationLimitOptions> {
     // The exploration parameter influences the MCTS results.
     // It is chosen "empirically" (this is the "generally recommended value" from Wikipedia)
-    public static explorationParameter: number = Math.sqrt(2);
+    public static EXPLORATION_PARAMETER: number = Math.sqrt(2);
+
+    // The longest a game can be before we decide to stop simulating it
+    public static MAX_GAME_LENGTH: number = 1000;
 
     public readonly availableOptions: AIIterationLimitOptions[] = [];
     /**
@@ -48,12 +51,11 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         for (let i: number = 0; i < options.maxIterations; i++) {
             console.log('------ ITERATION ' + i)
             const expansionResult: NodeAndPath<M, S> = this.expand(this.select({ node: root, path: [root] }, i));
-            const win: boolean = this.simulate(expansionResult.node, player);
-            if (win) console.log(`>>>>> win by player ${player}`)
-            this.backpropagate(expansionResult.path, win);
+            const gameStatus: GameStatus = this.simulate(expansionResult.node);
+            this.backpropagate(expansionResult.path, this.winScore(gameStatus, player));
         }
         // console.log('---- DONE')
-        // console.log('root winRatio: ' + this.winRatio(root));
+        console.log('root winRatio: ' + this.winRatio(root));
         console.log(root.getChildren().map((n) => this.winRatio(n))); // .filter((n) => n > 0));
         const bestChild: GameNode<M, S> =
             ArrayUtils.maximumBy(root.getChildren(), (n: GameNode<M, S>) => this.winRatio(n));
@@ -61,8 +63,18 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         const seconds =  (new Date().getTime() - startTime) / 1000;
         console.log('Computed ' + options.maxIterations/seconds + ' iterations per second');
         console.log('Best child has a win ratio of: ' + this.winRatio(bestChild));
-        // root.printDot(this.rules, 0);
+        root.printDot(this.rules, (node: GameNode<M, S>): string => `${this.wins(node)}/${this.simulations(node)}`);
         return bestChild.move.get();
+    }
+    private winScore(gameStatus: GameStatus, player: Player): number {
+        switch (gameStatus) {
+            case GameStatus.DRAW:
+            case GameStatus.ONGOING:
+                return 0.5;
+            default:
+                if (gameStatus.winner === player) return 1;
+                else return 0;
+        }
     }
     /**
      * Computes the UCB value of a node.
@@ -74,7 +86,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
             return Number.MAX_SAFE_INTEGER;
         }
         return (this.wins(node) / simulations) +
-               MCTS.explorationParameter * Math.sqrt(Math.log(totalSimulations) / simulations);
+               MCTS.EXPLORATION_PARAMETER * Math.sqrt(Math.log(totalSimulations) / simulations);
     }
     /**
      * Computes the win ratio for this node, as how many simulations have been won.
@@ -106,16 +118,16 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
      */
     private select(nodeAndPath: NodeAndPath<M, S>, simulations: number): NodeAndPath<M, S> {
         const node: GameNode<M, S> = nodeAndPath.node;
+        Debug.display('MCTS', 'select', node.id);
         if (node.hasChildren()) {
             // Select within the child with the highest UCB value.
-            // console.log('UCB');
-            // console.log(node.children.map((n) => n.id + ': ' + n.ucb(simulations)));
+            Debug.display('MCTS', 'select', (node.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.ucb(node, simulations))));
             const childToVisit: GameNode<M, S> = ArrayUtils.maximumBy(node.getChildren(), (n: GameNode<M, S>) => this.ucb(n, simulations));
-            // console.log('selecting ' + childToVisit.id);
+            Debug.display('MCTS', 'select', 'selecting ' + childToVisit.id);
             return this.select({ node: childToVisit, path: nodeAndPath.path.concat([childToVisit]) }, simulations);
         } else {
             // This is a leaf node, we select it.
-            // console.log('this is a leaf node')
+            Debug.display('MCTS', 'select', 'this is a leaf node, we select it')
             return nodeAndPath;
         }
     }
@@ -148,24 +160,23 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
     }
     /**
      * Simulate a game from the given node. Does not change anything in the node.
-     * @returns true if the simulation was a win
+     * @returns the game status at the end of the simulation
      */
-    private simulate(node: GameNode<M, S>, player: Player): boolean {
-        // console.log('simulate from node ' + node.id + ' which has a last move of ' + node.node.move.get().toString())
+    private simulate(node: GameNode<M, S>): GameStatus {
+        Debug.display('MCTS', 'simulate', 'simulate from node which has a last move of ' + node.move.get().toString())
         let current: GameNode<M, S> = node;
         let steps: number = 0;
         do {
             const status: GameStatus = this.rules.getGameStatus(current);
-            // console.log(status)
             if (status.isEndGame) {
-                // console.log('!!!!! end game, winner is ' + status.winner);
-                return status.winner === player;
+                Debug.display('MCTS', 'simulate', `end game in ${steps} steps, winner is ${status.winner}`)
+                return status;
             }
             steps++;
             current = this.playRandomStep(current);
-        } while (steps < 1000);
-        // Game has taken more than 1000 steps, we consider it a loss
-        return false;
+        } while (steps < MCTS.MAX_GAME_LENGTH);
+        // Game has taken more than MAX_GAME_LENGTH steps
+        return GameStatus.ONGOING;
     }
     /**
      * Picks a random move and play it
@@ -173,7 +184,6 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
      */
     private playRandomStep(node: GameNode<M, S>): GameNode<M, S> {
         let move: M;
-        // console.log('PLAYING')
         move = ArrayUtils.getRandomElement(this.moveGenerator.getListMoves(node));
         return this.play(node, move);
     }
@@ -192,17 +202,16 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
      * Backpropagates the result of a simulation in a path from the simulated node to the root of the tree.
      * @returns nothing, as it modifies the nodes directly
      */
-    private backpropagate(path: GameNode<M, S>[], win: boolean): void {
+    private backpropagate(path: GameNode<M, S>[], winScore: number): void {
         // console.log('path is ' + path.length);
         for (const node of path) {
-            this.newSimulation(node, win);
-            // console.log(`backpropagate to node ${node.id} which now has ${node.wins/node.simulations}`);
+            this.addSimulationResult(node, winScore);
+            Debug.display('MCTS', 'backpropagate', `backpropagate to node which now has ${this.wins(node)/this.simulations(node)}`);
         }
     }
-    private newSimulation(node: GameNode<M, S>, win: boolean): void {
+    private addSimulationResult(node: GameNode<M, S>, winScore: number): void {
         const simulations: number = this.simulations(node) + 1;
-        let wins: number = this.wins(node);
-        if (win) wins++;
+        const wins: number = this.wins(node) + winScore;
         node.setCache('wins', wins);
         node.setCache('simulations', simulations);
     }

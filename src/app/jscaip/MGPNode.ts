@@ -20,6 +20,10 @@ export class MGPNodeStats {
  */
 @Debug.log
 export class GameNode<M extends Move, S extends GameState> {
+    public static ID: number = 0;
+
+    public readonly id: number; // Used for debug purposes to uniquely identify nodes
+
     /**
      * The children of this node.
      * It is a map keyed with moves, with as value the child that corresponds
@@ -35,6 +39,7 @@ export class GameNode<M extends Move, S extends GameState> {
     public constructor(public readonly gameState: S,
                        public readonly parent: MGPOptional<GameNode<M, S>> = MGPOptional.empty(),
                        public readonly move: MGPOptional<M> = MGPOptional.empty()) {
+        this.id = GameNode.ID++;
     }
     /**
      * Returns the child corresponding to applying the given move to the current state,
@@ -66,7 +71,7 @@ export class GameNode<M extends Move, S extends GameState> {
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public printDot<L>(rules: Rules<M, S, L>, level: number = 0, max?: number, id: number = 0): number {
+    public printDot<L>(rules: Rules<M, S, L>, labelFn?: (node: GameNode<M, S>) => string, level: number = 0, max?: number, id: number = 0): number {
         if (level === 0) {
             console.log('digraph G {');
         }
@@ -85,13 +90,17 @@ export class GameNode<M extends Move, S extends GameState> {
                     break;
             }
         }
-        console.log(`    node_${id} [label="#${this.gameState.turn}", style=filled, fillcolor="${color}"];`);
+        let label: string = `#${this.gameState.turn}: ${this.id}`;
+        if (labelFn) {
+            label += ` - ${labelFn(this)}`;
+        }
+        console.log(`    node_${id} [label="${label}", style=filled, fillcolor="${color}"];`);
 
         let nextId: number = id+1;
         if (max === undefined || level < max) {
             for (const child of this.children.listValues()) {
                 console.log(`    node_${id} -> node_${nextId} [label="${child.move.get()}"];`);
-                nextId = child.printDot(rules, level+1, max, nextId);
+                nextId = child.printDot(rules, labelFn, level+1, max, nextId);
             }
         }
         if (level === 0) {
