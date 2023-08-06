@@ -153,12 +153,7 @@ export class Minimax<M extends Move, S extends GameState, L = void>
             const state: S = this.rules.applyLegalMove(move, node.gameState, legality.get());
             const newChild = new GameNode(state, MGPOptional.of(node), MGPOptional.of(move));
             node.addChild(move, newChild)
-            const gameStatus: GameStatus = this.rules.getGameStatus(newChild);
-            if (gameStatus.isEndGame) {
-                this.setScore(newChild, gameStatus.toBoardValue());
-            } else {
-                this.setScore(newChild, this.heuristic.getBoardValue(newChild));
-            }
+            this.setScore(newChild, this.computeBoardValue(newChild));
             return newChild;
         }
         return child.get();
@@ -173,9 +168,17 @@ export class Minimax<M extends Move, S extends GameState, L = void>
         if (score.isPresent()) {
             return score.get();
         } else {
-            const boardValue = this.heuristic.getBoardValue(node);
+            const boardValue: BoardValue = this.computeBoardValue(node);
             this.setScore(node, boardValue);
             return boardValue;
+        }
+    }
+    private computeBoardValue(node: GameNode<M, S>): BoardValue {
+        const gameStatus: GameStatus = this.rules.getGameStatus(node);
+        if (gameStatus.isEndGame) {
+            return gameStatus.toBoardValue();
+        } else {
+            return this.heuristic.getBoardValue(node);
         }
     }
     private setMoves(node: GameNode<M, S>, moves: MGPSet<M>): void {

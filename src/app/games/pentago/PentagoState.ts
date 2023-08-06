@@ -8,6 +8,8 @@ import { PentagoMove } from './PentagoMove';
 
 export class PentagoState extends GameStateWithTable<PlayerOrNone> {
 
+    public static readonly SIZE: number = 6;
+
     public static ROTATION_MAP: [Coord, Coord][] = [
         [new Coord(-1, -1), new Coord(1, -1)],
         [new Coord(0, -1), new Coord(1, 0)],
@@ -19,8 +21,13 @@ export class PentagoState extends GameStateWithTable<PlayerOrNone> {
         [new Coord(-1, 0), new Coord(0, -1)],
     ];
     public static getInitialState(): PentagoState {
-        const initialBoard: Table<PlayerOrNone> = ArrayUtils.createTable(6, 6, PlayerOrNone.NONE);
+        const initialBoard: Table<PlayerOrNone> = ArrayUtils.createTable(PentagoState.SIZE,
+                                                                         PentagoState.SIZE,
+                                                                         PlayerOrNone.NONE);
         return new PentagoState(initialBoard, 0);
+    }
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(PentagoState.SIZE, PentagoState.SIZE);
     }
     public readonly neutralBlocks: number[];
 

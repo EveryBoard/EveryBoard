@@ -111,7 +111,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     }
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
-        if (!capture.equals(move.landingCoord) &&
+        if (capture.equals(move.landingCoord) === false &&
             state.getPieceAt(capture) !== currentPlayer)
         {
             return false;

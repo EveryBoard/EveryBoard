@@ -229,7 +229,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             c = state.getPieceAt(coord);
             commonCrit.mergeWithQuartoPiece(c);
         }
-        if (QuartoRules.isOccupied(c) && !commonCrit.areAllAbsent()) {
+        if (QuartoRules.isOccupied(c) && commonCrit.areAllAbsent() === false) {
             /**
              * the last square was occupied, and there was some common criterion on all the four pieces
              * that's what victory is like in Quarto

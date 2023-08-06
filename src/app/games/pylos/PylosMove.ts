@@ -108,10 +108,10 @@ export class PylosMove extends Move {
     }
     public equals(other: PylosMove): boolean {
         if (other === this) return true;
-        if (!this.startingCoord.equals(other.startingCoord)) return false;
-        if (!this.landingCoord.equals(other.landingCoord)) return false;
-        if (!this.firstCapture.equals(other.firstCapture)) return false;
-        if (!this.secondCapture.equals(other.secondCapture)) return false;
+        if (this.startingCoord.equals(other.startingCoord) === false) return false;
+        if (this.landingCoord.equals(other.landingCoord) === false) return false;
+        if (this.firstCapture.equals(other.firstCapture) === false) return false;
+        if (this.secondCapture.equals(other.secondCapture) === false) return false;
         return true;
     }
 }

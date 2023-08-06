@@ -30,7 +30,7 @@ export class SaharaMoveGenerator extends MoveGenerator<SaharaMove, SaharaState> 
                     const farNeighbors: Coord[] =
                         TriangularGameState.getEmptyNeighbors(board, neighbor, FourStatePiece.EMPTY);
                     for (const farNeighbor of farNeighbors) {
-                        if (!farNeighbor.equals(start)) {
+                        if (farNeighbor.equals(start) === false) {
                             const farMove: SaharaMove = SaharaMove.from(start, farNeighbor).get();
                             board[farNeighbor.y][farNeighbor.x] = board[neighbor.y][neighbor.x];
                             board[neighbor.y][neighbor.x] = FourStatePiece.EMPTY;

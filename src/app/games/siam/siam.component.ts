@@ -10,12 +10,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Utils } from 'src/app/utils/utils';
 import { Debug } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { assert } from 'src/app/utils/assert';
 import { SiamFailure } from './SiamFailure';
 
 export type SiamIndicatorArrow = {
@@ -37,6 +37,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamPiece,
                                                             SiamLegalityInformation>
 {
+    public SiamState: typeof SiamState = SiamState;
     public lastMove: MGPOptional<SiamMove> = MGPOptional.empty();
     public movedPieces: Coord[] = [];
     public selectedPiece: MGPOptional<Coord> = MGPOptional.empty();
@@ -144,7 +145,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                 }
                 return this.performMoveOrShowOrientationArrows(moves);
             } else {
-                assert(this.getState().isOnBoard(clickedCoord), 'SiamComponent: user clicked outside of board when it should not be possible');
+                Utils.assert(this.getState().isOnBoard(clickedCoord), 'SiamComponent: user clicked outside of board when it should not be possible');
                 const clickedPiece: SiamPiece = this.board[y][x];
                 if (clickedPiece.getOwner() !== this.getCurrentPlayer()) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -183,7 +184,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
     }
     private async performMoveOrShowOrientationArrows(availableMoves: SiamMove[]): Promise<MGPValidation> {
-        assert(availableMoves.length > 0, 'SiamComponent.performMoveOrShowOrientationArrows expects at least one move');
+        Utils.assert(availableMoves.length > 0, 'SiamComponent.performMoveOrShowOrientationArrows expects at least one move');
         if (availableMoves.length === 1) {
             // There's only one possible move, so perform it
             this.cancelMove();

@@ -34,9 +34,9 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
                                 break;
                             }
                             const second: Coord = first.getNext(alignement, distance);
-                            if (second.isInRange(9, 9)) {
+                            if (AbaloneState.isOnBoard(second)) {
                                 const translation: AbaloneMove = AbaloneMove.fromDoubleCoord(first, second, dir).get();
-                                if (AbaloneRules.isLegal(translation, state).isSuccess()) {
+                                if (AbaloneRules.get().isLegal(translation, state).isSuccess()) {
                                     moves.push(translation);
                                 }
                             } else {
@@ -51,7 +51,7 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
     }
     private isAcceptablePush(move: AbaloneMove, state: AbaloneState): boolean {
         const scores: [number, number] = state.getScores();
-        const status: MGPFallible<AbaloneLegalityInformation> = AbaloneRules.isLegal(move, state);
+        const status: MGPFallible<AbaloneLegalityInformation> = AbaloneRules.get().isLegal(move, state);
         if (status.isSuccess()) {
             const OPPONENT: number = state.getCurrentOpponent().value;
             const newState: AbaloneState = new AbaloneState(status.get(), state.turn + 1);

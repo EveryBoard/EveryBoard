@@ -61,7 +61,7 @@ export abstract class GroupDatasFactory<T> {
             for (const direction of this.getDirections()) {
                 const nextCoord: Coord = coord.getNext(direction);
                 if (nextCoord.isInRange(board[0].length, board.length)) {
-                    if (!groupDatas.contains(nextCoord)) {
+                    if (groupDatas.contains(nextCoord) === false) {
                         groupDatas = this._getGroupDatas(nextCoord, board, groupDatas);
                     }
                 }

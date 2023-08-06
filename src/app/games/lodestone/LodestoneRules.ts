@@ -126,7 +126,8 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     {
         for (let coord: Coord = start; // eslint-disable-next-line indent
              coord.isInRange(LodestoneState.SIZE, LodestoneState.SIZE); // eslint-disable-next-line indent
-             coord = coord.getNext(direction)) {
+             coord = coord.getNext(direction))
+        {
             for (const player of Player.PLAYERS) {
                 if (lodestones.get(player).equalsValue(coord)) {
                     lodestones.delete(player);

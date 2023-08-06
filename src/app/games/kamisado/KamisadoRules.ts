@@ -108,7 +108,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             //    - the move is within the board (this has been checked when constructing the move)
             //    - start piece should be owned by the current player
             const piece: KamisadoPiece = state.getPieceAt(start);
-            if (!piece.belongsTo(state.getCurrentPlayer())) {
+            if (piece.belongsTo(state.getCurrentPlayer()) === false) {
                 return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
             //    - start space should contain a piece of the right color (or any color can be played)
@@ -117,7 +117,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             }
             //    - end space should be empty
             const endPiece: KamisadoPiece = state.getPieceAt(end);
-            if (!endPiece.isEmpty()) {
+            if (endPiece.isEmpty() === false) {
                 return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             }
             //    - move direction is linear
@@ -127,14 +127,14 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             }
             //    - move direction is toward the opponent's line
             const dir: Direction = directionOptional.get();
-            if (!KamisadoRules.directionAllowedForPlayer(dir, state.getCurrentPlayer())) {
+            if (KamisadoRules.directionAllowedForPlayer(dir, state.getCurrentPlayer()) === false) {
                 return MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
             }
             //    - there is no piece between starting and landing coord
             let currentCoord: Coord = start;
-            while (!currentCoord.equals(end)) {
+            while (currentCoord.equals(end) === false) {
                 currentCoord = currentCoord.getNext(dir);
-                if (!state.getPieceAt(currentCoord).isEmpty()) {
+                if (state.getPieceAt(currentCoord).isEmpty() === false) {
                     return MGPValidation.failure(KamisadoFailure.MOVE_BLOCKED());
                 }
             }
@@ -144,7 +144,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         }
     }
     private static isLegalPass(state: KamisadoState): MGPValidation {
-        if (this.mustPass(state) && !state.alreadyPassed) {
+        if (this.mustPass(state) && state.alreadyPassed === false) {
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(RulesFailure.CANNOT_PASS());

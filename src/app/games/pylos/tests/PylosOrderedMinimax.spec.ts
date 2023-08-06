@@ -2,7 +2,7 @@
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMinimax, PylosOrderedMoveGenerator } from '../PylosOrderedMinimax';
-import { PylosRules } from '../PylosRules';
+import { PylosNode, PylosRules } from '../PylosRules';
 
 describe('PylosOrderedMoveGenerator', () => {
 
@@ -12,8 +12,12 @@ describe('PylosOrderedMoveGenerator', () => {
     const coord2: PylosCoord = new PylosCoord(0, 0, 2);
 
     beforeEach(() => {
-        const rules: PylosRules = PylosRules.get();
         moveGenerator = new PylosOrderedMoveGenerator();
+    });
+    it('should generate 16 moves at first turn', () => {
+        const initialNode: PylosNode = PylosRules.get().getInitialNode();
+        const moves: PylosMove[] = moveGenerator.getListMoves(initialNode);
+        expect(moves.length).toEqual(16);
     });
     describe('orderMoves', () => {
         it('should order move from lowest stone use to highest', () => {
