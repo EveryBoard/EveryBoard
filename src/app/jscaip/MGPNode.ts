@@ -157,10 +157,10 @@ export type AIDepthLimitOptions = AIOptions & {
 }
 
 /**
- * These are options for AI that can be iteration-constrained, such as MCTS.
+ * These are options for AI that can be time-constrained, such as MCTS.
  */
-export type AIIterationLimitOptions = AIOptions & {
-    readonly maxIterations: number;
+export type AITimeLimitOptions = AIOptions & {
+    readonly maxSeconds: number;
 }
 
 /**

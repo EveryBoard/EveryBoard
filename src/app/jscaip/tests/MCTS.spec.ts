@@ -1,3 +1,8 @@
+/* eslint-disable max-lines-per-function */
+import { AwaleMoveGenerator } from 'src/app/games/awale/AwaleMinimax';
+import { AwaleMove } from 'src/app/games/awale/AwaleMove';
+import { AwaleRules } from 'src/app/games/awale/AwaleRules';
+import { AwaleState } from 'src/app/games/awale/AwaleState';
 import { QuartoMoveGenerator } from 'src/app/games/quarto/QuartoMinimax';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -6,12 +11,12 @@ import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from '../Coord';
 import { MCTS } from '../MCTS';
-import { AIIterationLimitOptions } from '../MGPNode';
+import { AITimeLimitOptions } from '../MGPNode';
 
 describe('MCTS', () => {
 
     let mcts: MCTS<QuartoMove, QuartoState>;
-    const mctsOptions: AIIterationLimitOptions = { name: 'Level 1', maxIterations: 160 };
+    const mctsOptions: AITimeLimitOptions = { name: '100ms', maxSeconds: 0.1 };
 
     beforeEach(() => {
         mcts = new MCTS('MCTS', new QuartoMoveGenerator(), QuartoRules.get());
@@ -55,5 +60,15 @@ describe('MCTS', () => {
         // Then it should place it in (3,0) in order to definitely win
         // otherwise we definitely lose
         expect(move).toEqual(new QuartoMove(3, 0, QuartoPiece.ABAB));
+    });
+    it('should not fail on games that are too long', () => {
+        // Given a MCTS for a game that has a tendency to give long random games
+        const otherMcts: MCTS<AwaleMove, AwaleState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
+        // When searching for the best move
+        const beforeSearch: number = Date.now();
+        const move: AwaleMove = otherMcts.chooseNextMove(AwaleRules.get().getInitialNode(), mctsOptions);
+        // Then it should find one and not get stuck infinitely
+        expect(move).toBeTruthy();
+        expect(Date.now() - beforeSearch).toBeLessThan(mctsOptions.maxSeconds + 0.5); // Add 0.5 to allow for iterations to finish
     });
 });

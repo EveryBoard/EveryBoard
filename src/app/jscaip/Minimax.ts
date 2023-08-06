@@ -44,9 +44,9 @@ export class Minimax<M extends Move, S extends GameState, L = void>
     implements AI<M, S, AIDepthLimitOptions>
 {
     // States whether the minimax takes random moves from the list of best moves.
-    private readonly RANDOM: boolean = false;
+    public RANDOM: boolean = false;
     // States whether alpha-beta pruning must be done. It probably is never useful to set it to false.
-    private readonly PRUNE: boolean = true;
+    public PRUNE: boolean = true;
 
     public readonly availableOptions: AIDepthLimitOptions[] = [];
 
