@@ -71,7 +71,7 @@ export class GameNode<M extends Move, S extends GameState> {
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public printDot<L>(rules: Rules<M, S, L>, labelFn?: (node: GameNode<M, S>) => string, level: number = 0, max?: number, id: number = 0): number {
+    public printDot<L>(rules: Rules<M, S, L>, labelFn?: (node: GameNode<M, S>) => string, max?: number, level: number = 0, id: number = 0): number {
         if (level === 0) {
             console.log('digraph G {');
         }
@@ -100,7 +100,7 @@ export class GameNode<M extends Move, S extends GameState> {
         if (max === undefined || level < max) {
             for (const child of this.children.listValues()) {
                 console.log(`    node_${id} -> node_${nextId} [label="${child.move.get()}"];`);
-                nextId = child.printDot(rules, labelFn, level+1, max, nextId);
+                nextId = child.printDot(rules, labelFn, max, level+1, nextId);
             }
         }
         if (level === 0) {
