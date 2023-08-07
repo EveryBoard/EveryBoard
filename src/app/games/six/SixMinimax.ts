@@ -7,7 +7,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { Debug } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
@@ -146,21 +146,7 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
             const pieces: number[] = state.countPieces();
             const zeroPieces: number = pieces[0];
             const onePieces: number = pieces[1];
-            if (zeroPieces < 6 && onePieces < 6) {
-                if (zeroPieces < onePieces) {
-                    return new BoardValue(Player.ONE.getVictoryValue());
-                } else if (onePieces < zeroPieces) {
-                    return new BoardValue(Player.ZERO.getVictoryValue());
-                } else {
-                    return new BoardValue(0); // Draw
-                }
-            } else if (zeroPieces < 6) {
-                return new BoardValue(Player.ZERO.getDefeatValue());
-            } else if (onePieces < 6) {
-                return new BoardValue(Player.ONE.getDefeatValue());
-            } else {
-                return new BoardValue(zeroPieces - onePieces);
-            }
+            return new BoardValue(zeroPieces - onePieces);
         }
         if (shapeInfo.status === SCORE.PRE_VICTORY) {
             return new BoardValue(LAST_PLAYER.getPreVictory());
@@ -467,15 +453,7 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
         let finalSubSum: number = 0;
         while (nbTested < 6) {
             const subSum: number = encountered.reduce((a: number, b: number) => a + b);
-            if (subSum === 6) {
-                return {
-                    status: SCORE.VICTORY,
-                    victory: MGPOptional.of(testedCoords),
-                    preVictory: MGPOptional.empty(),
-                    sum: 0,
-                };
-            } else if (subSum === 5.16 &&
-                status === SCORE.DEFAULT) {
+            if (subSum === 5.16 && status === SCORE.DEFAULT) {
                 if (preVictory.isPresent()) {
                     assert(preVictory.equals(lastEmpty) === false,
                            'Impossible to have point aligned with differents line to a same point');

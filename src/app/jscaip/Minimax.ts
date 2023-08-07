@@ -126,7 +126,7 @@ export class Minimax<M extends Move, S extends GameState, L = void>
                 bestChildren.push(bestChildDescendant);
             }
             if (this.PRUNE && newValueIsBetter(extremumExpected, currentPlayer === Player.ZERO ? alpha : beta)) {
-                // cut-off, no need to explore the other childs
+                // cut-off, no need to explore the other children
                 break;
             }
             if (currentPlayer === Player.ZERO) {

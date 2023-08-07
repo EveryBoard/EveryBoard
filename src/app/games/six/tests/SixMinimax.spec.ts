@@ -5,7 +5,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixNode } from '../SixRules';
-import { SixHeuristic, SixMinimax, SixReducedMoveGenerator } from '../SixMinimax';
+import { SixHeuristic, SixMinimax, SixMoveGenerator, SixReducedMoveGenerator } from '../SixMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
@@ -15,6 +15,31 @@ const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
 const _: PlayerOrNone = PlayerOrNone.NONE;
 
+describe('SixMoveGenerator', () => {
+
+    let moveGenerator: SixMoveGenerator;
+
+    beforeEach(() => {
+        moveGenerator = new SixMoveGenerator();
+    });
+
+    it(`should propose all movements`, () => {
+        // Given an board where all piece are blocked
+        const board: Table<PlayerOrNone> = [
+            [O, X, X, X, X, X, O],
+        ];
+        const state: SixState = SixState.ofRepresentation(board, 40);
+        const node: SixNode = new SixNode(state);
+
+        // When listing the choices
+        const choices: SixMove[] = moveGenerator.getListMoves(node);
+
+        // Then there should be all the possibilities
+        // 2 starting positions * 15 possible ends
+        expect(choices.length).toBe(30);
+    });
+});
+
 describe('SixReducedMoveGenerator', () => {
 
     let moveGenerator: SixReducedMoveGenerator;
@@ -22,7 +47,7 @@ describe('SixReducedMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new SixReducedMoveGenerator();
     });
-    it(`should propose only one starting piece when all piece are blocking an opponent's victory`, () => {
+    it(`should propose only one starting piece when all piece are blocking an opponent's victory (lines)`, () => {
         // Given an initial board where all piece are blocked but there is a forcing move
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, O, O, _],
@@ -40,7 +65,41 @@ describe('SixReducedMoveGenerator', () => {
         const startingCoord: Coord = choices[0].start.get();
         expect(choices.every((move: SixMove) => move.start.equalsValue(startingCoord))).toBeTrue();
     });
-    it('should pass possible drops when Phase 1', () => {
+    it(`should propose only one starting piece when all piece are blocking an opponent's victory (triangle)`, () => {
+        // Given an initial board where all piece are blocked but there is a forcing move
+        const board: Table<PlayerOrNone> = [
+           [_, X, X, _],
+           [_, O, X, O],
+           [X, X, X, _],
+        ];
+        const state: SixState = SixState.ofRepresentation(board, 40);
+        const node: SixNode = new SixNode(state);
+
+        // When listing the choices
+        const choices: SixMove[] = moveGenerator.getListMoves(node);
+
+        // Then there should be only one starting piece
+        const startingCoord: Coord = choices[0].start.get();
+        expect(choices.every((move: SixMove) => move.start.equalsValue(startingCoord))).toBeTrue();
+    });
+    it(`should propose only one starting piece when all piece are blocking an opponent's victory (circle)`, () => {
+        // Given an initial board where all piece are blocked but there is a forcing move
+        const board: Table<PlayerOrNone> = [
+           [_, X, X, _],
+           [O, _, X, _],
+           [X, X, O, _],
+        ];
+        const state: SixState = SixState.ofRepresentation(board, 40);
+        const node: SixNode = new SixNode(state);
+
+        // When listing the choices
+        const choices: SixMove[] = moveGenerator.getListMoves(node);
+
+        // Then there should be only one starting piece
+        const startingCoord: Coord = choices[0].start.get();
+        expect(choices.every((move: SixMove) => move.start.equalsValue(startingCoord))).toBeTrue();
+    });
+    it('should give all possible drops in phase 1', () => {
         // Given a game state in phase 1
         const state: SixState = SixState.ofRepresentation([
             [O],
@@ -188,20 +247,6 @@ describe('SixHeuristic', () => {
                                                                strongerState, MGPOptional.of(move),
                                                                Player.ONE);
         });
-    });
-    it('should assign a value of 0 in case of draw', () => {
-        // Given a state in a draw in phase 2
-        const state: SixState = SixState.ofRepresentation([
-            [O, O, X, X],
-            [O, O, X, X],
-        ], 42);
-        const node: SixNode = new SixNode(state);
-
-        // When calculating the board value
-        const boardValue: BoardValue = heuristic.getBoardValue(node);
-
-        // Then it should be 0
-        expect(boardValue.value).toBe(0);
     });
     it('Score after 40th turn should be a subtraction of the number of piece', () => {
         const state: SixState = SixState.ofRepresentation([

@@ -63,12 +63,14 @@ describe('MCTS', () => {
     });
     it('should not fail on games that are too long', () => {
         // Given a MCTS for a game that has a tendency to give long random games
+        MCTS.MAX_GAME_LENGTH = 10; // Limit it heavily to ensure we will exhaust the limit (for coverage)
         const otherMcts: MCTS<AwaleMove, AwaleState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
         // When searching for the best move
         const beforeSearch: number = Date.now();
         const move: AwaleMove = otherMcts.chooseNextMove(AwaleRules.get().getInitialNode(), mctsOptions);
         // Then it should find one and not get stuck infinitely
         expect(move).toBeTruthy();
-        expect(Date.now() - beforeSearch).toBeLessThan(mctsOptions.maxSeconds + 0.5); // Add 0.5 to allow for iterations to finish
+        // Add 10% to allow for iterations to finish
+        expect(Date.now() - beforeSearch).toBeLessThan(1000 * (mctsOptions.maxSeconds + 0.1));
     });
 });

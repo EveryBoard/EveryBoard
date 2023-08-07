@@ -156,47 +156,30 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const mountainsRow: number[] = mountainsInfo.rows;
         const mountainsColumn: number[] = mountainsInfo.columns;
 
-        const winner: PlayerOrNone = this.getWinner(state, move, mountainsInfo.nbMountain);
-        if (winner.isPlayer()) { // 1. victories
-            if (winner === Player.ZERO) {
-                return {
-                    shortestZero: 0,
-                    shortestOne: Number.POSITIVE_INFINITY,
-                    boardValue: Number.MIN_SAFE_INTEGER,
-                };
-            } else {
-                return {
-                    shortestZero: Number.POSITIVE_INFINITY,
-                    shortestOne: 0,
-                    boardValue: Number.MAX_SAFE_INTEGER,
-                };
-            }
-        } else {
-            const pushers: { distance: number, coord: Coord}[] =
-                this.getPushers(state, mountainsColumn, mountainsRow);
-            let zeroShortestDistance: number = Number.MAX_SAFE_INTEGER;
-            let oneShortestDistance: number = Number.MAX_SAFE_INTEGER;
-            const currentPlayer: Player = state.getCurrentPlayer();
-            for (const pusher of pushers) {
-                if (SiamState.isOnBoard(pusher.coord)) {
-                    const piece: SiamPiece = state.getPieceAt(pusher.coord);
-                    if (piece.belongTo(Player.ZERO)) {
-                        zeroShortestDistance = Math.min(zeroShortestDistance, pusher.distance);
-                    } else {
-                        oneShortestDistance = Math.min(oneShortestDistance, pusher.distance);
-                    }
+        const pushers: { distance: number, coord: Coord}[] =
+            this.getPushers(state, mountainsColumn, mountainsRow);
+        let zeroShortestDistance: number = Number.MAX_SAFE_INTEGER;
+        let oneShortestDistance: number = Number.MAX_SAFE_INTEGER;
+        const currentPlayer: Player = state.getCurrentPlayer();
+        for (const pusher of pushers) {
+            if (SiamState.isOnBoard(pusher.coord)) {
+                const piece: SiamPiece = state.getPieceAt(pusher.coord);
+                if (piece.belongTo(Player.ZERO)) {
+                    zeroShortestDistance = Math.min(zeroShortestDistance, pusher.distance);
                 } else {
-                    if (currentPlayer === Player.ZERO) {
-                        zeroShortestDistance = Math.min(zeroShortestDistance, pusher.distance);
-                    } else {
-                        oneShortestDistance = Math.min(oneShortestDistance, pusher.distance);
-                    }
+                    oneShortestDistance = Math.min(oneShortestDistance, pusher.distance);
+                }
+            } else {
+                if (currentPlayer === Player.ZERO) {
+                    zeroShortestDistance = Math.min(zeroShortestDistance, pusher.distance);
+                } else {
+                    oneShortestDistance = Math.min(oneShortestDistance, pusher.distance);
                 }
             }
-            const boardValue: number =
-                this.getScoreFromShortestDistances(zeroShortestDistance, oneShortestDistance, currentPlayer);
-            return { shortestZero: zeroShortestDistance, shortestOne: oneShortestDistance, boardValue };
         }
+        const boardValue: number =
+            this.getScoreFromShortestDistances(zeroShortestDistance, oneShortestDistance, currentPlayer);
+        return { shortestZero: zeroShortestDistance, shortestOne: oneShortestDistance, boardValue };
     }
     public getScoreFromShortestDistances(zeroShortestDistance: number,
                                          oneShortestDistance: number,
