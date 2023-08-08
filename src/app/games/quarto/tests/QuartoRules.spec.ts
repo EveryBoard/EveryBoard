@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { QuartoNode, QuartoRules } from '../QuartoRules';
-import { QuartoHeuristic } from '../QuartoMinimax';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
@@ -10,18 +9,13 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { QuartoFailure } from '../QuartoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 
 describe('QuartoRules', () => {
 
     let rules: QuartoRules;
-    let heuristics: Heuristic<QuartoMove, QuartoState>[];
 
     beforeEach(() => {
         rules = QuartoRules.get();
-        heuristics = [
-            new QuartoHeuristic(),
-        ];
     });
     it('should create', () => {
         expect(rules).toBeTruthy();
@@ -60,7 +54,7 @@ describe('QuartoRules', () => {
         const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.EMPTY);
         const node: QuartoNode = new QuartoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeDraw(rules, node, heuristics);
+        RulesUtils.expectToBeDraw(rules, node);
     });
     it('should forbid to give a piece already on the board', () => {
         // Given a board with AAAA on it
@@ -148,7 +142,7 @@ describe('QuartoRules', () => {
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should consider Player.ONE winner when doing a full line', () => {
         // Given a board with 3 piece with common criterion aligned
@@ -174,7 +168,7 @@ describe('QuartoRules', () => {
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should recognize ongoing games', () => {
         // Given an ongoing game
@@ -189,24 +183,6 @@ describe('QuartoRules', () => {
 
         // When evaluating board value
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node, heuristics);
-    });
-    describe('updateBoardStatus', () => {
-        it('should recognize "3 3" as pre-victory', () => {
-            // Given a board where 3 piece are aligned with a common criterion
-            // and another line of 3 matching another criterion
-            const board: Table<QuartoPiece> = [
-                [QuartoPiece.AAAA, QuartoPiece.ABBB, QuartoPiece.AAAB, QuartoPiece.EMPTY],
-                [QuartoPiece.BBBB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.EMPTY],
-                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
-                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
-            ];
-            const state: QuartoState = new QuartoState(board, 10, QuartoPiece.BBBB);
-
-            // When evaluating board value
-            // Then it should be evaluated as Ongoing
-            const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            RulesUtils.expectStateToBePreVictory(state, move, Player.ZERO, heuristics);
-        });
+        RulesUtils.expectToBeOngoing(rules, node);
     });
 });

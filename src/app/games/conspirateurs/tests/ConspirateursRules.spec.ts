@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -8,7 +7,6 @@ import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
-import { ConspirateursHeuristic } from '../ConspirateursMinimax';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -17,13 +15,8 @@ describe('ConspirateursRules', () => {
 
     let rules: ConspirateursRules;
 
-    let heuristics: Heuristic<ConspirateursMove, ConspirateursState>[];
-
     beforeEach(() => {
         rules = ConspirateursRules.get();
-        heuristics = [
-            new ConspirateursHeuristic(),
-        ];
     });
 
     function drop(coord: Coord): ConspirateursMove {
@@ -461,7 +454,7 @@ describe('ConspirateursRules', () => {
             const state: ConspirateursState = ConspirateursState.getInitialState();
             const node: ConspirateursNode = new ConspirateursNode(state);
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, heuristics);
+            RulesUtils.expectToBeOngoing(rules, node);
         });
         it('should consider game won if a player has put all its pieces in shelters (Player.ZERO)', () => {
             // Given a state where player 0 has sheltered all of its pieces
@@ -486,7 +479,7 @@ describe('ConspirateursRules', () => {
             ], 60);
             const node: ConspirateursNode = new ConspirateursNode(state);
             // Then the victory should be detected for player 0
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should consider game won if a player has put all its pieces in shelters (Player.ONE)', () => {
             // Given a state where player 1 has sheltered all of its pieces
@@ -511,7 +504,7 @@ describe('ConspirateursRules', () => {
             ], 60);
             const node: ConspirateursNode = new ConspirateursNode(state);
             // Then the victory should be detected for player 1
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });
     it('should not compute jumps that go out of the board', () => {

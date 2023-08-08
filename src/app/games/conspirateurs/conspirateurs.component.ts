@@ -8,12 +8,13 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ConspirateursMinimax } from './ConspirateursMinimax';
+import { ConspirateursMinimax, ConspirateursMoveGenerator } from './ConspirateursMinimax';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { ConspirateursTutorial } from './ConspirateursTutorial';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
@@ -67,6 +68,7 @@ export class ConspirateursComponent
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new ConspirateursMinimax(),
+            new MCTS('MCTS', new ConspirateursMoveGenerator(), this.rules),
         ];
         this.encoder = ConspirateursMove.encoder;
         this.tutorial = new ConspirateursTutorial().tutorial;

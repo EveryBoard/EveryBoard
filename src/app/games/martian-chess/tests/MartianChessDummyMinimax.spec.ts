@@ -155,7 +155,6 @@ describe('MartianChessScoreHeuristic', () => {
     });
     it('should simply prefer higher score', () => {
         const weakState: MartianChessState = MartianChessState.getInitialState();
-        const empty: MGPOptional<MartianChessMove> = MGPOptional.empty();
         const strongBoard: Table<MartianChessPiece> = weakState.getCopiedBoard();
         const captured: MGPMap<Player, MartianChessCapture> = weakState.captured.getCopy();
         const capturedPawn: MartianChessCapture = MartianChessCapture.of([MartianChessPiece.PAWN]);
@@ -165,6 +164,11 @@ describe('MartianChessScoreHeuristic', () => {
                                                                      MGPOptional.empty(),
                                                                      MGPOptional.empty(),
                                                                      captured);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic, weakState, empty, strongState, empty, Player.ZERO);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                           weakState,
+                                                           MGPOptional.empty(),
+                                                           strongState,
+                                                           MGPOptional.empty(),
+                                                           Player.ZERO);
     });
 });

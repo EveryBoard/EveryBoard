@@ -4,7 +4,7 @@ import { RectangularGameComponent }
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { PentagoMinimax } from './PentagoMinimax';
+import { PentagoMinimax, PentagoMoveGenerator } from './PentagoMinimax';
 import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
@@ -14,6 +14,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 interface ArrowInfo {
     path: string;
@@ -52,6 +53,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new PentagoMinimax(),
+            new MCTS('MCTS', new PentagoMoveGenerator(), this.rules),
         ];
         this.encoder = PentagoMove.encoder;
         this.tutorial = new PentagoTutorial().tutorial;

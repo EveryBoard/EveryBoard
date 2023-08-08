@@ -1,11 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { TrexoFailure } from '../TrexoFailure';
-import { TrexoHeuristic } from '../TrexoMinimax';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
@@ -31,13 +29,9 @@ const X1__T4: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 4
 describe('TrexoRules', () => {
 
     let rules: TrexoRules;
-    let heuristics: Heuristic<TrexoMove, TrexoState>[];
 
     beforeEach(() => {
         rules = TrexoRules.get();
-        heuristics = [
-            new TrexoHeuristic(),
-        ];
     });
     it('should accept to drop piece on the floor', () => {
         // Given any board where two spaces on the floor are free
@@ -181,7 +175,7 @@ describe('TrexoRules', () => {
         ], 5);
         const node: TrexoNode = new TrexoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
     });
@@ -218,7 +212,7 @@ describe('TrexoRules', () => {
         ], 4);
         const node: TrexoNode = new TrexoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should declare loser the player who align 5 piece of both players', () => {
         // Given a board where two players have 4 pieces aligned
@@ -253,7 +247,7 @@ describe('TrexoRules', () => {
         ], 5);
         const node: TrexoNode = new TrexoNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
     });

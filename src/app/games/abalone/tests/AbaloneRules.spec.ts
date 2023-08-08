@@ -20,13 +20,9 @@ describe('AbaloneRules', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     let rules: AbaloneRules;
-    let heuristics: Heuristic<AbaloneMove, AbaloneState>[];
 
     beforeEach(() => {
         rules = AbaloneRules.get();
-        heuristics = [
-            new AbaloneScoreHeuristic(),
-        ];
     });
     it('should start with an ongoing board status', () => {
         const state: AbaloneState = AbaloneState.getInitialState();
@@ -234,7 +230,7 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should declare player one winner when he push a 6th opponent piece out of the board', () => {
         const winningBoard: FourStatePiece[][] = [
@@ -250,7 +246,7 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should allow unblocked translation', () => {
         // Given an initial board (for simplicity)

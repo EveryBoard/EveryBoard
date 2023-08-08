@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
-import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
+import { EncapsuleMinimax, EncapsuleMoveGenerator } from 'src/app/games/encapsule/EncapsuleMinimax';
 import { EncapsuleState, EncapsuleSpace } from 'src/app/games/encapsule/EncapsuleState';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
@@ -15,6 +15,7 @@ import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-encapsule',
@@ -43,6 +44,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new EncapsuleMinimax(),
+            new MCTS('MCTS', new EncapsuleMoveGenerator(), this.rules),
         ];
         this.encoder = EncapsuleMove.encoder;
         this.tutorial = new EncapsuleTutorial().tutorial;

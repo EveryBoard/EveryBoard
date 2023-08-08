@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaNode, SaharaRules } from '../SaharaRules';
-import { SaharaHeuristic } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaState } from '../SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
@@ -19,13 +18,9 @@ describe('SaharaHeuristic', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     let rules: SaharaRules;
-    let heuristics: SaharaHeuristic[];
 
     beforeEach(() => {
         rules = SaharaRules.get();
-        heuristics = [
-            new SaharaHeuristic(),
-        ];
     });
     it('SaharaRules should be created', () => {
         expect(rules).toBeTruthy();
@@ -65,6 +60,6 @@ describe('SaharaHeuristic', () => {
         ];
         const state: SaharaState = new SaharaState(board, 4);
         const node: SaharaNode = new SaharaNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
 });

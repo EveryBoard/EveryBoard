@@ -29,7 +29,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new P4Minimax(),
-            new MCTS('MCTS', new P4MoveGenerator, P4Rules.get()),
+            new MCTS('MCTS', new P4MoveGenerator(), this.rules),
         ];
         this.encoder = P4Move.encoder;
         this.tutorial = new P4Tutorial().tutorial;

@@ -4,18 +4,15 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
-import { PylosHeuristic } from '../PylosMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from '../PylosFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 
 describe('PylosRules', () => {
 
     let rules: PylosRules;
-    let heuristics: Heuristic<PylosMove, PylosState>[];
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -23,9 +20,6 @@ describe('PylosRules', () => {
 
     beforeEach(() => {
         rules = PylosRules.get();
-        heuristics = [
-            new PylosHeuristic(),
-        ];
     });
     it(`should forbid move who'se landing coord is not empty`, () => {
         const board: PlayerOrNone[][][] = [
@@ -344,7 +338,7 @@ describe('PylosRules', () => {
         const expectedState: PylosState = new PylosState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should declare loser Player.ONE when he put his 15th ball', () => {
         const board: PlayerOrNone[][][] = [
@@ -387,6 +381,6 @@ describe('PylosRules', () => {
         const expectedState: PylosState = new PylosState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 });

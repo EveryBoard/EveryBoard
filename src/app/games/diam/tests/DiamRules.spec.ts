@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';
@@ -19,11 +18,8 @@ describe('DiamRules', () => {
 
     let rules: DiamRules;
 
-    let heuristics: Heuristic<DiamMove, DiamState>[];
-
     beforeEach(() => {
         rules = DiamRules.get();
-        heuristics = [];
     });
     function drop(target: number, piece: DiamPiece): DiamMove {
         return new DiamMoveDrop(target, piece);
@@ -197,7 +193,7 @@ describe('DiamRules', () => {
             ], 3);
             const node: DiamNode = new DiamNode(state);
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, heuristics);
+            RulesUtils.expectToBeOngoing(rules, node);
         });
         it('should not consider non-facing alignment as win', () => {
             // Given a state where there is an alignment but not face-to-face
@@ -209,7 +205,7 @@ describe('DiamRules', () => {
             ], 4);
             const node: DiamNode = new DiamNode(state);
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, heuristics);
+            RulesUtils.expectToBeOngoing(rules, node);
         });
         it('should detect player 0 win with face-to-face alignment', () => {
             // Given a state where player zero has a face-to-face alignment
@@ -221,7 +217,7 @@ describe('DiamRules', () => {
             ], 4);
             const node: DiamNode = new DiamNode(state);
             // Then it is detected as a v ictory for player zero
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should detect win when two alignments happen at the same turn', () => {
             // Given a board where two alignment exist, but player one has a higher alignment
@@ -233,7 +229,7 @@ describe('DiamRules', () => {
             ], 4);
             const node: DiamNode = new DiamNode(state);
             // Then the winner is the one with the highest alignment
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });
 });

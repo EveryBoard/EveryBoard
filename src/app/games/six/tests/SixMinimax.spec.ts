@@ -172,6 +172,24 @@ describe('SixHeuristic', () => {
             // Then that value should be a pre-victory
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
+        it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
+            const state: SixState = SixState.ofRepresentation([
+                [X, X, X, X, X],
+            ], 2);
+            const previousMove: SixMove = SixMove.ofDrop(new Coord(0, 0));
+            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic]);
+        });
+        it('should know that full-bowtie aligned with two empty extension mean PRE_VICTORY', () => {
+            const state: SixState = SixState.ofRepresentation([
+                [_, O, O, O],
+                [O, O, O, X],
+                [O, X, X, X],
+                [O, X, X, _],
+
+            ], 2);
+            const previousMove: SixMove = SixMove.ofDrop(new Coord(2, 2));
+            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic]);
+        });
     });
     describe('4 pieces aligned is better than 3 pieces aligned', () => {
         it('should be true with lines', () => {

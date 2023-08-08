@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoRules } from './TrexoRules';
-import { TrexoMinimax } from './TrexoMinimax';
+import { TrexoMinimax, TrexoMoveGenerator } from './TrexoMinimax';
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -14,6 +14,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 interface PieceOnBoard {
 
@@ -80,6 +81,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new TrexoMinimax(),
+            new MCTS('MCTS', new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
         this.tutorial = new TrexoTutorial().tutorial;

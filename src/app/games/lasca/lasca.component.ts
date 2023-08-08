@@ -18,6 +18,7 @@ import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { LascaTutorial } from './LascaTutorial';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 interface SpaceInfo {
     squareClasses: string[];
@@ -72,6 +73,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.availableAIs = [
             new LascaControlMinimax(),
             new LascaControlAndDominationMinimax(),
+            new MCTS('MCTS', new LascaMoveGenerator(), this.rules),
         ];
         this.encoder = LascaMove.encoder;
         this.tutorial = new LascaTutorial().tutorial;

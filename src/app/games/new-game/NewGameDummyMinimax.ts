@@ -46,7 +46,8 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
  * By convention, we call such a class a "dummy minimax" if:
  *   - it doesn't filter any move in `getListMoves`
  *   - it has a simplistic `getBoardValue`, only relying the score stored in the state
- * TODO FOR REVIEW: je propose "dummy minimax" = minimux avec DummyHeuristic (prédéfinie à 0 par plateau) vs. "score minimax" = minimax qui utilise le score comme heuristique
+ * TODO FOR REVIEW: je propose "dummy minimax" = minimux avec DummyHeuristic (prédéfinie à 0 par plateau)
+ * TODO FOR REVIEW: vs. "score minimax" = minimax qui utilise le score comme heuristique
  */
 export class NewGameDummyMinimax extends Minimax<NewGameMove, NewGameState, NewGameLegalityInfo> {
 

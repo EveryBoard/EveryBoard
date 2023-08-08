@@ -107,9 +107,9 @@ export class RulesUtils {
         heuristics: Heuristic<M, S>[])
     : void
     {
-        for (const minimax of heuristics) {
+        for (const heuristic of heuristics) {
             const node: GameNode<M, S> = new GameNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
-            const value: number = minimax.getBoardValue(node).value;
+            const value: number = heuristic.getBoardValue(node).value;
             const expectedValue: number = player.getPreVictory();
             expect(BoardValue.isPreVictory(value)).toBeTrue();
             expect(value).toBe(expectedValue);

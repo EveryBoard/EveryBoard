@@ -5,10 +5,11 @@ import { TablutRules } from './TablutRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TablutTutorial } from './TablutTutorial';
 import { TaflComponent } from '../tafl.component';
-import { TaflHeuristic, TaflMinimax } from '../TaflMinimax';
+import { TaflHeuristic, TaflMinimax, TaflMoveGenerator } from '../TaflMinimax';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-tablut',
@@ -26,6 +27,7 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
             new TaflMinimax('Piece > Influence Minimax', new TaflPieceAndInfluenceHeuristic(this.rules)),
             new TaflMinimax('Piece > Control Minimax', new TaflPieceAndControlHeuristic(this.rules)),
             new TaflMinimax('Escape > Piece > Control Minimax', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
+            new MCTS('MCTS', new TaflMoveGenerator(this.rules), this.rules),
         ];
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;

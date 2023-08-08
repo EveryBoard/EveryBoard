@@ -6,12 +6,10 @@ import { GipfCapture, GipfMove, GipfPlacement } from '../GipfMove';
 import { GipfState } from '../GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfLegalityInformation, GipfNode, GipfRules } from '../GipfRules';
-import { GipfHeuristic } from '../GipfMinimax';
 import { GipfFailure } from '../GipfFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('GipfRules', () => {
@@ -26,20 +24,8 @@ describe('GipfRules', () => {
 
     let rules: GipfRules;
 
-    let heuristics: Heuristic<GipfMove, GipfState>[];
-
-    let node: GipfNode;
-
     beforeEach(() => {
         rules = GipfRules.get();
-        heuristics = [
-            new GipfHeuristic(),
-        ];
-        node = rules.getInitialNode();
-    });
-    it('should be created', () => {
-        expect(rules).toBeTruthy();
-        expect(node.gameState.turn).withContext('Game should start at turn 0').toBe(0);
     });
     it('should start with the expected board for the basic variant', () => {
         const state: GipfState = GipfState.getInitialState();
@@ -431,7 +417,7 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P1Turn, [5, 0], [0, 0]);
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should declare victory when one player does not have any piece left (Player.ONE)', () => {
             const board: Table<FourStatePiece> = [
@@ -445,7 +431,7 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
         it('should not declare victory when one player does not have pieces left but still has an initial capture', () => {
             const board: Table<FourStatePiece> = [
@@ -460,7 +446,7 @@ describe('GipfRules', () => {
             const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, heuristics);
+            RulesUtils.expectToBeOngoing(rules, node);
         });
     });
     describe('getAllDirectionsForEntrance', () => {

@@ -6,13 +6,14 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionRules } from './LinesOfActionRules';
-import { LinesOfActionMinimax } from './LinesOfActionMinimax';
+import { LinesOfActionMinimax, LinesOfActionMoveGenerator } from './LinesOfActionMinimax';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-linesofaction',
@@ -38,6 +39,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new LinesOfActionMinimax(),
+            new MCTS('MCTS', new LinesOfActionMoveGenerator(), this.rules),
         ];
         this.encoder = LinesOfActionMove.encoder;
         this.tutorial = new LinesOfActionTutorial().tutorial;

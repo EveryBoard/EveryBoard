@@ -83,7 +83,7 @@
             >Start a new game</button>
             <div *ngIf="gameComponent.node.move.isPresent() && displayAIMetrics"
                  id="AIMetrics">
-                <!-- TODO: restore and add "debugInfo" to AIs
+                <!-- TODO FOR REVIEW: je propose de passer par Debug.display plutôt que du HTML dans le composant, vu que c'est addressé aux devs ceci
                 <ng-container *ngFor="let minimax of gameComponent.availableAIs">
                     {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.node) }} <br/>
                 </ng-container>

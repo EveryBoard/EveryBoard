@@ -5,20 +5,16 @@ import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
-import { KamisadoHeuristic } from '../KamisadoMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { KamisadoFailure } from '../KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 
 describe('KamisadoRules', () => {
 
     let rules: KamisadoRules;
-
-    let heuristics: Heuristic<KamisadoMove, KamisadoState>[];
 
     let node: KamisadoNode;
 
@@ -35,9 +31,6 @@ describe('KamisadoRules', () => {
 
     beforeEach(() => {
         rules = KamisadoRules.get();
-        heuristics = [
-            new KamisadoHeuristic(),
-        ];
         node = rules.getInitialNode();
     });
     it('should be created', () => {
@@ -356,7 +349,7 @@ describe('KamisadoRules', () => {
             const node: KamisadoNode = new KamisadoNode(state);
 
             // Then it should be a victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
         it('should detect victory for Player.ZERO', () => {
             // Given a board where Player.ZERO just landed on last line
@@ -375,7 +368,7 @@ describe('KamisadoRules', () => {
             const node: KamisadoNode = new KamisadoNode(state);
 
             // Then it should be a victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should declare blocking player as loser', () => {
             // Given a board where Player.ONE blocked everyone
@@ -396,7 +389,7 @@ describe('KamisadoRules', () => {
             const node: KamisadoNode = new KamisadoNode(state);
 
             // Then it should be victory for Player.ZERO
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
     });
     it('should not allow creating invalid color', () => {

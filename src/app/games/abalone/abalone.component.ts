@@ -12,13 +12,14 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { AbaloneScoreMinimax } from './AbaloneDummyMinimax';
+import { AbaloneMoveGenerator, AbaloneScoreMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -53,6 +54,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new AbaloneScoreMinimax(),
+            new MCTS('MCTS', new AbaloneMoveGenerator(), this.rules),
         ];
         this.encoder = AbaloneMove.encoder;
         this.tutorial = new AbaloneTutorial().tutorial;

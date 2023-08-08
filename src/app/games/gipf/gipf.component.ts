@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { GipfLegalityInformation, GipfRules } from 'src/app/games/gipf/GipfRules';
-import { GipfMinimax } from 'src/app/games/gipf/GipfMinimax';
+import { GipfMinimax, GipfMoveGenerator } from 'src/app/games/gipf/GipfMinimax';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -19,6 +19,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfTutorial } from './GipfTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-gipf',
@@ -66,6 +67,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new GipfMinimax(),
+            new MCTS('MCTS', new GipfMoveGenerator(), this.rules),
         ];
         this.encoder = GipfMove.encoder;
         this.tutorial = new GipfTutorial().tutorial;

@@ -5,7 +5,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
-import { QuixoMinimax } from 'src/app/games/quixo/QuixoMinimax';
+import { QuixoMinimax, QuixoMoveGenerator } from 'src/app/games/quixo/QuixoMinimax';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -13,6 +13,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { QuixoTutorial } from './QuixoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-quixo',
@@ -39,6 +40,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new QuixoMinimax(),
+            new MCTS('MCTS', new QuixoMoveGenerator(), this.rules),
         ];
         this.encoder = QuixoMove.encoder;
         this.tutorial = new QuixoTutorial().tutorial;

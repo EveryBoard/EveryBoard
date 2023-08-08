@@ -5,18 +5,13 @@ import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove }
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
-import { CoerceoHeuristic } from '../CoerceoMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Heuristic } from 'src/app/jscaip/Minimax';
-import { CoerceoPiecesThreatTilesHeuristic } from '../CoerceoPiecesThreatTilesMinimax';
 
 describe('CoerceoRules', () => {
 
     let rules: CoerceoRules;
-
-    let heuristics: Heuristic<CoerceoMove, CoerceoState>[];
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -29,10 +24,6 @@ describe('CoerceoRules', () => {
 
     beforeEach(() => {
         rules = CoerceoRules.get();
-        heuristics = [
-            new CoerceoHeuristic(),
-            new CoerceoPiecesThreatTilesHeuristic(),
-        ];
     });
     describe('movement', () => {
         it('should forbid to start move from outside the board', () => {
@@ -370,7 +361,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [18, 17]);
             const node: CoerceoNode = new CoerceoNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should set minimal value to victory of Player.ONE', () => {
             const board: FourStatePiece[][] = [
@@ -387,7 +378,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [17, 18]);
             const node: CoerceoNode = new CoerceoNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });
 });

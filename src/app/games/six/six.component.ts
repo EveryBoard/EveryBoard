@@ -17,7 +17,8 @@ import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { SixMinimax } from './SixMinimax';
+import { SixMinimax, SixMoveGenerator } from './SixMinimax';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-six',
@@ -50,6 +51,7 @@ export class SixComponent
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new SixMinimax(),
+            new MCTS('MCTS', new SixMoveGenerator(), this.rules),
         ];
         this.encoder = SixMove.encoder;
         this.tutorial = new SixTutorial().tutorial;

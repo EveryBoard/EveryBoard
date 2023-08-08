@@ -8,14 +8,11 @@ import { EncapsulePiece } from '../EncapsulePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
-
-    let heuristics: Heuristic<EncapsuleMove, EncapsuleState>[];
 
     let node: EncapsuleNode;
 
@@ -36,7 +33,6 @@ describe('EncapsuleRules', () => {
 
     beforeEach(() => {
         rules = EncapsuleRules.get();
-        heuristics = [];
         node = rules.getInitialNode();
     });
     it('should be created', () => {
@@ -56,7 +52,7 @@ describe('EncapsuleRules', () => {
         node = new EncapsuleNode(state);
         // When evaluating it
         // Then it should be a victory
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should not consider a non-victory as a victory', () => {
         // Given a board that is an ongoing part
@@ -73,7 +69,7 @@ describe('EncapsuleRules', () => {
 
         // When evaluating it
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node, heuristics);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('should know winner even when he was not playing', () => {
         // Given a board on which active player could lose by acting
@@ -103,7 +99,7 @@ describe('EncapsuleRules', () => {
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: EncapsuleNode = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should allow moving pieces on empty coord', () => {
         // Given a board with piece on it

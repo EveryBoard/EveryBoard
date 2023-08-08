@@ -34,6 +34,22 @@ describe('QuartoHeuristic', () => {
         // Then the heuristic should detect the previctory
         RulesUtils.expectStateToBePreVictory(state, new QuartoMove(1, 0, AAAA), Player.ONE, [heuristic]);
     });
+    it('should recognize "3 3" as pre-victory', () => {
+        // Given a board where 3 piece are aligned with a common criterion
+        // and another line of 3 matching another criterion
+        const board: Table<QuartoPiece> = [
+            [QuartoPiece.AAAA, QuartoPiece.ABBB, QuartoPiece.AAAB, QuartoPiece.EMPTY],
+            [QuartoPiece.BBBB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+        ];
+        const state: QuartoState = new QuartoState(board, 10, QuartoPiece.BBBB);
+
+        // When evaluating board value
+        // Then it should be evaluated as Ongoing
+        const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
+        RulesUtils.expectStateToBePreVictory(state, move, Player.ZERO, [heuristic]);
+    });
 });
 
 describe('QuartoMoveGenerator', () => {

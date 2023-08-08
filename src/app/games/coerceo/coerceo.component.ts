@@ -6,7 +6,7 @@ import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
-import { CoerceoMinimax } from 'src/app/games/coerceo/CoerceoMinimax';
+import { CoerceoMinimax, CoerceoMoveGenerator } from 'src/app/games/coerceo/CoerceoMinimax';
 import { CoerceoPiecesThreatTilesMinimax } from './CoerceoPiecesThreatTilesMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
@@ -14,6 +14,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoTutorial } from './CoerceoTutorial';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-coerceo',
@@ -45,6 +46,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.availableAIs = [
             new CoerceoMinimax(),
             new CoerceoPiecesThreatTilesMinimax(),
+            new MCTS('MCTS', new CoerceoMoveGenerator(), this.rules),
         ];
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;

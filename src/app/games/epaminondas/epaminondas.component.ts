@@ -3,7 +3,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
-import { EpaminondasMinimax } from 'src/app/games/epaminondas/EpaminondasMinimax';
+import { EpaminondasMinimax, EpaminondasMoveGenerator } from 'src/app/games/epaminondas/EpaminondasMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -16,6 +16,7 @@ import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-epaminondas',
@@ -55,6 +56,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             new EpaminondasMinimax(),
             new PositionalEpaminondasMinimax(),
             new AttackEpaminondasMinimax(),
+            new MCTS('MCTS', new EpaminondasMoveGenerator(), this.rules),
         ];
         this.encoder = EpaminondasMove.encoder;
         this.tutorial = new EpaminondasTutorial().tutorial;

@@ -7,7 +7,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MartianChessScoreMinimax } from './MartianChessDummyMinimax';
+import { MartianChessMoveGenerator, MartianChessScoreMinimax } from './MartianChessDummyMinimax';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
@@ -15,6 +15,7 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessTutorial } from './MartianChessTutorial';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Utils } from 'src/app/utils/utils';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,
@@ -35,7 +36,7 @@ export type MartianChessPoint = 'Concentric Circles' | 'Dots' | 'Horizontal Poin
  * When drawing a 3x3 board, its a width of 3x100 + half strokes on each side, so 308x308
  * The advantage is that by only drawing the empty squares you get a grid with all horizontal and vertical
  * and all inside and outside lines equals.
- * Then for those pattern it's bettern to think that we draw from the coord (-4, -4)
+ * Then for those pattern it's better to think that we draw from the coord (-4, -4)
  * and that the width is 308.
  *
  * For the inside circle, his center must still be (50, 50), but is radius cannot be 50 to avoid overlap,
@@ -157,6 +158,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new MartianChessScoreMinimax(),
+            new MCTS('MCTS', new MartianChessMoveGenerator(), this.rules),
         ];
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();

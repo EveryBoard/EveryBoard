@@ -4,11 +4,12 @@ import { HnefataflState } from './HnefataflState';
 import { HnefataflRules } from './HnefataflRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { TaflHeuristic, TaflMinimax } from '../TaflMinimax';
+import { TaflHeuristic, TaflMinimax, TaflMoveGenerator } from '../TaflMinimax';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
 import { HnefataflTutorial } from './HnefataflTutorial';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-hnefatafl',
@@ -26,6 +27,7 @@ export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflM
             new TaflMinimax('Piece > Influence', new TaflPieceAndInfluenceHeuristic(this.rules)),
             new TaflMinimax('Piece > Control', new TaflPieceAndControlHeuristic(this.rules)),
             new TaflMinimax('Escape > Piece > Control', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
+            new MCTS('MCTS', new TaflMoveGenerator(this.rules), this.rules),
         ];
         this.encoder = HnefataflMove.encoder;
         this.tutorial = new HnefataflTutorial().tutorial;

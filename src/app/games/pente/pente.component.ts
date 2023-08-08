@@ -1,7 +1,7 @@
 import { PenteRules } from './PenteRules';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
+import { PenteAlignmentMinimax, PenteMoveGenerator } from './PenteAlignmentMinimax';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { PenteTutorial } from './PenteTutorial';
@@ -10,6 +10,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-new-game',
@@ -31,6 +32,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.tutorial = new PenteTutorial().tutorial;
         this.availableAIs = [
             new PenteAlignmentMinimax(),
+            new MCTS('MCTS', new PenteMoveGenerator(), this.rules),
         ];
     }
     public updateBoard(): void {

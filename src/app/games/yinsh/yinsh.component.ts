@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
-import { YinshMinimax } from './YinshMinimax';
+import { YinshMinimax, YinshMoveGenerator } from './YinshMinimax';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
@@ -18,6 +18,7 @@ import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 interface SpaceInfo {
     coord: Coord,
@@ -100,6 +101,7 @@ export class YinshComponent
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new YinshMinimax(),
+            new MCTS('MCTS', new YinshMoveGenerator(), this.rules),
         ];
         this.encoder = YinshMove.encoder;
         this.tutorial = new YinshTutorial().tutorial;

@@ -6,10 +6,7 @@ import { DvonnMove } from '../DvonnMove';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnFailure } from '../DvonnFailure';
-import { DvonnHeuristic } from '../DvonnMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Heuristic } from 'src/app/jscaip/Minimax';
-import { MaxStacksDvonnHeuristic } from '../MaxStacksDvonnMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -19,10 +16,6 @@ import { fakeAsync } from '@angular/core/testing';
 describe('DvonnRules', () => {
 
     let rules: DvonnRules;
-
-    let heuristics: Heuristic<DvonnMove, DvonnState>[];
-
-    let node: DvonnNode;
 
     const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
     const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
@@ -39,15 +32,6 @@ describe('DvonnRules', () => {
 
     beforeEach(() => {
         rules = DvonnRules.get();
-        heuristics = [
-            new DvonnHeuristic(),
-            new MaxStacksDvonnHeuristic(),
-        ];
-        node = rules.getInitialNode();
-    });
-    it('should be created', () => {
-        expect(rules).toBeTruthy();
-        expect(node.gameState.turn).withContext('Game should start at turn 0').toBe(0);
     });
     it('initial stacks should be of size 1', () => {
         const state: DvonnState = DvonnState.getInitialState();
@@ -238,7 +222,7 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should recognize victory for player one', () => {
             const board: Table<DvonnPieceStack> = [
@@ -250,7 +234,7 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
         it('should recognize draw', () => {
             const board: Table<DvonnPieceStack> = [
@@ -262,7 +246,7 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
-            RulesUtils.expectToBeDraw(rules, node, heuristics);
+            RulesUtils.expectToBeDraw(rules, node);
         });
     });
     describe('isMovablePiece', () => {

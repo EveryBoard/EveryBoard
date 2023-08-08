@@ -1,13 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
-import { PenteAlignmentHeuristic } from '../PenteAlignmentMinimax';
 
 describe('PenteRules', () => {
 
@@ -16,13 +14,9 @@ describe('PenteRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: PenteRules;
-    let heuristics: Heuristic<PenteMove, PenteState>[];
 
     beforeEach(() => {
         rules = PenteRules.get();
-        heuristics = [
-            new PenteAlignmentHeuristic(),
-        ];
     });
     it('should allow a drop on an empty space', () => {
         // Given a state
@@ -172,7 +166,7 @@ describe('PenteRules', () => {
         const state: PenteState = PenteState.getInitialState();
         const node: PenteNode = new PenteNode(state);
         // Then it should be ongoing
-        RulesUtils.expectToBeOngoing(rules, node, heuristics);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('should be a draw if there are no 5-alignments', () => {
         // Given a drawn state
@@ -199,7 +193,7 @@ describe('PenteRules', () => {
         ], [8, 8], 1337);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a draw
-        RulesUtils.expectToBeDraw(rules, node, heuristics);
+        RulesUtils.expectToBeDraw(rules, node);
     });
     it('should detect 10 captures victory', () => {
         // Given a state with 10 captures from a player
@@ -226,7 +220,7 @@ describe('PenteRules', () => {
         ], [10, 0], 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for this player
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should detect alignment victory', () => {
         // Given a state where zero has aligned 5
@@ -253,6 +247,6 @@ describe('PenteRules', () => {
         ], [0, 0], 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for zero
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 });

@@ -1,13 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Heuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { LodestoneScoreHeuristic } from '../LodestoneDummyMinimax';
 import { LodestoneFailure } from '../LodestoneFailure';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
@@ -30,13 +28,9 @@ describe('LodestoneRules', () => {
     const noLodestones: LodestonePositions = new MGPMap();
 
     let rules: LodestoneRules;
-    let heuristics: Heuristic<LodestoneMove, LodestoneState>[];
 
     beforeEach(() => {
         rules = LodestoneRules.get();
-        heuristics = [
-            new LodestoneScoreHeuristic(),
-        ];
     });
 
     it('should allow placing a lodestone on an empty square', () => {
@@ -931,7 +925,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = LodestoneState.getInitialState();
         const node: LodestoneNode = new LodestoneNode(state);
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node, heuristics);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('should consider player victory when they have no more piece', () => {
         for (const player of Player.PLAYERS) {
@@ -951,7 +945,7 @@ describe('LodestoneRules', () => {
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
             const node: LodestoneNode = new LodestoneNode(state);
             // Then it should be a victory for that player
-            RulesUtils.expectToBeVictoryFor(rules, node, player, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, player);
         }
     });
     it('should be a draw if there are no pieces at all left', () => {
@@ -969,6 +963,6 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
         const node: LodestoneNode = new LodestoneNode(state);
         // Then it should be a a draw
-        RulesUtils.expectToBeDraw(rules, node, heuristics);
+        RulesUtils.expectToBeDraw(rules, node);
     });
 });

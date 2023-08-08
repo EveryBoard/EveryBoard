@@ -29,9 +29,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
     public static MAX_GAME_LENGTH: number = 1000;
 
     public readonly availableOptions: AITimeLimitOptions[] = [];
-    /**
-     * We need a minimax to get the list of moves.
-     */
+
     public constructor(public readonly name: string,
                        private readonly moveGenerator: MoveGenerator<M, S>,
                        private readonly rules: Rules<M, S, L>) {
@@ -61,7 +59,6 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         const seconds: number = (Date.now() - startTime) / 1000;
         Debug.display('MCTS', 'chooseNextMove', 'Computed ' + iterations + ' in ' + seconds);
         Debug.display('MCTS', 'chooseNextMove', 'Best child has a win ratio of: ' + this.winRatio(bestChild));
-        root.printDot(this.rules, (node: GameNode<M, S>): string => `${this.wins(node)}/${this.simulations(node)}`);
         return bestChild.move.get();
     }
     private winScore(gameStatus: GameStatus, player: Player): number {

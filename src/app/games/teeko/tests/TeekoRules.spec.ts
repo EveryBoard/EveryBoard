@@ -1,9 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Heuristic } from 'src/app/jscaip/Minimax';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
 import { TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
-import { TeekoHeuristic } from '../TeekoMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -18,7 +16,6 @@ describe('TeekoRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: TeekoRules;
-    let heuristics: Heuristic<TeekoMove, TeekoState>[];
 
     function translate(start: Coord, end: Coord): TeekoMove {
         return TeekoTranslationMove.from(start, end).get();
@@ -27,12 +24,7 @@ describe('TeekoRules', () => {
         return TeekoDropMove.from(coord).get();
     }
     beforeEach(() => {
-        // This is the rules instance that we will test
         rules = TeekoRules.get();
-        // These are the heuristics. They will be tested at the same time.
-        heuristics = [
-            new TeekoHeuristic(),
-        ];
     });
     describe('dropping phase', () => {
         it('should fail if receiving translation in the 8 first turns', () => {
@@ -109,7 +101,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
             const node: TeekoNode = new TeekoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should notice diagonal victory', () => {
             // Given a board about to have 4 O in a line
@@ -136,7 +128,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
             const node: TeekoNode = new TeekoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should notice vertical victory', () => {
             // Given a board about to have 4 O in a line
@@ -163,7 +155,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
             const node: TeekoNode = new TeekoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should notice square victory', () => {
             // Given a board about to have 4 O in a square
@@ -190,7 +182,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
             const node: TeekoNode = new TeekoNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
     });
     describe('translation phase', () => {
@@ -318,7 +310,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 9);
             const node: TeekoNode = new TeekoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should notice diagonal victory', () => {
             // Given a board about to have 4 O in a line
@@ -345,7 +337,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 9);
             const node: TeekoNode = new TeekoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should notice vertical victory', () => {
             // Given a board about to have 4 O in a line
@@ -372,7 +364,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 9);
             const node: TeekoNode = new TeekoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should notice square victory', () => {
             // Given a board about to have 4 O in a square
@@ -399,7 +391,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 10);
             const node: TeekoNode = new TeekoNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });
 });

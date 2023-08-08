@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnMinimax } from 'src/app/games/dvonn/DvonnMinimax';
+import { DvonnMinimax, DvonnMoveGenerator } from 'src/app/games/dvonn/DvonnMinimax';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -16,6 +16,7 @@ import { DvonnTutorial } from './DvonnTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-dvonn',
@@ -37,6 +38,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.availableAIs = [
             new DvonnMinimax(),
             new MaxStacksDvonnMinimax(),
+            new MCTS('MCTS', new DvonnMoveGenerator(), this.rules),
         ];
         this.encoder = DvonnMove.encoder;
         this.tutorial = new DvonnTutorial().tutorial;

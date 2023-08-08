@@ -1,9 +1,7 @@
-import { Heuristic } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
-import { NewGameHeuristic } from '../NewGameDummyMinimax';
 
 /**
  * This is the test suite for the rules
@@ -11,15 +9,10 @@ import { NewGameHeuristic } from '../NewGameDummyMinimax';
 describe('NewGameRules', () => {
 
     let rules: NewGameRules;
-    let heuristics: Heuristic<NewGameMove, NewGameState>[];
 
     beforeEach(() => {
         // This is the rules instance that we will test
         rules = NewGameRules.get();
-        // These are the heuristics. They will be tested at the same time.
-        heuristics = [
-            new NewGameHeuristic(),
-        ];
     });
     it('should adhere to some rule', () => {
         // This is how you would test a particular rule:
@@ -42,8 +35,8 @@ describe('NewGameRules', () => {
         // When checking its status
         // Then it should be a draw
         const node: NewGameNode = new NewGameNode(state);
-        RulesUtils.expectToBeDraw(rules, node, heuristics);
+        RulesUtils.expectToBeDraw(rules, node);
         // Or you could use this
-        // RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        // RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 });

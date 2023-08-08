@@ -5,30 +5,20 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
-import { EpaminondasHeuristic } from '../EpaminondasMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Heuristic } from 'src/app/jscaip/Minimax';
-import { AttackEpaminondasHeuristic } from '../AttackEpaminondasMinimax';
-import { PositionalEpaminondasHeuristic } from '../PositionalEpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('EpaminondasRules', () => {
 
     let rules: EpaminondasRules;
-    let heuristics: Heuristic<EpaminondasMove, EpaminondasState>[];
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = EpaminondasRules.get();
-        heuristics = [
-            new AttackEpaminondasHeuristic(),
-            new EpaminondasHeuristic(),
-            new PositionalEpaminondasHeuristic(),
-        ];
     });
     it('should forbid phalanx to go outside the board (body)', () => {
         // Given a board
@@ -323,7 +313,7 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Direction.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a victory for 0
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should declare second player winner if their pawn survive one turn on first line', () => {
             // Given a board where second player wins
@@ -345,7 +335,7 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Direction.UP);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a victory for player 1
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
         it('should not consider first player winner if both players have one piece on their landing line', () => {
             // Given a board where both players have a piece on the landing line
@@ -367,7 +357,7 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, heuristics);
+            RulesUtils.expectToBeOngoing(rules, node);
         });
         it('should declare player zero winner when last soldier of opponent has been captured', () => {
             // Given a board with only pieces from player zero
@@ -389,7 +379,7 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a win for player zero
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should declare player one winner when last soldier of opponent has been captured', () => {
             // Given a board with only pieces from player one
@@ -411,7 +401,7 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a win for player one
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, heuristics);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });
 });

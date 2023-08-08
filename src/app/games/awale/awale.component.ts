@@ -40,7 +40,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new AwaleCaptureMinimax(),
-            new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get()),
+            new MCTS('MCTS', new AwaleMoveGenerator(), this.rules),
         ];
         this.encoder = AwaleMove.encoder;
         this.tutorial = new AwaleTutorial().tutorial;
