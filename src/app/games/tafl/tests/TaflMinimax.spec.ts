@@ -40,7 +40,8 @@ describe('TaflMinimax', () => {
     });
     it('should not propose to King to go back on the throne when its forbidden', () => {
         // Given a board where king could go back on his throne but the rules forbid it
-        const moveGenerator: TaflMoveGenerator<BrandhubMove, BrandhubState> = new TaflMoveGenerator(BrandhubRules.get());
+        const moveGenerator: TaflMoveGenerator<BrandhubMove, BrandhubState> =
+            new TaflMoveGenerator(BrandhubRules.get());
         const board: Table<TaflPawn> = [
             [_, _, _, O, _, _, _],
             [_, _, _, _, O, _, _],

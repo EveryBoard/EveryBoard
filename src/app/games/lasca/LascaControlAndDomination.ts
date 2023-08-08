@@ -1,5 +1,4 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { LascaControlHeuristic, LascaMoveGenerator } from './LascaControlMinimax';

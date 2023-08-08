@@ -1,4 +1,3 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';

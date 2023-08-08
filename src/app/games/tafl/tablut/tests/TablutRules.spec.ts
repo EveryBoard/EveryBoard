@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { TablutNode, TablutRules } from '../TablutRules';
-import { TaflHeuristic, TaflMinimax } from '../../TaflMinimax';
+import { TaflHeuristic } from '../../TaflMinimax';
 import { TablutMove } from '../TablutMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TablutState } from '../TablutState';
 import { TaflPawn } from '../../TaflPawn';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { TaflPieceAndInfluenceHeuristic } from '../../TaflPieceAndInfluenceMinimax';

@@ -5,7 +5,6 @@ import { PenteState } from './PenteState';
 import { PenteMove } from './PenteMove';
 import { PenteNode, PenteRules } from './PenteRules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
 export class PenteMoveGenerator extends MoveGenerator<PenteMove, PenteState> {

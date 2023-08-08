@@ -10,7 +10,7 @@ import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
 export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiState> {
 
-    public static readonly bestCoords: Coord[] = [
+    private readonly bestCoords: Coord[] = [
         new Coord(0, 0),
         new Coord(0, ReversiState.BOARD_HEIGHT - 1),
         new Coord(ReversiState.BOARD_WIDTH - 1, 0),
@@ -20,7 +20,7 @@ export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiStat
         const moves: ReversiMoveWithSwitched[] = ReversiRules.getListMoves(n.gameState);
         // Best moves are on the corner, otherwise moves are sorted by number of pieces switched
         ArrayUtils.sortByDescending(moves, (moveWithSwitched: ReversiMoveWithSwitched): number => {
-            if (ReversiMoveGenerator.bestCoords.some((coord: Coord): boolean => moveWithSwitched.move.coord.equals(coord))) {
+            if (this.bestCoords.some((coord: Coord): boolean => moveWithSwitched.move.coord.equals(coord))) {
                 return 100;
             } else {
                 return moveWithSwitched.switched;

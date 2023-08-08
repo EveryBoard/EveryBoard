@@ -21,7 +21,7 @@ describe('YinshMoveGenerator', () => {
 
     beforeEach(() => {
         rules = YinshRules.get();
-        moveGenerator = new YinshMoveGenerator()
+        moveGenerator = new YinshMoveGenerator();
     });
     describe('getListMoves', () => {
         it('should have 85 moves on first turn', () => {

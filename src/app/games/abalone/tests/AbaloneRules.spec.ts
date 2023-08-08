@@ -10,7 +10,7 @@ import { AbaloneScoreHeuristic } from '../AbaloneDummyMinimax';
 import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
-import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 describe('AbaloneRules', () => {

@@ -25,11 +25,9 @@ const d: SiamPiece = SiamPiece.DARK_DOWN;
 
 describe('SiamMoveGenerator', () => {
 
-    let rules: SiamRules;
     let moveGenerator: SiamMoveGenerator;
 
     beforeEach(() => {
-        rules = SiamRules.get();
         moveGenerator = new SiamMoveGenerator();
     });
     describe('list of moves', () => {

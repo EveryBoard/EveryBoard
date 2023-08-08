@@ -4,7 +4,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasHeuristic } from '../EpaminondasMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';

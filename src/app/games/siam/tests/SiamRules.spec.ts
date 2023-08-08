@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { SiamLegalityInformation, SiamNode, SiamRules } from '../SiamRules';
+import { SiamNode, SiamRules } from '../SiamRules';
 import { SiamHeuristic } from '../SiamMinimax';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';

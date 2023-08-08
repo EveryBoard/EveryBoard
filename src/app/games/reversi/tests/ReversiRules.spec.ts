@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
-import { ReversiHeuristic, ReversiMinimax } from '../ReversiMinimax';
+import { ReversiNode, ReversiRules } from '../ReversiRules';
+import { ReversiHeuristic } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -24,7 +24,7 @@ describe('ReversiRules', () => {
     beforeEach(() => {
         rules = ReversiRules.get();
         heuristics = [
-            new ReversiHeuristic()
+            new ReversiHeuristic(),
         ];
         node = rules.getInitialNode();
     });

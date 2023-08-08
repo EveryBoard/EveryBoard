@@ -8,7 +8,6 @@ import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
@@ -455,8 +454,8 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
             const subSum: number = encountered.reduce((a: number, b: number) => a + b);
             if (subSum === 5.16 && status === SCORE.DEFAULT) {
                 if (preVictory.isPresent()) {
-                    assert(preVictory.equals(lastEmpty) === false,
-                           'Impossible to have point aligned with differents line to a same point');
+                    Utils.assert(preVictory.equals(lastEmpty) === false,
+                                 'Impossible to have point aligned with different line to a same point');
                     status = SCORE.PRE_VICTORY;
                 } else {
                     preVictory = lastEmpty;

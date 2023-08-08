@@ -2,7 +2,7 @@
 import { P4Heuristic, P4Minimax, P4MoveGenerator } from '../P4Minimax';
 import { P4Move } from '../P4Move';
 import { P4State } from '../P4State';
-import { P4Node, P4Rules } from '../P4Rules';
+import { P4Node } from '../P4Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -37,11 +37,9 @@ describe('P4MoveGenerator', () => {
 
 describe('P4Heuristic', () => {
 
-    let rules: P4Rules;
     let heuristic: P4Heuristic;
 
     beforeEach(() => {
-        rules = P4Rules.get();
         heuristic = new P4Heuristic();
     });
     it('should assign greater score to center column', () => {

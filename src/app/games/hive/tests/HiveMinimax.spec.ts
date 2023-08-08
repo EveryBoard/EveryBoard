@@ -4,7 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { HiveHeuristic, HiveMinimax, HiveMoveGenerator } from '../HiveMinimax';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
-import { HiveNode, HiveRules } from '../HiveRules';
+import { HiveNode } from '../HiveRules';
 import { HiveState } from '../HiveState';
 
 describe('HiveMoveGenerator', () => {

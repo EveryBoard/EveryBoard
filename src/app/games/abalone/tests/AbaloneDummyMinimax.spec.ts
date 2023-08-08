@@ -3,7 +3,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { AbaloneMoveGenerator, AbaloneScoreHeuristic } from '../AbaloneDummyMinimax';
 import { AbaloneState } from '../AbaloneState';
-import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { AbaloneNode } from '../AbaloneRules';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';

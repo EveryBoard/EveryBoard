@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
-import { DummyHeuristic, Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PentagoMove } from './PentagoMove';
 import { PentagoNode, PentagoRules } from './PentagoRules';

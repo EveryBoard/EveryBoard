@@ -45,7 +45,6 @@ describe('GameNode', () => {
 
     let rules: RulesMock;
 
-
     describe('printDot', () => {
 
         let treeRoot: GameNode<MoveMock, GameStateMock>;
@@ -102,7 +101,7 @@ describe('GameNode', () => {
                 '    node_0 -> node_4 [label="MoveMock"];',
                 '    node_4 [label="#1: 2", style=filled, fillcolor="white"];',
                 '}',
-            ]
+            ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
         it('should print with extra label if needed', () => {

@@ -1,7 +1,7 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';
 import { TrexoState } from './TrexoState';
@@ -20,8 +20,6 @@ export class TrexoHeuristic extends Heuristic<TrexoMove, TrexoState> {
     public getBoardValue(node: TrexoNode): BoardValue {
         let score: number = 0;
         const state: TrexoState = node.gameState;
-        const lastPlayer: Player = state.getCurrentOpponent();
-        let lastPlayerAligned5: boolean = false;
         for (const coordPiece of state.toMap()) {
             // for every column, starting from the bottom of each column
             // while we haven't reached the top or an empty space

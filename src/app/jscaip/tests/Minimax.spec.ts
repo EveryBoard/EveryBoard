@@ -1,15 +1,14 @@
+/* eslint-disable max-lines-per-function */
 import { P4Heuristic, P4MoveGenerator } from 'src/app/games/p4/P4Minimax';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
 import { P4State } from 'src/app/games/p4/P4State';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';
-import { AIDepthLimitOptions, GameNode } from '../MGPNode';
+import { AIDepthLimitOptions } from '../MGPNode';
 import { DummyHeuristic, Minimax } from '../Minimax';
 
-/* eslint-disable max-lines-per-function */
 describe('Minimax', () => {
 
     let moveGenerator: P4MoveGenerator;

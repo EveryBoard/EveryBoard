@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
+import { KamisadoRules } from '../KamisadoRules';
 import { KamisadoMoveGenerator } from '../KamisadoMinimax';
 import { KamisadoMove } from '../KamisadoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';

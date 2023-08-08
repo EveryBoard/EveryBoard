@@ -31,7 +31,7 @@ describe('GoRules', () => {
     beforeEach(() => {
         rules = GoRules.get();
         heuristics = [
-            new GoHeuristic()
+            new GoHeuristic(),
         ];
     });
     it('should be created', () => {

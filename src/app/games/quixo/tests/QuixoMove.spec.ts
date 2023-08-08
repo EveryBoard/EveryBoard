@@ -2,8 +2,8 @@
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
-import { QuixoNode, QuixoRules } from '../QuixoRules';
-import { QuixoMinimax, QuixoMoveGenerator } from '../QuixoMinimax';
+import { QuixoNode } from '../QuixoRules';
+import { QuixoMoveGenerator } from '../QuixoMinimax';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
@@ -44,7 +44,7 @@ describe('QuixoMove', () => {
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const state: QuixoState = new QuixoState(board, 0);
         const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        const moveGenerator: QuixoMoveGenerator = new QuixoMoveGenerator()
+        const moveGenerator: QuixoMoveGenerator = new QuixoMoveGenerator();
         const moves: QuixoMove[] = moveGenerator.getListMoves(node);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(QuixoMove.encoder, move);

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaNode, SaharaRules } from '../SaharaRules';
-import { SaharaHeuristic, SaharaMinimax } from '../SaharaMinimax';
+import { SaharaHeuristic } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaState } from '../SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';

@@ -1,6 +1,6 @@
 import { Utils } from 'src/app/utils/utils';
 import { NInARowHelper } from '../NInARowHelper';
-import { Player, PlayerOrNone } from '../Player';
+import { PlayerOrNone } from '../Player';
 import { Coord } from '../Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { BoardValue } from '../BoardValue';

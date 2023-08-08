@@ -17,12 +17,12 @@ import { GameStatus } from './GameStatus';
  * The value assigned to a node can be more than just a number, and is thus a `BoardValue`
  */
 export abstract class Heuristic<M extends Move, S extends GameState, B extends BoardValue = BoardValue> {
+
     public abstract getBoardValue(node: GameNode<M, S>): B;
 }
 
-export abstract class PlayerMetricHeuristic<M extends Move, S extends GameState>
-  extends Heuristic<M, S>
-{
+export abstract class PlayerMetricHeuristic<M extends Move, S extends GameState> extends Heuristic<M, S> {
+
     public abstract getMetrics(node: GameNode<M, S>): [number, number];
     public getBoardValue(node: GameNode<M, S>): BoardValue {
         const metrics: [number, number] = this.getMetrics(node);
@@ -31,6 +31,7 @@ export abstract class PlayerMetricHeuristic<M extends Move, S extends GameState>
 }
 
 export class DummyHeuristic<M extends Move, S extends GameState> extends PlayerMetricHeuristic<M, S> {
+
     public getMetrics(node: GameNode<M, S>): [number, number] {
         // This is really a dummy heuristic: boards have no value
         return [0, 0];
@@ -40,9 +41,8 @@ export class DummyHeuristic<M extends Move, S extends GameState> extends PlayerM
 /**
  * This implements the minimax algorithm with alpha-beta pruning.
  */
-export class Minimax<M extends Move, S extends GameState, L = void>
-    implements AI<M, S, AIDepthLimitOptions>
-{
+export class Minimax<M extends Move, S extends GameState, L = void> implements AI<M, S, AIDepthLimitOptions> {
+
     // States whether the minimax takes random moves from the list of best moves.
     public RANDOM: boolean = false;
     // States whether alpha-beta pruning must be done. It probably is never useful to set it to false.
@@ -74,12 +74,9 @@ export class Minimax<M extends Move, S extends GameState, L = void>
     }
 
     public alphaBeta(node: GameNode<M, S>, depth: number, alpha: number, beta: number): GameNode<M, S> {
-        // const LOCAL_VERBOSE: boolean = false;
         if (depth < 1) {
-            // display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf-Calculation : ' + this.myToString() + ' at depth ' + depth);
             return node; // leaf by calculation
         } else if (this.rules.getGameStatus(node).isEndGame) {
-            // display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf-EndGame(' + minimax.ruler.getGameStatus(this).winner.toString() + ') : ' + this.myToString() + ' at depth ' + depth);
             return node; // rules - leaf or calculation - leaf
         }
         const possibleMoves: MGPSet<M> = this.getPossibleMoves(node);
@@ -145,14 +142,14 @@ export class Minimax<M extends Move, S extends GameState, L = void>
         }
     }
     private getOrCreateChild(node: GameNode<M, S>, move: M): GameNode<M, S> {
-        let child: MGPOptional<GameNode<M, S>> = node.getChild(move);
+        const child: MGPOptional<GameNode<M, S>> = node.getChild(move);
         if (child.isAbsent()) {
             const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState);
             const moveString: string = move.toString();
             Utils.assert(legality.isSuccess(), 'The minimax "' + this.name + '" has proposed an illegal move (' + moveString + '), refusal reason: ' + legality.getReasonOr('') + ' this should not happen.');
             const state: S = this.rules.applyLegalMove(move, node.gameState, legality.get());
-            const newChild = new GameNode(state, MGPOptional.of(node), MGPOptional.of(move));
-            node.addChild(move, newChild)
+            const newChild: GameNode<M, S> = new GameNode(state, MGPOptional.of(node), MGPOptional.of(move));
+            node.addChild(move, newChild);
             this.setScore(newChild, this.computeBoardValue(newChild));
             return newChild;
         }

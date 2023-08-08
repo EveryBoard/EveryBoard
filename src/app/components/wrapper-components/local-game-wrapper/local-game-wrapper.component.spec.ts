@@ -27,7 +27,7 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { AIDepthLimitOptions, AIOptions } from 'src/app/jscaip/MGPNode';
+import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -316,7 +316,7 @@ describe('LocalGameWrapperComponent', () => {
             spyOn(minimax, 'chooseNextMove').and.returnValue(P4Move.ZERO);
 
             // When it is the turn of the bugged AI
-            const aiOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 }
+            const aiOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
             const message: string = 'The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!';
             const result: MGPValidation = await testUtils.expectToDisplayCriticalMessage(message, async() => {
                 return localGameWrapper.doAIMove(minimax, aiOptions);

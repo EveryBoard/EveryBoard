@@ -35,7 +35,7 @@ describe('HiveRules', () => {
     beforeEach(() => {
         rules = HiveRules.get();
         heuristics = [
-            new HiveHeuristic()
+            new HiveHeuristic(),
         ];
     });
     describe('dropping', () => {

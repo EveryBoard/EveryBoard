@@ -2,7 +2,7 @@
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
 import { QuartoHeuristic, QuartoMinimax, QuartoMoveGenerator } from '../QuartoMinimax';
-import { QuartoNode, QuartoRules } from '../QuartoRules';
+import { QuartoNode } from '../QuartoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { QuartoMove } from '../QuartoMove';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';

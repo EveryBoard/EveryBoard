@@ -2,7 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixMinimax, ConnectSixMoveGenerator } from '../ConnectSixMinimax';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
-import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
+import { ConnectSixNode } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';

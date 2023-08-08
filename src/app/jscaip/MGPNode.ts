@@ -12,6 +12,9 @@ export class MGPNodeStats {
     public static minimaxTime: number = 0;
 }
 
+// TODO FOR REVIEW: ce fichier s'appelle toujours MGPNode.ts. Je propose de le renommer GameNode.ts
+// TODO FOR REVIEW: mais il définit des trucs liés à l'IA aussi, que je propose de bouger dans AI.ts
+
 /**
  * A node of the game tree.
  * A node has a state, and may have a parent and previous move.
@@ -71,22 +74,26 @@ export class GameNode<M extends Move, S extends GameState> {
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public printDot<L>(rules: Rules<M, S, L>, labelFn?: (node: GameNode<M, S>) => string, max?: number, level: number = 0, id: number = 0): number {
+    public printDot<L>(rules: Rules<M, S, L>,
+                       labelFn?: (node: GameNode<M, S>) => string,
+                       max?: number,
+                       level: number = 0,
+                       id: number = 0): number {
         if (level === 0) {
             console.log('digraph G {');
         }
         const gameStatus: GameStatus = rules.getGameStatus(this);
-        let color: string = "white";
+        let color: string = 'white';
         if (gameStatus.isEndGame) {
             switch (gameStatus.winner) {
                 case Player.ZERO:
-                    color = "#994d00";
+                    color = '#994d00';
                     break;
                 case Player.ONE:
-                    color = "#ffc34d";
+                    color = '#ffc34d';
                     break;
                 default:
-                    color = "grey";
+                    color = 'grey';
                     break;
             }
         }
@@ -117,7 +124,7 @@ export class GameNode<M extends Move, S extends GameState> {
     /**
      * Set or replace a value from the cache.
      */
-    public setCache(key: NonNullable<string>, value: NonNullable<unknown>) {
+    public setCache(key: NonNullable<string>, value: NonNullable<unknown>): void {
         if (this.cache.containsKey(key)) {
             this.cache.replace(key, value);
         } else {
@@ -127,6 +134,8 @@ export class GameNode<M extends Move, S extends GameState> {
 }
 
 export class AbstractNode extends GameNode<Move, GameState> {}
+
+// TODO FOR REVIEW: à partir d'ici, le reste appartiendrait à AI.ts
 
 /**
  * A move generator should have a method that generates move from a node.

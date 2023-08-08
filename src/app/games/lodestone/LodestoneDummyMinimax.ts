@@ -1,7 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Heuristic, Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Player } from 'src/app/jscaip/Player';
+import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';

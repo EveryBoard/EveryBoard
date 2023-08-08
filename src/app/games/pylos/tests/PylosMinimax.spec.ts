@@ -132,3 +132,9 @@ describe('PylosHeuristic', () => {
         expect(heuristic.getBoardValue(node).value).toBe(0);
     });
 });
+
+describe('PylosMinimax', () => {
+    it('should create', () => {
+        expect(new PylosMinimax()).toBeTruthy();
+    });
+});

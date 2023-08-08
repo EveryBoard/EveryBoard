@@ -2,7 +2,6 @@ import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
-import { Debug } from 'src/app/utils/utils';
 import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode, SiamLegalityInformation } from './SiamRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';

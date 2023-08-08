@@ -7,7 +7,9 @@ import { GipfRules, GipfNode, GipfLegalityInformation } from './GipfRules';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
 export class GipfMoveGenerator extends MoveGenerator<GipfMove, GipfState> {
-    public static getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures: GipfCapture[]): Table<GipfCapture> {
+    public static getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures: GipfCapture[])
+    : Table<GipfCapture>
+    {
         const intersections: number[][] = this.computeIntersections(possibleCaptures);
         let captureCombinations: number[][] = [[]];
         possibleCaptures.forEach((_capture: GipfCapture, index: number) => {

@@ -4,7 +4,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoHeuristic, QuixoMinimax } from '../QuixoMinimax';
-import { QuixoNode, QuixoRules } from '../QuixoRules';
+import { QuixoNode } from '../QuixoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 

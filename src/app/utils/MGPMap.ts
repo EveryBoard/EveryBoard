@@ -76,7 +76,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
     public listValues(): V[] {
         return this.map.map((entry: {key: K, value: V}) => entry.value);
-    };
+    }
     public getKeySet(): MGPSet<K> {
         return new MGPSet<K>(this.listKeys());
     }

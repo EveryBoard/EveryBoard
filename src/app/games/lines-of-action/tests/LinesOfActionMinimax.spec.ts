@@ -1,7 +1,7 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { LinesOfActionMoveGenerator, LinesOfActionMinimax } from '../LinesOfActionMinimax';
-import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
+import { LinesOfActionNode } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionMoveGenerator', () => {
@@ -12,7 +12,6 @@ describe('LinesOfActionMoveGenerator', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
-        const rules: LinesOfActionRules = LinesOfActionRules.get();
         moveGenerator = new LinesOfActionMoveGenerator();
     });
     it('should have 36 moves on the initial state', () => {

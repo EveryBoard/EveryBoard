@@ -1,7 +1,7 @@
 import { Heuristic } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { NewGameMove } from '../NewGameMove';
-import {  NewGameNode, NewGameRules } from '../NewGameRules';
+import { NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
 import { NewGameHeuristic } from '../NewGameDummyMinimax';
 

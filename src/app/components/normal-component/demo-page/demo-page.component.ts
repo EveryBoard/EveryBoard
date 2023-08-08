@@ -71,11 +71,9 @@ export class DemoPageComponent {
             } else {
                 const move: Move = solution;
                 const node: AbstractNode =
-                    new GameNode(rules.applyLegalMove(move,
-                                                     step.state,
-                                                     rules.isLegal(move, step.state).get()),
-                                MGPOptional.of(new GameNode(step.state)),
-                                MGPOptional.of(move));
+                    new GameNode(rules.applyLegalMove(move, step.state, rules.isLegal(move, step.state).get()),
+                                 MGPOptional.of(new GameNode(step.state)),
+                                 MGPOptional.of(move));
                 return { node, click: MGPOptional.empty() };
             }
         } else {

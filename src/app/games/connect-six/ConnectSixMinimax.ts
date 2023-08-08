@@ -10,7 +10,6 @@ import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 
 export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, ConnectSixState> {
 

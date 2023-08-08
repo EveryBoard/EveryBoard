@@ -12,9 +12,7 @@ import { GameNode, MoveGenerator } from 'src/app/jscaip/MGPNode';
 export class TaflNode extends GameNode<TaflMove, TaflState> {}
 
 @Debug.log
-export class TaflMoveGenerator<M extends TaflMove, S extends TaflState>
-    extends MoveGenerator<M, S>
-{
+export class TaflMoveGenerator<M extends TaflMove, S extends TaflState> extends MoveGenerator<M, S> {
 
     public constructor(private readonly rules: TaflRules<M, S>) {
         super();
@@ -50,7 +48,8 @@ export class TaflMoveGenerator<M extends TaflMove, S extends TaflState>
 }
 
 
-export class TaflHeuristic<M extends TaflMove, S extends TaflState>  extends PlayerMetricHeuristic<M, S> {
+export class TaflHeuristic<M extends TaflMove, S extends TaflState> extends PlayerMetricHeuristic<M, S> {
+
     public constructor(public readonly rules: TaflRules<M, S>) {
         super();
     }

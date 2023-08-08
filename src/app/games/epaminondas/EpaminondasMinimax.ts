@@ -7,7 +7,6 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 

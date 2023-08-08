@@ -6,7 +6,6 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState> {
 
@@ -65,6 +64,6 @@ export class TeekoHeuristic extends Heuristic<TeekoMove, TeekoState> {
 export class TeekoMinimax extends Minimax<TeekoMove, TeekoState> {
 
     public constructor() {
-        super('Minimax', TeekoRules.get(), new TeekoHeuristic(), new TeekoMoveGenerator())
+        super('Minimax', TeekoRules.get(), new TeekoHeuristic(), new TeekoMoveGenerator());
     }
 }

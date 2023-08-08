@@ -3,7 +3,6 @@ import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TrexoHeuristic, TrexoMinimax } from '../TrexoMinimax';
-import { TrexoRules } from '../TrexoRules';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const X1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
@@ -14,7 +13,6 @@ describe('TrexoHeuristic', () => {
     let heuristic: TrexoHeuristic;
 
     beforeEach(() => {
-        const rules: TrexoRules = TrexoRules.get();
         heuristic = new TrexoHeuristic();
     });
     it('should prefer to have more visible pieces aligned than less', () => {

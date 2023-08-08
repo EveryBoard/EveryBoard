@@ -7,7 +7,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessMoveGenerator, MartianChessScoreHeuristic } from '../MartianChessDummyMinimax';
 import { MartianChessMove } from '../MartianChessMove';
-import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
+import { MartianChessNode } from '../MartianChessRules';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 

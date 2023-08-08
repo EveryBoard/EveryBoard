@@ -4,7 +4,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoHeuristic, GoMinimax, GoMoveGenerator } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { GoState, GoPiece, Phase } from '../GoState';
-import { GoNode, GoRules } from '../GoRules';
+import { GoNode } from '../GoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;

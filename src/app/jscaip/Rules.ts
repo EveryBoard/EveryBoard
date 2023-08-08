@@ -2,11 +2,9 @@ import { GameNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { Type } from '@angular/core';
 import { Debug, Utils } from '../utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
-import { BoardValue } from './BoardValue';
 import { GameStatus } from './GameStatus';
 
 export abstract class Rules<M extends Move, S extends GameState, L = void> {

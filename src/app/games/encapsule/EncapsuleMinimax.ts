@@ -5,7 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
-import { DummyHeuristic, Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';

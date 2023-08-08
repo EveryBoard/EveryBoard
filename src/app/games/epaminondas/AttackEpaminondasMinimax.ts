@@ -5,7 +5,6 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasHeuristic, EpaminondasMoveGenerator } from './EpaminondasMinimax';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { EpaminondasMove } from './EpaminondasMove';
 import { Minimax } from 'src/app/jscaip/Minimax';
 

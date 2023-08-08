@@ -118,10 +118,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (aiOpt.isPresent()) {
             const ai: AbstractAI = aiOpt.get();
             const optionsName: string = this.aiOptions[playerIndex];
-            return MGPOptional.ofNullable(
-                ai.availableOptions.find((options: AIOptions) => {
+            const matchingOptions: MGPOptional<AIOptions> =
+                MGPOptional.ofNullable(ai.availableOptions.find((options: AIOptions) => {
                     return options.name === optionsName;
-                })).map((options) => { return { ai, options } });
+                }));
+            return matchingOptions.map((options: AIOptions) => {
+                return { ai, options };
+            });
         } else {
             return MGPOptional.empty();
         }
@@ -147,8 +150,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             return MGPValidation.SUCCESS;
         } else {
             this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
-            return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move',
-                                               { game: this.getGameName(), name: playingAI.name, move: aiMove.toString() });
+            return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', {
+                game: this.getGameName(),
+                name: playingAI.name,
+                move: aiMove.toString(),
+            });
         }
     }
     public availableAIOptions(player: number): AIOptions[] {

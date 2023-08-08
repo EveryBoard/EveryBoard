@@ -4,12 +4,12 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
-import { QuixoHeuristic, QuixoMinimax } from '../QuixoMinimax';
+import { QuixoHeuristic } from '../QuixoMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 

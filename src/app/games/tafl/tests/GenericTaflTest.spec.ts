@@ -8,7 +8,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TaflComponent } from '../tafl.component';
 import { TaflFailure } from '../TaflFailure';
-import { TaflMinimax, TaflMoveGenerator } from '../TaflMinimax';
+import { TaflMoveGenerator } from '../TaflMinimax';
 import { TaflMove } from '../TaflMove';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';

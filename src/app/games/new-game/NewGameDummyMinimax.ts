@@ -5,8 +5,8 @@ import { NewGameLegalityInfo, NewGameNode, NewGameRules } from './NewGameRules';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 
-// TODO: update documentation
 
+// A move generator lists possible moves for a game
 export class NewGameMoveGenerator extends MoveGenerator<NewGameMove, NewGameState> {
 
     /**
@@ -21,6 +21,7 @@ export class NewGameMoveGenerator extends MoveGenerator<NewGameMove, NewGameStat
     }
 }
 
+// A heuristic assigns values to game states
 export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
     /**
      * This function assigns a score to a state, in the form of a `BoardValue`.
@@ -29,10 +30,9 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
      *   - a score of 0: no player has the advantage
      *   - a positive score: Player.ONE has the advantage
      *   - a negative score: Player.ZERO has the advantage
-     *   - Number.MAX_SAFE_INTEGER: Player.ONE won
-     *   - Number.MIN_SAFE_INTEGER: Player.ZERO won
+     * You should not handle victories here, this is handled by the rules' getGameStatus method.
      *
-     * You want want to use `PlayerMetricsMinimax` to define a score for each player instead, which
+     * You may want to use `PlayerMetricHeuristic` to define a score for each player instead, which
      * is often what you want.
      */
     public getBoardValue(node: NewGameNode): BoardValue {
@@ -41,13 +41,12 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
 }
 
 /**
- * What is called "minimaxes" here are heuristic calculators.
- * They assign a score to a state so that the `LocalGameWrappercomponent` can
- * use it within the AI system to know which move to play.
+ * A minimax uses a move generator and a heuristic.
  *
  * By convention, we call such a class a "dummy minimax" if:
  *   - it doesn't filter any move in `getListMoves`
  *   - it has a simplistic `getBoardValue`, only relying the score stored in the state
+ * TODO FOR REVIEW: je propose "dummy minimax" = minimux avec DummyHeuristic (prédéfinie à 0 par plateau) vs. "score minimax" = minimax qui utilise le score comme heuristique
  */
 export class NewGameDummyMinimax extends Minimax<NewGameMove, NewGameState, NewGameLegalityInfo> {
 
