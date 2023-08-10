@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, UrlTree } from '@angular/router';
+import { UrlTree } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService';
 
@@ -9,7 +9,7 @@ import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService
 /**
  * This abstract guard can be used to implement guards based on the current user
  */
-export abstract class AccountGuard implements CanActivate {
+export abstract class AccountGuard  {
 
     protected userSubscription!: Subscription; // always bound in canActivate
 
