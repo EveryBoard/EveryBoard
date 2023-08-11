@@ -14,12 +14,12 @@ export class KalahDummyMinimax extends PlayerMetricsMinimax<KalahMove,
         super(KalahRules.get(), 'Dummy Minimax');
     }
     public override getMetrics(node: KalahNode): [number, number] {
-        return node.gameState.getCapturedCopy();
+        return node.gameState.getScoresCopy();
     }
     public override getListMoves(node: KalahNode): KalahMove[] {
         const moves: KalahMove[] = [];
-        const playerY: number = node.gameState.getCurrentOpponent().value;
-        for (let x: number = 0; x < 6; x++) {
+        const playerY: number = node.gameState.getCurrentPlayerY();
+        for (let x: number = 0; x < MancalaState.WIDTH; x++) {
             if (node.gameState.getPieceAtXY(x, playerY) > 0) {
                 const state: MancalaState = node.gameState;
                 const move: KalahMove = KalahMove.of(MancalaDistribution.of(x));
@@ -34,7 +34,7 @@ export class KalahDummyMinimax extends PlayerMetricsMinimax<KalahMove,
         state = distributionResult.resultingState;
         const playerHasPieces: boolean = MancalaRules.isStarving(state.getCurrentPlayer(), state.board) === false;
         if (distributionResult.endUpInKalah && playerHasPieces) {
-            for (let x: number = 0; x < 6; x++) {
+            for (let x: number = 0; x < MancalaState.WIDTH; x++) {
                 if (state.getPieceAtXY(x, y) > 0) {
                     const move: KalahMove = currentMove.add(MancalaDistribution.of(x));
                     moves.push(...this.getChildMoves(state, x, y, move));

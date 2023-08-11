@@ -55,6 +55,8 @@ import { HnefataflTutorial } from 'src/app/games/tafl/hnefatafl/HnefataflTutoria
 import { HnefataflComponent } from 'src/app/games/tafl/hnefatafl/hnefatafl.component';
 
 import { KalahComponent } from 'src/app/games/mancala/kalah/kalah.component';
+import { KalahTutorial } from 'src/app/games/mancala/kalah/KalahTutorial';
+import { KalahRules } from 'src/app/games/mancala/kalah/KalahRules';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
 import { KamisadoTutorial } from 'src/app/games/kamisado/KamisadoTutorial';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
@@ -125,8 +127,6 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { KalahTutorial } from 'src/app/games/mancala/kalah/KalahTutorial';
-import { KalahRules } from 'src/app/games/mancala/kalah/KalahRules';
 
 class GameDescription {
 

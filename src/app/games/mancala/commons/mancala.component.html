@@ -30,24 +30,26 @@
     <line x1="120" y1="0"   x2="120" y2="240" class="base"/>
     <line x1="740" y1="0"   x2="740" y2="240" class="base"/>
 
-    <g id="player_zero_captures"
+    <g id="store_player_0"
+       (click)="onStoreClick(Player.ZERO)"
        app-numbered-circle
        transform="translate(60 120)"
        [x]="-1"
        [y]="-1"
-       [content]="scores.get()[0] + droppedInKalah[0]"
+       [content]="getStoreContent(Player.ZERO)"
        [spaceClasses]="getSpaceClasses(-1, -1)"
        [rotation]="getPieceRotation()"
-       [secondaryContent]="droppedInKalah[0] === 0 ? MGPOptional.empty() : MGPOptional.of('+' + droppedInKalah[0])"
+       [secondaryContent]="getStoreSecondaryContent(Player.ZERO)"
     ></g>
-    <g id="player_one_captures"
+    <g id="store_player_1"
+       (click)="onStoreClick(Player.ONE)"
        app-numbered-circle
        transform="translate(800 120)"
        [x]="2"
        [y]="2"
-       [content]="scores.get()[1] + droppedInKalah[1]"
+       [content]="getStoreContent(Player.ONE)"
        [spaceClasses]="getSpaceClasses(2, 2)"
        [rotation]="getPieceRotation()"
-       [secondaryContent]="droppedInKalah[1] === 0 ? MGPOptional.empty() : MGPOptional.of('+' + droppedInKalah[1])"
+       [secondaryContent]="getStoreSecondaryContent(Player.ONE)"
     ></g>
 </svg>

@@ -276,7 +276,7 @@ describe('AbaloneComponent', () => {
         // Given the initial board with first space clicked
         await testUtils.expectClickSuccess('#piece_2_6');
 
-        // When clicking on the space marked by the direction instead of it's arrow
+        // When clicking on the space marked by the direction instead of its arrow
         // Then the move should have been done
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.LEFT).get();
         await testUtils.expectMoveSuccess('#space_1_6', move);
@@ -299,7 +299,7 @@ describe('AbaloneComponent', () => {
         await testUtils.expectClickSuccess('#piece_2_6');
         await testUtils.expectClickSuccess('#piece_2_7');
 
-        // When clicking on the space marked by the direction instead of it's arrow
+        // When clicking on the space marked by the direction instead of its arrow
         // Then the move should have been done
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 7), HexaDirection.UP).get();
         await testUtils.expectMoveSuccess('#piece_2_5', move);
@@ -308,7 +308,7 @@ describe('AbaloneComponent', () => {
         // Given the initial board with first space clicked
         await testUtils.expectClickSuccess('#space_1_6');
 
-        // When clicking on the space marked by the direction instead of it's arrow
+        // When clicking on the space marked by the direction instead of its arrow
         // Then expect nothing, just want this line covered!
     }));
     describe('showLastMove', () => {
@@ -323,8 +323,6 @@ describe('AbaloneComponent', () => {
                 AbaloneMove.fromDoubleCoord(new Coord(2, 6), new Coord(3, 6), HexaDirection.UP).get();
             await testUtils.expectMoveSuccess('#direction_UP', move);
         }));
-    });
-    describe('showLastMove', () => {
         it('should show last move moved pieces (push)', fakeAsync(async() => {
             // Given a board with a previous move
             await testUtils.expectClickSuccess('#piece_0_7');

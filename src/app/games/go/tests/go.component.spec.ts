@@ -42,7 +42,7 @@ describe('GoComponent', () => {
 
         const move: GoMove = new GoMove(0, 1);
         await testUtils.expectMoveSuccess('#click_0_1', move);
-        const goComponent: GoComponent = testUtils.getComponent();
+        const goComponent: GoComponent = testUtils.getGameComponent();
         expect(goComponent.captures).toEqual([new Coord(0, 0)]);
     }));
     it('should allow simple clicks', fakeAsync(async() => {

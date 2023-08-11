@@ -11,7 +11,7 @@ export class NumberedCircleComponent {
     @Input() x: number;
     @Input() y: number;
     @Input() spaceClasses: string[];
-    @Input() content: string | number;
+    @Input() content: number;
     @Input() secondaryContent: MGPOptional<string>;
     @Input() rotation: string;
 }

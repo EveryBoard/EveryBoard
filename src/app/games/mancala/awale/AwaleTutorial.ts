@@ -17,11 +17,11 @@ export class AwaleTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Sowing`,
-            $localize`The main move in mancala games is sowing, let's see how seeds are sown. As you're playing Dark, the 6 houses on the bottom are yours.<br/><br>Click on the righter bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.<br/><br/>Click on the righter house!`,
+            $localize`The main move in mancala games is sowing, let's see how seeds are sown. As you're playing Dark, the 6 houses on the bottom are yours.<br/><br>Click on the rightermost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.<br/><br/>Click on the rightermost house!`,
             MancalaState.getInitialState(),
             [AwaleMove.FIVE],
             $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.`,
-            $localize`Failed. Choose the righter house on the bottom.`,
+            $localize`Failed. Choose the rightermost house on the bottom.`,
         ),
         TutorialStep.anyMove(
             $localize`Big sowing`,

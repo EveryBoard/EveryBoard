@@ -36,12 +36,12 @@ export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, MancalaState> 
                 }
             }
             x++;
-        } while (x < 6);
+        } while (x < MancalaState.WIDTH);
         return this.orderMoves(node, moves);
     }
     private orderMoves(node: AwaleNode, moves: AwaleMove[]): AwaleMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
-        const playerY: number = node.gameState.getCurrentOpponent().value;
+        const playerY: number = node.gameState.getOpponentY();
         const opponentY: number = player.value;
         // sort by captured houses
         ArrayUtils.sortByDescending(moves, (move: AwaleMove): number => {
@@ -55,7 +55,7 @@ export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, MancalaState> 
             let sameTerritoryValue: number = 0;
             if (endHouse.y === playerY) {
                 captured = 0;
-                if (toDistribute <= 6) {
+                if (toDistribute <= MancalaState.WIDTH) {
                     sameTerritoryValue = 10;
                 }
             } else {
@@ -67,7 +67,7 @@ export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, MancalaState> 
         return moves;
     }
     public getMetrics(node: AwaleNode): [number, number] {
-        const captured: number[] = node.gameState.getCapturedCopy();
+        const captured: number[] = node.gameState.getScoresCopy();
         return [captured[0], captured[1]];
     }
 }

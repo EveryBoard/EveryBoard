@@ -90,7 +90,6 @@ class Layer extends Table2DWithPossibleNegativeIndices<SpaceInLayerInfo> {
     selector: 'app-hive',
     templateUrl: './hive.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, HiveState, HivePieceStack> {
 

@@ -8,7 +8,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display } from 'src/app/utils/utils';
 import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
@@ -33,7 +32,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public lastMove: MGPOptional<M> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       public VERBOSE: boolean,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
         super(messageDisplayer);
@@ -44,7 +42,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         return begin + ' ' + begin + ' ' + width + ' ' + width;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        display(this.VERBOSE, 'taflComponent.updateBoard');
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
         this.updateViewInfo();
@@ -85,7 +82,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.viewInfo = { pieceClasses };
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        display(this.VERBOSE, 'TaflComponent.onClick(' + x + ', ' + y + ')');
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -104,8 +100,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         }
     }
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
-        display(this.VERBOSE, 'TaflComponent.chooseDestination');
-
         const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: MGPFallible<M> = this.generateMove(chosenPiece, chosenDestination);
@@ -116,8 +110,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         }
     }
     private async choosePiece(coord: Coord): Promise<MGPValidation> {
-        display(this.VERBOSE, 'TaflComponent.choosePiece');
-
         if (this.board[coord.y][coord.x] === TaflPawn.UNOCCUPIED) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
@@ -127,7 +119,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
         this.chosen = MGPOptional.of(coord);
         this.updateViewInfo();
-        display(this.VERBOSE, 'selected piece = (' + coord.x + ', ' + coord.y + ')');
         return MGPValidation.SUCCESS;
     }
     private pieceBelongToCurrentPlayer(coord: Coord): boolean {

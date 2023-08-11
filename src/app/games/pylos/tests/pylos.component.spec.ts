@@ -116,7 +116,7 @@ describe('PylosComponent', () => {
             await testUtils.setupState(initialState);
 
             // When clicking on the supporting piece
-            // Then the move should be cancelled
+            // Then the move should be canceled
             await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }));
         it('should select coord when clicking on it', fakeAsync(async() => {

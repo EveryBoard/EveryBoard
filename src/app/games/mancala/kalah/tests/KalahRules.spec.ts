@@ -2,13 +2,15 @@
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { KalahMove } from '../KalahMove';
-import { KalahRules } from '../KalahRules';
+import { KalahNode, KalahRules } from '../KalahRules';
 import { KalahDummyMinimax } from '../KalahDummyMinimax';
 import { MancalaDistribution } from '../../commons/MancalaMove';
 import { MancalaState } from '../../commons/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { DoMancalaRulesTests } from '../../commons/GenericMancalaRulesTest.spec';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('KalahRules', () => {
 
@@ -171,36 +173,81 @@ describe('KalahRules', () => {
             const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
 
             // Then that normally-illegal move should be accepted
+            // And since player gave their last stone, monsoon
             const expectedState: MancalaState = new MancalaState([
-                [0, 0, 1, 9, 0, 0],
                 [0, 0, 0, 0, 0, 0],
-            ], 11, [14, 9]);
+                [0, 0, 0, 0, 0, 0],
+            ], 11, [14, 19]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
     });
-    describe('starvation and mansoon', () => {
-        it('should allow to starve opponent and mansoon immediately', () => {
-            // Given a board where the opponent cannot play
+    describe('starvation and monsoon', () => {
+        it('should monsoon even if next player will be able to feed current player', () => {
+            // Given a state where next player is able to distribute
             const board: Table<number> = [
-                [0, 0, 0, 0, 0, 0],
-                [1, 0, 0, 1, 0, 1],
+                [0, 0, 0, 0, 0, 1],
+                [0, 3, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [22, 23]);
+            const state: MancalaState = new MancalaState(board, 1, [22, 22]);
 
-            // When doing a move not feeding the opponent
-            const move: KalahMove = KalahMove.of(MancalaDistribution.THREE);
+            // When current player player give its last stone
+            const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
 
-            // Then your move should capture all pieces
+            // Then the move should be the last of the game and Player.ZERO should monsoon
             const expectedBoard: Table<number> = [
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [25, 23]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
+            const node: KalahNode = new KalahNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        });
+        it(`should monsoon player after player captured opponent's last seeds`, () => {
+            // Given a state where next player is able to distribute
+            const board: Table<number> = [
+                [0, 0, 0, 0, 2, 0],
+                [0, 1, 0, 0, 0, 1],
+            ];
+            const state: MancalaState = new MancalaState(board, 0, [22, 22]);
+
+            // When current player capture opponent last stones
+            const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
+
+            // Then the move should be the last of the game and Player.ZERO should monsoon
+            const expectedBoard: Table<number> = [
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+            ];
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [26, 22]);
+            const node: KalahNode = new KalahNode(expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        });
+        it('should monsoon if next player will not be able to feed current player', () => {
+            // Given a state where next player is unable to feed current player
+            const board: Table<number> = [
+                [0, 0, 0, 0, 0, 2],
+                [0, 1, 2, 3, 4, 4],
+            ];
+            const state: MancalaState = new MancalaState(board, 1, [10, 22]);
+
+            // When player give its last stone
+            const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
+
+            // Then, since the other player can't distribute, all its pieces should be mansooned
+            const expectedBoard: Table<number> = [
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+            ];
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const node: KalahNode = new KalahNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
     });
     describe('captures', () => {
-        it(`should capture parallel opponent's house when landing in your own territory on an empty house`, () => {
+        it(`should capture opposite house when landing in your own territory on an empty house`, () => {
             // Given a board with an opponent's house full of seeds and your paralel house being empty
             const board: Table<number> = [
                 [4, 4, 4, 4, 4, 4],

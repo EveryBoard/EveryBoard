@@ -34,7 +34,7 @@ describe('TeekoComponent', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on the occupied space
             const move: TeekoDropMove = TeekoDropMove.from(new Coord(2, 2)).get();
@@ -71,7 +71,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When clicking on empty space
                 // Then it should fail
@@ -88,7 +88,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When clicking on opponent piece
                 // Then it should fail
@@ -105,7 +105,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When selecting a valid piece
                 await testUtils.expectClickSuccess('#click_0_0');
@@ -125,7 +125,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#click_0_0');
 
                 // When clicking on it again
@@ -144,7 +144,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#click_0_0');
 
                 // When clicking on valid landing space
@@ -163,7 +163,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#click_0_0');
 
                 // When clicking on an invalid landing space
@@ -182,7 +182,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#click_0_0');
 
                 // When finishing the move legally
@@ -205,7 +205,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
                 // When
                 // Then
             }));
@@ -219,7 +219,7 @@ describe('TeekoComponent', () => {
                     [X, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                testUtils.setupState(state);
+                await testUtils.setupState(state);
 
                 // When translating piece into victory
                 const move: TeekoMove = TeekoTranslationMove.from(new Coord(2, 2), new Coord(1, 1)).get();

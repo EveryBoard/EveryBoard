@@ -21,12 +21,12 @@ describe('EpaminondasComponent', () => {
 
     function expectClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);
-        expect(testUtils.getComponent()
+        expect(testUtils.getGameComponent()
             .getHighlightedCoords().some((c: Coord) => c.equals(coord))).toBeTrue();
     }
     function expectNotClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);
-        expect(testUtils.getComponent()
+        expect(testUtils.getGameComponent()
             .getHighlightedCoords().some((c: Coord) => c.equals(coord))).toBeFalse();
     }
 
@@ -232,7 +232,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_11'); // deselect first piece
 
         // Then it should change the first piece
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece.isAbsent()).toBeTrue();
         expectClickable(0, 9);
@@ -266,7 +266,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_11'); // deselect first piece
 
         // Then it should change the first piece
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(0, 9));
         expectNotClickable(0, 8);
@@ -299,7 +299,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_10'); // deselect last piece
 
         // Then it should change the last piece
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 11));
         expect(epaminondasComponent.lastPiece.isAbsent()).toBeTrue();
         expectClickable(0, 9);
@@ -333,7 +333,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_8'); // deselect last piece
 
         // Then it should change the last piece
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 11));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(0, 9));
         expect(epaminondasComponent.getPieceClasses(0, 7)).not.toContain('selected-stroke');
@@ -385,7 +385,7 @@ describe('EpaminondasComponent', () => {
         // Given a board where a phalanx has already been selected
         await testUtils.expectClickSuccess('#click_1_10');
         await testUtils.expectClickSuccess('#click_2_10');
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(1, 10));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(2, 10));
 
@@ -400,7 +400,7 @@ describe('EpaminondasComponent', () => {
         // Given a board where a phalanx has already been selected
         await testUtils.expectClickSuccess('#click_0_10');
         await testUtils.expectClickSuccess('#click_1_10');
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(1, 10));
 
@@ -434,7 +434,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_11');
         await testUtils.expectClickSuccess('#click_0_9');
 
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Direction.UP);
         await testUtils.expectMoveSuccess('#click_0_8', move);
 

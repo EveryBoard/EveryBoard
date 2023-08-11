@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { GameActionFailure } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -55,19 +54,18 @@ describe('LobbyComponent', () => {
             // Given a server page
             testUtils.detectChanges();
             // where you are forbidden by connectedUserService
-            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-            spyOn(messageDisplayer, 'criticalMessage').and.resolveTo();
             const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
             const error: string = `Si je dit non, c'est non!!!`;
             spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
 
             // When clicking on the 'create game' tab
-            await testUtils.clickElement('#tab-create');
-            await testUtils.whenStable();
-
             // Then online-game-selection component should not be visible and an error should be toasted
+            await testUtils.expectToDisplayCriticalMessage(error, async() => {
+                await testUtils.clickElement('#tab-create');
+            });
+
+            await testUtils.whenStable();
             testUtils.expectElementNotToExist('#online-game-selection');
-            expect(messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
         }));
     });
 
@@ -95,11 +93,10 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // When clicking on the part
-        spyOn(component.messageDisplayer, 'criticalMessage').and.resolveTo(); // Skip 3000ms of toast
-        await testUtils.clickElement('#part_0');
-
         // Then the refusal reason should be given
-        expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
+        await testUtils.expectToDisplayCriticalMessage(reason, async() => {
+            await testUtils.clickElement('#part_0');
+        });
     }
     describe('clicking on a started game', () => {
 
@@ -268,7 +265,7 @@ describe('LobbyComponent', () => {
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
                 await shouldForbidToJoinPart([unstartedPartUserDidNotCreate], reason);
             }));
-            it('should allow user to have his created part in two tabs', fakeAsync(async() => {
+            it('should allow user to have their created part in two tabs', fakeAsync(async() => {
                 // And a lobby where the same part is obviously already
                 await shouldAllowJoinPart([unstartedPartUserCreated]);
             }));
@@ -353,7 +350,7 @@ describe('LobbyComponent', () => {
 
         // When clicking on the chat tab
         await testUtils.clickElement('#tab-chat');
-        tick();
+        tick(0);
         testUtils.detectChanges();
 
         // Then it should show the chat

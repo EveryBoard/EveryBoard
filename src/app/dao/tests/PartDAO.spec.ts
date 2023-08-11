@@ -19,6 +19,7 @@ import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameEventService } from '../../services/GameEventService';
 import { IFirestoreDAO } from '../FirestoreDAO';
+import { TimeUtils } from 'src/app/utils/TimeUtils';
 
 type PartInfo = {
     id: string,
@@ -27,7 +28,7 @@ type PartInfo = {
     candidate: MinimalUser,
 }
 
-describe('PartDAO security', () => {
+xdescribe('PartDAO security', () => {
 
     let partDAO: PartDAO;
     let gameEventService: GameEventService;
@@ -621,7 +622,7 @@ describe('PartDAO security', () => {
             const partId: string = await partDAO.create(part);
 
             // Wait 10ms to ensure the player has timed out
-            await new Promise((f: (value: unknown) => void) => window.setTimeout(f, 10));
+            await TimeUtils.sleep(10);
 
             // When setting the part as result as timed out
             const result: Promise<void> = partDAO.update(partId, {

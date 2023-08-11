@@ -55,7 +55,7 @@ describe('ConnectSixComponent', () => {
             ], 1);
             await testUtils.setupState(state);
             // When clicking on them
-            // Then the move should be cancelled
+            // Then the move should be canceled
             await testUtils.expectClickFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }));
         it('should drop the first of two pieces when clicking empty coord', fakeAsync(async() => {

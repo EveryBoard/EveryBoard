@@ -14,7 +14,7 @@ import { HnefataflTutorial } from './HnefataflTutorial';
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove, HnefataflState> {
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false, HnefataflMove.from);
+        super(messageDisplayer, HnefataflMove.from);
         this.rules = HnefataflRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = this.createMinimaxes();

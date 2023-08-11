@@ -252,14 +252,14 @@ describe('ChatComponent', () => {
             // Given a chat component
             const userDAO: UserDAO = TestBed.inject(UserDAO);
             await userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
-            tick();
+            tick(0);
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
             testUtils.detectChanges();
 
             // When the user's lastUpdateTime is updated
             spyOn(component, 'loadChatContent').and.callThrough();
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
-            tick();
+            tick(0);
 
             // Then loadChatContent should not have been called
             expect(component.loadChatContent).not.toHaveBeenCalled();

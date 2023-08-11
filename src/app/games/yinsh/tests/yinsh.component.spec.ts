@@ -84,7 +84,7 @@ describe('YinshComponent', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
-            const component: YinshComponent = testUtils.getComponent();
+            const component: YinshComponent = testUtils.getGameComponent();
             spyOn(component, 'isPlayerTurn').and.returnValue(true);
 
             // When rendering the board
@@ -110,7 +110,7 @@ describe('YinshComponent', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
-            const component: YinshComponent = testUtils.getComponent();
+            const component: YinshComponent = testUtils.getGameComponent();
             spyOn(component, 'isPlayerTurn').and.returnValue(false);
 
             // When rendering the board
@@ -129,7 +129,7 @@ describe('YinshComponent', () => {
 
             // Then the score (0 - 0) should be displayed
             const expectedScore: MGPOptional<[number, number]> = MGPOptional.of([0, 0]);
-            expect(testUtils.getComponent().scores).toEqual(expectedScore);
+            expect(testUtils.getGameComponent().scores).toEqual(expectedScore);
         }));
         it('should display score ring count when game is second phase', fakeAsync(async() => {
             // Given a game in its main phases, with captures already done
@@ -153,7 +153,7 @@ describe('YinshComponent', () => {
 
             // Then score (2 - 1) should be displayed
             const expectedScore: MGPOptional<[number, number]> = MGPOptional.of([2, 1]);
-            expect(testUtils.getComponent().scores).toEqual(expectedScore);
+            expect(testUtils.getGameComponent().scores).toEqual(expectedScore);
         }));
         it('should allow a simple move without capture', fakeAsync(async() => {
             // Given a state

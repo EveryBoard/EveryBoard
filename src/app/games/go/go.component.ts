@@ -4,7 +4,7 @@ import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -18,9 +18,8 @@ import { GobanGameComponent } from 'src/app/components/game-components/goban-gam
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
+@Debug.log
 export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityInformation> {
-
-    public static VERBOSE: boolean = false;
 
     public boardInfo: GroupDatas<GoPiece>;
 
@@ -60,8 +59,6 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         return this.chooseMove(resultlessMove);
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        display(GoComponent.VERBOSE, 'updateBoard');
-
         const state: GoState = this.getState();
         const move: MGPOptional<GoMove> = this.node.move;
         const phase: Phase = state.phase;

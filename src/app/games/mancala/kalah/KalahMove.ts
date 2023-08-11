@@ -19,7 +19,7 @@ export class KalahMove extends MancalaMove {
                             this.subMoves.slice(1).concat(move));
     }
     public override toString(): string {
-        return 'KalahMove[' + this.subMoves.map((move: MancalaDistribution) => move.x).join(', ') + ']';
+        return 'KalahMove([' + this.subMoves.map((move: MancalaDistribution) => move.x).join(', ') + '])';
     }
     public override equals(other: this): boolean {
         return ArrayUtils.compareArray(this.subMoves, other.subMoves);

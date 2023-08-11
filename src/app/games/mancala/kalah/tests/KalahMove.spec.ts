@@ -9,7 +9,7 @@ describe('KalahMove', () => {
     describe('toString', () => {
         it('should be defined', () => {
             const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
-            expect(move.toString()).toBe('KalahMove[0]');
+            expect(move.toString()).toBe('KalahMove([0])');
         });
     });
     it('should be iterable', () => {

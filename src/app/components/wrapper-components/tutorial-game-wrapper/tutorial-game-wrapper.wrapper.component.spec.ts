@@ -30,7 +30,7 @@ describe('TutorialGameWrapperComponent for non-existing game', () => {
 
         // When loading the wrapper
         testUtils.detectChanges();
-        tick(3000);
+        tick(0);
 
         // Then it goes to /notFound with the expected error message
         expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
@@ -45,13 +45,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     beforeEach(fakeAsync(async() => {
         testUtils =
             await ComponentTestUtils.forGameWithWrapper<QuartoComponent, Comparable>('Quarto', TutorialGameWrapperComponent);
-        wrapper = testUtils.wrapper as TutorialGameWrapperComponent;
+        wrapper = testUtils.getWrapper() as TutorialGameWrapperComponent;
     }));
     describe('Common behavior', () => {
         // ///////////////////////// Before ///////////////////////////////////////
         it('should create', () => {
-            expect(testUtils.wrapper).toBeTruthy();
-            expect(testUtils.getComponent()).toBeTruthy();
+            testUtils.expectToBeCreated();
         });
         it('should show informations below/beside the board', fakeAsync(async() => {
             // Given a certain TutorialStep
@@ -78,7 +77,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const expectedMessage: string = 'instruction';
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const actualState: QuartoState = testUtils.getComponent().getState();
+            const actualState: QuartoState = testUtils.getGameComponent().getState();
             expect(actualState).toEqual(state);
         }));
         it('should show previousMove when set', fakeAsync(async() => {
@@ -241,7 +240,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(testUtils.getComponent().getState())
+            expect(testUtils.getGameComponent().getState())
                 .toEqual(QuartoState.getInitialState());
         }));
         it('should start step again after clicking "retry" on step success', fakeAsync(async() => {
@@ -269,7 +268,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(testUtils.getComponent().getState())
+            expect(testUtils.getGameComponent().getState())
                 .toEqual(QuartoState.getInitialState());
         }));
         it('should forbid clicking again on the board after success', fakeAsync(async() => {
@@ -329,7 +328,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Congratulations!');
-            expect(testUtils.getComponent().getState())
+            expect(testUtils.getGameComponent().getState())
                 .toEqual(QuartoState.getInitialState());
         }));
         // /////////////////////// Next /////////////////////////////////////////////////////////
@@ -775,20 +774,20 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectMoveSuccess('#choosePiece_8', move);
 
             // When clicking "Show Solution"
-            spyOn(testUtils.getComponent(), 'updateBoard').and.callThrough();
+            spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
             await testUtils.clickElement('#showSolutionButton');
             tick(10);
 
             // Then the first awaited move should have been done
-            expect(testUtils.getComponent().node.move.get()).toEqual(awaitedMove);
-            expect(testUtils.getComponent().getTurn()).toEqual(stepInitialTurn + 1);
+            expect(testUtils.getGameComponent().node.move.get()).toEqual(awaitedMove);
+            expect(testUtils.getGameComponent().getTurn()).toEqual(stepInitialTurn + 1);
             // and 'solution' message to be shown
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Congratulations!');
             // and step not to be considered a success
             expect(wrapper.stepFinished[wrapper.stepIndex]).toBeFalse();
             // And the move done should have triggered the animation
-            expect(testUtils.getComponent().updateBoard).toHaveBeenCalledWith(true);
+            expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledWith(true);
         }));
     });
     describe('TutorialStep awaiting any move', () => {
@@ -917,7 +916,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // When clicking on 'see solution'
             await testUtils.clickElement('#showSolutionButton');
-            testUtils.detectChanges();
+            tick(0);
 
             // Then the actual click is performed and the solution message is shown
             testUtils.expectElementToExist('#selected');
@@ -944,8 +943,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // expect to see still the steps success message on component
             const expectedMessage: string = 'instruction 0';
-            const currentMessage: string =
-                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
         it('should mark step as finished when skipped', fakeAsync(async() => {
@@ -1062,13 +1060,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // When clicking "Show Solution"
             await testUtils.clickElement('#showSolutionButton');
+            tick(0);
 
             // Expect the step proposed move to have been done
-            expect(testUtils.getComponent().node.move.get()).toEqual(solutionMove);
-            expect(testUtils.getComponent().getTurn()).toEqual(1);
+            expect(testUtils.getGameComponent().node.move.get()).toEqual(solutionMove);
+            expect(testUtils.getGameComponent().getTurn()).toEqual(1);
             // expect 'solution' message to be shown
-            const currentMessage: string =
-                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Congratulations!');
             // expect step not to be considered a success
             expect(wrapper.stepFinished[wrapper.stepIndex]).toBeFalse();

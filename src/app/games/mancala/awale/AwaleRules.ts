@@ -31,7 +31,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         });
     }
     public distributeMove(move: AwaleMove, state: MancalaState): MancalaDistributionResult {
-        const playerY: number = state.getCurrentOpponent().value;
+        const playerY: number = state.getCurrentPlayerY();
         return this.distributeHouse(move.x, playerY, state);
     }
     public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {
@@ -48,7 +48,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
      */
     public isLegal(move: AwaleMove, state: MancalaState): MGPValidation {
         const opponent: Player = state.getCurrentOpponent();
-        const playerY: number = opponent.value; // So player 0 is in row 1
+        const playerY: number = state.getCurrentPlayerY();
 
         const x: number = move.x;
         if (state.getPieceAtXY(x, playerY) === 0) {
@@ -68,7 +68,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
      * Captures even if this could mean doing an illegal starvation
      */
     private capture(x: number, y: number, state: MancalaState): MancalaCaptureResult {
-        const playerY: number = state.getCurrentOpponent().value;
+        const playerY: number = state.getCurrentPlayerY();
         Utils.assert(y !== playerY, 'AwaleRules.capture cannot capture the players house');
         const resultingBoard: number[][] = state.getCopiedBoard();
         let target: number = resultingBoard[y][x];
@@ -87,10 +87,10 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         if (state.getCurrentPlayer() === Player.ONE) {
             /** if Player.ONE capture, it is on the bottom line
               * means capture goes from left to right ( + 1)
-              * so one ending condition of the loop is reaching index 6
+              * so one ending condition of the loop is reaching index MancalaState.WIDTH
              */
             direction = +1;
-            limit = 6;
+            limit = MancalaState.WIDTH;
         }
 
         do {
@@ -100,7 +100,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
             x += direction;
             target = resultingBoard[y][x];
         } while ((x !== limit) && ((target === 2) || (target === 3)));
-        const captured: [number, number] = state.getCapturedCopy();
+        const captured: [number, number] = state.getScoresCopy();
         captured[state.getCurrentPlayer().value] += capturedSum;
         return {
             capturedSum,

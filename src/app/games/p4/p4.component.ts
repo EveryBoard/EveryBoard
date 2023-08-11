@@ -18,8 +18,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 })
 export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone> {
 
-    public static VERBOSE: boolean = false;
-
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public last: MGPOptional<Coord>;
     public victoryCoords: Coord[] = [];

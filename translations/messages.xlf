@@ -1972,14 +1972,14 @@
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="7856229390539793235" datatype="html">
-        <source>The main move in mancala games is sowing, let&apos;s see how seeds are sown. As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the righter bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the righter house!</source>
+      <trans-unit id="3960906110055575363" datatype="html">
+        <source>The main move in mancala games is sowing, let&apos;s see how seeds are sown. As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightermost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightermost house!</source>
       </trans-unit>
       <trans-unit id="6994033934467498174" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
       </trans-unit>
-      <trans-unit id="7973986792987103756" datatype="html">
-        <source>Failed. Choose the righter house on the bottom.</source>
+      <trans-unit id="3137932316267051789" datatype="html">
+        <source>Failed. Choose the rightermost house on the bottom.</source>
       </trans-unit>
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
@@ -2056,8 +2056,8 @@
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
          Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
       </trans-unit>
-      <trans-unit id="8572141978310888290" datatype="html">
-        <source>You cannot distribute from the opponent&apos;s home.</source>
+      <trans-unit id="8840015526202664476" datatype="html">
+        <source>You must distribute one of your houses.</source>
       </trans-unit>
       <trans-unit id="4189334243342030215" datatype="html">
         <source>You should choose a non-empty house to distribute.</source>
@@ -2077,23 +2077,23 @@
       <trans-unit id="5407801196980144019" datatype="html">
         <source>As you see, three houses have been fed in addition to your kalah.</source>
       </trans-unit>
-      <trans-unit id="5368214167812589514" datatype="html">
-        <source>Failed. Choose the three lefter house on the bottom.</source>
+      <trans-unit id="8271077564662598313" datatype="html">
+        <source>Failed. Choose the three leftermost house on the bottom.</source>
       </trans-unit>
       <trans-unit id="6340571023242332704" datatype="html">
         <source>The Kalah (2/2)</source>
       </trans-unit>
-      <trans-unit id="1588751806685340935" datatype="html">
-        <source>When ending in the Kalah, you are allowed to distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that end up in the Kalah then do a second move!</source>
+      <trans-unit id="8979647594925459000" datatype="html">
+        <source>When ending in the Kalah, you must distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that end up in the Kalah then do a second move!</source>
       </trans-unit>
-      <trans-unit id="8173280937607745120" datatype="html">
-        <source>This move only distributed one house, do one distribution that end in the Kalah then a second one!</source>
+      <trans-unit id="6244569030236259143" datatype="html">
+        <source>This move only distributed one house, do one distribution that ends in the Kalah then a second one!</source>
       </trans-unit>
-      <trans-unit id="4131193328352974552" datatype="html">
-        <source>When the last seed of a distribution end up in one of your empty houses, if the house over it is filled, then you capture both houses. On this board, such a move is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+      <trans-unit id="723370864893318309" datatype="html">
+        <source>When the last seed of a distribution ends up in one of your empty houses, if the opposite house is filled, then you capture both houses. On this board, such a move is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
       </trans-unit>
-      <trans-unit id="4482453877770637601" datatype="html">
-        <source>At any moment, when one player have more than 24 seeds in their kalah, they win. That can happend before the board is emptied, but, there is also a second way. When, at the beginning of your turn, you don&apos;t have any seed in your house, the game is over and your opponent takes all the remaining seeds from his houses. Here, the opponent&apos;s just gave you their last seed, if you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
+      <trans-unit id="1165257353049752736" datatype="html">
+        <source>At any moment, when one player have more than 24 seeds in their kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don&apos;t have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
       </trans-unit>
       <trans-unit id="902849596357033257" datatype="html">
         <source>Failed, you gave the opponent a seed! Try again.</source>

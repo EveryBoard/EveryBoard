@@ -96,7 +96,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             it(game.urlName, fakeAsync(async() => {
                 const wrapper: GameWrapper<Comparable> =
                     (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
-                        .wrapper;
+                        .getWrapper();
                 expect(wrapper).toBeTruthy();
             }));
         }
@@ -189,7 +189,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     KalahRules.get(),
                     kalahTutorial[4],
                     KalahMove.of(MancalaDistribution.ZERO),
-                    MGPValidation.failure($localize`This move only distributed one house, do one distribution that end in the Kalah then a second one!`),
+                    MGPValidation.failure($localize`This move only distributed one house, do one distribution that ends in the Kalah then a second one!`),
                 ], [
                     KalahRules.get(),
                     kalahTutorial[5],

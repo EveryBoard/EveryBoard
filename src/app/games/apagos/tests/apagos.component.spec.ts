@@ -16,7 +16,7 @@ describe('ApagosComponent', () => {
         testUtils = await ComponentTestUtils.forGame<ApagosComponent>('Apagos');
     }));
     describe('show last move', () => {
-        it('should show only legal drop arrows', async() => {
+        it('should show only legal drop arrows', fakeAsync(async() => {
             // Given a board where some square are selectable and some not, some square can receive drop some don't
             const state: ApagosState = ApagosState.fromRepresentation(8, [
                 [0, 0, 0, 1],
@@ -38,7 +38,7 @@ describe('ApagosComponent', () => {
             // and the invalid one should not be shown
             testUtils.expectElementNotToExist('#dropArrow_zero_3');
             testUtils.expectElementNotToExist('#dropArrow_one_3');
-        });
+        }));
         it('should show switched squares', fakeAsync(async() => {
             // Given a board with a previous move being a drop
             const previousState: ApagosState = ApagosState.fromRepresentation(1, [
@@ -249,7 +249,7 @@ describe('ApagosComponent', () => {
         await testUtils.expectClickSuccess('#square_2');
 
         // When clicking another VALID square
-        // Then the move should not have been cancelled
+        // Then the move should not have been canceled
         await testUtils.expectClickSuccess('#square_1');
     }));
     it('should not allow to select leftmost space for transfer', fakeAsync(async() => {

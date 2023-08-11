@@ -66,7 +66,7 @@ describe('AwaleRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
     });
-    describe('starvation and mansoon', () => {
+    describe('starvation and monsoon', () => {
         it('should forbid starving move', () => {
             // Given a state where the player could feed its opponent
             const board: Table<number> = [
@@ -82,7 +82,7 @@ describe('AwaleRules', () => {
             const reason: string = MancalaFailure.SHOULD_DISTRIBUTE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('should not mansoon if next player will be able to feed current player', () => {
+        it('should not monsoon if next player will be able to feed current player', () => {
             // Given a state where next player is able to distribute
             const board: Table<number> = [
                 [0, 0, 0, 0, 0, 1],
@@ -93,7 +93,7 @@ describe('AwaleRules', () => {
             // When current player player give its last stone
             const move: AwaleMove = AwaleMove.FIVE;
 
-            // Then the move should be legal and no mansoon should be done
+            // Then the move should be legal and no monsoon should be done
             const expectedBoard: Table<number> = [
                 [0, 0, 0, 0, 0, 0],
                 [0, 2, 0, 0, 0, 1],
@@ -101,7 +101,7 @@ describe('AwaleRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [0, 0]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should mansoon if next player will not be able to feed current player', () => {
+        it('should monsoon if next player will not be able to feed current player', () => {
             // Given a state where next player is unable to feed current player
             const board: Table<number> = [
                 [0, 0, 0, 0, 0, 1],

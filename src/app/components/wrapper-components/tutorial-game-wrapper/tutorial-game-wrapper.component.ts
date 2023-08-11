@@ -6,8 +6,7 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { AbstractNode, MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { display, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
@@ -22,9 +21,8 @@ type TutorialPlayer = 'tutorial-player';
     templateUrl: './tutorial-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@Debug.log
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
-
-    public static override VERBOSE: boolean = false;
 
     public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Congratulations, you completed the tutorial.`;
 
@@ -44,7 +42,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                 connectedUserService: ConnectedUserService)
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
-        display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
         this.role = Player.ZERO; // The user is playing, not observing
     }
     public getNumberOfSteps(): number {
@@ -58,7 +55,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
     }
     public async ngAfterViewInit(): Promise<void> {
-        display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.ngAfterViewInit');
         const createdSuccessfully: boolean = await this.afterViewInit();
         if (createdSuccessfully) {
             await this.start();
@@ -69,8 +65,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         await this.startTutorial(tutorial);
     }
     public async startTutorial(tutorial: TutorialStep[]): Promise<void> {
-        display(TutorialGameWrapperComponent.VERBOSE,
-                { tutorialGameWrapperComponent_startTutorial: { tutorial } });
         this.steps = tutorial;
         this.tutorialOver = false;
         this.stepFinished = this.getCompletionArray();
@@ -87,7 +81,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         await this.showStep(Number.parseInt(target.value, 10));
     }
     private async showStep(stepIndex: number): Promise<void> {
-        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapperComponent.showStep(' + stepIndex + ')');
         this.moveAttemptMade = false;
         this.stepFinished[stepIndex] = false;
         this.updateSuccessCount();
@@ -103,12 +96,10 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.cdr.detectChanges();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
-        display(TutorialGameWrapperComponent.VERBOSE, { tutorialGameWrapper_onLegalUserMove: { move } });
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         const node: MGPOptional<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
-        assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
+        Utils.assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
         this.gameComponent.node = node.get();
-        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: legal move');
         await this.updateBoardAndShowLastMove(false);
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
@@ -122,17 +113,16 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                 this.currentReason = MGPOptional.of(moveValidity.getReason());
             }
         } else if (currentStep.isAnyMove()) {
-            display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
+            Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
             this.showStepSuccess(currentStep.getSuccessMessage());
         } else {
-            assert(currentStep.isMove(), 'cannot reach here with a click step');
+            Utils.assert(currentStep.isMove(), 'cannot reach here with a click step');
             const currentStepMove: TutorialStepMove = currentStep as TutorialStepMove;
             if (currentStepMove.acceptedMoves.some((m: Move) => m.equals(move))) {
-                display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
+                Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
                 this.showStepSuccess(currentStepMove.getSuccessMessage());
             } else {
-                display(TutorialGameWrapperComponent.VERBOSE,
-                        'tutorialGameWrapper.onLegalUserMove: not the move that was awaited.');
+                Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'not the move that was awaited.');
                 this.currentReason = MGPOptional.of(currentStepMove.getFailureMessage());
             }
         }
@@ -140,12 +130,10 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.cdr.detectChanges();
     }
     public async retry(): Promise<void> {
-        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.retry');
         this.moveAttemptMade = false;
         await this.showStep(this.stepIndex);
     }
     public override async canUserPlay(elementName: string): Promise<MGPValidation> {
-        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.canUserPlay(' + elementName + ')');
         this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
             return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
@@ -170,15 +158,12 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
     }
     public async onCancelMove(reason?: string): Promise<void> {
-        display(TutorialGameWrapperComponent.VERBOSE,
-                'tutorialGameWrapperComponent.onCancelMove(' + reason + ')');
         if (reason !== undefined) {
             this.currentReason = MGPOptional.of(reason);
         }
         this.cdr.detectChanges();
     }
     private showStepSuccess(successMessage: string): void {
-        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapperComponent.showStepSuccess()');
         this.currentMessage = successMessage;
         this.stepFinished[this.stepIndex] = true;
         this.updateSuccessCount();
@@ -209,9 +194,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
     }
     public async showSolution(): Promise<void> {
-        display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.showSolution()');
         const step: TutorialStep = this.steps[this.stepIndex];
-        assert(step.hasSolution(), 'step must have solution');
+        Utils.assert(step.hasSolution(), 'step must have solution');
         const solutionStep: TutorialStepWithSolution | TutorialStepClick =
             step as TutorialStepWithSolution | TutorialStepClick;
         const solution: Move | Click = solutionStep.getSolution();

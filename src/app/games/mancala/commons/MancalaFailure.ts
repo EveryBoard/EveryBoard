@@ -2,7 +2,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class MancalaFailure {
 
-    public static CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME: Localized = () => $localize`You cannot distribute from the opponent's home.`;
+    public static MUST_DISTRIBUTE_YOUR_OWN_HOUSES: Localized = () => $localize`You must distribute one of your houses.`;
 
     public static MUST_CHOOSE_NON_EMPTY_HOUSE: Localized = () => $localize`You should choose a non-empty house to distribute.`;
 

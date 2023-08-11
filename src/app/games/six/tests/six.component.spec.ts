@@ -88,7 +88,7 @@ describe('SixComponent', () => {
             const state: SixState = SixState.ofRepresentation(board, 40);
             await testUtils.setupState(state);
 
-            const gameComponent: SixComponent = testUtils.getComponent();
+            const gameComponent: SixComponent = testUtils.getGameComponent();
             await testUtils.expectClickSuccess('#piece_0_0');
             testUtils.expectElementToExist('#selectedPiece_0_0');
             const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(0, 6));
@@ -195,7 +195,7 @@ describe('SixComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
             // When the user clicks on an empty space instead of selecting a group
-            // Then the move should be cancelled and the board is back to its initial state
+            // Then the move should be canceled and the board is back to its initial state
             await testUtils.expectClickFailure('#neighbor_1_-1', SixFailure.MUST_CUT());
             testUtils.expectElementToExist('#piece_0_2');
         }));

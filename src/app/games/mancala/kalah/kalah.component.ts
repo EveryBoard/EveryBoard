@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+
+import { MancalaDistribution } from '../commons/MancalaMove';
 import { MancalaMultipleSowComponent } from '../commons/MancalaMultipleSowComponent';
+
 import { KalahRules } from './KalahRules';
 import { KalahMove } from './KalahMove';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { KalahDummyMinimax } from './KalahDummyMinimax';
 import { KalahTutorial } from './KalahTutorial';
-import { MancalaDistribution } from '../commons/MancalaMove';
 
 @Component({
     selector: 'app-kalah-component',

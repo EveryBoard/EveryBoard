@@ -108,7 +108,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 await testUtils.expectMoveSuccess('#click_' + secondCoord.x + '_' + secondCoord.y, entries.capture);
 
                 // Then captured and move highlight should be shown
-                const component: C = testUtils.getComponent();
+                const component: C = testUtils.getGameComponent();
                 expect(component.getRectClasses(entries.firstCaptured.x, entries.firstCaptured.y)).toContain('captured-fill');
                 expect(component.getRectClasses(firstCoord.x, firstCoord.y)).toContain('moved-fill');
                 expect(component.getRectClasses(secondCoord.x, secondCoord.y)).toContain('moved-fill');
@@ -155,8 +155,8 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             }));
         });
         it('should have a bijective encoder', () => {
-            const rules: R = testUtils.getComponent().rules;
-            const encoder: Encoder<M> = testUtils.getComponent().encoder;
+            const rules: R = testUtils.getGameComponent().rules;
+            const encoder: Encoder<M> = testUtils.getGameComponent().encoder;
             const minimax: TaflMinimax = new TaflMinimax(rules, 'TaflMinimax');
             const firstTurnMoves: M[] = minimax
                 .getListMoves(rules.getInitialNode())
