@@ -164,7 +164,7 @@ export class SimpleComponentTestUtils<T> {
 
     public async clickElement(elementName: string,
                               awaitStability: boolean = true,
-                              waitOneMs?: number)
+                              waitInMs?: number)
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
@@ -176,8 +176,8 @@ export class SimpleComponentTestUtils<T> {
         if (awaitStability) {
             await this.whenStable();
         }
-        if (waitOneMs !== undefined) {
-            tick(waitOneMs); // Yeah, not really 1ms, but we want to flush asynchronous tasks
+        if (waitInMs !== undefined) {
+            tick(waitInMs); // Yeah, not really 1ms, but we want to flush asynchronous tasks
         }
         this.detectChanges();
     }

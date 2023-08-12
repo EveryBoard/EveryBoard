@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { KamisadoBoard } from './KamisadoBoard';
+import { KamisadoState } from './KamisadoState';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { Utils } from 'src/app/utils/utils';
@@ -32,15 +32,15 @@ export class KamisadoPieceMove extends MoveCoordToCoord {
 
     public static readonly encoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.of);
 
-    private constructor(start: Coord, end: Coord) {
-        super(start, end);
-    }
     public static of(start: Coord, end: Coord): KamisadoPieceMove {
-        Utils.assert(start.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE),
+        Utils.assert(KamisadoState.isOnBoard(start),
                      'Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
-        Utils.assert(end.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE),
+        Utils.assert(KamisadoState.isOnBoard(end),
                      'End coord of KamisadoMove must be on the board, not at ' + end.toString());
         return new KamisadoPieceMove(start, end);
+    }
+    private constructor(start: Coord, end: Coord) {
+        super(start, end);
     }
     public override equals(other: KamisadoMove): boolean {
         if (other === this) return true;

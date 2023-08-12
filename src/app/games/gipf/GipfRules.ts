@@ -320,7 +320,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             capturable.push(cur);
             cur = cur.getNext(oppositeDir);
         }
-        for (let cur: Coord = start; !cur.equals(end); cur = cur.getNext(dir)) {
+        for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
             // The 4 pieces are capturable
             capturable.push(cur);
         }

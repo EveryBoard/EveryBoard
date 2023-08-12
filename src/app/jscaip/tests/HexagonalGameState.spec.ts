@@ -123,11 +123,11 @@ describe('HexagonalGameState', () => {
     describe('getPieceAt', () => {
         it('should fail when accessing coords not on board', () => {
             spyOn(state, 'isOnBoard').and.returnValue(false);
-            expect(() => state.getPieceAt(new Coord(0, 0))).toThrow();
+            expect(() => state.getPieceAtXY(0, 0)).toThrow();
         });
         it('should return the right content', () => {
             const state: TestingHexagonalState = TestingHexagonalState.fromTable(1, [[0, 1, 0]], [], 0);
-            expect(state.getPieceAt(new Coord(1, 0))).toBe(1);
+            expect(state.getPieceAtXY(1, 0)).toBe(1);
         });
     });
     describe('setAt', () => {

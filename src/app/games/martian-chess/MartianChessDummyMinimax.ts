@@ -21,7 +21,7 @@ export class MartianChessDummyMinimax
         const playerTerritory: MGPSet<number> = state.getPlayerTerritory(currentPlayer);
         let moves: MartianChessMove[] = [];
         for (const y of playerTerritory) {
-            for (let x: number = 0; x < 4; x++) {
+            for (let x: number = 0; x < MartianChessState.WIDTH; x++) {
                 const piece: MartianChessPiece = state.getPieceAtXY(x, y);
                 switch (piece) {
                     case MartianChessPiece.PAWN:
@@ -45,7 +45,7 @@ export class MartianChessDummyMinimax
         const landingCoords: Coord[] = [];
         for (const diagonal of Direction.DIAGONALS) {
             const landingCoord: Coord = coord.getNext(diagonal);
-            if (landingCoord.isInRange(4, 8)) {
+            if (MartianChessState.isOnBoard(landingCoord)) {
                 landingCoords.push(landingCoord);
             }
         }
@@ -126,7 +126,7 @@ export class MartianChessDummyMinimax
         return this.addLegalMoves(state, startingCoord, landingCoords);
     }
     private getLandingCoordsForQueen(startingCoord: Coord, state: MartianChessState): Coord[] {
-        return this.getLandingCoordsForLinearMove(startingCoord, state, 8);
+        return this.getLandingCoordsForLinearMove(startingCoord, state, MartianChessState.HEIGHT);
     }
     public getMetrics(node: MartianChessNode): [number, number] {
         const zeroScore: number = node.gameState.getScoreOf(Player.ZERO);

@@ -85,11 +85,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);
-        while (moved.isInRange(9, 9) && previousState.isPiece(moved)) {
+        while (AbaloneState.isOnBoard(moved) && previousState.isPiece(moved)) {
             this.moveds.push(moved);
             moved = moved.getNext(move.dir);
         }
-        if (moved.isInRange(9, 9)) {
+        if (AbaloneState.isOnBoard(moved)) {
             this.moveds.push(moved);
         }
     }

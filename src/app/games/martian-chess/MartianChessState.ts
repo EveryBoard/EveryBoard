@@ -43,6 +43,10 @@ export class MartianChessCapture {
 }
 export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
 
+    public static readonly WIDTH: number = 4;
+
+    public static readonly HEIGHT: number = 8;
+
     public static readonly PLAYER_ZERO_TERRITORY: MGPSet<number> = new MGPSet([4, 5, 6, 7]);
 
     public static readonly PLAYER_ONE_TERRITORY: MGPSet<number> = new MGPSet([0, 1, 2, 3]);
@@ -63,6 +67,9 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
             [_, B, C, C],
         ];
         return new MartianChessState(board, 0, MGPOptional.empty());
+    }
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(MartianChessState.WIDTH, MartianChessState.HEIGHT);
     }
     public readonly captured: MGPMap<Player, MartianChessCapture>;
 
@@ -93,7 +100,7 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         const currentPlayer: Player = this.getCurrentPlayer();
         const playerTerritory: MGPSet<number> = this.getPlayerTerritory(currentPlayer);
         for (const y of playerTerritory) {
-            for (let x: number = 0; x < 4; x++) {
+            for (let x: number = 0; x < MartianChessState.WIDTH; x++) {
                 if (this.getPieceAtXY(x, y) === piece) {
                     return true;
                 }
@@ -116,7 +123,7 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
     public isTerritoryEmpty(player: Player): boolean {
         const playerTerritory: MGPSet<number> = this.getPlayerTerritory(player);
         for (const y of playerTerritory) {
-            for (let x: number = 0; x < 4; x++) {
+            for (let x: number = 0; x < MartianChessState.WIDTH; x++) {
                 if (this.getPieceAtXY(x, y) !== MartianChessPiece.EMPTY) {
                     return false;
                 }

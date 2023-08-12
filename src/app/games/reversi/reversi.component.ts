@@ -12,7 +12,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { ReversiTutorial } from './ReversiTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/assert';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-reversi',
@@ -68,7 +68,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const dir of Direction.DIRECTIONS) {
             let captured: Coord = this.lastMove.getNext(dir, 1);
-            while (captured.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT) &&
+            while (ReversiState.isOnBoard(captured) &&
                    this.getState().getPieceAt(captured) === opponent &&
                    this.getPreviousState().getPieceAt(captured) === player)
             {
@@ -91,7 +91,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         return this.getPlayerClass(this.board[y][x]);
     }
     public override async pass(): Promise<MGPValidation> {
-        assert(this.canPass, 'ReversiComponent: pass() can only be called if canPass is true');
+        Utils.assert(this.canPass, 'ReversiComponent: pass() can only be called if canPass is true');
         return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
     }
 }

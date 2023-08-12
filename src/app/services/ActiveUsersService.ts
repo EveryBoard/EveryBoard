@@ -33,9 +33,8 @@ export class ActiveUsersService {
         };
         const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = (deletedUsers: UserDocument[]) => {
             // No need to sort again upon deletion
-            activeUsers =
-                activeUsers.filter((u: UserDocument) =>
-                    !deletedUsers.some((user: UserDocument) => user.id === u.id));
+            activeUsers = activeUsers.filter((u: UserDocument) =>
+                deletedUsers.some((user: UserDocument) => user.id === u.id) === false);
             callback(activeUsers);
         };
         const usersObserver: FirestoreCollectionObserver<User> =

@@ -77,7 +77,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         let directThreats: Coord[] = [];
         const neighbors: Coord[] = TriangularCheckerBoard
             .getNeighbors(coord)
-            .filter((c: Coord) => c.isInRange(15, 10));
+            .filter(CoerceoState.isOnBoard);
         for (const directThreat of neighbors) {
             const threat: FourStatePiece = state.getPieceAt(directThreat);
             if (threat.is(opponent)) {
@@ -98,7 +98,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             const movingThreats: Coord[] = [];
             for (const step of CoerceoStep.STEPS) {
                 const movingThreat: Coord = uniqueFreedom.get().getNext(step.direction, 1);
-                if (movingThreat.isInRange(15, 10) &&
+                if (CoerceoState.isOnBoard(movingThreat) &&
                     state.getPieceAt(movingThreat).is(opponent) &&
                     directThreats.some((coord: Coord) => coord.equals(movingThreat)) === false)
                 {
@@ -148,7 +148,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             const landing: Coord = piece.getNext(dir.direction, 1);
             const landingTileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(landing);
             if (startingTileUpperLeft.equals(landingTileUpperLeft) === false &&
-                CoerceoState.isInRange(landing) &&
+                CoerceoState.isOnBoard(landing) === true &&
                 state.getPieceAt(landing) === FourStatePiece.EMPTY)
             {
                 return true;

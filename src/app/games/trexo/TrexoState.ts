@@ -2,7 +2,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
 import { Utils } from 'src/app/utils/utils';
 
 /**
@@ -29,7 +28,7 @@ export class TrexoPieceStack {
     public static of(pieces: ReadonlyArray<TrexoPiece>): TrexoPieceStack {
         let previousTurn: number = -1;
         for (const piece of pieces) {
-            assert(previousTurn < piece.tileId, 'TrexoPieceStack: dropped turn should be ascending');
+            Utils.assert(previousTurn < piece.tileId, 'TrexoPieceStack: dropped turn should be ascending');
             previousTurn = piece.tileId;
         }
         return new TrexoPieceStack(pieces);
@@ -61,7 +60,7 @@ export class TrexoPieceStack {
         return TrexoPieceStack.of(this.pieces.concat(piece));
     }
     public getPieceAt(z: number): TrexoPiece {
-        assert(z < this.pieces.length, 'no element ' + z + 'in piece!');
+        Utils.assert(z < this.pieces.length, 'no element ' + z + 'in piece!');
         return this.pieces[z];
     }
     public isGround(): boolean {
@@ -73,7 +72,6 @@ export class TrexoPieceStack {
         }).join(' ') + ']';
     }
 }
-
 export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
 
     public static readonly SIZE: number = 10;
@@ -83,6 +81,9 @@ export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
                                                                   TrexoState.SIZE,
                                                                   TrexoPieceStack.EMPTY);
         return new TrexoState(board, 0);
+    }
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(TrexoState.SIZE, TrexoState.SIZE);
     }
     public static of(board: TrexoPieceStack[][], turn: number): TrexoState {
         Utils.assert(board.length === TrexoState.SIZE, 'Invalid board dimensions');

@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -20,7 +19,7 @@ describe('EncapsuleState', () => {
                 [someSpace, _, _],
                 [_, _, _]];
             const state: EncapsuleState = new EncapsuleState(board, 0, []);
-            expect(state.getPieceAt(new Coord(0, 1))).toBe(someSpace);
+            expect(state.getPieceAtXY(0, 1)).toBe(someSpace);
         });
     });
     describe('isDroppable', () => {

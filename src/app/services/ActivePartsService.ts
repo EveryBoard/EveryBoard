@@ -37,7 +37,7 @@ export class ActivePartsService {
         const onDocumentDeleted: (deletedDocIds: PartDocument[]) => void = (deletedDocs: PartDocument[]) => {
             const result: PartDocument[] = [];
             for (const activePart of activeParts) {
-                if (!deletedDocs.some((part: PartDocument) => part.id === activePart.id)) {
+                if (deletedDocs.every((part: PartDocument) => part.id !== activePart.id)) {
                     result.push(activePart);
                 }
             }

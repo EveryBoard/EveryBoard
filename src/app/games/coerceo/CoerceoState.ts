@@ -3,8 +3,8 @@ import { Vector } from 'src/app/jscaip/Vector';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { Utils } from 'src/app/utils/utils';
 import { Debug } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { CoerceoRegularMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
@@ -31,9 +31,9 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return new Coord(x, y);
     }
-    public static isInRange: (c: Coord) => boolean = (coord: Coord) => {
+    public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(15, 10);
-    };
+    }
     public static getPresentNeighborEntrances(tileUpperLeft: Coord): Coord[] {
         return [
             new Coord(tileUpperLeft.x + 1, tileUpperLeft.y - 1), // UP
@@ -42,7 +42,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             new Coord(tileUpperLeft.x + 1, tileUpperLeft.y + 2), // DOWN
             new Coord(tileUpperLeft.x - 1, tileUpperLeft.y + 1), // DOWN-LEFT
             new Coord(tileUpperLeft.x - 1, tileUpperLeft.y + 0), // UP-LEFT
-        ].filter(CoerceoState.isInRange);
+        ].filter(CoerceoState.isOnBoard);
     }
     public static getInitialState(): CoerceoState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -135,8 +135,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         return resultingState;
     }
     public isTileEmpty(tileUpperLeft: Coord): boolean {
-        assert(this.getPieceAt(tileUpperLeft) !== FourStatePiece.UNREACHABLE,
-               'Should not call isTileEmpty on removed tile');
+        Utils.assert(this.getPieceAt(tileUpperLeft) !== FourStatePiece.UNREACHABLE,
+                     'Should not call isTileEmpty on removed tile');
         for (let y: number = 0; y < 2; y++) {
             for (let x: number = 0; x < 3; x++) {
                 const coord: Coord = tileUpperLeft.getNext(new Vector(x, y), 1);
@@ -173,7 +173,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoState.NEIGHBORS_TILES_DIRECTIONS[i];
             const neighborTile: Coord = tile.getNext(vector, 1);
-            if (neighborTile.isInRange(15, 10) &&
+            if (CoerceoState.isOnBoard(neighborTile) &&
                 this.getPieceAt(neighborTile) !== FourStatePiece.UNREACHABLE)
             {
                 if (firstIndex.isAbsent()) {

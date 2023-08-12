@@ -106,7 +106,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
     }
     public spaceIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.getState().getPieceAtXY(x, y);
-        return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
+        return piece !== GoPiece.EMPTY && this.isTerritory(x, y) === false;
     }
     public isLastSpace(x: number, y: number): boolean {
         if (this.last.isPresent()) {

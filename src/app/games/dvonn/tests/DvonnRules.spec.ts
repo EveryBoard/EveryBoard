@@ -155,7 +155,7 @@ describe('DvonnRules', () => {
         const move: DvonnMove = DvonnMove.from(new Coord(0, 3), new Coord(0, 2)).get();
         const expectedState: DvonnState = new DvonnState(expectedBoard, 1, false);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const stack: DvonnPieceStack = expectedState.getPieceAt(new Coord(0, 2));
+        const stack: DvonnPieceStack = expectedState.getPieceAtXY(0, 2);
         expect(stack.belongsTo(Player.ZERO)).toBeTrue();
     });
     it('should allow moves only to occupied spaces', () => {

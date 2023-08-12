@@ -92,7 +92,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     }
     public getLandingCoords(board: Table<FourStatePiece>, coord: Coord): Coord[] {
         const isOnBoardAndEmpty: (coord: Coord) => boolean = (coord: Coord) => {
-            return coord.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT) &&
+            return SaharaState.isOnBoard(coord) &&
                    board[coord.y][coord.x] === FourStatePiece.EMPTY;
         };
         const landings: MGPSet<Coord> =

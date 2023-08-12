@@ -92,7 +92,7 @@ export class Coord extends Vector {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
     }
     public getDistance(c: Coord): number {
-        if (!c.isAlignedWith(this)) {
+        if (c.isAlignedWith(this) === false) {
             throw new Error('Cannot calculate distance with non aligned coords.');
         }
         const dx: number = Math.abs(c.x - this.x);
@@ -124,7 +124,7 @@ export class Coord extends Vector {
     }
     public getCoordsToward(c: Coord): Coord[] {
         if (c.equals(this)) return [];
-        if (!c.isAlignedWith(this)) return [];
+        if (c.isAlignedWith(this) === false) return [];
         const dir: Direction = this.getDirectionToward(c).get();
         let coord: Coord = this.getNext(dir, 1);
         const coords: Coord[] = [];

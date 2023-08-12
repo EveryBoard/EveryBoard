@@ -29,8 +29,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
-    public lastMove: MGPOptional<M> = MGPOptional.empty();
-
     public constructor(messageDisplayer: MessageDisplayer,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
@@ -45,13 +43,12 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
         this.updateViewInfo();
-        this.lastMove = this.node.move;
     }
     public override async showLastMove(move: M): Promise<void> {
         const previousState: S = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
-            const captured: Coord = this.lastMove.get().getEnd().getNext(orthogonal, 1);
+            const captured: Coord = move.getEnd().getNext(orthogonal, 1);
             if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
                 const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
@@ -113,7 +110,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         if (this.board[coord.y][coord.x] === TaflPawn.UNOCCUPIED) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        if (!this.pieceBelongToCurrentPlayer(coord)) {
+        if (this.pieceBelongToCurrentPlayer(coord) === false) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
 
@@ -156,14 +153,13 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const coord: Coord = new Coord(x, y);
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
-        } else if (this.lastMove.isPresent()) {
-            const lastStart: Coord = this.lastMove.get().getStart();
-            const lastEnd: Coord = this.lastMove.get().getEnd();
+        } else if (this.node.move.isPresent()) {
+            const lastStart: Coord = this.node.move.get().getStart();
+            const lastEnd: Coord = this.node.move.get().getEnd();
             if (coord.equals(lastStart) || coord.equals(lastEnd)) {
                 classes.push('moved-fill');
             }
         }
-
         return classes;
     }
     public getClickables(): Coord[] {
