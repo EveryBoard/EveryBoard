@@ -9,7 +9,7 @@ import { Message } from 'src/app/domain/Message';
 import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 
-xdescribe('ChatService', () => {
+describe('ChatService', () => {
 
     let chatService: ChatService;
     let chatDAO: ChatDAO;
