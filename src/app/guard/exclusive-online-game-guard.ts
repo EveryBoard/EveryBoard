@@ -10,7 +10,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 @Injectable({
     providedIn: 'root',
 })
-export class ExclusiveOnlineGameGuard  {
+export class ExclusiveOnlineGameGuard {
 
     protected currentGameSubscription: MGPOptional<Subscription> = MGPOptional.empty();
 

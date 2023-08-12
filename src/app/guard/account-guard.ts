@@ -9,7 +9,7 @@ import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService
 /**
  * This abstract guard can be used to implement guards based on the current user
  */
-export abstract class AccountGuard  {
+export abstract class AccountGuard {
 
     protected userSubscription!: Subscription; // always bound in canActivate
 
