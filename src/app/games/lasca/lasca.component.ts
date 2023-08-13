@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -11,14 +10,16 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
-import { LascaControlAndDominationMinimax } from './LascaControlAndDomination';
-import { LascaControlMinimax, LascaMoveGenerator } from './LascaControlMinimax';
 import { LascaFailure } from './LascaFailure';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { LascaTutorial } from './LascaTutorial';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { LascaControlHeuristic } from './LascaControlHeuristic';
+import { LascaMoveGenerator } from './LascaMoveGenerator';
+import { LascaControlAndDominationHeuristic } from './LascaControlAndDominationHeuristic';
 
 interface SpaceInfo {
     squareClasses: string[];
@@ -71,8 +72,11 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.rules = LascaRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new LascaControlMinimax(),
-            new LascaControlAndDominationMinimax(),
+            new Minimax('Control Minimax', this.rules, new LascaControlHeuristic(), new LascaMoveGenerator()),
+            new Minimax('ControlAndDomination Minimax',
+                        this.rules,
+                        new LascaControlAndDominationHeuristic(),
+                        new LascaMoveGenerator()),
             new MCTS('MCTS', new LascaMoveGenerator(), this.rules),
         ];
         this.encoder = LascaMove.encoder;

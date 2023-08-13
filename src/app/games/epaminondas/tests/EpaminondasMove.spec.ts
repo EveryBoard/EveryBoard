@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
 import { EpaminondasRules } from '../EpaminondasRules';
-import { EpaminondasMoveGenerator } from '../EpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
 
 describe('EpaminondasMove: ', () => {
 

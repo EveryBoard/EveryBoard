@@ -1,0 +1,23 @@
+/* eslint-disable max-lines-per-function */
+import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
+import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
+
+describe('EpaminondasMoveGenerator', () => {
+
+    let rules: EpaminondasRules;
+    let moveGenerator: EpaminondasMoveGenerator;
+
+    beforeEach(() => {
+        rules = EpaminondasRules.get();
+        moveGenerator = new EpaminondasMoveGenerator();
+    });
+    it('should propose 114 moves at first turn', () => {
+        const node: EpaminondasNode = rules.getInitialNode();
+        expect(moveGenerator.getListMoves(node).length).toBe(114);
+    });
+});

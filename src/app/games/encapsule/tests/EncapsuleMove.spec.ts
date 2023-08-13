@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { EncapsuleRules } from '../EncapsuleRules';
-import { EncapsuleMoveGenerator } from '../EncapsuleMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 
 describe('EncapsuleMove', () => {
 

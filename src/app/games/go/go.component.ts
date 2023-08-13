@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
-import { GoMinimax, GoMoveGenerator } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Debug } from 'src/app/utils/utils';
@@ -13,6 +12,9 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { GoHeuristic } from './GoHeuristic';
+import { GoMoveGenerator } from './GoMoveGenerator';
 
 @Component({
     selector: 'app-go',
@@ -41,7 +43,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         this.rules = GoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new GoMinimax(),
+            new Minimax('Minimax', GoRules.get(), new GoHeuristic(), new GoMoveGenerator()),
             new MCTS('MCTS', new GoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;

@@ -87,8 +87,3 @@ describe('PenteAlignmentHeuristic', () => {
     });
 });
 
-describe('PenteAlignmentMinimaxMinimax', () => {
-    it('should create', () => {
-        expect(new PenteAlignmentMinimax()).toBeTruthy();
-    });
-});

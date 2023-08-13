@@ -6,7 +6,6 @@ import { KamisadoMove, KamisadoPieceMove } from 'src/app/games/kamisado/Kamisado
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
-import { KamisadoMinimax, KamisadoMoveGenerator } from 'src/app/games/kamisado/KamisadoMinimax';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -17,6 +16,9 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { KamisadoHeuristic } from './KamisadoHeuristic';
+import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 
 @Component({
     selector: 'app-kamisado',
@@ -40,7 +42,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         this.rules = KamisadoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new KamisadoMinimax(),
+            new Minimax('Minimax', KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator()),
             new MCTS('MCTS', new KamisadoMoveGenerator(), this.rules),
         ];
         this.encoder = KamisadoMove.encoder;

@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Combinatorics } from 'src/app/utils/Combinatorics';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GipfMoveGenerator } from '../gipf/GipfMinimax';
 import { GipfCapture } from '../gipf/GipfMove';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
@@ -9,6 +8,7 @@ import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshNode, YinshRules } from './YinshRules';
 import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { GipfMoveGenerator } from '../gipf/GipfMoveGenerator';
 
 export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
 

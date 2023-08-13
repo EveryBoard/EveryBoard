@@ -6,7 +6,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionRules } from './LinesOfActionRules';
-import { LinesOfActionMinimax, LinesOfActionMoveGenerator } from './LinesOfActionMinimax';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -14,6 +13,9 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
+import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-linesofaction',
@@ -38,7 +40,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.rules = LinesOfActionRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new LinesOfActionMinimax(),
+            new Minimax('Minimax', this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),
             new MCTS('MCTS', new LinesOfActionMoveGenerator(), this.rules),
         ];
         this.encoder = LinesOfActionMove.encoder;

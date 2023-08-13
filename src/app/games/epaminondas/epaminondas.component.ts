@@ -3,13 +3,10 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
-import { EpaminondasMinimax, EpaminondasMoveGenerator } from 'src/app/games/epaminondas/EpaminondasMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
-import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
@@ -17,6 +14,12 @@ import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { EpaminondasPositionalHeuristic } from './EpaminondasPositionalHeuristic';
+import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from './EpaminondasPhalanxSizeAndFilterMoveGenerator';
+import { EpaminondasHeuristic } from './EpaminondasHeuristic';
+import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
+import { EpaminondasAttackHeuristic } from './EpaminondasAttackHeuristic';
 
 @Component({
     selector: 'app-epaminondas',
@@ -53,9 +56,12 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.rules = EpaminondasRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new EpaminondasMinimax(),
-            new PositionalEpaminondasMinimax(),
-            new AttackEpaminondasMinimax(),
+            new Minimax('Minimax', this.rules, new EpaminondasHeuristic(), new EpaminondasMoveGenerator()),
+            new Minimax('Positional Minimax',
+                        this.rules,
+                        new EpaminondasPositionalHeuristic(),
+                        new EpaminondasPhalanxSizeAndFilterMoveGenerator()),
+            new Minimax('Attack Minimax', this.rules, new EpaminondasAttackHeuristic(), new EpaminondasMoveGenerator()),
             new MCTS('MCTS', new EpaminondasMoveGenerator(), this.rules),
         ];
         this.encoder = EpaminondasMove.encoder;

@@ -3,20 +3,23 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnMinimax, DvonnMoveGenerator } from 'src/app/games/dvonn/DvonnMinimax';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { DvonnTutorial } from './DvonnTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
+import { DvonnOrderedMoveGenerator } from './DvonnOrderedMoveGenerator';
+import { DvonnMaxStacksHeuristic } from './DvonnMaxStacksHeuristic';
+import { DvonnMoveGenerator } from './DvonnMoveGenerator';
 
 @Component({
     selector: 'app-dvonn',
@@ -36,8 +39,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.rules = DvonnRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new DvonnMinimax(),
-            new MaxStacksDvonnMinimax(),
+            new Minimax('MaxStacks Minimax', DvonnRules.get(), new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator()),
+            new Minimax('Score Minimax', this.rules, new DvonnScoreHeuristic(), new DvonnOrderedMoveGenerator()),
             new MCTS('MCTS', new DvonnMoveGenerator(), this.rules),
         ];
         this.encoder = DvonnMove.encoder;
