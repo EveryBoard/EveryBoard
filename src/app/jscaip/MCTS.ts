@@ -23,16 +23,17 @@ type NodeAndPath<M extends Move, S extends GameState> = {
 export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M, S, AITimeLimitOptions> {
     // The exploration parameter influences the MCTS results.
     // It is chosen "empirically" (this is the "generally recommended value" from Wikipedia)
-    public static EXPLORATION_PARAMETER: number = Math.sqrt(2);
+    public explorationParameter: number = Math.sqrt(2);
 
     // The longest a game can be before we decide to stop simulating it
-    public static MAX_GAME_LENGTH: number = 1000;
+    public maxGameLength: number = 1000;
 
     public readonly availableOptions: AITimeLimitOptions[] = [];
 
     public constructor(public readonly name: string,
                        private readonly moveGenerator: MoveGenerator<M, S>,
-                       private readonly rules: Rules<M, S, L>) {
+                       private readonly rules: Rules<M, S, L>)
+    {
         for (let i: number = 1; i < 10; i++) {
             this.availableOptions.push({ name: `${i} seconds`, maxSeconds: i });
         }
@@ -59,7 +60,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         const seconds: number = (Date.now() - startTime) / 1000;
         Debug.display('MCTS', 'chooseNextMove', 'Computed ' + iterations + ' in ' + seconds);
         Debug.display('MCTS', 'chooseNextMove', 'Best child has a win ratio of: ' + this.winRatio(bestChild));
-        return bestChild.move.get();
+        return bestChild.previousMove.get();
     }
     private winScore(gameStatus: GameStatus, player: Player): number {
         switch (gameStatus) {
@@ -81,7 +82,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
             return Number.MAX_SAFE_INTEGER;
         }
         return (this.wins(node) / simulations) +
-               MCTS.EXPLORATION_PARAMETER * Math.sqrt(Math.log(parentSimulations) / simulations);
+               this.explorationParameter * Math.sqrt(Math.log(parentSimulations) / simulations);
     }
     /**
      * Computes the win ratio for this node, as how many simulations have been won.
@@ -140,10 +141,10 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         }
         const node: GameNode<M, S> = nodeAndPath.node;
         const moves: M[] = this.moveGenerator.getListMoves(node);
-        Utils.assert(moves.length > 0, 'MCTS: move generator did not return any move on a non-finished game');
+        Utils.assert(moves.length > 0, `${this.name}: move generator did not return any move on a non-finished game: ${this.moveGenerator.constructor.name}`);
         // Create the children and pick the first one
         for (const move of moves) {
-            node.addChild(move, this.play(node, move));
+            node.addChild(this.play(node, move));
         }
         const pickedChild: GameNode<M, S> = ArrayUtils.getRandomElement(node.getChildren());
         return { node: pickedChild, path: nodeAndPath.path.concat([pickedChild]) };
@@ -153,7 +154,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
      * @returns the game status at the end of the simulation
      */
     private simulate(node: GameNode<M, S>): GameStatus {
-        Debug.display('MCTS', 'simulate', 'simulate from node which has a last move of ' + node.move.get().toString());
+        Debug.display('MCTS', 'simulate', 'simulate from node which has a last move of ' + node.previousMove.get().toString());
         let current: GameNode<M, S> = node;
         let steps: number = 0;
         do {
@@ -164,7 +165,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
             }
             steps++;
             current = this.playRandomStep(current);
-        } while (steps < MCTS.MAX_GAME_LENGTH);
+        } while (steps < this.maxGameLength);
         // Game has taken more than MAX_GAME_LENGTH steps
         return GameStatus.ONGOING;
     }

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixNode } from '../SixRules';
@@ -177,7 +177,7 @@ describe('SixHeuristic', () => {
                 [X, X, X, X, X],
             ], 2);
             const previousMove: SixMove = SixMove.ofDrop(new Coord(0, 0));
-            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic]);
+            HeuristicUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic]);
         });
         it('should know that full-bowtie aligned with two empty extension mean PRE_VICTORY', () => {
             const state: SixState = SixState.ofRepresentation([
@@ -188,7 +188,7 @@ describe('SixHeuristic', () => {
 
             ], 2);
             const previousMove: SixMove = SixMove.ofDrop(new Coord(2, 2));
-            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic]);
+            HeuristicUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic]);
         });
     });
     describe('4 pieces aligned is better than 3 pieces aligned', () => {
@@ -204,11 +204,10 @@ describe('SixHeuristic', () => {
                 [X, X, X, X, _],
                 [O, O, _, _, _],
             ], 7);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakerState, MGPOptional.of(move),
-                                                               strongerState, MGPOptional.of(move),
-
-                                                               Player.ONE);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                                   weakerState, MGPOptional.of(move),
+                                                                   strongerState, MGPOptional.of(move),
+                                                                   Player.ONE);
         });
         it('should be true with triangle', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(1, 3));
@@ -224,10 +223,10 @@ describe('SixHeuristic', () => {
                 [X, _, O],
                 [X, O, _],
             ], 7);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakerState, MGPOptional.of(move),
-                                                               strongerState, MGPOptional.of(move),
-                                                               Player.ONE);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                                   weakerState, MGPOptional.of(move),
+                                                                   strongerState, MGPOptional.of(move),
+                                                                   Player.ONE);
         });
         it('should be true with circle', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(2, 1));
@@ -241,10 +240,10 @@ describe('SixHeuristic', () => {
                 [_, O, X],
                 [_, X, _],
             ], 7);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakerState, MGPOptional.of(move),
-                                                               strongerState, MGPOptional.of(move),
-                                                               Player.ONE);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                                   weakerState, MGPOptional.of(move),
+                                                                   strongerState, MGPOptional.of(move),
+                                                                   Player.ONE);
         });
     });
     describe('4 pieces aligned with two spaces should be better than 4 aligned with two opponents', () => {
@@ -260,10 +259,10 @@ describe('SixHeuristic', () => {
                 [_, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 7);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakerState, MGPOptional.of(move),
-                                                               strongerState, MGPOptional.of(move),
-                                                               Player.ONE);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                                   weakerState, MGPOptional.of(move),
+                                                                   strongerState, MGPOptional.of(move),
+                                                                   Player.ONE);
         });
     });
     it('Score after 40th turn should be a subtraction of the number of piece', () => {

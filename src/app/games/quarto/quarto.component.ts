@@ -50,7 +50,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
     public updateBoard(): void {
         const state: QuartoState = this.getState();
-        const move: MGPOptional<QuartoMove> = this.node.move;
+        const move: MGPOptional<QuartoMove> = this.node.previousMove;
         this.board = state.getCopiedBoard();
         this.chosen = MGPOptional.empty();
         this.pieceInHand = state.pieceInHand;

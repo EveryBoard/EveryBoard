@@ -211,8 +211,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(clickedCoord)) {
             classes.push('selected-stroke');
         }
-        if (this.node.move.isPresent()) {
-            const move: MartianChessMove = this.node.move.get();
+        if (this.node.previousMove.isPresent()) {
+            const move: MartianChessMove = this.node.previousMove.get();
             if (move.getEnd().equals(clickedCoord)) {
                 const previousPiece: MartianChessPiece = this.getPreviousState().getPieceAt(clickedCoord);
                 const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
@@ -347,9 +347,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getSquareClasses(x: number, y: number): string[] {
         const square: Coord = new Coord(x, y);
         const classes: string[] = ['base'];
-        if (this.node.move.isPresent()) {
+        if (this.node.previousMove.isPresent()) {
             const node: MartianChessNode = this.node;
-            const move: MartianChessMove = node.move.get();
+            const move: MartianChessMove = node.previousMove.get();
             if (move.getStart().equals(square)) {
                 classes.push('moved-fill');
             } else if (move.getEnd().equals(square)) {

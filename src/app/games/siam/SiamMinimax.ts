@@ -52,7 +52,7 @@ export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
 export class SiamHeuristic extends Heuristic<SiamMove, SiamState> {
 
     public getBoardValue(node: SiamNode): BoardValue {
-        return new BoardValue(SiamRules.get().getBoardValueInfo(node.move, node.gameState).boardValue);
+        return new BoardValue(SiamRules.get().getBoardValueInfo(node.previousMove, node.gameState).boardValue);
     }
 }
 

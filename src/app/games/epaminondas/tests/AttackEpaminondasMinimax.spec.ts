@@ -2,7 +2,7 @@
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { AttackEpaminondasHeuristic, AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
@@ -52,10 +52,10 @@ describe('AttackEpaminondasHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           lesserState, MGPOptional.empty(),
-                                                           greaterState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               lesserState, MGPOptional.empty(),
+                                                               greaterState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
 });
 

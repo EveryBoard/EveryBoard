@@ -59,18 +59,18 @@ describe('GameNode', () => {
             treeRoot = new GameNode(new GameStateMock(0));
             const child: MockNode =
                 new GameNode(new GameStateMock(1), MGPOptional.of(treeRoot), MGPOptional.of(move));
-            treeRoot.addChild(move, child);
+            treeRoot.addChild(child);
 
             const otherChild: MockNode =
                 new GameNode(new GameStateMock(1), MGPOptional.of(treeRoot), MGPOptional.of(otherMove));
-            treeRoot.addChild(otherMove, otherChild);
+            treeRoot.addChild(otherChild);
 
             const grandChild: MockNode =
                 new GameNode(new GameStateMock(2), MGPOptional.of(child), MGPOptional.of(move));
-            child.addChild(move, grandChild);
+            child.addChild(grandChild);
 
             terminalNode = new GameNode(new GameStateMock(3), MGPOptional.of(grandChild), MGPOptional.of(move));
-            grandChild.addChild(move, terminalNode);
+            grandChild.addChild(terminalNode);
 
             spyOn(rules, 'getGameStatus').and.callFake((node: MockNode) => {
                 if (node.gameState.turn === 3) return GameStatus.ZERO_WON;

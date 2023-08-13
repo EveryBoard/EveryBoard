@@ -9,7 +9,7 @@ import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
 
     public getListMoves(node: DvonnNode): DvonnMove[] {
-        const lastMove: MGPOptional<DvonnMove> = node.move;
+        const lastMove: MGPOptional<DvonnMove> = node.previousMove;
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = [];
         // For each movable piece, look at its possible targets

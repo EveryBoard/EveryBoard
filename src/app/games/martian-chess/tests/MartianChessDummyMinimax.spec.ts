@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -164,11 +164,11 @@ describe('MartianChessScoreHeuristic', () => {
                                                                      MGPOptional.empty(),
                                                                      MGPOptional.empty(),
                                                                      captured);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState,
-                                                           MGPOptional.empty(),
-                                                           strongState,
-                                                           MGPOptional.empty(),
-                                                           Player.ZERO);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState,
+                                                               MGPOptional.empty(),
+                                                               strongState,
+                                                               MGPOptional.empty(),
+                                                               Player.ZERO);
     });
 });

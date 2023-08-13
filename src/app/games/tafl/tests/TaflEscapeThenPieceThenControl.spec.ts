@@ -4,7 +4,7 @@ import { TaflPawn } from '../TaflPawn';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { BrandhubState } from '../brandhub/BrandhubState';
 import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
@@ -44,10 +44,10 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
         ];
         const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
     it('should be better when king is one step away from winning than two', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -70,9 +70,9 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
         ];
         const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
 });

@@ -70,7 +70,7 @@ export class SixComponent
     }
     public updateBoard(): void {
         this.state = this.node.gameState;
-        const lastMove: MGPOptional<SixMove> = this.node.move;
+        const lastMove: MGPOptional<SixMove> = this.node.previousMove;
         if (lastMove.isAbsent()) {
             // For tutorial
             this.hideLastMove();
@@ -107,7 +107,7 @@ export class SixComponent
         const newPieces: Coord[] = this.getState().getPieceCoords();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {
-            const start: MGPOptional<Coord> = this.node.move.get().start;
+            const start: MGPOptional<Coord> = this.node.previousMove.get().start;
             if (start.equalsValue(oldPiece) === false &&
                 newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece)) === false)
             {

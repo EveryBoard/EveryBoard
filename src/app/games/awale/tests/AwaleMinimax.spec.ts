@@ -1,44 +1,23 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleNode, AwaleRules } from '../AwaleRules';
-import { AwaleCaptureMinimax, AwaleMoveGenerator } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
-
-describe('AwaleMinimax', () => {
-
-    let moveGenerator: AwaleMoveGenerator;
-
-    beforeEach(() => {
-        moveGenerator = new AwaleMoveGenerator();
-    });
-    it('should not try to perform illegal moves', () => {
-        // Given a state with an illegal distribution due to the do-not-starve rule
-        const board: Table<number> = [
-            [1, 0, 0, 0, 0, 1],
-            [0, 0, 0, 0, 0, 0],
-        ];
-        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
-        const node: AwaleNode = new AwaleNode(state);
-        // When listing the moves
-        const moves: AwaleMove[] = moveGenerator.getListMoves(node);
-        // Then only the legal moves should be present
-        expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(AwaleMove.FIVE);
-    });
-});
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
+import { AwaleCaptureHeuristic } from '../AwaleCaptureHeuristic';
 
 describe('AwaleCaptureMinimax', () => {
 
     let rules: AwaleRules;
-    let minimax: AwaleCaptureMinimax;
+    let minimax: Minimax<AwaleMove, AwaleState>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 2 };
 
     beforeEach(() => {
         rules = AwaleRules.get();
-        minimax = new AwaleCaptureMinimax();
+        minimax = new Minimax('Capture Minimax', AwaleRules.get(), new AwaleCaptureHeuristic(), new AwaleMoveGenerator());
     });
     it('should not throw at first choice', () => {
         const node: AwaleNode = rules.getInitialNode();
@@ -85,4 +64,3 @@ describe('AwaleCaptureMinimax', () => {
         expect(bestMove).toEqual(AwaleMove.ZERO);
     });
 });
-

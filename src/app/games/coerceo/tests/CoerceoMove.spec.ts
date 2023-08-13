@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoRules } from '../CoerceoRules';
-import { CoerceoMoveGenerator } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
 
 describe('CoerceoMove', () => {
 

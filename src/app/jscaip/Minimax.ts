@@ -44,16 +44,17 @@ export class DummyHeuristic<M extends Move, S extends GameState> extends PlayerM
 export class Minimax<M extends Move, S extends GameState, L = void> implements AI<M, S, AIDepthLimitOptions> {
 
     // States whether the minimax takes random moves from the list of best moves.
-    public RANDOM: boolean = false;
+    public random: boolean = false;
     // States whether alpha-beta pruning must be done. It probably is never useful to set it to false.
-    public PRUNE: boolean = true;
+    public prune: boolean = true;
 
     public readonly availableOptions: AIDepthLimitOptions[] = [];
 
     public constructor(public readonly name: string,
                        private readonly rules: Rules<M, S, L>,
                        private readonly heuristic: Heuristic<M, S>,
-                       private readonly moveGenerator: MoveGenerator<M, S>) {
+                       private readonly moveGenerator: MoveGenerator<M, S>)
+    {
         for (let i: number = 1; i < 10; i++) {
             this.availableOptions.push({ name: `Level ${i}`, maxDepth: i });
         }
@@ -70,7 +71,7 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
         while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
             bestDescendant = bestDescendant.parent.get();
         }
-        return bestDescendant.move.get();
+        return bestDescendant.previousMove.get();
     }
 
     public alphaBeta(node: GameNode<M, S>, depth: number, alpha: number, beta: number): GameNode<M, S> {
@@ -122,7 +123,7 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
             } else if (bestChildValue === extremumExpected) {
                 bestChildren.push(bestChildDescendant);
             }
-            if (this.PRUNE && newValueIsBetter(extremumExpected, currentPlayer === Player.ZERO ? alpha : beta)) {
+            if (this.prune && newValueIsBetter(extremumExpected, currentPlayer === Player.ZERO ? alpha : beta)) {
                 // cut-off, no need to explore the other children
                 break;
             }
@@ -135,7 +136,7 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
         return bestChildren;
     }
     private getBestChildAmong(bestChildren: GameNode<M, S>[]): GameNode<M, S> {
-        if (this.RANDOM) {
+        if (this.random) {
             return ArrayUtils.getRandomElement(bestChildren);
         } else {
             return bestChildren[0];
@@ -149,7 +150,7 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
             Utils.assert(legality.isSuccess(), 'The minimax "' + this.name + '" has proposed an illegal move (' + moveString + '), refusal reason: ' + legality.getReasonOr('') + ' this should not happen.');
             const state: S = this.rules.applyLegalMove(move, node.gameState, legality.get());
             const newChild: GameNode<M, S> = new GameNode(state, MGPOptional.of(node), MGPOptional.of(move));
-            node.addChild(move, newChild);
+            node.addChild(newChild);
             this.setScore(newChild, this.computeBoardValue(newChild));
             return newChild;
         }

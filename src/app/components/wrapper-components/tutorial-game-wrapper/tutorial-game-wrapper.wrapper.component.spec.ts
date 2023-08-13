@@ -104,7 +104,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // expect to see previous move but no parent to the node
-            const componentPreviousMove: QuartoMove = wrapper.gameComponent.node.move.get() as QuartoMove;
+            const componentPreviousMove: QuartoMove = wrapper.gameComponent.node.previousMove.get() as QuartoMove;
             expect(componentPreviousMove).toEqual(tutorialPreviousMove);
             expect(wrapper.gameComponent.node.parent.isAbsent()).toBeTrue();
         }));
@@ -745,7 +745,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#showSolutionButton');
 
             // Expect the first awaited move to have been done
-            expect(testUtils.getGameComponent().node.move.get()).toEqual(awaitedMove);
+            expect(testUtils.getGameComponent().node.previousMove.get()).toEqual(awaitedMove);
             expect(testUtils.getGameComponent().getTurn()).toEqual(stepInitialTurn + 1);
             // expect 'solution' message to be shown
             const currentMessage: string =
@@ -1028,7 +1028,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#showSolutionButton');
 
             // Expect the step proposed move to have been done
-            expect(testUtils.getGameComponent().node.move.get()).toEqual(solutionMove);
+            expect(testUtils.getGameComponent().node.previousMove.get()).toEqual(solutionMove);
             expect(testUtils.getGameComponent().getTurn()).toEqual(1);
             // expect 'solution' message to be shown
             const currentMessage: string =

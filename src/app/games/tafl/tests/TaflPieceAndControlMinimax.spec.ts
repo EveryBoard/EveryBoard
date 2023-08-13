@@ -5,7 +5,7 @@ import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { BrandhubState } from '../brandhub/BrandhubState';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 
 describe('TaflPieceAndControlMinimax', () => {
@@ -50,9 +50,9 @@ describe('TaflPieceAndControlMinimax', () => {
         const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
 
         // Then the strong board should be preferred
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
 });

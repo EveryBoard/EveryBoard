@@ -5,7 +5,7 @@ import { QuartoHeuristic, QuartoMinimax, QuartoMoveGenerator } from '../QuartoMi
 import { QuartoNode } from '../QuartoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { QuartoMove } from '../QuartoMove';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 
 describe('QuartoHeuristic', () => {
@@ -32,7 +32,7 @@ describe('QuartoHeuristic', () => {
         const pieceInHand: QuartoPiece = AAAA;
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
         // Then the heuristic should detect the previctory
-        RulesUtils.expectStateToBePreVictory(state, new QuartoMove(1, 0, AAAA), Player.ONE, [heuristic]);
+        HeuristicUtils.expectStateToBePreVictory(state, new QuartoMove(1, 0, AAAA), Player.ONE, [heuristic]);
     });
     it('should recognize "3 3" as pre-victory', () => {
         // Given a board where 3 piece are aligned with a common criterion
@@ -48,7 +48,7 @@ describe('QuartoHeuristic', () => {
         // When evaluating board value
         // Then it should be evaluated as Ongoing
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-        RulesUtils.expectStateToBePreVictory(state, move, Player.ZERO, [heuristic]);
+        HeuristicUtils.expectStateToBePreVictory(state, move, Player.ZERO, [heuristic]);
     });
 });
 

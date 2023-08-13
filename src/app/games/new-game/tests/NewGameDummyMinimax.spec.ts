@@ -1,4 +1,4 @@
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { NewGameDummyMinimax, NewGameHeuristic, NewGameMoveGenerator } from '../NewGameDummyMinimax';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameNode } from '../NewGameRules';
@@ -34,7 +34,7 @@ describe('NewGameMoveGenerator', () => {
  * These are the tests for the heuristic.
  * We want to test that it gives some value on some boards, or rather that it assigns higher values to a board
  * compared to another one.
- * We can rely on RulesUtils' functions to achieve this.
+ * We can rely on HeuristicUtils' functions to achieve this.
  */
 describe('NewGameHeuristic', () => {
 
@@ -45,10 +45,10 @@ describe('NewGameHeuristic', () => {
     });
     it('should have some score', () => {
         /**
-         * To test scores, most of the time you want to rely on `RulesUtils.expectSecondStateToBeBetterThanFirstFor`.
+         * To test scores, most of the time you want to rely on `HeuristicUtils.expectSecondStateToBeBetterThanFirstFor`.
          */
         const initialState: NewGameState = NewGameState.getInitialState();
-        RulesUtils.expectStatesToBeOfEqualValue(heuristic, initialState, initialState);
+        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, initialState, initialState);
     });
 });
 

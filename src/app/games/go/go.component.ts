@@ -63,7 +63,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
     }
     public updateBoard(): void {
         const state: GoState = this.getState();
-        const move: MGPOptional<GoMove> = this.node.move;
+        const move: MGPOptional<GoMove> = this.node.previousMove;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();

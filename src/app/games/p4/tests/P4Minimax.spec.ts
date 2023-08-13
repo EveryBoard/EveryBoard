@@ -4,7 +4,7 @@ import { P4Move } from '../P4Move';
 import { P4State } from '../P4State';
 import { P4Node } from '../P4Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -62,10 +62,10 @@ describe('P4Heuristic', () => {
         ];
         const strongState: P4State = new P4State(strongBoard, 0);
 
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ZERO);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ZERO);
     });
     describe('getBoardValue', () => {
         it('should count three point for the corner', () => {

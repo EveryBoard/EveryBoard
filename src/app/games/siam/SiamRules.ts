@@ -476,7 +476,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
             this.getMountainsRowsAndColumns(node.gameState);
 
-        const winner: PlayerOrNone = this.getWinner(node.gameState, node.move, mountainsInfo.nbMountain);
+        const winner: PlayerOrNone = this.getWinner(node.gameState, node.previousMove, mountainsInfo.nbMountain);
         if (winner.isPlayer()) {
             return GameStatus.getVictory(winner);
         } else {

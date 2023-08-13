@@ -1,8 +1,8 @@
 import { Player } from 'src/app/jscaip/Player';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TrexoHeuristic, TrexoMinimax } from '../TrexoMinimax';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const X1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
@@ -46,12 +46,12 @@ describe('TrexoHeuristic', () => {
 
         // When comparing them
         // Then the second one should be deemed better
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState,
-                                                           MGPOptional.empty(),
-                                                           strongState,
-                                                           MGPOptional.empty(),
-                                                           Player.ZERO);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState,
+                                                               MGPOptional.empty(),
+                                                               strongState,
+                                                               MGPOptional.empty(),
+                                                               Player.ZERO);
     });
 });
 

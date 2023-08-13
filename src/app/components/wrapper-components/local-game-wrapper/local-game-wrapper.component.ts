@@ -184,8 +184,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return 'human';
     }
     public onCancelMove(reason?: string): void {
-        if (this.gameComponent.node.move.isPresent()) {
-            const move: Move = this.gameComponent.node.move.get();
+        if (this.gameComponent.node.previousMove.isPresent()) {
+            const move: Move = this.gameComponent.node.previousMove.get();
             this.gameComponent.showLastMove(move);
         }
     }

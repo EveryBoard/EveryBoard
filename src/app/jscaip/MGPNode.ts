@@ -1,6 +1,6 @@
 import { Move } from './Move';
 import { MGPMap } from '../utils/MGPMap';
-import { Debug } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { GameState } from './GameState';
 import { Rules } from './Rules';
@@ -41,7 +41,8 @@ export class GameNode<M extends Move, S extends GameState> {
 
     public constructor(public readonly gameState: S,
                        public readonly parent: MGPOptional<GameNode<M, S>> = MGPOptional.empty(),
-                       public readonly move: MGPOptional<M> = MGPOptional.empty()) {
+                       public readonly previousMove: MGPOptional<M> = MGPOptional.empty())
+    {
         this.id = GameNode.ID++;
     }
     /**
@@ -66,8 +67,9 @@ export class GameNode<M extends Move, S extends GameState> {
     /**
      * Adds a child to this node.
      */
-    public addChild(move: M, node: GameNode<M, S>): void {
-        this.children.set(move, node);
+    public addChild(node: GameNode<M, S>): void {
+        Utils.assert(node.previousMove.isPresent(), 'GameNode: addChild expects a node with a previous move');
+        this.children.set(node.previousMove.get(), node);
     }
     /**
      * Represents the tree starting at this node as a DOT graph.
@@ -78,7 +80,8 @@ export class GameNode<M extends Move, S extends GameState> {
                        labelFn?: (node: GameNode<M, S>) => string,
                        max?: number,
                        level: number = 0,
-                       id: number = 0): number {
+                       id: number = 0): number
+    {
         if (level === 0) {
             console.log('digraph G {');
         }
@@ -106,7 +109,7 @@ export class GameNode<M extends Move, S extends GameState> {
         let nextId: number = id+1;
         if (max === undefined || level < max) {
             for (const child of this.children.listValues()) {
-                console.log(`    node_${id} -> node_${nextId} [label="${child.move.get()}"];`);
+                console.log(`    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"];`);
                 nextId = child.printDot(rules, labelFn, max, level+1, nextId);
             }
         }
@@ -140,6 +143,7 @@ export class AbstractNode extends GameNode<Move, GameState> {}
 /**
  * A move generator should have a method that generates move from a node.
  * It may generate all possible moves, but may also just filter out some uninteresting moves.
+ * It may also order moves from more interesting to less interesting.
  */
 export abstract class MoveGenerator<M extends Move, S extends GameState> {
     /**
@@ -175,10 +179,10 @@ export type AITimeLimitOptions = AIOptions & {
 /**
  * An AI selects a move from a game node.
  */
-export abstract class AI<M extends Move, S extends GameState, Opts extends AIOptions> {
+export abstract class AI<M extends Move, S extends GameState, O extends AIOptions> {
     public abstract readonly name: string;
-    public abstract readonly availableOptions: Opts[];
-    public abstract chooseNextMove(node: GameNode<M, S>, options: Opts): M;
+    public abstract readonly availableOptions: O[];
+    public abstract chooseNextMove(node: GameNode<M, S>, options: O): M;
 }
 
 export abstract class AbstractAI extends AI<Move, GameState, AIOptions> {

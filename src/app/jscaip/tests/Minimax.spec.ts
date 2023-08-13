@@ -26,7 +26,7 @@ describe('Minimax', () => {
         const getListMovesSpy: jasmine.Spy = spyOn(moveGenerator, 'getListMoves').and.callThrough();
 
         // Given the number of moves of a minimax without alpha-beta pruning
-        minimax.PRUNE = false;
+        minimax.prune = false;
         let node: P4Node = P4Rules.get().getInitialNode();
         minimax.chooseNextMove(node, minimaxOptions);
         const callsToGetBoardValueWithoutPruning: number = getBoardValueSpy.calls.count();
@@ -35,7 +35,7 @@ describe('Minimax', () => {
         getListMovesSpy.calls.reset();
 
         // When computing the same information with alpha-beta pruning enabled
-        minimax.PRUNE = true;
+        minimax.prune = true;
         node = new P4Node(P4State.getInitialState());
         minimax.chooseNextMove(node, minimaxOptions);
         const callsToGetBoardValueWithPruning: number = getBoardValueSpy.calls.count();
@@ -60,7 +60,7 @@ describe('Minimax', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
         const node: P4Node = P4Rules.get().getInitialNode();
-        minimax.RANDOM = true;
+        minimax.random = true;
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions);
         // Then it should have selected it randomly among all the best
@@ -70,7 +70,7 @@ describe('Minimax', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
         const node: P4Node = P4Rules.get().getInitialNode();
-        minimax.RANDOM = false;
+        minimax.random = false;
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions);
         // Then it should have selected it randomly among all the best

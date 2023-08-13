@@ -81,7 +81,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.updateBoard();
     }
     public updateBoard(): void {
-        this.lastMove = this.node.move;
+        this.lastMove = this.node.previousMove;
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
         this.legalMoves = this.moveGenerator.getListMoves(this.node);

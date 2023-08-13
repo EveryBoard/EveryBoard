@@ -7,7 +7,7 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { PhalanxSizeAndFilterEpaminondasMoveGenerator, PositionalEpaminondasHeuristic, PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -92,10 +92,10 @@ describe('PositionalEpaminondasHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           lesserState, MGPOptional.empty(),
-                                                           greaterState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               lesserState, MGPOptional.empty(),
+                                                               greaterState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
     it('should prefer to have aligned piece than higher piece', () => {
         const greaterBoard: Table<PlayerOrNone> = [
@@ -128,10 +128,10 @@ describe('PositionalEpaminondasHeuristic', () => {
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           lesserState, MGPOptional.empty(),
-                                                           greaterState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               lesserState, MGPOptional.empty(),
+                                                               greaterState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
 });
 

@@ -2,10 +2,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { AbaloneMoveGenerator } from '../AbaloneDummyMinimax';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneRules } from '../AbaloneRules';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
 
 describe('AbaloneMove', () => {
 

@@ -110,7 +110,7 @@ describe('EncapsuleComponent', () => {
             const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 1));
             await testUtils.expectMoveFailure('#click_0_1', EncapsuleFailure.INVALID_PLACEMENT(), move);
         }));
-        it('should move a piece when clicking on the piece and clicking on its destination coord', fakeAsync(async() => {
+        fit('should move a piece when clicking on the piece and clicking on its destination coord', fakeAsync(async() => {
             const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
             const board: EncapsuleSpace[][] = [
                 [_, _, _],

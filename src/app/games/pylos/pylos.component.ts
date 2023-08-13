@@ -295,7 +295,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public updateBoard(): void {
         this.state = this.getState();
         this.constructedState = this.state;
-        this.lastMove = this.node.move;
+        this.lastMove = this.node.previousMove;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
         this.highCapture = MGPOptional.empty();

@@ -53,7 +53,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public updateBoard(): void {
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
-        const move: MGPOptional<EncapsuleMove> = this.node.move;
+        const move: MGPOptional<EncapsuleMove> = this.node.previousMove;
         this.calculateLeftPieceCoords();
 
         if (move.isPresent()) {

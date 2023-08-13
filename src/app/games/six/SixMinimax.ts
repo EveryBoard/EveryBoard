@@ -125,7 +125,7 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
     public currentVictorySource: SixVictorySource;
 
     public getBoardValue(node: SixNode): BoardValue {
-        const move: MGPOptional<SixMove> = node.move;
+        const move: MGPOptional<SixMove> = node.previousMove;
         const state: SixState = node.gameState;
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         const victoryValue: number = LAST_PLAYER.getVictoryValue();

@@ -284,8 +284,8 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
                 break;
             }
         }
-        if (this.node.move.isPresent()) {
-            const lastMove: TrexoMove = this.node.move.get();
+        if (this.node.previousMove.isPresent()) {
+            const lastMove: TrexoMove = this.node.previousMove.get();
             if (lastMove.getZero().equals(piece) || lastMove.getOne().equals(piece)) {
                 classes.push('last-move-stroke');
             }

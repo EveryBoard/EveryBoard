@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { SaharaHeuristic, SaharaMinimax, SaharaMoveGenerator } from '../SaharaMinimax';
 import { SaharaState } from '../SaharaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -48,10 +48,10 @@ describe('SaharaTeuristic', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const strongState: SaharaState = new SaharaState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
 });
 

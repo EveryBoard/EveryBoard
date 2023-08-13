@@ -12,6 +12,7 @@ import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
 
 export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState> {
 
+    // TODO: split unordered / ordered
     public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const moves: EpaminondasMove[] = this.getUnorderedListMoves(node);
         ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {

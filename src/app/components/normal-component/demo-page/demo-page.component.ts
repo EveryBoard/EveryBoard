@@ -8,6 +8,7 @@ import { GameInfo } from '../pick-game/pick-game.component';
 import { AbstractNode } from 'src/app/jscaip/MGPNode';
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { GameState } from 'src/app/jscaip/GameState';
 
 @Component({
     selector: 'app-demo-page',
@@ -70,10 +71,8 @@ export class DemoPageComponent {
                 };
             } else {
                 const move: Move = solution;
-                const node: AbstractNode =
-                    new GameNode(rules.applyLegalMove(move, step.state, rules.isLegal(move, step.state).get()),
-                                 MGPOptional.of(new GameNode(step.state)),
-                                 MGPOptional.of(move));
+                const state: GameState = rules.applyLegalMove(move, step.state, rules.isLegal(move, step.state).get());
+                const node: AbstractNode = new GameNode(state, MGPOptional.of(new GameNode(step.state)), MGPOptional.of(move));
                 return { node, click: MGPOptional.empty() };
             }
         } else {

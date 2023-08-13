@@ -12,7 +12,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { AbaloneMoveGenerator, AbaloneScoreMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
@@ -20,6 +19,9 @@ import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
+import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -53,7 +55,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.rules = AbaloneRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new AbaloneScoreMinimax(),
+            new Minimax('Score Minimax', this.rules, new AbaloneScoreHeuristic(), new AbaloneMoveGenerator()),
             new MCTS('MCTS', new AbaloneMoveGenerator(), this.rules),
         ];
         this.encoder = AbaloneMove.encoder;

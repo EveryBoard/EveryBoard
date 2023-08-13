@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LascaControlHeuristic, LascaControlMinimax, LascaMoveGenerator } from '../LascaControlMinimax';
 import { LascaMove } from '../LascaMove';
@@ -80,12 +80,12 @@ describe('LascaControlHeuristic', () => {
 
         // When comparing them
         // Then the one with mobile stacks should be considered better
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           immobilizedState,
-                                                           MGPOptional.empty(),
-                                                           mobileState,
-                                                           MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               immobilizedState,
+                                                               MGPOptional.empty(),
+                                                               mobileState,
+                                                               MGPOptional.empty(),
+                                                               Player.ONE);
     });
     it('should count the potential mobility as primary board value', () => {
         // Given two boards with the same stacks, one with an unique forced capture, the other without
@@ -111,7 +111,7 @@ describe('LascaControlHeuristic', () => {
         // When comparing them
         // Then the two should be of equal value:
         //     the number of non-blocked stacks times the number of piece (which is 11)
-        RulesUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState);
+        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState);
     });
 });
 

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleMoveGenerator } from 'src/app/games/awale/AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
+import { AwaleMoveGenerator } from 'src/app/games/awale/AwaleMoveGenerator';
 import { AwaleRules } from 'src/app/games/awale/AwaleRules';
 import { AwaleState } from 'src/app/games/awale/AwaleState';
 import { QuartoMoveGenerator } from 'src/app/games/quarto/QuartoMinimax';
@@ -63,8 +63,8 @@ describe('MCTS', () => {
     });
     it('should not fail on games that are too long', () => {
         // Given a MCTS for a game that has a tendency to give long random games
-        MCTS.MAX_GAME_LENGTH = 10; // Limit it heavily to ensure we will exhaust the limit (for coverage)
         const otherMcts: MCTS<AwaleMove, AwaleState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
+        otherMcts.maxGameLength = 10; // Limit it heavily to ensure we will exhaust the limit (for coverage)
         // When searching for the best move
         const beforeSearch: number = Date.now();
         const move: AwaleMove = otherMcts.chooseNextMove(AwaleRules.get().getInitialNode(), mctsOptions);

@@ -3,7 +3,7 @@ import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursRules, ConspirateursNode } from '../ConspirateursRules';
 import { ConspirateursHeuristic, ConspirateursMinimax, ConspirateursMoveGenerator } from '../ConspirateursMinimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ConspirateursMove } from '../ConspirateursMove';
 import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
@@ -128,7 +128,7 @@ describe('ConspirateursHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
@@ -173,7 +173,7 @@ describe('ConspirateursHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
@@ -219,10 +219,10 @@ describe('ConspirateursHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                                   weakState, MGPOptional.empty(),
+                                                                   strongState, MGPOptional.empty(),
+                                                                   Player.ZERO);
         });
     });
 });

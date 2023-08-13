@@ -149,9 +149,9 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const coord: Coord = new Coord(x, y);
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
-        } else if (this.node.move.isPresent()) {
-            const lastStart: Coord = this.node.move.get().getStart();
-            const lastEnd: Coord = this.node.move.get().getEnd();
+        } else if (this.node.previousMove.isPresent()) {
+            const lastStart: Coord = this.node.previousMove.get().getStart();
+            const lastEnd: Coord = this.node.previousMove.get().getEnd();
             if (coord.equals(lastStart) || coord.equals(lastEnd)) {
                 classes.push('moved-fill');
             }

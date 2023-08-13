@@ -2,14 +2,16 @@ import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ApagosCoord } from './ApagosCoord';
-import { ApagosDummyMinimax, ApagosMoveGenerator } from './ApagosDummyMinimax';
 import { ApagosFailure } from './ApagosFailure';
+import { ApagosHeuristic } from './ApagosHeuristic';
 import { ApagosMove } from './ApagosMove';
+import { ApagosMoveGenerator } from './ApagosMoveGenerator';
 import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
@@ -76,7 +78,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.node = this.rules.getInitialNode();
         this.hasAsymmetricBoard = true;
         this.availableAIs = [
-            new ApagosDummyMinimax(),
+            new Minimax('Minimax', this.rules, new ApagosHeuristic(), new ApagosMoveGenerator()),
             new MCTS('MCTS', new ApagosMoveGenerator(), this.rules),
         ];
         this.encoder = ApagosMove.encoder;

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PenteAlignmentHeuristic, PenteAlignmentMinimax, PenteMoveGenerator } from '../PenteAlignmentMinimax';
 import { PenteMove } from '../PenteMove';
@@ -80,7 +80,7 @@ describe('PenteAlignmentHeuristic', () => {
         ], [0, 0], 6);
         // When using the minimax
         // Then it should consider the better aligned state stronger
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                            weakerState, MGPOptional.empty(),
                                                            strongerState, MGPOptional.empty(),
                                                            Player.ZERO);

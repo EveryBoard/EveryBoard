@@ -4,7 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { TaflPawn } from '../TaflPawn';
 import { TablutState } from '../tablut/TablutState';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
@@ -53,10 +53,10 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
     it('should be better of with more influence (at piece number equal)', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -83,10 +83,10 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
     it('should be better of with non threatened piece (at piece number equal)', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -113,10 +113,10 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
     it('should be better of with non threatened piece (at piece number equal) (opposite one)', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -143,10 +143,10 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
     it('should be better of with more kill than influence', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -173,10 +173,10 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakState, MGPOptional.empty(),
-                                                           strongState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
     describe('isThreatened', () => {
         it('should now that empty thrones are threatening', () => {

@@ -1,13 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { AbaloneState } from './AbaloneState';
-import { AbaloneMove } from './AbaloneMove';
-import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
+import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MGPSet } from 'src/app/utils/MGPSet';
+import { AbaloneMove } from './AbaloneMove';
+import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
+import { AbaloneState } from './AbaloneState';
 
 export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneState> {
 
@@ -64,24 +63,5 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
         } else {
             return false;
         }
-    }
-}
-
-export class AbaloneScoreHeuristic extends PlayerMetricHeuristic<AbaloneMove, AbaloneState> {
-
-    public getMetrics(node: AbaloneNode): [number, number] {
-        return node.gameState.getScores();
-    }
-}
-
-export class AbaloneScoreMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
-
-    public constructor() {
-        // TODO FOR REVIEW: j'ai renommé certains minimax, hésite pas si t'en vois d'autres qui méritent renommage !
-        // TODO FOR REVIEW: l'idée c'est : un dummy minimax utilise DummyHeuristic (car il est vraiment dummy)
-        // TODO FOR REVIEW:                un score minimax utilise le score
-        // TODO FOR REVIEW:                sinon, il a un nom approprié à ce qu'il fait (tout comme son heuristique)
-        // TODO FOR REVIEW:                       ou juste JeuMinimax quand y'en a qu'un
-        super('Score Minimax', AbaloneRules.get(), new AbaloneScoreHeuristic(), new AbaloneMoveGenerator());
     }
 }

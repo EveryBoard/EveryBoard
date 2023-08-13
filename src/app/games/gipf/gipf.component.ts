@@ -260,7 +260,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.captured = [];
         this.moved = [];
 
-        const moveOptional: MGPOptional<GipfMove> = this.node.move;
+        const moveOptional: MGPOptional<GipfMove> = this.node.previousMove;
         if (moveOptional.isPresent()) {
             const move: GipfMove = moveOptional.get();
             const previousState: GipfState = this.getPreviousState();

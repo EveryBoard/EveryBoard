@@ -7,7 +7,7 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasHeuristic, EpaminondasMinimax, EpaminondasMoveGenerator } from '../EpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -65,10 +65,10 @@ describe('EpaminondasHeuristic', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakerState, MGPOptional.empty(),
-                                                           strongerState, MGPOptional.empty(),
-                                                           Player.ONE);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakerState, MGPOptional.empty(),
+                                                               strongerState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
 });
 

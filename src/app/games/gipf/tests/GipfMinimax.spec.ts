@@ -5,7 +5,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfNode, GipfRules } from '../GipfRules';
 import { GipfHeuristic, GipfMinimax, GipfMoveGenerator } from '../GipfMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -129,10 +129,10 @@ describe('GipfHeuristic', () => {
             const strongState: GipfState = new GipfState(board, 0, [5, 5], moreCapturedPieces);
             // When computing their minimax values
             // Then it should prefer having more captured pieces
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                                   weakState, MGPOptional.empty(),
+                                                                   strongState, MGPOptional.empty(),
+                                                                   Player.ONE);
         });
         it('should favor having pieces to play pieces', () => {
             // Given two states differing only in available pieces to place
@@ -151,10 +151,10 @@ describe('GipfHeuristic', () => {
             const strongState: GipfState = new GipfState(board, 0, morePiecesToPlay, [0, 0]);
             // When computing their minimax values
             // Then it should prefer having more pieces to place
-            RulesUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                                   weakState, MGPOptional.empty(),
+                                                                   strongState, MGPOptional.empty(),
+                                                                   Player.ONE);
         });
     });
 });
