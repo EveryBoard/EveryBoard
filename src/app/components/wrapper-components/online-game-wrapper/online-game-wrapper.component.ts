@@ -301,11 +301,16 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // Take back once, in any case
         this.gameComponent.node = this.gameComponent.node.mother.get();
         if (this.gameComponent.getCurrentPlayer() !== player) {
+            Utils.assert(this.gameComponent.getTurn() > 0, 'Should not allow player that never played to take back');
             // Take back a second time to make sure it end up on player's turn
             this.gameComponent.node = this.gameComponent.node.mother.get();
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        await this.updateBoardAndShowLastMove(true);
+        if (this.gameComponent.getTurn() === 0) {
+            await this.updateBoardAndShowLastMove(false);
+        } else {
+            await this.updateBoardAndShowLastMove(true);
+        }
     }
     public canResign(): boolean {
         Utils.assert(this.isPlaying(), 'Non playing should not call canResign');

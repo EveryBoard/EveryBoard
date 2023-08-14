@@ -98,7 +98,6 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
      * ie: - if it's online, he'll tell the game-component when the remote opponent has played
      *     - if it's offline, he'll tell the game-component what the bot have done
      */
-
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
     }

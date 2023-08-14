@@ -16,6 +16,7 @@ import { MancalaComponent } from '../../commons/MancalaComponent';
 import { KalahComponent } from '../kalah.component';
 import { KalahMove } from '../KalahMove';
 import { KalahRules } from '../KalahRules';
+import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 describe('KalahComponent', () => {
 
@@ -125,7 +126,7 @@ describe('KalahComponent', () => {
                 await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
 
                 // Then the 1000ms pause of the AI should be done first
-                tick(1000);
+                tick(LocalGameWrapperComponent.BOT_TIMEOUT);
                 // Then it should take TIMEOUT_BETWEEN_SEED ms to empty the initial house
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
                 // Then 4 * TIMEOUT_BETWEEN_SEED ms to sow the 4 seeds
@@ -295,7 +296,7 @@ describe('KalahComponent', () => {
             // When giving turn to AI to play and waiting for move
             await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
             // 1000ms for AI to take action + 1000 for the distribution
-            tick(1000 + (5 * MancalaComponent.TIMEOUT_BETWEEN_SEED));
+            tick(LocalGameWrapperComponent.BOT_TIMEOUT + (5 * MancalaComponent.TIMEOUT_BETWEEN_SEED));
 
             // Then the " +1 " in Kalah secondary message should have disappeared
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');

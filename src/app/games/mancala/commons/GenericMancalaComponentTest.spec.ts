@@ -310,6 +310,13 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
             await mancalaTestUtils.testUtils.expectClickFailure('#store_player_0', reason);
         }));
         describe('Move Animation', () => {
+            async function triggerOpponentMove(coord: Coord): Promise<void> {
+                const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
+                const move: M = gameComponent.generateMove(coord.x);
+                await gameComponent.chooseMove(move);
+                // Void cause we don't want to await it
+                void gameComponent.updateBoard(true);
+            }
             for (const actor of ['user', 'not_the_user']) {
                 let receiveMoveOrDoClick: (coord: Coord) => Promise<void>;
                 if (actor === 'user') {
@@ -320,11 +327,7 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
                     };
                 } else {
                     receiveMoveOrDoClick = async(coord: Coord): Promise<void> => {
-                        const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
-                        const move: M = gameComponent.generateMove(coord.x);
-                        await gameComponent.chooseMove(move);
-                        // Void cause we don't want to await it
-                        void gameComponent.updateBoard(true);
+                        return triggerOpponentMove(coord);
                     };
                 }
                 it('should show right after the first seed being drop (' + actor + ')', fakeAsync(async() => {
@@ -383,7 +386,21 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
                 expect(mancalaTestUtils.testUtils.getGameComponent().onLegalClick).toHaveBeenCalledOnceWith(2, 1);
                 tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
             }));
-            it('should make click impossible during distribution', fakeAsync(async() => {
+            it('should make click impossible during opponent move animation', fakeAsync(async() => {
+                // Given a move triggered by the opponent
+                void triggerOpponentMove(new Coord(2, 1));
+                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but bot finished yet
+                spyOn(mancalaTestUtils.testUtils.getGameComponent() as MancalaComponent<R, M>, 'onLegalClick').and.callThrough();
+
+                // When clicking again
+                await mancalaTestUtils.testUtils.expectClickSuccess('#click_3_1');
+                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
+
+                // Then onLegalUserClick should not have been called
+                expect(mancalaTestUtils.testUtils.getGameComponent().onLegalClick).not.toHaveBeenCalled();
+                tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
+            }));
+            it('should make click impossible during player distribution animation', fakeAsync(async() => {
                 // Given a move where a first click has been done but is not finished
                 await mancalaTestUtils.testUtils.expectClickSuccess('#click_2_1');
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but bot finished yet

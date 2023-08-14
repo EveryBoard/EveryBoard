@@ -12,11 +12,13 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MancalaFailure } from './MancalaFailure';
 import { TimeUtils } from 'src/app/utils/TimeUtils';
+import { Utils } from 'src/app/utils/utils';
 
 export abstract class MancalaComponent<R extends MancalaRules<M>, M extends MancalaMove>
     extends RectangularGameComponent<R, M, MancalaState, number>
 {
     public static readonly TIMEOUT_BETWEEN_SEED: number = 200;
+
     public static readonly TIMEOUT_BETWEEN_DISTRIBUTION: number = 1000;
 
     public MGPOptional: typeof MGPOptional = MGPOptional;
@@ -71,6 +73,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;
+            Utils.assert(this.node.mother.isPresent(), 'triggerAnimation in kalah should be false at first turn');
             this.changeVisibleState(this.node.mother.get().gameState);
             let indexDistribution: number = 0;
             for (const subMove of this.node.move.get()) {
@@ -92,6 +95,8 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.clickOngoing === true) {
+            return MGPValidation.SUCCESS;
+        } else if (this.opponentMoveIsBeingAnimated === true) {
             return MGPValidation.SUCCESS;
         } else {
             this.clickOngoing = true;
@@ -260,13 +265,8 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         }
     }
     private getPreviousStableState(): MancalaState {
-        // if user move
-        // - - - - getState()       turn not-changed & no-move-done
-        // - - - - constructedState turn not-changed & move-ongoing
-        // if opponent move:
-        // - - - - getState()       turn ! changed ! & move-alldone
-        // - - - - constructedState turn previoussed & move-recapit
         if (this.opponentMoveIsBeingAnimated) {
+            Utils.assert(this.getTurn() > 0, 'Kalah: Should not animate move at turn 0');
             return this.node.mother.get().gameState;
         } else {
             if (this.constructedState.equals(this.getState()) === true) {

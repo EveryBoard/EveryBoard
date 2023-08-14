@@ -4,7 +4,7 @@ import { AbstractNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { Debug } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
@@ -24,13 +24,14 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
+    public static readonly BOT_TIMEOUT: number = 1000;
+
     public aiDepths: [string, string] = ['0', '0'];
 
     public playerSelection: [string, string] = ['human', 'human'];
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
-    public botTimeOut: number = 1000;
 
     public displayAIMetrics: boolean = false;
 
@@ -106,7 +107,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // bot's turn
             window.setTimeout(async() => {
                 await this.doAIMove(playingMinimax.get());
-            }, this.botTimeOut);
+            }, LocalGameWrapperComponent.BOT_TIMEOUT);
         }
     }
     private getPlayingAI(): MGPOptional<AbstractMinimax> {
@@ -145,11 +146,17 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
     public canTakeBack(): boolean {
-        return this.gameComponent.getTurn() > 0;
+        if (this.players[0].equalsValue('human')) {
+            return this.gameComponent.getTurn() > 0;
+        } else {
+            return this.gameComponent.getTurn() > 1;
+        }
     }
     public async takeBack(): Promise<void> {
         this.gameComponent.node = this.gameComponent.node.mother.get();
         if (this.isAITurn()) {
+            Utils.assert(this.gameComponent.node.mother.isPresent(),
+                         'Cannot take back in first turn when AI is Player.ZERO');
             this.gameComponent.node = this.gameComponent.node.mother.get();
         }
         await this.updateBoardAndShowLastMove(false);
