@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { P4Heuristic, P4MoveGenerator } from 'src/app/games/p4/P4Minimax';
+import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Move } from 'src/app/games/p4/P4Move';
+import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
 import { P4State } from 'src/app/games/p4/P4State';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';

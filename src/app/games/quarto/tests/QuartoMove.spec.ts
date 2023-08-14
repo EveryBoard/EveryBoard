@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { QuartoNode, QuartoRules } from '../QuartoRules';
-import { QuartoMoveGenerator } from '../QuartoMinimax';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 
 describe('QuartoMove', () => {
 

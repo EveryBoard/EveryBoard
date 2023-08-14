@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
 import { QuartoState } from './QuartoState';
 import { QuartoRules } from './QuartoRules';
-import { QuartoMinimax, QuartoMoveGenerator } from './QuartoMinimax';
 import { QuartoPiece } from './QuartoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -12,6 +11,9 @@ import { QuartoTutorial } from './QuartoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { QuartoHeuristic } from './QuartoHeuristic';
+import { QuartoMoveGenerator } from './QuartoMoveGenerator';
 
 @Component({
     selector: 'app-quarto',
@@ -40,7 +42,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.node = this.rules.getInitialNode();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new QuartoMinimax(),
+            new Minimax('Minimax', this.rules, new QuartoHeuristic(), new QuartoMoveGenerator()),
             new MCTS('MCTS', new QuartoMoveGenerator(), this.rules),
         ];
         this.encoder = QuartoMove.encoder;

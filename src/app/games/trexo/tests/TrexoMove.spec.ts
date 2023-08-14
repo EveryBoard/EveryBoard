@@ -5,8 +5,8 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { TrexoFailure } from '../TrexoFailure';
-import { TrexoMoveGenerator } from '../TrexoMinimax';
 import { TrexoMove } from '../TrexoMove';
+import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
 
 describe('TrexoMove', () => {

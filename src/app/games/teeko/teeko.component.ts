@@ -3,7 +3,6 @@ import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TeekoMinimax, TeekoMoveGenerator } from './TeekoMinimax';
 import { TeekoTutorial } from './TeekoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -12,6 +11,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TeekoHeuristic } from './TeekoHeuristic';
+import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 
 @Component({
     selector: 'app-teeko',
@@ -37,7 +39,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.encoder = TeekoMove.encoder;
         this.tutorial = new TeekoTutorial().tutorial;
         this.availableAIs = [
-            new TeekoMinimax(),
+            new Minimax('Minimax', this.rules, new TeekoHeuristic(), new TeekoMoveGenerator()),
             new MCTS('MCTS', new TeekoMoveGenerator(), this.rules),
         ];
     }

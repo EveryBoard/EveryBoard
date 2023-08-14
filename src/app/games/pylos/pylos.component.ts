@@ -3,17 +3,19 @@ import { GameComponent } from '../../components/game-components/game-component/G
 import { PylosMove, PylosMoveFailure } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
-import { PylosMinimax, PylosMoveGenerator } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { PylosOrderedMoveGenerator } from './PylosOrderedMoveGenerator';
+import { PylosMoveGenerator } from './PylosMoveGenerator';
+import { PylosHeuristic } from './PylosHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-pylos',
@@ -52,8 +54,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.rules = PylosRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new PylosMinimax(),
-            new PylosOrderedMinimax(),
+            new Minimax('Minimax', this.rules, new PylosHeuristic(), new PylosOrderedMoveGenerator()),
             new MCTS('MCTS', new PylosMoveGenerator(), this.rules),
         ];
         this.encoder = PylosMove.encoder;

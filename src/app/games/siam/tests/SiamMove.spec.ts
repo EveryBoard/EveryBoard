@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { SiamNode } from '../SiamRules';
-import { SiamMoveGenerator } from '../SiamMinimax';
 import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -9,6 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { SiamMoveGenerator } from '../SiamMoveGenerator';
 
 describe('SiamMove', () => {
 

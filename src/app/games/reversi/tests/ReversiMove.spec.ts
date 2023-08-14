@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { ReversiRules } from '../ReversiRules';
-import { ReversiMoveGenerator } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 
 describe('ReversiMove', () => {
 

@@ -7,7 +7,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MartianChessMoveGenerator, MartianChessScoreMinimax } from './MartianChessDummyMinimax';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
@@ -16,6 +15,9 @@ import { MartianChessTutorial } from './MartianChessTutorial';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
+import { MartianChessScoreHeuristic } from './MartianChessScoreHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,
@@ -157,7 +159,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.rules = MartianChessRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new MartianChessScoreMinimax(),
+            new Minimax('Score Minimax', this.rules, new MartianChessScoreHeuristic(), new MartianChessMoveGenerator()),
             new MCTS('MCTS', new MartianChessMoveGenerator(), this.rules),
         ];
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;

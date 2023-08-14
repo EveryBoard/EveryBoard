@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-
 import { ReversiLegalityInformation, ReversiRules } from './ReversiRules';
-import { ReversiMinimax, ReversiMoveGenerator } from './ReversiMinimax';
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -14,6 +12,9 @@ import { ReversiTutorial } from './ReversiTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { ReversiMoveGenerator } from './ReversiMoveGenerator';
+import { ReversiHeuristic } from './ReversiHeuristic';
 
 @Component({
     selector: 'app-reversi',
@@ -37,7 +38,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.rules = ReversiRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new ReversiMinimax(),
+            new Minimax('Minimax', this.rules, new ReversiHeuristic(), new ReversiMoveGenerator()),
             new MCTS('MCTS', new ReversiMoveGenerator(), this.rules),
         ];
         this.encoder = ReversiMove.encoder;

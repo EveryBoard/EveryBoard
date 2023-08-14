@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { SaharaRules } from '../SaharaRules';
-import { SaharaMoveGenerator } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaFailure } from '../SaharaFailure';
@@ -8,6 +7,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
 
 describe('SaharaMoves', () => {
 

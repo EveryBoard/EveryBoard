@@ -4,12 +4,14 @@ import { BrandhubState } from './BrandhubState';
 import { BrandhubRules } from './BrandhubRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { TaflHeuristic, TaflMinimax, TaflMoveGenerator } from '../TaflMinimax';
-import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
-import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
 import { BrandhubTutorial } from './BrandhubTutorial';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflHeuristic } from '../TaflHeuristic';
+import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
+import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlHeuristic';
 
 @Component({
     selector: 'app-brandhub',
@@ -22,11 +24,21 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
         super(messageDisplayer, BrandhubMove.from);
         this.rules = BrandhubRules.get();
         this.node = this.rules.getInitialNode();
+        const moveGenerator: TaflMoveGenerator<BrandhubMove, BrandhubState> = new TaflMoveGenerator(this.rules);
         this.availableAIs = [
-            new TaflMinimax('DummyMinimax', new TaflHeuristic(this.rules)),
-            new TaflMinimax('Piece > Influence Minimax', new TaflPieceAndInfluenceHeuristic(this.rules)),
-            new TaflMinimax('Piece > Control Minimax', new TaflPieceAndControlHeuristic(this.rules)),
-            new TaflMinimax('Escape > Piece > Control Minimax', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
+            new Minimax('DummyMinimax', this.rules, new TaflHeuristic(this.rules), moveGenerator),
+            new Minimax('Piece > Influence Minimax',
+                        this.rules,
+                        new TaflPieceAndInfluenceHeuristic(this.rules),
+                        moveGenerator),
+            new Minimax('Piece > Control Minimax',
+                        this.rules,
+                        new TaflPieceAndControlHeuristic(this.rules),
+                        moveGenerator),
+            new Minimax('Escape > Piece > Control Minimax',
+                        this.rules,
+                        new TaflEscapeThenPieceThenControlHeuristic(this.rules),
+                        moveGenerator),
             new MCTS('MCTS', new TaflMoveGenerator(this.rules), this.rules),
         ];
         this.encoder = BrandhubMove.encoder;

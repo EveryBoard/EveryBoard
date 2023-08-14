@@ -5,11 +5,13 @@ import { TablutRules } from './TablutRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TablutTutorial } from './TablutTutorial';
 import { TaflComponent } from '../tafl.component';
-import { TaflHeuristic, TaflMinimax, TaflMoveGenerator } from '../TaflMinimax';
-import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
-import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TaflHeuristic } from '../TaflHeuristic';
+import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
+import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
+import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlHeuristic';
 
 @Component({
     selector: 'app-tablut',
@@ -22,12 +24,22 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
         super(messageDisplayer, TablutMove.from);
         this.rules = TablutRules.get();
         this.node = this.rules.getInitialNode();
+        const moveGenerator: TaflMoveGenerator<TablutMove, TablutState> = new TaflMoveGenerator(this.rules);
         this.availableAIs = [
-            new TaflMinimax('Dummy Minimax', new TaflHeuristic(this.rules)),
-            new TaflMinimax('Piece > Influence Minimax', new TaflPieceAndInfluenceHeuristic(this.rules)),
-            new TaflMinimax('Piece > Control Minimax', new TaflPieceAndControlHeuristic(this.rules)),
-            new TaflMinimax('Escape > Piece > Control Minimax', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
-            new MCTS('MCTS', new TaflMoveGenerator(this.rules), this.rules),
+            new Minimax('Dummy Minimax', this.rules, new TaflHeuristic(this.rules), moveGenerator),
+            new Minimax('Piece > Influence Minimax',
+                        this.rules,
+                        new TaflPieceAndInfluenceHeuristic(this.rules),
+                        moveGenerator),
+            new Minimax('Piece > Control Minimax',
+                        this.rules,
+                        new TaflPieceAndControlHeuristic(this.rules),
+                        moveGenerator),
+            new Minimax('Escape > Piece > Control Minimax',
+                        this.rules,
+                        new TaflEscapeThenPieceThenControlHeuristic(this.rules),
+                        moveGenerator),
+            new MCTS('MCTS', moveGenerator, this.rules),
         ];
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;

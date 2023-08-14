@@ -13,7 +13,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { P4State } from 'src/app/games/p4/P4State';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
@@ -28,6 +27,10 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
+import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
+import { P4Rules } from 'src/app/games/p4/P4Rules';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -312,7 +315,8 @@ describe('LocalGameWrapperComponent', () => {
             // Given a board and a buggy AI (that performs an illegal move)
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPOptional.empty());
-            const minimax: P4Minimax = new P4Minimax();
+            const minimax: Minimax<P4Move, P4State> =
+                new Minimax('Minimax', P4Rules.get(), new P4Heuristic(), new P4MoveGenerator());
             spyOn(minimax, 'chooseNextMove').and.returnValue(P4Move.ZERO);
 
             // When it is the turn of the bugged AI

@@ -6,7 +6,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
-import { SaharaMinimax, SaharaMoveGenerator } from 'src/app/games/sahara/SaharaMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
@@ -16,6 +15,9 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaTutorial } from './SaharaTutorial';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { SaharaHeuristic } from './SaharaHeuristic';
+import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 
 @Component({
     selector: 'app-sahara',
@@ -40,7 +42,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.rules = SaharaRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new SaharaMinimax(),
+            new Minimax('Minimax', this.rules, new SaharaHeuristic(), new SaharaMoveGenerator()),
             new MCTS('MCTS', new SaharaMoveGenerator(), this.rules),
         ];
         this.encoder = SaharaMove.encoder;

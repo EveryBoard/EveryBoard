@@ -4,12 +4,14 @@ import { HnefataflState } from './HnefataflState';
 import { HnefataflRules } from './HnefataflRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { TaflHeuristic, TaflMinimax, TaflMoveGenerator } from '../TaflMinimax';
-import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceMinimax';
-import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlMinimax';
 import { HnefataflTutorial } from './HnefataflTutorial';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflHeuristic } from '../TaflHeuristic';
+import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
+import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
+import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlHeuristic';
 
 @Component({
     selector: 'app-hnefatafl',
@@ -22,11 +24,15 @@ export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflM
         super(messageDisplayer, HnefataflMove.from);
         this.rules = HnefataflRules.get();
         this.node = this.rules.getInitialNode();
+        const moveGenerator: TaflMoveGenerator<HnefataflMove, HnefataflState> = new TaflMoveGenerator(this.rules);
         this.availableAIs = [
-            new TaflMinimax('DummyBot', new TaflHeuristic(this.rules)),
-            new TaflMinimax('Piece > Influence', new TaflPieceAndInfluenceHeuristic(this.rules)),
-            new TaflMinimax('Piece > Control', new TaflPieceAndControlHeuristic(this.rules)),
-            new TaflMinimax('Escape > Piece > Control', new TaflEscapeThenPieceThenControlHeuristic(this.rules)),
+            new Minimax('DummyBot', this.rules, new TaflHeuristic(this.rules), moveGenerator),
+            new Minimax('Piece > Influence', this.rules, new TaflPieceAndInfluenceHeuristic(this.rules), moveGenerator),
+            new Minimax('Piece > Control', this.rules, new TaflPieceAndControlHeuristic(this.rules), moveGenerator),
+            new Minimax('Escape > Piece > Control',
+                        this.rules,
+                        new TaflEscapeThenPieceThenControlHeuristic(this.rules),
+                        moveGenerator),
             new MCTS('MCTS', new TaflMoveGenerator(this.rules), this.rules),
         ];
         this.encoder = HnefataflMove.encoder;
