@@ -1,12 +1,12 @@
-/* eslint-disable max-lines-per-function */
-import { ConspirateursState } from '../ConspirateursState';
-import { ConspirateursRules, ConspirateursNode } from '../ConspirateursRules';
-import { ConspirateursHeuristic, ConspirateursMinimax, ConspirateursMoveGenerator } from '../ConspirateursMinimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ConspirateursMove } from '../ConspirateursMove';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
+import { ConspirateursState } from '../ConspirateursState';
+
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
 
 describe('ConspirateursHeuristic', () => {
 
@@ -56,10 +56,9 @@ describe('ConspirateursHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
             HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
-
+                                                                   weakState, MGPOptional.empty(),
+                                                                   strongState, MGPOptional.empty(),
+                                                                   Player.ZERO);
         });
         it('should assign a higher score to a board with a piece in a shelter than on the side', () => {
             const strongState: ConspirateursState = new ConspirateursState([
@@ -101,9 +100,9 @@ describe('ConspirateursHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
             HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState, MGPOptional.empty(),
-                                                               strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                                   weakState, MGPOptional.empty(),
+                                                                   strongState, MGPOptional.empty(),
+                                                                   Player.ZERO);
         });
         it('should assign a higher score for a piece close to an empty shelter', () => {
             // Here, A is close to two empty shelters

@@ -17,7 +17,8 @@ describe('NewGameHeuristic', () => {
     });
     it('should have some score', () => {
         /**
-         * To test scores, most of the time you want to rely on `HeuristicUtils.expectSecondStateToBeBetterThanFirstFor`.
+         * To test scores, most of the time you want to rely on
+         * `HeuristicUtils.expectSecondStateToBeBetterThanFirstFor`.
          */
         const initialState: NewGameState = NewGameState.getInitialState();
         HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, initialState, initialState);

@@ -1,6 +1,6 @@
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
+import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
-import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
+import { ConspirateursNode } from './ConspirateursRules';
 
 export class ConspirateursOrderedMoveGenerator extends ConspirateursMoveGenerator {
 

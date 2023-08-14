@@ -1,5 +1,3 @@
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ConspirateursMove } from '../ConspirateursMove';
 import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
@@ -21,7 +19,7 @@ describe('ConspirateursMinimax', () => {
                               new ConspirateursHeuristic(),
                               new ConspirateursOrderedMoveGenerator());
     });
-    // TODO FOR REVIEW: que fait on de ce test ? On le généralise TOUS les composants ?
+    // TODO FOR REVIEW: que fait on de ce test ? On le généralise sur TOUS les composants ?
     // TODO FOR REVIEW: genre on s'assure que chaque minimax déclaré doit pouvoir faire X tours contre lui-même
     it('should be able to finish when playing with itself', () => {
         // Given a component where AI plays against AI

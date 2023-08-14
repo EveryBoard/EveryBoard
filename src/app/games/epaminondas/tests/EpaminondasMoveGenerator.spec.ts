@@ -1,11 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
 import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
-
-const _: PlayerOrNone = PlayerOrNone.NONE;
-const O: PlayerOrNone = PlayerOrNone.ZERO;
-const X: PlayerOrNone = PlayerOrNone.ONE;
 
 describe('EpaminondasMoveGenerator', () => {
 

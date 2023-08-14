@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { ConspirateursState } from '../ConspirateursState';
-import { ConspirateursRules, ConspirateursNode } from '../ConspirateursRules';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { ConspirateursNode } from '../ConspirateursRules';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConspirateursMoveGenerator } from '../ConspirateursMoveGenerator';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

@@ -1,5 +1,5 @@
 import { ConnectSixState } from './ConnectSixState';
-import { ConnectSixNode, ConnectSixRules } from './ConnectSixRules';
+import { ConnectSixNode } from './ConnectSixRules';
 import { ConnectSixMove } from './ConnectSixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixFirstMove } from './ConnectSixMove';

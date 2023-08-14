@@ -62,8 +62,8 @@ describe('PenteAlignmentHeuristic', () => {
         // When using the minimax
         // Then it should consider the better aligned state stronger
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                           weakerState, MGPOptional.empty(),
-                                                           strongerState, MGPOptional.empty(),
-                                                           Player.ZERO);
+                                                               weakerState, MGPOptional.empty(),
+                                                               strongerState, MGPOptional.empty(),
+                                                               Player.ZERO);
     });
 });

@@ -1,7 +1,7 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { LascaControlHeuristic } from './LascaControlHeuristic';
-import { LascaNode, LascaRules } from './LascaRules';
+import { LascaNode } from './LascaRules';
 import { LascaStack, LascaState } from './LascaState';
 
 export class LascaControlAndDominationHeuristic extends LascaControlHeuristic {

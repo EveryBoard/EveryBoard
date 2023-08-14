@@ -12,7 +12,6 @@ import { P4MoveGenerator } from '../P4MoveGenerator';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
-const X: PlayerOrNone = PlayerOrNone.ONE;
 
 describe('P4Heuristic', () => {
 

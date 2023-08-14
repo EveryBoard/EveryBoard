@@ -1,7 +1,7 @@
 import { Player } from 'src/app/jscaip/Player';
 import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
-import { PlayerMetricHeuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { PylosNode } from './PylosRules';
 
 export class PylosHeuristic extends PlayerMetricHeuristic<PylosMove, PylosState> {

@@ -8,7 +8,6 @@ import { SixMoveGenerator } from '../SixMoveGenerator';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
-const _: PlayerOrNone = PlayerOrNone.NONE;
 
 describe('SixMoveGenerator', () => {
 

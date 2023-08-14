@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';

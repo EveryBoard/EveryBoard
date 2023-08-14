@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax, PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
-import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { ConspirateursMove } from './ConspirateursMove';
+import { ConspirateursNode } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 
 export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursMove, ConspirateursState> {

@@ -1,5 +1,5 @@
 import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasNode } from './EpaminondasRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
 

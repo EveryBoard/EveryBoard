@@ -1,11 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
-import { Heuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { EpaminondasNode } from './EpaminondasRules';
+import { Heuristic } from 'src/app/jscaip/Minimax';
 
 export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
 
