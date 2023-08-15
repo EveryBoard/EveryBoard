@@ -187,6 +187,6 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
         return node.getCache(this.name + '-moves');
     }
     public getInfo(node: GameNode<M, S>): string {
-        return 'BoardValue=' + this.heuristic.getBoardValue(node);
+        return 'BoardValue=' + this.heuristic.getBoardValue(node).value;
     }
 }
