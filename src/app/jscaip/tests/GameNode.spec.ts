@@ -50,6 +50,8 @@ describe('GameNode', () => {
         let treeRoot: GameNode<MoveMock, GameStateMock>;
         let terminalNode: MockNode;
         let consoleLogBuffer: string[];
+        let getGameStatusSpy: jasmine.Spy;
+
         beforeEach(() => {
             GameNode.ID = 0;
             rules = new RulesMock(GameStateMock);
@@ -73,7 +75,8 @@ describe('GameNode', () => {
             terminalNode = new GameNode(new GameStateMock(3), MGPOptional.of(grandChild), MGPOptional.of(move));
             grandChild.addChild(terminalNode);
 
-            spyOn(rules, 'getGameStatus').and.callFake((node: MockNode) => {
+            getGameStatusSpy = spyOn(rules, 'getGameStatus');
+            getGameStatusSpy.and.callFake((node: MockNode) => {
                 if (node.gameState.turn === 3) return GameStatus.ZERO_WON;
                 else return GameStatus.ONGOING;
             });
@@ -133,7 +136,7 @@ describe('GameNode', () => {
         });
         it('should color nodes based on game status (Player.ZERO)', () => {
             // Given a terminal game node where Player.ZERO wins
-            spyOn(rules, 'getGameStatus').and.callFake((node: MockNode) => {
+            getGameStatusSpy.and.callFake((node: MockNode) => {
                 return GameStatus.ZERO_WON;
             });
             // When printing it
@@ -141,14 +144,14 @@ describe('GameNode', () => {
             // Then it should have printed the node with the player color
             const expectedOutput: string[] = [
                 'digraph G {',
-                '    node_0 [label="#3: 4 - foo", style=filled, fillcolor="#994d00"];',
+                '    node_0 [label="#3: 4", style=filled, fillcolor="#994d00"];',
                 '}',
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
         it('should color nodes based on game status (Player.ONE)', () => {
             // Given a terminal game node where Player.ZERO wins
-            spyOn(rules, 'getGameStatus').and.callFake((node: MockNode) => {
+            getGameStatusSpy.and.callFake((node: MockNode) => {
                 return GameStatus.ONE_WON;
             });
             // When printing it
@@ -156,14 +159,14 @@ describe('GameNode', () => {
             // Then it should have printed the node with the player color
             const expectedOutput: string[] = [
                 'digraph G {',
-                '    node_0 [label="#3: 4 - foo", style=filled, fillcolor="#ffc34d"];',
+                '    node_0 [label="#3: 4", style=filled, fillcolor="#ffc34d"];',
                 '}',
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
         it('should color nodes based on game status (draw)', () => {
             // Given a terminal game node where Player.ZERO wins
-            spyOn(rules, 'getGameStatus').and.callFake((node: MockNode) => {
+            getGameStatusSpy.and.callFake((node: MockNode) => {
                 return GameStatus.DRAW;
             });
             // When printing it
@@ -171,7 +174,7 @@ describe('GameNode', () => {
             // Then it should have printed the node in grey
             const expectedOutput: string[] = [
                 'digraph G {',
-                '    node_0 [label="#3: 4 - foo", style=filled, fillcolor="grey"];',
+                '    node_0 [label="#3: 4", style=filled, fillcolor="grey"];',
                 '}',
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
