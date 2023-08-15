@@ -33,4 +33,21 @@ describe('CoerceoOrderedMoveGenerator', () => {
         const node: CoerceoNode = new CoerceoNode(state);
         expect(moveGenerator.getListMoves(node).length).toBe(3);
     });
+    it('should generate all moves in case of capture on the edge', () => {
+            const board: FourStatePiece[][] = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, X, _, X],
+            [N, N, N, N, N, N, N, N, N, N, N, N, _, _, O],
+        ];
+        const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [18, 17]);
+        const node: CoerceoNode = new CoerceoNode(state);
+        expect(moveGenerator.getListMoves(node).length).toBe(2);
+    });
 });

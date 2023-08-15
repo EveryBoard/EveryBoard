@@ -24,7 +24,7 @@ describe('AttackEpaminondasHeuristic', () => {
         heuristic = new EpaminondasAttackHeuristic();
     });
     it('should go forward', () => {
-        const greaterBoard: Table<PlayerOrNone> = [
+        const strongerBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -38,8 +38,8 @@ describe('AttackEpaminondasHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
         ];
-        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 1);
-        const lesserBoard: Table<PlayerOrNone> = [
+        const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
+        const weakerBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -53,10 +53,46 @@ describe('AttackEpaminondasHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
-        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
+        const weakerState: EpaminondasState = new EpaminondasState(weakerBoard, 1);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               lesserState, MGPOptional.empty(),
-                                                               greaterState, MGPOptional.empty(),
+                                                               weakerState, MGPOptional.empty(),
+                                                               strongerState, MGPOptional.empty(),
+                                                               Player.ONE);
+    });
+    it('should prefer going into the winning territory', () => {
+        const strongerBoard: Table<PlayerOrNone> = [
+            [_, O, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, X, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _],
+        ];
+        const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
+        const weakerBoard: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, X, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _],
+        ];
+        const weakerState: EpaminondasState = new EpaminondasState(weakerBoard, 1);
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               strongerState, MGPOptional.empty(),
+                                                               weakerState, MGPOptional.empty(),
                                                                Player.ONE);
     });
 });

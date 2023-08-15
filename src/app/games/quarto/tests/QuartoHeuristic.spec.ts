@@ -6,6 +6,8 @@ import { QuartoMove } from '../QuartoMove';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { QuartoHeuristic } from '../QuartoHeuristic';
+import { QuartoNode } from '../QuartoRules';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 
 describe('QuartoHeuristic', () => {
 
@@ -19,6 +21,20 @@ describe('QuartoHeuristic', () => {
 
     beforeEach(() => {
         heuristic = new QuartoHeuristic();
+    });
+    it('should assign 0 to boards that have no pre-victory', () => {
+        // Given a state without a pre-victory
+        const board: Table<QuartoPiece> = [
+            [NULL, ABBB, AABB, NULL],
+            [NULL, NULL, NULL, NULL],
+            [NULL, NULL, NULL, NULL],
+            [NULL, NULL, NULL, NULL],
+        ];
+        const pieceInHand: QuartoPiece = AAAA;
+        const state: QuartoState = new QuartoState(board, 3, pieceInHand);
+        // Then the heuristic should assign 0 as board value
+        const boardValue: BoardValue = heuristic.getBoardValue(new QuartoNode(state));
+        expect(boardValue.value).toBe(0);
     });
     it('should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {
         // Given a state with a pre-victory

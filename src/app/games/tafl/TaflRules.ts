@@ -17,7 +17,7 @@ import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class TaflNode extends GameNode<TaflMove, TaflState> {}
+export class TaflNode<M extends TaflMove, S extends TaflState> extends GameNode<M, S> {}
 
 export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S> {
 
@@ -276,7 +276,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return state.of(board, turn + 1);
     }
-    public getGameStatus(node: GameNode<M, S>): GameStatus {
+    public getGameStatus(node: TaflNode<M, S>): GameStatus {
         const state: S = node.gameState as S;
 
         const winner: MGPOptional<Player> = this.getWinner(state);

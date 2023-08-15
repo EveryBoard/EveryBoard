@@ -10,8 +10,8 @@ import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { assert } from 'src/app/utils/assert';
 import { TaflMove } from './TaflMove';
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
+import { TaflNode } from './TaflRules';
 
 export type TaflPieceAndControlHeuristicMetrics = {
     controlScore: number,
@@ -23,7 +23,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove, S extends TaflStat
     extends TaflPieceAndInfluenceHeuristic<M, S>
 {
 
-    public override getBoardValue(node: GameNode<M, S>): BoardValue {
+    public override getBoardValue(node: TaflNode<M, S>): BoardValue {
         const state: S = node.gameState;
 
         const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(state);

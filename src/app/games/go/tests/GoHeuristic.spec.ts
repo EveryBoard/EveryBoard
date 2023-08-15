@@ -4,6 +4,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoState, GoPiece, Phase } from '../GoState';
 import { GoNode } from '../GoRules';
 import { GoHeuristic } from '../GoHeuristic';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { Player } from 'src/app/jscaip/Player';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -28,5 +30,53 @@ describe('GoHeuristic', () => {
         const initialNode: GoNode = new GoNode(state);
         const boardValue: number = heuristic.getBoardValue(initialNode).value;
         expect(boardValue).toBe(3);
+    });
+    it('should prefer a larger territory', () => {
+        // Given a board with more territory for ZERO than another
+        const strongBoard: Table<GoPiece> = [
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+        ];
+        const strongState: GoState = new GoState(strongBoard, [10, 1], 0, MGPOptional.empty(), Phase.PLAYING);
+        const weakBoard: Table<GoPiece> = [
+            [_, O, X, _, _],
+            [_, O, X, _, _],
+            [_, O, X, _, _],
+            [_, O, X, _, _],
+            [_, O, X, _, _],
+        ];
+        const weakState: GoState = new GoState(weakBoard, [10, 1], 0, MGPOptional.empty(), Phase.PLAYING);
+        // When computing their value
+        // Then it should prefer having a larger territory
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ZERO);
+    });
+    it('should not care about kills in territory', () => {
+        const u: GoPiece = GoPiece.DEAD_DARK;
+        // Given two boards with the same territory, but one with a dead opponent piece
+        const strongBoard: Table<GoPiece> = [
+            [_, _, O, X, u],
+            [_, _, O, X, X],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+        ];
+        const strongState: GoState = new GoState(strongBoard, [10, 1], 0, MGPOptional.empty(), Phase.PLAYING);
+        const weakBoard: Table<GoPiece> = [
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+        ];
+        const weakState: GoState = new GoState(weakBoard, [10, 1], 0, MGPOptional.empty(), Phase.PLAYING);
+        // When computing their value
+        // Then it should assign the same value for both
+        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState);
     });
 });

@@ -1,9 +1,8 @@
-import { TaflRules } from './TaflRules';
+import { TaflNode, TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
-import { GameNode } from 'src/app/jscaip/GameNode';
 
 export class TaflHeuristic<M extends TaflMove, S extends TaflState> extends PlayerMetricHeuristic<M, S> {
 
@@ -11,7 +10,7 @@ export class TaflHeuristic<M extends TaflMove, S extends TaflState> extends Play
         super();
     }
 
-    public getMetrics(node: GameNode<M, S>): [number, number] {
+    public getMetrics(node: TaflNode<M, S>): [number, number] {
         const state: S = node.gameState;
         // 1. has the king escaped ?
         // 2. is the king captured ?

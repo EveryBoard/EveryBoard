@@ -6,13 +6,12 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflPawn } from './TaflPawn';
-import { TaflRules } from './TaflRules';
+import { TaflNode, TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { TaflHeuristic } from './TaflHeuristic';
 
 export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflState> extends TaflHeuristic<M, S> {
@@ -32,7 +31,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
         this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
         this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
     }
-    public override getBoardValue(node: GameNode<M, S>): BoardValue {
+    public override getBoardValue(node: TaflNode<M, S>): BoardValue {
         const gameStatus: GameStatus = this.rules.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();

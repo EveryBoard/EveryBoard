@@ -1,11 +1,10 @@
-import { TaflRules } from './TaflRules';
+import { TaflNode, TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
 import { Debug } from 'src/app/utils/utils';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 
 @Debug.log
@@ -14,7 +13,7 @@ export class TaflMoveGenerator<M extends TaflMove, S extends TaflState> extends 
     public constructor(private readonly rules: TaflRules<M, S>) {
         super();
     }
-    public getListMoves(node: GameNode<M, S>): M[] {
+    public getListMoves(node: TaflNode<M, S>): M[] {
         const state: S = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state);

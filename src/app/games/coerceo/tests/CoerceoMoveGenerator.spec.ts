@@ -16,7 +16,7 @@ describe('CoerceoMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new CoerceoMoveGenerator();
     });
-    it('should generate all moves number of moves', () => {
+    it('should generate all moves', () => {
         const board: FourStatePiece[][] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

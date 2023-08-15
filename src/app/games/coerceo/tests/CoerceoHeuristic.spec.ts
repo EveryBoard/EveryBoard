@@ -19,7 +19,7 @@ describe('CoerceoHeuristic', () => {
     beforeEach(() => {
         heuristic = new CoerceoHeuristic();
     });
-    it('should prefer a board where he has more freedom', () => {
+    it('should prefer a board with more freedom', () => {
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
