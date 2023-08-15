@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 @Injectable({
     providedIn: 'root',
 })
-export class ExclusiveOnlineGameGuard implements CanActivate {
+export class ExclusiveOnlineGameGuard {
 
     protected currentGameSubscription: MGPOptional<Subscription> = MGPOptional.empty();
 
