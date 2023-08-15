@@ -27,7 +27,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
     public explorationParameter: number = Math.sqrt(2);
 
     // The longest a game can be before we decide to stop simulating it
-    public maxGameLength: number = 1000;
+    public maxGameLength: number = 8;
 
     public readonly availableOptions: AITimeLimitOptions[] = [];
 
