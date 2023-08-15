@@ -41,7 +41,7 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
     }
 }
 
-fdescribe('GameNode', () => {
+describe('GameNode', () => {
 
     let rules: RulesMock;
 
@@ -51,6 +51,7 @@ fdescribe('GameNode', () => {
         let terminalNode: MockNode;
         let consoleLogBuffer: string[];
         beforeEach(() => {
+            GameNode.ID = 0;
             rules = new RulesMock(GameStateMock);
 
             const move: MoveMock = new MoveMock(1);
@@ -81,8 +82,6 @@ fdescribe('GameNode', () => {
             spyOn(console, 'log').and.callFake((line: string) => {
                 consoleLogBuffer.push(line);
             });
-
-            GameNode.ID = 0;
         });
         it('should output a DOT representation of the node tree on standard output', () => {
             // Given a tree of game nodes
