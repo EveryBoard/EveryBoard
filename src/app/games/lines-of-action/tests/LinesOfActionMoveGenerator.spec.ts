@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';

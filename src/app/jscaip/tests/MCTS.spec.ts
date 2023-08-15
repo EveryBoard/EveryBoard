@@ -35,7 +35,6 @@ describe('MCTS', () => {
         // When computing the best move
         const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions);
         // Then it should not give the win to the opponent
-        console.log(move);
         if (move.coord.equals(new Coord(3, 0))) {
             // MCTS blocked the opponent's only possible win
             expect(true).toBe(true);
