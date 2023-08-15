@@ -131,5 +131,50 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+        it('should color nodes based on game status (Player.ZERO)', () => {
+            // Given a terminal game node where Player.ZERO wins
+            spyOn(rules, 'getGameStatus').and.callFake((node: MockNode) => {
+                return GameStatus.ZERO_WON;
+            });
+            // When printing it
+            terminalNode.printDot(rules);
+            // Then it should have printed the node with the player color
+            const expectedOutput: string[] = [
+                'digraph G {',
+                '    node_0 [label="#3: 4 - foo", style=filled, fillcolor="#994d00"];',
+                '}',
+            ];
+            expect(consoleLogBuffer).toEqual(expectedOutput);
+        });
+        it('should color nodes based on game status (Player.ONE)', () => {
+            // Given a terminal game node where Player.ZERO wins
+            spyOn(rules, 'getGameStatus').and.callFake((node: MockNode) => {
+                return GameStatus.ONE_WON;
+            });
+            // When printing it
+            terminalNode.printDot(rules);
+            // Then it should have printed the node with the player color
+            const expectedOutput: string[] = [
+                'digraph G {',
+                '    node_0 [label="#3: 4 - foo", style=filled, fillcolor="#ffc34d"];',
+                '}',
+            ];
+            expect(consoleLogBuffer).toEqual(expectedOutput);
+        });
+        it('should color nodes based on game status (draw)', () => {
+            // Given a terminal game node where Player.ZERO wins
+            spyOn(rules, 'getGameStatus').and.callFake((node: MockNode) => {
+                return GameStatus.DRAW;
+            });
+            // When printing it
+            terminalNode.printDot(rules);
+            // Then it should have printed the node in grey
+            const expectedOutput: string[] = [
+                'digraph G {',
+                '    node_0 [label="#3: 4 - foo", style=filled, fillcolor="grey"];',
+                '}',
+            ];
+            expect(consoleLogBuffer).toEqual(expectedOutput);
+        });
     });
 });

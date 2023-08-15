@@ -48,18 +48,21 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         Utils.assert(this.rules.getGameStatus(root).isEndGame === false, 'cannot search from a finished game');
         const player: Player = root.gameState.getCurrentPlayer();
         const startTime: number = Date.now();
+        const endTime: number = Date.now() + options.maxSeconds * 1000;
         let iterations: number = 0;
-        do {
+        while (Date.now() < endTime) {
             const expansionResult: NodeAndPath<M, S> = this.expand(this.select({ node: root, path: [root] }));
-            const gameStatus: GameStatus = this.simulate(expansionResult.node);
+            const gameStatus: GameStatus = this.simulate(expansionResult.node, endTime);
             this.backpropagate(expansionResult.path, this.winScore(gameStatus, player));
             iterations++;
-        } while (Date.now() < startTime + options.maxSeconds * 1000);
+        }
         Debug.display('MCTS', 'chooseNextMove', 'root winRatio: ' + this.winRatio(root));
+        Debug.display('MCTS', 'chooseNextMove', 'children winRatio: ' +
+            (root.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.winRatio(n))));
         const bestChild: GameNode<M, S> =
             ArrayUtils.maximumBy(root.getChildren(), (n: GameNode<M, S>) => this.winRatio(n));
         const seconds: number = (Date.now() - startTime) / 1000;
-        Debug.display('MCTS', 'chooseNextMove', 'Computed ' + iterations + ' in ' + seconds);
+        Debug.display('MCTS', 'chooseNextMove', `Computed ${iterations} in ${seconds} (rate: ${iterations/seconds} it/s)`);
         Debug.display('MCTS', 'chooseNextMove', 'Best child has a win ratio of: ' + this.winRatio(bestChild));
         return bestChild.previousMove.get();
     }
@@ -115,14 +118,15 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
      */
     private select(nodeAndPath: NodeAndPath<M, S>): NodeAndPath<M, S> {
         const node: GameNode<M, S> = nodeAndPath.node;
-        Debug.display('MCTS', 'select', node.id);
+        Debug.display('MCTS', 'select', 'Exploring node: ' + node.id);
         if (node.hasChildren()) {
             const simulations: number = this.simulations(node);
             // Select within the child with the highest UCB value.
-            Debug.display('MCTS', 'select', (node.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.ucb(node, simulations))));
+            Debug.display('MCTS', 'select', 'UCB values: ' +
+                (node.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.ucb(node, simulations))));
             const childToVisit: GameNode<M, S> =
                 ArrayUtils.maximumBy(node.getChildren(), (n: GameNode<M, S>) => this.ucb(n, simulations));
-            Debug.display('MCTS', 'select', 'selecting ' + childToVisit.id);
+            Debug.display('MCTS', 'select', 'selecting children ' + childToVisit.id);
             return this.select({ node: childToVisit, path: nodeAndPath.path.concat([childToVisit]) });
         } else {
             // This is a leaf node, we select it.
@@ -154,11 +158,11 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
      * Simulate a game from the given node. Does not change anything in the node.
      * @returns the game status at the end of the simulation
      */
-    private simulate(node: GameNode<M, S>): GameStatus {
+    private simulate(node: GameNode<M, S>, endTime: number): GameStatus {
         Debug.display('MCTS', 'simulate', 'simulate from node which has a last move of ' + node.previousMove.get().toString());
         let current: GameNode<M, S> = node;
         let steps: number = 0;
-        do {
+        while (steps < this.maxGameLength && Date.now() < endTime) {
             const status: GameStatus = this.rules.getGameStatus(current);
             if (status.isEndGame) {
                 Debug.display('MCTS', 'simulate', `end game in ${steps} steps, winner is ${status.winner}`);
@@ -166,8 +170,8 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
             }
             steps++;
             current = this.playRandomStep(current);
-        } while (steps < this.maxGameLength);
-        // Game has taken more than MAX_GAME_LENGTH steps
+        }
+        // Game has taken too long
         return GameStatus.ONGOING;
     }
     /**
