@@ -36,7 +36,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
                        private readonly rules: Rules<M, S, L>)
     {
         for (let i: number = 1; i < 10; i++) {
-            this.availableOptions.push({ name: `${i} seconds`, maxSeconds: i });
+            this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });
         }
     }
 
