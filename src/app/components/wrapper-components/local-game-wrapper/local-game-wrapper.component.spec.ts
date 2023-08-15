@@ -26,7 +26,7 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
@@ -472,16 +472,17 @@ describe('LocalGameWrapperComponent', () => {
             expect(component.showLastMove).not.toHaveBeenCalled();
         }));
     });
-    it('should display AI metrics when parameter is set to true', fakeAsync(async() => {
+    it('should display AI info when parameter is set to true', fakeAsync(async() => {
         // Given a component where we want to show the AI metrics in the middle of a part
-        (testUtils.getWrapper() as LocalGameWrapperComponent).displayAIMetrics = true;
+        localStorage.setItem('displayAIInfo', 'true');
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
         // When displaying it
         testUtils.detectChanges();
 
         // Then the AI metrics are shown
-        testUtils.expectElementToExist('#AIMetrics');
+        testUtils.expectElementToExist('#AIInfo');
+        localStorage.clear();
     }));
     describe('takeBack', () => {
         it('should allow to go back one move', fakeAsync(async() => {

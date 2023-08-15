@@ -2,7 +2,7 @@ import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
 import { QuartoNode } from './QuartoRules';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class QuartoMoveGenerator extends MoveGenerator<QuartoMove, QuartoState> {
 

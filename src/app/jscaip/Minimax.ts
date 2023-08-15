@@ -1,4 +1,4 @@
-import { AI, AIDepthLimitOptions, GameNode, MoveGenerator } from './MGPNode';
+import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
 import { Move } from './Move';
 import { BoardValue } from './BoardValue';
 import { Rules } from './Rules';
@@ -10,6 +10,7 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { Utils } from '../utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { GameStatus } from './GameStatus';
+import { GameNode } from './GameNode';
 
 /**
  * A heuristic assigns a specific value for a node.
@@ -184,5 +185,8 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
     }
     private getMoves(node: GameNode<M, S>): MGPOptional<MGPSet<M>> {
         return node.getCache(this.name + '-moves');
+    }
+    public getInfo(node: GameNode<M, S>): string {
+        return 'BoardValue=' + this.heuristic.getBoardValue(node);
     }
 }

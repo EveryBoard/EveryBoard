@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';

@@ -14,7 +14,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 
 export class KamisadoNode extends GameNode<KamisadoMove, KamisadoState> { }
 

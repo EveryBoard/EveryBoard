@@ -1,4 +1,4 @@
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 import { NewGameMove } from './NewGameMove';
 import { NewGameNode } from './NewGameRules';
 import { NewGameState } from './NewGameState';

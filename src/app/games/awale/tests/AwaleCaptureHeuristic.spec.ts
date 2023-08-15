@@ -3,7 +3,7 @@ import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { AwaleCaptureHeuristic } from '../AwaleCaptureHeuristic';

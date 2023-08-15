@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';

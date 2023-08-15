@@ -1,9 +1,9 @@
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class LinesOfActionMoveGenerator extends MoveGenerator<LinesOfActionMove, LinesOfActionState> {
 

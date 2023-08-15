@@ -1,5 +1,5 @@
 import { Rules } from '../../jscaip/Rules';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';

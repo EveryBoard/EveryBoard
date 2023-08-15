@@ -9,9 +9,9 @@ import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoNode, QuartoRules } from 'src/app/games/quarto/QuartoRules';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { AITimeLimitOptions } from '../AI';
 import { Coord } from '../Coord';
 import { MCTS } from '../MCTS';
-import { AITimeLimitOptions } from '../MGPNode';
 
 describe('MCTS', () => {
 

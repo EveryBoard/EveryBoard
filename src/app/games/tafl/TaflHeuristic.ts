@@ -3,7 +3,7 @@ import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 
 export class TaflHeuristic<M extends TaflMove, S extends TaflState> extends PlayerMetricHeuristic<M, S> {
 

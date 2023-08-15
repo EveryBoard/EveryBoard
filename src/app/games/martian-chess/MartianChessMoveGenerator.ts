@@ -6,8 +6,8 @@ import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { MartianChessNode } from './MartianChessRules';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, MartianChessState> {
 

@@ -1,7 +1,7 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { EpaminondasPositionalHeuristic } from '../EpaminondasPositionalHeuristic';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';

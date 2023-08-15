@@ -6,7 +6,7 @@ import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflMove } from './TaflMove';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Utils } from 'src/app/utils/utils';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlHeuristicMetrics } from './TaflPieceAndControlHeuristic';
 

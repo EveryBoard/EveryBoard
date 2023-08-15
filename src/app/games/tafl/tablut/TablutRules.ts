@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { tablutConfig } from './tablutConfig';
 import { TablutMove } from './TablutMove';
 import { TablutState } from './TablutState';

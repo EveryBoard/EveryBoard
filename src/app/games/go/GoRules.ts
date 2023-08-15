@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { GoState, Phase, GoPiece } from './GoState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';

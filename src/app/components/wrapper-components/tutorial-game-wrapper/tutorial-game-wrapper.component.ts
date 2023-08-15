@@ -3,7 +3,7 @@ import {
     Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { AbstractNode, GameNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
 import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Debug, Utils } from 'src/app/utils/utils';

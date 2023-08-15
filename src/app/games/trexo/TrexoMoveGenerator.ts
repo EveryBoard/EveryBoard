@@ -1,4 +1,4 @@
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';
 import { TrexoState } from './TrexoState';

@@ -12,7 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
 import { TaflConfig } from './TaflConfig';
 import { Type } from '@angular/core';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';

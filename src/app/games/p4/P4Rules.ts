@@ -1,6 +1,6 @@
 import { Coord } from '../../jscaip/Coord';
 import { Rules } from '../../jscaip/Rules';
-import { GameNode } from '../../jscaip/MGPNode';
+import { GameNode } from '../../jscaip/GameNode';
 import { P4State } from './P4State';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Utils, Debug } from 'src/app/utils/utils';

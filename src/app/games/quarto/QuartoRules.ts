@@ -1,5 +1,5 @@
 import { Rules } from '../../jscaip/Rules';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';

@@ -3,7 +3,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { QuixoNode, QuixoRules } from './QuixoRules';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class QuixoMoveGenerator extends MoveGenerator<QuixoMove, QuixoState> {
 

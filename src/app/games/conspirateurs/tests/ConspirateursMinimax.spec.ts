@@ -1,5 +1,5 @@
 import { ConspirateursMove } from '../ConspirateursMove';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursOrderedMoveGenerator } from '../ConspirateursOrderedMoveGenerator';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';

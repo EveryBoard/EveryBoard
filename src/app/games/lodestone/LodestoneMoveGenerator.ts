@@ -1,3 +1,4 @@
+import { MoveGenerator } from 'src/app/jscaip/AI';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -5,7 +6,6 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestoneOrientation, LodestonePiece } from './LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
 import { LodestoneState } from './LodestoneState';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 
 export class LodestoneMoveGenerator extends MoveGenerator<LodestoneMove, LodestoneState> {
 

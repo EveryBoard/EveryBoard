@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Debug, Utils } from 'src/app/utils/utils';

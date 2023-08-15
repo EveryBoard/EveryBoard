@@ -8,10 +8,10 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 import { SiamHeuristic } from '../SiamHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

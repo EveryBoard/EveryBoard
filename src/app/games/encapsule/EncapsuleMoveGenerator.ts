@@ -7,7 +7,7 @@ import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, EncapsuleState> {
 

@@ -1,7 +1,7 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';

@@ -1,4 +1,4 @@
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 import { ApagosMove } from './ApagosMove';
 import { ApagosNode, ApagosRules } from './ApagosRules';
 import { ApagosState } from './ApagosState';

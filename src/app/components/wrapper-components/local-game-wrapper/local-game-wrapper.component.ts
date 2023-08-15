@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractAI, AbstractNode, AIOptions, MGPNodeStats } from 'src/app/jscaip/MGPNode';
+import { AbstractNode, GameNodeStats } from 'src/app/jscaip/GameNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
@@ -14,6 +14,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { AbstractAI, AIOptions, AIStats } from 'src/app/jscaip/AI';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -44,10 +45,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.role = Player.ZERO; // The user is playing, not observing
     }
     public getCreatedNodes(): number {
-        return MGPNodeStats.createdNodes;
+        return GameNodeStats.createdNodes;
     }
     public getMinimaxTime(): number {
-        return MGPNodeStats.minimaxTime;
+        return AIStats.aiTime;
     }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
@@ -188,5 +189,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             const move: Move = this.gameComponent.node.previousMove.get();
             this.gameComponent.showLastMove(move);
         }
+    }
+    public displayAIInfo(): boolean {
+        return localStorage.getItem('displayAIInfo') === "true";
     }
 }

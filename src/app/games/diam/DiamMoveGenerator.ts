@@ -1,5 +1,5 @@
+import { MoveGenerator } from 'src/app/jscaip/AI';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';

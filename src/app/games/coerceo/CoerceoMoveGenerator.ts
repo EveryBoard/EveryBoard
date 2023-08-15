@@ -4,7 +4,7 @@ import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState> {
 

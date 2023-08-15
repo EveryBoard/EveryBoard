@@ -10,7 +10,7 @@ import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { assert } from 'src/app/utils/assert';
 import { TaflMove } from './TaflMove';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
 
 export type TaflPieceAndControlHeuristicMetrics = {

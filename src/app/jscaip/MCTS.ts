@@ -4,7 +4,8 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Debug, Utils } from '../utils/utils';
 import { GameState } from './GameState';
 import { GameStatus } from './GameStatus';
-import { AI, AITimeLimitOptions, GameNode, MoveGenerator } from './MGPNode';
+import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
+import { GameNode } from './GameNode';
 import { Move } from './Move';
 import { Player } from './Player';
 import { Rules } from './Rules';
@@ -203,5 +204,10 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         const wins: number = this.wins(node) + winScore;
         node.setCache('wins', wins);
         node.setCache('simulations', simulations);
+    }
+    public getInfo(node: GameNode<M, S>): string {
+        const wins: number = this.getCounterFromCache(node, 'wins');
+        const simulations: number = this.getCounterFromCache(node, 'simulations');
+        return `wins/simulations=${wins}/${simulations}`;
     }
 }

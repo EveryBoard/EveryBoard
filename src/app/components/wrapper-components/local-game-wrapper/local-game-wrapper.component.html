@@ -81,13 +81,11 @@
                     (click)="restartGame()"
                     i18n
             >Start a new game</button>
-            <div *ngIf="gameComponent.node.previousMove.isPresent() && displayAIMetrics"
-                 id="AIMetrics">
-                <!-- TODO FOR REVIEW: je propose de passer par Debug.display plutôt que du HTML dans le composant, vu que c'est addressé aux devs ceci
-                <ng-container *ngFor="let minimax of gameComponent.availableAIs">
-                    {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.node) }} <br/>
+            <div *ngIf="gameComponent.node.previousMove.isPresent() && displayAIInfo()"
+                 id="AIInfo">
+                <ng-container *ngFor="let ai of gameComponent.availableAIs">
+                    {{ ai.name + ': ' + ai.getInfo(gameComponent.node) }} <br/>
                 </ng-container>
-                -->
                 Created {{ getCreatedNodes() }} nodes.<br/>
                 Minimax time: {{ getMinimaxTime() }}ms.<br/>
             </div>

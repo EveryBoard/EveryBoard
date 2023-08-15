@@ -13,7 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 
 export class SiamLegalityInformation {
     public constructor(public readonly resultingBoard: Table<SiamPiece>,

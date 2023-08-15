@@ -1,5 +1,5 @@
+import { MoveGenerator } from 'src/app/jscaip/AI';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PentagoMove } from './PentagoMove';
 import { PentagoNode } from './PentagoRules';

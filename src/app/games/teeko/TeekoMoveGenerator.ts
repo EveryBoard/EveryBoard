@@ -3,7 +3,7 @@ import { TeekoState } from './TeekoState';
 import { TeekoNode } from './TeekoRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState> {
 

@@ -7,7 +7,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { ConnectSixAlignmentHeuristic } from '../ConnectSixAlignmentHeuristic';
 
 describe('ConnectSixAlignmentHeuristic', () => {

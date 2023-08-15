@@ -4,7 +4,7 @@ import { GameState } from '../GameState';
 import { Move } from '../Move';
 import { Heuristic } from '../Minimax';
 import { Player } from '../Player';
-import { GameNode } from '../MGPNode';
+import { GameNode } from '../GameNode';
 
 export class HeuristicUtils {
 

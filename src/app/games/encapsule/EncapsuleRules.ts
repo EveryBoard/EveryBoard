@@ -1,5 +1,5 @@
 import { Rules } from '../../jscaip/Rules';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';

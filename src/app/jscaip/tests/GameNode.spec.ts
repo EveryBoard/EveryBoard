@@ -2,7 +2,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameState } from '../GameState';
 import { GameStatus } from '../GameStatus';
-import { GameNode } from '../MGPNode';
+import { GameNode } from '../GameNode';
 import { Move } from '../Move';
 import { Rules } from '../Rules';
 
@@ -41,7 +41,7 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
     }
 }
 
-describe('GameNode', () => {
+fdescribe('GameNode', () => {
 
     let rules: RulesMock;
 

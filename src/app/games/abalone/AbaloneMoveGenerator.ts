@@ -1,6 +1,6 @@
+import { MoveGenerator } from 'src/app/jscaip/AI';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';

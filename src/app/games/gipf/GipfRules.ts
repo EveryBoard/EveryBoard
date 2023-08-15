@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { assert } from 'src/app/utils/assert';

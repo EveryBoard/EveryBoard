@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { brandhubConfig } from './brandhubConfig';
 import { BrandhubState } from './BrandhubState';
 import { TaflRules } from '../TaflRules';

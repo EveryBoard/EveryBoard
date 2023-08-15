@@ -5,7 +5,7 @@ import { SaharaState } from './SaharaState';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { SaharaNode, SaharaRules } from './SaharaRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class SaharaMoveGenerator extends MoveGenerator<SaharaMove, SaharaState> {
 

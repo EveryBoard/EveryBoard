@@ -5,7 +5,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from '../../utils/MGPValidation';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class AwaleMoveGenerator extends MoveGenerator<AwaleMove, AwaleState> {
 

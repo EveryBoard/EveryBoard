@@ -1,5 +1,5 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';

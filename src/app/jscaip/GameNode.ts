@@ -7,13 +7,9 @@ import { Rules } from './Rules';
 import { GameStatus } from './GameStatus';
 import { Player } from './Player';
 
-export class MGPNodeStats {
+export class GameNodeStats {
     public static createdNodes: number = 0;
-    public static minimaxTime: number = 0;
 }
-
-// TODO FOR REVIEW: ce fichier s'appelle toujours MGPNode.ts. Je propose de le renommer GameNode.ts
-// TODO FOR REVIEW: mais il définit des trucs liés à l'IA aussi, que je propose de bouger dans AI.ts
 
 /**
  * A node of the game tree.
@@ -23,6 +19,7 @@ export class MGPNodeStats {
  */
 @Debug.log
 export class GameNode<M extends Move, S extends GameState> {
+
     public static ID: number = 0;
 
     public readonly id: number; // Used for debug purposes to uniquely identify nodes
@@ -44,6 +41,7 @@ export class GameNode<M extends Move, S extends GameState> {
                        public readonly previousMove: MGPOptional<M> = MGPOptional.empty())
     {
         this.id = GameNode.ID++;
+        GameNodeStats.createdNodes++;
     }
     /**
      * Returns the child corresponding to applying the given move to the current state,
@@ -137,53 +135,3 @@ export class GameNode<M extends Move, S extends GameState> {
 }
 
 export class AbstractNode extends GameNode<Move, GameState> {}
-
-// TODO FOR REVIEW: à partir d'ici, le reste appartiendrait à AI.ts
-
-/**
- * A move generator should have a method that generates move from a node.
- * It may generate all possible moves, but may also just filter out some uninteresting moves.
- * It may also order moves from more interesting to less interesting.
- */
-export abstract class MoveGenerator<M extends Move, S extends GameState> {
-    /**
-     * Gives the list of all the possible moves.
-     * Has to be implemented for each rule so that the AI can choose among theses moves.
-     * This function could give an incomplete set of data if some of them are redundant
-     * or if some of them are too bad to be interesting to count, as a matter of performance.
-     */
-    public abstract getListMoves(node: GameNode<M, S>): M[];
-}
-
-/**
- * Most AIs can be parameterized. This is where the parameters would be stored.
- */
-export type AIOptions = {
-    readonly name: string;
-}
-
-/**
- * These are options for AIs that have a depth limit, such as minimax.
- */
-export type AIDepthLimitOptions = AIOptions & {
-    readonly maxDepth: number;
-}
-
-/**
- * These are options for AI that can be time-constrained, such as MCTS.
- */
-export type AITimeLimitOptions = AIOptions & {
-    readonly maxSeconds: number;
-}
-
-/**
- * An AI selects a move from a game node.
- */
-export abstract class AI<M extends Move, S extends GameState, O extends AIOptions> {
-    public abstract readonly name: string;
-    public abstract readonly availableOptions: O[];
-    public abstract chooseNextMove(node: GameNode<M, S>, options: O): M;
-}
-
-export abstract class AbstractAI extends AI<Move, GameState, AIOptions> {
-}

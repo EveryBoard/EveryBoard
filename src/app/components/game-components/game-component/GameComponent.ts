@@ -11,7 +11,8 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { AI, AIOptions, GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
+import { AI, AIOptions } from 'src/app/jscaip/AI';
 
 /**
  * Define some methods that are useful to have in game components.

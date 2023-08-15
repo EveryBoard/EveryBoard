@@ -7,7 +7,7 @@ import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
 import { EpaminondasAttackHeuristic } from '../EpaminondasAttackHeuristic';

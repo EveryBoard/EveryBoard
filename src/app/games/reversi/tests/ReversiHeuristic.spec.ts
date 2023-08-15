@@ -4,7 +4,7 @@ import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { ReversiHeuristic } from '../ReversiHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { ReversiMoveGenerator } from '../ReversiMoveGenerator';

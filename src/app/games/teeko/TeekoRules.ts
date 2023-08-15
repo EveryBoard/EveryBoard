@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';

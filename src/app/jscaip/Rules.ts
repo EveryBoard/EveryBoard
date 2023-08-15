@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Move } from './Move';
 import { Type } from '@angular/core';
 import { Debug, Utils } from '../utils/utils';

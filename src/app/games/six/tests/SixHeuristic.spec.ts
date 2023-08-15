@@ -7,11 +7,11 @@ import { SixMove } from '../SixMove';
 import { SixLegalityInformation, SixNode, SixRules } from '../SixRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { AIDepthLimitOptions } from 'src/app/jscaip/MGPNode';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { SixHeuristic } from '../SixHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;

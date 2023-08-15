@@ -2,7 +2,7 @@ import { P4Move } from './P4Move';
 import { P4State } from './P4State';
 import { P4Node, P4Rules } from './P4Rules';
 import { Debug } from 'src/app/utils/utils';
-import { MoveGenerator } from 'src/app/jscaip/MGPNode';
+import { MoveGenerator } from 'src/app/jscaip/AI';
 
 @Debug.log
 export class P4MoveGenerator extends MoveGenerator<P4Move, P4State> {

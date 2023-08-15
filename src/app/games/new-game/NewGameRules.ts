@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { NewGameMove } from './NewGameMove';
