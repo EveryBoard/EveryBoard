@@ -12,6 +12,8 @@ import { TaflMinimax } from '../TaflMinimax';
 import { TaflMove } from '../TaflMove';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
+import { Direction } from 'src/app/jscaip/Direction';
+import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 
 export class TaflTestEntries<C extends TaflComponent<R, M, S>,
@@ -73,19 +75,29 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             }));
         });
         describe('Second click', () => {
-            it('should allow simple move', fakeAsync(async() => {
+            fit('should allow simple move', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
-                const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
+                const start: Coord = entries.validFirstCoord;
+                const end: Coord = entries.validSecondCoord;
+                const playersCoord: string = start.x + '_' + start.y;
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
                 // When moving your piece
-                const move: M = entries.moveProvider(entries.validFirstCoord, entries.validSecondCoord);
+                const move: M = entries.moveProvider(start, end);
 
                 // Then the move should be legal
-                const landingSpace: string = '#click_' + entries.validSecondCoord.x + '_' + entries.validSecondCoord.y;
+                const landingSpace: string = '#click_' + end.x + '_' + end.y;
                 await testUtils.expectMoveSuccess(landingSpace, move);
+                // And the piece on the way should be highlighted
+                const moveDirection: Direction = start.getDirectionToward(end).get();
+                let movedCoord: Coord = start.getNext(moveDirection, 1);
+                while (movedCoord.equals(end) === false) {
+                    const elementName: string = '#click_' + movedCoord.x + '_' + movedCoord.y;
+                    testUtils.expectElementToHaveClass(elementName, 'moved-fill');
+                    movedCoord = movedCoord.getNext(moveDirection, 1);
+                }
             }));
-            it('Diagonal move attempt should not throw', fakeAsync(async() => {
+            it('should fail but not throw during diagonal move attempt', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
                 await testUtils.expectClickSuccess('#click_' + playersCoord);

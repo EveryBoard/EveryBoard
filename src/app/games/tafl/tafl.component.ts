@@ -1,6 +1,6 @@
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -26,6 +26,8 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
 
     protected capturedCoords: Coord[] = [];
+
+    protected passedByCoord: Coord[] = [];
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -59,6 +61,9 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
                 }
             }
         }
+        const lastStart: Coord = this.node.move.get().getStart();
+        const lastEnd: Coord = this.node.move.get().getEnd();
+        this.passedByCoord = lastStart.getCoordsToward(lastEnd).concat(lastStart).concat(lastEnd);
     }
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
@@ -154,9 +159,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
         } else if (this.node.move.isPresent()) {
-            const lastStart: Coord = this.node.move.get().getStart();
-            const lastEnd: Coord = this.node.move.get().getEnd();
-            if (coord.equals(lastStart) || coord.equals(lastEnd)) {
+            if (this.passedByCoord.some((c: Coord) => c.equals(coord))) {
                 classes.push('moved-fill');
             }
         }
