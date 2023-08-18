@@ -240,15 +240,7 @@ export class YinshComponent
         }
     }
     private coordsBetween(start: Coord, end: Coord): Coord[] {
-        const coords: Coord[] = [];
-        const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
-        for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
-            if (this.constructedState.getPieceAt(cur) !== YinshPiece.EMPTY) {
-                coords.push(cur);
-            }
-            coords.push(end);
-        }
-        return coords;
+        return start.getCoordsToward(end).concat(start).concat(end);
     }
     private showLastMoveCapture(capture: YinshCapture, alsoShowPiece: boolean): void {
         for (const coord of capture.capturedSpaces) {

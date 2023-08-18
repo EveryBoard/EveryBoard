@@ -210,6 +210,36 @@ describe('YinshComponent', () => {
             testUtils.expectElementToHaveClass('#space_5_2', 'moved-fill'); // another flipped marker
             testUtils.expectElementToHaveClass('#space_6_2', 'moved-fill'); // the moved ring
         }));
+        fit('should show passed-by spaces', fakeAsync(async() => {
+            // Given a board with some markers
+            const board: Table<YinshPiece> = [
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ];
+            const state: YinshState = new YinshState(board, [0, 0], 10);
+            await testUtils.setupState(state);
+            // When performing a move that flips the markers
+            const move: YinshMove = new YinshMove([],
+                                                  new Coord(3, 2), MGPOptional.of(new Coord(6, 2)),
+                                                  []);
+            await testUtils.expectClickSuccess('#click_3_2');
+            await testUtils.expectMoveSuccess('#click_6_2', move);
+
+            // Then the markers and the ring should be shown as moved
+            testUtils.expectElementToHaveClass('#space_3_2', 'moved-fill'); // the new marker
+            testUtils.expectElementToHaveClass('#space_4_2', 'moved-fill'); // a flipped marker
+            testUtils.expectElementToHaveClass('#space_5_2', 'moved-fill'); // another flipped marker
+            testUtils.expectElementToHaveClass('#space_6_2', 'moved-fill'); // the moved ring
+        }));
         it('should fill the ring selected at the beginning of a move', fakeAsync(async() => {
             // Given a board with a ring
             const board: Table<YinshPiece> = [

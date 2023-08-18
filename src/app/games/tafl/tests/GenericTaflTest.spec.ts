@@ -75,7 +75,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             }));
         });
         describe('Second click', () => {
-            fit('should allow simple move', fakeAsync(async() => {
+            it('should allow simple move', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 const start: Coord = entries.validFirstCoord;
                 const end: Coord = entries.validSecondCoord;
@@ -92,7 +92,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 const moveDirection: Direction = start.getDirectionToward(end).get();
                 let movedCoord: Coord = start.getNext(moveDirection, 1);
                 while (movedCoord.equals(end) === false) {
-                    const elementName: string = '#click_' + movedCoord.x + '_' + movedCoord.y;
+                    const elementName: string = '#space_' + movedCoord.x + '_' + movedCoord.y;
                     testUtils.expectElementToHaveClass(elementName, 'moved-fill');
                     movedCoord = movedCoord.getNext(moveDirection, 1);
                 }
