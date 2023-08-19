@@ -136,12 +136,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         it('Some tags are needed before initialization', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.INITIAL, PartMocks.INITIAL);
             expect(wrapper).toBeTruthy();
-            // const partCreationTag: DebugElement = testUtils.findElement('app-part-creation');
             const p4Tag: DebugElement = testUtils.findElement('app-p4');
             const chatTag: DebugElement = testUtils.findElement('app-chat');
 
             expect(wrapper.gameStarted).toBeFalse();
-            // expect(partCreationTag).withContext('app-part-creation tag should be absent at start').toBeFalsy();
 
             expect(p4Tag).withContext('app-p4 tag should be absent at start').toBeFalsy();
             expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();

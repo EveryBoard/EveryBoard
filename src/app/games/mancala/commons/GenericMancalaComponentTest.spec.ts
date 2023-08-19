@@ -1,4 +1,3 @@
-
 /* eslint-disable max-lines-per-function */
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
@@ -28,7 +27,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R, M>,
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
         const playerY: number = state.getCurrentPlayerY();
-        const lastDistribution: MancalaDistribution = move.subMoves[move.subMoves.length - 1];
+        const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
         let lastDistributionSeedNumber: number = state.getPieceAtXY(lastDistribution.x, playerY);
         if (lastDistributionSeedNumber > (2 * MancalaState.WIDTH)) {
             lastDistributionSeedNumber++; // it'll take TIMEOUT_BETWEEN_SEED ms skipping the initial house
@@ -76,7 +75,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R, M>,
                 this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
             } else {
                 const playerY: number = actionAndResult.state.getCurrentPlayerY();
-                const startingCoord: Coord = new Coord(actionAndResult.move.subMoves[0].x, playerY);
+                const startingCoord: Coord = new Coord(actionAndResult.move.distributions[0].x, playerY);
                 if (startingCoord.equals(coordAndContent.coord)) { // Initial house
                     const classes: string[] = ['base', 'last-move-stroke', playerFill];
                     this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
@@ -110,7 +109,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R, M>,
         }
     }
     public getSuffix(mancalaActionAndResult: MancalaActionAndResult<MancalaMove>): string {
-        const lastMoveX: number = mancalaActionAndResult.move.subMoves[0].x;
+        const lastMoveX: number = mancalaActionAndResult.move.distributions[0].x;
         const suffix: string = lastMoveX + '_' + (mancalaActionAndResult.state.turn + 1) % 2;
         return suffix;
     }
@@ -314,7 +313,6 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
                 const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
                 const move: M = gameComponent.generateMove(coord.x);
                 await gameComponent.chooseMove(move);
-                // Void cause we don't want to await it
                 void gameComponent.updateBoard(true);
             }
             for (const actor of ['user', 'not_the_user']) {

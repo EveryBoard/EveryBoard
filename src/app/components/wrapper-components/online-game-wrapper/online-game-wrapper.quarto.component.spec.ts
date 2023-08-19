@@ -397,7 +397,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
             await doMove(FIRST_MOVE, true);
 
-            // Then gameComponent.updateBoard should have been called with (false)
+            // Then gameComponent.updateBoard should have been called with false
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(false);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));

@@ -1,6 +1,6 @@
 export interface MancalaConfig {
 
-    readonly passByPlayerKalah: boolean;
+    readonly passByPlayerStore: boolean;
 
     readonly mustFeed: boolean;
 

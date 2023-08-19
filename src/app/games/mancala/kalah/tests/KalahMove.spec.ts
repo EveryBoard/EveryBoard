@@ -27,7 +27,7 @@ describe('KalahMove', () => {
         expect(ArrayUtils.compareArray(subMoveList, expectedSubMoveList)).toBeTrue();
     });
     describe('add', () => {
-        it('should return new move with one more subMoves at the end', () => {
+        it('should return new move with one more distribution at the end', () => {
             // Given a basic move
             const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
 

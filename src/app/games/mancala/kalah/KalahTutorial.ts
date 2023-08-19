@@ -3,12 +3,16 @@ import { MancalaState } from '../commons/MancalaState';
 import { KalahMove } from './KalahMove';
 import { MancalaDistribution } from '../commons/MancalaMove';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MancalaTutorial } from '../commons/MancalaTutorial';
 
 export class KalahTutorial extends Tutorial {
+
+    public gameName: string = $localize`Kalah`;
+
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Mancala`,
-            $localize`Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you're playing Dark, the 6 houses on the bottom are yours.`,
+            this.gameName,
+            $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you're playing Dark, the 6 houses on the bottom are yours.`,
             MancalaState.getInitialState(),
         ),
         TutorialStep.informational(
@@ -16,17 +20,11 @@ export class KalahTutorial extends Tutorial {
             $localize`Bonus fact: Kalah has been created in America in 1940 by William Julius Champion Jr.`,
             MancalaState.getInitialState(),
         ),
-        TutorialStep.fromMove(
-            $localize`Sowing`,
-            $localize`The main move in mancala games is sowing, let's see how seeds are sown. As you're playing Dark, the 6 houses on the bottom are yours.<br/><br>Click on the rightermost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.<br/><br/>Click on the rightermost house!`,
-            MancalaState.getInitialState(),
-            [KalahMove.of(MancalaDistribution.FIVE)],
-            $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.`,
-            $localize`Failed. Choose the rightermost house on the bottom.`,
-        ),
+        MancalaTutorial.SOWING(KalahMove.of(MancalaDistribution.FIVE)),
+
         TutorialStep.forClick(
             $localize`The Kalah (1/2)`,
-            $localize`The houses on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent's on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won't have to drop seed in your opponent's kalah. When you make a capture, your seeds are put in your kalah.<br/><br/>You're playing Dark. Make a move that pass through your kalah then feed opponent's houses.`,
+            $localize`The houses on the extreme left and right, unaligned to the others, are the kalah. Yours is on the left, the opponent's on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won't have to drop seed in your opponent's kalah. When you make a capture, the captured seeds are put in your kalah.<br/><br/>You're playing Dark. Make a move that pass through your kalah then feed opponent's houses.`,
             MancalaState.getInitialState(),
             [
                 '#click_0_1',
@@ -34,7 +32,7 @@ export class KalahTutorial extends Tutorial {
                 '#click_2_1',
             ],
             $localize`As you see, three houses have been fed in addition to your kalah.`,
-            $localize`Failed. Choose the three leftermost house on the bottom.`,
+            $localize`Failed. Choose the three leftmost house on the bottom.`,
         ),
         TutorialStep.fromPredicate(
             $localize`The Kalah (2/2)`,
@@ -42,8 +40,8 @@ export class KalahTutorial extends Tutorial {
             MancalaState.getInitialState(),
             KalahMove.of(MancalaDistribution.THREE, [MancalaDistribution.ONE]),
             (move: KalahMove, _previous: MancalaState, _result: MancalaState) => {
-                if (move.subMoves.length === 1) {
-                    return MGPValidation.failure($localize`This move only distributed one house, do one distribution that ends in the Kalah then a second one!`);
+                if (move.distributions.length === 1) {
+                    return MGPValidation.failure($localize`This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!`);
                 } else {
                     return MGPValidation.SUCCESS;
                 }
@@ -69,7 +67,7 @@ export class KalahTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`End of the game`,
-            $localize`At any moment, when one player have more than 24 seeds in their kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don't have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.<br/><br/>You're playing Dark, win!`,
+            $localize`At any moment, when one player has more than 24 seeds in their kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don't have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.<br/><br/>You're playing Dark, win!`,
             new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 3, 0, 1, 0, 1],

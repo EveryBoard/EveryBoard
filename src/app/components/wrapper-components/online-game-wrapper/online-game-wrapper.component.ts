@@ -281,7 +281,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.role === PlayerOrNone.NONE) {
             await this.updateBoardAndShowLastMove(true);
         } else {
-            // We only animate the move of opponent, cause the users generated themselves their move before sending it
+            // We only animate the move of opponent, because the users move has already been animated before sending it
             const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value;
             await this.updateBoardAndShowLastMove(triggerAnimation);
         }

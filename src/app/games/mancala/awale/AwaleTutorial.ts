@@ -1,13 +1,16 @@
 import { AwaleMove } from 'src/app/games/mancala/awale/AwaleMove';
 import { MancalaState } from 'src/app/games/mancala/commons/MancalaState';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { MancalaTutorial } from '../commons/MancalaTutorial';
 
 export class AwaleTutorial extends Tutorial {
 
+    public gameName: string = $localize`Awalé`;
+
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Mancala`,
-            $localize`Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you're playing Dark, the 6 houses on the bottom are yours.`,
+            this.gameName,
+            $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you're playing Dark, the 6 houses on the bottom are yours.`,
             MancalaState.getInitialState(),
         ),
         TutorialStep.informational(
@@ -15,14 +18,8 @@ export class AwaleTutorial extends Tutorial {
             $localize`Bonus fact: Awalé is the more common of all Mancalas.`,
             MancalaState.getInitialState(),
         ),
-        TutorialStep.fromMove(
-            $localize`Sowing`,
-            $localize`The main move in mancala games is sowing, let's see how seeds are sown. As you're playing Dark, the 6 houses on the bottom are yours.<br/><br>Click on the rightermost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.<br/><br/>Click on the rightermost house!`,
-            MancalaState.getInitialState(),
-            [AwaleMove.FIVE],
-            $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.`,
-            $localize`Failed. Choose the rightermost house on the bottom.`,
-        ),
+        MancalaTutorial.SOWING(AwaleMove.FIVE),
+
         TutorialStep.anyMove(
             $localize`Big sowing`,
             $localize`When there are enough seeds to make a full turn, something else happens.<br/><br/>

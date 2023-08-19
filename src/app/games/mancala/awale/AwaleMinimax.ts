@@ -20,7 +20,7 @@ export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, MancalaState> 
         const player: number = (turn + 1) % 2; // So player zero is on row 1
         let newMove: AwaleMove;
         let x: number = 0;
-        do {
+        while (x < MancalaState.WIDTH) {
             // for each house that might be playable
             if (state.getPieceAtXY(x, player) !== 0) {
                 // if the house is not empty
@@ -36,7 +36,7 @@ export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, MancalaState> 
                 }
             }
             x++;
-        } while (x < MancalaState.WIDTH);
+        }
         return this.orderMoves(node, moves);
     }
     private orderMoves(node: AwaleNode, moves: AwaleMove[]): AwaleMove[] {

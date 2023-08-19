@@ -25,7 +25,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
     }
     private constructor() {
         super({
-            passByPlayerKalah: true,
+            passByPlayerStore: true,
             mustFeed: false,
             feedOriginalHouse: true,
         });
@@ -58,7 +58,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         const distributionResult: MancalaDistributionResult = this.distributeHouse(subMove.x, playerY, state);
         const isStarving: boolean = MancalaRules.isStarving(distributionResult.resultingState.getCurrentPlayer(),
                                                             distributionResult.resultingState.board);
-        return MGPFallible.success(distributionResult.endUpInKalah && isStarving === false);
+        return MGPFallible.success(distributionResult.endsUpInKalah && isStarving === false);
     }
     public distributeMove(move: KalahMove, state: MancalaState): MancalaDistributionResult {
         const playerValue: number = state.getCurrentPlayer().value;
@@ -73,13 +73,13 @@ export class KalahRules extends MancalaRules<KalahMove> {
             state = distributionResult.resultingState;
             filledCoords.push(...distributionResult.filledCoords);
             passedByKalahNTimes += distributionResult.passedByKalahNTimes;
-            endUpInKalah = distributionResult.endUpInKalah;
+            endUpInKalah = distributionResult.endsUpInKalah;
         }
         const captured: [number, number] = state.getScoresCopy();
         captured[playerValue] += passedByKalahNTimes;
         const distributedState: MancalaState = new MancalaState(state.getCopiedBoard(), state.turn, captured);
         return {
-            endUpInKalah,
+            endsUpInKalah: endUpInKalah,
             filledCoords: filledCoords,
             passedByKalahNTimes,
             resultingState: distributedState,
@@ -92,7 +92,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
             captureMap: [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]],
             resultingState: distributedState,
         };
-        if (distributionResult.endUpInKalah) {
+        if (distributionResult.endsUpInKalah) {
             return capturelessResult;
         } else {
             const landingSpace: Coord = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];

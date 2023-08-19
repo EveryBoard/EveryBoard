@@ -189,7 +189,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     KalahRules.get(),
                     kalahTutorial[4],
                     KalahMove.of(MancalaDistribution.ZERO),
-                    MGPValidation.failure($localize`This move only distributed one house, do one distribution that ends in the Kalah then a second one!`),
+                    MGPValidation.failure($localize`This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!`),
                 ], [
                     KalahRules.get(),
                     kalahTutorial[5],

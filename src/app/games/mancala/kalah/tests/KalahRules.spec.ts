@@ -3,7 +3,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { KalahMove } from '../KalahMove';
 import { KalahNode, KalahRules } from '../KalahRules';
-import { KalahDummyMinimax } from '../KalahDummyMinimax';
+import { KalahScoreMinimax } from '../KalahDummyMinimax';
 import { MancalaDistribution } from '../../commons/MancalaMove';
 import { MancalaState } from '../../commons/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -17,7 +17,7 @@ describe('KalahRules', () => {
     const rules: Rules<KalahMove, MancalaState> = KalahRules.get();
 
     const minimaxes: Minimax<KalahMove, MancalaState>[] = [
-        new KalahDummyMinimax(),
+        new KalahScoreMinimax(),
     ];
     describe('generic tests', () => {
         DoMancalaRulesTests({

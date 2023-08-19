@@ -199,15 +199,24 @@ describe('TeekoComponent', () => {
                 // Given any board in translation phase
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],
-                    [O, O, _, _, _],
-                    [X, X, _, _, _],
-                    [X, O, _, _, _],
+                    [_, O, _, _, _],
+                    [X, X, O, _, _],
+                    [X, _, O, _, _],
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
                 await testUtils.setupState(state);
-                // When
-                // Then
+
+                // When translating piece into victory
+                const move: TeekoMove = TeekoTranslationMove.from(new Coord(2, 3), new Coord(3, 3)).get();
+                await testUtils.expectClickSuccess('#click_2_3');
+                await testUtils.expectMoveSuccess('#click_3_3', move);
+
+                // Then the four victory pieces should be highlighted
+                testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'victory-stroke']);
+                testUtils.expectElementToHaveClasses('#piece_1_1', ['base', 'player0-fill', 'victory-stroke']);
+                testUtils.expectElementToHaveClasses('#piece_2_2', ['base', 'player0-fill', 'victory-stroke']);
+                testUtils.expectElementToHaveClasses('#piece_3_3', ['base', 'player0-fill', 'victory-stroke']);
             }));
             it('should show victory coords when squaring coord', fakeAsync(async() => {
                 // Given any board in translation phase

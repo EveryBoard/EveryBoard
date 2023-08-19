@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { KalahDummyMinimax } from '../KalahDummyMinimax';
+import { KalahScoreMinimax } from '../KalahDummyMinimax';
 import { KalahMove } from '../KalahMove';
 import { KalahNode } from '../KalahRules';
 import { MancalaState } from '../../commons/MancalaState';
@@ -7,10 +7,10 @@ import { MancalaDistribution } from '../../commons/MancalaMove';
 
 describe('KalahDummyMinimax', () => {
 
-    let minimax: KalahDummyMinimax;
+    let minimax: KalahScoreMinimax;
 
     beforeEach(() => {
-        minimax = new KalahDummyMinimax();
+        minimax = new KalahScoreMinimax();
     });
     it('should have all move options', () => {
         // Given an initial node
