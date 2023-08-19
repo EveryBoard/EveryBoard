@@ -16,6 +16,7 @@ import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 @Component({
     selector: 'app-epaminondas',
@@ -26,6 +27,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                                    EpaminondasMove,
                                                                    EpaminondasState,
                                                                    PlayerOrNone,
+                                                                   GameConfig,
                                                                    EpaminondasLegalityInformation>
 {
     public NONE: PlayerOrNone = PlayerOrNone.NONE;

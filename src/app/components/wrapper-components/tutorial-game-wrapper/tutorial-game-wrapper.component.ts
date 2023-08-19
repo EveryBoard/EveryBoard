@@ -16,6 +16,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 
+
 type TutorialPlayer = 'tutorial-player';
 @Component({
     selector: 'app-tutorial-game-wrapper',
@@ -59,7 +60,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
     public async ngAfterViewInit(): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.ngAfterViewInit');
-        const createdSuccessfully: boolean = await this.afterViewInit();
+        const createdSuccessfully: boolean = await this.afterViewInit({}); // TODO: non !
         if (createdSuccessfully) {
             this.start();
         }
@@ -98,6 +99,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new MGPNode(currentStep.state,
                                               MGPOptional.empty(),
                                               currentStep.previousMove);
+        // this.gameComponent.node = this.gameComponent.rules.getInitialNode(this.gameComponent.config); // TODO: nope
         // Set role will update view with updateBoardAndShowLastMove
         this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();

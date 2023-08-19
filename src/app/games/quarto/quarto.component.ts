@@ -37,7 +37,6 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         super(messageDisplayer);
         this.rules = QuartoRules.get();
         this.node = this.rules.getInitialNode();
-        this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
             new QuartoMinimax(this.rules, 'QuartoMinimax'),
         ];

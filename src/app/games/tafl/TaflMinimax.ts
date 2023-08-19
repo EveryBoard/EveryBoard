@@ -8,13 +8,15 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
 export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
                                                       TaflState,
+                                                      GameConfig,
                                                       void,
-                                                      TaflRules<TaflMove, TaflState>>
+                                                      TaflRules<TaflMove, TaflState>> // TODO: remove thoses
 {
     public getListMoves(node: TaflNode): TaflMove[] {
         const LOCAL_VERBOSE: boolean = false;

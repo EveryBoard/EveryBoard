@@ -4,8 +4,9 @@ import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { GipfRules, GipfNode, GipfLegalityInformation } from './GipfRules';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
-export class GipfMinimax extends PlayerMetricsMinimax<GipfMove, GipfState, GipfLegalityInformation> {
+export class GipfMinimax extends PlayerMetricsMinimax<GipfMove, GipfState, GameConfig, GipfLegalityInformation> {
     public static getPossibleCaptureCombinationsFromPossibleCaptures(
         possibleCaptures: GipfCapture[],
     ): Table<GipfCapture> {

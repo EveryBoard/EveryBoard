@@ -9,9 +9,11 @@ import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } fro
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
-export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
-
+export class EpaminondasMinimax
+    extends Minimax<EpaminondasMove, EpaminondasState, GameConfig, EpaminondasLegalityInformation>
+{
     public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const opponent: Player = node.gameState.getCurrentOpponent();

@@ -8,8 +8,9 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestoneOrientation, LodestonePiece } from './LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
 import { LodestoneState } from './LodestoneState';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
-export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState, LodestoneInfos> {
+export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState, GameConfig, LodestoneInfos> {
     public getListMoves(node: LodestoneNode): LodestoneMove[] {
         const state: LodestoneState = node.gameState;
         return this.flatMapEmptyCoords(state, (coord: Coord): LodestoneMove[] => {

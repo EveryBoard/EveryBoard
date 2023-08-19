@@ -12,14 +12,16 @@ import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityInformation> {
-
+export class GoComponent
+    extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GameConfig, GoLegalityInformation>
+{
     public static VERBOSE: boolean = false;
 
     public boardInfo: GroupDatas<GoPiece>;
@@ -32,22 +34,20 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    public boardHeight: number = GoState.HEIGHT;
-    public boardWidth: number = GoState.WIDTH;
+    public boardHeight: number;
+    public boardWidth: number;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, config: GameConfig) {
+        super(messageDisplayer, config);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = GoRules.get();
-        this.node = this.rules.getInitialNode();
+        this.node = this.rules.getInitialNode(config);
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),
         ];
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
-        this.boardHeight = this.getState().board.length;
-        this.boardWidth = this.getState().board[0].length;
         this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -64,6 +64,9 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         display(GoComponent.VERBOSE, 'updateBoard');
 
         const state: GoState = this.getState();
+        console.log('update board have this state', state)
+        this.boardHeight = state.board.length;
+        this.boardWidth = state.board[0].length;
         const move: MGPOptional<GoMove> = this.node.move;
         const phase: Phase = state.phase;
 

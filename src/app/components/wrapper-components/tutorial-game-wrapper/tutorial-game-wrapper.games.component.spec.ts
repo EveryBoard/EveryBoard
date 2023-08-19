@@ -2,13 +2,13 @@
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
 import { ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { GameWrapper } from '../GameWrapper';
 import { Click, TutorialStep } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Rules } from 'src/app/jscaip/Rules';
+import { AbstractRules, GameConfig, Rules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -86,10 +86,12 @@ import { Comparable } from 'src/app/utils/Comparable';
 describe('TutorialGameWrapperComponent (games)', () => {
 
     describe('Game should load correctly', () => {
-        for (const game of GameInfo.ALL_GAMES()) {
-            it(game.urlName, fakeAsync(async() => {
+        for (const gameInfo of GameInfo.ALL_GAMES()) {
+            it(gameInfo.urlName, fakeAsync(async() => {
                 const wrapper: GameWrapper<Comparable> =
-                    (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
+                    (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
+                                                                 TutorialGameWrapperComponent,
+                                                                 gameInfo.config))
                         .wrapper;
                 expect(wrapper).toBeTruthy();
             }));
@@ -97,22 +99,22 @@ describe('TutorialGameWrapperComponent (games)', () => {
     });
     describe('Tutorials', () => {
         it('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
-            const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
-            const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
-            const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
-            const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
-            const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
-            const hiveTutorial: TutorialStep[] = new HiveTutorial().tutorial;
-            const linesOfActionTutorial: TutorialStep[] = new LinesOfActionTutorial().tutorial;
-            const lodestoneTutorial: TutorialStep[] = new LodestoneTutorial().tutorial;
-            const martianChessTutorial: TutorialStep[] = new MartianChessTutorial().tutorial;
-            const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
-            const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
-            const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
-            const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
-            const trexoTutorial: TutorialStep[] = new TrexoTutorial().tutorial;
-            const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
-            const stepExpectations: [Rules<Move, GameState, unknown>, TutorialStep, Move, MGPValidation][] = [
+            const apagosTutorial: TutorialStep[] = new ApagosTutorial().steps;
+            const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().steps;
+            const dvonnTutorial: TutorialStep[] = new DvonnTutorial().steps;
+            const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().steps;
+            const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().steps;
+            const hiveTutorial: TutorialStep[] = new HiveTutorial().steps;
+            const linesOfActionTutorial: TutorialStep[] = new LinesOfActionTutorial().steps;
+            const lodestoneTutorial: TutorialStep[] = new LodestoneTutorial().steps;
+            const martianChessTutorial: TutorialStep[] = new MartianChessTutorial().steps;
+            const pentagoTutorial: TutorialStep[] = new PentagoTutorial().steps;
+            const pylosTutorial: TutorialStep[] = new PylosTutorial().steps;
+            const saharaTutorial: TutorialStep[] = new SaharaTutorial().steps;
+            const sixTutorial: TutorialStep[] = new SixTutorial().steps;
+            const trexoTutorial: TutorialStep[] = new TrexoTutorial().steps;
+            const yinshTutorial: TutorialStep[] = new YinshTutorial().steps;
+            const stepExpectations: [AbstractRules, TutorialStep, Move, MGPValidation][] = [
                 [
                     ApagosRules.get(),
                     apagosTutorial[2],
@@ -303,7 +305,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
-                const rules: Rules<Move, GameState, unknown> = stepExpectation[0];
+                const rules: Rules<Move, GameState, GameConfig, unknown> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
                 if (step.isPredicate()) {
                     const move: Move = stepExpectation[2];
@@ -322,12 +324,15 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 }
             }
         }));
-        it('should make sure all solutionMove are legal', fakeAsync(async() => {
-            for (const gameInfo of GameInfo.ALL_GAMES()) {
+        for (const gameInfo of GameInfo.ALL_GAMES()) {
+            it('should make sure all solutionMove are legal for ' + gameInfo.name, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
-                    TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
-                const rules: Rules<Move, GameState, unknown> = gameComponent.rules;
-                const steps: TutorialStep[] = gameComponent.tutorial;
+                    (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
+                                                                 TutorialGameWrapperComponent,
+                                                                 gameInfo.config))
+                        .getComponent();
+                const rules: Rules<Move, GameState, GameConfig, unknown> = gameComponent.rules;
+                const steps: TutorialStep[] = gameComponent.tutorial.steps;
                 for (const step of steps) {
                     if (step.hasSolution()) {
                         const solution: Move | Click = step.getSolution();
@@ -347,7 +352,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                         }
                     }
                 }
-            }
-        }));
+            }));
+        }
     });
 });

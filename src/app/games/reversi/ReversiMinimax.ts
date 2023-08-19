@@ -5,9 +5,11 @@ import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiLegalityInformation } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
-export class ReversiMinimax extends PlayerMetricsMinimax<ReversiMove, ReversiState, ReversiLegalityInformation> {
-
+export class ReversiMinimax
+    extends PlayerMetricsMinimax<ReversiMove, ReversiState, GameConfig, ReversiLegalityInformation>
+{
     public static readonly bestCoords: Coord[] = [
         new Coord(0, 0),
         new Coord(0, ReversiState.BOARD_HEIGHT - 1),

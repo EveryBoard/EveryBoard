@@ -6,6 +6,7 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 /**
  * This class is optional.
@@ -33,9 +34,10 @@ export class NewGameBoardValue extends BoardValue {
 /**
  * Defining the game node class is only for cosmetic purposes. It reduces the length of the argument to `getGameStatus`.
  */
-export class NewGameNode extends MGPNode<Rules<NewGameMove, NewGameState, NewGameLegalityInfo, NewGameBoardValue>,
+export class NewGameNode extends MGPNode<NewGameRules,
                                          NewGameMove,
                                          NewGameState,
+                                         GameConfig,
                                          NewGameLegalityInfo,
                                          NewGameBoardValue> {}
 
@@ -44,7 +46,7 @@ export class NewGameNode extends MGPNode<Rules<NewGameMove, NewGameState, NewGam
  * It should be a singleton class.
  * It is used by the wrappers to check the legality of a move, and to apply the move on a state.
  */
-export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegalityInfo, NewGameBoardValue> {
+export class NewGameRules extends Rules<NewGameMove, NewGameState, GameConfig, NewGameLegalityInfo, NewGameBoardValue> {
 
     /**
      * This is the singleton instance. You should keep this as is, except for adapting the class name.

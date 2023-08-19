@@ -54,8 +54,6 @@ describe('GoComponent', () => {
     describe('hoshi', () => {
         it('shoud be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
-            GoState.HEIGHT = 19;
-            GoState.WIDTH = 19;
             const board: Table<GoPiece> = ArrayUtils.createTable(19, 19, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
@@ -76,8 +74,6 @@ describe('GoComponent', () => {
         }));
         it('shoud be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
-            GoState.HEIGHT = 13;
-            GoState.WIDTH = 13;
             const board: Table<GoPiece> = ArrayUtils.createTable(13, 13, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
@@ -99,8 +95,6 @@ describe('GoComponent', () => {
         }));
         it('shoud be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
-            GoState.HEIGHT = 9;
-            GoState.WIDTH = 9;
             const board: Table<GoPiece> = ArrayUtils.createTable(9, 9, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 

@@ -14,6 +14,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -47,9 +48,10 @@ export abstract class BaseGameComponent {
     template: '',
     styleUrls: ['./game-component.scss'],
 })
-export abstract class GameComponent<R extends Rules<M, S, L, B>,
+export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
                                     M extends Move,
                                     S extends GameState,
+                                    C extends GameConfig = GameConfig,
                                     L = void,
                                     B extends BoardValue = BoardValue>
     extends BaseGameComponent
@@ -66,9 +68,9 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public rules: R;
 
-    public node: MGPNode<R, M, S, L, B>;
+    public node: MGPNode<R, M, S, C, L, B>;
 
-    public availableMinimaxes: Minimax<M, S, L>[];
+    public availableMinimaxes: Minimax<M, S, C, L>[];
 
     public canPass: boolean = false;
 
@@ -99,7 +101,9 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
      *     - if it's offline, he'll tell the game-component what the bot have done
      */
 
-    public constructor(public readonly messageDisplayer: MessageDisplayer) {
+    public constructor(public readonly messageDisplayer: MessageDisplayer,
+                       public readonly config: GameConfig = {})
+    {
         super();
     }
     public message(msg: string): void {
@@ -142,9 +146,10 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     }
 }
 
-export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, unknown>,
+export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, GameConfig, unknown>,
                                                                   Move,
                                                                   GameState,
+                                                                  GameConfig,
                                                                   unknown>
 {
 }

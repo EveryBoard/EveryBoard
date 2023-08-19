@@ -5,6 +5,7 @@ import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { GoState, GoPiece, Phase } from '../GoState';
 import { GoNode, GoRules } from '../GoRules';
+import { GoConfig } from '../GoConfig';
 
 describe('GoMinimax', () => {
 
@@ -17,6 +18,8 @@ describe('GoMinimax', () => {
     const w: GoPiece = GoPiece.LIGHT_TERRITORY;
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
+
+    const config: GoConfig = new GoConfig(5, 5);
 
     beforeEach(() => {
         const rules: GoRules = GoRules.get();
@@ -38,14 +41,14 @@ describe('GoMinimax', () => {
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });
         it('should only have GoMove.ACCEPT in ACCEPT Phase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
+            const initialBoard: GoPiece[][] = GoState.getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
         it('should only have GoMove.ACCEPT in COUNTNG Phase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
+            const initialBoard: GoPiece[][] = GoState.getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
             spyOn(minimax, 'getCountingMovesList').and.returnValue([]);
@@ -53,7 +56,7 @@ describe('GoMinimax', () => {
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
         it('should only have counting moves in COUNTING Phase when not agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
+            const initialBoard: GoPiece[][] = GoState.getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
             spyOn(minimax, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);

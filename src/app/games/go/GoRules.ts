@@ -14,12 +14,13 @@ import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type GoLegalityInformation = Coord[];
 
-export class GoNode extends MGPNode<GoRules, GoMove, GoState, GoLegalityInformation> {}
+export class GoNode extends MGPNode<GoRules, GoMove, GoState, GameConfig, GoLegalityInformation> {}
 
-export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
+export class GoRules extends Rules<GoMove, GoState, GameConfig, GoLegalityInformation> {
 
     public static VERBOSE: boolean = false;
 

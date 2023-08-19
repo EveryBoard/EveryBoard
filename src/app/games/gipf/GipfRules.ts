@@ -14,12 +14,13 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type GipfLegalityInformation = GipfState
 
-export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, GipfLegalityInformation> {}
+export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, GameConfig, GipfLegalityInformation> {}
 
-export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformation> {
+export class GipfRules extends Rules<GipfMove, GipfState, GameConfig, GipfLegalityInformation> {
 
     private static singleton: MGPOptional<GipfRules> = MGPOptional.empty();
 

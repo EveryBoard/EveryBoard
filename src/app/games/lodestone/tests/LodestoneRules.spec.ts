@@ -13,6 +13,7 @@ import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from '../LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('LodestoneRules', () => {
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
@@ -30,7 +31,7 @@ describe('LodestoneRules', () => {
     const noLodestones: LodestonePositions = new MGPMap();
 
     let rules: LodestoneRules;
-    let minimaxes: Minimax<LodestoneMove, LodestoneState, LodestoneInfos>[];
+    let minimaxes: Minimax<LodestoneMove, LodestoneState, GameConfig, LodestoneInfos>[];
 
     beforeEach(() => {
         rules = LodestoneRules.get();

@@ -19,6 +19,7 @@ import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -38,6 +39,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,
                                                              AbaloneState,
                                                              FourStatePiece,
+                                                             GameConfig,
                                                              AbaloneLegalityInformation>
 {
     public moveds: Coord[] = [];

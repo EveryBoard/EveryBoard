@@ -6,8 +6,9 @@ import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
-export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GoLegalityInformation> {
+export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GameConfig, GoLegalityInformation> {
 
     public getListMoves(node: GoNode): GoMove[] {
         const LOCAL_VERBOSE: boolean = false;

@@ -8,9 +8,10 @@ import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshNode, YinshRules } from './YinshRules';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class YinshMinimax
-    extends PlayerMetricsMinimax<YinshMove, YinshState, YinshLegalityInformation, YinshRules> {
+    extends PlayerMetricsMinimax<YinshMove, YinshState, GameConfig, YinshLegalityInformation, YinshRules> {
 
     public getMetrics(node: YinshNode): [number, number] {
         return node.gameState.sideRings;

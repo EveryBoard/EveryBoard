@@ -8,9 +8,19 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BoardValue } from './BoardValue';
 import { GameStatus } from './GameStatus';
+import { GameConfig } from './ConfigUtil';
+
+// export class GameConfig {
+
+//     public static readonly NO_CONFIG: GameConfig = new GameConfig();
+
+//     private readonly usedToPreventAnyEmptyTypeToPassAsGameConfig: boolean = true;
+// }
+
 
 export abstract class Rules<M extends Move,
                             S extends GameState,
+                            C extends GameConfig = GameConfig, // TODO: check if needed, probably not
                             L = void,
                             B extends BoardValue = BoardValue>
 {
@@ -24,8 +34,8 @@ export abstract class Rules<M extends Move,
      * the remaining pawn that you can put on the board...
      */
 
-    public choose(node: MGPNode<Rules<M, S, L, B>, M, S, L, B>, move: M)
-    : MGPOptional<MGPNode<Rules<M, S, L, B>, M, S, L, B>>
+    public choose(node: MGPNode<Rules<M, S, C, L, B>, M, S, C, L, B>, move: M)
+    : MGPOptional<MGPNode<Rules<M, S, C, L, B>, M, S, C, L, B>>
     {
         /* used by the rules to update board
          * return true if the move was legal, and the node updated
@@ -36,7 +46,7 @@ export abstract class Rules<M extends Move,
         const legality: MGPFallible<L> = this.isLegal(move, node.gameState);
         if (node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choice: MGPOptional<MGPNode<Rules<M, S, L, B>, M, S, L, B>> = node.getSonByMove(move);
+            const choice: MGPOptional<MGPNode<Rules<M, S, C, L, B>, M, S, C, L, B>> = node.getSonByMove(move);
             // let's not create the node twice
             if (choice.isPresent()) {
                 assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
@@ -53,9 +63,9 @@ export abstract class Rules<M extends Move,
         }
 
         const resultingState: GameState = this.applyLegalMove(move, node.gameState, legality.get());
-        const son: MGPNode<Rules<M, S, L, B>, M, S, L, B> = new MGPNode(resultingState as S,
-                                                                        MGPOptional.of(node),
-                                                                        MGPOptional.of(move));
+        const son: MGPNode<Rules<M, S, C, L, B>, M, S, C, L, B> = new MGPNode(resultingState as S,
+                                                                              MGPOptional.of(node),
+                                                                              MGPOptional.of(move));
         return MGPOptional.of(son);
     }
     /**
@@ -68,13 +78,13 @@ export abstract class Rules<M extends Move,
      */
     public abstract isLegal(move: M, state: S): MGPFallible<L>;
 
-    public getInitialNode(): MGPNode<Rules<M, S, L, B>, M, S, L, B> {
+    public getInitialNode(config?: C): MGPNode<Rules<M, S, C, L, B>, M, S, C, L, B> {
         // eslint-disable-next-line dot-notation
-        const initialState: S = this.stateType['getInitialState']();
+        const initialState: S = this.stateType['getInitialState'](config);
         return new MGPNode(initialState);
     }
-    public abstract getGameStatus(node: MGPNode<Rules<M, S, L>, M, S, L>): GameStatus;
+    public abstract getGameStatus(node: MGPNode<Rules<M, S, C, L>, M, S, C, L>): GameStatus;
 }
 
-export abstract class AbstractRules extends Rules<Move, GameState, unknown> {
+export abstract class AbstractRules extends Rules<Move, GameState, GameConfig, unknown> {
 }

@@ -12,6 +12,7 @@ import { YinshLegalityInformation, YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('YinshRules', () => {
 
@@ -24,7 +25,7 @@ describe('YinshRules', () => {
 
     let rules: YinshRules;
 
-    let minimaxes: Minimax<YinshMove, YinshState, YinshLegalityInformation>[];
+    let minimaxes: Minimax<YinshMove, YinshState, GameConfig, YinshLegalityInformation>[];
 
     beforeEach(() => {
         rules = YinshRules.get();

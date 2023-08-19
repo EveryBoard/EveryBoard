@@ -15,6 +15,8 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -54,12 +56,18 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
-            const createdSuccessfully: boolean = await this.afterViewInit();
+            const createdSuccessfully: boolean = await this.createGameConfigAndStartComponent();
+            // TODO: must receive a config
             if (createdSuccessfully) {
                 this.restartGame();
                 this.cdr.detectChanges();
             }
         }, 1);
+    }
+    private async createGameConfigAndStartComponent(): Promise<boolean> {
+        const gameURL: string = this.getGameName();
+        const gameInfo: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
+        return await this.afterViewInit({}); // TODO: DO
     }
     public updatePlayer(player: Player): void {
         this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
@@ -130,7 +138,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
         // called only when it's AI's Turn
-        const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
+        const ruler: Rules<Move, GameState, GameConfig, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
         assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
         const turn: number = this.gameComponent.node.gameState.turn % 2;
@@ -162,7 +170,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.getPlayingAI().isPresent();
     }
     public restartGame(): void {
-        this.gameComponent.node = this.gameComponent.rules.getInitialNode();
+        this.gameComponent.node = this.gameComponent.rules.getInitialNode(this.gameComponent.config);
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();

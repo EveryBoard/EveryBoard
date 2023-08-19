@@ -12,6 +12,7 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessFailure } from './MartianChessFailure';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export interface MartianChessMoveResult {
 
@@ -23,9 +24,10 @@ export interface MartianChessMoveResult {
 export class MartianChessNode extends MGPNode<MartianChessRules,
                                               MartianChessMove,
                                               MartianChessState,
+                                              GameConfig,
                                               MartianChessMoveResult> {}
 
-export class MartianChessRules extends Rules<MartianChessMove, MartianChessState, MartianChessMoveResult> {
+export class MartianChessRules extends Rules<MartianChessMove, MartianChessState, GameConfig, MartianChessMoveResult> {
 
     public static readonly STARTING_COUNT_DOWN: MGPOptional<number> = MGPOptional.of(7);
 

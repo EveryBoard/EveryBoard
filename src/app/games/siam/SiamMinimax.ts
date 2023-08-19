@@ -6,8 +6,9 @@ import { display } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode, SiamLegalityInformation } from './SiamRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
-export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInformation> {
+export class SiamMinimax extends Minimax<SiamMove, SiamState, GameConfig, SiamLegalityInformation> {
 
     public getBoardValue(node: SiamNode): BoardValue {
         return new BoardValue(SiamRules.get().getBoardValueInfo(node.move, node.gameState).boardValue);

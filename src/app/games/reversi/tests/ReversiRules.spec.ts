@@ -10,6 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from '../ReversiFailure';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('ReversiRules', () => {
 
@@ -18,7 +19,7 @@ describe('ReversiRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ReversiRules;
-    let minimaxes: Minimax<ReversiMove, ReversiState, ReversiLegalityInformation>[];
+    let minimaxes: Minimax<ReversiMove, ReversiState, GameConfig, ReversiLegalityInformation>[];
     let node: ReversiNode;
 
     beforeEach(() => {

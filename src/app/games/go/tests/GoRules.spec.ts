@@ -10,11 +10,13 @@ import { GoFailure } from '../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { GoConfig } from '../GoConfig';
 
 describe('GoRules', () => {
 
     let rules: GoRules;
-    let minimaxes: Minimax<GoMove, GoState, GoLegalityInformation>[];
+    let minimaxes: Minimax<GoMove, GoState, GameConfig, GoLegalityInformation>[];
 
     const X: GoPiece = GoPiece.LIGHT;
     const O: GoPiece = GoPiece.DARK;
@@ -24,10 +26,8 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    beforeAll(() => {
-        GoState.HEIGHT = 5;
-        GoState.WIDTH = 5;
-    });
+    const config: GoConfig = new GoConfig(5, 5);
+
     beforeEach(() => {
         rules = GoRules.get();
         minimaxes = [
@@ -40,7 +40,7 @@ describe('GoRules', () => {
     describe('Phase.PLAYING', () => {
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
-            const state: GoState = GoState.getInitialState();
+            const state: GoState = GoState.getInitialState(config);
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
@@ -208,7 +208,7 @@ describe('GoRules', () => {
         });
         it('Phase.PLAYING + GoMove.PASS = Phase.PASSED', () => {
             // Given initial board (so, playing phase)
-            const state: GoState = GoState.getInitialState();
+            const state: GoState = GoState.getInitialState(config);
             expect(state.phase).toBe(Phase.PLAYING);
 
             // When passing

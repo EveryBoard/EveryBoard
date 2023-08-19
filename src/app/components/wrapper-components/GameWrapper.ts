@@ -1,4 +1,4 @@
-import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, Injector, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
@@ -13,6 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Comparable, comparableEquals } from 'src/app/utils/Comparable';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class GameWrapperMessages {
 
@@ -62,11 +63,12 @@ export abstract class GameWrapper<P extends Comparable> {
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
-    protected async afterViewInit(): Promise<boolean> {
+    protected async afterViewInit(config: GameConfig): Promise<boolean> {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterViewInit');
-        const gameCreatedSuccessfully: boolean = await this.createGameComponent();
+        const gameCreatedSuccessfully: boolean = await this.createGameComponent(config);
         if (gameCreatedSuccessfully) {
-            this.gameComponent.node = this.gameComponent.rules.getInitialNode();
+            console.log('GameWrapper create the initial node')
+            this.gameComponent.node = this.gameComponent.rules.getInitialNode(this.gameComponent.config);
             this.gameComponent.updateBoard();
         }
         return gameCreatedSuccessfully;
@@ -74,7 +76,7 @@ export abstract class GameWrapper<P extends Comparable> {
     protected getGameName(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
-    private async createGameComponent(): Promise<boolean> {
+    private async createGameComponent(config: GameConfig): Promise<boolean> {
         display(GameWrapper.VERBOSE, { m: 'GameWrapper.createGameComponent', that: this });
 
         const gameName: string = this.getGameName();
@@ -86,7 +88,13 @@ export abstract class GameWrapper<P extends Comparable> {
         assert(this.boardRef != null, 'Board element should be present');
 
         const componentRef: ComponentRef<AbstractGameComponent> =
-            Utils.getNonNullable(this.boardRef).createComponent(component.get());
+            Utils.getNonNullable(this.boardRef).createComponent(component.get(), {
+                injector: Injector.create({
+                    providers: [
+                        // { provide: GameConfig, useValue: config }, // TODO KILL
+                    ],
+                }),
+            });
         this.gameComponent = componentRef.instance;
 
 

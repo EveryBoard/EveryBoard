@@ -18,6 +18,7 @@ import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 interface SpaceInfo {
     coord: Coord,
@@ -50,8 +51,12 @@ interface ViewInfo {
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class YinshComponent
-    extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshPiece, YinshLegalityInformation>
+export class YinshComponent extends HexagonalGameComponent<YinshRules,
+                                                           YinshMove,
+                                                           YinshState,
+                                                           YinshPiece,
+                                                           GameConfig,
+                                                           YinshLegalityInformation>
 {
     private static readonly RING_OUTER_SIZE: number = 40;
     private static readonly RING_MID_SIZE: number = 34;

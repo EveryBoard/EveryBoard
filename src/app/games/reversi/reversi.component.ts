@@ -13,6 +13,7 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 import { ReversiTutorial } from './ReversiTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 @Component({
     selector: 'app-reversi',
@@ -23,6 +24,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiMove,
                                                                ReversiState,
                                                                PlayerOrNone,
+                                                               GameConfig,
                                                                ReversiLegalityInformation>
 {
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;

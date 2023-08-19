@@ -4,16 +4,18 @@ import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { GameComponent } from '../game-component/GameComponent';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 @Component({
     template: '',
 })
-export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
+export abstract class RectangularGameComponent<R extends Rules<M, S, C, L>,
                                                M extends Move,
                                                S extends GameStateWithTable<P>,
                                                P,
+                                               C extends GameConfig = GameConfig,
                                                L = void>
-    extends GameComponent<R, M, S, L>
+    extends GameComponent<R, M, S, C, L>
 {
 
     public board: Table<P>;

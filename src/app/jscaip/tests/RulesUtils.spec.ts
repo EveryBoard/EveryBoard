@@ -14,14 +14,19 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { GameStatus } from '../GameStatus';
 import { BoardValue } from '../BoardValue';
 import { JSONValue, Utils } from 'src/app/utils/utils';
+import { GameConfig } from '../ConfigUtil';
 
 export class RulesUtils {
 
-    public static expectMoveSuccess<R extends Rules<M, S, L, B>,
+    public static expectMoveSuccess<R extends Rules<M, S, C, L, B>,
                                     M extends Move,
                                     S extends GameState,
                                     L,
-                                    B extends BoardValue>(rules: R, state: S, move: M, expectedState: S)
+                                    B extends BoardValue,
+                                    C extends GameConfig = GameConfig>(rules: R,
+                                                                       state: S,
+                                                                       move: M,
+                                                                       expectedState: S)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state);
@@ -37,22 +42,28 @@ export class RulesUtils {
             throw new Error('expected move to be valid but it is not: ' + legality.getReason());
         }
     }
-    public static expectMoveFailure<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
-        rules: R,
-        state: S,
-        move: M,
-        reason: string)
+    public static expectMoveFailure<R extends Rules<M, S, C, L>,
+                                    M extends Move,
+                                    S extends GameState,
+                                    L,
+                                    C extends GameConfig = GameConfig>(rules: R,
+                                                                       state: S,
+                                                                       move: M,
+                                                                       reason: string)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state);
         expect(legality.isFailure()).withContext('move should have failed but it succeeded').toBeTrue();
         expect(legality.getReason()).toBe(reason);
     }
-    public static expectToBeVictoryFor<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
-        rules: R,
-        node: MGPNode<R, M, S, L>,
-        player: Player,
-        minimaxes: Minimax<M, S, L>[])
+    public static expectToBeVictoryFor<R extends Rules<M, S, C, L>,
+                                       M extends Move,
+                                       S extends GameState,
+                                       L,
+                                       C extends GameConfig>(rules: R,
+                                                             node: MGPNode<R, M, S, C, L>,
+                                                             player: Player,
+                                                             minimaxes: Minimax<M, S, C, L>[])
     : void
     {
         expect(rules.getGameStatus(node))
@@ -64,10 +75,13 @@ export class RulesUtils {
                 .toEqual(player.getVictoryValue());
         }
     }
-    public static expectToBeOngoing<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
-        rules: R,
-        node: MGPNode<R, M, S, L>,
-        minimaxes: Minimax<M, S, L>[])
+    public static expectToBeOngoing<R extends Rules<M, S, C, L>,
+                                    M extends Move,
+                                    S extends GameState,
+                                    L,
+                                    C extends GameConfig>(rules: R,
+                                                          node: MGPNode<R, M, S, C, L>,
+                                                          minimaxes: Minimax<M, S, C, L>[])
     : void
     {
         expect(rules.getGameStatus(node)).toEqual(GameStatus.ONGOING);
@@ -81,10 +95,13 @@ export class RulesUtils {
                 .not.toEqual(Player.ONE.getVictoryValue());
         }
     }
-    public static expectToBeDraw<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
-        rules: R,
-        node: MGPNode<R, M, S, L>,
-        minimaxes: Minimax<M, S, L>[])
+    public static expectToBeDraw<R extends Rules<M, S, C, L>,
+                                 M extends Move,
+                                 S extends GameState,
+                                 L,
+                                 C extends GameConfig>(rules: R,
+                                                       node: MGPNode<R, M, S, C, L>,
+                                                       minimaxes: Minimax<M, S, C, L>[])
     : void
     {
         expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
@@ -94,35 +111,38 @@ export class RulesUtils {
                 .toBe(0);
         }
     }
-    public static expectStatesToBeOfEqualValue<M extends Move, S extends GameState, L>(
-        minimax: Minimax<M, S, L>,
+    public static expectStatesToBeOfEqualValue<M extends Move, S extends GameState, L, C extends GameConfig>(
+        minimax: Minimax<M, S, C, L>,
         leftState: S,
         rightState: S)
     : void {
-        const leftNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(leftState,
-                                                                       MGPOptional.empty(),
-                                                                       MGPOptional.empty(),
-                                                                       minimax);
+        const leftNode: MGPNode<Rules<M, S, C, L>, M, S, C, L> = new MGPNode(leftState,
+                                                                             MGPOptional.empty(),
+                                                                             MGPOptional.empty(),
+                                                                             minimax);
         const leftValue: number = minimax.getBoardValue(leftNode).value;
-        const rightNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(rightState,
-                                                                        MGPOptional.empty(),
-                                                                        MGPOptional.empty(),
-                                                                        minimax);
+        const rightNode: MGPNode<Rules<M, S, C, L>, M, S, C, L> = new MGPNode(rightState,
+                                                                              MGPOptional.empty(),
+                                                                              MGPOptional.empty(),
+                                                                              minimax);
         const rightValue: number = minimax.getBoardValue(rightNode).value;
         expect(leftValue).withContext('both value should be equal').toEqual(rightValue);
     }
-    public static expectSecondStateToBeBetterThanFirstFor<M extends Move, S extends GameState, L>(
-        minimax: Minimax<M, S, L>,
-        weakState: S,
-        weakMove: MGPOptional<M>,
-        strongState: S,
-        strongMove: MGPOptional<M>,
-        player: Player)
+    public static expectSecondStateToBeBetterThanFirstFor<M extends Move,
+                                                          S extends GameState,
+                                                          L,
+                                                          C extends GameConfig>(minimax: Minimax<M, S, C, L>,
+                                                                                weakState: S,
+                                                                                weakMove: MGPOptional<M>,
+                                                                                strongState: S,
+                                                                                strongMove: MGPOptional<M>,
+                                                                                player: Player)
     : void
     {
-        const weakNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(weakState, MGPOptional.empty(), weakMove);
+        const weakNode: MGPNode<Rules<M, S, C, L>, M, S, C, L> = new MGPNode(weakState, MGPOptional.empty(), weakMove);
         const weakValue: number = minimax.getBoardValue(weakNode).value;
-        const strongNode: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(strongState, MGPOptional.empty(), strongMove);
+        const strongNode: MGPNode<Rules<M, S, C, L>, M, S, C, L> =
+            new MGPNode(strongState, MGPOptional.empty(), strongMove);
         const strongValue: number = minimax.getBoardValue(strongNode).value;
         if (player === Player.ZERO) {
             expect(weakValue).toBeGreaterThan(strongValue);
@@ -130,17 +150,17 @@ export class RulesUtils {
             expect(weakValue).toBeLessThan(strongValue);
         }
     }
-    public static expectStateToBePreVictory<M extends Move, S extends GameState, L>(
+    public static expectStateToBePreVictory<M extends Move, S extends GameState, L, C extends GameConfig>(
         state: S,
         previousMove: M,
         player: Player,
-        minimaxes: Minimax<M, S, L>[])
+        minimaxes: Minimax<M, S, C, L>[])
     : void
     {
         for (const minimax of minimaxes) {
-            const node: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(state,
-                                                                       MGPOptional.empty(),
-                                                                       MGPOptional.of(previousMove));
+            const node: MGPNode<Rules<M, S, C, L>, M, S, C, L> = new MGPNode(state,
+                                                                             MGPOptional.empty(),
+                                                                             MGPOptional.of(previousMove));
             const value: number = minimax.getBoardValue(node).value;
             const expectedValue: number = player.getPreVictory();
             expect(MGPNode.getScoreStatus(value)).toBe(SCORE.PRE_VICTORY);
@@ -159,10 +179,13 @@ export class RulesUtils {
      * @param moveDecoder the move decoder
      * @returns the state creates from applying the moves, enjoy you debug !
      */
-    public static applyMoves<S extends GameState, M extends Move, L>(ruler: Rules<M, S, L>,
-                                                                     encodedMoves: JSONValue[],
-                                                                     state: S,
-                                                                     moveDecoder: (em: JSONValue) => M)
+    public static applyMoves<S extends GameState,
+                             M extends Move,
+                             L,
+                             C extends GameConfig>(ruler: Rules<M, S, C, L>,
+                                                   encodedMoves: JSONValue[],
+                                                   state: S,
+                                                   moveDecoder: (em: JSONValue) => M)
     : S
     {
         let i: number = 0;

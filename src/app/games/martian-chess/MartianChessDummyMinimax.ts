@@ -8,9 +8,10 @@ import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './M
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class MartianChessDummyMinimax
-    extends PlayerMetricsMinimax<MartianChessMove, MartianChessState, MartianChessMoveResult> {
+    extends PlayerMetricsMinimax<MartianChessMove, MartianChessState, GameConfig, MartianChessMoveResult> {
 
     public constructor(ruler: MartianChessRules, name: string) {
         super(ruler, name);

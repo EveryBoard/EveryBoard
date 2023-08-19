@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { NewGameDummyMinimax } from './NewGameDummyMinimax';
 import { NewGameTutorial } from './NewGameTutorial';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.
@@ -24,6 +25,7 @@ import { NewGameTutorial } from './NewGameTutorial';
 export class NewGameComponent extends GameComponent<NewGameRules,
                                                     NewGameMove,
                                                     NewGameState,
+                                                    GameConfig,
                                                     NewGameLegalityInfo>
 {
     /**

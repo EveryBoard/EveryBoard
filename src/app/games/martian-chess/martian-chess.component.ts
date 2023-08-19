@@ -15,6 +15,7 @@ import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessTutorial } from './MartianChessTutorial';
 import { Direction } from 'src/app/jscaip/Direction';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,
@@ -51,6 +52,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                                                                     MartianChessMove,
                                                                     MartianChessState,
                                                                     MartianChessPiece,
+                                                                    GameConfig,
                                                                     MartianChessMoveResult>
 {
     public static SPACE_SIZE: number = 100;

@@ -30,6 +30,7 @@ import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { AbstractNode } from 'src/app/jscaip/MGPNode';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class OnlineGameWrapperMessages {
 
@@ -94,10 +95,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private extractPartIdFromURL(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
     }
-    private extractGameNameFromURL(): string {
-        // url is ["play", "game-name", "part-id"]
-        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
-    }
     public isPlaying(): boolean {
         return this.role.isPlayer();
     }
@@ -105,7 +102,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.authUser.toMinimalUser();
     }
     private async redirectIfPartOrGameIsInvalid(): Promise<void> {
-        const gameURL: string = this.extractGameNameFromURL();
+        const gameURL: string = this.getGameName();
         const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === gameURL);
         if (gameExists) {
             const partValidity: MGPValidation =
@@ -183,7 +180,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.gameStarted = true;
         window.setTimeout(async() => {
             // the small waiting is there to make sure that the chronos are charged by view
-            const createdSuccessfully: boolean = await this.afterViewInit();
+            const createdSuccessfully: boolean = await this.afterViewInit({}); // TODO: nooo
             this.timeManager.setClocks([this.chronoZeroTurn, this.chronoOneTurn],
                                        [this.chronoZeroGlobal, this.chronoOneGlobal]);
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
@@ -264,7 +261,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 break;
             case 'Rematch':
                 await this.router.navigate(['/nextGameLoading']);
-                const game: string = this.extractGameNameFromURL();
+                const game: string = this.getGameName();
                 await this.router.navigate(['/play', game, reply.data]);
                 break;
             case 'Draw':
@@ -277,7 +274,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.endGame = true;
     }
     private async onReceivedMove(moveEvent: GameEventMove): Promise<void> {
-        const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
+        const rules: Rules<Move, GameState, GameConfig, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
         const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
@@ -416,8 +413,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
             const stateAfterMove: GameState =
                 this.gameComponent.rules.applyLegalMove(move, this.gameComponent.node.gameState, legality.get());
-            const node: MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> =
-                new MGPNode(stateAfterMove, MGPOptional.of(this.gameComponent.node), MGPOptional.of(move));
+            const node: AbstractNode = new MGPNode(stateAfterMove,
+                                                   MGPOptional.of(this.gameComponent.node),
+                                                   MGPOptional.of(move));
             const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
 
             // To adhere to security rules, we must add the move before updating the part

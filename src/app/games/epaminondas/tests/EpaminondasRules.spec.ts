@@ -13,11 +13,12 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('EpaminondasRules', () => {
 
     let rules: EpaminondasRules;
-    let minimaxes: Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation>[];
+    let minimaxes: Minimax<EpaminondasMove, EpaminondasState, GameConfig, EpaminondasLegalityInformation>[];
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;

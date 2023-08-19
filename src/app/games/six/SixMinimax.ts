@@ -13,6 +13,7 @@ import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
 import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class SixBoardValue extends BoardValue {
 
@@ -26,6 +27,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                                                   SixState,
                                                   SixLegalityInformation,
                                                   SixVictorySource,
+                                                  GameConfig,
                                                   SixBoardValue>
 {
 

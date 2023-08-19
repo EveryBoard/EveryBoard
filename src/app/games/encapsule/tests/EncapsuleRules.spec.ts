@@ -11,12 +11,13 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
 
-    let minimaxes: Minimax<EncapsuleMove, EncapsuleState, EncapsuleSpace>[];
+    let minimaxes: Minimax<EncapsuleMove, EncapsuleState, GameConfig, EncapsuleSpace>[];
 
     let node: EncapsuleNode;
 

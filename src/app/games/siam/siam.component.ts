@@ -17,6 +17,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { assert } from 'src/app/utils/assert';
 import { SiamFailure } from './SiamFailure';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -34,6 +35,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamMove,
                                                             SiamState,
                                                             SiamPiece,
+                                                            GameConfig,
                                                             SiamLegalityInformation>
 {
     public static VERBOSE: boolean = false;

@@ -15,6 +15,7 @@ import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 @Component({
     selector: 'app-encapsule',
@@ -25,6 +26,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,
                                                                  EncapsuleState,
                                                                  EncapsuleSpace,
+                                                                 GameConfig,
                                                                  EncapsuleLegalityInformation>
 {
     public readonly CENTER: number = this.getPieceCenter(1);

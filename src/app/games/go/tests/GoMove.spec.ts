@@ -3,13 +3,16 @@ import { GoNode, GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { GoConfig } from '../GoConfig';
+
+const config: GoConfig = new GoConfig(5, 5);
 
 describe('GoMove', () => {
 
     it('should have a bijective encoder', () => {
         const rules: GoRules = GoRules.get();
         const minimax: GoMinimax = new GoMinimax(rules, 'GoMinimax');
-        const node: GoNode = rules.getInitialNode();
+        const node: GoNode = rules.getInitialNode(config);
         const firstTurnMoves: GoMove[] = minimax.getListMoves(node);
         firstTurnMoves.push(GoMove.PASS);
         firstTurnMoves.push(GoMove.ACCEPT);

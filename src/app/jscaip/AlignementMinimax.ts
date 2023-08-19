@@ -5,6 +5,7 @@ import { Move } from './Move';
 import { BoardValue } from './BoardValue';
 import { SCORE } from './SCORE';
 import { GameState } from './GameState';
+import { GameConfig } from './ConfigUtil';
 
 export interface BoardInfo {
     status: SCORE,
@@ -16,8 +17,9 @@ export abstract class AlignementMinimax<M extends Move,
                                         S extends GameState,
                                         L,
                                         V,
+                                        C extends GameConfig = GameConfig,
                                         B extends BoardValue = BoardValue>
-    extends Minimax<M, S, L, B>
+    extends Minimax<M, S, C, L, B>
 {
 
     public calculateBoardValue(move: M, state: S): BoardInfo {

@@ -6,7 +6,7 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 
-export class TeekoMinimax extends Minimax<TeekoMove, TeekoState, void, BoardValue, TeekoRules> {
+export class TeekoMinimax extends Minimax<TeekoMove, TeekoState> {
 
     public constructor() {
         super(TeekoRules.get(), 'Teeko Minimax');

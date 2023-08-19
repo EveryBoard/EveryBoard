@@ -18,14 +18,20 @@ import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 @Component({
     selector: 'app-six',
     templateUrl: './six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class SixComponent
-    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixLegalityInformation, SixBoardValue>
+export class SixComponent extends HexagonalGameComponent<SixRules,
+                                                         SixMove,
+                                                         SixState,
+                                                         Player,
+                                                         GameConfig,
+                                                         SixLegalityInformation,
+                                                         SixBoardValue>
 {
     public state: SixState;
 

@@ -9,9 +9,11 @@ import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                                                           EpaminondasState,
+                                                          GameConfig,
                                                           EpaminondasLegalityInformation>
 {
 

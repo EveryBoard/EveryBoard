@@ -4,6 +4,7 @@ import { NewGameMove } from '../NewGameMove';
 import { NewGameBoardValue, NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
 import { NewGameDummyMinimax } from '../NewGameDummyMinimax';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 /**
  * This is the test suite for the rules
@@ -11,7 +12,11 @@ import { NewGameDummyMinimax } from '../NewGameDummyMinimax';
 describe('NewGameRules', () => {
 
     let rules: NewGameRules;
-    let minimaxes: Minimax<NewGameMove, NewGameState, NewGameLegalityInfo, NewGameBoardValue>[];
+    let minimaxes: Minimax<NewGameMove,
+                           NewGameState,
+                           GameConfig,
+                           NewGameLegalityInfo,
+                           NewGameBoardValue>[]; // TODO NewGameConfig
 
     beforeEach(() => {
         // This is the rules instance that we will test

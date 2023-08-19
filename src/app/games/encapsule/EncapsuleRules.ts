@@ -11,13 +11,14 @@ import { EncapsuleFailure } from './EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 
 export class EncapsuleNode
-    extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {}
+    extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsuleState, GameConfig, EncapsuleLegalityInformation> {}
 
-export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
+export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, GameConfig, EncapsuleLegalityInformation> {
 
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
 

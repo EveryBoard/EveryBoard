@@ -5,6 +5,7 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 export class GoPiece implements ComparableObject {
@@ -83,10 +84,6 @@ export enum Phase {
 }
 export class GoState extends GameStateWithTable<GoPiece> {
 
-    public static WIDTH: number = 19;
-
-    public static HEIGHT: number = 19;
-
     public readonly koCoord: MGPOptional<Coord>;
 
     public readonly captured: ReadonlyArray<number>;
@@ -104,15 +101,22 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.koCoord = koCoord;
         this.phase = phase;
     }
-    public static getInitialState(): GoState {
-        const board: Table<GoPiece> = GoState.getStartingBoard();
+    public static getInitialState(config: GameConfig): GoState {
+        console.log('received config', config)
+        if (config['width'] === undefined) {
+            config = {
+                width: 14,
+                height: 6,
+            };
+        }
+        const board: Table<GoPiece> = GoState.getStartingBoard(config);
         return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
     }
     public getCapturedCopy(): [number, number] {
         return [this.captured[0], this.captured[1]];
     }
-    public static getStartingBoard(): Table<GoPiece> {
-        return ArrayUtils.createTable(GoState.WIDTH, GoState.HEIGHT, GoPiece.EMPTY);
+    public static getStartingBoard(config: GoConfig): Table<GoPiece> {
+        return ArrayUtils.createTable(config.width, config.height, GoPiece.EMPTY);
     }
     public copy(): GoState {
         return new GoState(this.getCopiedBoard(),

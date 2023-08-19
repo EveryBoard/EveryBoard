@@ -11,15 +11,17 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Player } from './Player';
 import { GameState } from './GameState';
 import { MGPFallible } from '../utils/MGPFallible';
+import { GameConfig } from './ConfigUtil';
 
 export class MGPNodeStats {
     public static createdNodes: number = 0;
     public static minimaxTime: number = 0;
 }
 
-export class MGPNode<R extends Rules<M, S, L>,
+export class MGPNode<R extends Rules<M, S, C, L>,
                      M extends Move,
                      S extends GameState,
+                     C extends GameConfig = GameConfig,
                      L = void,
                      B extends BoardValue = BoardValue> {
 
@@ -27,7 +29,7 @@ export class MGPNode<R extends Rules<M, S, L>,
 
     public static minimaxes: MGPMap<string, Minimax<Move, GameState>> = new MGPMap();
 
-    private childs: MGPOptional<MGPNode<R, M, S, L, B>[]> = MGPOptional.empty();
+    private childs: MGPOptional<MGPNode<R, M, S, C, L, B>[]> = MGPOptional.empty();
     /* empty if we did not create potential children of a node, hence also if it is a leaf (depth = 0)
     *
     * an empty ArrayList if it is the end of the game (and then a leaf)
@@ -73,9 +75,9 @@ export class MGPNode<R extends Rules<M, S, L>,
         return SCORE.DEFAULT;
     }
     public constructor(public readonly gameState: S,
-                       public readonly mother: MGPOptional<MGPNode<R, M, S, L, B>> = MGPOptional.empty(),
+                       public readonly mother: MGPOptional<MGPNode<R, M, S, C, L, B>> = MGPOptional.empty(),
                        public readonly move: MGPOptional<M> = MGPOptional.empty(),
-                       public minimaxCreator?: Minimax<M, S, L, B>)
+                       public minimaxCreator?: Minimax<M, S, C, L, B>)
     {
         /* Initialization condition:
          * mother: null for initial board
@@ -91,18 +93,18 @@ export class MGPNode<R extends Rules<M, S, L>,
         display(MGPNode.VERBOSE, 'creating ' + this.myToString());
     }
     public findBestMove(readingDepth: number,
-                        minimax: Minimax<M, S, L, B>,
+                        minimax: Minimax<M, S, C, L, B>,
                         random: boolean = false,
                         prune: boolean = true)
     : M
     {
         const startTime: number = new Date().getTime();
-        let bestDescendant: MGPNode<R, M, S, L, B> = this.alphaBeta(readingDepth,
-                                                                    Number.MIN_SAFE_INTEGER,
-                                                                    Number.MAX_SAFE_INTEGER,
-                                                                    minimax,
-                                                                    random,
-                                                                    prune);
+        let bestDescendant: MGPNode<R, M, S, C, L, B> = this.alphaBeta(readingDepth,
+                                                                       Number.MIN_SAFE_INTEGER,
+                                                                       Number.MAX_SAFE_INTEGER,
+                                                                       minimax,
+                                                                       random,
+                                                                       prune);
         while (bestDescendant.gameState.turn > this.gameState.turn + 1) {
             bestDescendant = bestDescendant.mother.get();
             readingDepth--;
@@ -113,10 +115,10 @@ export class MGPNode<R extends Rules<M, S, L>,
     public alphaBeta(depth: number,
                      alpha: number,
                      beta: number,
-                     minimax: Minimax<M, S, L, B>,
+                     minimax: Minimax<M, S, C, L, B>,
                      random: boolean,
                      prune: boolean)
-    : MGPNode<R, M, S, L, B>
+    : MGPNode<R, M, S, C, L, B>
     {
         const LOCAL_VERBOSE: boolean = false;
         if (depth < 1) {
@@ -131,19 +133,19 @@ export class MGPNode<R extends Rules<M, S, L>,
         if (this.childs.isAbsent()) {
             this.childs = MGPOptional.of([]);
         }
-        const bestChilds: MGPNode<R, M, S, L, B>[] = this.getBestChilds(possibleMoves,
-                                                                        depth,
-                                                                        alpha,
-                                                                        beta,
-                                                                        minimax,
-                                                                        random,
-                                                                        prune);
-        const bestChild: MGPNode<R, M, S, L, B> = this.getBestChildAmongst(bestChilds, random);
+        const bestChilds: MGPNode<R, M, S, C, L, B>[] = this.getBestChilds(possibleMoves,
+                                                                           depth,
+                                                                           alpha,
+                                                                           beta,
+                                                                           minimax,
+                                                                           random,
+                                                                           prune);
+        const bestChild: MGPNode<R, M, S, C, L, B> = this.getBestChildAmongst(bestChilds, random);
         const bestChildHopedValue: number = bestChild.hopedValue.get(minimax.toString()).get();
         this.hopedValue.put(minimax.toString(), bestChildHopedValue);
         return bestChild;
     }
-    private getPossibleMoves(minimax: Minimax<M, S, L, B>): MGPSet<M> {
+    private getPossibleMoves(minimax: Minimax<M, S, C, L, B>): MGPSet<M> {
         const currentMoves: MGPOptional<MGPSet<M>> = this.possibleMoves.get(minimax.name);
         if (currentMoves.isAbsent()) {
             const moves: M[] = minimax.getListMoves(this);
@@ -157,13 +159,13 @@ export class MGPNode<R extends Rules<M, S, L>,
                           depth: number,
                           alpha: number,
                           beta: number,
-                          minimax: Minimax<M, S, L, B>,
+                          minimax: Minimax<M, S, C, L, B>,
                           random: boolean,
                           prune: boolean)
-    : MGPNode<R, M, S, L, B>[]
+    : MGPNode<R, M, S, C, L, B>[]
     {
 
-        let bestChilds: MGPNode<R, M, S, L, B>[] = [];
+        let bestChilds: MGPNode<R, M, S, C, L, B>[] = [];
         const currentPlayer: Player = this.gameState.getCurrentPlayer();
         let extremumExpected: number =
             currentPlayer === Player.ZERO ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
@@ -172,8 +174,8 @@ export class MGPNode<R extends Rules<M, S, L>,
                 ((a: number, b: number): boolean => a < b) :
                 ((a: number, b: number): boolean => b < a);
         for (const move of possibleMoves) {
-            const child: MGPNode<R, M, S, L, B> = this.getOrCreateChild(move, minimax);
-            const bestChildDescendant: MGPNode<R, M, S, L, B> =
+            const child: MGPNode<R, M, S, C, L, B> = this.getOrCreateChild(move, minimax);
+            const bestChildDescendant: MGPNode<R, M, S, C, L, B> =
                 child.alphaBeta(depth - 1, alpha, beta, minimax, random, prune);
             const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
             if (newValueIsBetter(bestChildValue, extremumExpected) || bestChilds.length === 0) {
@@ -194,7 +196,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
         return bestChilds;
     }
-    private getBestChildAmongst(bestChilds: MGPNode<R, M, S, L, B>[], random: boolean): MGPNode<R, M, S, L, B> {
+    private getBestChildAmongst(bestChilds: MGPNode<R, M, S, C, L, B>[], random: boolean): MGPNode<R, M, S, C, L, B> {
         if (random) {
             const randomIndex: number = Math.floor(Math.random() * bestChilds.length);
             return bestChilds[randomIndex];
@@ -202,8 +204,8 @@ export class MGPNode<R extends Rules<M, S, L>,
             return bestChilds[0];
         }
     }
-    private getOrCreateChild(move: M, minimax: Minimax<M, S, L, B>): MGPNode<R, M, S, L, B> {
-        let child: MGPOptional<MGPNode<R, M, S, L, B>> = this.getSonByMove(move);
+    private getOrCreateChild(move: M, minimax: Minimax<M, S, C, L, B>): MGPNode<R, M, S, C, L, B> {
+        let child: MGPOptional<MGPNode<R, M, S, C, L, B>> = this.getSonByMove(move);
         if (child.isAbsent()) {
             const legality: MGPFallible<L> = minimax.ruler.isLegal(move, this.gameState);
             const moveString: string = move.toString();
@@ -214,7 +216,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
         return child.get();
     }
-    public getSonByMove(move: M): MGPOptional<MGPNode<R, M, S, L, B>> {
+    public getSonByMove(move: M): MGPOptional<MGPNode<R, M, S, C, L, B>> {
         assert(this.childs.isPresent(), 'Cannot get son of uncalculated node');
         for (const node of this.childs.get()) {
             if (node.move.isPresent() && node.move.equalsValue(move)) {
@@ -223,10 +225,10 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
         return MGPOptional.empty();
     }
-    public getHopedValue(minimax: Minimax<M, S, L, B>): number {
+    public getHopedValue(minimax: Minimax<M, S, C, L, B>): number {
         return this.hopedValue.get(minimax.name).get();
     }
-    public getOwnValue(minimax: Minimax<M, S, L, B>): B {
+    public getOwnValue(minimax: Minimax<M, S, C, L, B>): B {
         const ownValueOptional: MGPOptional<B> = this.ownValue.get(minimax.name);
         if (ownValueOptional.isAbsent()) {
             const ownValue: B = minimax.getBoardValue(this);
@@ -239,7 +241,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     public myToString(): string {
         let genealogy: string = '';
         // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let node: MGPNode<R, M, S, L, B> = this;
+        let node: MGPNode<R, M, S, C, L, B> = this;
         if (node.mother.isAbsent()) {
             const turn: number = node.gameState.turn;
             return 'NodeInitial: ' + turn;
@@ -268,5 +270,9 @@ export class MGPNode<R extends Rules<M, S, L>,
     }
 }
 
-export abstract class AbstractNode extends MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> {
+export abstract class AbstractNode extends MGPNode<Rules<Move, GameState, GameConfig, unknown>,
+                                                   Move,
+                                                   GameState,
+                                                   GameConfig,
+                                                   unknown> {
 }

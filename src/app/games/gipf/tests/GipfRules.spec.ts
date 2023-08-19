@@ -13,6 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('GipfRules', () => {
 
@@ -26,7 +27,7 @@ describe('GipfRules', () => {
 
     let rules: GipfRules;
 
-    let minimaxes: Minimax<GipfMove, GipfState, GipfLegalityInformation>[];
+    let minimaxes: Minimax<GipfMove, GipfState, GameConfig, GipfLegalityInformation>[];
 
     let node: GipfNode;
 
