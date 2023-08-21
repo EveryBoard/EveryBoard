@@ -13,6 +13,7 @@ import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
+import { ActivatedRoute } from '@angular/router';
 
 export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
     extends RectangularGameComponent<R, M, S, TaflPawn>
@@ -30,9 +31,10 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
     public constructor(messageDisplayer: MessageDisplayer,
                        public VERBOSE: boolean,
+                       actRoute: ActivatedRoute,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(messageDisplayer);
+        super(messageDisplayer, actRoute);
     }
     public override getViewBox(): string {
         const begin: number = - this.STROKE_WIDTH;

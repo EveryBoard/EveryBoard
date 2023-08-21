@@ -17,6 +17,7 @@ import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-epaminondas',
@@ -48,8 +49,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.rules = EpaminondasRules.get();
         this.node = this.rules.getInitialNode();

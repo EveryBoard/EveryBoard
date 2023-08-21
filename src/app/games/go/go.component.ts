@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
@@ -13,6 +13,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-go',
@@ -21,6 +22,7 @@ import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 })
 export class GoComponent
     extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GameConfig, GoLegalityInformation>
+    implements OnInit
 {
     public static VERBOSE: boolean = false;
 
@@ -37,11 +39,11 @@ export class GoComponent
     public boardHeight: number;
     public boardWidth: number;
 
-    public constructor(messageDisplayer: MessageDisplayer, config: GameConfig) {
-        super(messageDisplayer, config);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = GoRules.get();
-        this.node = this.rules.getInitialNode(config);
+        this.node = this.rules.getInitialNode({});
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),
         ];
@@ -49,6 +51,10 @@ export class GoComponent
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
         this.updateBoard();
+    }
+    public ngOnInit(): void {
+        const config: GameConfig = this.TODO_getGameConfigFromWrapper();
+        this.node = this.rules.getInitialNode(config);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -64,7 +70,6 @@ export class GoComponent
         display(GoComponent.VERBOSE, 'updateBoard');
 
         const state: GoState = this.getState();
-        console.log('update board have this state', state)
         this.boardHeight = state.board.length;
         this.boardWidth = state.board[0].length;
         const move: MGPOptional<GoMove> = this.node.move;

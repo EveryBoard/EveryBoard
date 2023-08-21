@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { fakeAsync } from '@angular/core/testing';
 import { GoComponent } from '../go.component';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
@@ -6,7 +7,6 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 
 describe('GoComponent', () => {
 
@@ -87,11 +87,11 @@ describe('GoComponent', () => {
             testUtils.expectElementToExist('#hoshi_9_3'); // Right Up
             testUtils.expectElementToExist('#hoshi_9_9'); // Right Down
             testUtils.expectElementToExist('#hoshi_3_9'); // Left Down
-            // And not the (cx, 3) and the 4 other one
-            testUtils.expectElementNotToExist('#hoshi_6_3'); // Middle Up
-            testUtils.expectElementNotToExist('#hoshi_9_6'); // Right Middle
-            testUtils.expectElementNotToExist('#hoshi_6_9'); // Middle Down
-            testUtils.expectElementNotToExist('#hoshi_3_6'); // Left Middle
+            // And the (cx, 3) and the 4 other one
+            testUtils.expectElementToExist('#hoshi_6_3'); // Middle Up
+            testUtils.expectElementToExist('#hoshi_9_6'); // Right Middle
+            testUtils.expectElementToExist('#hoshi_6_9'); // Middle Down
+            testUtils.expectElementToExist('#hoshi_3_6'); // Left Middle
         }));
         it('shoud be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board

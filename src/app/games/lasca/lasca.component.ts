@@ -18,6 +18,7 @@ import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { LascaTutorial } from './LascaTutorial';
+import { ActivatedRoute } from '@angular/router';
 
 interface SpaceInfo {
     squareClasses: string[];
@@ -63,8 +64,8 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
     private legalMoves: LascaMove[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.rules = LascaRules.get();
         this.node = this.rules.getInitialNode();

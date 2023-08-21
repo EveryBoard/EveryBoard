@@ -14,6 +14,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoTutorial } from './CoerceoTutorial';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-coerceo',
@@ -37,8 +38,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public possibleLandings: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = CoerceoRules.get();
         this.node = this.rules.getInitialNode();

@@ -20,6 +20,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfTutorial } from './GipfTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-gipf',
@@ -60,8 +61,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
         this.rules = GipfRules.get();

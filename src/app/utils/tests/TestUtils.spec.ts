@@ -46,7 +46,6 @@ import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 @Component({})
 export class BlankComponent {}
@@ -214,19 +213,17 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,
-                                                     {}, // TODO: remove this eh
                                                      AuthUser.NOT_CONNECTED,
                                                      configureTestModule);
     }
     public static async forGameWithWrapper<T extends AbstractGameComponent, P extends Comparable>(
         game: string,
         wrapperKind: Type<GameWrapper<P>>,
-        config: GameConfig = {},
         user: AuthUser = AuthUser.NOT_CONNECTED,
         configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T, P>>
     {
-        const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestModule, config);
+        const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestModule);
         ConnectedUserServiceMock.setUser(user);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
@@ -237,21 +234,16 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public static async basic<T extends AbstractGameComponent, P extends Comparable>(
         game?: string,
-        configureTestModule: boolean = true,
-        config: GameConfig = {}) // TODO: remove config
+        configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T, P>>
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
         if (configureTestModule) {
-            await ComponentTestUtils.configureTestModule(activatedRouteStub, config);
+            await ComponentTestUtils.configureTestModule(activatedRouteStub);
         }
         return new ComponentTestUtils<T, P>(activatedRouteStub);
     }
-    public static async configureTestModule(
-        activatedRouteStub: ActivatedRouteStub,
-        config: GameConfig = {}) // TODO: remove config
-    : Promise<void>
-    {
+    public static async configureTestModule(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -263,7 +255,6 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                // { provide: GameConfig, useValue: config }, // TODO KILL
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },

@@ -16,6 +16,7 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessTutorial } from './MartianChessTutorial';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,
@@ -149,8 +150,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public static getRadius(circle: number): number {
         return this.SPACE_SIZE * circle / 10;
     }
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.rules = MartianChessRules.get();
         this.node = this.rules.getInitialNode();

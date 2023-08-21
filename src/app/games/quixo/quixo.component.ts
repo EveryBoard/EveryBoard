@@ -13,6 +13,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { QuixoTutorial } from './QuixoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-quixo',
@@ -33,8 +34,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = QuixoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

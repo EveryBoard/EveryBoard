@@ -15,6 +15,7 @@ import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
 import { DiamTutorial } from './DiamTutorial';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { ActivatedRoute } from '@angular/router';
 
 interface ViewInfo {
     boardInfo: SpaceInfo[],
@@ -92,8 +93,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             { key: Player.ONE, value: [] },
         ]),
     };
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = DiamRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

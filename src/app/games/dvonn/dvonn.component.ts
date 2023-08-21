@@ -16,6 +16,7 @@ import { DvonnTutorial } from './DvonnTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-dvonn',
@@ -30,8 +31,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public disconnecteds: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = DvonnRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

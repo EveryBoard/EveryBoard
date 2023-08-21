@@ -13,6 +13,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-linesofaction',
@@ -32,8 +33,8 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private lastMove: MGPOptional<LinesOfActionMove> = MGPOptional.empty();
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = LinesOfActionRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

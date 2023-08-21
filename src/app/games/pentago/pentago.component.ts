@@ -14,6 +14,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { ActivatedRoute } from '@angular/router';
 
 interface ArrowInfo {
     path: string;
@@ -46,8 +47,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public ARROWS: ArrowInfo[];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = PentagoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

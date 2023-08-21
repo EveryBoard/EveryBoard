@@ -6,6 +6,7 @@ import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { Utils } from 'src/app/utils/utils';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 export class GoPiece implements ComparableObject {
@@ -102,12 +103,11 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.phase = phase;
     }
     public static getInitialState(config: GameConfig): GoState {
-        console.log('received config', config)
         if (config['width'] === undefined) {
-            config = {
-                width: 14,
-                height: 6,
-            };
+            console.log('initial state received nothing')
+            config = { width: 13, height: 5 };
+        } else {
+            console.log('initial state received', config)
         }
         const board: Table<GoPiece> = GoState.getStartingBoard(config);
         return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
@@ -115,8 +115,12 @@ export class GoState extends GameStateWithTable<GoPiece> {
     public getCapturedCopy(): [number, number] {
         return [this.captured[0], this.captured[1]];
     }
-    public static getStartingBoard(config: GoConfig): Table<GoPiece> {
-        return ArrayUtils.createTable(config.width, config.height, GoPiece.EMPTY);
+    public static getStartingBoard(config: GameConfig): Table<GoPiece> {
+        const width: number = config['width'] as number;
+        Utils.assert(width !== undefined, 'Go GameConfig must have a field width');
+        const height: number = config['height'] as number;
+        Utils.assert(height !== undefined, 'Go GameConfig must have a field height');
+        return ArrayUtils.createTable(width, height, GoPiece.EMPTY);
     }
     public copy(): GoState {
         return new GoState(this.getCopiedBoard(),

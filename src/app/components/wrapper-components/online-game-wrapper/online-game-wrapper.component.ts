@@ -180,7 +180,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.gameStarted = true;
         window.setTimeout(async() => {
             // the small waiting is there to make sure that the chronos are charged by view
-            const createdSuccessfully: boolean = await this.afterViewInit({}); // TODO: nooo
+            const createdSuccessfully: boolean = await this.afterViewInit();
             this.timeManager.setClocks([this.chronoZeroTurn, this.chronoOneTurn],
                                        [this.chronoZeroGlobal, this.chronoOneGlobal]);
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
@@ -573,5 +573,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.gameEventsSubscription.unsubscribe();
         }
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
+    }
+    public getConfig(): GameConfig {
+        const gameURL: string = this.getGameName();
+        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
+        return {}; // TODO: do it !
     }
 }

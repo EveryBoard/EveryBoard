@@ -12,6 +12,7 @@ import { AwaleTutorial } from './AwaleTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-awale-component',
@@ -31,8 +32,8 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
     ];
     private filledCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
         this.rules = AwaleRules.get();

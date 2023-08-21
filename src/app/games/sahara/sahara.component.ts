@@ -15,6 +15,7 @@ import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaTutorial } from './SaharaTutorial';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-sahara',
@@ -36,8 +37,8 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     public possibleLandings: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = SaharaRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

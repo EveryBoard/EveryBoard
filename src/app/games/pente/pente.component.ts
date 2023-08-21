@@ -10,6 +10,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-new-game',
@@ -22,8 +23,8 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
     public victoryCoords: Coord[] = [];
     public captured: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = PenteRules.get();
         this.node = this.rules.getInitialNode();

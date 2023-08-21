@@ -9,6 +9,7 @@ import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
 import { HnefataflTutorial } from './HnefataflTutorial';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-hnefatafl',
@@ -17,8 +18,8 @@ import { HnefataflTutorial } from './HnefataflTutorial';
 })
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove, HnefataflState> implements OnInit {
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false, HnefataflMove.from);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, false, actRoute, HnefataflMove.from);
         this.rules = HnefataflRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

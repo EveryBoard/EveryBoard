@@ -14,6 +14,7 @@ import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { ConspirateursTutorial } from './ConspirateursTutorial';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { ActivatedRoute } from '@angular/router';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
@@ -60,8 +61,8 @@ export class ConspirateursComponent
 
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
         this.rules = ConspirateursRules.get();
         this.node = this.rules.getInitialNode();

@@ -14,6 +14,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';
+import { ActivatedRoute } from '@angular/router';
 
 interface PieceOnBoard {
 
@@ -75,8 +76,8 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public currentOpponentClass: string = 'player1';
     public currentPlayerClass: string = 'player0';
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = TrexoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

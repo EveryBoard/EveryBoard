@@ -23,6 +23,7 @@ import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { HiveTutorial } from './HiveTutorial';
+import { ActivatedRoute } from '@angular/router';
 
 interface GroundInfo {
     spaceClasses: string[];
@@ -111,8 +112,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = HiveRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

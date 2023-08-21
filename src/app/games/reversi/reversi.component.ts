@@ -14,6 +14,7 @@ import { ReversiTutorial } from './ReversiTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-reversi',
@@ -32,8 +33,8 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.scores = MGPOptional.of([2, 2]);
         this.rules = ReversiRules.get();
         this.node = this.rules.getInitialNode();

@@ -9,6 +9,7 @@ import { TaflMinimax } from '../TaflMinimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-tablut',
@@ -17,8 +18,8 @@ import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThe
 })
 export class TablutComponent extends TaflComponent<TablutRules, TablutMove, TablutState> {
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false, TablutMove.from);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, false, actRoute, TablutMove.from);
         this.rules = TablutRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

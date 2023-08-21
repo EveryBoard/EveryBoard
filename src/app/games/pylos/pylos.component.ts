@@ -13,6 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-pylos',
@@ -47,8 +48,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.rules = PylosRules.get();
         this.node = this.rules.getInitialNode();

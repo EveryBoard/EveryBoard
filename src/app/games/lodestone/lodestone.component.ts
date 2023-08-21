@@ -19,6 +19,7 @@ import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, Press
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneTutorial } from './LodestoneTutorial';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 interface LodestoneInfo {
     direction: LodestoneDirection,
@@ -126,8 +127,8 @@ export class LodestoneComponent
     private selectedLodestone: MGPOptional<LodestonePieceLodestone> = MGPOptional.empty();
     private captures: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 };
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = LodestoneRules.get();
         this.node = this.rules.getInitialNode();
         this.tutorial = new LodestoneTutorial().tutorial;

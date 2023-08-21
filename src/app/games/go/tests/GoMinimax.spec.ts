@@ -5,7 +5,7 @@ import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { GoState, GoPiece, Phase } from '../GoState';
 import { GoNode, GoRules } from '../GoRules';
-import { GoConfig } from '../GoConfig';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('GoMinimax', () => {
 
@@ -19,7 +19,7 @@ describe('GoMinimax', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const config: GoConfig = new GoConfig(5, 5);
+    const config: GameConfig = { width: 5, height: 5 };
 
     beforeEach(() => {
         const rules: GoRules = GoRules.get();

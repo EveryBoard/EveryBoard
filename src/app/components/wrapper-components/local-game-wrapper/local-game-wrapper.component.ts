@@ -67,7 +67,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     private async createGameConfigAndStartComponent(): Promise<boolean> {
         const gameURL: string = this.getGameName();
         const gameInfo: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
-        return await this.afterViewInit({}); // TODO: DO
+        return this.afterViewInit(); // TODO: DO
     }
     public updatePlayer(player: Player): void {
         this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
@@ -170,7 +170,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.getPlayingAI().isPresent();
     }
     public restartGame(): void {
-        this.gameComponent.node = this.gameComponent.rules.getInitialNode(this.gameComponent.config);
+        this.gameComponent.node = this.gameComponent.rules.getInitialNode(this.getConfig());
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
@@ -184,5 +184,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             const move: Move = this.gameComponent.node.move.get();
             this.gameComponent.showLastMove(move);
         }
+    }
+    public getConfig(): GameConfig {
+        const gameURL: string = this.getGameName();
+        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
+        console.log('LGWC.getConfig (9, 9)')
+        return { width: 9, height: 9 }; // TODO: do it !
     }
 }

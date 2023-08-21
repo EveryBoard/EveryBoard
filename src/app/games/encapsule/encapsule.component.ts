@@ -16,6 +16,7 @@ import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-encapsule',
@@ -39,8 +40,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private chosenPieceIndex: MGPOptional<number>;
     public remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = EncapsuleRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

@@ -27,24 +27,33 @@ export abstract class GobanGameComponent<R extends Rules<M, S, C, L>,
      * Must be called after `this.board` has been set, usually in `updateBoard`.
      */
     public createHoshis(): void {
+        this.hoshis = [];
         const height: number = this.board.length;
-        const middle: number = Math.floor(height / 2);
-        const begin: number = height < 12 ? 2 : 3;
-        const end: number = height - (begin + 1);
-        if (18 < height) {
+        const width: number = this.board[0].length;
+        const horizontalMiddle: number = Math.floor(width / 2);
+        const verticalMiddle: number = Math.floor(height / 2);
+        const left: number = width < 12 ? 2 : 3;
+        const up: number = height < 12 ? 2 : 3;
+        const right: number = width - (left + 1);
+        const down: number = height - (up + 1);
+        if (12 < height) {
             this.hoshis.push(
-                new Coord(begin, middle),
-                new Coord(middle, begin),
-                new Coord(middle, end),
-                new Coord(end, middle),
+                new Coord(left, verticalMiddle),
+                new Coord(right, verticalMiddle),
+            );
+        }
+        if (12 < width) {
+            this.hoshis.push(
+                new Coord(horizontalMiddle, up),
+                new Coord(horizontalMiddle, down),
             );
         }
         this.hoshis.push(
-            new Coord(middle, middle),
-            new Coord(begin, begin),
-            new Coord(begin, end),
-            new Coord(end, begin),
-            new Coord(end, end),
+            new Coord(horizontalMiddle, verticalMiddle),
+            new Coord(left, up),
+            new Coord(left, down),
+            new Coord(right, up),
+            new Coord(right, down),
         );
     }
     public isHoshi(x: number, y: number): boolean {

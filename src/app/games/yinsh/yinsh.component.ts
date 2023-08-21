@@ -19,6 +19,7 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 interface SpaceInfo {
     coord: Coord,
@@ -98,8 +99,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         sideRings: [5, 5],
         sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = YinshRules.get();
         this.node = this.rules.getInitialNode();

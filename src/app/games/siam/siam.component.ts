@@ -18,6 +18,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { assert } from 'src/app/utils/assert';
 import { SiamFailure } from './SiamFailure';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -50,8 +51,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     private insertingPiece: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = SiamRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

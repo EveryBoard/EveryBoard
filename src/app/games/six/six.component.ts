@@ -19,6 +19,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-six',
@@ -50,8 +51,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules,
 
     private nextClickShouldSelectGroup: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = SixRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

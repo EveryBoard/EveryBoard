@@ -251,7 +251,7 @@ export class GameInfo {
                        public readonly rules: AbstractRules,
                        public readonly creationDate: Date,
                        public readonly description: string,
-                       public readonly config: GameConfigDescription = { fields: {} },
+                       public readonly configDescription: GameConfigDescription = { fields: {} },
                        public readonly display: boolean = true)
     {
     }

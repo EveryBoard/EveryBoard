@@ -11,6 +11,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-teeko',
@@ -29,8 +30,8 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     public moved: Coord[] = [];
     public victory: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = TeekoRules.get();
         this.node = this.rules.getInitialNode();
         this.encoder = TeekoMove.encoder;

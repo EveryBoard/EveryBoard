@@ -180,7 +180,7 @@ describe('GameComponent', () => {
             // Then it should have an encoder and a non-empty tutorial
             expect(component.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
-            expect(component.tutorial.steps.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
+            expect(component.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
         }));
     }
 });

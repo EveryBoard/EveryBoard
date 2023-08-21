@@ -20,6 +20,7 @@ import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -49,8 +50,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     public selecteds: Coord[] = [];
 
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = AbaloneRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

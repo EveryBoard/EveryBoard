@@ -4,7 +4,6 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -63,12 +62,12 @@ export abstract class GameWrapper<P extends Comparable> {
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
-    protected async afterViewInit(config: GameConfig): Promise<boolean> {
+    protected async afterViewInit(): Promise<boolean> {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterViewInit');
-        const gameCreatedSuccessfully: boolean = await this.createGameComponent(config);
+        const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
-            console.log('GameWrapper create the initial node')
-            this.gameComponent.node = this.gameComponent.rules.getInitialNode(this.gameComponent.config);
+            const gameConfig: GameConfig = this.getConfig();
+            this.gameComponent.node = this.gameComponent.rules.getInitialNode(gameConfig);
             this.gameComponent.updateBoard();
         }
         return gameCreatedSuccessfully;
@@ -76,7 +75,7 @@ export abstract class GameWrapper<P extends Comparable> {
     protected getGameName(): string {
         return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
-    private async createGameComponent(config: GameConfig): Promise<boolean> {
+    private async createGameComponent(): Promise<boolean> {
         display(GameWrapper.VERBOSE, { m: 'GameWrapper.createGameComponent', that: this });
 
         const gameName: string = this.getGameName();
@@ -85,7 +84,7 @@ export abstract class GameWrapper<P extends Comparable> {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true });
             return false;
         }
-        assert(this.boardRef != null, 'Board element should be present');
+        Utils.assert(this.boardRef != null, 'Board element should be present');
 
         const componentRef: ComponentRef<AbstractGameComponent> =
             Utils.getNonNullable(this.boardRef).createComponent(component.get(), {
@@ -113,6 +112,9 @@ export abstract class GameWrapper<P extends Comparable> {
         // Mostly for interception by TutorialGameWrapper
         this.gameComponent.cancelMoveOnWrapper = (reason?: string): void => {
             this.onCancelMove(reason);
+        };
+        this.gameComponent.TODO_getGameConfigFromWrapper = (): GameConfig => {
+            return this.getConfig();
         };
         this.setRole(this.role);
         return true;
@@ -143,6 +145,8 @@ export abstract class GameWrapper<P extends Comparable> {
     public abstract onCancelMove(_reason?: string): void;
 
     public abstract getPlayer(): P;
+
+    public abstract getConfig(): GameConfig;
 
     public canUserPlay(_clickedElementName: string): MGPValidation {
         if (this.role === PlayerOrNone.NONE) {

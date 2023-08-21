@@ -16,6 +16,7 @@ import { KamisadoTutorial } from './KamisadoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-kamisado',
@@ -33,8 +34,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public chosenAutomatically: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.rules = KamisadoRules.get();
         this.node = this.rules.getInitialNode();

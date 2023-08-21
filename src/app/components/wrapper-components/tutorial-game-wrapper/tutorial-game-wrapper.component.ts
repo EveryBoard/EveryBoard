@@ -15,6 +15,8 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 
 type TutorialPlayer = 'tutorial-player';
@@ -60,7 +62,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
     public async ngAfterViewInit(): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.ngAfterViewInit');
-        const createdSuccessfully: boolean = await this.afterViewInit({}); // TODO: non !
+        const createdSuccessfully: boolean = await this.afterViewInit();
         if (createdSuccessfully) {
             this.start();
         }
@@ -240,5 +242,10 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
     public getPlayer(): TutorialPlayer {
         return 'tutorial-player';
+    }
+    public getConfig(): GameConfig {
+        const gameURL: string = this.getGameName();
+        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
+        return {}; // TODO: DO IT
     }
 }

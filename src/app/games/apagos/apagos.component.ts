@@ -13,6 +13,7 @@ import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 import { ApagosTutorial } from './ApagosTutorial';
+import { ActivatedRoute } from '@angular/router';
 
 interface PieceLocation {
 
@@ -72,8 +73,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         return upLeft + ' ' + upRight + ' ' + middleMiddleRight + ' ' + middleExtremeRight + ' ' +
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = ApagosRules.get();
         this.node = this.rules.getInitialNode();
         this.hasAsymmetricBoard = true;

@@ -15,6 +15,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -93,6 +94,8 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
+    public TODO_getGameConfigFromWrapper: () => C;
+
     public role: PlayerOrNone;
 
     /* all game rules should be able to call the game-wrapper
@@ -102,12 +105,15 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
      */
 
     public constructor(public readonly messageDisplayer: MessageDisplayer,
-                       public readonly config: GameConfig = {})
+                      protected readonly actRoute: ActivatedRoute)
     {
         super();
     }
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
+    }
+    protected getGameName(): string {
+        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
     public cancelMove(reason?: string): MGPValidation {
         this.cancelMoveAttempt();

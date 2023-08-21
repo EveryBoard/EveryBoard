@@ -7,6 +7,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { NewGameDummyMinimax } from './NewGameDummyMinimax';
 import { NewGameTutorial } from './NewGameTutorial';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.
@@ -33,8 +34,8 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * It must set up the `rules`, `node`, `encoder`, `encoder`, and `availableMinimaxes` fields.
      * The minimax list can remain empty.
      */
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         // If the board you draw must be rotated of 180° when you play the second player, enable the following:
         // this.hasAsymetricBoard = true;
         // If your game has scores in-game, enable the following:

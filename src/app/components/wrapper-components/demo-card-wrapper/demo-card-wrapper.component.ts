@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Move } from 'src/app/jscaip/Move';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type DemoNodeInfo = {
     name: string, // The name of the game
@@ -40,7 +42,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
     public async ngAfterViewInit(): Promise<void> {
         setTimeout(async() => {
-            await this.afterViewInit({}); // TODO: noooope
+            await this.afterViewInit();
             this.gameComponent.node = this.demoNodeInfo.node;
             // The board needs to be updated to render the changed node, setRole will do it
             this.setRole(this.gameComponent.getCurrentPlayer());
@@ -64,5 +66,10 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
     public onCancelMove(_reason?: string | undefined): void {
         return;
+    }
+    public getConfig(): GameConfig {
+        const gameURL: string = this.getGameName();
+        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
+        return {}; // TODO: do it !
     }
 }

@@ -11,6 +11,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoTutorial } from './QuartoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-quarto',
@@ -33,8 +34,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public pieceToGive: MGPOptional<QuartoPiece> = MGPOptional.empty();
     public victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(messageDisplayer, actRoute);
         this.rules = QuartoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
