@@ -14,7 +14,7 @@ import { Utils } from 'src/app/utils/utils';
 import { Debug } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SiamFailure } from './SiamFailure';
 
@@ -258,15 +258,16 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         let x: number = (maxRemainingPieces + 1)/closenessFactor;
         let y: number;
         let orientation: Orthogonal;
-        if (player === Player.ONE) {
-            // Player zero pieces are stacked right-to-left for better visuals
-            x += (remainingPieces - piece + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
-            y = -1;
-            orientation = Orthogonal.RIGHT;
-        } else {
+        const playerOnBottom: Player = this.role === PlayerOrNone.NONE ? Player.ZERO : this.role as Player;
+        if (player === playerOnBottom) {
             x += ((piece + 1) + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
             y = 7;
             orientation = Orthogonal.LEFT;
+        } else {
+            // Top pieces are stacked right-to-left for better visuals
+            x += (remainingPieces - piece + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
+            y = -1;
+            orientation = Orthogonal.RIGHT;
         }
         return this.getArrowTransform(x, y, orientation);
     }
