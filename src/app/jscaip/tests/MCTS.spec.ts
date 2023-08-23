@@ -44,7 +44,7 @@ describe('MCTS', () => {
         }
     });
     it('should know how to win multiple turns in advance', () => {
-        // Given a board where we have to make a choice between possibly losing or winning,
+        // Given a board where we have to make a choice between definitely losing or possibly winning,
         // but multiple turns in advance
         const board: Table<QuartoPiece> = [
             [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.EMPTY],
@@ -56,8 +56,7 @@ describe('MCTS', () => {
         const node: QuartoNode = new QuartoNode(state);
         // When computing the best move
         const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions);
-        // Then it should place it in (3,0) in order to definitely win
-        // otherwise we definitely lose
+        // Then it should choose the move that leads to the wins
         expect(move).toEqual(new QuartoMove(3, 0, QuartoPiece.ABAB));
     });
     it('should not fail on games that are too long', () => {

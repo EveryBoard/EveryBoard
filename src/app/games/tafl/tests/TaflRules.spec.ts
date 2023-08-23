@@ -9,7 +9,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
 import { TaflPawn } from '../TaflPawn';
-import { TaflNode } from '../TaflRules';
 import { TaflState } from '../TaflState';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflNode, MyTaflRules } from './MyTaflRules.spec';

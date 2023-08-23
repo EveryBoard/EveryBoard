@@ -70,7 +70,7 @@ export class ConspirateursComponent
         this.rules = ConspirateursRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Jump Minimax',
+            new Minimax('Jump',
                         this.rules,
                         new ConspirateursHeuristic(),
                         new ConspirateursOrderedMoveGenerator()),

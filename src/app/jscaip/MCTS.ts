@@ -59,8 +59,9 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         Debug.display('MCTS', 'chooseNextMove', 'root winRatio: ' + this.winRatio(root));
         Debug.display('MCTS', 'chooseNextMove', 'children winRatio: ' +
             (root.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.winRatio(n))));
-        const bestChild: GameNode<M, S> =
-            ArrayUtils.maximumBy(root.getChildren(), (n: GameNode<M, S>) => this.winRatio(n));
+        const bestChildren: GameNode<M, S>[] =
+            ArrayUtils.maximumsBy(root.getChildren(), (n: GameNode<M, S>) => this.winRatio(n));
+        const bestChild: GameNode<M, S> = ArrayUtils.getRandomElement(bestChildren);
         const seconds: number = (Date.now() - startTime) / 1000;
         Debug.display('MCTS', 'chooseNextMove', `Computed ${iterations} in ${seconds} (rate: ${iterations/seconds} it/s)`);
         Debug.display('MCTS', 'chooseNextMove', 'Best child has a win ratio of: ' + this.winRatio(bestChild));
@@ -124,8 +125,9 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
             // Select within the child with the highest UCB value.
             Debug.display('MCTS', 'select', 'UCB values: ' +
                 (node.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.ucb(node, simulations))));
-            const childToVisit: GameNode<M, S> =
-                ArrayUtils.maximumBy(node.getChildren(), (n: GameNode<M, S>) => this.ucb(n, simulations));
+            const bestChildren: GameNode<M, S>[] =
+                ArrayUtils.maximumsBy(node.getChildren(), (n: GameNode<M, S>) => this.ucb(n, simulations));
+            const childToVisit: GameNode<M, S> = ArrayUtils.getRandomElement(bestChildren);
             Debug.display('MCTS', 'select', 'selecting children ' + childToVisit.id);
             return this.select({ node: childToVisit, path: nodeAndPath.path.concat([childToVisit]) });
         } else {

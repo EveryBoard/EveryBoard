@@ -11,7 +11,7 @@ import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
 
-export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> { }
+export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
 export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursState> {
 

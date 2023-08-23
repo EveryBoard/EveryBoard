@@ -17,7 +17,7 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 
 export type YinshLegalityInformation = YinshState
 
-export class YinshNode extends GameNode<YinshMove, YinshState> { }
+export class YinshNode extends GameNode<YinshMove, YinshState> {}
 
 export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInformation> {
 

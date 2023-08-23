@@ -36,7 +36,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.rules = ConnectSixRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Alignment Minimax',
+            new Minimax('Alignment',
                         this.rules,
                         new ConnectSixAlignmentHeuristic(),
                         new ConnectSixMoveGenerator()),

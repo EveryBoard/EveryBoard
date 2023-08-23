@@ -16,7 +16,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { CoerceoHeuristic } from './CoerceoHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
-import { CoerceoPiecesThreatTilesHeuristic } from './CoerceoPiecesThreatTilesHeuristic';
+import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
 
 @Component({
@@ -47,9 +47,9 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.rules = CoerceoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Piece > Threat > Tiles Minimax',
+            new Minimax('Pieces > Threats > Tiles',
                         this.rules,
-                        new CoerceoPiecesThreatTilesHeuristic(),
+                        new CoerceoPiecesThreatsTilesHeuristic(),
                         new CoerceoOrderedMoveGenerator()),
             new Minimax('Minimax', CoerceoRules.get(), new CoerceoHeuristic(), new CoerceoMoveGenerator()),
             new MCTS('MCTS', new CoerceoMoveGenerator(), this.rules),

@@ -26,16 +26,16 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
         this.node = this.rules.getInitialNode();
         const moveGenerator: TaflMoveGenerator<BrandhubMove, BrandhubState> = new TaflMoveGenerator(this.rules);
         this.availableAIs = [
-            new Minimax('DummyMinimax', this.rules, new TaflHeuristic(this.rules), moveGenerator),
-            new Minimax('Piece > Influence Minimax',
+            new Minimax('Dummy', this.rules, new TaflHeuristic(this.rules), moveGenerator),
+            new Minimax('Piece > Influence',
                         this.rules,
                         new TaflPieceAndInfluenceHeuristic(this.rules),
                         moveGenerator),
-            new Minimax('Piece > Control Minimax',
+            new Minimax('Piece > Control',
                         this.rules,
                         new TaflPieceAndControlHeuristic(this.rules),
                         moveGenerator),
-            new Minimax('Escape > Piece > Control Minimax',
+            new Minimax('Escape > Piece > Control',
                         this.rules,
                         new TaflEscapeThenPieceThenControlHeuristic(this.rules),
                         moveGenerator),

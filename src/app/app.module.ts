@@ -251,4 +251,4 @@ export class FirebaseProviders {
     ],
     bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

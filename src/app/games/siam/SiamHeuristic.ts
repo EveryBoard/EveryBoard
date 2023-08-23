@@ -7,6 +7,8 @@ import { SiamState } from './SiamState';
 export class SiamHeuristic extends Heuristic<SiamMove, SiamState> {
 
     public getBoardValue(node: SiamNode): BoardValue {
-        return new BoardValue(SiamRules.get().getBoardValueInfo(node.previousMove, node.gameState).boardValue);
+        const boardValueInfo: { shortestZero: number, shortestOne: number, boardValue: number } =
+            SiamRules.get().getBoardValueInfo(node.previousMove, node.gameState);
+        return new BoardValue(boardValueInfo.boardValue);
     }
 }

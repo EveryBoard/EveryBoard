@@ -78,7 +78,8 @@ export class GameNode<M extends Move, S extends GameState> {
                        labelFn?: (node: GameNode<M, S>) => string,
                        max?: number,
                        level: number = 0,
-                       id: number = 0): number
+                       id: number = 0)
+    : number
     {
         if (level === 0) {
             console.log('digraph G {');

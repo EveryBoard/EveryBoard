@@ -24,6 +24,6 @@ describe('NewGameMoveGenerator', () => {
         const moves: NewGameMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be this many moves
-        expect(moves.length).toBe(0);
+        expect(moves.length).toBe(1);
     });
 });

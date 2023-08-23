@@ -12,9 +12,9 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MCTS } from 'src/app/jscaip/MCTS';
-import { AwaleCaptureHeuristic } from './AwaleCaptureHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';
+import { AwaleScoreHeuristic } from './AwaleScoreHeuristic';
 
 @Component({
     selector: 'app-awale-component',
@@ -41,7 +41,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.rules = AwaleRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Capture Minimax', AwaleRules.get(), new AwaleCaptureHeuristic(), new AwaleMoveGenerator()),
+            new Minimax('Score', AwaleRules.get(), new AwaleScoreHeuristic(), new AwaleMoveGenerator()),
             new MCTS('MCTS', new AwaleMoveGenerator(), this.rules),
         ];
         this.encoder = AwaleMove.encoder;

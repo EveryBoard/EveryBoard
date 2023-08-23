@@ -20,7 +20,7 @@ describe('ConnectSixAlignmentHeuristic', () => {
     const O: PlayerOrNone = PlayerOrNone.ZERO;
 
     beforeEach(() => {
-        minimax = new Minimax('Alignment Minimax',
+        minimax = new Minimax('Alignment',
                               ConnectSixRules.get(),
                               new ConnectSixAlignmentHeuristic(),
                               new ConnectSixMoveGenerator());

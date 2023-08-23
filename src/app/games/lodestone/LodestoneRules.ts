@@ -15,7 +15,7 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneState, LodestonePositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
 
-export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> { }
+export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
 export type LodestoneInfos = {
     board: LodestonePiece[][]

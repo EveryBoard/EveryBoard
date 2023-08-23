@@ -10,11 +10,11 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoNode } from '../CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { CoerceoPiecesThreatTilesHeuristic } from '../CoerceoPiecesThreatTilesHeuristic';
+import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
 
 describe('CoerceoPiecesThreatTilesHeuristic', () => {
 
-    let heuristic: CoerceoPiecesThreatTilesHeuristic;
+    let heuristic: CoerceoPiecesThreatsTilesHeuristic;
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -22,7 +22,7 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     beforeEach(() => {
-        heuristic = new CoerceoPiecesThreatTilesHeuristic();
+        heuristic = new CoerceoPiecesThreatsTilesHeuristic();
     });
     it('should prefer board with more pieces', () => {
         const weakBoard: Table<FourStatePiece> = [
@@ -331,9 +331,9 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
     });
     describe('getBoardValue', () => {
 
-        const SAFE: number = CoerceoPiecesThreatTilesHeuristic.SCORE_BY_SAFE_PIECE;
+        const SAFE: number = CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
 
-        const THREATENED: number = CoerceoPiecesThreatTilesHeuristic.SCORE_BY_THREATENED_PIECE;
+        const THREATENED: number = CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE;
 
         it('should count one safe piece', () => {
             // Given a state with one piece of player zero

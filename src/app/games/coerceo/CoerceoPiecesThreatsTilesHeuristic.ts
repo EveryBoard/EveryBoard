@@ -13,7 +13,7 @@ import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { Vector } from 'src/app/jscaip/Vector';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 
-export class CoerceoPiecesThreatTilesHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
+export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
 
     public static readonly SCORE_BY_THREATENED_PIECE: number = 1000;
 
@@ -28,9 +28,9 @@ export class CoerceoPiecesThreatTilesHeuristic extends PlayerMetricHeuristic<Coe
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    scores[owner.value] += CoerceoPiecesThreatTilesHeuristic.SCORE_BY_THREATENED_PIECE;
+                    scores[owner.value] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE;
                 } else {
-                    scores[owner.value] += CoerceoPiecesThreatTilesHeuristic.SCORE_BY_SAFE_PIECE;
+                    scores[owner.value] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
                 }
             }
             scores[owner.value] += state.tiles[owner.value];

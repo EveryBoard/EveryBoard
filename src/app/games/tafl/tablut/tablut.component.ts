@@ -26,16 +26,16 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
         this.node = this.rules.getInitialNode();
         const moveGenerator: TaflMoveGenerator<TablutMove, TablutState> = new TaflMoveGenerator(this.rules);
         this.availableAIs = [
-            new Minimax('Dummy Minimax', this.rules, new TaflHeuristic(this.rules), moveGenerator),
-            new Minimax('Piece > Influence Minimax',
+            new Minimax('Minimax', this.rules, new TaflHeuristic(this.rules), moveGenerator),
+            new Minimax('Piece > Influence',
                         this.rules,
                         new TaflPieceAndInfluenceHeuristic(this.rules),
                         moveGenerator),
-            new Minimax('Piece > Control Minimax',
+            new Minimax('Piece > Control',
                         this.rules,
                         new TaflPieceAndControlHeuristic(this.rules),
                         moveGenerator),
-            new Minimax('Escape > Piece > Control Minimax',
+            new Minimax('Escape > Piece > Control',
                         this.rules,
                         new TaflEscapeThenPieceThenControlHeuristic(this.rules),
                         moveGenerator),

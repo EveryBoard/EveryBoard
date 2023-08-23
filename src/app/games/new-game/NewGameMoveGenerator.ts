@@ -15,6 +15,6 @@ export class NewGameMoveGenerator extends MoveGenerator<NewGameMove, NewGameStat
      * A move generator should never return an empty list in case there are possible moves.
      */
     public getListMoves(node: NewGameNode): NewGameMove[] {
-        return [];
+        return [new NewGameMove()];
     }
 }

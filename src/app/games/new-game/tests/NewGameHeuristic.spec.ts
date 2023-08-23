@@ -15,9 +15,9 @@ describe('NewGameHeuristic', () => {
     beforeEach(() => {
         heuristic = new NewGameHeuristic();
     });
-    it('should have some score', () => {
+    it('should have some board value', () => {
         /**
-         * To test scores, most of the time you want to rely on
+         * To test board values, most of the time you want to rely on
          * `HeuristicUtils.expectSecondStateToBeBetterThanFirstFor`.
          */
         const initialState: NewGameState = NewGameState.getInitialState();

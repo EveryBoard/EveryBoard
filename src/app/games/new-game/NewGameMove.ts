@@ -22,7 +22,7 @@ export class NewGameMove extends Move {
     public static encoder: Encoder<NewGameMove> = undefined as any;
 
     public toString(): string {
-        throw new Error('This method is really more debug oriented');
+        return 'This method is really more debug oriented';
     }
     public equals(other: this): boolean {
         throw new Error('This method helps the minimaxes avoid creating two times the same move, which would slow its calculations');

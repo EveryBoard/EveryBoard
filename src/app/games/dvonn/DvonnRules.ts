@@ -15,7 +15,7 @@ import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class DvonnNode extends GameNode<DvonnMove, DvonnState> { }
+export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}
 
 export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 

@@ -57,11 +57,11 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new Minimax('Minimax', this.rules, new EpaminondasHeuristic(), new EpaminondasMoveGenerator()),
-            new Minimax('Positional Minimax',
+            new Minimax('Positional',
                         this.rules,
                         new EpaminondasPositionalHeuristic(),
                         new EpaminondasPhalanxSizeAndFilterMoveGenerator()),
-            new Minimax('Attack Minimax', this.rules, new EpaminondasAttackHeuristic(), new EpaminondasMoveGenerator()),
+            new Minimax('Attack', this.rules, new EpaminondasAttackHeuristic(), new EpaminondasMoveGenerator()),
             new MCTS('MCTS', new EpaminondasMoveGenerator(), this.rules),
         ];
         this.encoder = EpaminondasMove.encoder;

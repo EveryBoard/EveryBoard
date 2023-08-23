@@ -191,6 +191,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
     public displayAIInfo(): boolean {
-        return localStorage.getItem('displayAIInfo') === "true";
+        return localStorage.getItem('displayAIInfo') === 'true';
     }
 }

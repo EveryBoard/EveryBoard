@@ -57,22 +57,27 @@ describe('GameNode', () => {
             rules = new RulesMock(GameStateMock);
 
             const move: MoveMock = new MoveMock(1);
+            const optionalMove: MGPOptional<MoveMock> = MGPOptional.of(move);
             const otherMove: MoveMock = new MoveMock(2);
+            const optionalOtherMove: MGPOptional<MoveMock> = MGPOptional.of(otherMove);
 
-            treeRoot = new GameNode(new GameStateMock(0));
-            const child: MockNode =
-                new GameNode(new GameStateMock(1), MGPOptional.of(treeRoot), MGPOptional.of(move));
+            const stateAtTurn0: GameStateMock = new GameStateMock(0);
+            const stateAtTurn1: GameStateMock = new GameStateMock(1);
+            const stateAtTurn2: GameStateMock = new GameStateMock(2);
+            const stateAtTurn3: GameStateMock = new GameStateMock(3);
+
+            treeRoot = new GameNode(stateAtTurn0);
+            const optionalTreeRoot: MGPOptional<MockNode> = MGPOptional.of(treeRoot);
+            const child: MockNode = new MockNode(stateAtTurn1, optionalTreeRoot, optionalMove);
             treeRoot.addChild(child);
 
-            const otherChild: MockNode =
-                new GameNode(new GameStateMock(1), MGPOptional.of(treeRoot), MGPOptional.of(otherMove));
+            const otherChild: MockNode = new MockNode(stateAtTurn1, optionalTreeRoot, optionalOtherMove);
             treeRoot.addChild(otherChild);
 
-            const grandChild: MockNode =
-                new GameNode(new GameStateMock(2), MGPOptional.of(child), MGPOptional.of(move));
+            const grandChild: MockNode = new MockNode(stateAtTurn2, MGPOptional.of(child), optionalMove);
             child.addChild(grandChild);
 
-            terminalNode = new GameNode(new GameStateMock(3), MGPOptional.of(grandChild), MGPOptional.of(move));
+            terminalNode = new MockNode(stateAtTurn3, MGPOptional.of(grandChild), optionalMove);
             grandChild.addChild(terminalNode);
 
             getGameStatusSpy = spyOn(rules, 'getGameStatus');

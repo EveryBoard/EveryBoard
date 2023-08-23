@@ -6,9 +6,9 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
-import { AwaleCaptureHeuristic } from '../AwaleCaptureHeuristic';
+import { AwaleScoreHeuristic } from '../AwaleScoreHeuristic';
 
-describe('AwaleCaptureHeuristic', () => {
+describe('AwaleScoreMinimax', () => {
 
     let rules: AwaleRules;
     let minimax: Minimax<AwaleMove, AwaleState>;
@@ -17,7 +17,7 @@ describe('AwaleCaptureHeuristic', () => {
 
     beforeEach(() => {
         rules = AwaleRules.get();
-        minimax = new Minimax('Capture Minimax', AwaleRules.get(), new AwaleCaptureHeuristic(), new AwaleMoveGenerator());
+        minimax = new Minimax('Capture Minimax', AwaleRules.get(), new AwaleScoreHeuristic(), new AwaleMoveGenerator());
     });
     it('should not throw at first choice', () => {
         const node: AwaleNode = rules.getInitialNode();

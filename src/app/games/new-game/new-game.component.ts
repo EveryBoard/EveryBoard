@@ -45,7 +45,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
         this.encoder = NewGameMove.encoder;
         this.tutorial = new NewGameTutorial().tutorial;
         this.availableAIs = [
-            new Minimax('Dummy Minimax', this.rules, new NewGameHeuristic(), new NewGameMoveGenerator()),
+            new Minimax('Dummy', this.rules, new NewGameHeuristic(), new NewGameMoveGenerator()),
             new MCTS('MCTS', new NewGameMoveGenerator(), this.rules),
         ];
     }

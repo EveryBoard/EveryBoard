@@ -14,7 +14,7 @@ describe('ConspirateursMinimax', () => {
 
     beforeEach(() => {
         rules = ConspirateursRules.get();
-        minimax = new Minimax('Jump Minimax',
+        minimax = new Minimax('Jump',
                               ConspirateursRules.get(),
                               new ConspirateursHeuristic(),
                               new ConspirateursOrderedMoveGenerator());

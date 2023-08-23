@@ -121,21 +121,20 @@ export class ArrayUtils {
         return array[randomIndex];
     }
     /**
-     * Gets the maximum element of an array, according to a given metric.
-     * Throws if the array is empty.
+     * Gets the maximum elements of an array, according to a given metric.
+     * Returns an array containing all the maximal values
      */
-    public static maximumBy<T>(array: T[], metric: (value: T) => number): T {
-        Utils.assert(array.length > 0, 'ArrayUtils.maximumBy must be called on an array containing elements');
-        let maxIndex: number = -1;
-        let max: number = Number.MIN_SAFE_INTEGER;
+    public static maximumsBy<T>(array: T[], metric: (value: T) => number): T[] {
+        const maximums: T[] = [];
+        let maxMetricValue: number = Number.MIN_SAFE_INTEGER;
         for (let i: number = 0; i < array.length; i++) {
-            const current: number = metric(array[i]);
-            if (current > max) {
-                max = current;
-                maxIndex = i;
+            const currentMetricValue: number = metric(array[i]);
+            if (currentMetricValue > maxMetricValue) {
+                maxMetricValue = currentMetricValue;
+                maximums.push(array[i]);
             }
         }
-        return array[maxIndex];
+        return maximums;
     }
 }
 

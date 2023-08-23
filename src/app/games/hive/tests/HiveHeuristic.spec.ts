@@ -31,13 +31,11 @@ describe('HiveHeuristic', () => {
         expect(boardValue.value).toEqual(0);
     });
     it('should prefer when queen bee has a higher mobility', () => {
-        console.log('STARTING TEST')
         // Given a state where the queen bee has more empty spaces around it than another one
         const strongState: HiveState = HiveState.fromRepresentation([
             [[B], [Q]],
             [[G], []],
         ], 4);
-        console.log('CONSTRUCTING OTHER')
         const weakState: HiveState = HiveState.fromRepresentation([
             [[B], [Q], [G]],
         ], 4);
