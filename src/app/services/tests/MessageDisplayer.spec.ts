@@ -6,11 +6,12 @@ import { MessageDisplayer } from '../MessageDisplayer';
 describe('MessageDisplayer', () => {
 
     let messageDisplayer: MessageDisplayer;
-    let toastSpy: jasmine.Spy<any>;
+    let toastSpy: jasmine.Spy;
 
     beforeEach(() => {
         messageDisplayer = TestBed.inject(MessageDisplayer);
         // We spy on the toast private method, hence we need <any>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         toastSpy = spyOn<any>(messageDisplayer, 'toast').and.returnValue(undefined);
     });
     function duration(message: string): number {
