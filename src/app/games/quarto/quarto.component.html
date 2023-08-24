@@ -98,7 +98,7 @@
                   [attr.transform]="'translate(' + (-0.75 * SPACE_SIZE) + ', 0)'"
                   class="base no-fill"
             />
-            <g *ngIf="chosen.isAbsent()">
+            <g *ngIf="chosen.isAbsent() && pieceInHand !== EMPTY">
                 <rect *ngIf="pieceInHand.isRectangle() else circle"
                       [attr.x]="0"
                       [attr.y]="SPACE_SIZE * 0.75"
