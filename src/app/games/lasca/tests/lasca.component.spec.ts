@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LascaComponent } from '../lasca.component';

@@ -9,7 +9,7 @@ import { SiamState } from 'src/app/games/siam/SiamState';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SiamFailure } from '../SiamFailure';
 
@@ -254,7 +254,6 @@ describe('SiamComponent', () => {
     }));
     it('should directly insert the piece in the desired direction when clicking on an indicator arrow', fakeAsync(async() => {
         // Given a state with a piece in a corner
-        // Given a state with a piece already on board, which has been selected by the player
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -272,4 +271,55 @@ describe('SiamComponent', () => {
         const move: SiamMove = SiamMove.from(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
         await testUtils.expectMoveSuccess('#indicator_4_4_LEFT', move);
     }));
+
+    function expectTranslationYToBe(transform: SVGTransform, y: number): void {
+        expect(transform.type).toBe(SVGTransform.SVG_TRANSFORM_TRANSLATE);
+        // In a SVG transform, f is the y coordinate
+        expect(transform.matrix.f).toBe(y);
+    }
+    it('should display current player pieces on the bottom (Player.ONE)', () => {
+        // Given a state from the point of view of player 1
+        const board: Table<SiamPiece> = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [_, _, _, _, U],
+        ];
+        const state: SiamState = new SiamState(board, 1);
+
+        // When the game is displayed
+        testUtils.setupState(state);
+
+        // Then player 1's pieces should be on the bottom
+        const playerOneRemainingPiecesTranslation: SVGTransform =
+            testUtils.findElement('#remainingPieces_1_0').nativeElement.transform.baseVal.getItem(0);
+        const playerZeroRemainingPiecesTranslation: SVGTransform =
+            testUtils.findElement('#remainingPieces_0_0').nativeElement.transform.baseVal.getItem(0);
+        expectTranslationYToBe(playerZeroRemainingPiecesTranslation, -100)
+        expectTranslationYToBe(playerOneRemainingPiecesTranslation, 700)
+    });
+    it('should display current player pieces on the bottom (observer)', () => {
+        // Given a state
+        const board: Table<SiamPiece> = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [_, _, _, _, U],
+        ];
+        const state: SiamState = new SiamState(board, 0);
+
+        // When the game is displayed for an observer
+        testUtils.setupState(state);
+        testUtils.getWrapper().setRole(PlayerOrNone.NONE);
+
+        // Then player 1's pieces should be on the bottom
+        const playerOneRemainingPiecesTranslation: SVGTransform =
+            testUtils.findElement('#remainingPieces_1_0').nativeElement.transform.baseVal.getItem(0);
+        const playerZeroRemainingPiecesTranslation: SVGTransform =
+            testUtils.findElement('#remainingPieces_0_0').nativeElement.transform.baseVal.getItem(0);
+        expectTranslationYToBe(playerZeroRemainingPiecesTranslation, 700)
+        expectTranslationYToBe(playerOneRemainingPiecesTranslation, -100)
+    });
 });
