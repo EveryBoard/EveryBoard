@@ -117,7 +117,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     private pieceBelongToCurrentPlayer(coord: Coord): boolean {
         const state: S = this.getState();
         const player: Player = state.getCurrentPlayer();
-        return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
+        return this.role === player && state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
     public override cancelMoveAttempt(): void {
         this.chosen = MGPOptional.empty();
