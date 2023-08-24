@@ -330,7 +330,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                 new MGPNode(previousState)),
             MGPOptional.ofNullable(previousMove),
         );
-        this.gameComponent.updateBoard();
+        this.getWrapper().setRole(this.gameComponent.getCurrentPlayer());
         if (previousMove !== undefined) {
             this.gameComponent.showLastMove(previousMove);
         }

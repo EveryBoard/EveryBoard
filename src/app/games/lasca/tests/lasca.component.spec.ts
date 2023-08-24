@@ -29,7 +29,7 @@ describe('LascaComponent', () => {
     });
     describe('first click', () => {
         it('should highlight possible step-landing after selecting piece', fakeAsync(async() => {
-            // Given any board where step are possible (initial board)
+            // Given any board where steps are possible (initial board)
             // When selecting a piece
             await testUtils.expectClickSuccess('#coord_4_4');
 
@@ -38,7 +38,7 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#square_5_3', 'selectable-fill');
         }));
         it('should highlight piece that can move this turn (when step moves)', () => {
-            // Given a board where current player can move 4 pieces (by example, the starting board)
+            // Given a board where current player can move 4 pieces (for example, the starting board)
             // When displaying the board
             // Then those 3 coord should be "selectable-fill"
             testUtils.expectElementToHaveClass('#square_0_4', 'selectable-fill');
@@ -256,16 +256,33 @@ describe('LascaComponent', () => {
         }));
     });
     describe('experience as second player (reversed board)', () => {
+        it('should not duplicate highlight when doing incorrect second click', fakeAsync(async() => {
+            // Given a board where you are player two and a moving piece has been selected
+            await testUtils.expectClickSuccess('#coord_2_4');
+            const move: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(1, 3)).get();
+            await testUtils.expectMoveSuccess('#coord_1_3', move); // First move is set
+            testUtils.getWrapper().setRole(Player.ONE); // changing role
+            await testUtils.expectClickSuccess('#coord_0_2'); // Making the first click
+
+            // When clicking on a invalid landing piece
+            await testUtils.expectClickFailure('#coord_0_1', LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
+
+            // Then the highlight should be at the expected place only, not at their symmetric point
+            testUtils.expectElementToHaveClass('#square_0_2', 'selectable-fill');
+            testUtils.expectElementNotToHaveClass('#square_6_4', 'selectable-fill');
+        }));
         it('should show lastMove reversed', fakeAsync(async() => {
-            // Given a board on which it's player.one's turn
+            // Given a board on which it is player one's turn
             await testUtils.expectClickSuccess('#coord_4_4');
             const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
             await testUtils.expectMoveSuccess('#coord_3_3', move);
-            testUtils.getWrapper().setRole(PlayerOrNone.ONE);
+            testUtils.getWrapper().setRole(Player.ONE);
 
             // When clicking on one of your piece
-            // Then the board should be reversed
-            await testUtils.expectClickSuccessWithAsymmetricNaming('#coord_4_4', '#coord_2_2');
+            await testUtils.expectClickSuccess('#coord_2_2');
+
+            // Then the last move should be shown at the expected place
+            testUtils.expectElementToHaveClass('#square_at_4_4 #square_2_2', 'moved-fill');
         }));
     });
     describe('multiple capture', () => {
@@ -293,31 +310,6 @@ describe('LascaComponent', () => {
             testUtils.expectElementToExist('#square_6_6_piece_0');
             testUtils.expectElementToExist('#square_6_6_piece_1');
             testUtils.expectElementToExist('#square_6_6_piece_2');
-        }));
-    });
-    describe('displaying reversed board', () => {
-        it('should have first player on top in a reversed board', fakeAsync(async() => {
-            // Given a board that been reversed
-            testUtils.getWrapper().setRole(Player.ONE);
-
-            // When clicking on (2, 2)
-            // Then it should have selected square (4, 4)
-            await testUtils.expectClickSuccessWithAsymmetricNaming('#coord_2_2', '#coord_4_4');
-        }));
-        it('should not duplicate highlight when doing incorrect second click', fakeAsync(async() => {
-            // Given a board where you are player two and a moving piece has been selected
-            await testUtils.expectClickSuccess('#coord_2_4');
-            const move: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(1, 3)).get();
-            await testUtils.expectMoveSuccess('#coord_1_3', move); // First move is set
-            testUtils.getWrapper().setRole(Player.ONE); // changing role
-            await testUtils.expectClickSuccessWithAsymmetricNaming('#coord_6_4', '#coord_0_2'); // Making the first click
-
-            // When clicking on a invalid landing piece
-            await testUtils.expectClickFailureWithAsymmetricNaming('#coord_6_5', '#coord_0_1', LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
-
-            // Then the highlight should be at the good place only, not at their symmetric point
-            testUtils.expectElementToHaveClass('#square_6_4', 'selectable-fill');
-            testUtils.expectElementNotToHaveClass('#square_0_2', 'selectable-fill');
         }));
     });
 });

@@ -11,11 +11,12 @@
     </defs>
 
     <g *ngFor="let line of adaptedBoard.spaceInfo; index as y">
-        <g *ngFor="let squareInfo of line; index as x">
-            <g id="coord_{{ x }}_{{ y }}"
+        <g *ngFor="let squareInfo of line; index as x"
+            id="square_at_{{ x }}_{{ y }}" >
+            <g id="coord_{{ squareInfo.x }}_{{ squareInfo.y }}"
                [attr.transform]="getTranslate(x, y, 0)"
-               (click)="onClick(x, y)">
-                <polygon id="square_{{ x }}_{{ y }}"
+               (click)="onClick(squareInfo.x, squareInfo.y)">
+                <polygon id="square_{{ squareInfo.x }}_{{ squareInfo.y }}"
                          [attr.points]="getParallelogramPoints()"
                          [ngClass]="squareInfo.squareClasses"
                          class="base"/>
@@ -23,11 +24,11 @@
                    pointer-events="fill"
                    [attr.transform]="getPieceTranslate(z)"
                    class="base mid-small-stroke">
-                    <use id="square_{{ x }}_{{ y }}_piece_{{ z }}"
+                    <use id="square_{{ squareInfo.x }}_{{ squareInfo.y }}_piece_{{ z }}"
                          xlink:href="#piece"
                          [ngClass]="pieceInfo.classes"
                          class="base mid-stroke"/>
-                    <circle id="square_{{ x }}_{{ y }}_piece_{{ z }}_officer_symbol"
+                    <circle id="square_{{ squareInfo.x }}_{{ squareInfo.y }}_piece_{{ z }}_officer_symbol"
                             *ngIf="pieceInfo.isOfficer"
                             [attr.cx]="SPACE_SIZE * 0.4"
                             [attr.cy]="SPACE_SIZE *  0.575"

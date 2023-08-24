@@ -20,6 +20,8 @@ import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { LascaTutorial } from './LascaTutorial';
 
 interface SpaceInfo {
+    x: number;
+    y: number;
     squareClasses: string[];
     pieceInfos: LascaPieceInfo[];
 }
@@ -128,6 +130,8 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
         return {
             pieceInfos,
+            x,
+            y,
             squareClasses: [],
         };
     }
@@ -187,10 +191,6 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.rotateAdaptedBoardIfNeeded();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        if (this.role === Player.ONE) {
-            x = (LascaState.SIZE - 1) - x;
-            y = (LascaState.SIZE - 1) - y;
-        }
         const clickValidity: MGPValidation = this.canUserPlay('#coord_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
