@@ -2,7 +2,7 @@
 import { AwaleComponent } from '../awale.component';
 import { AwaleMove } from '../AwaleMove';
 import { MancalaState } from 'src/app/games/mancala/commons/MancalaState';
-import { DoMancalaComponentTests as doMancalaComponentTests } from '../../commons/GenericMancalaComponentTest.spec';
+import { doMancalaComponentTests as doMancalaComponentTests } from '../../commons/GenericMancalaComponentTest.spec';
 
 describe('AwaleComponent', () => {
 

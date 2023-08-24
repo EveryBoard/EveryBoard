@@ -446,7 +446,7 @@ describe('LocalGameWrapperComponent', () => {
         // Then the AI metrics are shown
         testUtils.expectElementToExist('#AIMetrics');
     }));
-    describe('takeBack', () => {
+    describe('Take Back', () => {
         it('should take back one turn when human move has been made', fakeAsync(async() => {
             // Given a board with a move already done
             const state: P4State = testUtils.getGameComponent().getState();
@@ -463,7 +463,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(testUtils.getGameComponent().getTurn()).toBe(0);
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledTimes(1);
         }));
-        it('should take back two turn when playing against IA', fakeAsync(async() => {
+        it('should take back two turns when playing against IA', fakeAsync(async() => {
             // Given a game component on which you play against IA, at turn N+2, and it's human turn
             await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
             await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
@@ -483,19 +483,15 @@ describe('LocalGameWrapperComponent', () => {
             expect(testUtils.getGameComponent().getTurn()).toBe(1); // AI just played
 
             // When searching for takeBack button
-            const takeBackButton: DebugElement = testUtils.findElement('#takeBack');
-
             // Then it should not be visible
-            expect(takeBackButton).toBeFalsy();
+            testUtils.expectElementNotToExist('#takeBack');
         }));
         it('should not allow to take back when no move has been made', fakeAsync(async() => {
             // Given a board with no move done
 
             // When searching for takeBack button
-            const takeBackButton: DebugElement = testUtils.findElement('#takeBack');
-
             // Then it should not be visible
-            expect(takeBackButton).toBeFalsy();
+            testUtils.expectElementNotToExist('#takeBack');
         }));
         it('should cancelMoveAttempt when taking back', fakeAsync(async() => {
             // Given a board where a move could be in construction
@@ -509,6 +505,24 @@ describe('LocalGameWrapperComponent', () => {
             // Then gameComponent.cancelMoveAttempt should have been called
             // And hence the potentially move in construction undone from the board
             expect(component.cancelMoveAttempt).toHaveBeenCalledOnceWith();
+        }));
+        it('should not allow to take back when AI vs. AI', fakeAsync(async() => {
+            // Given a board on which AI plays against AI
+            await testUtils.selectAIPlayer(Player.ZERO);
+            expect(testUtils.getGameComponent().getState().turn).toBe(0);
+            testUtils.expectElementNotToExist('#takeBack');
+            tick( LocalGameWrapperComponent.AI_TIMEOUT);
+            expect(testUtils.getGameComponent().getState().turn).toBe(1);
+            testUtils.expectElementNotToExist('#takeBack');
+
+            // When searching for takeBack button
+            // Then it should not be visible
+            await testUtils.selectAIPlayer(Player.ONE);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
+            expect(testUtils.getGameComponent().getState().turn).toBe(2);
+            testUtils.expectElementNotToExist('#takeBack');
+            // disactivate AI to stop timeout generation
+            tick(40 * LocalGameWrapperComponent.AI_TIMEOUT);
         }));
     });
 });

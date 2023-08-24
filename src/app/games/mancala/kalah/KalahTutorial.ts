@@ -17,21 +17,21 @@ export class KalahTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Kalah`,
-            $localize`Bonus fact: Kalah has been created in America in 1940 by William Julius Champion Jr.`,
+            $localize`Bonus fact: Kalah has been created in the U.S.A in 1940 by William Julius Champion Jr.`,
             MancalaState.getInitialState(),
         ),
         MancalaTutorial.SOWING(KalahMove.of(MancalaDistribution.FIVE)),
 
         TutorialStep.forClick(
             $localize`The Kalah (1/2)`,
-            $localize`The houses on the extreme left and right, unaligned to the others, are the kalah. Yours is on the left, the opponent's on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won't have to drop seed in your opponent's kalah. When you make a capture, the captured seeds are put in your kalah.<br/><br/>You're playing Dark. Make a move that pass through your kalah then feed opponent's houses.`,
+            $localize`The houses on the extreme left and right, unaligned to the others, are the Kalah. Yours is on the left, the opponent's on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah. But you won't have to drop seed in your opponent's Kalah. When you make a capture, the captured seeds are put in your Kalah.<br/><br/>You're playing Dark. Make a move that pass through your Kalah then feed opponent's houses.`,
             MancalaState.getInitialState(),
             [
                 '#click_0_1',
                 '#click_1_1',
                 '#click_2_1',
             ],
-            $localize`As you see, three houses have been fed in addition to your kalah.`,
+            $localize`As you see, three houses have been fed in addition to your Kalah.`,
             $localize`Failed. Choose the three leftmost house on the bottom.`,
         ),
         TutorialStep.fromPredicate(
@@ -67,7 +67,7 @@ export class KalahTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`End of the game`,
-            $localize`At any moment, when one player has more than 24 seeds in their kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don't have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.<br/><br/>You're playing Dark, win!`,
+            $localize`At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don't have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.<br/><br/>You're playing Dark, win!`,
             new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 3, 0, 1, 0, 1],

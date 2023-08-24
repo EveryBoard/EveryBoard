@@ -15,7 +15,7 @@ export class AwaleTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Awalé`,
-            $localize`Bonus fact: Awalé is the more common of all Mancalas.`,
+            $localize`Bonus fact: Awalé is the most common of all Mancalas.`,
             MancalaState.getInitialState(),
         ),
         MancalaTutorial.SOWING(AwaleMove.FIVE),

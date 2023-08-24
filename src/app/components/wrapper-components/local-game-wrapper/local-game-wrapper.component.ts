@@ -148,8 +148,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public canTakeBack(): boolean {
         if (this.players[0].equalsValue('human')) {
             return this.gameComponent.getTurn() > 0;
-        } else {
+        } else if (this.players[1].equalsValue('human')) {
             return this.gameComponent.getTurn() > 1;
+        } else {
+            return false;
         }
     }
     public async takeBack(): Promise<void> {

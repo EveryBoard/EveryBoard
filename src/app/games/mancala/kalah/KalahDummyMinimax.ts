@@ -23,12 +23,12 @@ export class KalahScoreMinimax extends PlayerMetricsMinimax<KalahMove,
             if (node.gameState.getPieceAtXY(x, playerY) > 0) {
                 const state: MancalaState = node.gameState;
                 const move: KalahMove = KalahMove.of(MancalaDistribution.of(x));
-                moves.push(...this.getMovePossibleContinuations(state, x, playerY, move));
+                moves.push(...this.getPossibleMoveContinuations(state, x, playerY, move));
             }
         }
         return moves;
     }
-    private getMovePossibleContinuations(state: MancalaState, x: number, y: number, currentMove: KalahMove)
+    private getPossibleMoveContinuations(state: MancalaState, x: number, y: number, currentMove: KalahMove)
     : KalahMove[]
     {
         const moves: KalahMove[] = [];
@@ -39,7 +39,7 @@ export class KalahScoreMinimax extends PlayerMetricsMinimax<KalahMove,
             for (let x: number = 0; x < MancalaState.WIDTH; x++) {
                 if (state.getPieceAtXY(x, y) > 0) {
                     const move: KalahMove = currentMove.add(MancalaDistribution.of(x));
-                    moves.push(...this.getMovePossibleContinuations(state, x, y, move));
+                    moves.push(...this.getPossibleMoveContinuations(state, x, y, move));
                 }
             }
             return moves;

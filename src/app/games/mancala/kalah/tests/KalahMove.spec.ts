@@ -13,7 +13,7 @@ describe('KalahMove', () => {
         });
     });
     it('should be iterable', () => {
-        // Given a move with several sub move
+        // Given a move with several distributions
         const move: KalahMove = KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.TWO]);
         const subMoveList: MancalaDistribution[] = [];
 

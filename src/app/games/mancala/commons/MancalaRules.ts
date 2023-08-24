@@ -33,7 +33,7 @@ export type MancalaDistributionResult = {
 
 export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState> {
 
-    // Since the store are not on the board
+    // These are the coordinates of the store. These are fake coordinates since the stores are not on the board
     public static FAKE_STORE_COORD: ReversibleMap<Player, Coord> = new ReversibleMap([
         { key: Player.ZERO, value: new Coord(-1, -1) },
         { key: Player.ONE, value: new Coord(+2, +2) },

@@ -13,8 +13,6 @@ export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, MancalaState> {}
 
 export class AwaleRules extends MancalaRules<AwaleMove> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
     public static get(): AwaleRules {

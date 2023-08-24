@@ -137,7 +137,7 @@ export class MancalaTestEntries<C extends MancalaComponent<R, M>,
     capture: MancalaActionAndResult<M>;
     fillThenCapture: MancalaActionAndResult<M>;
 }
-export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
+export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                                         R extends MancalaRules<M>,
                                         M extends MancalaMove>(entries: MancalaTestEntries<C, R, M>)
 : void

@@ -69,7 +69,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;
-            Utils.assert(this.node.mother.isPresent(), 'triggerAnimation in kalah should be false at first turn');
+            Utils.assert(this.node.mother.isPresent(), 'triggerAnimation in store should be false at first turn');
             this.changeVisibleState(this.node.mother.get().gameState);
             let indexDistribution: number = 0;
             for (const subMove of this.node.move.get()) {

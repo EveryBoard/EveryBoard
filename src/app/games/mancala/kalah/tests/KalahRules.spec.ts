@@ -61,14 +61,14 @@ describe('KalahRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [3, 0]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should allow to distribute twice when first landing end up in the kalah', () => {
-            // Given a move with the first sub-move landing in the kalah
+        it('should allow to distribute twice when first landing end up in the Kalah', () => {
+            // Given a move with the first sub-move landing in the Kalah
             const state: MancalaState = MancalaState.getInitialState();
 
             // When doing the double distribution
             const move: KalahMove = KalahMove.of(MancalaDistribution.THREE, [MancalaDistribution.FIVE]);
 
-            // Then two distributiong must have been done and one piece dropped in the kalah
+            // Then two distributiong must have been done and one piece dropped in the Kalah
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [5, 6, 6, 1, 5, 0],
@@ -76,8 +76,8 @@ describe('KalahRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should throw when distributing twice when first landing did not end in the kalah', () => {
-            // Given a double distribution with the first one not landing in the kalah
+        it('should throw when distributing twice when first landing did not end in the Kalah', () => {
+            // Given a double distribution with the first one not landing in the Kalah
             const state: MancalaState = MancalaState.getInitialState();
 
             // When doing the double distribution
@@ -89,14 +89,14 @@ describe('KalahRules', () => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });
-        it('should drop a piece in your kalah when passing by', () => {
+        it('should drop a piece in your Kalah when passing by', () => {
             // Given any move going further than your last house
             const state: MancalaState = MancalaState.getInitialState();
 
             // When doing it
             const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
 
-            // Then one of your seeds would be dropped in your kalah
+            // Then one of your seeds would be dropped in your Kalah
             // YEAH YOU READ THAT RIGHT, UP YOURS !!
             const expectedBoard: Table<number> = [
                 [5, 5, 5, 4, 4, 4],
@@ -105,7 +105,7 @@ describe('KalahRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it(`should not drop a piece in opponent's kalah when passing by`, () => {
+        it(`should not drop a piece in opponent's Kalah when passing by`, () => {
             // Given any move going further than your last house, and than last opponent's house
             const board: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
@@ -116,7 +116,7 @@ describe('KalahRules', () => {
             // When doing it
             const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
 
-            // Then one of your seeds would be dropped in your kalah but not in the opponent's
+            // Then one of your seeds would be dropped in your Kalah but not in the opponent's
             const expectedBoard: Table<number> = [
                 [5, 5, 5, 5, 5, 5],
                 [0, 4, 4, 4, 4, 5],
@@ -124,8 +124,8 @@ describe('KalahRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should forbid to stop distributing after landing in your kalah', () => {
-            // Given a simple distribution ending in the kalah
+        it('should forbid to stop distributing after landing in your Kalah', () => {
+            // Given a simple distribution ending in the Kalah
             const state: MancalaState = MancalaState.getInitialState();
 
             // When doing the move
@@ -137,8 +137,8 @@ describe('KalahRules', () => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });
-        it('should allow to pass by kalah several time', () => {
-            // Given a board where you could pass by kalah five times
+        it('should allow to pass by Kalah several time', () => {
+            // Given a board where you could pass by Kalah five times
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 1, 4, 1, 5, 4],
@@ -162,8 +162,8 @@ describe('KalahRules', () => {
             ], 11, [18, 9]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should allow to stop distribution in the kalah when no more piece available', () => {
-            // Given a move where current player has no more non-kalah sub-moves
+        it('should allow to stop distribution in the Kalah when no more piece available', () => {
+            // Given a move where current player has no more non-Kalah sub-moves
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
@@ -305,7 +305,7 @@ describe('KalahRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow long capture', () => {
-            // Given a board where you could pass by kalah five times
+            // Given a board where you could pass by Kalah five times
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 2, 3, 0, 0, 0],

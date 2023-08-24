@@ -194,8 +194,8 @@
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
-      <trans-unit id="6107341392568100566" datatype="html">
-        <source>A modern version of the Mancala board game family.</source>
+      <trans-unit id="8852931932150400681" datatype="html">
+        <source>The most widespread of the Mancalas.</source>
       </trans-unit>
       <trans-unit id="3910056094130316471" datatype="html">
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
@@ -1963,8 +1963,8 @@
       <trans-unit id="3176237054354369377" datatype="html">
         <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you&apos;re playing Dark, the 6 houses on the bottom are yours.</source>
       </trans-unit>
-      <trans-unit id="590668854902440450" datatype="html">
-        <source>Bonus fact: Awalé is the more common of all Mancalas.</source>
+      <trans-unit id="9104781897718296194" datatype="html">
+        <source>Bonus fact: Awalé is the most common of all Mancalas.</source>
       </trans-unit>
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
@@ -2053,8 +2053,8 @@
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="6377916335349461469" datatype="html">
-        <source>The main move in mancala games is sowing, let&apos;s see how seeds are sown. As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
+      <trans-unit id="7521405420652271800" datatype="html">
+        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
       </trans-unit>
       <trans-unit id="6994033934467498174" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
@@ -2062,17 +2062,17 @@
       <trans-unit id="8587148937080588417" datatype="html">
         <source>Failed. Choose the rightmost house on the bottom.</source>
       </trans-unit>
-      <trans-unit id="1854732749925914827" datatype="html">
-        <source>Bonus fact: Kalah has been created in America in 1940 by William Julius Champion Jr.</source>
+      <trans-unit id="6065363643959580719" datatype="html">
+        <source>Bonus fact: Kalah has been created in the U.S.A in 1940 by William Julius Champion Jr.</source>
       </trans-unit>
       <trans-unit id="7111322038810092184" datatype="html">
         <source>The Kalah (1/2)</source>
       </trans-unit>
-      <trans-unit id="2506898450328009080" datatype="html">
-        <source>The houses on the extreme left and right, unaligned to the others, are the kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, the captured seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your kalah then feed opponent&apos;s houses.</source>
+      <trans-unit id="5431422227189154431" datatype="html">
+        <source>The houses on the extreme left and right, unaligned to the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah. But you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your Kalah then feed opponent&apos;s houses.</source>
       </trans-unit>
-      <trans-unit id="5407801196980144019" datatype="html">
-        <source>As you see, three houses have been fed in addition to your kalah.</source>
+      <trans-unit id="108833396164233870" datatype="html">
+        <source>As you see, three houses have been fed in addition to your Kalah.</source>
       </trans-unit>
       <trans-unit id="7327320572157893918" datatype="html">
         <source>Failed. Choose the three leftmost house on the bottom.</source>
@@ -2089,8 +2089,8 @@
       <trans-unit id="723370864893318309" datatype="html">
         <source>When the last seed of a distribution ends up in one of your empty houses, if the opposite house is filled, then you capture both houses. On this board, such a move is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
       </trans-unit>
-      <trans-unit id="2399882055372056587" datatype="html">
-        <source>At any moment, when one player has more than 24 seeds in their kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don&apos;t have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
+      <trans-unit id="6542017808867499457" datatype="html">
+        <source>At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don&apos;t have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
       </trans-unit>
       <trans-unit id="902849596357033257" datatype="html">
         <source>Failed, you gave the opponent a seed! Try again.</source>

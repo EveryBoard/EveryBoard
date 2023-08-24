@@ -9,9 +9,11 @@ export class KalahMove extends MancalaMove {
         (move: KalahMove) => [move.distributions],
         (value: [MancalaDistribution[]]) => KalahMove.of(value[0][0], value[0].slice(1)),
     );
-    public static of(mandatoryMove: MancalaDistribution, bonusMoves: MancalaDistribution[] = []): KalahMove {
-        const distributions: MancalaDistribution[] = [mandatoryMove];
-        distributions.push(...bonusMoves);
+    public static of(mandatoryDistribution: MancalaDistribution, bonusDistributionns: MancalaDistribution[] = [])
+    : KalahMove
+    {
+        const distributions: MancalaDistribution[] = [mandatoryDistribution];
+        distributions.push(...bonusDistributionns);
         return new KalahMove(distributions);
     }
     public add(move: MancalaDistribution): KalahMove {

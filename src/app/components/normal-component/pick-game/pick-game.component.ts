@@ -160,7 +160,7 @@ class GameDescription {
 
     public static readonly HNEFATAFL: Localized = () => $localize`The Viking board game! Invaders must capture the king, defender must make him escape!`;
 
-    public static readonly KALAH: Localized = () => $localize`A modern version of the Mancala board game family.`;
+    public static readonly KALAH: Localized = () => $localize`The most widespread of the Mancalas.`;
 
     public static readonly KAMISADO: Localized = () => $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
