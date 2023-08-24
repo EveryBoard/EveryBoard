@@ -445,4 +445,11 @@ describe('EpaminondasComponent', () => {
         expect(epaminondasComponent.getRectClasses(0, 10)).toEqual(['moved-fill']);
         expect(epaminondasComponent.getRectClasses(0, 11)).toEqual(['moved-fill']);
     }));
+    it('should not highlight any piece when observing', fakeAsync(async() => {
+        // Given a state and an observer
+        testUtils.getWrapper().setRole(PlayerOrNone.NONE);
+        // When displaying the state
+        // Then no coordinate should be clickable
+        expect(testUtils.getGameComponent().getHighlightedCoords().length).toBe(0);
+    }));
 });

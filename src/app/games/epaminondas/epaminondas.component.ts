@@ -401,10 +401,12 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const pieces: Coord[] = [];
         const state: EpaminondasState = this.getState();
         const player: Player = state.getCurrentPlayer();
-        for (let y: number = 0; y < this.board.length; y++) {
-            for (let x: number = 0; x < this.board[y].length; x++) {
-                if (this.board[y][x] === player) {
-                    pieces.push(new Coord(x, y));
+        if (player === this.role) {
+            for (let y: number = 0; y < this.board.length; y++) {
+                for (let x: number = 0; x < this.board[y].length; x++) {
+                    if (this.board[y][x] === player) {
+                        pieces.push(new Coord(x, y));
+                    }
                 }
             }
         }
