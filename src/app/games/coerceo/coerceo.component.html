@@ -6,65 +6,69 @@
         <g *ngFor="let spaceContent of line; index as x"
            id="click_{{ x }}_{{ y }}"
            (click)="onClick(x, y)">
-            <polygon *ngIf="isPyramid(x, y) else emptySpace"
+            <polygon *ngIf="isReachable(x, y)"
+                     id="space_{{ x }}_{{ y }}"
+                     [attr.points]="getTrianglePoints(x, y)"
+                     [attr.transform]="getTriangleTranslate(x, y)"
+                     [ngClass]="getSpaceClass(x, y)"
+                     class="base small-stroke"
+                     stroke-linecap="round"
+            />
+            <polygon *ngIf="isPyramid(x, y)"
                      id="pyramid_{{ x }}_{{ y }}"
-                     [attr.points]="getPyramidCoordinate(x, y)"
+                     [attr.points]="getPyramidPoints(x, y)"
+                     [attr.transform]="getPyramidTransform(x, y)"
                      [ngClass]="getPyramidClass(x, y)"
                      class="base mid-stroke"
                      stroke-linecap="round"
             />
-            <ng-template #emptySpace>
-                <polygon *ngIf="isEmptySpace(x, y)"
-                         id="empty_{{ x }}_{{ y }}"
-                         [attr.points]="getTriangleCoordinate(x, y)"
-                         [ngClass]="getEmptyClass(x, y)"
-                         class="base small-stroke"
-                         stroke-linecap="round"
-                />
-            </ng-template>
             <g *ngIf="spaceContent !== NONE">
                 <polygon id="base_line_{{ x }}_{{ y }}"
-                     [attr.points]="getLineCoordinate(x, y)"
-                     class="base"
+                         [attr.points]="getLineCoordinate(x, y)"
+                         class="base"
                 />
                 <polygon id="white_stroke_line_{{ x }}_{{ y }}"
-                     [attr.points]="getLineCoordinate(x, y)"
-                     class="white-stroke"
+                         [attr.points]="getLineCoordinate(x, y)"
+                         class="white-stroke"
                 />
             </g>
         </g>
     </g>
     <g *ngIf="chosenCoord.isPresent() else lastMove">
         <polygon id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
-             [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
-             class="base no-fill selected-stroke"/>
+                 [attr.points]="getTrianglePoints(chosenCoord.get().x, chosenCoord.get().y)"
+                 [attr.transform]="getTriangleTranslate(chosenCoord.get().x, chosenCoord.get().y)"
+                 class="base no-fill selected-stroke"/>
         <polygon *ngFor="let possibleLanding of possibleLandings"
-             [attr.points]="getTriangleCoordinate(possibleLanding.x, possibleLanding.y)"
-             class="base no-fill selectable-stroke"/>
+                 [attr.points]="getTrianglePoints(possibleLanding.x, possibleLanding.y)"
+                 [attr.transform]="getTriangleTranslate(possibleLanding.x, possibleLanding.y)"
+                 class="base no-fill mid-stroke selectable-stroke"/>
     </g>
     <ng-template #lastMove>
         <polygon *ngIf="lastStart.isPresent()"
                  id="last_start_{{ lastStart.get().x }}_{{ lastStart.get().y }}"
-                 [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
+                 [attr.points]="getTrianglePoints(lastStart.get().x, lastStart.get().y)"
+                 [attr.transform]="getTriangleTranslate(lastStart.get().x, lastStart.get().y)"
                  class="base no-fill last-move-stroke"/>
         <polygon *ngIf="lastEnd.isPresent()"
                  id="last_end_{{ lastEnd.get().x }}_{{ lastEnd.get().y }}"
-                 [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
+                 [attr.points]="getTrianglePoints(lastEnd.get().x, lastEnd.get().y)"
+                 [attr.transform]="getTriangleTranslate(lastEnd.get().x, lastEnd.get().y)"
                  class="base no-fill last-move-stroke"/>
     </ng-template>
     <g *ngFor="let player of [0, 1]">
         <g *ngIf="mustShowTilesOf(player)"
            [id]="'tilesCount' + player">
             <polygon [attr.points]="getTilesCountCoordinate(player === 0 ? 0 : 4.5, player === 0 ? 0 : 6)"
-                    [attr.stroke]="lastTurnWasTilesExchange(player) ? 'yellow' : 'black'"
-                    [ngClass]="['base', 'player' + player + '-fill']"
-                    stroke-linecap="round"
+                     [attr.stroke]="lastTurnWasTilesExchange(player) ? 'yellow' : 'black'"
+                     [ngClass]="['base', 'player' + player + '-fill']"
+                     stroke-linecap="round"
             />
             <text id="playerZeroTilesCount"
-                [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * (player === 0 ? 0 : 6.4)"
-                [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * (player === 0 ? 0 : 8.5)"
-                class="text-giant"
-                [attr.font-size]="SPACE_SIZE / 2"
+                 [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * (player === 0 ? 0 : 6.4)"
+                 [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * (player === 0 ? 0 : 8.5)"
+                 class="text-giant"
+                 [attr.font-size]="SPACE_SIZE / 2"
             >{{ tiles[player] }}</text>
         </g>
     </g>

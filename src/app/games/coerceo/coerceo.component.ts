@@ -120,8 +120,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
     private wasOpponent(x: number, y: number): boolean {
         const mother: MGPOptional<CoerceoNode> = this.node.mother;
-        return mother.isPresent() &&
-               mother.get().gameState.getPieceAtXY(x, y).is(mother.get().gameState.getCurrentOpponent());
+        if (mother.isPresent()) {
+            const opponent: Player = mother.get().gameState.getCurrentOpponent();
+            return mother.get().gameState.getPieceAtXY(x, y).is(opponent);
+        } else {
+            return false;
+        }
     }
     public getPyramidClass(x: number, y: number): string {
         const spaceContent: FourStatePiece = this.board[y][x];
@@ -133,9 +137,9 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return 'captured-fill';
         }
     }
-    public isEmptySpace(x: number, y: number): boolean {
+    public isReachable(x: number, y: number): boolean {
         const spaceContent: FourStatePiece = this.board[y][x];
-        return spaceContent === FourStatePiece.EMPTY ||
+        return spaceContent !== FourStatePiece.UNREACHABLE ||
                this.wasRemoved(x, y);
     }
     private wasRemoved(x: number, y: number): boolean {
@@ -149,16 +153,15 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return false;
         }
     }
-    public getEmptyClass(x: number, y: number): string {
-        const spaceContent: FourStatePiece = this.board[y][x];
-        if (spaceContent === FourStatePiece.EMPTY) {
-            if ((x+y)%2 === 1) {
+    public getSpaceClass(x: number, y: number): string {
+        if (this.wasRemoved(x, y)) {
+            return 'captured-alternate-fill';
+        } else {
+            if ((x + y) % 2 === 1) {
                 return 'background';
             } else {
                 return 'background2';
             }
-        } else {
-            return 'captured-alternate-fill';
         }
     }
     public getTilesCountCoordinate(x: number, y: number): string {
