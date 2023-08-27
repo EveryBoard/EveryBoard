@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="'-5 -5 ' + (10 + SPACE_SIZE * 8) + ' ' + (10 + SPACE_SIZE * 10)"
+     [attr.viewBox]="left + ' ' + up + ' ' + width + ' ' + height"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let spaceContent of line; index as x"
@@ -9,52 +9,59 @@
             <polygon *ngIf="isReachable(x, y)"
                      id="space_{{ x }}_{{ y }}"
                      [attr.points]="getTrianglePoints(x, y)"
-                     [attr.transform]="getTriangleTranslate(x, y)"
+                     [attr.transform]="getTriangleInHexTranslate(x, y)"
                      [ngClass]="getSpaceClass(x, y)"
                      class="base small-stroke"
                      stroke-linecap="round"
             />
+            <g *ngIf="spaceContent !== NONE">
+                <polygon id="base_line_{{ x }}_{{ y }}"
+                         [attr.points]="getLinePoints(x, y)"
+                         [attr.transform]="getTriangleInHexTranslate(x, y)"
+                         class="base small-stroke white-stroke"
+                />
+            </g>
+        </g>
+    </g>
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let spaceContent of line; index as x"
+           id="click_{{ x }}_{{ y }}"
+           (click)="onClick(x, y)">
             <polygon *ngIf="isPyramid(x, y)"
                      id="pyramid_{{ x }}_{{ y }}"
                      [attr.points]="getPyramidPoints(x, y)"
-                     [attr.transform]="getPyramidTransform(x, y)"
+                     [attr.transform]="getTriangleInHexTranslate(x, y)"
                      [ngClass]="getPyramidClass(x, y)"
-                     class="base mid-stroke"
+                     class="base small-stroke"
                      stroke-linecap="round"
             />
-            <g *ngIf="spaceContent !== NONE">
-                <polygon id="base_line_{{ x }}_{{ y }}"
-                         [attr.points]="getLineCoordinate(x, y)"
-                         class="base"
-                />
-                <polygon id="white_stroke_line_{{ x }}_{{ y }}"
-                         [attr.points]="getLineCoordinate(x, y)"
-                         class="white-stroke"
-                />
-            </g>
         </g>
     </g>
     <g *ngIf="chosenCoord.isPresent() else lastMove">
         <polygon id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
                  [attr.points]="getTrianglePoints(chosenCoord.get().x, chosenCoord.get().y)"
-                 [attr.transform]="getTriangleTranslate(chosenCoord.get().x, chosenCoord.get().y)"
-                 class="base no-fill selected-stroke"/>
-        <polygon *ngFor="let possibleLanding of possibleLandings"
-                 [attr.points]="getTrianglePoints(possibleLanding.x, possibleLanding.y)"
-                 [attr.transform]="getTriangleTranslate(possibleLanding.x, possibleLanding.y)"
-                 class="base no-fill mid-stroke selectable-stroke"/>
+                 [attr.transform]="getTriangleInHexTranslate(chosenCoord.get().x, chosenCoord.get().y)"
+                 class="base no-fill mid-stroke selected-stroke"/>
+        <rect *ngFor="let possibleLanding of possibleLandings"
+              [attr.x]="- INDICATOR_SIZE / 2"
+              [attr.y]="getIndicatorY(possibleLanding)"
+              [attr.width]="INDICATOR_SIZE"
+              [attr.height]="INDICATOR_SIZE"
+              [attr.transform]="getTriangleInHexTranslate(possibleLanding.x, possibleLanding.y)"
+              (click)="onClick(possibleLanding.x, possibleLanding.y)"
+              class="base-no-fill indicator clickable-fill"/>
     </g>
     <ng-template #lastMove>
         <polygon *ngIf="lastStart.isPresent()"
                  id="last_start_{{ lastStart.get().x }}_{{ lastStart.get().y }}"
                  [attr.points]="getTrianglePoints(lastStart.get().x, lastStart.get().y)"
-                 [attr.transform]="getTriangleTranslate(lastStart.get().x, lastStart.get().y)"
-                 class="base no-fill last-move-stroke"/>
+                 [attr.transform]="getTriangleInHexTranslate(lastStart.get().x, lastStart.get().y)"
+                 class="base no-fill mid-stroke last-move-stroke"/>
         <polygon *ngIf="lastEnd.isPresent()"
                  id="last_end_{{ lastEnd.get().x }}_{{ lastEnd.get().y }}"
                  [attr.points]="getTrianglePoints(lastEnd.get().x, lastEnd.get().y)"
-                 [attr.transform]="getTriangleTranslate(lastEnd.get().x, lastEnd.get().y)"
-                 class="base no-fill last-move-stroke"/>
+                 [attr.transform]="getTriangleInHexTranslate(lastEnd.get().x, lastEnd.get().y)"
+                 class="base no-fill mid-stroke last-move-stroke"/>
     </ng-template>
     <g *ngFor="let player of [0, 1]">
         <g *ngIf="mustShowTilesOf(player)"

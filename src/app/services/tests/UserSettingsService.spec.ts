@@ -2,7 +2,7 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserSettingsService } from '../UserSettingsService';
 
-xdescribe('UserSettingsService', () => {
+describe('UserSettingsService', () => {
 
     let userSettingsService: UserSettingsService;
 

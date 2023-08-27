@@ -30,12 +30,18 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
 
     public NONE: FourStatePiece = FourStatePiece.UNREACHABLE;
+    public INDICATOR_SIZE: number = 15;
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     public lastStart: MGPOptional<Coord> = MGPOptional.empty();
     public lastEnd: MGPOptional<Coord> = MGPOptional.empty();
 
     public possibleLandings: Coord[] = [];
+
+    public left: number = - 2 * this.STROKE_WIDTH;
+    public up: number = (- this.SPACE_SIZE / 2) - (2 * this.STROKE_WIDTH);
+    public width: number = this.SPACE_SIZE * 8;
+    public height: number = 10 * (this.SPACE_SIZE + this.STROKE_WIDTH);
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -48,7 +54,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         ];
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
-        this.SPACE_SIZE = 70;
         this.updateBoard();
     }
     public updateBoard(): void {
@@ -180,7 +185,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                     coin5x + ', ' + coin5y + ', ' +
                     coin0x + ', ' + coin0y;
     }
-    public getLineCoordinate(x: number, y: number): string {
+    public getLinePoints(x: number, y: number): string {
         const points: Coord[] = this.getTriangleCornerCoords(x, y);
         if (x % 3 === 0) {
             return points[0].x + ',' + points[0].y + ',' + points[1].x + ',' + points[1].y;
@@ -203,5 +208,25 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
         const previousTiles: number = this.getPreviousState().tiles[player];
         return previousTiles > this.tiles[player];
+    }
+    public getIndicatorY(coord: Coord): number {
+        const y: number = this.INDICATOR_SIZE / 2;
+        if ((coord.x + coord.y) % 2 === 0) {
+            return y;
+        } else {
+            return y - 20;
+        }
+    }
+    public getTriangleInHexTranslate(x: number, y: number): string {
+        const translate: Coord = this.getTriangleTranslateCoord(x, y);
+        const translateX: number = translate.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
+        let translateY: number = translate.y;
+        if (Math.floor(x / 3) % 2 === 0) {
+            translateY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
+        } else {
+            translateY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
+            translateY += this.STROKE_WIDTH;
+        }
+        return 'translate(' + translateX + ', ' + translateY + ')';
     }
 }

@@ -8,7 +8,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreDAOMock } from 'src/app/dao/tests/FirestoreDAOMock.spec';
 
-xdescribe('UserService', () => {
+describe('UserService', () => {
 
     let userService: UserService;
 
