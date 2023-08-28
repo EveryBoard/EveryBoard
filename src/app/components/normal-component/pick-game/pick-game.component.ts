@@ -207,7 +207,7 @@ export class GameInfo {
         new GameInfo($localize`Tablut`, 'Tablut', TablutComponent, new TablutTutorial(), TablutRules.get(), new Date('2018-12-27'), GameDescription.TABLUT()), // 26 days after Quarto
 
         new GameInfo($localize`Reversi`, 'Reversi', ReversiComponent, new ReversiTutorial(), ReversiRules.get(), new Date('2019-01-16'), GameDescription.REVERSI()), // 20 days after Tablut
-        new GameInfo($localize`Go`, 'Go', GoComponent, new GoTutorial(), GoRules.get(), new Date('2019-12-21'), GameDescription.GO(), { fields: { 'height': 'number', 'width': 'number' } }), // 11 months after Reversi
+        new GameInfo($localize`Go`, 'Go', GoComponent, new GoTutorial(), GoRules.get(), new Date('2019-12-21'), GameDescription.GO(), { fields: [{ name: 'height', type: 'number' }, { name: 'width', type: 'number' }] }), // 11 months after Reversi
         new GameInfo($localize`Encapsule`, 'Encapsule', EncapsuleComponent, new EncapsuleTutorial(), EncapsuleRules.get(), new Date('2019-12-30'), GameDescription.ENCAPSULE()), // 9 days after Go
 
         new GameInfo($localize`Siam`, 'Siam', SiamComponent, new SiamTutorial(), SiamRules.get(), new Date('2020-01-11'), GameDescription.SIAM()), // 12 days after Encapsule
@@ -251,7 +251,7 @@ export class GameInfo {
                        public readonly rules: AbstractRules,
                        public readonly creationDate: Date,
                        public readonly description: string,
-                       public readonly configDescription: GameConfigDescription = { fields: {} },
+                       public readonly configDescription: GameConfigDescription = { fields: [] },
                        public readonly display: boolean = true)
     {
     }

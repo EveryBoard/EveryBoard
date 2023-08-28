@@ -243,7 +243,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public getPlayer(): TutorialPlayer {
         return 'tutorial-player';
     }
-    public getConfig(): GameConfig {
+    public async getConfig(): Promise<GameConfig> {
         const gameURL: string = this.getGameName();
         const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
         return {}; // TODO: DO IT

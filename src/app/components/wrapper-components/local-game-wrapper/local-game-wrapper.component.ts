@@ -16,7 +16,9 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { GameConfig, GameConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { TimeUtils } from 'src/app/utils/TimeUtils';
+import { BehaviorSubject, Observable, Subscription, lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -37,6 +39,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public displayAIMetrics: boolean = false;
 
+    public configSetted: boolean = false;
+
+    private readonly configBS: BehaviorSubject<GameConfig> = new BehaviorSubject({});
+    private readonly configObs: Observable<GameConfig> = this.configBS.asObservable();
+
     public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
@@ -56,10 +63,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
+            console.log('LGWC.ngAfterViewInit: let us createGameConfigAndStartComponent')
             const createdSuccessfully: boolean = await this.createGameConfigAndStartComponent();
+            console.log('LGWC.ngAfterViewInit: we have finished createGameConfigAndStartComponent')
             // TODO: must receive a config
             if (createdSuccessfully) {
-                this.restartGame();
+                await this.restartGame();
                 this.cdr.detectChanges();
             }
         }, 1);
@@ -169,8 +178,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     private isAITurn(): boolean {
         return this.getPlayingAI().isPresent();
     }
-    public restartGame(): void {
-        this.gameComponent.node = this.gameComponent.rules.getInitialNode(this.getConfig());
+    public async restartGame(): Promise<void> {
+        const config: GameConfig = await this.getConfig();
+        this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
@@ -185,10 +195,30 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.gameComponent.showLastMove(move);
         }
     }
-    public getConfig(): GameConfig {
+    public getConfigDescriptor(): GameConfigDescription {
         const gameURL: string = this.getGameName();
         const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
-        console.log('LGWC.getConfig (9, 9)')
-        return { width: 9, height: 9 }; // TODO: do it !
+        return game.configDescription;
+    }
+    public async getConfig(): Promise<GameConfig> {
+        console.log('LGWC.getConfig: we fetch the config')
+        const propro: Promise<GameConfig> = new Promise((resolve: (value: GameConfig) => void) => {
+            this.configObs.subscribe((response: GameConfig) => {
+                console.log('içi quoi', response)
+                if (Object.keys(response).length === 0) {
+                    console.log('sporé lo')
+                } else {
+                    resolve(response);
+                }
+            }); // TODO: UNSUB LO
+        });
+        const gameConfig: GameConfig = await propro;
+        console.log("j'ai enfn reçu", gameConfig);
+        this.configSetted = true;
+        this.cdr.detectChanges();
+        return gameConfig; // TODO: do it !
+    }
+    public markConfigAsFilled(thingy: GameConfig): void {
+        this.configBS.next(thingy);
     }
 }

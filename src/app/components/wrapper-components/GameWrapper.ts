@@ -64,9 +64,12 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     protected async afterViewInit(): Promise<boolean> {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterViewInit');
+        console.log('GameWrapper.afterViewInit: await to getConfig')
+        const gameConfig: GameConfig = await this.getConfig();
+        console.log('GameWrapper.afterViewInit: getConfig is done; let us createGameCOponent')
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
+        console.log('GameWrapper.afterViewInit: createGameComponent is done')
         if (gameCreatedSuccessfully) {
-            const gameConfig: GameConfig = this.getConfig();
             this.gameComponent.node = this.gameComponent.rules.getInitialNode(gameConfig);
             this.gameComponent.updateBoard();
         }
@@ -113,7 +116,7 @@ export abstract class GameWrapper<P extends Comparable> {
         this.gameComponent.cancelMoveOnWrapper = (reason?: string): void => {
             this.onCancelMove(reason);
         };
-        this.gameComponent.TODO_getGameConfigFromWrapper = (): GameConfig => {
+        this.gameComponent.TODO_getGameConfigFromWrapper = (): Promise<GameConfig> => {
             return this.getConfig();
         };
         this.setRole(this.role);
@@ -146,7 +149,7 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public abstract getPlayer(): P;
 
-    public abstract getConfig(): GameConfig;
+    public abstract getConfig(): Promise<GameConfig>;
 
     public canUserPlay(_clickedElementName: string): MGPValidation {
         if (this.role === PlayerOrNone.NONE) {

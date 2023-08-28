@@ -94,7 +94,7 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
-    public TODO_getGameConfigFromWrapper: () => C;
+    public TODO_getGameConfigFromWrapper: () => Promise<C>;
 
     public role: PlayerOrNone;
 

@@ -574,7 +574,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnDestroy finished');
     }
-    public getConfig(): GameConfig {
+    public async getConfig(): Promise<GameConfig> {
         const gameURL: string = this.getGameName();
         const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
         return {}; // TODO: do it !

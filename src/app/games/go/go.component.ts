@@ -52,8 +52,8 @@ export class GoComponent
         this.canPass = true;
         this.updateBoard();
     }
-    public ngOnInit(): void {
-        const config: GameConfig = this.TODO_getGameConfigFromWrapper();
+    public async ngOnInit(): Promise<void> {
+        const config: GameConfig = await this.TODO_getGameConfigFromWrapper();
         this.node = this.rules.getInitialNode(config);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

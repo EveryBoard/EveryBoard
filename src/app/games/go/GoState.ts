@@ -104,10 +104,7 @@ export class GoState extends GameStateWithTable<GoPiece> {
     }
     public static getInitialState(config: GameConfig): GoState {
         if (config['width'] === undefined) {
-            console.log('initial state received nothing')
             config = { width: 13, height: 5 };
-        } else {
-            console.log('initial state received', config)
         }
         const board: Table<GoPiece> = GoState.getStartingBoard(config);
         return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);

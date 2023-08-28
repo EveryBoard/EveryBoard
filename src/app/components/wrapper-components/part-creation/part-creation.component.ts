@@ -75,6 +75,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
+
     public gameStarted: boolean = false;
 
     public viewInfo: PartCreationViewInfo = {
