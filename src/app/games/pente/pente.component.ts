@@ -33,7 +33,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.encoder = PenteMove.encoder;
         this.tutorial = new PenteTutorial().tutorial;
         this.availableAIs = [
-            new Minimax('Alignment Minimax', this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
+            new Minimax('Alignment', this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
             new MCTS('MCTS', new PenteMoveGenerator(), this.rules),
         ];
     }

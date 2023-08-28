@@ -258,8 +258,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private async tryExtension(clicked: Coord, firstPiece: Coord, lastPiece: Coord): Promise<MGPValidation> {
         const alignement: MGPFallible<Direction> = Direction.factory.fromMove(firstPiece, clicked);
         if (alignement.isSuccess()) {
-            const secondAlignement: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
-            if (alignement.equals(secondAlignement)) {
+            const secondAlignment: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
+            if (alignement.equals(secondAlignment)) {
                 // Then it's an extension of the line
                 const firstDistance: number = firstPiece.getDistance(clicked);
                 const secondDistance: number = lastPiece.getDistance(clicked);

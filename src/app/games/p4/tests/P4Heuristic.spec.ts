@@ -42,82 +42,80 @@ describe('P4Heuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
-    describe('getBoardValue', () => {
-        it('should count three point for the corner', () => {
-            // Given a board where player zero have one piece in the corner
-            const board: Table<PlayerOrNone> = [
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, O],
-            ];
-            const state: P4State = new P4State(board, 1);
-            const node: P4Node = new P4Node(state);
+    it('should count three point for the corner', () => {
+        // Given a board where player zero have one piece in the corner
+        const board: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, O],
+        ];
+        const state: P4State = new P4State(board, 1);
+        const node: P4Node = new P4Node(state);
 
-            // When counting board value
-            const boardValue: number = heuristic.getBoardValue(node).value;
+        // When counting board value
+        const boardValue: number = heuristic.getBoardValue(node).value;
 
-            // Then the value should be -3
-            expect(boardValue).toBe(-3);
-        });
-        it('should count four for the place next to the corner', () => {
-            // Given a board where player zero have one piece next to the corner
-            const board: Table<PlayerOrNone> = [
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, O, _],
-            ];
-            const state: P4State = new P4State(board, 1);
-            const node: P4Node = new P4Node(state);
+        // Then the value should be -3
+        expect(boardValue).toBe(-3);
+    });
+    it('should count four for the place next to the corner', () => {
+        // Given a board where player zero have one piece next to the corner
+        const board: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, O, _],
+        ];
+        const state: P4State = new P4State(board, 1);
+        const node: P4Node = new P4Node(state);
 
-            // When counting board value
-            const boardValue: number = heuristic.getBoardValue(node).value;
+        // When counting board value
+        const boardValue: number = heuristic.getBoardValue(node).value;
 
-            // Then the value should be -4
-            expect(boardValue).toBe(-4);
-        });
-        it('should count 5 for the place next to the corner', () => {
-            // Given a board where player zero have one piece next to the center
-            const board: Table<PlayerOrNone> = [
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, O, _, _],
-            ];
-            const state: P4State = new P4State(board, 1);
-            const node: P4Node = new P4Node(state);
+        // Then the value should be -4
+        expect(boardValue).toBe(-4);
+    });
+    it('should count 5 for the place next to the corner', () => {
+        // Given a board where player zero have one piece next to the center
+        const board: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, O, _, _],
+        ];
+        const state: P4State = new P4State(board, 1);
+        const node: P4Node = new P4Node(state);
 
-            // When counting board value
-            const boardValue: number = heuristic.getBoardValue(node).value;
+        // When counting board value
+        const boardValue: number = heuristic.getBoardValue(node).value;
 
-            // Then the value should be -5
-            expect(boardValue).toBe(-5);
-        });
-        it('should count 7 for the center', () => {
-            // Given a board where player zero have one piece in the center
-            const board: Table<PlayerOrNone> = [
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, O, _, _, _],
-            ];
-            const state: P4State = new P4State(board, 1);
-            const node: P4Node = new P4Node(state);
+        // Then the value should be -5
+        expect(boardValue).toBe(-5);
+    });
+    it('should count 7 for the center', () => {
+        // Given a board where player zero have one piece in the center
+        const board: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, O, _, _, _],
+        ];
+        const state: P4State = new P4State(board, 1);
+        const node: P4Node = new P4Node(state);
 
-            // When counting board value
-            const boardValue: number = heuristic.getBoardValue(node).value;
+        // When counting board value
+        const boardValue: number = heuristic.getBoardValue(node).value;
 
-            // Then the value should be -7
-            expect(boardValue).toBe(-7);
-        });
+        // Then the value should be -7
+        expect(boardValue).toBe(-7);
     });
 });

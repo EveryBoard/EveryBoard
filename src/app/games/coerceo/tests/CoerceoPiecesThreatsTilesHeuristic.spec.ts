@@ -21,6 +21,9 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
 
+    const SAFE: number = CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
+    const THREATENED: number = CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE;
+
     beforeEach(() => {
         heuristic = new CoerceoPiecesThreatsTilesHeuristic();
     });
@@ -329,154 +332,148 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
             expect(filteredThreatMap.containsKey(new Coord(5, 7))).toBeFalse();
         });
     });
-    describe('getBoardValue', () => {
 
-        const SAFE: number = CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
+    it('should count one safe piece', () => {
+        // Given a state with one piece of player zero
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
+        ];
+        const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+        const node: CoerceoNode = new CoerceoNode(state);
 
-        const THREATENED: number = CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE;
+        // When evaluating its value
+        const value: number = heuristic.getBoardValue(node).value;
 
-        it('should count one safe piece', () => {
-            // Given a state with one piece of player zero
-            const board: Table<FourStatePiece> = [
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
-                [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
-            ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const node: CoerceoNode = new CoerceoNode(state);
+        // Then the value should be the vone attributed to one safe piece
+        expect(value).toEqual(SAFE);
+    });
+    it('should count one 2 SAFE - 1 THREATENED', () => {
+        // Given a state with 3 safe piece of player 1
+        // and one threatened piece of player 0
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, O, X, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
+        ];
+        const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+        const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its value
-            const value: number = heuristic.getBoardValue(node).value;
+        // When evaluating its value
+        const value: number = heuristic.getBoardValue(node).value;
 
-            // Then the value should be the vone attributed to one safe piece
-            expect(value).toEqual(SAFE);
-        });
-        it('should count one 2 SAFE - 1 THREATENED', () => {
-            // Given a state with 3 safe piece of player 1
-            // and one threatened piece of player 0
-            const board: Table<FourStatePiece> = [
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
-                [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
-                [N, N, N, N, N, N, O, X, _, N, N, N, N, N, N],
-                [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
-            ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const node: CoerceoNode = new CoerceoNode(state);
+        // Then the value should be correct
+        expect(value).toEqual((3 * SAFE) - THREATENED);
+    });
+    it(`should not count as threatened pieces which has a moving threat that is also a direct threat`, () => {
+        // Given a state with 3 safe piece of player 1
+        // and one obviously NON threatened piece of player 0
+        // and one non threatened but who might create confusion in the code
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
+            [N, N, N, _, O, _, O, X, _, N, N, N, N, N, N],
+            [N, N, N, _, _, _, X, _, _, N, N, N, N, N, N],
+            [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+        ];
+        const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+        const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its value
-            const value: number = heuristic.getBoardValue(node).value;
+        // When evaluating its value
+        const value: number = heuristic.getBoardValue(node).value;
 
-            // Then the value should be correct
-            expect(value).toEqual((3 * SAFE) - THREATENED);
-        });
-        it(`should not count as threatened pieces which has a moving threat that is also a direct threat`, () => {
-            // Given a state with 3 safe piece of player 1
-            // and one obviously NON threatened piece of player 0
-            // and one non threatened but who might create confusion in the code
-            const board: Table<FourStatePiece> = [
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
-                [N, N, N, _, O, _, O, X, _, N, N, N, N, N, N],
-                [N, N, N, _, _, _, X, _, _, N, N, N, N, N, N],
-                [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const node: CoerceoNode = new CoerceoNode(state);
+        // Then the value should be correct
+        expect(value).toEqual((3 * SAFE) - (2 * SAFE));
+    });
+    it('should count "zero freedom" as safe when tile is not removable', () => {
+        // Given a piece of player Zero that has zero freedom
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [_, _, _, N, N, N, N, N, N, N, N, N, N, N, N],
+            [_, O, _, _, _, _, N, N, N, N, N, N, N, N, N],
+            [N, N, N, _, O, X, O, X, _, N, N, N, N, N, N],
+            [N, N, N, _, _, _, X, _, _, N, N, N, N, N, N],
+            [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+        ];
+        const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+        const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its value
-            const value: number = heuristic.getBoardValue(node).value;
+        // When evaluating its value
+        const value: number = heuristic.getBoardValue(node).value;
 
-            // Then the value should be correct
-            expect(value).toEqual((3 * SAFE) - (2 * SAFE));
-        });
-        it('should count "zero freedom" as safe when tile is not removable', () => {
-            // Given a piece of player Zero that has zero freedom
-            const board: Table<FourStatePiece> = [
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [_, _, _, N, N, N, N, N, N, N, N, N, N, N, N],
-                [_, O, _, _, _, _, N, N, N, N, N, N, N, N, N],
-                [N, N, N, _, O, X, O, X, _, N, N, N, N, N, N],
-                [N, N, N, _, _, _, X, _, _, N, N, N, N, N, N],
-                [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const node: CoerceoNode = new CoerceoNode(state);
+        // Then the value should be correct
+        expect(value).toEqual((4 * SAFE) - (3 * SAFE));
+    });
+    it('should count "zero freedom" as safe when tile is removable but player cannot leave it', () => {
+        // Given a piece of player Zero that has zero freedom
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
+            [N, N, N, _, _, X, O, X, _, N, N, N, N, N, N],
+            [N, N, N, _, X, _, X, _, _, N, N, N, N, N, N],
+            [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+        ];
+        const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+        const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its value
-            const value: number = heuristic.getBoardValue(node).value;
+        // When evaluating its value
+        const value: number = heuristic.getBoardValue(node).value;
 
-            // Then the value should be correct
-            expect(value).toEqual((4 * SAFE) - (3 * SAFE));
-        });
-        it('should count "zero freedom" as safe when tile is removable but player cannot leave it', () => {
-            // Given a piece of player Zero that has zero freedom
-            const board: Table<FourStatePiece> = [
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
-                [N, N, N, _, _, X, O, X, _, N, N, N, N, N, N],
-                [N, N, N, _, X, _, X, _, _, N, N, N, N, N, N],
-                [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
-            const node: CoerceoNode = new CoerceoNode(state);
+        // Then the value should be correct
+        expect(value).toEqual((4 * SAFE) - (1 * SAFE));
+    });
+    it('should count "zero freedom x leavable neighbor-tile" as threat', () => {
+        // Given a piece of player Zero that has zero freedom
+        // but one of its neighboring tile could be removed during the move
+        // and the 4 opponent's piece, one of them able to do the aforementioned move
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
+            [N, N, N, _, _, X, O, X, _, N, N, N, N, N, N],
+            [N, N, N, _, _, _, X, _, _, N, N, N, N, N, N],
+            [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+        ];
+        const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
+        const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its value
-            const value: number = heuristic.getBoardValue(node).value;
+        // When evaluating its value
+        const value: number = heuristic.getBoardValue(node).value;
 
-            // Then the value should be correct
-            expect(value).toEqual((4 * SAFE) - (1 * SAFE));
-        });
-        it('should count "zero freedom x leavable neighbor-tile" as threat', () => {
-            // Given a piece of player Zero that has zero freedom
-            // but one of its neighboring tile could be removed during the move
-            // and the 4 opponent's piece, one of them able to do the aforementioned move
-            const board: Table<FourStatePiece> = [
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-                [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
-                [N, N, N, _, _, X, O, X, _, N, N, N, N, N, N],
-                [N, N, N, _, _, _, X, _, _, N, N, N, N, N, N],
-                [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
-                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
-            const node: CoerceoNode = new CoerceoNode(state);
-
-            // When evaluating its value
-            const value: number = heuristic.getBoardValue(node).value;
-
-            // Then the value should be correct
-            expect(value).toEqual((4 * SAFE) - (1 * THREATENED));
-        });
+        // Then the value should be correct
+        expect(value).toEqual((4 * SAFE) - (1 * THREATENED));
     });
 });

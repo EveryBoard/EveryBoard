@@ -21,7 +21,7 @@ describe('MCTS', () => {
     beforeEach(() => {
         mcts = new MCTS('MCTS', new QuartoMoveGenerator(), QuartoRules.get());
     });
-    it('should not be stupid', () => {
+    it('should choose possible victory over definite defeat', () => {
         // Given a board that could be a win for opponent in their next moves
         const board: Table<QuartoPiece> = [
             [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABB, QuartoPiece.EMPTY],

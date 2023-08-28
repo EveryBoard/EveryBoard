@@ -11,11 +11,9 @@ describe('YinshScoreHeuristic', () => {
     beforeEach(() => {
         heuristic = new YinshScoreHeuristic();
     });
-    describe('getBoardValue', () => {
-        it('should assign higher values for the player with most rings', () => {
-            const state: YinshState = new YinshState(YinshState.getInitialState().board, [2, 1], 20);
-            const node: YinshNode = new YinshNode(state);
-            expect(heuristic.getBoardValue(node).value * Player.ZERO.getScoreModifier()).toBeGreaterThan(0);
-        });
+    it('should assign higher values for the player with most rings', () => {
+        const state: YinshState = new YinshState(YinshState.getInitialState().board, [2, 1], 20);
+        const node: YinshNode = new YinshNode(state);
+        expect(heuristic.getBoardValue(node).value * Player.ZERO.getScoreModifier()).toBeGreaterThan(0);
     });
 });

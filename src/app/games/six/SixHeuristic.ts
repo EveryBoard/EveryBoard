@@ -8,16 +8,9 @@ import { SCORE } from 'src/app/jscaip/SCORE';
 import { Utils } from 'src/app/utils/utils';
 import { SixVictorySource, SixNode } from './SixRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Heuristic } from 'src/app/jscaip/Minimax';
+import { AlignmentHeuristic, BoardInfo } from 'src/app/jscaip/AlignmentHeuristic';
 
-export interface BoardInfo {
-    status: SCORE,
-    victory: MGPOptional<Coord[]>,
-    preVictory: MGPOptional<Coord>,
-    sum: number,
-}
-
-export class SixHeuristic extends Heuristic<SixMove, SixState> {
+export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVictorySource> {
 
     public VERBOSE: boolean = false;
 
@@ -50,33 +43,6 @@ export class SixHeuristic extends Heuristic<SixMove, SixState> {
             return new BoardValue(LAST_PLAYER.getPreVictory());
         }
         return new BoardValue(shapeInfo.sum * LAST_PLAYER.getScoreModifier());
-    }
-    public calculateBoardValue(move: SixMove, state: SixState): BoardInfo {
-        this.startSearchingVictorySources();
-        const boardInfo: BoardInfo = {
-            status: SCORE.DEFAULT,
-            victory: MGPOptional.empty(),
-            preVictory: MGPOptional.empty(),
-            sum: 0,
-        };
-        while (this.hasNextVictorySource()) {
-            const victorySource: SixVictorySource = this.getNextVictorySource();
-            let newBoardInfo: BoardInfo;
-            if (boardInfo.status === SCORE.PRE_VICTORY) {
-                newBoardInfo = this.searchVictoryOnly(victorySource, move, state);
-            } else {
-                newBoardInfo = this.getBoardInfo(victorySource, move, state, boardInfo);
-            }
-            if (newBoardInfo.status === SCORE.VICTORY) {
-                return newBoardInfo;
-            }
-            boardInfo.status = newBoardInfo.status;
-            boardInfo.sum = boardInfo.sum + newBoardInfo.sum;
-            if (boardInfo.preVictory.isAbsent()) {
-                boardInfo.preVictory = newBoardInfo.preVictory;
-            }
-        }
-        return boardInfo;
     }
     public startSearchingVictorySources(): void {
         this.currentVictorySource = {

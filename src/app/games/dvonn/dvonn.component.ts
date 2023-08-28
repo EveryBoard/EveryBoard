@@ -39,7 +39,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.rules = DvonnRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('MaxStacks', DvonnRules.get(), new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator()),
+            new Minimax('Max Stacks', this.rules, new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator()),
             new Minimax('Score', this.rules, new DvonnScoreHeuristic(), new DvonnOrderedMoveGenerator()),
             new MCTS('MCTS', new DvonnMoveGenerator(), this.rules),
         ];

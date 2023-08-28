@@ -401,7 +401,7 @@ describe('GipfRules', () => {
             expect(() => GipfRules.applyPlacement(placement, state)).toThrow();
         });
     });
-    describe('getBoardValue', () => {
+    describe('game status', () => {
         const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
                                                            MGPOptional.of(HexaDirection.UP_RIGHT));
         const dummyMove: GipfMove = new GipfMove(placement, [], []);

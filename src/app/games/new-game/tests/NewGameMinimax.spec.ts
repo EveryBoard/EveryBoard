@@ -19,6 +19,7 @@ describe('NewGameMinimax', () => {
         // Given state
         const state: NewGameState = NewGameState.getInitialState();
         const node: NewGameNode = new NewGameNode(state);
+
         // When selecting the best move
         const bestMove: NewGameMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 });
         // Then it should be the move I want it to be

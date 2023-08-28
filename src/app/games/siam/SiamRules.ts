@@ -148,39 +148,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;
     }
-    public getBoardValueInfo(move: MGPOptional<SiamMove>, state: SiamState)
-    : { shortestZero: number, shortestOne: number, boardValue: number }
-    {
-        const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
-            this.getMountainsRowsAndColumns(state);
-        const mountainsRow: number[] = mountainsInfo.rows;
-        const mountainsColumn: number[] = mountainsInfo.columns;
-
-        const pushers: { distance: number, coord: Coord}[] =
-            this.getPushers(state, mountainsColumn, mountainsRow);
-        let zeroShortestDistance: number = Number.MAX_SAFE_INTEGER;
-        let oneShortestDistance: number = Number.MAX_SAFE_INTEGER;
-        const currentPlayer: Player = state.getCurrentPlayer();
-        for (const pusher of pushers) {
-            if (SiamState.isOnBoard(pusher.coord)) {
-                const piece: SiamPiece = state.getPieceAt(pusher.coord);
-                if (piece.belongTo(Player.ZERO)) {
-                    zeroShortestDistance = Math.min(zeroShortestDistance, pusher.distance);
-                } else {
-                    oneShortestDistance = Math.min(oneShortestDistance, pusher.distance);
-                }
-            } else {
-                if (currentPlayer === Player.ZERO) {
-                    zeroShortestDistance = Math.min(zeroShortestDistance, pusher.distance);
-                } else {
-                    oneShortestDistance = Math.min(oneShortestDistance, pusher.distance);
-                }
-            }
-        }
-        const boardValue: number =
-            this.getScoreFromShortestDistances(zeroShortestDistance, oneShortestDistance, currentPlayer);
-        return { shortestZero: zeroShortestDistance, shortestOne: oneShortestDistance, boardValue };
-    }
     public getScoreFromShortestDistances(zeroShortestDistance: number,
                                          oneShortestDistance: number,
                                          currentPlayer: Player)

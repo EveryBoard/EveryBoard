@@ -9,6 +9,7 @@ import { AbstractNode } from 'src/app/jscaip/GameNode';
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { GameState } from 'src/app/jscaip/GameState';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 @Component({
     selector: 'app-demo-page',
@@ -71,9 +72,11 @@ export class DemoPageComponent {
                 };
             } else {
                 const move: Move = solution;
-                const state: GameState = rules.applyLegalMove(move, step.state, rules.isLegal(move, step.state).get());
-                const node: AbstractNode =
-                    new GameNode(state, MGPOptional.of(new GameNode(step.state)), MGPOptional.of(move));
+                const legalityStatus: MGPFallible<unknown> =
+                    rules.isLegal(move, step.state).get() as MGPFallible<unknown>;
+                const state: GameState = rules.applyLegalMove(move, step.state, legalityStatus);
+                const parent: MGPOptional<AbstractNode> = MGPOptional.of(new GameNode(step.state));
+                const node: AbstractNode = new GameNode(state, parent, MGPOptional.of(move));
                 return { node, click: MGPOptional.empty() };
             }
         } else {

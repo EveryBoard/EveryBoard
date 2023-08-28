@@ -7,7 +7,8 @@ import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { SixMoveGenerator } from './SixMoveGenerator';
-import { BoardInfo, SixHeuristic } from './SixHeuristic';
+import { SixHeuristic } from './SixHeuristic';
+import { BoardInfo } from 'src/app/jscaip/AlignmentHeuristic';
 
 export class SixFilteredMoveGenerator extends SixMoveGenerator {
 

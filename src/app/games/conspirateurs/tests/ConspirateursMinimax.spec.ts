@@ -19,8 +19,6 @@ describe('ConspirateursMinimax', () => {
                               new ConspirateursHeuristic(),
                               new ConspirateursOrderedMoveGenerator());
     });
-    // TODO FOR REVIEW: que fait on de ce test ? On le généralise sur TOUS les composants ?
-    // TODO FOR REVIEW: genre on s'assure que chaque minimax déclaré doit pouvoir faire X tours contre lui-même
     it('should be able to finish when playing with itself', () => {
         // Given a component where AI plays against AI
         let node: ConspirateursNode = rules.getInitialNode();
