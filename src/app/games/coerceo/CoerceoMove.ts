@@ -41,9 +41,9 @@ export class CoerceoStep {
 
 export class CoerceoRegularMove extends MoveCoordToCoord {
 
-    public static readonly encoder: Encoder<CoerceoRegularMove> = MoveCoordToCoord.getEncoder(CoerceoRegularMove.of);
+    public static override readonly encoder: Encoder<CoerceoRegularMove> = MoveCoordToCoord.getEncoder(CoerceoRegularMove.of);
 
-    public static of(start: Coord, end: Coord): CoerceoRegularMove {
+    public static override of(start: Coord, end: Coord): CoerceoRegularMove {
         const step: CoerceoStep = CoerceoStep.ofCoords(start, end);
         const move: CoerceoRegularMove = CoerceoRegularMove.ofMovement(start, step);
         return move;

@@ -151,6 +151,9 @@ export class Direction extends BaseDirection {
     public isDiagonal(): boolean {
         return (this.x !== 0) && (this.y !== 0);
     }
+    public isOrthogonal(): boolean {
+        return this.isDiagonal() === false;
+    }
     public getOpposite(): Direction {
         const opposite: MGPFallible<Direction> = Direction.factory.from(-this.x, -this.y);
         return opposite.get();

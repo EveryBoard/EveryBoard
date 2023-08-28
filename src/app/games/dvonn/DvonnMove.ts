@@ -10,7 +10,7 @@ export class DvonnMove extends MoveCoordToCoord {
 
     public static PASS: DvonnMove = new DvonnMove(new Coord(-1, -1), new Coord(-2, -2));
 
-    public static encoder: Encoder<DvonnMove> = MoveWithTwoCoords.getFallibleEncoder(DvonnMove.from);
+    public static override encoder: Encoder<DvonnMove> = MoveWithTwoCoords.getFallibleEncoder(DvonnMove.from);
 
     private constructor(start: Coord, end: Coord) {
         super(start, end);
@@ -41,7 +41,7 @@ export class DvonnMove extends MoveCoordToCoord {
             return MGPFallible.failure(DvonnFailure.MUST_MOVE_IN_STRAIGHT_LINE());
         }
     }
-    public toString(): string {
+    public override toString(): string {
         if (this === DvonnMove.PASS) {
             return 'DvonnMove.PASS';
         }

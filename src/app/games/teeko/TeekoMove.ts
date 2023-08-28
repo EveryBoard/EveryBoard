@@ -33,7 +33,7 @@ export class TeekoDropMove extends MoveCoord {
 
 export class TeekoTranslationMove extends MoveCoordToCoord {
 
-    public static encoder: Encoder<TeekoTranslationMove> =
+    public static override encoder: Encoder<TeekoTranslationMove> =
         MoveCoordToCoord.getFallibleEncoder(TeekoTranslationMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<TeekoTranslationMove> {
