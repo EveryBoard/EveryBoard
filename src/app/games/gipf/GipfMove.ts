@@ -73,9 +73,13 @@ export class GipfCapture {
     }
     public equals(other: GipfCapture): boolean {
         if (this === other) return true;
-        if (this.capturedSpaces.length !== other.capturedSpaces.length) return false;
+        if (this.capturedSpaces.length !== other.capturedSpaces.length) {
+            return false;
+        }
         for (let i: number = 0; i < this.capturedSpaces.length; i++) {
-            if (!this.capturedSpaces[i].equals(other.capturedSpaces[i])) return false;
+            if (this.capturedSpaces[i].equals(other.capturedSpaces[i]) === false) {
+                return false;
+            }
         }
         return true;
     }
@@ -101,7 +105,9 @@ export class GipfPlacement {
         }
     }
     public equals(other: GipfPlacement): boolean {
-        if (!this.coord.equals(other.coord)) return false;
+        if (this.coord.equals(other.coord) === false) {
+            return false;
+        }
         return this.direction.equals(other.direction);
     }
 }

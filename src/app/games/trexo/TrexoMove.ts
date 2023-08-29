@@ -14,8 +14,8 @@ export class TrexoMove extends MoveWithTwoCoords {
     public static encoder: Encoder<TrexoMove> = MoveWithTwoCoords.getFallibleEncoder(TrexoMove.from);
 
     public static from(zero: Coord, one: Coord): MGPFallible<TrexoMove> {
-        Utils.assert(zero.isInRange(TrexoState.SIZE, TrexoState.SIZE), `${ zero.toString() } is out of the TrexoBoard!`);
-        Utils.assert(one.isInRange(TrexoState.SIZE, TrexoState.SIZE), `${ one.toString() } is out of the TrexoBoard!`);
+        Utils.assert(TrexoState.isOnBoard(zero), `${ zero.toString() } is out of the TrexoBoard!`);
+        Utils.assert(TrexoState.isOnBoard(one), `${ one.toString() } is out of the TrexoBoard!`);
         const distance: number = zero.getOrthogonalDistance(one);
         if (distance === 1) {
             return MGPFallible.success(new TrexoMove(zero, one));

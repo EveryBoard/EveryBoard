@@ -12,10 +12,11 @@ import { ErrorDAO, MGPError } from 'src/app/dao/ErrorDAO';
 import { ErrorDAOMock } from 'src/app/dao/tests/ErrorDAOMock.spec';
 import { MessageDisplayer } from '../MessageDisplayer';
 
-xdescribe('ErrorLoggerService', () => {
+describe('ErrorLoggerService', () => {
 
     let errorLoggerService: ErrorLoggerService;
     let errorDAO: ErrorDAO;
+    let messageDisplayer: MessageDisplayer;
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -31,6 +32,8 @@ xdescribe('ErrorLoggerService', () => {
         }).compileComponents();
         errorLoggerService = TestBed.inject(ErrorLoggerService);
         errorDAO = TestBed.inject(ErrorDAO);
+        messageDisplayer = TestBed.inject(MessageDisplayer);
+        spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
     }));
     it('should create', fakeAsync(async() => {
         expect(errorLoggerService).toBeTruthy();
@@ -44,9 +47,6 @@ xdescribe('ErrorLoggerService', () => {
         expect(() => ErrorLoggerService.logError('component', 'error')).toThrowError('component: error (extra data: undefined)');
     });
     it('should display a message to let the user know something unusual happened', fakeAsync(async() => {
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        spyOn(messageDisplayer, 'criticalMessage').and.resolveTo();
-
         // Given an error
         const component: string = 'Some component';
         const message: string = 'Some error';
@@ -66,7 +66,7 @@ xdescribe('ErrorLoggerService', () => {
 
         // When logging it
         ErrorLoggerService.logError(component, message, data);
-        tick(3000);
+        tick(0);
 
         // Then the error is stored in the DAO with all expected fields
         const expectedError: MGPError = {
@@ -88,7 +88,7 @@ xdescribe('ErrorLoggerService', () => {
 
         // When logging it
         ErrorLoggerService.logError(component, message);
-        tick(3000);
+        tick(0);
 
         // Then the error is stored in the DAO with all expected fields
         const expectedError: MGPError = {
@@ -115,7 +115,7 @@ xdescribe('ErrorLoggerService', () => {
 
         // When logging it a second time
         ErrorLoggerService.logError(component, message, data);
-        tick(3000);
+        tick(0);
 
         // Then the error is updated in the DAO with all expected fields
         const update: Partial<MGPError> = {

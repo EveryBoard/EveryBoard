@@ -24,6 +24,9 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
             new Coord(ConspirateursState.WIDTH-1, xOrY),
         ])).toList();
 
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
+    }
     public static getInitialState(): ConspirateursState {
         const board: PlayerOrNone[][] = ArrayUtils.createTable(ConspirateursState.WIDTH,
                                                                ConspirateursState.HEIGHT,
@@ -48,7 +51,6 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
     public isDropPhase(): boolean {
         return this.turn < 40;
     }
-
     public getSidePieces(): [number, number] {
         if (this.turn % 2 === 0) {
             return [20 - (this.turn / 2), 20 - (this.turn / 2)];

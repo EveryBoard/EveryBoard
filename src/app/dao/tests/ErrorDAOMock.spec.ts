@@ -11,7 +11,7 @@ export class ErrorDAOMock extends FirestoreDAOMock<MGPError> {
     public static errorDB: MGPMap<string, ErrorOS>;
 
     public constructor() {
-        super('ErrorDAOMock', false);
+        super('ErrorDAOMock');
     }
     public findErrors(component: string, route: string, message: string, data?: JSONValue): Promise<ErrorDocument[]> {
         if (data === undefined) {

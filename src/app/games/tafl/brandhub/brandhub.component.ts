@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove, BrandhubState> implements OnInit {
 
     public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, false, actRoute, BrandhubMove.from);
+        super(messageDisplayer, actRoute, BrandhubMove.from);
         this.rules = BrandhubRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

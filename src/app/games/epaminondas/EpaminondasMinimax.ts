@@ -21,35 +21,35 @@ export class EpaminondasMinimax
 
         let moves: EpaminondasMove[] = [];
         const state: EpaminondasState = node.gameState;
-        let move: EpaminondasMove;
-        for (let y: number = 0; y < 12; y++) {
-            for (let x: number = 0; x < 14; x++) {
-                const firstCoord: Coord = new Coord(x, y);
-                if (state.getPieceAt(firstCoord) === player) {
-                    for (const direction of Direction.DIRECTIONS) {
-                        let movedPieces: number = 1;
-                        let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                        while (nextCoord.isInRange(14, 12) &&
-                            state.getPieceAt(nextCoord) === player) {
-                            movedPieces += 1;
-                            nextCoord = nextCoord.getNext(direction, 1);
-                        }
-                        let stepSize: number = 1;
-                        while (nextCoord.isInRange(14, 12) &&
-                            stepSize <= movedPieces &&
-                            state.getPieceAt(nextCoord) === empty) {
-                            move = new EpaminondasMove(x, y, movedPieces, stepSize, direction);
-                            moves = this.addMove(moves, move, state);
-
-                            stepSize++;
-                            nextCoord = nextCoord.getNext(direction, 1);
-                        }
-                        if (nextCoord.isInRange(14, 12) &&
-                            stepSize <= movedPieces &&
-                            state.getPieceAt(nextCoord) === opponent) {
-                            move = new EpaminondasMove(x, y, movedPieces, stepSize, direction);
-                            moves = this.addMove(moves, move, state);
-                        }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const firstCoord: Coord = coordAndContent.coord;
+            if (coordAndContent.content === player) {
+                let move: EpaminondasMove;
+                for (const direction of Direction.DIRECTIONS) {
+                    let movedPieces: number = 1;
+                    let nextCoord: Coord = firstCoord.getNext(direction, 1);
+                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                           state.getPieceAt(nextCoord) === player)
+                    {
+                        movedPieces += 1;
+                        nextCoord = nextCoord.getNext(direction, 1);
+                    }
+                    let stepSize: number = 1;
+                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                           stepSize <= movedPieces &&
+                           state.getPieceAt(nextCoord) === empty)
+                    {
+                        move = new EpaminondasMove(firstCoord.x, firstCoord.y, movedPieces, stepSize, direction);
+                        moves = this.addMove(moves, move, state);
+                        stepSize++;
+                        nextCoord = nextCoord.getNext(direction, 1);
+                    }
+                    if (EpaminondasState.isOnBoard(nextCoord) &&
+                        stepSize <= movedPieces &&
+                        state.getPieceAt(nextCoord) === opponent)
+                    {
+                        move = new EpaminondasMove(firstCoord.x, firstCoord.y, movedPieces, stepSize, direction);
+                        moves = this.addMove(moves, move, state);
                     }
                 }
             }
@@ -82,15 +82,15 @@ export class EpaminondasMinimax
         return new BoardValue(this.getPieceCountPlusRowDomination(node.gameState));
     }
     public getPieceCountPlusRowDomination(state: EpaminondasState): number {
-        const SCORE_BY_PIECE: number = 14*13*11;
+        const SCORE_BY_PIECE: number = EpaminondasState.WIDTH * 13 * 11;
         const SCORE_BY_ROW_DOMINATION: number = 2;
         const SCORE_BY_PRESENCE: number = 1;
         const SCORE_BY_ALIGNEMENT: number = 1;
         let total: number = 0;
-        for (let y: number = 0; y < 12; y++) {
+        for (let y: number = 0; y < EpaminondasState.HEIGHT; y++) {
             let row: number = 0;
             const wasPresent: number[] = [0, 0];
-            for (let x: number = 0; x < 14; x++) {
+            for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
                 const player: PlayerOrNone = state.getPieceAt(coord);
                 if (player.isPlayer()) {
@@ -100,7 +100,7 @@ export class EpaminondasMinimax
                     row += mod;
                     for (const dir of [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT]) {
                         let neighbor: Coord = coord.getNext(dir, 1);
-                        while (neighbor.isInRange(14, 12) &&
+                        while (EpaminondasState.isOnBoard(neighbor) &&
                                state.getPieceAt(neighbor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;

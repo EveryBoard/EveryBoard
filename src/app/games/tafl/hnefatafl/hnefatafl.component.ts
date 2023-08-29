@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove, HnefataflState> implements OnInit {
 
     public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, false, actRoute, HnefataflMove.from);
+        super(messageDisplayer, actRoute, HnefataflMove.from);
         this.rules = HnefataflRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [

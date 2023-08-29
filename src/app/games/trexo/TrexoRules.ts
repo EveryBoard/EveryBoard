@@ -26,11 +26,8 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     private static getOwner(piece: TrexoPieceStack): PlayerOrNone {
         return piece.getOwner();
     }
-    private static isInRange(coord: Coord): boolean {
-        return coord.isInRange(TrexoState.SIZE, TrexoState.SIZE);
-    }
     public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
-        new NInARowHelper(TrexoRules.isInRange, TrexoRules.getOwner, 5);
+        new NInARowHelper(TrexoState.isOnBoard, TrexoRules.getOwner, 5);
 
     private constructor() {
         super(TrexoState);

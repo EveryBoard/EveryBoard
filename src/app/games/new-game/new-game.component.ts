@@ -69,7 +69,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * In the component's HTML, you will likely set onClick elements.
      * You can call back to the component, and call `this.chooseMove` to apply a move.
      * In case you want to cancel a move, you can call `this.cancelMove`.
-     * It takes an optional parameter, being a toast to show to the user upon the move cancellation.
+     * It takes an optional parameter, being a toast to show to the user upon the move cancelation.
      */
 
 }

@@ -3,7 +3,6 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
@@ -12,12 +11,14 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { Debug } from 'src/app/utils/utils';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 
 export class EncapsuleNode
     extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsuleState, GameConfig, EncapsuleLegalityInformation> {}
 
+@Debug.log
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, GameConfig, EncapsuleLegalityInformation> {
 
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
@@ -68,8 +69,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, GameCon
         }
     }
     public static isLegal(move: EncapsuleMove, state: EncapsuleState): MGPFallible<EncapsuleLegalityInformation> {
-        const LOCAL_VERBOSE: boolean = false;
-        display(LOCAL_VERBOSE, move.toString());
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();

@@ -8,7 +8,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
-import { display } from 'src/app/utils/utils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -16,6 +15,7 @@ import { SixBoardValue } from './SixMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { Debug } from 'src/app/utils/utils';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
@@ -26,14 +26,13 @@ export interface SixVictorySource {
     index: number,
 }
 
+@Debug.log
 export class SixRules extends Rules<SixMove,
                                     SixState,
                                     GameConfig,
                                     SixLegalityInformation,
                                     SixBoardValue>
 {
-    public VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<SixRules> = MGPOptional.empty();
 
     public static get(): SixRules {
@@ -56,7 +55,6 @@ export class SixRules extends Rules<SixMove,
         }
     }
     public isLegal(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
-        display(this.VERBOSE, { called: 'SixRules.isLegal', move, state });
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start);
         if (landingLegality.isFailure()) {
             return landingLegality.toOtherFallible();
@@ -181,7 +179,6 @@ export class SixRules extends Rules<SixMove,
         return GameStatus.ONGOING;
     }
     private startSearchingVictorySources(): void {
-        display(this.VERBOSE, 'SixRules.startSearchingVictorySources()');
         this.currentVictorySource = {
             typeSource: 'LINE',
             index: -1,
@@ -235,7 +232,6 @@ export class SixRules extends Rules<SixMove,
     }
     private searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixState): Coord[] {
         const lastDrop: Coord = move.landing;
-        display(this.VERBOSE, { called: 'SixRules.searchVictoryOnly', victorySource, move, state });
         switch (victorySource.typeSource) {
             case 'LINE':
                 return this.searchVictoryOnlyForLine(victorySource.index, lastDrop, state);
@@ -248,8 +244,6 @@ export class SixRules extends Rules<SixMove,
         }
     }
     private searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixState): Coord[] {
-        display(this.VERBOSE,
-                { called: 'SixRules.searchVictoryOnlyForCircle', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
         const victory: Coord[] = [lastDrop];
@@ -290,8 +284,6 @@ export class SixRules extends Rules<SixMove,
         return victory;
     }
     private searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixState): Coord[] {
-        display(this.VERBOSE,
-                { called: 'SixRules.searchVictoryTriangleCornerOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const victory: Coord[] = [lastDrop];
@@ -313,8 +305,6 @@ export class SixRules extends Rules<SixMove,
         return victory;
     }
     private searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixState): Coord[] {
-        display(this.VERBOSE,
-                { called: 'SixRules.searchVictoryTriangleEdgeOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const victory: Coord[] = [lastDrop];

@@ -4,7 +4,7 @@ import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -20,12 +20,11 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
+@Debug.log
 export class GoComponent
     extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GameConfig, GoLegalityInformation>
     implements OnInit
 {
-    public static VERBOSE: boolean = false;
-
     public boardInfo: GroupDatas<GoPiece>;
 
     public ko: MGPOptional<Coord> = MGPOptional.empty();
@@ -67,8 +66,6 @@ export class GoComponent
         return this.chooseMove(resultlessMove);
     }
     public updateBoard(): void {
-        display(GoComponent.VERBOSE, 'updateBoard');
-
         const state: GoState = this.getState();
         this.boardHeight = state.board.length;
         this.boardWidth = state.board[0].length;
@@ -118,7 +115,7 @@ export class GoComponent
     }
     public spaceIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.getState().getPieceAtXY(x, y);
-        return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
+        return piece !== GoPiece.EMPTY && this.isTerritory(x, y) === false;
     }
     public isLastSpace(x: number, y: number): boolean {
         if (this.last.isPresent()) {

@@ -10,12 +10,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { assert } from 'src/app/utils/assert';
 import { SiamFailure } from './SiamFailure';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
@@ -32,6 +32,7 @@ export type SiamIndicatorArrow = {
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
+@Debug.log
 export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamMove,
                                                             SiamState,
@@ -39,8 +40,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             GameConfig,
                                                             SiamLegalityInformation>
 {
-    public static VERBOSE: boolean = false;
-
+    public SiamState: typeof SiamState = SiamState;
     public lastMove: MGPOptional<SiamMove> = MGPOptional.empty();
     public movedPieces: Coord[] = [];
     public selectedPiece: MGPOptional<Coord> = MGPOptional.empty();
@@ -63,7 +63,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.updateBoard();
     }
     public updateBoard(): void {
-        display(SiamComponent.VERBOSE, 'updateBoard');
         const state: SiamState = this.getState();
         this.board = state.board;
         this.movedPieces = [];
@@ -121,7 +120,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return this.chooseMove(move);
     }
     public async clickSquare(x: number, y: number, internalCall: boolean = false): Promise<MGPValidation> {
-        display(SiamComponent.VERBOSE, 'SiamComponent.clickSquare(' + x + ', ' + y + ')');
         if (internalCall === false) {
             const clickValidity: MGPValidation = this.canUserPlay('#square_' + x + '_' + y);
             if (clickValidity.isFailure()) {
@@ -150,7 +148,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                 }
                 return this.performMoveOrShowOrientationArrows(moves);
             } else {
-                assert(this.getState().isOnBoard(clickedCoord), 'SiamComponent: user clicked outside of board when it should not be possible');
+                Utils.assert(this.getState().isOnBoard(clickedCoord), 'SiamComponent: user clicked outside of board when it should not be possible');
                 const clickedPiece: SiamPiece = this.board[y][x];
                 if (clickedPiece.getOwner() !== this.getCurrentPlayer()) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -189,7 +187,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
     }
     private async performMoveOrShowOrientationArrows(availableMoves: SiamMove[]): Promise<MGPValidation> {
-        assert(availableMoves.length > 0, 'SiamComponent.performMoveOrShowOrientationArrows expects at least one move');
+        Utils.assert(availableMoves.length > 0, 'SiamComponent.performMoveOrShowOrientationArrows expects at least one move');
         if (availableMoves.length === 1) {
             // There's only one possible move, so perform it
             this.cancelMove();

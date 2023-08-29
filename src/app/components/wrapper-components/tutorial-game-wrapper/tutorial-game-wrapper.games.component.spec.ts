@@ -90,9 +90,8 @@ describe('TutorialGameWrapperComponent (games)', () => {
         for (const gameInfo of GameInfo.ALL_GAMES()) {
             it(gameInfo.urlName, fakeAsync(async() => {
                 const wrapper: GameWrapper<Comparable> =
-                    (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
-                                                                 TutorialGameWrapperComponent))
-                        .wrapper;
+                    (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName, TutorialGameWrapperComponent))
+                        .getWrapper();
                 expect(wrapper).toBeTruthy();
             }));
         }
@@ -329,7 +328,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 const gameComponent: AbstractGameComponent =
                     (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
                                                                  TutorialGameWrapperComponent))
-                        .getComponent();
+                        .getGameComponent();
                 const rules: Rules<Move, GameState, GameConfig, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {

@@ -16,10 +16,6 @@ import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export class SixState extends OpenHexagonalGameState<Player> {
 
-    public override readonly width: number;
-
-    public override readonly height: number;
-
     public static getInitialState(): SixState {
         const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
         return SixState.ofRepresentation(board, 0);

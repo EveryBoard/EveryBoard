@@ -210,7 +210,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.viewInfo.spaceInfo[coord.y][coord.x].isMarker = false;
         this.viewInfo.spaceInfo[coord.y][coord.x].markerClasses = [];
         if (piece !== YinshPiece.EMPTY) {
-            const containsMarker: boolean = !piece.isRing || this.moveStart.equalsValue(coord);
+            const containsMarker: boolean = piece.isRing === false || this.moveStart.equalsValue(coord);
             if (containsMarker) {
                 const playerClass: string = this.getPlayerClass(piece.player);
                 this.viewInfo.spaceInfo[coord.y][coord.x].isMarker = true;
@@ -248,7 +248,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     private coordsBetween(start: Coord, end: Coord): Coord[] {
         const coords: Coord[] = [];
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
-        for (let cur: Coord = start; !cur.equals(end); cur = cur.getNext(dir)) {
+        for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
             if (this.constructedState.getPieceAt(cur) !== YinshPiece.EMPTY) {
                 coords.push(cur);
             }

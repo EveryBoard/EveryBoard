@@ -17,7 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 
-xdescribe('ConfigRoomService', () => {
+describe('ConfigRoomService', () => {
 
     let configRoomDAO: ConfigRoomDAO;
 
@@ -131,7 +131,7 @@ xdescribe('ConfigRoomService', () => {
 
             spyOn(configRoomService, 'removeCandidate').and.resolveTo();
 
-            // When cancelling our join
+            // When canceling our join
             await configRoomService.cancelJoining('configRoomId');
 
             // Then we are removed from the list

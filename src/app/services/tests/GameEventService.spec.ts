@@ -10,7 +10,7 @@ import { JSONValue } from 'src/app/utils/utils';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 
-xdescribe('GameEventService', () => {
+describe('GameEventService', () => {
 
     let gameEventService: GameEventService;
     let partDAO: PartDAO;
@@ -133,7 +133,7 @@ xdescribe('GameEventService', () => {
             await gameEventService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
             // Then we receive it a single time
             // (firestore gives us two updates, one with a null time, which should be filtered by the service)
-            tick(1);
+            tick(0);
             expect(receivedEvents).toBe(1);
         }));
         it('should receive already present events when subscribing', fakeAsync(async() => {

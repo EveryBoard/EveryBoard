@@ -1,9 +1,9 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 
 import { GameConfigurationComponent } from './game-configuration.component';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
-fdescribe('GameConfigurationComponent', () => {
+describe('GameConfigurationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<GameConfigurationComponent>;
 
@@ -17,9 +17,9 @@ fdescribe('GameConfigurationComponent', () => {
         expect(component).toBeTruthy();
     });
     describe('number config', () => {
-        fit('should propose a number imput when given a config of type number', fakeAsync(async() => {
+        it('should propose a number imput when given a config of type number', fakeAsync(async() => {
             // Given a component loaded with a config description having a number
-            component.config = { fields: { nombre: 'number' } };
+            component.config = { fields: [{ type: 'number', name: 'nombre' }] };
 
             // When rendering component
             testUtils.detectChanges();

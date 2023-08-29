@@ -3,7 +3,7 @@ import { Rules } from '../../jscaip/Rules';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { P4State } from './P4State';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Utils, display } from 'src/app/utils/utils';
+import { Utils, Debug } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { P4Failure } from './P4Failure';
@@ -14,14 +14,13 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
 
+@Debug.log
 export class P4Rules extends Rules<P4Move, P4State> {
-
-    public static VERBOSE: boolean = false;
 
     private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
 
     public static readonly P4_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(P4Rules.isInRange, Utils.identity, 4);
+        new NInARowHelper(P4State.isOnBoard, Utils.identity, 4);
 
     public static get(): P4Rules {
         if (P4Rules.singleton.isAbsent()) {
@@ -29,27 +28,22 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return P4Rules.singleton.get();
     }
-    public static isInRange(coord: Coord): boolean {
-        return coord.isInRange(7, 6);
-    }
     public static getVictoriousCoords(state: P4State): Coord[] {
         return P4Rules.P4_HELPER.getVictoriousCoord(state);
     }
     public static getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
-        while (y < 6 && board[y][x] === PlayerOrNone.NONE) {
+        while (y < P4State.HEIGHT && board[y][x] === PlayerOrNone.NONE) {
             y++;
         }
         return y - 1;
     }
     public static getListMoves(node: P4Node): P4Move[] {
-        display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });
-
         // should be called only if the game is not over
         const originalState: P4State = node.gameState;
         const moves: P4Move[] = [];
 
-        for (let x: number = 0; x < 7; x++) {
+        for (let x: number = 0; x < P4State.WIDTH; x++) {
             if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
                 const move: P4Move = P4Move.of(x);
                 moves.push(move);
@@ -73,7 +67,6 @@ export class P4Rules extends Rules<P4Move, P4State> {
         return resultingState;
     }
     public isLegal(move: P4Move, state: P4State): MGPValidation {
-        display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
         if (state.getPieceAtXY(move.x, 0).isPlayer()) {
             return MGPValidation.failure(P4Failure.COLUMN_IS_FULL());
         }

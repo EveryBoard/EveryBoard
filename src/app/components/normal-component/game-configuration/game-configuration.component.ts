@@ -21,6 +21,9 @@ export class GameConfigurationComponent implements OnInit {
     public gameConfigForm: FormGroup = new FormGroup({});
 
     public ngOnInit(): void {
+        if (this.config == null || this.config.fields.length === 0) {
+            return this.configFullfilledNotification.emit({});
+        }
         const group: ConfigFormJson = {};
 
         this.config.fields.forEach((configDescription: ConfigParameter) => {

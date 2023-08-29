@@ -49,36 +49,34 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         return new BoardValue(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
     private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {
-        const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * 12;
+        const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * EpaminondasState.WIDTH;
         const SCORE_BY_ALIGNEMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13
         const MAX_NUMBER_OF_ALIGNEMENT: number = (24*16) + (4*15);
         const SCORE_BY_PIECE: number = (MAX_NUMBER_OF_ALIGNEMENT * SCORE_BY_ALIGNEMENT) + 1; // OLDLY 25*13
         let total: number = 0;
-        for (let y: number = 0; y < 12; y++) {
-            for (let x: number = 0; x < 14; x++) {
-                const coord: Coord = new Coord(x, y);
-                const player: PlayerOrNone = state.getPieceAt(coord);
-                if (player.isPlayer()) {
-                    let avancement: number; // entre 0 et 11
-                    let dirs: Direction[];
-                    if (player === Player.ZERO) {
-                        avancement = 12 - y;
-                        dirs = [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT];
-                    } else {
-                        avancement = y + 1;
-                        dirs = [Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT];
-                    }
-                    const mod: number = player.getScoreModifier();
-                    total += avancement * mod;
-                    total += SCORE_BY_PIECE * mod;
-                    for (const dir of dirs) {
-                        let neighbor: Coord = coord.getNext(dir, 1);
-                        while (neighbor.isInRange(14, 12) &&
-                               state.getPieceAt(neighbor) === player)
-                        {
-                            total += mod * SCORE_BY_ALIGNEMENT;
-                            neighbor = neighbor.getNext(dir, 1);
-                        }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            const player: PlayerOrNone = coordAndContent.content;
+            if (player.isPlayer()) {
+                let avancement: number; // entre 0 et 11
+                let dirs: Direction[];
+                if (player === Player.ZERO) {
+                    avancement = EpaminondasState.HEIGHT - coord.y;
+                    dirs = [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT];
+                } else {
+                    avancement = coord.y + 1;
+                    dirs = [Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT];
+                }
+                const mod: number = player.getScoreModifier();
+                total += avancement * mod;
+                total += SCORE_BY_PIECE * mod;
+                for (const dir of dirs) {
+                    let neighbor: Coord = coord.getNext(dir, 1);
+                    while (EpaminondasState.isOnBoard(neighbor) &&
+                           state.getPieceAt(neighbor) === player)
+                    {
+                        total += mod * SCORE_BY_ALIGNEMENT;
+                        neighbor = neighbor.getNext(dir, 1);
                     }
                 }
             }

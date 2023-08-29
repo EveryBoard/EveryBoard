@@ -2,7 +2,7 @@ import { Move } from './Move';
 import { SCORE } from './SCORE';
 import { Rules } from './Rules';
 import { MGPMap } from '../utils/MGPMap';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { BoardValue } from './BoardValue';
 import { Minimax } from './Minimax';
@@ -18,14 +18,13 @@ export class MGPNodeStats {
     public static minimaxTime: number = 0;
 }
 
+@Debug.log
 export class MGPNode<R extends Rules<M, S, C, L>,
                      M extends Move,
                      S extends GameState,
                      C extends GameConfig = GameConfig,
                      L = void,
                      B extends BoardValue = BoardValue> {
-
-    public static VERBOSE: boolean = false;
 
     public static minimaxes: MGPMap<string, Minimax<Move, GameState>> = new MGPMap();
 
@@ -54,24 +53,23 @@ export class MGPNode<R extends Rules<M, S, C, L>,
         /* the score status is VICTORY if the score is minValue or MaxValue,
          * because it's how we encode the boardValue if there's a victory
          */
-        const LOCAL_VERBOSE: boolean = false;
         if (score === Number.MAX_SAFE_INTEGER) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'VICTORY');
+            Debug.display('MGPNode', 'getScoreStatus', 'VICTORY');
             return SCORE.VICTORY;
         }
         if (score === Number.MIN_SAFE_INTEGER) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'VICTORY');
+            Debug.display('MGPNode', 'getScoreStatus', 'VICTORY');
             return SCORE.VICTORY;
         }
         if (score === Number.MIN_SAFE_INTEGER + 1) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'PRE_VICTORY_MIN');
+            Debug.display('MGPNode', 'getScoreStatus', 'PRE_VICTORY_MIN');
             return SCORE.PRE_VICTORY;
         }
         if (score === Number.MAX_SAFE_INTEGER - 1) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'PRE_VICTORY_MAX');
+            Debug.display('MGPNode', 'getScoreStatus', 'PRE_VICTORY_MAX');
             return SCORE.PRE_VICTORY;
         }
-        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
+        Debug.display('MGPNode', 'getScoreStatus', 'DEFAULT');
         return SCORE.DEFAULT;
     }
     public constructor(public readonly gameState: S,
@@ -90,7 +88,6 @@ export class MGPNode<R extends Rules<M, S, C, L>,
             this.hopedValue.set(minimaxCreator.name, firstValue.value);
         }
         MGPNodeStats.createdNodes++;
-        display(MGPNode.VERBOSE, 'creating ' + this.myToString());
     }
     public findBestMove(readingDepth: number,
                         minimax: Minimax<M, S, C, L, B>,
@@ -120,12 +117,11 @@ export class MGPNode<R extends Rules<M, S, C, L>,
                      prune: boolean)
     : MGPNode<R, M, S, C, L, B>
     {
-        const LOCAL_VERBOSE: boolean = false;
         if (depth < 1) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf-Calculation : ' + this.myToString() + ' at depth ' + depth);
+            Debug.display('MGPNode', 'alphaBeta', 'isLeaf-Calculation : ' + this.myToString() + ' at depth ' + depth);
             return this; // leaf by calculation
         } else if (minimax.ruler.getGameStatus(this).isEndGame) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf-EndGame(' + minimax.ruler.getGameStatus(this).winner.toString() + ') : ' + this.myToString() + ' at depth ' + depth);
+            Debug.display('MGPNode', 'alphaBeta', 'isLeaf-EndGame(' + minimax.ruler.getGameStatus(this).winner.toString() + ') : ' + this.myToString() + ' at depth ' + depth);
             return this; // rules - leaf or calculation - leaf
         }
         const possibleMoves: MGPSet<M> = this.getPossibleMoves(minimax);
@@ -244,7 +240,7 @@ export class MGPNode<R extends Rules<M, S, C, L>,
         let node: MGPNode<R, M, S, C, L, B> = this;
         if (node.mother.isAbsent()) {
             const turn: number = node.gameState.turn;
-            return 'NodeInitial: ' + turn;
+            return 'InitialNode: ' + turn;
         }
         while (node.mother.isPresent()) {
             const move: string = node.move.isAbsent() ? ' ' : ' > ' + node.move.get().toString() + '> ';

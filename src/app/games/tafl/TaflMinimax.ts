@@ -3,7 +3,7 @@ import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -12,6 +12,7 @@ import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
+@Debug.log
 export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
                                                       TaflState,
                                                       GameConfig,
@@ -19,9 +20,6 @@ export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
                                                       TaflRules<TaflMove, TaflState>> // TODO: remove thoses
 {
     public getListMoves(node: TaflNode): TaflMove[] {
-        const LOCAL_VERBOSE: boolean = false;
-        display(LOCAL_VERBOSE, { TaflMinimax_getListMoves: { node } });
-
         const state: TaflState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         const listMoves: TaflMove[] = this.ruler.getPlayerListMoves(currentPlayer, state);

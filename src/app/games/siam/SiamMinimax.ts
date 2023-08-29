@@ -2,12 +2,13 @@ import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode, SiamLegalityInformation } from './SiamRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
+@Debug.log
 export class SiamMinimax extends Minimax<SiamMove, SiamState, GameConfig, SiamLegalityInformation> {
 
     public getBoardValue(node: SiamNode): BoardValue {
@@ -16,12 +17,13 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, GameConfig, SiamLe
     public getListMoves(node: SiamNode): SiamMove[] {
         let moves: SiamMove[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
-        for (let y: number = 0; y < 5; y++) {
-            for (let x: number = 0; x < 5; x++) {
-                const piece: SiamPiece = node.gameState.getPieceAtXY(x, y);
-                if (piece.belongTo(currentPlayer)) {
-                    moves = moves.concat(SiamRules.get().getMovesFrom(node.gameState, piece, x, y));
-                }
+        for (const coordAndContent of node.gameState.getCoordsAndContents()) {
+            const piece: SiamPiece = coordAndContent.content;
+            if (piece.belongTo(currentPlayer)) {
+                moves = moves.concat(SiamRules.get().getMovesFrom(node.gameState,
+                                                                  piece,
+                                                                  coordAndContent.coord.x,
+                                                                  coordAndContent.coord.y));
             }
         }
         if (node.gameState.countCurrentPlayerPawn() < 5) {
@@ -42,7 +44,6 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, GameConfig, SiamLe
                 }
             }
         }
-        display(SiamRules.VERBOSE, { getListMovesResult: moves });
         return moves;
     }
     private isOnBorder(insertion: SiamMove): boolean {

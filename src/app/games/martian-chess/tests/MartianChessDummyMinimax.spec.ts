@@ -101,7 +101,7 @@ describe('MartianChessDummyMinimax', () => {
         expect(drone.length).toBe(13);
         expect(moves.length).toBe(15);
     });
-    it('should exclude illegal "move cancellation"', () => {
+    it('should exclude illegal "move cancelation"', () => {
         // Given a state in which last move could be cancelled
         const board: Table<MartianChessPiece> = [
             [_, _, _, _],

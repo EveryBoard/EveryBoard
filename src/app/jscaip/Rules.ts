@@ -1,7 +1,7 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { Type } from '@angular/core';
-import { display } from '../utils/utils';
+import { Debug } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -41,25 +41,24 @@ export abstract class Rules<M extends Move,
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
-        const LOCAL_VERBOSE: boolean = false;
-        display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
+        Debug.display('Rules', 'choose', move.toString() + ' was proposed');
         const legality: MGPFallible<L> = this.isLegal(move, node.gameState);
         if (node.hasMoves()) { // if calculation has already been done by the AI
-            display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
+            Debug.display('Rules', 'choose', 'current node has moves');
             const choice: MGPOptional<MGPNode<Rules<M, S, C, L, B>, M, S, C, L, B>> = node.getSonByMove(move);
             // let's not create the node twice
             if (choice.isPresent()) {
                 assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
-                display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
+                Debug.display('Rules', 'choose', 'and this proposed move is found in the list, so it is legal');
                 return MGPOptional.of(choice.get());
             }
         }
-        display(LOCAL_VERBOSE, `Rules.choose: current node has no moves or is pruned, let's verify ourselves`);
+        Debug.display('Rules', 'choose', `current node has no moves or is pruned, let's verify ourselves`);
         if (legality.isFailure()) {
-            display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + legality.getReason());
+            Debug.display('Rules', 'choose', 'Move is illegal: ' + legality.getReason());
             return MGPOptional.empty();
         } else {
-            display(LOCAL_VERBOSE, `Rules.choose: Move is legal, let's apply it`);
+            Debug.display('Rules', 'choose', `Move is legal, let's apply it`);
         }
 
         const resultingState: GameState = this.applyLegalMove(move, node.gameState, legality.get());

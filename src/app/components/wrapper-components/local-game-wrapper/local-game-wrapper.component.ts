@@ -4,7 +4,7 @@ import { AbstractNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
@@ -17,17 +17,15 @@ import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameConfig, GameConfigDescription } from 'src/app/jscaip/ConfigUtil';
-import { TimeUtils } from 'src/app/utils/TimeUtils';
-import { BehaviorSubject, Observable, Subscription, lastValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
-
-    public static override VERBOSE: boolean = false;
 
     public aiDepths: [string, string] = ['0', '0'];
 
@@ -41,8 +39,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public configSetted: boolean = false;
 
-    private readonly configBS: BehaviorSubject<GameConfig> = new BehaviorSubject({});
-    private readonly configObs: Observable<GameConfig> = this.configBS.asObservable();
+    private readonly configBS: BehaviorSubject<MGPOptional<GameConfig>> = new BehaviorSubject(MGPOptional.empty());
+    private readonly configObs: Observable<MGPOptional<GameConfig>> = this.configBS.asObservable();
 
     public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
@@ -53,7 +51,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         super(actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
-        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
     public getCreatedNodes(): number {
         return MGPNodeStats.createdNodes;
@@ -63,10 +60,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
-            console.log('LGWC.ngAfterViewInit: let us createGameConfigAndStartComponent')
             const createdSuccessfully: boolean = await this.createGameConfigAndStartComponent();
-            console.log('LGWC.ngAfterViewInit: we have finished createGameConfigAndStartComponent')
-            // TODO: must receive a config
             if (createdSuccessfully) {
                 await this.restartGame();
                 this.cdr.detectChanges();
@@ -88,8 +82,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
-        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onLegalUserMove');
-
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
         this.updateBoard();
         this.proposeAIToPlay();
@@ -116,8 +108,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                         this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (Player ${gameStatus.winner.value + 1}) won`);
                     }
                 }
+            } else {
+                console.log('y a bien draw he')
             }
-
+        } else {
+            console.log("la partie n'est pas finie, FELIPE")
         }
     }
     public proposeAIToPlay(): void {
@@ -179,10 +174,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.getPlayingAI().isPresent();
     }
     public async restartGame(): Promise<void> {
+        console.log('restartGame !')
         const config: GameConfig = await this.getConfig();
+        console.log('restartGame has a gameConfig: the same as before?!')
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.updateBoard();
         this.endGame = false;
+        console.log('restartGame winnerMessage erased')
         this.winnerMessage = MGPOptional.empty();
         this.proposeAIToPlay();
     }
@@ -198,27 +196,28 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public getConfigDescriptor(): GameConfigDescription {
         const gameURL: string = this.getGameName();
         const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
+        // TODO: do the assert that this exist eh
         return game.configDescription;
     }
     public async getConfig(): Promise<GameConfig> {
-        console.log('LGWC.getConfig: we fetch the config')
-        const propro: Promise<GameConfig> = new Promise((resolve: (value: GameConfig) => void) => {
-            this.configObs.subscribe((response: GameConfig) => {
-                console.log('içi quoi', response)
-                if (Object.keys(response).length === 0) {
-                    console.log('sporé lo')
-                } else {
-                    resolve(response);
-                }
-            }); // TODO: UNSUB LO
+        // Linter seem to think that the unscubscription line can be reached before the subscription
+        // yet this is false, so this explain the weird instanciation
+        let subcription: Subscription = { unsubscribe: () => {}} as Subscription;
+        const gameConfigPromise: Promise<GameConfig> =
+            new Promise((resolve: (value: GameConfig) => void) => {
+                subcription = this.configObs.subscribe((response: MGPOptional<GameConfig>) => {
+                    if (response.isPresent()) {
+                        resolve(response.get());
+                    }
+                });
         });
-        const gameConfig: GameConfig = await propro;
-        console.log("j'ai enfn reçu", gameConfig);
+        const gameConfig: GameConfig = await gameConfigPromise;
+        subcription.unsubscribe();
+        return gameConfig;
+    }
+    public markConfigAsFilled(gameConfig: GameConfig): void {
         this.configSetted = true;
         this.cdr.detectChanges();
-        return gameConfig; // TODO: do it !
-    }
-    public markConfigAsFilled(thingy: GameConfig): void {
-        this.configBS.next(thingy);
+        this.configBS.next(MGPOptional.of(gameConfig));
     }
 }

@@ -34,7 +34,6 @@ type ModeType = '2D' | '3D';
 })
 export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
 
-    public static VERBOSE: boolean = false;
     public static STROKE_WIDTH: number;
     private static readonly INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
         isDroppedPiece: false,
@@ -166,7 +165,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         let otherCoord: Coord = new Coord(-2, -2); // Will get erased
         for (const dir of Direction.ORTHOGONALS) {
             const neighborCoord: Coord = pieceCoord.getNext(dir);
-            if (neighborCoord.isInRange(TrexoState.SIZE, TrexoState.SIZE)) {
+            if (TrexoState.isOnBoard(neighborCoord)) {
                 const neighborStack: TrexoPieceStack = this.getState().getPieceAt(neighborCoord);
                 if (neighborStack.getHeight() > z) {
                     const neighborPiece: TrexoPiece = neighborStack.getPieceAt(z);

@@ -68,7 +68,7 @@ describe('LinesOfActionComponent', () => {
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
             await testUtils.expectMoveSuccess('#click_2_2', move);
 
-            const component: LinesOfActionComponent = testUtils.getComponent();
+            const component: LinesOfActionComponent = testUtils.getGameComponent();
             expect(component.getSquareClasses(2, 2)).toEqual(['moved-fill']);
             expect(component.getSquareClasses(2, 0)).toEqual(['moved-fill']);
         }));
@@ -90,7 +90,7 @@ describe('LinesOfActionComponent', () => {
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
             await testUtils.expectMoveSuccess('#click_2_2', move);
 
-            const component: LinesOfActionComponent = testUtils.getComponent();
+            const component: LinesOfActionComponent = testUtils.getGameComponent();
             expect(component.getSquareClasses(2, 2)).toEqual(['captured-fill']);
         }));
         it('should change selected piece when clicking another piece', fakeAsync(async() => {

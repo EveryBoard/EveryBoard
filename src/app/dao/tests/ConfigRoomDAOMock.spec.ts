@@ -2,7 +2,7 @@
 import { ConfigRoom, ConfigRoomDocument } from 'src/app/domain/ConfigRoom';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
@@ -12,15 +12,13 @@ import { Subscription } from 'rxjs';
 
 type ConfigRoomOS = ObservableSubject<MGPOptional<ConfigRoomDocument>>
 
+@Debug.log
 export class ConfigRoomDAOMock extends FirestoreDAOMock<ConfigRoom> {
-
-    public static override VERBOSE: boolean = false;
 
     private static configRoomDB: MGPMap<string, ConfigRoomOS>;
 
     public constructor() {
-        super('ConfigRoomDAOMock', ConfigRoomDAOMock.VERBOSE);
-        display(this.VERBOSE, 'ConfigRoomDAOMock.constructor');
+        super('ConfigRoomDAOMock');
     }
     public getStaticDB(): MGPMap<string, ConfigRoomOS> {
         return ConfigRoomDAOMock.configRoomDB;
@@ -30,7 +28,7 @@ export class ConfigRoomDAOMock extends FirestoreDAOMock<ConfigRoom> {
     }
 }
 
-xdescribe('ConfigRoomDAOMock', () => {
+describe('ConfigRoomDAOMock', () => {
 
     let configRoomDAOMock: ConfigRoomDAOMock;
 

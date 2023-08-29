@@ -1,6 +1,6 @@
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { display } from '../utils/utils';
+import { Debug } from '../utils/utils';
 import { Direction } from './Direction';
 
 export class BoardDatas {
@@ -44,25 +44,24 @@ export class GroupInfos {
                        readonly neighborsEntryPoints: ReadonlyArray<Coord>) { }
 }
 
+@Debug.log
 export abstract class GroupDatasFactory<T> {
 
     public abstract getNewInstance(color: T): GroupDatas<T>;
 
     public getGroupDatas(coord: Coord, board: Table<T>): GroupDatas<T> {
-        display(GroupDatas.VERBOSE, 'GroupDatas.getGroupDatas(' + coord + ', ' + board + ')');
         const color: T = board[coord.y][coord.x];
         const groupDatas: GroupDatas<T> = this.getNewInstance(color);
         return this._getGroupDatas(coord, board, groupDatas);
     }
     private _getGroupDatas(coord: Coord, board: Table<T>, groupDatas: GroupDatas<T>): GroupDatas<T> {
-        display(GroupDatas.VERBOSE, { GroupDatas_getGroupDatas: { groupDatas, coord } });
         const color: T = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
         if (color === groupDatas.color) {
             for (const direction of this.getDirections()) {
                 const nextCoord: Coord = coord.getNext(direction);
                 if (nextCoord.isInRange(board[0].length, board.length)) {
-                    if (!groupDatas.contains(nextCoord)) {
+                    if (groupDatas.contains(nextCoord) === false) {
                         groupDatas = this._getGroupDatas(nextCoord, board, groupDatas);
                     }
                 }
@@ -74,7 +73,6 @@ export abstract class GroupDatasFactory<T> {
 }
 
 export abstract class GroupDatas<T> {
-    public static VERBOSE: boolean = false;
 
     public constructor(public readonly color: T) {}
 
