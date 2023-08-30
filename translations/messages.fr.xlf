@@ -83,16 +83,16 @@
         <target>Apprendre les règles</target>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
-        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> de <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> de <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
-        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> contre <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> contre <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
       </trans-unit>
       <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (waiting for opponent)</source>
-        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (en attente d'adversaire)</target>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (waiting for opponent)</source>
+        <target><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (en attente d'adversaire)</target>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
@@ -614,13 +614,13 @@
         <source>Human</source>
         <target>Humain</target>
       </trans-unit>
-      <trans-unit id="6063984594211340121" datatype="html">
-        <source>Pick the level</source>
-        <target>Choisissez le niveau</target>
+      <trans-unit id="3795472118461355324" datatype="html">
+        <source>Pick the options</source>
+        <target>Choisissez les options</target>
       </trans-unit>
-      <trans-unit id="8800476882871783599" datatype="html">
-        <source>Level <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
-        <target>Niveau <x id="INTERPOLATION" equiv-text="{{ i }}"/></target>
+      <trans-unit id="187187500641108332" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="option.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="option.name }}"/></target>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</source>
