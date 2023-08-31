@@ -296,8 +296,8 @@ describe('SiamComponent', () => {
             testUtils.findElement('#remainingPieces_1_0').nativeElement.transform.baseVal.getItem(0);
         const playerZeroRemainingPiecesTranslation: SVGTransform =
             testUtils.findElement('#remainingPieces_0_0').nativeElement.transform.baseVal.getItem(0);
-        expectTranslationYToBe(playerZeroRemainingPiecesTranslation, -100)
-        expectTranslationYToBe(playerOneRemainingPiecesTranslation, 700)
+        expectTranslationYToBe(playerZeroRemainingPiecesTranslation, -100);
+        expectTranslationYToBe(playerOneRemainingPiecesTranslation, 700);
     });
     it('should display current player pieces on the bottom (observer)', () => {
         // Given a state
@@ -314,7 +314,7 @@ describe('SiamComponent', () => {
         testUtils.setupState(state);
         testUtils.getWrapper().setRole(PlayerOrNone.NONE);
 
-        // Then player 1's pieces should be on the bottom
+        // Then player 0's pieces should be on the bottom
         const playerOneRemainingPiecesTranslation: SVGTransform =
             testUtils.findElement('#remainingPieces_1_0').nativeElement.transform.baseVal.getItem(0);
         const playerZeroRemainingPiecesTranslation: SVGTransform =

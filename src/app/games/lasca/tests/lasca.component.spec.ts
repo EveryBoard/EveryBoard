@@ -256,6 +256,14 @@ describe('LascaComponent', () => {
         }));
     });
     describe('experience as second player (reversed board)', () => {
+        it('should have first player on top in a reversed board', fakeAsync(async() => {
+            // Given a board that been reversed
+            testUtils.getWrapper().setRole(Player.ONE);
+
+            // When displaying it it
+            // Then the square at (2, 2) should be coord (4, 4)
+            testUtils.expectElementToExist('#square_at_2_2 #square_4_4')
+        }));
         it('should not duplicate highlight when doing incorrect second click', fakeAsync(async() => {
             // Given a board where you are player two and a moving piece has been selected
             await testUtils.expectClickSuccess('#coord_2_4');
