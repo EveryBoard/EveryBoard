@@ -52,7 +52,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         return moves;
     }
     private constructor() {
-        super(P4State);
+        super(P4State, {});
     }
     public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
         const x: number = move.x;

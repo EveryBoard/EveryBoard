@@ -5,7 +5,7 @@ import { TaflMove } from './TaflMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Debug } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -16,18 +16,25 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { tablutConfig } from './tablut/tablutConfig';
 
-class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
+class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState, TaflConfig> {}
 
-export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S> {
+export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S, TaflConfig> {
 
     protected constructor(stateType: Type<S>,
-                          public readonly config: TaflConfig,
+                          config: TaflConfig,
                           public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(stateType);
+        super(stateType, config);
+        if (Object.keys(config).length === 0) {
+            console.log('TAFL CREATED WITHOUT CONFIG');
+        }
     }
     public isLegal(move: TaflMove, state: S): MGPValidation {
+        if (Object.keys(this.config).length > 0) console.log('CONFIG CANNOT BE NULL (' + Object.keys(tablutConfig).length +')')
+        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL (' + Object.keys(tablutConfig).length +')');
+
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
         if (validity.isFailure()) {
@@ -68,14 +75,14 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return MGPValidation.SUCCESS;
     }
     public isThrone(state: S, coord: Coord): boolean {
-        if (this.isExternalThrone(coord)) {
+        if (this.isExternalThrone(state, coord)) {
             return true;
         } else {
             return state.isCentralThrone(coord);
         }
     }
-    public isExternalThrone(coord: Coord): boolean {
-        const max: number = this.config.WIDTH - 1;
+    public isExternalThrone(state: TaflState, coord: Coord): boolean {
+        const max: number = state.getSize() - 1;
         if (coord.x === 0) {
             return (coord.y === 0) || (coord.y === max);
         } else if (coord.x === max) {
@@ -93,7 +100,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
          * 4: the threatened square is a pawn          -> delegate calculation
          */
         const threatened: Coord = landingPawn.getNext(d);
-        if (threatened.isNotInRange(this.config.WIDTH, this.config.WIDTH)) {
+        if (state.isOnBoard(threatened) === false) {
             return MGPOptional.empty(); // 1: the threatened square dont exist, no capture
         }
         const threatenedPawnOwner: RelativePlayer = state.getRelativeOwner(player, threatened);
@@ -118,7 +125,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             return this.captureKingAgainstTheWall(left, right, kingCoord);
         }
         if (back === RelativePlayer.NONE && this.isThrone(state, backCoord)) {
-            return this.captureKingAgainstThrone(backCoord, kingCoord, left, right);
+            return this.captureKingAgainstThrone(state, backCoord, kingCoord, left, right);
         }
         if (back === RelativePlayer.PLAYER) {
             return this.captureKingWithAtLeastASandwich(state, kingCoord, left, leftCoord, right, rightCoord);
@@ -132,19 +139,19 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     {
         // the piece that just moved came from the front direction (by definition)
         const backCoord: Coord = c.getNext(d);
-        const backInRange: boolean = backCoord.isInRange(this.config.WIDTH, this.config.WIDTH);
+        const backInRange: boolean = state.isOnBoard(backCoord);
         const back: RelativePlayer = backInRange ?
             state.getRelativeOwner(player, backCoord) :
             RelativePlayer.NONE;
 
         const leftCoord: Coord = c.getLeft(d);
-        const leftInRange: boolean = leftCoord.isInRange(this.config.WIDTH, this.config.WIDTH);
+        const leftInRange: boolean = state.isOnBoard(leftCoord);
         const left: RelativePlayer = leftInRange ?
             state.getRelativeOwner(player, leftCoord) :
             RelativePlayer.NONE;
 
         const rightCoord: Coord = c.getRight(d);
-        const rightInRange: boolean = rightCoord.isInRange(this.config.WIDTH, this.config.WIDTH);
+        const rightInRange: boolean = state.isOnBoard(rightCoord);
         const right: RelativePlayer = rightInRange ?
             state.getRelativeOwner(player, rightCoord) :
             RelativePlayer.NONE;
@@ -168,13 +175,14 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         // those were the only two way to capture against the border
         return MGPOptional.empty();
     }
-    private captureKingAgainstThrone(backCoord: Coord,
+    private captureKingAgainstThrone(state: TaflState,
+                                     backCoord: Coord,
                                      kingCoord: Coord,
                                      left: RelativePlayer,
                                      right: RelativePlayer)
     : MGPOptional<Coord>
     {
-        if (this.isExternalThrone(backCoord)) {
+        if (this.isExternalThrone(state, backCoord)) {
             if (this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED) {
                 return MGPOptional.of(kingCoord);
             }
@@ -202,7 +210,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         const backCoord: Coord = threatenedPieceCoord.getNext(direction);
         // the piece that just move is always considered in front
         let back: RelativePlayer = RelativePlayer.NONE;
-        if (backCoord.isInRange(this.config.WIDTH, this.config.WIDTH)) {
+        if (state.isOnBoard(backCoord)) {
             back = state.getRelativeOwner(player, backCoord);
         }
         if (back === RelativePlayer.NONE) {
@@ -293,7 +301,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             return MGPOptional.of(this.getInvader());
         }
         const kingCoord: Coord = optionalKingCoord.get();
-        if (this.isExternalThrone(kingCoord)) {
+        if (this.isExternalThrone(state, kingCoord)) {
             Debug.display('TaflRules', 'getWinner', 'The king escape, victory to defender');
             // king reached one corner!
             return MGPOptional.of(this.getDefender());
@@ -310,8 +318,9 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return MGPOptional.empty();
     }
     public getKingCoord(state: S): MGPOptional<Coord> {
-        for (let y: number = 0; y < this.config.WIDTH; y++) {
-            for (let x: number = 0; x < this.config.WIDTH; x++) {
+        const size: number = state.getSize();
+        for (let y: number = 0; y < size; y++) {
+            for (let x: number = 0; x < size; x++) {
                 if (state.getPieceAtXY(x, y).isKing()) {
                     return MGPOptional.of(new Coord(x, y));
                 }
@@ -320,10 +329,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return MGPOptional.empty();
     }
     public getInvader(): Player {
-        return this.config.INVADER;
+        return this.config.INVADER_IS_PLAYER_ZERO ? Player.ZERO : Player.ONE;
     }
     public getDefender(): Player {
-        return this.config.INVADER.getOpponent();
+        return this.getInvader().getOpponent();
     }
     public isPlayerImmobilized(player: Player, state: S): boolean {
         return this.getPlayerListMoves(player, state).length === 0;
@@ -342,9 +351,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return listMoves;
     }
     public getPlayerListPawns(player: Player, state: S): Coord[] {
+        const size: number = state.getSize();
         const listPawn: Coord[] = [];
-        for (let y: number = 0; y < this.config.WIDTH; y++) {
-            for (let x: number = 0; x < this.config.WIDTH; x++) {
+        for (let y: number = 0; y < size; y++) {
+            for (let x: number = 0; x < size; x++) {
                 // for each square
                 const pawn: Coord = new Coord(x, y);
                 const owner: PlayerOrNone = state.getAbsoluteOwner(pawn);
@@ -363,12 +373,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             // we look for empty existing destinations in each direction as far as we can
             foundDestination = start.getNext(dir, 1);
             let obstacleFound: boolean = false;
-            while (foundDestination.isInRange(this.config.WIDTH, this.config.WIDTH) &&
-                   obstacleFound === false)
-            {
+            while (state.isOnBoard(foundDestination) && obstacleFound === false) {
                 const destinationEmpty: boolean = state.getAbsoluteOwner(foundDestination) === PlayerOrNone.NONE;
                 if (destinationEmpty) {
-                    if (this.isExternalThrone(foundDestination)) {
+                    if (this.isExternalThrone(state, foundDestination)) {
                         if (state.getPieceAt(start).isKing()) {
                             destinations.push(foundDestination);
                         }

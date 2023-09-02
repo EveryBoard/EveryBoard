@@ -30,7 +30,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
     private constructor() {
-        super(ConnectSixState);
+        super(ConnectSixState, {});
     }
     public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _info: void): ConnectSixState {
         if (move instanceof ConnectSixDrops) {

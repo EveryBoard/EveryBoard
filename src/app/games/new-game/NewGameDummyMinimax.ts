@@ -2,7 +2,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { NewGameBoardValue, NewGameLegalityInfo, NewGameNode, NewGameRules } from './NewGameRules';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { NewGameConfig } from './NewGameConfig';
 
 /**
  * What is called "minimaxes" here are heuristic calculators.
@@ -15,7 +15,7 @@ import { GameConfig } from 'src/app/jscaip/ConfigUtil';
  */
 export class NewGameDummyMinimax extends Minimax<NewGameMove,
                                                  NewGameState,
-                                                 GameConfig,
+                                                 NewGameConfig,
                                                  NewGameLegalityInfo,
                                                  NewGameBoardValue,
                                                  NewGameRules>

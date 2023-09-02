@@ -142,6 +142,9 @@
                         </ng-template>
                     </div>
                 </div>
+                <app-game-configuration [config]="configDescription"
+                                        (configFullfilledNotification)="saveGameConfig($event)">
+                </app-game-configuration>
             </fieldset>
             <div class="field">
                 <div class="buttons has-addons">

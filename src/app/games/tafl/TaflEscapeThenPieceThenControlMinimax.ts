@@ -18,7 +18,7 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
             return gameStatus.toBoardValue();
         }
         const state: TaflState = node.gameState;
-        const width: number = this.ruler.config.WIDTH;
+        const width: number = state.getSize();
 
         const metrics: TaflPieceAndControlMinimaxMetrics =
             this.getControlScoreAndPieceScores(width, state);
@@ -52,7 +52,7 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
             // not found:
             return MGPOptional.empty();
         }
-        if (nextGen.some((coord: Coord) => this.ruler.isExternalThrone(coord))) {
+        if (nextGen.some((coord: Coord) => this.ruler.isExternalThrone(state, coord))) {
             return MGPOptional.of(step);
         } else {
             step++;
@@ -65,9 +65,7 @@ export class TaflEscapeThenPieceThenControlMinimax extends TaflPieceAndControlMi
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {
                 let landing: Coord = piece.getNext(dir, 1);
-                while (landing.isInRange(this.ruler.config.WIDTH, this.ruler.config.WIDTH) &&
-                       state.getPieceAt(landing) === TaflPawn.UNOCCUPIED)
-                {
+                while (state.isOnBoard(landing) && state.getPieceAt(landing) === TaflPawn.UNOCCUPIED) {
                     if (handledCoords.every((coord: Coord) => coord.equals(landing) === false)) {
                         // coord is new
                         newGen.push(landing);

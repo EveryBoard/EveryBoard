@@ -7,8 +7,6 @@ export class ConfigRoomServiceMock {
 
     public static emittedsConfigRoom: ConfigRoomDocument[];
 
-    public constructor() {
-    }
     public joinGame(): Promise<void> {
         return new Promise((resolve: () => void) => {
             resolve();
@@ -31,6 +29,7 @@ export class ConfigRoomServiceMock {
                 maximalMoveDuration: 60,
                 totalPartDuration: 300,
                 gameType: 42,
+                gameConfig: {},
             });
         });
     }

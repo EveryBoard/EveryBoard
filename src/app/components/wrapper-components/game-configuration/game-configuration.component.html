@@ -1,0 +1,58 @@
+<div class="box">
+    <p class="title" i18n>Configuration of your {{ gameName }} part</p>
+    <form [formGroup]="gameConfigForm"
+          (ngSubmit)="onSubmit()">
+        <div *ngFor="let configParameter of config.fields"
+             id="{{ configParameter.name }}_{{ configParameter.type }}_config"
+             class="field is-horizontal">
+            <div class="field-label is-normal">
+                <label class="label">{{ configParameter.name }}</label>
+            </div>
+            <div *ngIf="configParameter.type === 'number'"
+                 class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input id="{{ configParameter.name }}_number_config_input"
+                               [formControlName]="configParameter.name"
+                               type="number"
+                               class="input"
+                               required
+                               i18n-placeholder placeholder="{{ configParameter.name }}" />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="configParameter.type === 'string'"
+                 class="control">
+                <input id="{{ configParameter.name }}_string_config_input"
+                       [formControlName]="configParameter.name"
+                       class="input"
+                       required
+                       i18n-placeholder placeholder="{{ configParameter.name }}" />
+
+            </div>
+            <div *ngIf="configParameter.type === 'boolean'"
+                 class="control">
+                <input id="{{ configParameter.name }}_boolean_config_input"
+                       class="input"
+                       required
+                       [formControlName]="configParameter.name"
+                       i18n-placeholder placeholder="{{ configParameter.name }}" />
+
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label is-normal"></div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <button id="chooseConfigButton"
+                                class="button is-primary is-fullwidth"
+                                type="submit"
+                                [disabled]="gameConfigForm.valid === false && 'TODO' === 'TODO'"
+                                i18n>{{ configurationButtonMessage }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

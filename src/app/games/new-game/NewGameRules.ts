@@ -6,7 +6,8 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { GameConfig, getDefaultConfig } from 'src/app/jscaip/ConfigUtil';
+import { NewGameConfig, NewGameConfigDescription } from './NewGameConfig';
 
 /**
  * This class is optional.
@@ -46,7 +47,9 @@ export class NewGameNode extends MGPNode<NewGameRules,
  * It should be a singleton class.
  * It is used by the wrappers to check the legality of a move, and to apply the move on a state.
  */
-export class NewGameRules extends Rules<NewGameMove, NewGameState, GameConfig, NewGameLegalityInfo, NewGameBoardValue> {
+export class NewGameRules
+    extends Rules<NewGameMove, NewGameState, NewGameConfig, NewGameLegalityInfo, NewGameBoardValue>
+{
 
     /**
      * This is the singleton instance. You should keep this as is, except for adapting the class name.
@@ -66,7 +69,8 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, GameConfig, N
      * The constructor is made private to avoid creating other instances of this class.
      */
     private constructor() {
-        super(NewGameState);
+        const config: NewGameConfig = getDefaultConfig(NewGameConfigDescription) as NewGameConfig;
+        super(NewGameState, config);
     }
 
     /**

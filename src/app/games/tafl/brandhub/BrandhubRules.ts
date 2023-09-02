@@ -4,8 +4,9 @@ import { BrandhubState } from './BrandhubState';
 import { TaflRules } from '../TaflRules';
 import { BrandhubMove } from './BrandhubMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TaflConfig } from '../TaflConfig';
 
-export class BrandhubNode extends MGPNode<BrandhubRules, BrandhubMove, BrandhubState> {}
+export class BrandhubNode extends MGPNode<BrandhubRules, BrandhubMove, BrandhubState, TaflConfig> {}
 
 export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
 

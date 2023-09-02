@@ -8,14 +8,14 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { TaflConfig } from './TaflConfig';
 
-export class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
+export class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState, TaflConfig> {}
 
 @Debug.log
 export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
                                                       TaflState,
-                                                      GameConfig,
+                                                      TaflConfig,
                                                       void,
                                                       TaflRules<TaflMove, TaflState>> // TODO: remove thoses
 {
@@ -27,14 +27,15 @@ export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
     }
     public orderMoves(state: TaflState, listMoves: TaflMove[]): TaflMove[] {
         const king: Coord = this.ruler.getKingCoord(state).get();
-        if (state.getCurrentPlayer() === this.ruler.config.INVADER) { // Invader
+        const invader: Player = this.ruler.config.INVADER_IS_PLAYER_ZERO ? Player.ZERO : Player.ONE;
+        if (state.getCurrentPlayer() === invader) { // Invader
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
                 return - move.getEnd().getOrthogonalDistance(king);
             });
         } else {
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
                 if (move.getStart().equals(king)) {
-                    if (this.ruler.isExternalThrone(move.getEnd())) {
+                    if (this.ruler.isExternalThrone(state, move.getEnd())) {
                         return 2;
                     } else {
                         return 1;
@@ -55,8 +56,9 @@ export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
 
         const nbPlayerZeroPawns: number = this.ruler.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.ruler.getPlayerListPawns(Player.ONE, state).length;
-        const zeroMult: number = [1, 2][this.ruler.config.INVADER.value]; // invaders pawn are twice as numerous
-        const oneMult: number = [2, 1][this.ruler.config.INVADER.value]; // so they're twice less valuable
+        const invader: Player = this.ruler.config.INVADER_IS_PLAYER_ZERO ? Player.ZERO : Player.ONE;
+        const zeroMult: number = [1, 2][invader.value]; // invaders pawn are twice as numerous
+        const oneMult: number = [2, 1][invader.value]; // so they're twice less valuable
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;
         const scoreOne: number = nbPlayerOnePawns * oneMult;
         return [scoreZero, scoreOne];

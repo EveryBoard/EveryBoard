@@ -8,7 +8,7 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Move } from 'src/app/jscaip/Move';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { GameConfig, GameConfigDescription, getDefaultConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type DemoNodeInfo = {
     name: string, // The name of the game
@@ -38,8 +38,11 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     protected override getGameName(): string {
+        // Unlike all other BaseGameComponent (wrapper or game) thoses will share one page: everyboard.org/demo
+        // Hence we cannot read the name of the game via the URL
         return this.demoNodeInfo.name;
     }
+
     public async ngAfterViewInit(): Promise<void> {
         setTimeout(async() => {
             await this.afterViewInit();
@@ -61,7 +64,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public async onLegalUserMove(move: Move, scores?: [number, number] | undefined): Promise<void> {
         return;
     }
-    public getPlayer(): string {
+    public override getPlayer(): string {
         return 'no-player';
     }
     public onCancelMove(_reason?: string | undefined): void {
@@ -70,6 +73,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public async getConfig(): Promise<GameConfig> {
         const gameURL: string = this.getGameName();
         const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
-        return {}; // TODO: do it !
+        const configDescription: GameConfigDescription = game.configDescription;
+        return getDefaultConfig(configDescription);
     }
 }

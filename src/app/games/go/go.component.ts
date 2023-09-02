@@ -52,7 +52,7 @@ export class GoComponent
         this.updateBoard();
     }
     public async ngOnInit(): Promise<void> {
-        const config: GameConfig = await this.TODO_getGameConfigFromWrapper();
+        const config: GameConfig = await this.getGameConfigFromWrapper();
         this.node = this.rules.getInitialNode(config);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

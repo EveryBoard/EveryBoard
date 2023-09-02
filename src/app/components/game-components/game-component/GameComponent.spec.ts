@@ -146,7 +146,7 @@ describe('GameComponent', () => {
     };
     const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
     for (const gameInfo of GameInfo.ALL_GAMES()) {
-        it('clicks method should refuse when observer click', fakeAsync(async() => {
+        it(`clicks method should refuse when observer click (${ gameInfo.name})`, fakeAsync(async() => {
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {
                 throw new Error('Please define ' + gameInfo.urlName + ' clickable method in here to test them.');
@@ -154,7 +154,6 @@ describe('GameComponent', () => {
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
                 await ComponentTestUtils.forGame(gameInfo.urlName);
-                // await ComponentTestUtils.forGame(gameInfo.urlName, false); // TODO: CHOOOOSE
             const component: AbstractGameComponent = testUtils.getGameComponent();
             testUtils.getWrapper().role = PlayerOrNone.NONE; // TODO: setRole ?
             testUtils.detectChanges();
@@ -172,7 +171,7 @@ describe('GameComponent', () => {
         }));
     }
     for (const gameInfo of GameInfo.ALL_GAMES()) {
-        it('should have an encoder and a tutorial for every game', fakeAsync(async() =>{
+        it(`should have an encoder and a tutorial for ${ gameInfo.name }`, fakeAsync(async() =>{
             // Given a game
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =

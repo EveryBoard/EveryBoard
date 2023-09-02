@@ -4,8 +4,9 @@ import { HnefataflState } from './HnefataflState';
 import { TaflRules } from '../TaflRules';
 import { HnefataflMove } from './HnefataflMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TaflConfig } from '../TaflConfig';
 
-export class HnefataflNode extends MGPNode<HnefataflRules, HnefataflMove, HnefataflState> {}
+export class HnefataflNode extends MGPNode<HnefataflRules, HnefataflMove, HnefataflState, TaflConfig> {}
 
 export class HnefataflRules extends TaflRules<HnefataflMove, HnefataflState> {
 

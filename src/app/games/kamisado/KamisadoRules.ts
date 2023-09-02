@@ -29,7 +29,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         return KamisadoRules.singleton.get();
     }
     private constructor() {
-        super(KamisadoState);
+        super(KamisadoState, {});
     }
     public static getColorMatchingPiece(state: KamisadoState): Array<Coord> {
         if (state.coordToPlay.isPresent()) {

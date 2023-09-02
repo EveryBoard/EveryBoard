@@ -30,7 +30,7 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
         return PenteRules.singleton.get();
     }
     private constructor() {
-        super(PenteState);
+        super(PenteState, {});
     }
 
     public isLegal(move: PenteMove, state: PenteState): MGPValidation {

@@ -24,7 +24,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         return ConspirateursRules.singleton.get();
     }
     private constructor() {
-        super(ConspirateursState);
+        super(ConspirateursState, {});
     }
     public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _info: void): ConspirateursState {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();

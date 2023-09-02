@@ -34,7 +34,7 @@ export class EpaminondasRules
         return EpaminondasRules.singleton.get();
     }
     private constructor() {
-        super(EpaminondasState);
+        super(EpaminondasState, {});
     }
     public static isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {
         const phalanxValidity: MGPValidation = this.getPhalanxValidity(state, move);

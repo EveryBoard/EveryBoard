@@ -30,7 +30,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return SaharaRules.singleton.get();
     }
     private constructor() {
-        super(SaharaState);
+        super(SaharaState, {});
     }
     public static getStartingCoords(board: Table<FourStatePiece>, player: Player): Coord[] {
         const startingCoords: Coord[] = [];

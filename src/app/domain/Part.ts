@@ -4,12 +4,14 @@ import { FirestoreTime } from './Time';
 import { MinimalUser } from './MinimalUser';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MGPOptional } from '../utils/MGPOptional';
+import { GameConfig } from '../jscaip/ConfigUtil';
 
 export type Part = {
     readonly typeGame: string; // the type of game
     readonly playerZero: MinimalUser; // the first player
     readonly turn: number; // -1 means the part has not started, 0 is the initial turn
     readonly result: IMGPResult;
+    readonly gameConfig: GameConfig; // Transfered from the ConfigRoom
 
     readonly playerOne?: MinimalUser; // the second player
     readonly beginning?: FirestoreTime; // beginning of the part

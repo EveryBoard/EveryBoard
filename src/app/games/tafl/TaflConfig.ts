@@ -1,11 +1,11 @@
-import { Player } from 'src/app/jscaip/Player';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 
 /**
  * Terminology:
  *     - surrounding: means capturing with 4 enemies (being border, opponent, or throne)
  *     - sandwiching: means capturing with 2 enemies (being border, opponent, or throne)
  */
-export interface TaflConfig {
+export interface TaflConfig extends GameConfig {
 
     // once the king leave the castle he cannot re-station there
     readonly CASTLE_IS_LEFT_FOR_GOOD: boolean;
@@ -16,7 +16,5 @@ export interface TaflConfig {
     // the king can be captured by two invaders when he doesn't touch a throne
     readonly KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: boolean;
 
-    readonly WIDTH: number;
-
-    readonly INVADER: Player;
+    readonly INVADER_IS_PLAYER_ZERO: boolean;
 }

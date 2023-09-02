@@ -15,8 +15,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { GameConfig, GameConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -68,9 +67,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }, 1);
     }
     private async createGameConfigAndStartComponent(): Promise<boolean> {
-        const gameURL: string = this.getGameName();
-        const gameInfo: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
-        return this.afterViewInit(); // TODO: DO
+        return this.afterViewInit();
     }
     public updatePlayer(player: Player): void {
         this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
@@ -108,11 +105,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                         this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (Player ${gameStatus.winner.value + 1}) won`);
                     }
                 }
-            } else {
-                console.log('y a bien draw he')
             }
-        } else {
-            console.log("la partie n'est pas finie, FELIPE")
         }
     }
     public proposeAIToPlay(): void {
@@ -174,17 +167,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.getPlayingAI().isPresent();
     }
     public async restartGame(): Promise<void> {
-        console.log('restartGame !')
         const config: GameConfig = await this.getConfig();
-        console.log('restartGame has a gameConfig: the same as before?!')
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.updateBoard();
         this.endGame = false;
-        console.log('restartGame winnerMessage erased')
         this.winnerMessage = MGPOptional.empty();
         this.proposeAIToPlay();
     }
-    public getPlayer(): string {
+    public override getPlayer(): string {
         return 'human';
     }
     public onCancelMove(reason?: string): void {
@@ -193,16 +183,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.gameComponent.showLastMove(move);
         }
     }
-    public getConfigDescriptor(): GameConfigDescription {
-        const gameURL: string = this.getGameName();
-        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
-        // TODO: do the assert that this exist eh
-        return game.configDescription;
-    }
     public async getConfig(): Promise<GameConfig> {
         // Linter seem to think that the unscubscription line can be reached before the subscription
         // yet this is false, so this explain the weird instanciation
-        let subcription: Subscription = { unsubscribe: () => {}} as Subscription;
+        let subcription: Subscription = { unsubscribe: () => {} } as Subscription;
         const gameConfigPromise: Promise<GameConfig> =
             new Promise((resolve: (value: GameConfig) => void) => {
                 subcription = this.configObs.subscribe((response: MGPOptional<GameConfig>) => {
@@ -210,7 +194,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                         resolve(response.get());
                     }
                 });
-        });
+            });
         const gameConfig: GameConfig = await gameConfigPromise;
         subcription.unsubscribe();
         return gameConfig;

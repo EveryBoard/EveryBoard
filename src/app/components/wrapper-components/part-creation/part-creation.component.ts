@@ -23,6 +23,7 @@ import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { GameConfig, GameConfigDescription } from 'src/app/jscaip/ConfigUtil';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -71,6 +72,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public partType: typeof PartType = PartType;
 
     @Input() partId: string;
+
+    @Input() configDescription: GameConfigDescription;
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
@@ -515,5 +518,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             await this.currentGameService.removeCurrentGame();
             await this.configRoomService.cancelJoining(this.partId);
         }
+    }
+
+    public saveGameConfig(gameConfig: GameConfig): Promise<void> {
+        return this.configRoomService.changeGameConfig(this.partId, gameConfig);
     }
 }

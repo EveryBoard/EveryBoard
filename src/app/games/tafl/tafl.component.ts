@@ -13,9 +13,10 @@ import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { ActivatedRoute } from '@angular/router';
+import { TaflConfig } from './TaflConfig';
 
 export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
-    extends RectangularGameComponent<R, M, S, TaflPawn>
+    extends RectangularGameComponent<R, M, S, TaflPawn, TaflConfig>
 {
 
     public viewInfo: { pieceClasses: string[][][] } = { pieceClasses: [] };
@@ -34,7 +35,8 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     public override getViewBox(): string {
         const begin: number = - this.STROKE_WIDTH;
-        const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
+        const abstractWidth: number = this.getState().board.length; // Asserting all tafl are square board
+        const width: number = (abstractWidth * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         return begin + ' ' + begin + ' ' + width + ' ' + width;
     }
     public updateBoard(): void {
@@ -47,7 +49,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = move.getEnd().getNext(orthogonal, 1);
-            if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
+            if (previousState.isOnBoard(captured)) {
                 const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
                 const currentPiece: TaflPawn = this.getState().getPieceAt(captured);

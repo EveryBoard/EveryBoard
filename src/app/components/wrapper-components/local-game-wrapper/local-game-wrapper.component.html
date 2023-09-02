@@ -103,7 +103,7 @@
     </div>
 </div>
 <div *ngIf="configSetted === false">
-    <app-game-configuration [config]="getConfigDescriptor()"
+    <app-game-configuration [config]="getConfigDescription()"
                             (configFullfilledNotification)="markConfigAsFilled($event)">
     </app-game-configuration>
 </div>

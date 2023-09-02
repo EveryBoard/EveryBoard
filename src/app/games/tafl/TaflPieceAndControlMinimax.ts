@@ -27,10 +27,10 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
             return gameStatus.toBoardValue();
         }
         const state: TaflState = node.gameState;
-        const width: number = this.ruler.config.WIDTH;
+        const size: number = state.getSize();
 
         const metrics: TaflPieceAndControlMinimaxMetrics =
-            this.getControlScoreAndPieceScores(width, state);
+            this.getControlScoreAndPieceScores(size, state);
         let scoreValue: number = metrics.controlScore;
         scoreValue += metrics.safeScore * this.getScoreBySafePiece(state);
         const maxControl: number = this.getScoreByThreatenedPiece(state);
@@ -57,8 +57,8 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
                     metrics.safeScore += owner.getScoreModifier();
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(width, width) &&
-                            state.getPieceAt(testedCoord) === TaflPawn.UNOCCUPIED) {
+                        while (state.isOnBoard(testedCoord) &&
+                               state.getPieceAt(testedCoord) === TaflPawn.UNOCCUPIED) {
                             controlledSquares.add(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
@@ -87,7 +87,7 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
         return value;
     }
     public getScoreByThreatenedPiece(state: TaflState): number {
-        const width: number = state.board.length;
+        const width: number = state.getSize();
         // The value of the four corners (each being "width" * "width")
         // + the value of what remains of the four edges (each border square being worth "width")
         // + the value of what remains of the board (each square being worth one point)

@@ -105,7 +105,7 @@ import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { GameEventService } from './services/GameEventService';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
-import { GameConfigurationComponent } from './components/normal-component/game-configuration/game-configuration.component';
+import { GameConfigurationComponent } from './components/wrapper-components/game-configuration/game-configuration.component';
 
 registerLocaleData(localeFr);
 

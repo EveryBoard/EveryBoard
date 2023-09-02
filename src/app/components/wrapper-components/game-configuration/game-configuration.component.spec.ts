@@ -1,7 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { GameConfigurationComponent } from './game-configuration.component';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('GameConfigurationComponent', () => {
 
@@ -10,7 +10,8 @@ describe('GameConfigurationComponent', () => {
     let component: GameConfigurationComponent;
 
     beforeEach(async() => {
-        testUtils = await SimpleComponentTestUtils.create(GameConfigurationComponent);
+        const actRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
+        testUtils = await SimpleComponentTestUtils.create(GameConfigurationComponent, actRoute);
         component = testUtils.getComponent();
     });
     it('should create', () => {
@@ -19,7 +20,7 @@ describe('GameConfigurationComponent', () => {
     describe('number config', () => {
         it('should propose a number imput when given a config of type number', fakeAsync(async() => {
             // Given a component loaded with a config description having a number
-            component.config = { fields: [{ type: 'number', name: 'nombre' }] };
+            component.config = { fields: [{ type: 'number', name: 'nombre', defaultValue: 5 }] };
 
             // When rendering component
             testUtils.detectChanges();

@@ -33,7 +33,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, GameConfig, A
         return AbaloneRules.singleton.get();
     }
     private constructor() {
-        super(AbaloneState);
+        super(AbaloneState, {});
     }
     private static isLegalRealPush(firstOpponent: Coord,
                                    move: AbaloneMove,

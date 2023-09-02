@@ -16,7 +16,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 
-    public width: number;
+    public maxWidth: number = 11; // The biggest width possible our board have
 
     public maxInfluence: number;
 
@@ -26,8 +26,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 
     public constructor(ruler: TaflRules<TaflMove, TaflState>, name: string) {
         super(ruler, name);
-        this.width = this.ruler.config.WIDTH;
-        this.maxInfluence = 16 * ((this.width * 2) - 2);
+        this.maxInfluence = 16 * ((this.maxWidth * 2) - 2);
         this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
         this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
     }
@@ -52,7 +51,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                     let influence: number = 0;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(this.width, this.width) &&
+                        while (state.isOnBoard(testedCoord) &&
                                state.getPieceAt(testedCoord) === empty)
                         {
                             influence++;
@@ -67,10 +66,11 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
     }
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
+        const size: number = state.getSize();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
-        for (let y: number = 0; y < this.width; y++) {
-            for (let x: number = 0; x < this.width; x++) {
+        for (let y: number = 0; y < size; y++) {
+            for (let x: number = 0; x < size; x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: TaflPawn = state.getPieceAt(coord);
                 if (piece !== empty) {
@@ -118,12 +118,12 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                         continue;
                     }
                     let futureCapturer: Coord = coord.getNext(dir, 1);
-                    while (futureCapturer.isInRange(this.width, this.width) &&
-                        state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
+                    while (state.isOnBoard(futureCapturer) &&
+                           state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
                     {
                         futureCapturer = futureCapturer.getNext(captureDirection);
                     }
-                    if (futureCapturer.isInRange(this.width, this.width) &&
+                    if (state.isOnBoard(futureCapturer) &&
                         state.getAbsoluteOwner(futureCapturer) === threatenerPlayer &&
                         coord.getNext(dir, 1).equals(futureCapturer) === false)
                     {
@@ -136,7 +136,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         return threats;
     }
     public isAThreat(coord: Coord, state: TaflState, opponent: Player): boolean {
-        if (coord.isNotInRange(this.width, this.width)) {
+        if (state.isOnBoard(coord) === false) {
             return false;
         }
         if (state.getAbsoluteOwner(coord) === opponent) {

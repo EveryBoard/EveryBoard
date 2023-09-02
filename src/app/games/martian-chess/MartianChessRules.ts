@@ -40,7 +40,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         return MartianChessRules.singleton.get();
     }
     private constructor() {
-        super(MartianChessState);
+        super(MartianChessState, {});
     }
     public applyLegalMove(move: MartianChessMove,
                           state: MartianChessState,

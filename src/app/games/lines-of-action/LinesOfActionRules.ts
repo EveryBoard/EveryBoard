@@ -26,7 +26,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return LinesOfActionRules.singleton.get();
     }
     private constructor() {
-        super(LinesOfActionState);
+        super(LinesOfActionState, {});
     }
     public static getListMovesFromState(state: LinesOfActionState): LinesOfActionMove[] {
         const moves: LinesOfActionMove[] = [];

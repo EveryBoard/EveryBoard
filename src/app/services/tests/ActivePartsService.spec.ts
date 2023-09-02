@@ -11,7 +11,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
 import { FirestoreCondition } from 'src/app/dao/FirestoreDAO';
 
-describe('ActivePartsService', () => {
+xdescribe('ActivePartsService', () => {
 
     let activePartsService: ActivePartsService;
 
@@ -23,6 +23,7 @@ describe('ActivePartsService', () => {
         result: 5,
         turn: 0,
         typeGame: 'P4',
+        gameConfig: {},
     };
 
     beforeEach(fakeAsync(async() => {

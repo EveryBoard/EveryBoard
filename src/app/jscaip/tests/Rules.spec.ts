@@ -29,7 +29,7 @@ class AbstractRules extends Rules<P4Move, MyAbstractState> {
         return AbstractRules.singleton.get();
     }
     private constructor() {
-        super(MyAbstractState);
+        super(MyAbstractState, {});
     }
     public applyLegalMove(move: P4Move, state: MyAbstractState, _legality: void): MyAbstractState {
         const board: readonly number[] = state.board[0];
@@ -82,7 +82,7 @@ describe('Rules', () => {
     describe('choose', () => {
         it('should return MGPOptional.empty() when the move was illegal', () => {
             // Given a node and a move that will be deemed illegal
-            const node: AbstractNode = rules.getInitialNode();
+            const node: AbstractNode = rules.getInitialNode({});
             const illegalMove: P4Move = P4Move.FIVE;
             spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure(''));
 

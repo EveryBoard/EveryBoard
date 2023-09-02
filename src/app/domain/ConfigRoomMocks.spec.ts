@@ -13,6 +13,7 @@ export class ConfigRoomMocks {
         partStatus: PartStatus.PART_CREATED.value,
         maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
         totalPartDuration: PartType.NORMAL_PART_DURATION,
+        gameConfig: {},
     };
 
     public static readonly INITIAL_RANDOM: ConfigRoom = {

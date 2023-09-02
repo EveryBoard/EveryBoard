@@ -21,15 +21,13 @@ export const myTaflConfig: TaflConfig = {
 
     CASTLE_IS_LEFT_FOR_GOOD: true,
 
-    INVADER: Player.ZERO,
+    INVADER_IS_PLAYER_ZERO: true,
 
     KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: true,
 
     CENTRAL_THRONE_CAN_SURROUND_KING: true,
 
     BORDER_CAN_SURROUND_KING: true,
-
-    WIDTH: 7,
 };
 
 describe('TaflRules', () => {
@@ -49,7 +47,7 @@ describe('TaflRules', () => {
     });
     describe('getSurroundings', () => {
         it('should return neighborings spaces', () => {
-            const startingState: TaflState = rules.getInitialNode().gameState;
+            const startingState: TaflState = rules.getInitialNode(myTaflConfig).gameState;
             const { backCoord } =
                 rules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingState);
             expect(backCoord).toEqual(new Coord(4, 1));

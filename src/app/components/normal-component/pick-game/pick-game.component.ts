@@ -198,16 +198,39 @@ class GameDescription {
 
 }
 
+class GameConfiguration {
+
+    public static readonly GO: GameConfigDescription = { fields: [
+        { name: 'height', type: 'number', defaultValue: 9 },
+        { name: 'width', type: 'number', defaultValue: 9 },
+    ] };
+
+    public static readonly MANCALAS: GameConfigDescription = { fields: [
+        { name: 'width', type: 'number', defaultValue: 6 },
+        { name: 'seed by house', type: 'number', defaultValue: 4 },
+    ] };
+
+    public static readonly TABLUT: GameConfigDescription = { fields: [
+        { name: 'CASTLE_IS_LEFT_FOR_GOOD', type: 'boolean', defaultValue: false },
+        { name: 'BORDER_CAN_SURROUND_KING', type: 'boolean', defaultValue: true },
+        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', type: 'boolean', defaultValue: false },
+        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', type: 'boolean', defaultValue: false },
+        { name: 'WIDTH', type: 'boolean', defaultValue: 9 },
+        { name: 'INVADER_IS_PLAYER_ZERO', type: 'boolean', defaultValue: true },
+    ] };
+
+}
+
 export class GameInfo {
     // Games sorted by creation date
     public static ALL_GAMES: () => GameInfo[] = () => [
         new GameInfo($localize`Four in a Row`, 'P4', P4Component, new P4Tutorial(), P4Rules.get(), new Date('2018-08-28'), GameDescription.P4()),
-        new GameInfo($localize`Awalé`, 'Awale', AwaleComponent, new AwaleTutorial(), AwaleRules.get(), new Date('2018-11-29'), GameDescription.AWALE()), // 93 days after P4
+        new GameInfo($localize`Awalé`, 'Awale', AwaleComponent, new AwaleTutorial(), AwaleRules.get(), new Date('2018-11-29'), GameDescription.AWALE(), GameConfiguration.MANCALAS), // 93 days after P4
         new GameInfo($localize`Quarto`, 'Quarto', QuartoComponent, new QuartoTutorial(), QuartoRules.get(), new Date('2018-12-09'), GameDescription.QUARTO()), // 10 days after Awale
-        new GameInfo($localize`Tablut`, 'Tablut', TablutComponent, new TablutTutorial(), TablutRules.get(), new Date('2018-12-27'), GameDescription.TABLUT()), // 26 days after Quarto
+        new GameInfo($localize`Tablut`, 'Tablut', TablutComponent, new TablutTutorial(), TablutRules.get(), new Date('2018-12-27'), GameDescription.TABLUT(), GameConfiguration.TABLUT), // 26 days after Quarto
 
         new GameInfo($localize`Reversi`, 'Reversi', ReversiComponent, new ReversiTutorial(), ReversiRules.get(), new Date('2019-01-16'), GameDescription.REVERSI()), // 20 days after Tablut
-        new GameInfo($localize`Go`, 'Go', GoComponent, new GoTutorial(), GoRules.get(), new Date('2019-12-21'), GameDescription.GO(), { fields: [{ name: 'height', type: 'number' }, { name: 'width', type: 'number' }] }), // 11 months after Reversi
+        new GameInfo($localize`Go`, 'Go', GoComponent, new GoTutorial(), GoRules.get(), new Date('2019-12-21'), GameDescription.GO(), GameConfiguration.GO), // 11 months after Reversi
         new GameInfo($localize`Encapsule`, 'Encapsule', EncapsuleComponent, new EncapsuleTutorial(), EncapsuleRules.get(), new Date('2019-12-30'), GameDescription.ENCAPSULE()), // 9 days after Go
 
         new GameInfo($localize`Siam`, 'Siam', SiamComponent, new SiamTutorial(), SiamRules.get(), new Date('2020-01-11'), GameDescription.SIAM()), // 12 days after Encapsule

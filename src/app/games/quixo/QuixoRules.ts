@@ -26,7 +26,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         return QuixoRules.singleton.get();
     }
     private constructor() {
-        super(QuixoState);
+        super(QuixoState, {});
     }
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(QuixoState.isOnBoard, Utils.identity, QuixoState.SIZE);

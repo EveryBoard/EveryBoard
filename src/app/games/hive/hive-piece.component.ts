@@ -3,6 +3,7 @@ import { BaseGameComponent } from 'src/app/components/game-components/game-compo
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { HivePiece } from './HivePiece';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: '[app-hive-piece]',
@@ -10,6 +11,10 @@ import { HivePiece } from './HivePiece';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class HivePieceComponent extends BaseGameComponent implements AfterContentChecked {
+
+    public constructor(actRoute: ActivatedRoute) {
+        super(actRoute);
+    }
 
     @Input() piece: HivePiece;
     @Input() x: number;

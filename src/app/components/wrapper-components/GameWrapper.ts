@@ -1,4 +1,4 @@
-import { Component, ComponentRef, Injector, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
@@ -7,12 +7,12 @@ import { Utils } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
+import { AbstractGameComponent, BaseGameComponent } from '../game-components/game-component/GameComponent';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Comparable } from 'src/app/utils/Comparable';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { GameConfig, GameConfigDescription } from 'src/app/jscaip/ConfigUtil';
 
 export class GameWrapperMessages {
 
@@ -31,7 +31,7 @@ export class GameWrapperMessages {
 }
 
 @Component({ template: '' })
-export abstract class GameWrapper<P extends Comparable> {
+export abstract class GameWrapper<P extends Comparable> extends BaseGameComponent {
 
     // This holds the #board html element
     @ViewChild('board', { read: ViewContainerRef })
@@ -47,11 +47,12 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public Player: typeof Player = Player;
 
-    public constructor(protected readonly actRoute: ActivatedRoute,
+    public constructor(actRoute: ActivatedRoute,
                        protected readonly connectedUserService: ConnectedUserService,
                        protected readonly router: Router,
                        protected readonly messageDisplayer: MessageDisplayer)
     {
+        super(actRoute);
     }
     public getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
         const gameInfo: MGPOptional<GameInfo> =
@@ -67,9 +68,6 @@ export abstract class GameWrapper<P extends Comparable> {
         }
         return gameCreatedSuccessfully;
     }
-    protected getGameName(): string {
-        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
-    }
     private async createGameComponent(): Promise<boolean> {
         const gameName: string = this.getGameName();
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
@@ -80,13 +78,7 @@ export abstract class GameWrapper<P extends Comparable> {
         Utils.assert(this.boardRef != null, 'Board element should be present');
 
         const componentRef: ComponentRef<AbstractGameComponent> =
-            Utils.getNonNullable(this.boardRef).createComponent(component.get(), {
-                injector: Injector.create({
-                    providers: [
-                        // { provide: GameConfig, useValue: config }, // TODO KILL
-                    ],
-                }),
-            });
+            Utils.getNonNullable(this.boardRef).createComponent(component.get());
         this.gameComponent = componentRef.instance;
 
 
@@ -106,7 +98,7 @@ export abstract class GameWrapper<P extends Comparable> {
         this.gameComponent.cancelMoveOnWrapper = (reason?: string): void => {
             this.onCancelMove(reason);
         };
-        this.gameComponent.TODO_getGameConfigFromWrapper = (): Promise<GameConfig> => {
+        this.gameComponent.getGameConfigFromWrapper = (): Promise<GameConfig> => {
             return this.getConfig();
         };
         this.setRole(this.role);
@@ -184,6 +176,20 @@ export abstract class GameWrapper<P extends Comparable> {
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
             this.gameComponent.showLastMove(move);
+        }
+    }
+
+    public getConfigDescription(): GameConfigDescription {
+        const gameName: string = this.getGameName();
+        return this.getGameConfigDescription(gameName);
+    }
+
+    public getGameConfigDescription(gameName: string): GameConfigDescription {
+        const game: GameInfo[] = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameName);
+        if (game.length === 0) {
+            return { fields: [] };
+        } else {
+            return game[0].configDescription;
         }
     }
 }

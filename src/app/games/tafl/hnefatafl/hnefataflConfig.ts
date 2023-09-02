@@ -1,4 +1,3 @@
-import { Player } from 'src/app/jscaip/Player';
 import { TaflConfig } from '../TaflConfig';
 
 export const hnefataflConfig: TaflConfig = {
@@ -6,6 +5,5 @@ export const hnefataflConfig: TaflConfig = {
     BORDER_CAN_SURROUND_KING: true,
     CENTRAL_THRONE_CAN_SURROUND_KING: false,
     KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: false,
-    WIDTH: 11,
-    INVADER: Player.ZERO,
+    INVADER_IS_PLAYER_ZERO: true,
 };

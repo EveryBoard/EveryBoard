@@ -66,7 +66,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, GameCon
         return LodestoneRules.singleton.get();
     }
     private constructor() {
-        super(LodestoneState);
+        super(LodestoneState, {});
     }
     public applyLegalMove(move: LodestoneMove, state: LodestoneState, infos: LodestoneInfos): LodestoneState {
         const currentPlayer: Player = state.getCurrentPlayer();

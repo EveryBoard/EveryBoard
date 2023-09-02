@@ -36,7 +36,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, GameConfig, SiamLegali
         return SiamRules.singleton.get();
     }
     private constructor() {
-        super(SiamState);
+        super(SiamState, {});
     }
 
     public isLegal(move: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {

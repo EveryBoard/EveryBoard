@@ -11,6 +11,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
+import { getDefaultConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('DemoCardComponent', () => {
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
@@ -78,4 +79,12 @@ describe('DemoCardComponent', () => {
         // Then nothing should have happend (for coverage sake)
         expect(result).withContext('should be null').toBe();
     }));
+    describe('getConfig', () => {
+        it('should provide initial default config to game component', fakeAsync(async() => {
+            // Given any demo card
+            // When calling getConfig
+            // TODO getDefaultConfig
+            // Then the return should be the default game config
+        }));
+    });
 });

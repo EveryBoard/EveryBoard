@@ -9,6 +9,8 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { BoardValue } from './BoardValue';
 import { GameStatus } from './GameStatus';
 import { GameConfig } from './ConfigUtil';
+import { TaflMove } from '../games/tafl/TaflMove';
+import { BrandhubState } from '../games/tafl/brandhub/BrandhubState';
 
 // export class GameConfig {
 
@@ -20,12 +22,18 @@ import { GameConfig } from './ConfigUtil';
 
 export abstract class Rules<M extends Move,
                             S extends GameState,
-                            C extends GameConfig = GameConfig, // TODO: check if needed, probably not
+                            C extends GameConfig = GameConfig,
                             L = void,
                             B extends BoardValue = BoardValue>
 {
 
-    public constructor(public readonly stateType: Type<S>) {
+    public constructor(public readonly stateType: Type<S>,
+                       public config: C)
+    {
+        if (this.stateType.toString().substring(0, 17) === 'class TablutState' && Object.keys(config).length === 0) {
+            console.log('TABLUT CRÉER SANS CONFIG')
+            throw new Error('SODBET, Tafl crée sans config !!')
+        }
     }
     /* The data that represent the status of the game at the current moment, including:
      * the board
@@ -78,6 +86,9 @@ export abstract class Rules<M extends Move,
     public abstract isLegal(move: M, state: S): MGPFallible<L>;
 
     public getInitialNode(config?: C): MGPNode<Rules<M, S, C, L, B>, M, S, C, L, B> {
+        if (config != null && Object.keys(config).length > 0) {
+            this.config = config;
+        }
         // eslint-disable-next-line dot-notation
         const initialState: S = this.stateType['getInitialState'](config);
         return new MGPNode(initialState);

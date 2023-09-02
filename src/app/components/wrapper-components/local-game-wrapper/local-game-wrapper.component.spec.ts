@@ -156,17 +156,11 @@ describe('LocalGameWrapperComponent', () => {
             await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
 
             // When restarting the game
-            testUtils.expectElementToExist('#draw');
-            console.log('>>>>>>>>>>>> restartButton');
             await testUtils.expectInterfaceClickSuccess('#restartButton');
 
             // Then the draw indication should be removed and we should be back at turn 0
-            expect(testUtils.getGameComponent().getTurn()).toBe(0);
-            console.log('>>>>>>>>>>>> tick(1)');
-            tick(1);
-            console.log('>>>>>> detect')
             testUtils.detectChanges();
-
+            expect(testUtils.getGameComponent().getTurn()).toBe(0);
             testUtils.expectElementNotToExist('#draw');
         }));
     });

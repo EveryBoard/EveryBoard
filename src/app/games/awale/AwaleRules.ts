@@ -35,7 +35,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         return AwaleRules.singleton.get();
     }
     private constructor() {
-        super(AwaleState);
+        super(AwaleState, {});
     }
     public applyLegalMove(move: AwaleMove, state: AwaleState, _info: void): AwaleState {
         const x: number = move.x;

@@ -57,6 +57,7 @@ export class GameService {
             playerZero,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
+            gameConfig: {}, // TODO: veux on procéder ainsi ?
         };
         return this.partDAO.create(newPart);
     }
@@ -92,6 +93,7 @@ export class GameService {
             playerOne,
             turn: 0,
             beginning: serverTimestamp(),
+            // TODO: check si il faut mettre une config par défaut
         };
     }
     public deletePart(partId: string): Promise<void> {
@@ -107,7 +109,7 @@ export class GameService {
         } else {
             accepter = Player.ZERO;
         }
-        await this.partDAO.update(partId, update);
+        await this.partDAO.update(partId, update as Part); // TODO: check why ?
         await this.gameEventService.startGame(partId, accepter);
     }
     public getPart(partId: string): Promise<MGPOptional<Part>> {
@@ -179,10 +181,12 @@ export class GameService {
             partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
         const startingConfig: StartingPartConfig = this.getStartingConfig(newConfigRoom);
+        // TODO: unit tester que le transfer de la config précédent est fait
         const newPart: Part = {
             typeGame: part.typeGame,
             result: MGPResult.UNACHIEVED.value,
             ...startingConfig,
+            gameConfig: configRoom.gameConfig,
         };
 
         const rematchId: string = await this.partDAO.create(newPart);

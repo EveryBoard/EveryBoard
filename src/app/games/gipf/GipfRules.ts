@@ -31,7 +31,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GameConfig, GipfLegali
         return GipfRules.singleton.get();
     }
     private constructor() {
-        super(GipfState);
+        super(GipfState, {});
     }
     public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
         return new GipfState(computedState.board,

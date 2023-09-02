@@ -14,7 +14,7 @@ import { TablutMove } from '../tablut/TablutMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 
-describe('TablutPieceAndInfluenceMinimax', () => {
+describe('TaflPieceAndInfluenceMinimax', () => {
 
     let minimax: TaflPieceAndInfluenceMinimax;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;

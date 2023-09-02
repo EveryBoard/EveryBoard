@@ -49,7 +49,7 @@ describe('MGPNode', () => {
         // Given a node who'se value has already been calculated
         const state: GameState = new GameStateMock(0);
         const node: MGPNode<RulesMock, MoveMock, GameStateMock> = new MGPNode(state);
-        const rules: RulesMock = new RulesMock(GameStateMock);
+        const rules: RulesMock = new RulesMock(GameStateMock, {});
         const minimax: MockMinimax = new MockMinimax(rules, 'mock minimax');
         node.getOwnValue(minimax);
 

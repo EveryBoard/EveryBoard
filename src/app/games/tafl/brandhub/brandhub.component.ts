@@ -10,6 +10,7 @@ import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
 import { BrandhubTutorial } from './BrandhubTutorial';
 import { ActivatedRoute } from '@angular/router';
+import { brandhubConfig } from './brandhubConfig';
 
 @Component({
     selector: 'app-brandhub',
@@ -21,7 +22,7 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
     public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
         super(messageDisplayer, actRoute, BrandhubMove.from);
         this.rules = BrandhubRules.get();
-        this.node = this.rules.getInitialNode();
+        this.node = this.rules.getInitialNode(brandhubConfig);
         this.availableMinimaxes = [
             new TaflMinimax(this.rules, 'DummyBot'),
             new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),

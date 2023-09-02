@@ -33,4 +33,7 @@ export abstract class TaflState extends GameStateWithTable<TaflPawn> {
         const pawn: TaflPawn = this.getPieceAt(coord);
         return pawn.getOwner();
     }
+    public getSize(): number {
+        return this.board.length;
+    }
 }

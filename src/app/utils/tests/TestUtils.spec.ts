@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -47,6 +47,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { GameConfig, GameConfigDescription, getDefaultConfig } from 'src/app/jscaip/ConfigUtil';
 
 @Component({})
 export class BlankComponent {}
@@ -280,12 +281,15 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1); // Need to be at least 1ms
+        if (testUtils.getWrapper() instanceof LocalGameWrapperComponent) {
+            await testUtils.acceptDefaultConfig();
+        }
         testUtils.bindGameComponent();
         testUtils.prepareSpies();
         return testUtils;
     }
     public static async basic<T extends AbstractGameComponent, P extends Comparable>(
-        game?: string,
+        game: string,
         configureTestingModule: boolean = true)
     : Promise<ComponentTestUtils<T, P>>
     {
@@ -298,6 +302,15 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         return testUtils;
     }
 
+    public async acceptDefaultConfig(): Promise<void> {
+        const compo: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
+        // eslint-disable-next-line dot-notation
+        const gameName: string = compo['getGameName']();
+        const configDescription: GameConfigDescription = compo.getGameConfigDescription(gameName);
+        const config: GameConfig = getDefaultConfig(configDescription);
+        compo.markConfigAsFilled(config);
+        tick(0);
+    }
     public bindGameComponent(): void {
         expect(this.component.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
         this.gameComponent = this.component.gameComponent;
@@ -468,6 +481,8 @@ export class TestUtils {
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
+        }).overrideComponent(LocalGameWrapperComponent, {
+            set: { changeDetection: ChangeDetectionStrategy.Default },
         }).compileComponents();
     }
     public static async configureTestingModule(componentType: object,

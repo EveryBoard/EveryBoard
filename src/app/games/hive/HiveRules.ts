@@ -27,7 +27,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return HiveRules.singleton.get();
     }
     private constructor() {
-        super(HiveState);
+        super(HiveState, {});
     }
     public applyLegalMove(move: HiveMove, state: HiveState, _info: void): HiveState {
         if (move instanceof HiveDropMove) {

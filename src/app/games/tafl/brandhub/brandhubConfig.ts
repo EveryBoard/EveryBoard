@@ -1,4 +1,3 @@
-import { Player } from 'src/app/jscaip/Player';
 import { TaflConfig } from '../TaflConfig';
 
 export const brandhubConfig: TaflConfig = {
@@ -11,7 +10,5 @@ export const brandhubConfig: TaflConfig = {
 
     KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: true,
 
-    WIDTH: 7,
-
-    INVADER: Player.ZERO,
+    INVADER_IS_PLAYER_ZERO: true,
 };

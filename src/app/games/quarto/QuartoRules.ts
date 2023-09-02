@@ -136,7 +136,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return QuartoRules.singleton.get();
     }
     private constructor() {
-        super(QuartoState);
+        super(QuartoState, {});
     }
     public static readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals

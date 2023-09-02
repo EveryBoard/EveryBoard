@@ -32,7 +32,7 @@ export class GoRules extends Rules<GoMove, GoState, GameConfig, GoLegalityInform
         return GoRules.singleton.get();
     }
     private constructor() {
-        super(GoState);
+        super(GoState, {});
     }
     public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         if (GoRules.isPass(move)) {

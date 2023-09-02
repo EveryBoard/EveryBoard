@@ -4,8 +4,9 @@ import { TablutMove } from './TablutMove';
 import { TablutState } from './TablutState';
 import { TaflRules } from '../TaflRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TaflConfig } from '../TaflConfig';
 
-export class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState> {}
+export class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState, TaflConfig> {}
 
 export class TablutRules extends TaflRules<TablutMove, TablutState> {
 

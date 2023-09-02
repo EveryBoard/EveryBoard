@@ -23,6 +23,9 @@ import { ActivatedRoute } from '@angular/router';
  * by sub components which themselves are not GameComponent subclasses
  */
 export abstract class BaseGameComponent {
+
+    public constructor(public readonly actRoute: ActivatedRoute) {}
+
     // Make ArrayUtils available in game components
     public ArrayUtils: typeof ArrayUtils = ArrayUtils;
 
@@ -37,6 +40,10 @@ export abstract class BaseGameComponent {
                 Utils.expectToBe(player, PlayerOrNone.NONE);
                 return '';
         }
+    }
+
+    protected getGameName(): string {
+        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
 }
 
@@ -94,7 +101,7 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
-    public TODO_getGameConfigFromWrapper: () => Promise<C>;
+    public getGameConfigFromWrapper: () => Promise<C>;
 
     public role: PlayerOrNone;
 
@@ -104,16 +111,12 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
      *     - if it's offline, he'll tell the game-component what the bot have done
      */
 
-    public constructor(public readonly messageDisplayer: MessageDisplayer,
-                      protected readonly actRoute: ActivatedRoute)
-    {
-        super();
+    public constructor(public readonly messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
+        super(actRoute);
     }
+
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
-    }
-    protected getGameName(): string {
-        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
     public cancelMove(reason?: string): MGPValidation {
         this.cancelMoveAttempt();

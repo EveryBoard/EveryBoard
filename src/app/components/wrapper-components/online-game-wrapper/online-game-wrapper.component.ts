@@ -96,7 +96,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public isPlaying(): boolean {
         return this.role.isPlayer();
     }
-    public getPlayer(): MinimalUser {
+    public override getPlayer(): MinimalUser {
         return this.authUser.toMinimalUser();
     }
     private async redirectIfPartOrGameIsInvalid(): Promise<void> {
@@ -555,8 +555,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
     public async getConfig(): Promise<GameConfig> {
-        const gameURL: string = this.getGameName();
-        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
-        return {}; // TODO: do it !
+        return this.configRoom.gameConfig;
     }
 }

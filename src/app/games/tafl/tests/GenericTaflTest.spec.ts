@@ -40,10 +40,15 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
     : void
 {
     let testUtils: ComponentTestUtils<C>;
+
     describe(entries.gameName + ' component generic tests', () => {
         beforeEach(fakeAsync(async() => {
+            console.log('ON TESTE DU ' + entries.gameName + ' LO')
             testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);
         }));
+        afterEach(() => {
+            console.log('Fijn de ' + entries.gameName + ' eh')
+        });
         it('should create', () => {
             testUtils.expectToBeCreated();
         });

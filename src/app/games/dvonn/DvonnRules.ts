@@ -28,7 +28,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return DvonnRules.singleton.get();
     }
     private constructor() {
-        super(DvonnState);
+        super(DvonnState, {});
     }
     public static getGameStatus(node: DvonnNode): GameStatus {
         const state: DvonnState = node.gameState;

@@ -225,7 +225,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         await this.router.navigate(['/play', game]);
     }
-    public getPlayer(): TutorialPlayer {
+    public override getPlayer(): TutorialPlayer {
+        // TODO FOR REVIEW: ticketter l'obligation de override ou plutôt l'autre ?
         return 'tutorial-player';
     }
     public async getConfig(): Promise<GameConfig> {
