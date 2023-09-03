@@ -18,6 +18,7 @@ import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
+import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 
 interface SpaceInfo {
     coord: Coord,
@@ -240,7 +241,7 @@ export class YinshComponent
         }
     }
     private coordsBetween(start: Coord, end: Coord): Coord[] {
-        return start.getCoordsToward(end).concat(start).concat(end);
+        return MoveCoordToCoord.getMovedCoords(start, end);
     }
     private showLastMoveCapture(capture: YinshCapture, alsoShowPiece: boolean): void {
         for (const coord of capture.capturedSpaces) {

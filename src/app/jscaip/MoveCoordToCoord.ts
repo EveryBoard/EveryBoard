@@ -6,6 +6,9 @@ import { MoveWithTwoCoords } from './MoveWithTwoCoords';
 
 export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
 
+    public static getMovedCoords(start: Coord, end: Coord): Coord[] {
+        return start.getCoordsToward(end).concat(start).concat(end);
+    }
     public constructor(start: Coord, end: Coord) {
         super(start, end);
         if (start.equals(end)) throw new Error(RulesFailure.MOVE_CANNOT_BE_STATIC());
@@ -26,5 +29,9 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
         if (this === other) return true;
         if (this.getStart().equals(other.getStart()) === false) return false;
         return this.getEnd().equals(other.getEnd());
+    }
+
+    public getMovedCoords(): Coord[] {
+        return MoveCoordToCoord.getMovedCoords(this.getStart(), this.getEnd());
     }
 }

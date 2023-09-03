@@ -27,7 +27,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
     protected capturedCoords: Coord[] = [];
 
-    protected passedByCoord: Coord[] = [];
+    protected passedByCoords: Coord[] = [];
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -61,9 +61,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
                 }
             }
         }
-        const lastStart: Coord = this.node.move.get().getStart();
-        const lastEnd: Coord = this.node.move.get().getEnd();
-        this.passedByCoord = lastStart.getCoordsToward(lastEnd).concat(lastStart).concat(lastEnd);
+        this.passedByCoords = this.node.move.get().getMovedCoords();
     }
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
@@ -159,7 +157,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
         } else if (this.node.move.isPresent()) {
-            if (this.passedByCoord.some((c: Coord) => c.equals(coord))) {
+            if (this.passedByCoords.some((c: Coord) => c.equals(coord))) {
                 classes.push('moved-fill');
             }
         }

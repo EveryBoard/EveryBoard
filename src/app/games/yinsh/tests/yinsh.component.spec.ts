@@ -210,7 +210,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementToHaveClass('#space_5_2', 'moved-fill'); // another flipped marker
             testUtils.expectElementToHaveClass('#space_6_2', 'moved-fill'); // the moved ring
         }));
-        fit('should show passed-by spaces', fakeAsync(async() => {
+        it('should show passed-by spaces', fakeAsync(async() => {
             // Given a board with some markers
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
