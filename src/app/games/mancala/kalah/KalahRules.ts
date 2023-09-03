@@ -33,14 +33,14 @@ export class KalahRules extends MancalaRules<KalahMove> {
     public isLegal(move: KalahMove, state: MancalaState): MGPValidation {
         const playerY: number = state.getCurrentPlayerY();
         let canStillPlay: boolean = true;
-        for (const distributions of move) {
+        for (const distribution of move) {
             Utils.assert(canStillPlay === true, 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE');
-            const subMoveResult: MGPFallible<boolean> = this.isLegalSubMove(distributions, state);
-            if (subMoveResult.isFailure()) {
-                return MGPValidation.ofFallible(subMoveResult);
+            const distributionResult: MGPFallible<boolean> = this.isLegalDistribution(distribution, state);
+            if (distributionResult.isFailure()) {
+                return MGPValidation.ofFallible(distributionResult);
             } else {
-                state = this.distributeHouse(distributions.x, playerY, state).resultingState;
-                canStillPlay = subMoveResult.get();
+                state = this.distributeHouse(distribution.x, playerY, state).resultingState;
+                canStillPlay = distributionResult.get();
             }
         }
         Utils.assert(canStillPlay === false, 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE');
@@ -50,7 +50,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
       * @param distributions the distributions to try
       * @return: MGPFallible.failure(reason) if it is illegal, MGPFallible.success(userCanStillPlay)
       */
-    private isLegalSubMove(distributions: MancalaDistribution, state: MancalaState): MGPFallible<boolean> {
+    private isLegalDistribution(distributions: MancalaDistribution, state: MancalaState): MGPFallible<boolean> {
         const playerY: number = state.getCurrentPlayerY();
         if (state.getPieceAtXY(distributions.x, playerY) === 0) {
             return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());

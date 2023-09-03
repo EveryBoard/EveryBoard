@@ -72,9 +72,10 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             Utils.assert(this.node.mother.isPresent(), 'triggerAnimation in store should be false at first turn');
             this.changeVisibleState(this.node.mother.get().gameState);
             let indexDistribution: number = 0;
-            for (const subMove of this.node.move.get()) {
-                await this.showSimpleDistribution(subMove);
-                if (indexDistribution + 1 < this.node.move.get().distributions.length) {
+            const move: M = this.node.move.get();
+            for (const distributions of move) {
+                await this.showSimpleDistribution(distributions);
+                if (indexDistribution + 1 < move.distributions.length) {
                     // This prevent to wait 1sec at the end of the animation for nothing
                     await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_DISTRIBUTION);
                 }

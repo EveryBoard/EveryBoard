@@ -309,12 +309,6 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
             await mancalaTestUtils.testUtils.expectClickFailure('#store_player_0', reason);
         }));
         describe('Move Animation', () => {
-            async function triggerOpponentMove(coord: Coord): Promise<void> {
-                const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
-                const move: M = gameComponent.generateMove(coord.x);
-                await gameComponent.chooseMove(move);
-                void gameComponent.updateBoard(true);
-            }
             for (const actor of ['user', 'not_the_user']) {
                 let receiveMoveOrDoClick: (coord: Coord) => Promise<void>;
                 if (actor === 'user') {
@@ -325,7 +319,10 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                     };
                 } else {
                     receiveMoveOrDoClick = async(coord: Coord): Promise<void> => {
-                        return triggerOpponentMove(coord);
+                        const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
+                        const move: M = gameComponent.generateMove(coord.x);
+                        await gameComponent.chooseMove(move);
+                        void gameComponent.updateBoard(true); // void, so it start but don't wait the animation's end
                     };
                 }
                 it('should show right after the first seed being drop (' + actor + ')', fakeAsync(async() => {
@@ -386,7 +383,10 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
             }));
             it('should make click impossible during opponent move animation', fakeAsync(async() => {
                 // Given a move triggered by the opponent
-                void triggerOpponentMove(new Coord(2, 1));
+                const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
+                const move: M = gameComponent.generateMove(2);
+                await gameComponent.chooseMove(move);
+                void gameComponent.updateBoard(true); // void, so it start but don't wait the animation's end
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but bot finished yet
                 spyOn(mancalaTestUtils.testUtils.getGameComponent() as MancalaComponent<R, M>, 'onLegalClick').and.callThrough();
 

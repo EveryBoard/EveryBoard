@@ -10,7 +10,7 @@ export class AwaleTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             this.gameName,
-            $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you're playing Dark, the 6 houses on the bottom are yours.`,
+            $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The one on the extreme left and right are called the stores, they contain the seed that each player one. As you are playing Dark, the 6 houses on the bottom are yours.`,
             MancalaState.getInitialState(),
         ),
         TutorialStep.informational(
@@ -45,7 +45,7 @@ export class AwaleTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Multiple captures`,
-            $localize`By sowing from your leftmost house, you will end in the opponent's second leftmost house, which contains now 3, so this will be a capture. But now, the house right before it contains 2, which is also capturable, so, that house will get captured as well!<br/><br/>You're playing Dark, do a capture!`,
+            $localize`By sowing from your leftmost house, you will end in the opponent's second leftmost house, which contains now 2 seeds, so this will be a capture. But now, the house right before it contains 3 seeds, which is also capturable, so, that house will get captured as well!<br/><br/>You're playing Dark, do a capture!`,
             new MancalaState([
                 [2, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],
@@ -78,8 +78,7 @@ export class AwaleTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Do not starve`,
-            $localize`You have a very nice capture that seems possible: it seems that you can capture all the opponent's seeds!<br/><br/>
-        You're playing Dark. Try it.`,
+            $localize`You have a very nice capture that seems possible: it seems that you can capture all the opponent's seeds!<br/><br/>You're playing Dark. Try it.`,
             new MancalaState([
                 [1, 1, 1, 1, 1, 0],
                 [5, 0, 0, 1, 0, 0],
@@ -106,10 +105,9 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [4, 4, 3, 2, 1, 0],
                 [1, 0, 0, 0, 0, 0],
-            ], 0, [0, 0]),
+            ], 0, [23, 10]),
             AwaleMove.ZERO,
-            $localize`Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
-         Here, it was the first player's turn, and the second player has taken all the remaining seeds.`,
+            $localize`Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player's turn, and the second player has taken all the remaining seeds.`,
         ),
     ];
 }

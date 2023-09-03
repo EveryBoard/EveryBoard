@@ -134,7 +134,7 @@ class GameDescription {
 
     public static readonly APAGOS: Localized = () => $localize`Very simple game, but, will you be able to win everytime?`;
 
-    public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
+    public static readonly AWALE: Localized = () => $localize`The most widespread of the Mancalas.`;
 
     public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
@@ -160,7 +160,7 @@ class GameDescription {
 
     public static readonly HNEFATAFL: Localized = () => $localize`The Viking board game! Invaders must capture the king, defender must make him escape!`;
 
-    public static readonly KALAH: Localized = () => $localize`The most widespread of the Mancalas.`;
+    public static readonly KALAH: Localized = () => $localize`A modern version of the famous African strategy game!`;
 
     public static readonly KAMISADO: Localized = () => $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
@@ -244,7 +244,7 @@ export class GameInfo {
         new GameInfo($localize`Connect Six`, 'ConnectSix', ConnectSixComponent, new ConnectSixTutorial(), ConnectSixRules.get(), new Date('2023-05-13'), GameDescription.CONNECT_SIX()),
         new GameInfo($localize`Pente`, 'Pente', PenteComponent, new PenteTutorial(), PenteRules.get(), new Date('2023-05-20'), GameDescription.PENTE()),
         new GameInfo($localize`Teeko`, 'Teeko', TeekoComponent, new TeekoTutorial(), TeekoRules.get(), new Date('2023-07-30'), GameDescription.TEEKO()),
-        new GameInfo($localize`Kalah`, 'Kalah', KalahComponent, new KalahTutorial(), KalahRules.get(), new Date('2023-08-15'), GameDescription.KALAH()),
+        new GameInfo($localize`Kalah`, 'Kalah', KalahComponent, new KalahTutorial(), KalahRules.get(), new Date('2023-08-30'), GameDescription.KALAH()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

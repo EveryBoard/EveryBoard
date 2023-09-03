@@ -6,5 +6,5 @@ export class MancalaFailure {
 
     public static MUST_CHOOSE_NON_EMPTY_HOUSE: Localized = () => $localize`You should choose a non-empty house to distribute.`;
 
-    public static SHOULD_DISTRIBUTE: Localized = () => $localize`You should distribute but you do not.`;
+    public static SHOULD_DISTRIBUTE: Localized = () => $localize`You should feed but you do not.`;
 }

@@ -12,7 +12,7 @@ export class KalahTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             this.gameName,
-            $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you're playing Dark, the 6 houses on the bottom are yours.`,
+            $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The one on the extreme left and right are called the stores, they contain the seed that each player one. As you are playing Dark, the 6 houses on the bottom are yours.`,
             MancalaState.getInitialState(),
         ),
         TutorialStep.informational(
@@ -24,7 +24,7 @@ export class KalahTutorial extends Tutorial {
 
         TutorialStep.forClick(
             $localize`The Kalah (1/2)`,
-            $localize`The houses on the extreme left and right, unaligned to the others, are the Kalah. Yours is on the left, the opponent's on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah. But you won't have to drop seed in your opponent's Kalah. When you make a capture, the captured seeds are put in your Kalah.<br/><br/>You're playing Dark. Make a move that pass through your Kalah then feed opponent's houses.`,
+            $localize`The houses on the extreme left and right, unaligned to the others, are the Kalah. Yours is on the left, the opponent's on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah, but you won't have to drop seed in your opponent's Kalah. When you make a capture, the captured seeds are put in your Kalah.<br/><br/>You're playing Dark. Make a move that passes through your Kalah then feeds opponent's houses.`,
             MancalaState.getInitialState(),
             [
                 '#click_0_1',
@@ -36,7 +36,7 @@ export class KalahTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`The Kalah (2/2)`,
-            $localize`When ending in the Kalah, you must distribute again.<br/><br/>You're playing Dark, play the house that end up in the Kalah then do a second move!`,
+            $localize`When ending in the Kalah, you must distribute again.<br/><br/>You're playing Dark, play the house that ends up in the Kalah then do a second distribution!`,
             MancalaState.getInitialState(),
             KalahMove.of(MancalaDistribution.THREE, [MancalaDistribution.ONE]),
             (move: KalahMove, _previous: MancalaState, _result: MancalaState) => {
@@ -60,7 +60,7 @@ export class KalahTutorial extends Tutorial {
                 if (resultingState.getPieceAtXY(1, 0) === 0) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure('You did not capture, try again!');
+                    return MGPValidation.failure($localize`You did not capture, try again!`);
                 }
             },
             $localize`Congratulations!`,

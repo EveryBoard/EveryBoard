@@ -415,6 +415,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ];
             await prepareStartedGameWithMoves(encodedMoves, false);
             let numberOfCall: number = 0;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             spyOn<any>(testUtils.getWrapper(), 'onReceivedMove').and.callFake((_: any, isLastMoveOfBatch: boolean) => {
                 numberOfCall++;
                 // Then only once move should have been animated
@@ -425,7 +426,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 }
             });
 
-            // When receiving several pair of moves
+            // When receiving several pairs of moves
             tick(2);
 
             // Finish the part (the real Then is in the callback fo onReceivedMove)

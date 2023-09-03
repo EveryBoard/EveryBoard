@@ -21,7 +21,8 @@ export class KalahMove extends MancalaMove {
                             this.distributions.slice(1).concat(move));
     }
     public override toString(): string {
-        return 'KalahMove([' + this.distributions.map((move: MancalaDistribution) => move.x).join(', ') + '])';
+        const distributions: number[] = this.distributions.map((move: MancalaDistribution) => move.x);
+        return 'KalahMove([' + distributions.join(', ') + '])';
     }
     public override equals(other: this): boolean {
         return ArrayUtils.compareArray(this.distributions, other.distributions);

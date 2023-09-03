@@ -213,15 +213,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const mutex: Mutex = new Mutex(); // Need to ensure we receive events one at a time
         const callback: (events: GameEvent[]) => Promise<void> = async(events: GameEvent[]): Promise<void> => {
             await mutex.runExclusive(async() => {
-                const numberOfMove: number = events.filter((g: GameEvent) => g.eventType === 'Move').length;
-                let numberOfMoveDone: number = 0;
+                const numberOfMoves: number = events.filter((g: GameEvent) => g.eventType === 'Move').length;
+                let numberOfMovesDone: number = 0;
                 this.beforeEventsBatch();
                 for (const event of events) {
                     switch (event.eventType) {
                         case 'Move':
-                            const isLastMove: boolean = (numberOfMoveDone + 1 === numberOfMove);
+                            const isLastMove: boolean = (numberOfMovesDone + 1 === numberOfMoves);
                             await this.onReceivedMove(event, isLastMove);
-                            numberOfMoveDone += 1;
+                            numberOfMovesDone += 1;
                             break;
                         case 'Request':
                             this.requestManager.onReceivedRequest(event);
