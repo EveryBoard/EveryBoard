@@ -14,6 +14,13 @@
                      class="base mid-stroke"
                      stroke-linecap="round"
             />
+            <g *ngIf="spaceContent !== NONE"> <!-- TODO CHECK -->
+                <polygon id="base_line_{{ x }}_{{ y }}"
+                         [attr.points]="getLinePoints(x, y)"
+                         [attr.transform]="getTriangleInHexTranslate(x, y)"
+                         class="base small-stroke white-stroke"
+                />
+            </g>
         </g>
     </g>
     <g *ngFor="let line of board; index as y">
@@ -25,7 +32,7 @@
                      [attr.points]="getPyramidPoints(x, y)"
                      [attr.transform]="getTriangleInHexTranslate(x, y)"
                      [ngClass]="getPyramidClass(x, y)"
-                     class="base mid-stroke"
+                     class="base small-stroke"
                      stroke-linecap="round"
             />
         </g>
