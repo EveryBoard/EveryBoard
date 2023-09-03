@@ -20,7 +20,7 @@ describe('CoerceoComponent', () => {
 
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = testUtils.getGameComponent();
-        expect(gameComponent.isReachable(x, y)).toBeTrue();
+        expect(gameComponent.mustDraw(x, y)).toBeTrue();
         expect(gameComponent.getSpaceClass(x, y)).toBe('captured-alternate-fill');
     }
     function expectCoordToBeOfCapturedFill(x: number, y: number): void {
@@ -237,8 +237,8 @@ describe('CoerceoComponent', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             testUtils.setupState(state, undefined, CoerceoRegularMove.of(new Coord(8, 9), new Coord(6, 9)));
-            testUtils.expectElementToHaveClasses('#last_end_6_9', ['base', 'no-fill', 'last-move-stroke']);
-            testUtils.expectElementToHaveClasses('#last_start_8_9', ['base', 'no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#last_end_6_9', ['base', 'no-fill', 'mid-stroke', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#last_start_8_9', ['base', 'no-fill', 'mid-stroke', 'last-move-stroke']);
 
             // When applying a tile exchange
             await testUtils.expectMoveSuccess('#click_6_9',

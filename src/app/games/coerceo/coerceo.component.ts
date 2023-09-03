@@ -30,12 +30,18 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
 
     public NONE: FourStatePiece = FourStatePiece.UNREACHABLE;
+    public INDICATOR_SIZE: number = 15;
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     public lastStart: MGPOptional<Coord> = MGPOptional.empty();
     public lastEnd: MGPOptional<Coord> = MGPOptional.empty();
 
     public possibleLandings: Coord[] = [];
+
+    public left: number = - 2 * this.STROKE_WIDTH;
+    public up: number = (- this.SPACE_SIZE / 2) - (2 * this.STROKE_WIDTH);
+    public width: number = this.SPACE_SIZE * 8;
+    public height: number = 10 * (this.SPACE_SIZE + this.STROKE_WIDTH);
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -48,7 +54,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         ];
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
-        this.SPACE_SIZE = 70;
         this.updateBoard();
     }
     public updateBoard(): void {
@@ -137,10 +142,15 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return 'captured-fill';
         }
     }
-    public isReachable(x: number, y: number): boolean {
+    public mustDraw(x: number, y: number): boolean {
         const spaceContent: FourStatePiece = this.board[y][x];
-        return spaceContent !== FourStatePiece.UNREACHABLE ||
-               this.wasRemoved(x, y);
+        if (spaceContent === FourStatePiece.UNREACHABLE) {
+            // If it was just removed, we want to draw it
+            return this.wasRemoved(x, y);
+        } else {
+            // If piece is reachable on the board, we want to draw it
+            return true;
+        }
     }
     private wasRemoved(x: number, y: number): boolean {
         const spaceContent: FourStatePiece = this.board[y][x];
@@ -164,23 +174,23 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             }
         }
     }
-    public getTilesCountCoordinate(x: number, y: number): string {
-        const bx: number = x * 100; const by: number = y * 100;
-        const coin0x: number = bx + 25; const coin0y: number = by;
-        const coin1x: number = bx + 75; const coin1y: number = by;
-        const coin2x: number = bx + 100; const coin2y: number = by + 50;
-        const coin3x: number = bx + 75; const coin3y: number = by + 100;
-        const coin4x: number = bx + 25; const coin4y: number = by + 100;
-        const coin5x: number = bx + 0; const coin5y: number = by + 50;
-        return '' + coin0x + ', ' + coin0y + ', ' +
-                    coin1x + ', ' + coin1y + ', ' +
-                    coin2x + ', ' + coin2y + ', ' +
-                    coin3x + ', ' + coin3y + ', ' +
-                    coin4x + ', ' + coin4y + ', ' +
-                    coin5x + ', ' + coin5y + ', ' +
-                    coin0x + ', ' + coin0y;
+    public getTilesCountCoordinate(): string {
+        const bx: number = -40; const by: number = -40;
+        const corner0x: number = bx + 25; const corner0y: number = by;
+        const corner1x: number = bx + 75; const corner1y: number = by;
+        const corner2x: number = bx + 100; const corner2y: number = by + 50;
+        const corner3x: number = bx + 75; const corner3y: number = by + 100;
+        const corner4x: number = bx + 25; const corner4y: number = by + 100;
+        const corner5x: number = bx + 0; const corner5y: number = by + 50;
+        return '' + corner0x + ', ' + corner0y + ', ' +
+                    corner1x + ', ' + corner1y + ', ' +
+                    corner2x + ', ' + corner2y + ', ' +
+                    corner3x + ', ' + corner3y + ', ' +
+                    corner4x + ', ' + corner4y + ', ' +
+                    corner5x + ', ' + corner5y + ', ' +
+                    corner0x + ', ' + corner0y;
     }
-    public getLineCoordinate(x: number, y: number): string {
+    public getLinePoints(x: number, y: number): string {
         const points: Coord[] = this.getTriangleCornerCoords(x, y);
         if (x % 3 === 0) {
             return points[0].x + ',' + points[0].y + ',' + points[1].x + ',' + points[1].y;
@@ -190,18 +200,52 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return points[1].x + ',' + points[1].y + ',' + points[2].x + ',' + points[2].y;
         }
     }
-    public mustShowTilesOf(player: number): boolean {
-        if (this.tiles[player] > 0) {
+    public mustShowTilesOf(player: Player): boolean {
+        if (this.tiles[player.value] > 0) {
             return true;
         } else {
             return this.lastTurnWasTilesExchange(player);
         }
     }
-    public lastTurnWasTilesExchange(player: number): boolean {
+    public lastTurnWasTilesExchange(player: Player): boolean {
         if (this.node.mother.isAbsent()) {
             return false;
         }
-        const previousTiles: number = this.getPreviousState().tiles[player];
-        return previousTiles > this.tiles[player];
+        const previousTiles: number = this.getPreviousState().tiles[player.value];
+        return previousTiles > this.tiles[player.value];
+    }
+    public getIndicatorY(coord: Coord): number {
+        const y: number = this.INDICATOR_SIZE / 2;
+        if ((coord.x + coord.y) % 2 === 0) {
+            return y;
+        } else {
+            return y - 20;
+        }
+    }
+    public getTriangleInHexTranslate(x: number, y: number): string {
+        const translate: Coord = this.getTriangleTranslateCoord(x, y);
+        const translateX: number = translate.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
+        let translateY: number = translate.y;
+        if (Math.floor(x / 3) % 2 === 0) {
+            translateY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
+        } else {
+            translateY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
+            translateY += this.STROKE_WIDTH;
+        }
+        return 'translate(' + translateX + ', ' + translateY + ')';
+    }
+    public getTilesCountTranslate(player: Player): string {
+        let x: number;
+        let y: number;
+        if (player === Player.ZERO) {
+            x = -0.05;
+            y = -0.10;
+        } else {
+            x = 7.5;
+            y = 9.45;
+        }
+        x = this.SPACE_SIZE * x;
+        y = this.SPACE_SIZE * y;
+        return 'translate(' + x + ', ' + y + ')';
     }
 }
