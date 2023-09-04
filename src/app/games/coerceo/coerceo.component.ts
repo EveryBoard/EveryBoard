@@ -219,7 +219,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         if ((coord.x + coord.y) % 2 === 0) {
             return y;
         } else {
-            return y - 20;
+            return y - 30;
         }
     }
     public getTriangleInHexTranslate(x: number, y: number): string {
