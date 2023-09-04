@@ -319,7 +319,7 @@ describe('SiamComponent', () => {
             testUtils.findElement('#remainingPieces_1_0').nativeElement.transform.baseVal.getItem(0);
         const playerZeroRemainingPiecesTranslation: SVGTransform =
             testUtils.findElement('#remainingPieces_0_0').nativeElement.transform.baseVal.getItem(0);
-        expectTranslationYToBe(playerZeroRemainingPiecesTranslation, 700)
-        expectTranslationYToBe(playerOneRemainingPiecesTranslation, -100)
+        expectTranslationYToBe(playerZeroRemainingPiecesTranslation, 700);
+        expectTranslationYToBe(playerOneRemainingPiecesTranslation, -100);
     });
 });
