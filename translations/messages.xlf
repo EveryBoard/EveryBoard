@@ -1960,8 +1960,8 @@
       <trans-unit id="1645842992024065193" datatype="html">
         <source>This is not the winning move. Try again.</source>
       </trans-unit>
-      <trans-unit id="7178116026015087747" datatype="html">
-        <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The one on the extreme left and right are called the stores, they contain the seed that each player one. As you are playing Dark, the 6 houses on the bottom are yours.</source>
+      <trans-unit id="387119594039428962" datatype="html">
+        <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>
       </trans-unit>
       <trans-unit id="9104781897718296194" datatype="html">
         <source>Bonus fact: Awalé is the most common of all Mancalas.</source>
@@ -1986,8 +1986,8 @@
       <trans-unit id="8065050610159894114" datatype="html">
         <source>Failed. Try again and sow from the leftmost house.</source>
       </trans-unit>
-      <trans-unit id="65642875113539073" datatype="html">
-        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which contains now 2 seeds, so this will be a capture. But now, the house right before it contains 3 seeds, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+      <trans-unit id="4514452777310919130" datatype="html">
+        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which now contains 2 seeds, so this will be a capture. But now, the house right before it contains 3 seeds, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
@@ -2066,8 +2066,8 @@
       <trans-unit id="7111322038810092184" datatype="html">
         <source>The Kalah (1/2)</source>
       </trans-unit>
-      <trans-unit id="7648204958888898115" datatype="html">
-        <source>The houses on the extreme left and right, unaligned to the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah, but you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that passes through your Kalah then feeds opponent&apos;s houses.</source>
+      <trans-unit id="1494658367285976347" datatype="html">
+        <source>The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah, but you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that passes through your Kalah then feeds opponent&apos;s houses.</source>
       </trans-unit>
       <trans-unit id="108833396164233870" datatype="html">
         <source>As you see, three houses have been fed in addition to your Kalah.</source>

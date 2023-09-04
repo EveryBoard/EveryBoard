@@ -115,8 +115,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         } else if (currentStep.isAnyMove()) {
             Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
             this.showStepSuccess(currentStep.getSuccessMessage());
-        } else {
-            Utils.assert(currentStep.isMove(), 'cannot reach here with a click step');
+        } else if (currentStep.isMove()) {
             const currentStepMove: TutorialStepMove = currentStep as TutorialStepMove;
             if (currentStepMove.acceptedMoves.some((m: Move) => m.equals(move))) {
                 Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
@@ -125,6 +124,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                 Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'not the move that was awaited.');
                 this.currentReason = MGPOptional.of(currentStepMove.getFailureMessage());
             }
+        } else {
+            // No need to do anything there, canUserPlay did it
+            Utils.assert(currentStep.isClick(), 'Here, we should have a click');
         }
         // We don't cover the click case here, it is covered in canUserPlay
         this.cdr.detectChanges();
@@ -140,7 +142,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
+            console.log('c 1 klik')
             await this.updateBoardAndShowLastMove(false);
+            console.log('klikiléfé')
             this.moveAttemptMade = true;
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess(currentStep.getSuccessMessage());

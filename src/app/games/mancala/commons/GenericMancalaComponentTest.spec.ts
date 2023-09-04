@@ -30,7 +30,9 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R, M>,
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
         let lastDistributionSeedNumber: number = state.getPieceAtXY(lastDistribution.x, playerY);
         if (lastDistributionSeedNumber > (2 * MancalaState.WIDTH)) {
-            lastDistributionSeedNumber++; // it'll take TIMEOUT_BETWEEN_SEED ms skipping the initial house
+            // Since we are distributing enough seed to do the whole turn
+            // it'll take TIMEOUT_BETWEEN_SEED ms to skip the initial house
+            lastDistributionSeedNumber++;
         }
         // The time to move the seeds
         const moveDuration: number = (lastDistributionSeedNumber + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEED;
@@ -322,7 +324,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                         const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
                         const move: M = gameComponent.generateMove(coord.x);
                         await gameComponent.chooseMove(move);
-                        void gameComponent.updateBoard(true); // void, so it start but don't wait the animation's end
+                        void gameComponent.updateBoard(true); // void, so it starts but doesn't wait the animation's end
                     };
                 }
                 it('should show right after the first seed being drop (' + actor + ')', fakeAsync(async() => {
@@ -386,7 +388,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                 const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
                 const move: M = gameComponent.generateMove(2);
                 await gameComponent.chooseMove(move);
-                void gameComponent.updateBoard(true); // void, so it start but don't wait the animation's end
+                void gameComponent.updateBoard(true); // void, so it starts but doesn't wait the animation's end
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but bot finished yet
                 spyOn(mancalaTestUtils.testUtils.getGameComponent() as MancalaComponent<R, M>, 'onLegalClick').and.callThrough();
 
