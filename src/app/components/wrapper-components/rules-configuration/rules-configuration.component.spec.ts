@@ -1,17 +1,17 @@
 import { fakeAsync } from '@angular/core/testing';
 
-import { GameConfigurationComponent } from './game-configuration.component';
+import { RulesConfigurationComponent } from './rules-configuration.component';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
-describe('GameConfigurationComponent', () => {
+describe('RulesConfigurationComponent', () => {
 
-    let testUtils: SimpleComponentTestUtils<GameConfigurationComponent>;
+    let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
 
-    let component: GameConfigurationComponent;
+    let component: RulesConfigurationComponent;
 
     beforeEach(async() => {
         const actRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
-        testUtils = await SimpleComponentTestUtils.create(GameConfigurationComponent, actRoute);
+        testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, actRoute);
         component = testUtils.getComponent();
     });
     it('should create', () => {

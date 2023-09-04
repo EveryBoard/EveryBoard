@@ -8,8 +8,8 @@ export class MyTaflState extends TaflState {
 
     public static getInitialState(): MyTaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
-        const O: TaflPawn = TaflPawn.INVADERS;
-        const X: TaflPawn = TaflPawn.DEFENDERS;
+        const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+        const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
         const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
         const board: Table<TaflPawn> = [
             [_, O, _, _, X, _, _, O, _],

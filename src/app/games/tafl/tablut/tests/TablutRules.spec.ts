@@ -20,8 +20,8 @@ describe('TablutRules', () => {
     let rules: TablutRules;
     let minimaxes: Minimax<TablutMove, TablutState>[];
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
-    const O: TaflPawn = TaflPawn.INVADERS;
-    const X: TaflPawn = TaflPawn.DEFENDERS;
+    const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+    const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     beforeEach(() => {

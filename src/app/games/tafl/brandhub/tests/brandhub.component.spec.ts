@@ -8,8 +8,8 @@ import { TaflPawn } from '../../TaflPawn';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
-const x: TaflPawn = TaflPawn.INVADERS;
-const i: TaflPawn = TaflPawn.DEFENDERS;
+const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 const stateReadyForCapture: BrandhubState = new BrandhubState([
     [_, A, _, _, _, _, _],

@@ -179,7 +179,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         return this.pieceBelongToCurrentPlayer(coord);
     }
     public isInvader(x: number, y: number): boolean {
-        return this.board[y][x] === TaflPawn.INVADERS;
+        return this.board[y][x] === TaflPawn.PLAYER_ZERO_PAWN;
     }
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();

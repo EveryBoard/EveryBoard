@@ -6,8 +6,8 @@ export class BrandhubState extends TaflState {
 
     public static getInitialState(): BrandhubState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
-        const x: TaflPawn = TaflPawn.INVADERS;
-        const i: TaflPawn = TaflPawn.DEFENDERS;
+        const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+        const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
         const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
         const board: Table<TaflPawn> = [
             [_, _, _, x, _, _, _],

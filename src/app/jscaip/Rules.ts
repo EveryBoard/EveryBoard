@@ -9,15 +9,6 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { BoardValue } from './BoardValue';
 import { GameStatus } from './GameStatus';
 import { GameConfig } from './ConfigUtil';
-import { TaflMove } from '../games/tafl/TaflMove';
-import { BrandhubState } from '../games/tafl/brandhub/BrandhubState';
-
-// export class GameConfig {
-
-//     public static readonly NO_CONFIG: GameConfig = new GameConfig();
-
-//     private readonly usedToPreventAnyEmptyTypeToPassAsGameConfig: boolean = true;
-// }
 
 
 export abstract class Rules<M extends Move,

@@ -6,9 +6,12 @@ export class TaflPawn {
 
     public static readonly PLAYER_ONE_KING: TaflPawn = new TaflPawn(PlayerOrNone.ONE, true);
 
-    public static readonly INVADERS: TaflPawn = new TaflPawn(PlayerOrNone.ZERO, false);
+    public static readonly PLAYER_ONE_PAWN: TaflPawn = new TaflPawn(PlayerOrNone.ONE, false);
 
-    public static readonly DEFENDERS: TaflPawn = new TaflPawn(PlayerOrNone.ONE, false);
+    public static readonly PLAYER_ZERO_KING: TaflPawn = new TaflPawn(PlayerOrNone.ZERO, true);
+
+    public static readonly PLAYER_ZERO_PAWN: TaflPawn = new TaflPawn(PlayerOrNone.ZERO, false);
+
 
     private constructor(private readonly owner: PlayerOrNone,
                         private readonly king: boolean)

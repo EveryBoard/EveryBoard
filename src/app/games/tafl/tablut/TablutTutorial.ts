@@ -3,10 +3,11 @@ import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
 import { TablutState } from 'src/app/games/tafl/tablut/TablutState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { tablutConfig } from './tablutConfig';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
-const x: TaflPawn = TaflPawn.INVADERS;
-const i: TaflPawn = TaflPawn.DEFENDERS;
+const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
 export class TablutTutorial extends Tutorial {
@@ -14,12 +15,12 @@ export class TablutTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
-            TablutState.getInitialState(),
+            TablutState.getInitialState(tablutConfig),
         ),
         TutorialStep.anyMove(
             $localize`Moving`,
             $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move:<ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a throne.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
-            TablutState.getInitialState(),
+            TablutState.getInitialState(tablutConfig),
             TablutMove.of(new Coord(4, 1), new Coord(1, 1)),
             $localize`Congratulations!`,
         ),

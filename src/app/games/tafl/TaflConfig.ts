@@ -16,5 +16,5 @@ export interface TaflConfig extends GameConfig {
     // the king can be captured by two invaders when he doesn't touch a throne
     readonly KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: boolean;
 
-    readonly INVADER_IS_PLAYER_ZERO: boolean;
+    readonly INVADER_STARTS: boolean;
 }

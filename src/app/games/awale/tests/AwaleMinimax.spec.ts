@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleNode, AwaleRules } from '../AwaleRules';
+import { AwaleNode, AwaleRules, MancalaConfig } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
@@ -16,9 +16,10 @@ describe('AwaleMinimax', () => {
         minimax = new AwaleMinimax(rules, 'AwaleMinimax');
     });
     it('should not throw at first choice', () => {
+        const config: MancalaConfig = { seed_by_house: 4, width: 4 };
         const node: AwaleNode = rules.getInitialNode();
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
-        expect(rules.isLegal(bestMove, AwaleState.getInitialState()).isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, AwaleState.getInitialState(config)).isSuccess()).toBeTrue();
     });
     it('should choose capture when possible (at depth 1)', () => {
         // Given a state with a possible capture
@@ -31,7 +32,7 @@ describe('AwaleMinimax', () => {
         // When getting the best move
         const bestMove: AwaleMove = node.findBestMove(1, minimax);
         // Then the best move should be the capture
-        expect(bestMove).toEqual(AwaleMove.TWO);
+        expect(bestMove).toEqual(AwaleMove.of(2));
     });
     it('should choose capture when possible (at depth 2)', () => {
         // Given a state with a possible capture
@@ -44,7 +45,7 @@ describe('AwaleMinimax', () => {
         // When getting the best move
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
         // Then the best move should be the capture
-        expect(bestMove).toEqual(AwaleMove.FOUR);
+        expect(bestMove).toEqual(AwaleMove.of(4));
     });
     it('should not try to perform illegal moves', () => {
         // Given a state with an illegal distribution due to the do-not-starve rule
@@ -58,7 +59,7 @@ describe('AwaleMinimax', () => {
         const moves: AwaleMove[] = minimax.getListMoves(node);
         // Then only the legal moves should be present
         expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(AwaleMove.FIVE);
+        expect(moves[0]).toEqual(AwaleMove.of(5));
     });
     it('should prioritise moves in the same territory when no captures are possible', () => {
         // Given a state with only one move that distributes only in the player's territory
@@ -71,7 +72,7 @@ describe('AwaleMinimax', () => {
         // When getting the best move
         const bestMove: AwaleMove = node.findBestMove(1, minimax);
         // Then the best move should be the capture
-        expect(bestMove).toEqual(AwaleMove.ZERO);
+        expect(bestMove).toEqual(AwaleMove.of(0));
     });
 });
 

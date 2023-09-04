@@ -1,0 +1,40 @@
+<div class="box">
+    <p class="title" i18n>Configuration of your {{ gameName }} part</p>
+    <form [formGroup]="gameConfigForm">
+        <fieldset [disabled]="userIsCreator === false">
+            <div *ngFor="let configParameter of configDescription.fields"
+                 id="{{ configParameter.name }}_{{ configParameter.type }}_config"
+                 class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">{{ configParameter.name }}</label>
+                </div>
+                <div *ngIf="configParameter.type === 'number'"
+                     class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input id="{{ configParameter.name }}_number_config_input"
+                                   [formControlName]="configParameter.name"
+                                   type="number"
+                                   class="input"
+                                   required
+                                   i18n-placeholder placeholder="{{ configParameter.name }}" />
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="configParameter.type === 'boolean'"
+                     class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input id="{{ configParameter.name }}_boolean_config_input"
+                                   [formControlName]="configParameter.name"
+                                   type="checkbox"
+                                   class="checkbox"
+                                   required
+                                   i18n-placeholder placeholder="{{ configParameter.name }}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

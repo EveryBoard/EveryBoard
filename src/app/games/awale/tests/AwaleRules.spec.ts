@@ -28,7 +28,7 @@ describe('AwaleRules', () => {
         ];
         const state: AwaleState = new AwaleState(board, 1, [0, 0]);
         // When performing a distribution
-        const move: AwaleMove = AwaleMove.FIVE;
+        const move: AwaleMove = AwaleMove.of(5);
         // Then the distribution should be performed as expected
         const expectedBoard: Table<number> = [
             [0, 0, 0, 0, 3, 0],
@@ -45,7 +45,7 @@ describe('AwaleRules', () => {
         ];
         const state: AwaleState = new AwaleState(board, 1, [0, 0]);
         // When performing a distribution
-        const move: AwaleMove = AwaleMove.FIVE;
+        const move: AwaleMove = AwaleMove.of(5);
         // Then the distribution should be performed as expected, and leave 0 stones in the starting space
         const expectedBoard: Table<number> = [
             [2, 1, 1, 1, 1, 0],
@@ -63,7 +63,7 @@ describe('AwaleRules', () => {
         const state: AwaleState = new AwaleState(board, 2, [1, 2]);
 
         // When performing a move that will capture
-        const move: AwaleMove = AwaleMove.ZERO;
+        const move: AwaleMove = AwaleMove.of(0);
 
         // Then the capture should be performed
         const expectedBoard: Table<number> = [
@@ -82,7 +82,7 @@ describe('AwaleRules', () => {
         const state: AwaleState = new AwaleState(board, 1, [1, 2]);
 
         // When performing a move that will capture
-        const move: AwaleMove = AwaleMove.FIVE;
+        const move: AwaleMove = AwaleMove.of(5);
 
         // Then the capture should be performed
         const expectedBoard: Table<number> = [
@@ -102,7 +102,7 @@ describe('AwaleRules', () => {
             const state: AwaleState = new AwaleState(board, 1, [10, 23]);
 
             // When player give its last stone
-            const move: AwaleMove = AwaleMove.FIVE;
+            const move: AwaleMove = AwaleMove.of(5);
 
             // Then, since the other player can't distribute, all its pieces should be mansooned
             const expectedBoard: Table<number> = [
@@ -123,7 +123,7 @@ describe('AwaleRules', () => {
             const state: AwaleState = new AwaleState(board, 1, [0, 0]);
 
             // When player give its last stone
-            const move: AwaleMove = AwaleMove.FIVE;
+            const move: AwaleMove = AwaleMove.of(5);
 
             // Then the move should be legal and no mansoon should be done
             const expectedBoard: Table<number> = [
@@ -142,7 +142,7 @@ describe('AwaleRules', () => {
             const state: AwaleState = new AwaleState(board, 1, [2, 5]);
 
             // When player give its last stone
-            const move: AwaleMove = AwaleMove.FIVE;
+            const move: AwaleMove = AwaleMove.of(5);
 
             // Then the move should be legal and no mansoon should be done
             const expectedBoard: Table<number> = [
@@ -162,7 +162,7 @@ describe('AwaleRules', () => {
         const state: AwaleState = new AwaleState(board, 1, [23, 23]);
 
         // When performing a move that does not feed the opponent
-        const move: AwaleMove = AwaleMove.ZERO;
+        const move: AwaleMove = AwaleMove.of(0);
 
         // Then the move should be illegal
         const reason: string = AwaleFailure.SHOULD_DISTRIBUTE();
@@ -177,7 +177,7 @@ describe('AwaleRules', () => {
         const state: AwaleState = new AwaleState(board, 1, [23, 23]);
 
         // When performing a move that feeds the opponent
-        const move: AwaleMove = AwaleMove.FIVE;
+        const move: AwaleMove = AwaleMove.of(5);
         const expectedBoard: Table<number> = [
             [1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 1],
@@ -196,7 +196,7 @@ describe('AwaleRules', () => {
         const state: AwaleState = new AwaleState(board, 1, [0, 0]);
 
         // When the player does a would-starve move
-        const move: AwaleMove = AwaleMove.FIVE;
+        const move: AwaleMove = AwaleMove.of(5);
 
         // Then, the distribution should be done but not the capture
         const expectedBoard: Table<number> = [

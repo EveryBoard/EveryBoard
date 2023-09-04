@@ -10,5 +10,5 @@ export const brandhubConfig: TaflConfig = {
 
     KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: true,
 
-    INVADER_IS_PLAYER_ZERO: true,
+    INVADER_STARTS: true,
 };

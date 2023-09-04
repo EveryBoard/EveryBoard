@@ -37,7 +37,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
         this.rules = AwaleRules.get();
-        this.node = this.rules.getInitialNode();
+        this.node = this.rules.getInitialNode({ seed_by_house: 4, width: 6 });
         this.availableMinimaxes = [
             new AwaleMinimax(this.rules, 'AwaleMinimax'),
         ];
@@ -46,6 +46,16 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
         this.updateBoard();
     }
+
+    public override getViewBox(): string {
+        const width: number = this.getViewBoxWidth();
+        return '-45 -20 ' + width + ' 260';
+    }
+
+    public getViewBoxWidth(): number {
+        return 100 * (this.board[0].length + 1);
+    }
+
     public updateBoard(): void {
         const state: AwaleState = this.getState();
         this.scores = MGPOptional.of(state.getCapturedCopy());

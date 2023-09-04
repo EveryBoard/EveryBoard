@@ -11,6 +11,14 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+
+export type MancalaConfig = GameConfig & {
+
+    width: number;
+
+    seed_by_house: number;
+};
 
 export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState> {}
 
@@ -24,7 +32,7 @@ export interface CaptureResult {
 }
 
 @Debug.log
-export class AwaleRules extends Rules<AwaleMove, AwaleState> {
+export class AwaleRules extends Rules<AwaleMove, AwaleState, MancalaConfig> {
 
     private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
@@ -35,7 +43,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         return AwaleRules.singleton.get();
     }
     private constructor() {
-        super(AwaleState, {});
+        super(AwaleState, { seed_by_house: 4, width: 6 });
     }
     public applyLegalMove(move: AwaleMove, state: AwaleState, _info: void): AwaleState {
         const x: number = move.x;
@@ -88,6 +96,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
      * Is called when a game is over because of starvation
      */
     public static mansoon(mansooningPlayer: Player, board: Table<number>): CaptureResult {
+        const width: number = board[0].length;
         const resultingBoard: number[][] = ArrayUtils.copyBiArray(board);
         let capturedSum: number = 0;
         const captureMap: number[][] = [
@@ -101,7 +110,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
             captureMap[mansoonedY][x] = resultingBoard[mansoonedY][x];
             resultingBoard[mansoonedY][x] = 0;
             x++;
-        } while (x < 6);
+        } while (x < width);
         return { capturedSum, captureMap, resultingBoard };
     }
     /**
@@ -129,13 +138,15 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         return AwaleRules.isLegal(move, state);
     }
     public static doesDistribute(x: number, y: number, board: Table<number>): boolean {
+        const maxX: number = board[0].length - 1;
         if (y === 0) { // distribution from left to right
-            return board[y][x] > (5 - x);
+            return board[y][x] > (maxX - x);
         }
         return board[y][x] > x; // distribution from right to left
     }
     public static canDistribute(player: Player, board: Table<number>): boolean {
-        for (let x: number = 0; x < 6; x++) {
+        const width: number = board[0].length;
+        for (let x: number = 0; x < width; x++) {
             if (AwaleRules.doesDistribute(x, player.getOpponent().value, board)) {
                 return true;
             }
@@ -143,13 +154,14 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         return false;
     }
     public static isStarving(player: Player, board: Table<number>): boolean {
+        const width: number = board[0].length;
         let i: number = 0;
         const playerY: number = player.getOpponent().value; // For player 0 has row 1
         do {
             if (board[playerY][i++] > 0) {
                 return false; // found some food there, so not starving
             }
-        } while (i < 6);
+        } while (i < width);
         return true;
     }
     /**
@@ -158,6 +170,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
      * Returns the coord of the last landing space of the move
      */
     public static distribute(x: number, y: number, board: number[][]): Coord[] {
+        const maxX: number = board[0].length - 1;
         // iy and ix are the initial spaces
         const ix: number = x;
         const iy: number = y;
@@ -168,7 +181,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         while (inHand > 0) {
             // get next space
             if (y === 0) {
-                if (x === 5) {
+                if (x === maxX) {
                     y = 1; // go from the bottom row to the top row
                 } else {
                     x++; // clockwise order on the top = left to right
@@ -215,10 +228,10 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState> {
         if (player === Player.ONE) {
             /** if Player.ONE capture, it is on the bottom line
               * means capture goes from left to right ( + 1)
-              * so one ending condition of the loop is reaching index 6
+              * so one ending condition of the loop is reaching index 6 (width)
              */
             direction = +1;
-            limit = 6;
+            limit = board[0].length;
         }
 
         do {

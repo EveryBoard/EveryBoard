@@ -27,7 +27,7 @@ export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
     }
     public orderMoves(state: TaflState, listMoves: TaflMove[]): TaflMove[] {
         const king: Coord = this.ruler.getKingCoord(state).get();
-        const invader: Player = this.ruler.config.INVADER_IS_PLAYER_ZERO ? Player.ZERO : Player.ONE;
+        const invader: Player = this.ruler.config.INVADER_STARTS ? Player.ZERO : Player.ONE;
         if (state.getCurrentPlayer() === invader) { // Invader
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
                 return - move.getEnd().getOrthogonalDistance(king);
@@ -56,7 +56,7 @@ export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
 
         const nbPlayerZeroPawns: number = this.ruler.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.ruler.getPlayerListPawns(Player.ONE, state).length;
-        const invader: Player = this.ruler.config.INVADER_IS_PLAYER_ZERO ? Player.ZERO : Player.ONE;
+        const invader: Player = this.ruler.config.INVADER_STARTS ? Player.ZERO : Player.ONE;
         const zeroMult: number = [1, 2][invader.value]; // invaders pawn are twice as numerous
         const oneMult: number = [2, 1][invader.value]; // so they're twice less valuable
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;

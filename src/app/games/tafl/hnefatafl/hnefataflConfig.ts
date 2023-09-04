@@ -5,5 +5,5 @@ export const hnefataflConfig: TaflConfig = {
     BORDER_CAN_SURROUND_KING: true,
     CENTRAL_THRONE_CAN_SURROUND_KING: false,
     KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: false,
-    INVADER_IS_PLAYER_ZERO: true,
+    INVADER_STARTS: true,
 };

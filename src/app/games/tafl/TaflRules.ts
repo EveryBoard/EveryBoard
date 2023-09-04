@@ -329,7 +329,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return MGPOptional.empty();
     }
     public getInvader(): Player {
-        return this.config.INVADER_IS_PLAYER_ZERO ? Player.ZERO : Player.ONE;
+        return this.config.INVADER_STARTS ? Player.ZERO : Player.ONE;
     }
     public getDefender(): Player {
         return this.getInvader().getOpponent();

@@ -5,8 +5,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
-const O: TaflPawn = TaflPawn.INVADERS;
-const X: TaflPawn = TaflPawn.DEFENDERS;
+const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
 export class BrandhubTutorial extends Tutorial {

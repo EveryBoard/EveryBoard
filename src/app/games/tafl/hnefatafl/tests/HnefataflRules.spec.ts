@@ -20,8 +20,8 @@ describe('HnefataflRules', () => {
     let rules: HnefataflRules;
     let minimaxes: Minimax<HnefataflMove, HnefataflState>[];
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
-    const O: TaflPawn = TaflPawn.INVADERS;
-    const X: TaflPawn = TaflPawn.DEFENDERS;
+    const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+    const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     beforeEach(() => {

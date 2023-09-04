@@ -38,6 +38,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public configSetted: boolean = false;
 
+    private rulesConfig: GameConfig;
+
     private readonly configBS: BehaviorSubject<MGPOptional<GameConfig>> = new BehaviorSubject(MGPOptional.empty());
     private readonly configObs: Observable<MGPOptional<GameConfig>> = this.configBS.asObservable();
 
@@ -199,9 +201,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         subcription.unsubscribe();
         return gameConfig;
     }
-    public markConfigAsFilled(gameConfig: GameConfig): void {
+    public updateConfig(rulesConfig: GameConfig): void { // TODO: GameConfig -> RulesConfig
+        this.rulesConfig = rulesConfig;
+    }
+    public markConfigAsFilled(): void {
         this.configSetted = true;
         this.cdr.detectChanges();
-        this.configBS.next(MGPOptional.of(gameConfig));
+        this.configBS.next(MGPOptional.of(this.rulesConfig));
     }
 }

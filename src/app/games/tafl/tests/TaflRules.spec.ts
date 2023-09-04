@@ -21,7 +21,7 @@ export const myTaflConfig: TaflConfig = {
 
     CASTLE_IS_LEFT_FOR_GOOD: true,
 
-    INVADER_IS_PLAYER_ZERO: true,
+    INVADER_STARTS: true,
 
     KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: true,
 
@@ -36,8 +36,8 @@ describe('TaflRules', () => {
     let minimaxes: Minimax<TaflMove, TaflState>[];
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
-    const O: TaflPawn = TaflPawn.INVADERS;
-    const X: TaflPawn = TaflPawn.DEFENDERS;
+    const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+    const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     beforeEach(() => {

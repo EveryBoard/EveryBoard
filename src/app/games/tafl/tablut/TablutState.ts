@@ -1,29 +1,37 @@
 import { TaflPawn } from '../TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflState } from '../TaflState';
+import { TaflConfig } from '../TaflConfig';
 
 export class TablutState extends TaflState {
 
-    public static getInitialState(): TablutState {
+    public static getInitialState(config: TaflConfig): TablutState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
-        const O: TaflPawn = TaflPawn.INVADERS;
-        const X: TaflPawn = TaflPawn.DEFENDERS;
-        const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+        let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+        let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
+        let K: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+        if (config.INVADER_STARTS === false) {
+            I = TaflPawn.PLAYER_ONE_PAWN;
+            D = TaflPawn.PLAYER_ZERO_PAWN;
+            K = TaflPawn.PLAYER_ZERO_KING;
+        }
         const board: Table<TaflPawn> = [
-            [_, _, _, O, O, O, _, _, _],
-            [_, _, _, _, O, _, _, _, _],
-            [_, _, _, _, X, _, _, _, _],
-            [O, _, _, _, X, _, _, _, O],
-            [O, O, X, X, A, X, X, O, O],
-            [O, _, _, _, X, _, _, _, O],
-            [_, _, _, _, X, _, _, _, _],
-            [_, _, _, _, O, _, _, _, _],
-            [_, _, _, O, O, O, _, _, _],
+            [_, _, _, I, I, I, _, _, _],
+            [_, _, _, _, I, _, _, _, _],
+            [_, _, _, _, D, _, _, _, _],
+            [I, _, _, _, D, _, _, _, I],
+            [I, I, D, D, K, D, D, I, I],
+            [I, _, _, _, D, _, _, _, I],
+            [_, _, _, _, D, _, _, _, _],
+            [_, _, _, _, I, _, _, _, _],
+            [_, _, _, I, I, I, _, _, _],
         ];
 
         return new TablutState(board, 0);
     }
+
     public of(board: Table<TaflPawn>, turn: number): this {
         return new TablutState(board, turn) as this;
     }
+
 }

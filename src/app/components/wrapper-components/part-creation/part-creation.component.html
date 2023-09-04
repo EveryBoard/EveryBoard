@@ -142,9 +142,10 @@
                         </ng-template>
                     </div>
                 </div>
-                <app-game-configuration [config]="configDescription"
-                                        (configFullfilledNotification)="saveGameConfig($event)">
-                </app-game-configuration>
+                <app-rules-configuration [configDescription]="configDescription"
+                                         [userIsCreator]="true"
+                                         (updateCallback)="saveGameConfig($event)">
+                </app-rules-configuration>
             </fieldset>
             <div class="field">
                 <div class="buttons has-addons">
@@ -195,6 +196,10 @@
                             <li i18n>a turn lasts at most <strong>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }} </strong></li>
                             <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
                         </ul>
+                        <app-rules-configuration [configDescription]="configDescription"
+                                                 [userIsCreator]="false"
+                                                 [config]="currentConfigRoom?.gameConfig">
+                        </app-rules-configuration>
                         <button class="button is-primary"
                                 (click)="acceptConfig()"
                                 id="acceptConfig"

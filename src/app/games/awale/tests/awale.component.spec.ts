@@ -28,7 +28,7 @@ describe('AwaleComponent', () => {
         testUtils.setupState(state);
 
         // When player zero clicks on a house to distribute
-        const move: AwaleMove = AwaleMove.ZERO;
+        const move: AwaleMove = AwaleMove.of(0);
 
         // Then the move should be performed
         await testUtils.expectMoveSuccess('#click_0_1', move);
@@ -44,7 +44,7 @@ describe('AwaleComponent', () => {
         // Given any state (initial here by default)
 
         // When player performs a move
-        const move: AwaleMove = AwaleMove.FIVE;
+        const move: AwaleMove = AwaleMove.of(5);
         await testUtils.expectMoveSuccess('#click_5_1', move);
 
         // Then the moved spaces should be shown
@@ -66,7 +66,7 @@ describe('AwaleComponent', () => {
         testUtils.setupState(state);
 
         // When clicking on the empty house
-        const move: AwaleMove = AwaleMove.ZERO;
+        const move: AwaleMove = AwaleMove.of(0);
 
         // Then it should fail
         const reason: string = AwaleFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
@@ -95,7 +95,7 @@ describe('AwaleComponent', () => {
         testUtils.setupState(state);
 
         // When doing the capturing move
-        const move: AwaleMove = AwaleMove.ZERO;
+        const move: AwaleMove = AwaleMove.of(0);
         await testUtils.expectMoveSuccess('#click_0_1', move);
 
         // Then the space in question should be marked as "captured"
@@ -113,7 +113,7 @@ describe('AwaleComponent', () => {
         testUtils.setupState(state);
 
         // When doing the capturing move
-        const move: AwaleMove = AwaleMove.FIVE;
+        const move: AwaleMove = AwaleMove.of(5);
         await testUtils.expectMoveSuccess('#click_5_0', move);
 
         // Then the space in question should be marked as "captured"

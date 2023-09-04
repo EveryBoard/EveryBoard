@@ -207,7 +207,7 @@ class GameConfiguration {
 
     public static readonly MANCALAS: GameConfigDescription = { fields: [
         { name: 'width', type: 'number', defaultValue: 6 },
-        { name: 'seed by house', type: 'number', defaultValue: 4 },
+        { name: 'seed_by_house', type: 'number', defaultValue: 4 },
     ] };
 
     public static readonly TABLUT: GameConfigDescription = { fields: [
@@ -215,8 +215,7 @@ class GameConfiguration {
         { name: 'BORDER_CAN_SURROUND_KING', type: 'boolean', defaultValue: true },
         { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', type: 'boolean', defaultValue: false },
         { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', type: 'boolean', defaultValue: false },
-        { name: 'WIDTH', type: 'boolean', defaultValue: 9 },
-        { name: 'INVADER_IS_PLAYER_ZERO', type: 'boolean', defaultValue: true },
+        { name: 'INVADER_STARTS', type: 'boolean', defaultValue: true },
     ] };
 
 }
