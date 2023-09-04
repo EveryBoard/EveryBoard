@@ -19,10 +19,10 @@ describe('CoerceoComponent', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
-        testUtils.expectElementToHaveClasses('#space_' + x + '_' + y, ['captured-alternate-fill']);
+        testUtils.expectElementToHaveClass('#space_' + x + '_' + y, 'captured-alternate-fill');
     }
     function expectCoordToBeOfCapturedFill(x: number, y: number): void {
-        testUtils.expectElementToHaveClasses('#pyramid_' + x + '_' + y, ['captured-fill']);
+        testUtils.expectElementToHaveClass('#pyramid_' + x + '_' + y, 'captured-fill');
     }
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');
