@@ -19,7 +19,7 @@
                     </div>
                     <div class="select">
                         <select *ngIf="players[0].equalsValue('human') === false"
-                                id="aiZeroDepthSelect"
+                                id="aiZeroLevelSelect"
                                 [(ngModel)]="aiOptions[0]"
                                 (change)="updatePlayer(Player.ZERO)">
                             <option selected value="none" i18n>Pick the options</option>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="select">
                         <select *ngIf="players[1].equalsValue('human') === false"
-                                id="aiOneDepthSelect"
+                                id="aiOneLevelSelect"
                                 [(ngModel)]="aiOptions[1]"
                                 (change)="updatePlayer(Player.ONE)">
                             <option selected value="none" i18n>Pick the options</option>

@@ -3,7 +3,7 @@ import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 
-export class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
+export class CoerceoCapturesAndFreedomHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
 
     public getMetrics(node: CoerceoNode): [number, number] {
         const state: CoerceoState = node.gameState;

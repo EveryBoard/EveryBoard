@@ -18,7 +18,7 @@ describe('AttackEpaminondasHeuristic', () => {
         heuristic = new EpaminondasAttackHeuristic();
     });
     it('should go forward', () => {
-        const strongerBoard: Table<PlayerOrNone> = [
+        const weakerBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -32,8 +32,8 @@ describe('AttackEpaminondasHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
         ];
-        const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
-        const weakerBoard: Table<PlayerOrNone> = [
+        const weakerState: EpaminondasState = new EpaminondasState(weakerBoard, 1);
+        const strongerBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -47,11 +47,11 @@ describe('AttackEpaminondasHeuristic', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
-        const weakerState: EpaminondasState = new EpaminondasState(weakerBoard, 1);
+        const strongerState: EpaminondasState = new EpaminondasState(strongerBoard, 1);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakerState, MGPOptional.empty(),
                                                                strongerState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ZERO);
     });
     it('should prefer going into the winning territory', () => {
         const strongerBoard: Table<PlayerOrNone> = [

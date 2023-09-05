@@ -13,7 +13,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoTutorial } from './CoerceoTutorial';
 import { MCTS } from 'src/app/jscaip/MCTS';
-import { CoerceoHeuristic } from './CoerceoHeuristic';
+import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
 import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
@@ -51,7 +51,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                         this.rules,
                         new CoerceoPiecesThreatsTilesHeuristic(),
                         new CoerceoOrderedMoveGenerator()),
-            new Minimax('Minimax', this.rules, new CoerceoHeuristic(), new CoerceoMoveGenerator()),
+            new Minimax('Captures > Freedom', this.rules, new CoerceoCapturesAndFreedomHeuristic(), new CoerceoMoveGenerator()),
             new MCTS('MCTS', new CoerceoMoveGenerator(), this.rules),
         ];
         this.encoder = CoerceoMove.encoder;

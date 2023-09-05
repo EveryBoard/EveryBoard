@@ -180,7 +180,7 @@ describe('LocalGameWrapperComponent', () => {
         await testUtils.whenStable();
     }
     async function choosingAILevel(player: Player): Promise<void> {
-        const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroDepthSelect' : '#aiOneDepthSelect';
+        const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroLevelSelect' : '#aiOneLevelSelect';
         const selectDepth: HTMLSelectElement = testUtils.findElement(aiDepthSelect).nativeElement;
         selectDepth.value = selectDepth.options[1].value;
         selectDepth.dispatchEvent(new Event('change'));
@@ -192,7 +192,7 @@ describe('LocalGameWrapperComponent', () => {
     describe('Using AI', () => {
         it('should show level when non-human player is selected', async() => {
             // Given a board where human are playing human
-            testUtils.expectElementNotToExist('#aiZeroDepthSelect');
+            testUtils.expectElementNotToExist('#aiZeroLevelSelect');
 
             // When selecting an AI for player ZERO
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
@@ -204,7 +204,7 @@ describe('LocalGameWrapperComponent', () => {
             // Then AI name should be diplayed and the level selectable
             const aiName: string = selectAI.options[selectAI.selectedIndex].label;
             expect(aiName).toBe('Minimax');
-            testUtils.expectElementToExist('#aiZeroDepthSelect');
+            testUtils.expectElementToExist('#aiZeroLevelSelect');
         });
         it('should show level when non-human player is selected, and propose AI to play', async() => {
             // Given any board
@@ -267,7 +267,7 @@ describe('LocalGameWrapperComponent', () => {
             selectAI.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
             await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneDepthSelect').nativeElement;
+            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneLevelSelect').nativeElement;
             const proposeAIToPlay: jasmine.Spy =
                 spyOn(testUtils.getWrapper() as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
             selectDepth.value = selectDepth.options[1].value;
@@ -285,7 +285,7 @@ describe('LocalGameWrapperComponent', () => {
             selectAI.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
             await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneDepthSelect').nativeElement;
+            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneLevelSelect').nativeElement;
             selectDepth.value = selectDepth.options[1].value;
             selectDepth.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
@@ -345,7 +345,7 @@ describe('LocalGameWrapperComponent', () => {
             selectAI.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
             await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiZeroDepthSelect').nativeElement;
+            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiZeroLevelSelect').nativeElement;
             selectDepth.value = selectDepth.options[1].value;
             selectDepth.dispatchEvent(new Event('change'));
             testUtils.detectChanges();

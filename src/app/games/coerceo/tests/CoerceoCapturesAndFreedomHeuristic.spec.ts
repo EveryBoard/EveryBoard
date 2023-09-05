@@ -5,19 +5,19 @@ import { CoerceoState } from '../CoerceoState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { CoerceoHeuristic } from '../CoerceoHeuristic';
+import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedomHeuristic';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 
-describe('CoerceoHeuristic', () => {
+describe('CoerceoCapturesAndFreedomHeuristic', () => {
 
-    let heuristic: CoerceoHeuristic;
+    let heuristic: CoerceoCapturesAndFreedomHeuristic;
 
     beforeEach(() => {
-        heuristic = new CoerceoHeuristic();
+        heuristic = new CoerceoCapturesAndFreedomHeuristic();
     });
     it('should prefer a board with more freedom', () => {
         const weakBoard: Table<FourStatePiece> = [
