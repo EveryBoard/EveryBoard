@@ -8,19 +8,22 @@ export type ConfigParameter = {
     defaultValue: ConfigDescriptionType;
 };
 
-export type GameConfigDescription = {
-    // Wrapping this into field to make it different for GameConfig in Typescript eyes
+export type RulesConfigDescription = {
+    // Wrapping this into field to make it different for RulesConfig in Typescript eyes
     fields: ConfigParameter[];
 };
 
-export type GameConfig = {
+export type RulesConfig = {
     [member: string]: ConfigDescriptionType;
 }
 
-export function getDefaultConfig(gameConfigDescription: GameConfigDescription): GameConfig {
-    const gameConfig: GameConfig = {};
-    for (const configParameter of gameConfigDescription.fields) {
-        gameConfig[configParameter.name] = configParameter.defaultValue;
+export class RulesConfigUtils {
+
+    public static getDefaultConfig(rulesConfigDescription: RulesConfigDescription): RulesConfig {
+        const rulesConfig: RulesConfig = {};
+        for (const configParameter of rulesConfigDescription.fields) {
+            rulesConfig[configParameter.name] = configParameter.defaultValue;
+        }
+        return rulesConfig;
     }
-    return gameConfig;
 }

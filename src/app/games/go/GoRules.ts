@@ -14,14 +14,14 @@ import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type GoLegalityInformation = Coord[];
 
-export class GoNode extends MGPNode<GoRules, GoMove, GoState, GameConfig, GoLegalityInformation> {}
+export class GoNode extends MGPNode<GoRules, GoMove, GoState, RulesConfig, GoLegalityInformation> {}
 
 @Debug.log
-export class GoRules extends Rules<GoMove, GoState, GameConfig, GoLegalityInformation> {
+export class GoRules extends Rules<GoMove, GoState, RulesConfig, GoLegalityInformation> {
 
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
 

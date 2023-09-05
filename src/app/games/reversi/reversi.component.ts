@@ -12,7 +12,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { ReversiTutorial } from './ReversiTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 import { Utils } from 'src/app/utils/utils';
 
@@ -25,7 +25,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiMove,
                                                                ReversiState,
                                                                PlayerOrNone,
-                                                               GameConfig,
+                                                               RulesConfig,
                                                                ReversiLegalityInformation>
 {
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;

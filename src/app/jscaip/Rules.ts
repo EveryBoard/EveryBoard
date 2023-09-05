@@ -8,12 +8,12 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BoardValue } from './BoardValue';
 import { GameStatus } from './GameStatus';
-import { GameConfig } from './ConfigUtil';
+import { RulesConfig } from './ConfigUtil';
 
 
 export abstract class Rules<M extends Move,
                             S extends GameState,
-                            C extends GameConfig = GameConfig,
+                            C extends RulesConfig = RulesConfig,
                             L = void,
                             B extends BoardValue = BoardValue>
 {
@@ -21,10 +21,6 @@ export abstract class Rules<M extends Move,
     public constructor(public readonly stateType: Type<S>,
                        public config: C)
     {
-        if (this.stateType.toString().substring(0, 17) === 'class TablutState' && Object.keys(config).length === 0) {
-            console.log('TABLUT CRÉER SANS CONFIG')
-            throw new Error('SODBET, Tafl crée sans config !!')
-        }
     }
     /* The data that represent the status of the game at the current moment, including:
      * the board
@@ -87,5 +83,5 @@ export abstract class Rules<M extends Move,
     public abstract getGameStatus(node: MGPNode<Rules<M, S, C, L>, M, S, C, L>): GameStatus;
 }
 
-export abstract class AbstractRules extends Rules<Move, GameState, GameConfig, unknown> {
+export abstract class AbstractRules extends Rules<Move, GameState, RulesConfig, unknown> {
 }

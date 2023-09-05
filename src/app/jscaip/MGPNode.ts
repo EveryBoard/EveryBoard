@@ -11,7 +11,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Player } from './Player';
 import { GameState } from './GameState';
 import { MGPFallible } from '../utils/MGPFallible';
-import { GameConfig } from './ConfigUtil';
+import { RulesConfig } from './ConfigUtil';
 
 export class MGPNodeStats {
     public static createdNodes: number = 0;
@@ -22,7 +22,7 @@ export class MGPNodeStats {
 export class MGPNode<R extends Rules<M, S, C, L>,
                      M extends Move,
                      S extends GameState,
-                     C extends GameConfig = GameConfig,
+                     C extends RulesConfig = RulesConfig,
                      L = void,
                      B extends BoardValue = BoardValue> {
 
@@ -266,9 +266,9 @@ export class MGPNode<R extends Rules<M, S, C, L>,
     }
 }
 
-export abstract class AbstractNode extends MGPNode<Rules<Move, GameState, GameConfig, unknown>,
+export abstract class AbstractNode extends MGPNode<Rules<Move, GameState, RulesConfig, unknown>,
                                                    Move,
                                                    GameState,
-                                                   GameConfig,
+                                                   RulesConfig,
                                                    unknown> {
 }

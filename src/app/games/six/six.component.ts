@@ -18,7 +18,7 @@ import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -30,7 +30,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules,
                                                          SixMove,
                                                          SixState,
                                                          Player,
-                                                         GameConfig,
+                                                         RulesConfig,
                                                          SixLegalityInformation,
                                                          SixBoardValue>
 {

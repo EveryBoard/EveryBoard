@@ -15,8 +15,9 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -38,10 +39,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public configSetted: boolean = false;
 
-    private rulesConfig: GameConfig;
+    private rulesConfig: RulesConfig;
 
-    private readonly configBS: BehaviorSubject<MGPOptional<GameConfig>> = new BehaviorSubject(MGPOptional.empty());
-    private readonly configObs: Observable<MGPOptional<GameConfig>> = this.configBS.asObservable();
+    private readonly configBS: BehaviorSubject<MGPOptional<RulesConfig>> = new BehaviorSubject(MGPOptional.empty());
+    private readonly configObs: Observable<MGPOptional<RulesConfig>> = this.configBS.asObservable();
 
     public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
@@ -52,6 +53,20 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         super(actRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
+        this.setDefaultRulesConfig();
+    }
+    /**
+     * Will set the default rules config
+     * Will not do it if the game don't exist, this will be handled later
+     */
+    private setDefaultRulesConfig(): void {
+        const gameURL: string = this.getGameName();
+        const games: GameInfo[] =
+            GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL);
+        if (games.length > 0) {
+            const rulesConfigDescription: RulesConfigDescription = games[0].configDescription;
+            this.rulesConfig = RulesConfigUtils.getDefaultConfig(rulesConfigDescription);
+        }
     }
     public getCreatedNodes(): number {
         return MGPNodeStats.createdNodes;
@@ -61,14 +76,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public ngAfterViewInit(): void {
         setTimeout(async() => {
-            const createdSuccessfully: boolean = await this.createGameConfigAndStartComponent();
+            const createdSuccessfully: boolean = await this.createRulesConfigAndStartComponent();
             if (createdSuccessfully) {
                 await this.restartGame();
                 this.cdr.detectChanges();
             }
         }, 1);
     }
-    private async createGameConfigAndStartComponent(): Promise<boolean> {
+    private async createRulesConfigAndStartComponent(): Promise<boolean> {
         return this.afterViewInit();
     }
     public updatePlayer(player: Player): void {
@@ -137,7 +152,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
         // called only when it's AI's Turn
-        const ruler: Rules<Move, GameState, GameConfig, unknown> = this.gameComponent.rules;
+        const ruler: Rules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
         assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
         const turn: number = this.gameComponent.node.gameState.turn % 2;
@@ -169,7 +184,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.getPlayingAI().isPresent();
     }
     public async restartGame(): Promise<void> {
-        const config: GameConfig = await this.getConfig();
+        const config: RulesConfig = await this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.updateBoard();
         this.endGame = false;
@@ -185,23 +200,23 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.gameComponent.showLastMove(move);
         }
     }
-    public async getConfig(): Promise<GameConfig> {
+    public async getConfig(): Promise<RulesConfig> {
         // Linter seem to think that the unscubscription line can be reached before the subscription
         // yet this is false, so this explain the weird instanciation
         let subcription: Subscription = { unsubscribe: () => {} } as Subscription;
-        const gameConfigPromise: Promise<GameConfig> =
-            new Promise((resolve: (value: GameConfig) => void) => {
-                subcription = this.configObs.subscribe((response: MGPOptional<GameConfig>) => {
+        const rulesConfigPromise: Promise<RulesConfig> =
+            new Promise((resolve: (value: RulesConfig) => void) => {
+                subcription = this.configObs.subscribe((response: MGPOptional<RulesConfig>) => {
                     if (response.isPresent()) {
                         resolve(response.get());
                     }
                 });
             });
-        const gameConfig: GameConfig = await gameConfigPromise;
+        const rulesConfig: RulesConfig = await rulesConfigPromise;
         subcription.unsubscribe();
-        return gameConfig;
+        return rulesConfig;
     }
-    public updateConfig(rulesConfig: GameConfig): void { // TODO: GameConfig -> RulesConfig
+    public updateConfig(rulesConfig: RulesConfig): void {
         this.rulesConfig = rulesConfig;
     }
     public markConfigAsFilled(): void {

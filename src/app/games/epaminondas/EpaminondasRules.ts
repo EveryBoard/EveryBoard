@@ -11,7 +11,7 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
@@ -19,11 +19,11 @@ export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 export class EpaminondasNode extends MGPNode<EpaminondasRules,
                                              EpaminondasMove,
                                              EpaminondasState,
-                                             GameConfig,
+                                             RulesConfig,
                                              EpaminondasLegalityInformation> {}
 
 export class EpaminondasRules
-    extends Rules<EpaminondasMove, EpaminondasState, GameConfig, EpaminondasLegalityInformation>
+    extends Rules<EpaminondasMove, EpaminondasState, RulesConfig, EpaminondasLegalityInformation>
 {
     private static singleton: MGPOptional<EpaminondasRules> = MGPOptional.empty();
 

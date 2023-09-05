@@ -15,7 +15,7 @@ import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from '../
 import { MartianChessFailure } from '../MartianChessFailure';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('MartianChessRules', () => {
 
@@ -29,7 +29,7 @@ describe('MartianChessRules', () => {
 
     let rules: MartianChessRules;
 
-    let minimaxes: Minimax<MartianChessMove, MartianChessState, GameConfig, MartianChessMoveResult>[];
+    let minimaxes: Minimax<MartianChessMove, MartianChessState, RulesConfig, MartianChessMoveResult>[];
 
     const boardWhereCaptureCanBeDone: Table<MartianChessPiece> = [
         [A, _, _, _],

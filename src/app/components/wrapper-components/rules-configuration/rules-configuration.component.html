@@ -1,6 +1,6 @@
 <div class="box">
     <p class="title" i18n>Configuration of your {{ gameName }} part</p>
-    <form [formGroup]="gameConfigForm">
+    <form [formGroup]="rulesConfigForm">
         <fieldset [disabled]="userIsCreator === false">
             <div *ngFor="let configParameter of configDescription.fields"
                  id="{{ configParameter.name }}_{{ configParameter.type }}_config"

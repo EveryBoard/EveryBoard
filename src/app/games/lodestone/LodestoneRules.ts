@@ -14,9 +14,9 @@ import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneState, LodestonePositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
-export class LodestoneNode extends MGPNode<LodestoneRules, LodestoneMove, LodestoneState, GameConfig, LodestoneInfos> {}
+export class LodestoneNode extends MGPNode<LodestoneRules, LodestoneMove, LodestoneState, RulesConfig, LodestoneInfos> {}
 
 export type LodestoneInfos = {
     board: LodestonePiece[][]
@@ -33,7 +33,7 @@ export interface PressurePlateViewPosition {
 export type PressurePlatePositionInformation =
     MGPMap<LodestonePressurePlatePosition, PressurePlateViewPosition>;
 
-export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, GameConfig, LodestoneInfos> {
+export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, RulesConfig, LodestoneInfos> {
     public static readonly THREATENED_COORD_RANGE: PressurePlatePositionInformation = MGPMap.from({
         top: {
             startForBigPlate: new Coord(0, 0),

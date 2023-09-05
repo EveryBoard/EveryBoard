@@ -22,7 +22,7 @@ import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { GameConfig, GameConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigDescription } from 'src/app/jscaip/ConfigUtil';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -72,7 +72,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     @Input() partId: string;
 
-    @Input() configDescription: GameConfigDescription;
+    @Input() configDescription: RulesConfigDescription;
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
@@ -306,7 +306,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.configRoomService.reviewConfig(this.partId);
     }
     public async proposeConfig(): Promise<void> {
-        // TODO UNIT TEST: when proposeConfig, the change made in the gameConfig/rulesConfig must be saved from here
+        // TODO UNIT TEST: when proposeConfig, the change made in the rulesConfig must be saved from here
         const chosenOpponentName: string = this.getForm('chosenOpponent').value;
         const partType: string = this.getForm('partType').value;
         const maxMoveDur: number = this.getForm('maximalMoveDuration').value;
@@ -520,7 +520,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
 
-    public saveGameConfig(gameConfig: GameConfig): Promise<void> {
-        return this.configRoomService.changeGameConfig(this.partId, gameConfig);
+    public saveRulesConfig(rulesConfig: RulesConfig): Promise<void> {
+        return this.configRoomService.changeRulesConfig(this.partId, rulesConfig);
     }
 }

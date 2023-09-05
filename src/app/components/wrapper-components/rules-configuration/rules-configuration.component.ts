@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ConfigDescriptionType, ConfigParameter, GameConfig, GameConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { ConfigDescriptionType, ConfigParameter, RulesConfig, RulesConfigDescription } from 'src/app/jscaip/ConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { BaseGameComponent } from '../../game-components/game-component/GameComponent';
 import { ActivatedRoute } from '@angular/router';
@@ -15,16 +15,16 @@ type ConfigFormJson = {
 })
 export class RulesConfigurationComponent extends BaseGameComponent implements OnInit {
 
-    @Input() configDescription: GameConfigDescription;
+    @Input() configDescription: RulesConfigDescription;
 
-    @Input() config?: GameConfig;
+    @Input() rulesConfigToDisplay?: RulesConfig;
 
     @Input() userIsCreator: boolean;
 
     // notify that the config has been update
-    @Output() updateCallback: EventEmitter<GameConfig> = new EventEmitter<GameConfig>();
+    @Output() updateCallback: EventEmitter<RulesConfig> = new EventEmitter<RulesConfig>();
 
-    public gameConfigForm: FormGroup = new FormGroup({});
+    public rulesConfigForm: FormGroup = new FormGroup({});
 
     public gameName: string; // Instanciated onInit
 
@@ -44,8 +44,8 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
             if (this.userIsCreator) {
                 value = configDescription.defaultValue;
             } else {
-                Utils.assert(this.config != null, 'Config should be provided to non-creator in RulesConfigurationComponent');
-                const configuration: GameConfig = Utils.getNonNullable(this.config);
+                Utils.assert(this.rulesConfigToDisplay != null, 'Config should be provided to non-creator in RulesConfigurationComponent');
+                const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
                 value = configuration[configDescription.name];
             }
             switch (configDescription.type) {
@@ -63,19 +63,20 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
                 this.onUpdate();
             });
         });
-        this.gameConfigForm = new FormGroup(group);
+        this.rulesConfigForm = new FormGroup(group);
     }
 
     public onUpdate(): void {
+        console.log('element updated!')
         // TODO: unit test game without config should start immediately
         // TODO: unit test that when I remove some default value, I cannot click
         // TODO: min value
         // TODO: max value
-        const gameConfig: GameConfig = {};
+        const rulesConfig: RulesConfig = {};
         for (const configDescription of this.configDescription.fields) {
-            gameConfig[configDescription.name] = this.gameConfigForm.controls[configDescription.name].value;
+            rulesConfig[configDescription.name] = this.rulesConfigForm.controls[configDescription.name].value;
         }
-        this.updateCallback.emit(gameConfig);
+        this.updateCallback.emit(rulesConfig);
     }
 
     public formContentIsValid(): boolean {

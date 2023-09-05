@@ -14,7 +14,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 /**
@@ -59,7 +59,7 @@ export abstract class BaseGameComponent {
 export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
                                     M extends Move,
                                     S extends GameState,
-                                    C extends GameConfig = GameConfig,
+                                    C extends RulesConfig = RulesConfig,
                                     L = void,
                                     B extends BoardValue = BoardValue>
     extends BaseGameComponent
@@ -101,7 +101,7 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
-    public getGameConfigFromWrapper: () => Promise<C>;
+    public getRulesConfigFromWrapper: () => Promise<C>;
 
     public role: PlayerOrNone;
 
@@ -155,10 +155,10 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
     }
 }
 
-export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, GameConfig, unknown>,
+export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, RulesConfig, unknown>,
                                                                   Move,
                                                                   GameState,
-                                                                  GameConfig,
+                                                                  RulesConfig,
                                                                   unknown>
 {
 }

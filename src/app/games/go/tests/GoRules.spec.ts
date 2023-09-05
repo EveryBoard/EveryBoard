@@ -10,12 +10,12 @@ import { GoFailure } from '../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('GoRules', () => {
 
     let rules: GoRules;
-    let minimaxes: Minimax<GoMove, GoState, GameConfig, GoLegalityInformation>[];
+    let minimaxes: Minimax<GoMove, GoState, RulesConfig, GoLegalityInformation>[];
 
     const X: GoPiece = GoPiece.LIGHT;
     const O: GoPiece = GoPiece.DARK;
@@ -25,7 +25,7 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const config: GameConfig = { width: 5, height: 5 };
+    const config: RulesConfig = { width: 5, height: 5 };
 
     beforeEach(() => {
         rules = GoRules.get();

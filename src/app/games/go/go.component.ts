@@ -12,7 +12,7 @@ import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -22,7 +22,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 @Debug.log
 export class GoComponent
-    extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GameConfig, GoLegalityInformation>
+    extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, RulesConfig, GoLegalityInformation>
     implements OnInit
 {
     public boardInfo: GroupDatas<GoPiece>;
@@ -52,7 +52,7 @@ export class GoComponent
         this.updateBoard();
     }
     public async ngOnInit(): Promise<void> {
-        const config: GameConfig = await this.getGameConfigFromWrapper();
+        const config: RulesConfig = await this.getRulesConfigFromWrapper();
         this.node = this.rules.getInitialNode(config);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

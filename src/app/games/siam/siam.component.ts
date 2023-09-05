@@ -17,7 +17,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SiamFailure } from './SiamFailure';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 export type SiamIndicatorArrow = {
@@ -37,7 +37,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamMove,
                                                             SiamState,
                                                             SiamPiece,
-                                                            GameConfig,
+                                                            RulesConfig,
                                                             SiamLegalityInformation>
 {
     public SiamState: typeof SiamState = SiamState;

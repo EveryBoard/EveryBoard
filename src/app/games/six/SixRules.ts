@@ -14,12 +14,12 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SixBoardValue } from './SixMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { Debug } from 'src/app/utils/utils';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
-export class SixNode extends MGPNode<SixRules, SixMove, SixState, GameConfig, SixLegalityInformation, SixBoardValue> {
+export class SixNode extends MGPNode<SixRules, SixMove, SixState, RulesConfig, SixLegalityInformation, SixBoardValue> {
 }
 export interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
@@ -29,7 +29,7 @@ export interface SixVictorySource {
 @Debug.log
 export class SixRules extends Rules<SixMove,
                                     SixState,
-                                    GameConfig,
+                                    RulesConfig,
                                     SixLegalityInformation,
                                     SixBoardValue>
 {

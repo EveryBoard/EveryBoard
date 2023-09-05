@@ -27,12 +27,9 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                           public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
         super(stateType, config);
-        if (Object.keys(config).length === 0) {
-            console.log('TAFL CREATED WITHOUT CONFIG');
-        }
+        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL (' + Object.keys(tablutConfig).length +')');
     }
     public isLegal(move: TaflMove, state: S): MGPValidation {
-        if (Object.keys(this.config).length > 0) console.log('CONFIG CANNOT BE NULL (' + Object.keys(tablutConfig).length +')')
         Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL (' + Object.keys(tablutConfig).length +')');
 
         const player: Player = state.getCurrentPlayer();

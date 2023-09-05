@@ -47,7 +47,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { GameConfig, GameConfigDescription, getDefaultConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
 
 @Component({})
 export class BlankComponent {}
@@ -238,6 +238,7 @@ export class SimpleComponentTestUtils<T> {
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist in order to fill its value`).toBeTruthy();
+        console.log('before', JSON.stringify(element.nativeElement.value), 'putting', value)
         element.nativeElement.value = value;
         element.nativeElement.dispatchEvent(new Event('input'));
     }
@@ -303,13 +304,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
 
     public async acceptDefaultConfig(): Promise<void> {
-        const compo: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
-        // eslint-disable-next-line dot-notation
-        const gameName: string = compo['getGameName']();
-        const configDescription: GameConfigDescription = compo.getGameConfigDescription(gameName);
-        const config: GameConfig = getDefaultConfig(configDescription);
-        compo.markConfigAsFilled(config);
-        tick(0);
+        await this.clickElement('#startGameWithConfig');
+        tick(1);
     }
     public bindGameComponent(): void {
         expect(this.component.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();

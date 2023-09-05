@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { NewGameDummyMinimax } from './NewGameDummyMinimax';
 import { NewGameTutorial } from './NewGameTutorial';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 /**
@@ -26,7 +26,7 @@ import { ActivatedRoute } from '@angular/router';
 export class NewGameComponent extends GameComponent<NewGameRules,
                                                     NewGameMove,
                                                     NewGameState,
-                                                    GameConfig,
+                                                    RulesConfig,
                                                     NewGameLegalityInfo>
 {
     /**

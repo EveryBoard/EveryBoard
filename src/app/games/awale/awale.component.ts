@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { AwaleRules, CaptureResult } from './AwaleRules';
+import { AwaleRules, CaptureResult, mancalaConfig } from './AwaleRules';
 import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from './AwaleState';
@@ -37,7 +37,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
         this.rules = AwaleRules.get();
-        this.node = this.rules.getInitialNode({ seed_by_house: 4, width: 6 });
+        this.node = this.rules.getInitialNode(mancalaConfig);
         this.availableMinimaxes = [
             new AwaleMinimax(this.rules, 'AwaleMinimax'),
         ];

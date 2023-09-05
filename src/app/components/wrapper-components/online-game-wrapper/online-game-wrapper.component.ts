@@ -30,7 +30,7 @@ import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { AbstractNode } from 'src/app/jscaip/MGPNode';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class OnlineGameWrapperMessages {
 
@@ -264,7 +264,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.endGame = true;
     }
     private async onReceivedMove(moveEvent: GameEventMove): Promise<void> {
-        const rules: Rules<Move, GameState, GameConfig, unknown> = this.gameComponent.rules;
+        const rules: Rules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
         const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
@@ -554,7 +554,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.gameEventsSubscription.unsubscribe();
         }
     }
-    public async getConfig(): Promise<GameConfig> {
-        return this.configRoom.gameConfig;
+    public async getConfig(): Promise<RulesConfig> {
+        return this.configRoom.rulesConfig;
     }
 }

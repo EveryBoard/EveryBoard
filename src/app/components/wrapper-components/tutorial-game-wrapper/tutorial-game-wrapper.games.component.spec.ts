@@ -82,7 +82,7 @@ import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
 import { TutorialStepFailure } from './TutorialStepFailure';
 import { Comparable } from 'src/app/utils/Comparable';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -304,7 +304,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
-                const rules: Rules<Move, GameState, GameConfig, unknown> = stepExpectation[0];
+                const rules: Rules<Move, GameState, RulesConfig, unknown> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
                 if (step.isPredicate()) {
                     const move: Move = stepExpectation[2];
@@ -329,7 +329,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
                                                                  TutorialGameWrapperComponent))
                         .getGameComponent();
-                const rules: Rules<Move, GameState, GameConfig, unknown> = gameComponent.rules;
+                const rules: Rules<Move, GameState, RulesConfig, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
                     if (step.hasSolution()) {

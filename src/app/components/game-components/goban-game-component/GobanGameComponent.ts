@@ -4,7 +4,7 @@ import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 /**
  * This component is used for games that are played on a Goban.
@@ -17,7 +17,7 @@ export abstract class GobanGameComponent<R extends Rules<M, S, C, L>,
                                          M extends Move,
                                          S extends GameStateWithTable<P>,
                                          P,
-                                         C extends GameConfig = GameConfig,
+                                         C extends RulesConfig = RulesConfig,
                                          L = void>
     extends RectangularGameComponent<R, M, S, P, C, L>
 {

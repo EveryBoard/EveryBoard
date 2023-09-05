@@ -6,8 +6,8 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameConfig, getDefaultConfig } from 'src/app/jscaip/ConfigUtil';
-import { NewGameConfig, NewGameConfigDescription } from './NewGameConfig';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
+import { NewRulesConfig, NewRulesConfigDescription } from './NewRulesConfig';
 
 /**
  * This class is optional.
@@ -38,7 +38,7 @@ export class NewGameBoardValue extends BoardValue {
 export class NewGameNode extends MGPNode<NewGameRules,
                                          NewGameMove,
                                          NewGameState,
-                                         GameConfig,
+                                         RulesConfig,
                                          NewGameLegalityInfo,
                                          NewGameBoardValue> {}
 
@@ -48,7 +48,7 @@ export class NewGameNode extends MGPNode<NewGameRules,
  * It is used by the wrappers to check the legality of a move, and to apply the move on a state.
  */
 export class NewGameRules
-    extends Rules<NewGameMove, NewGameState, NewGameConfig, NewGameLegalityInfo, NewGameBoardValue>
+    extends Rules<NewGameMove, NewGameState, NewRulesConfig, NewGameLegalityInfo, NewGameBoardValue>
 {
 
     /**
@@ -69,7 +69,7 @@ export class NewGameRules
      * The constructor is made private to avoid creating other instances of this class.
      */
     private constructor() {
-        const config: NewGameConfig = getDefaultConfig(NewGameConfigDescription) as NewGameConfig;
+        const config: NewRulesConfig = RulesConfigUtils.getDefaultConfig(NewRulesConfigDescription) as NewRulesConfig;
         super(NewGameState, config);
     }
 

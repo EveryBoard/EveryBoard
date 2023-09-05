@@ -124,7 +124,8 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GameConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 class GameDescription {
 
@@ -198,19 +199,35 @@ class GameDescription {
 
 }
 
-class GameConfiguration {
+class RulesConfigDescriptions {
 
-    public static readonly GO: GameConfigDescription = { fields: [
+    public static readonly BRANDHUB: RulesConfigDescription = { fields: [
+        { name: 'CASTLE_IS_LEFT_FOR_GOOD', type: 'boolean', defaultValue: true },
+        { name: 'BORDER_CAN_SURROUND_KING', type: 'boolean', defaultValue: false },
+        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', type: 'boolean', defaultValue: true },
+        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', type: 'boolean', defaultValue: true },
+        { name: 'INVADER_STARTS', type: 'boolean', defaultValue: true },
+    ] };
+
+    public static readonly GO: RulesConfigDescription = { fields: [
         { name: 'height', type: 'number', defaultValue: 9 },
         { name: 'width', type: 'number', defaultValue: 9 },
     ] };
 
-    public static readonly MANCALAS: GameConfigDescription = { fields: [
+    public static readonly HNEFATAFL: RulesConfigDescription = { fields: [
+        { name: 'CASTLE_IS_LEFT_FOR_GOOD', type: 'boolean', defaultValue: false },
+        { name: 'BORDER_CAN_SURROUND_KING', type: 'boolean', defaultValue: true },
+        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', type: 'boolean', defaultValue: false },
+        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', type: 'boolean', defaultValue: false },
+        { name: 'INVADER_STARTS', type: 'boolean', defaultValue: true },
+    ] };
+
+    public static readonly MANCALAS: RulesConfigDescription = { fields: [
         { name: 'width', type: 'number', defaultValue: 6 },
         { name: 'seed_by_house', type: 'number', defaultValue: 4 },
     ] };
 
-    public static readonly TABLUT: GameConfigDescription = { fields: [
+    public static readonly TABLUT: RulesConfigDescription = { fields: [
         { name: 'CASTLE_IS_LEFT_FOR_GOOD', type: 'boolean', defaultValue: false },
         { name: 'BORDER_CAN_SURROUND_KING', type: 'boolean', defaultValue: true },
         { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', type: 'boolean', defaultValue: false },
@@ -220,16 +237,24 @@ class GameConfiguration {
 
 }
 
+export const rulesConfigDescriptionMap: MGPMap<string, RulesConfigDescription> = new MGPMap([
+    { key: 'Awale', value: RulesConfigDescriptions.MANCALAS },
+    { key: 'Brandhub', value: RulesConfigDescriptions.BRANDHUB },
+    { key: 'Go', value: RulesConfigDescriptions.GO },
+    { key: 'Hnefatafl', value: RulesConfigDescriptions.HNEFATAFL },
+    { key: 'Tablut', value: RulesConfigDescriptions.TABLUT },
+]);
+
 export class GameInfo {
     // Games sorted by creation date
     public static ALL_GAMES: () => GameInfo[] = () => [
         new GameInfo($localize`Four in a Row`, 'P4', P4Component, new P4Tutorial(), P4Rules.get(), new Date('2018-08-28'), GameDescription.P4()),
-        new GameInfo($localize`Awalé`, 'Awale', AwaleComponent, new AwaleTutorial(), AwaleRules.get(), new Date('2018-11-29'), GameDescription.AWALE(), GameConfiguration.MANCALAS), // 93 days after P4
+        new GameInfo($localize`Awalé`, 'Awale', AwaleComponent, new AwaleTutorial(), AwaleRules.get(), new Date('2018-11-29'), GameDescription.AWALE(), RulesConfigDescriptions.MANCALAS), // 93 days after P4
         new GameInfo($localize`Quarto`, 'Quarto', QuartoComponent, new QuartoTutorial(), QuartoRules.get(), new Date('2018-12-09'), GameDescription.QUARTO()), // 10 days after Awale
-        new GameInfo($localize`Tablut`, 'Tablut', TablutComponent, new TablutTutorial(), TablutRules.get(), new Date('2018-12-27'), GameDescription.TABLUT(), GameConfiguration.TABLUT), // 26 days after Quarto
+        new GameInfo($localize`Tablut`, 'Tablut', TablutComponent, new TablutTutorial(), TablutRules.get(), new Date('2018-12-27'), GameDescription.TABLUT(), RulesConfigDescriptions.TABLUT), // 26 days after Quarto
 
         new GameInfo($localize`Reversi`, 'Reversi', ReversiComponent, new ReversiTutorial(), ReversiRules.get(), new Date('2019-01-16'), GameDescription.REVERSI()), // 20 days after Tablut
-        new GameInfo($localize`Go`, 'Go', GoComponent, new GoTutorial(), GoRules.get(), new Date('2019-12-21'), GameDescription.GO(), GameConfiguration.GO), // 11 months after Reversi
+        new GameInfo($localize`Go`, 'Go', GoComponent, new GoTutorial(), GoRules.get(), new Date('2019-12-21'), GameDescription.GO(), RulesConfigDescriptions.GO), // 11 months after Reversi
         new GameInfo($localize`Encapsule`, 'Encapsule', EncapsuleComponent, new EncapsuleTutorial(), EncapsuleRules.get(), new Date('2019-12-30'), GameDescription.ENCAPSULE()), // 9 days after Go
 
         new GameInfo($localize`Siam`, 'Siam', SiamComponent, new SiamTutorial(), SiamRules.get(), new Date('2020-01-11'), GameDescription.SIAM()), // 12 days after Encapsule
@@ -249,12 +274,12 @@ export class GameInfo {
         new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new YinshTutorial(), YinshRules.get(), new Date('2021-07-31'), GameDescription.YINSH()), // 94 days after LinesOfAction *Quentin
         new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new ApagosTutorial(), ApagosRules.get(), new Date('2021-11-04'), GameDescription.APAGOS()), // 4 month after Abalone
         new GameInfo($localize`Diam`, 'Diam', DiamComponent, new DiamTutorial(), DiamRules.get(), new Date('2021-11-30'), GameDescription.DIAM()), // 4 months after Yinsh *Quentin
-        new GameInfo($localize`Brandhub`, 'Brandhub', BrandhubComponent, new BrandhubTutorial(), BrandhubRules.get(), new Date('2021-12-07'), GameDescription.BRANDHUB()), // 33 days after Apagos
+        new GameInfo($localize`Brandhub`, 'Brandhub', BrandhubComponent, new BrandhubTutorial(), BrandhubRules.get(), new Date('2021-12-07'), GameDescription.BRANDHUB(), RulesConfigDescriptions.BRANDHUB), // 33 days after Apagos
         new GameInfo($localize`Conspirateurs`, 'Conspirateurs', ConspirateursComponent, new ConspirateursTutorial(), ConspirateursRules.get(), new Date('2021-12-30'), GameDescription.CONSPIRATEURS()), // 30 days after Diam *Quentin
 
         new GameInfo($localize`Lodestone`, 'Lodestone', LodestoneComponent, new LodestoneTutorial(), LodestoneRules.get(), new Date('2022-06-24'), GameDescription.LODESTONE()),
         new GameInfo($localize`Martian Chess`, 'MartianChess', MartianChessComponent, new MartianChessTutorial(), MartianChessRules.get(), new Date('2022-07-01'), GameDescription.MARTIAN_CHESS()),
-        new GameInfo($localize`Hnefatafl`, 'Hnefatafl', HnefataflComponent, new HnefataflTutorial(), HnefataflRules.get(), new Date('2022-09-21'), GameDescription.HNEFATAFL()),
+        new GameInfo($localize`Hnefatafl`, 'Hnefatafl', HnefataflComponent, new HnefataflTutorial(), HnefataflRules.get(), new Date('2022-09-21'), GameDescription.HNEFATAFL(), RulesConfigDescriptions.HNEFATAFL),
 
         new GameInfo($localize`Hive`, 'Hive', HiveComponent, new HiveTutorial(), HiveRules.get(), new Date('2023-04-02'), GameDescription.HIVE()),
         new GameInfo($localize`Trexo`, 'Trexo', TrexoComponent, new TrexoTutorial(), TrexoRules.get(), new Date('2023-04-23'), GameDescription.TREXO()),
@@ -273,7 +298,7 @@ export class GameInfo {
                        public readonly rules: AbstractRules,
                        public readonly creationDate: Date,
                        public readonly description: string,
-                       public readonly configDescription: GameConfigDescription = { fields: [] },
+                       public readonly configDescription: RulesConfigDescription = { fields: [] },
                        public readonly display: boolean = true)
     {
     }

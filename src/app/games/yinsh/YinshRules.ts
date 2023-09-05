@@ -14,13 +14,13 @@ import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type YinshLegalityInformation = YinshState
 
-export class YinshNode extends MGPNode<YinshRules, YinshMove, YinshState, GameConfig, YinshLegalityInformation> { }
+export class YinshNode extends MGPNode<YinshRules, YinshMove, YinshState, RulesConfig, YinshLegalityInformation> { }
 
-export class YinshRules extends Rules<YinshMove, YinshState, GameConfig, YinshLegalityInformation> {
+export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshLegalityInformation> {
 
     private static singleton: MGPOptional<YinshRules> = MGPOptional.empty();
 

@@ -11,13 +11,20 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
-export type MancalaConfig = GameConfig & {
+export type MancalaConfig = RulesConfig & {
 
     width: number;
 
     seed_by_house: number;
+};
+
+export const mancalaConfig: MancalaConfig = {
+
+    width: 6,
+
+    seed_by_house: 4,
 };
 
 export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState> {}
@@ -43,7 +50,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState, MancalaConfig> {
         return AwaleRules.singleton.get();
     }
     private constructor() {
-        super(AwaleState, { seed_by_house: 4, width: 6 });
+        super(AwaleState, mancalaConfig);
     }
     public applyLegalMove(move: AwaleMove, state: AwaleState, _info: void): AwaleState {
         const x: number = move.x;

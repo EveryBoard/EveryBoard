@@ -63,7 +63,7 @@ xdescribe('GameService', () => {
             playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 2,
             result: MGPResult.UNACHIEVED.value,
-            gameConfig: {},
+            rulesConfig: {},
         };
         await partDAO.set('partId', part);
 
@@ -183,7 +183,7 @@ xdescribe('GameService', () => {
                 partStatus: 3,
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
-                gameConfig: {},
+                rulesConfig: {},
             };
 
             // When calling getStartingConfig
@@ -204,7 +204,7 @@ xdescribe('GameService', () => {
                 partStatus: 3,
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
-                gameConfig: {},
+                rulesConfig: {},
             };
 
             // When calling getStartingConfig
@@ -246,8 +246,8 @@ xdescribe('GameService', () => {
         it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
             // Given a previous game
             const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
-            const lastGameConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
-            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
+            const lastConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
+            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastConfigRoom);
             spyOn(partDAO, 'create').and.resolveTo('rematchId');
 
             // When calling acceptRematch
@@ -264,8 +264,8 @@ xdescribe('GameService', () => {
         it('should create elements in this order: part, configRoom, and then chat', fakeAsync(async() => {
             // Given a previous game
             const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
-            const lastGameConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
-            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
+            const lastConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
+            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastConfigRoom);
 
             // Install some mocks to check what we need
             // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
@@ -310,7 +310,7 @@ xdescribe('GameService', () => {
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 turn: 1,
                 result: MGPResult.UNACHIEVED.value,
-                gameConfig: {},
+                rulesConfig: {},
             };
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();

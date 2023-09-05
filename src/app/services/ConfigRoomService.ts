@@ -10,7 +10,7 @@ import { Localized } from '../utils/LocaleUtils';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
-import { GameConfig } from '../jscaip/ConfigUtil';
+import { RulesConfig } from '../jscaip/ConfigUtil';
 
 @Injectable({
     providedIn: 'root',
@@ -75,7 +75,7 @@ export class ConfigRoomService {
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator,
-            gameConfig: {}, // TODO: check to input here the default values of the config
+            rulesConfig: {}, // TODO: check to input here the default values of the config
         };
         return this.configRoomDAO.set(configRoomId, newConfigRoom);
     }
@@ -165,7 +165,7 @@ export class ConfigRoomService {
         return (await this.configRoomDAO.read(configRoomId)).get();
     }
 
-    public changeGameConfig(configRoomId: string, gameConfig: GameConfig): Promise<void> {
-        return this.configRoomDAO.update(configRoomId, { gameConfig });
+    public changeRulesConfig(configRoomId: string, rulesConfig: RulesConfig): Promise<void> {
+        return this.configRoomDAO.update(configRoomId, { rulesConfig });
     }
 }

@@ -2,7 +2,7 @@ import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { JSONObject } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MinimalUser } from './MinimalUser';
-import { GameConfig } from '../jscaip/ConfigUtil';
+import { RulesConfig } from '../jscaip/ConfigUtil';
 
 // On top of these fields, a config room has a subcollection of candidates, which are MinimalUsers
 export interface ConfigRoom extends JSONObject {
@@ -14,7 +14,7 @@ export interface ConfigRoom extends JSONObject {
     readonly partType: IPartType
     readonly maximalMoveDuration: number;
     readonly totalPartDuration: number;
-    readonly gameConfig: GameConfig; // It is in the ConfigRoom in PartCreationComponent that this is set
+    readonly rulesConfig: RulesConfig; // It is in the ConfigRoom in PartCreationComponent that this is set
 }
 
 export type ConfigRoomDocument = FirestoreDocument<ConfigRoom>;

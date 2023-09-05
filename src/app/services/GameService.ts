@@ -57,7 +57,7 @@ export class GameService {
             playerZero,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
-            gameConfig: {}, // TODO: veux on procéder ainsi ?
+            rulesConfig: {}, // TODO: veux on procéder ainsi ?
         };
         return this.partDAO.create(newPart);
     }
@@ -186,7 +186,7 @@ export class GameService {
             typeGame: part.typeGame,
             result: MGPResult.UNACHIEVED.value,
             ...startingConfig,
-            gameConfig: configRoom.gameConfig,
+            rulesConfig: configRoom.rulesConfig,
         };
 
         const rematchId: string = await this.partDAO.create(newPart);

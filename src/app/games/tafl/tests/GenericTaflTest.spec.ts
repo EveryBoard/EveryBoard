@@ -12,6 +12,10 @@ import { TaflMinimax } from '../TaflMinimax';
 import { TaflMove } from '../TaflMove';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
+import { RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
+import { TaflConfig } from '../TaflConfig';
+import { rulesConfigDescriptionMap } from 'src/app/components/normal-component/pick-game/pick-game.component';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 
 export class TaflTestEntries<C extends TaflComponent<R, M, S>,
@@ -43,12 +47,8 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
 
     describe(entries.gameName + ' component generic tests', () => {
         beforeEach(fakeAsync(async() => {
-            console.log('ON TESTE DU ' + entries.gameName + ' LO')
             testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);
         }));
-        afterEach(() => {
-            console.log('Fijn de ' + entries.gameName + ' eh')
-        });
         it('should create', () => {
             testUtils.expectToBeCreated();
         });
@@ -163,8 +163,12 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             const rules: R = testUtils.getGameComponent().rules;
             const encoder: Encoder<M> = testUtils.getGameComponent().encoder;
             const minimax: TaflMinimax = new TaflMinimax(rules, 'TaflMinimax');
+            const rulesConfigDescription: MGPOptional<RulesConfigDescription> =
+                rulesConfigDescriptionMap.get(entries.gameName);
+            const rulesConfig: TaflConfig =
+                RulesConfigUtils.getDefaultConfig(rulesConfigDescription.get()) as TaflConfig;
             const firstTurnMoves: M[] = minimax
-                .getListMoves(rules.getInitialNode())
+                .getListMoves(rules.getInitialNode(rulesConfig))
                 .map((move: TaflMove) => {
                     return entries.moveProvider(move.getStart(), move.getEnd());
                 });

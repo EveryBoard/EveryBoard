@@ -1,6 +1,7 @@
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from 'src/app/games/awale/AwaleState';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { mancalaConfig } from './AwaleRules';
 
 export class AwaleTutorial extends Tutorial {
 
@@ -11,7 +12,7 @@ export class AwaleTutorial extends Tutorial {
          Let's see how seeds are sown. The spaces in Awalé are called the houses.
          As you're playing Dark, the 6 houses on the bottom are yours.<br/><br>
          Click on any of the bottom houses to sow the seeds it contains: they will be sown clockwise, one seed per house.`,
-            AwaleState.getInitialState({ seed_by_house: 4, width: 4 }),
+            AwaleState.getInitialState(mancalaConfig),
             AwaleMove.of(0),
             $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
         This is how seeds are sown:

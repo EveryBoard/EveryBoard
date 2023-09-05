@@ -16,7 +16,7 @@ import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -28,7 +28,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                                    EpaminondasMove,
                                                                    EpaminondasState,
                                                                    PlayerOrNone,
-                                                                   GameConfig,
+                                                                   RulesConfig,
                                                                    EpaminondasLegalityInformation>
 {
     public NONE: PlayerOrNone = PlayerOrNone.NONE;

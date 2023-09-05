@@ -18,7 +18,7 @@ import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 interface SpaceInfo {
@@ -56,7 +56,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            YinshMove,
                                                            YinshState,
                                                            YinshPiece,
-                                                           GameConfig,
+                                                           RulesConfig,
                                                            YinshLegalityInformation>
 {
     private static readonly RING_OUTER_SIZE: number = 40;

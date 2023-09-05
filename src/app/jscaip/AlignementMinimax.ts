@@ -5,7 +5,7 @@ import { Move } from './Move';
 import { BoardValue } from './BoardValue';
 import { SCORE } from './SCORE';
 import { GameState } from './GameState';
-import { GameConfig } from './ConfigUtil';
+import { RulesConfig } from './ConfigUtil';
 
 export interface BoardInfo {
     status: SCORE,
@@ -17,7 +17,7 @@ export abstract class AlignementMinimax<M extends Move,
                                         S extends GameState,
                                         L,
                                         V,
-                                        C extends GameConfig = GameConfig,
+                                        C extends RulesConfig = RulesConfig,
                                         B extends BoardValue = BoardValue>
     extends Minimax<M, S, C, L, B>
 {

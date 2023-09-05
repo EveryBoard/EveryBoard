@@ -7,10 +7,10 @@ import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class AbaloneDummyMinimax
-    extends PlayerMetricsMinimax<AbaloneMove, AbaloneState, GameConfig, AbaloneLegalityInformation>
+    extends PlayerMetricsMinimax<AbaloneMove, AbaloneState, RulesConfig, AbaloneLegalityInformation>
 {
     public getListMoves(node: AbaloneNode): AbaloneMove[] {
         const moves: AbaloneMove[] = [];

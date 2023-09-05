@@ -4,7 +4,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { Move } from 'src/app/jscaip/Move';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 export interface ModeConfig {
 
@@ -26,7 +26,7 @@ export abstract class ParallelogramGameComponent<R extends Rules<M, S, C, L>,
                                                  M extends Move,
                                                  S extends GameStateWithTable<P>,
                                                  P,
-                                                 C extends GameConfig = GameConfig,
+                                                 C extends RulesConfig = RulesConfig,
                                                  L = void>
     extends RectangularGameComponent<R, M, S, P, C, L>
 {

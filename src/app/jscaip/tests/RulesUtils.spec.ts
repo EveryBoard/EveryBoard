@@ -14,7 +14,7 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { GameStatus } from '../GameStatus';
 import { BoardValue } from '../BoardValue';
 import { JSONValue, Utils } from 'src/app/utils/utils';
-import { GameConfig } from '../ConfigUtil';
+import { RulesConfig } from '../ConfigUtil';
 
 export class RulesUtils {
 
@@ -23,7 +23,7 @@ export class RulesUtils {
                                     S extends GameState,
                                     L,
                                     B extends BoardValue,
-                                    C extends GameConfig = GameConfig>(rules: R,
+                                    C extends RulesConfig = RulesConfig>(rules: R,
                                                                        state: S,
                                                                        move: M,
                                                                        expectedState: S)
@@ -46,7 +46,7 @@ export class RulesUtils {
                                     M extends Move,
                                     S extends GameState,
                                     L,
-                                    C extends GameConfig = GameConfig>(rules: R,
+                                    C extends RulesConfig = RulesConfig>(rules: R,
                                                                        state: S,
                                                                        move: M,
                                                                        reason: string)
@@ -60,7 +60,7 @@ export class RulesUtils {
                                        M extends Move,
                                        S extends GameState,
                                        L,
-                                       C extends GameConfig>(rules: R,
+                                       C extends RulesConfig>(rules: R,
                                                              node: MGPNode<R, M, S, C, L>,
                                                              player: Player,
                                                              minimaxes: Minimax<M, S, C, L>[])
@@ -79,7 +79,7 @@ export class RulesUtils {
                                     M extends Move,
                                     S extends GameState,
                                     L,
-                                    C extends GameConfig>(rules: R,
+                                    C extends RulesConfig>(rules: R,
                                                           node: MGPNode<R, M, S, C, L>,
                                                           minimaxes: Minimax<M, S, C, L>[])
     : void
@@ -99,7 +99,7 @@ export class RulesUtils {
                                  M extends Move,
                                  S extends GameState,
                                  L,
-                                 C extends GameConfig>(rules: R,
+                                 C extends RulesConfig>(rules: R,
                                                        node: MGPNode<R, M, S, C, L>,
                                                        minimaxes: Minimax<M, S, C, L>[])
     : void
@@ -111,7 +111,7 @@ export class RulesUtils {
                 .toBe(0);
         }
     }
-    public static expectStatesToBeOfEqualValue<M extends Move, S extends GameState, L, C extends GameConfig>(
+    public static expectStatesToBeOfEqualValue<M extends Move, S extends GameState, L, C extends RulesConfig>(
         minimax: Minimax<M, S, C, L>,
         leftState: S,
         rightState: S)
@@ -131,7 +131,7 @@ export class RulesUtils {
     public static expectSecondStateToBeBetterThanFirstFor<M extends Move,
                                                           S extends GameState,
                                                           L,
-                                                          C extends GameConfig>(minimax: Minimax<M, S, C, L>,
+                                                          C extends RulesConfig>(minimax: Minimax<M, S, C, L>,
                                                                                 weakState: S,
                                                                                 weakMove: MGPOptional<M>,
                                                                                 strongState: S,
@@ -150,7 +150,7 @@ export class RulesUtils {
             expect(weakValue).toBeLessThan(strongValue);
         }
     }
-    public static expectStateToBePreVictory<M extends Move, S extends GameState, L, C extends GameConfig>(
+    public static expectStateToBePreVictory<M extends Move, S extends GameState, L, C extends RulesConfig>(
         state: S,
         previousMove: M,
         player: Player,
@@ -182,7 +182,7 @@ export class RulesUtils {
     public static applyMoves<S extends GameState,
                              M extends Move,
                              L,
-                             C extends GameConfig>(ruler: Rules<M, S, C, L>,
+                             C extends RulesConfig>(ruler: Rules<M, S, C, L>,
                                                    encodedMoves: JSONValue[],
                                                    state: S,
                                                    moveDecoder: (em: JSONValue) => M)

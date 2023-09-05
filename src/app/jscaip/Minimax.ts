@@ -4,11 +4,11 @@ import { BoardValue } from './BoardValue';
 import { Rules } from './Rules';
 import { GameState } from './GameState';
 import { GameStatus } from './GameStatus';
-import { GameConfig } from './ConfigUtil';
+import { RulesConfig } from './ConfigUtil';
 
 export abstract class Minimax<M extends Move,
                               S extends GameState,
-                              C extends GameConfig = GameConfig,
+                              C extends RulesConfig = RulesConfig,
                               L = void,
                               B extends BoardValue = BoardValue,
                               R extends Rules<M, S, C, L> = Rules<M, S, C, L>>
@@ -39,7 +39,7 @@ export abstract class Minimax<M extends Move,
 
 export abstract class PlayerMetricsMinimax<M extends Move,
                                            S extends GameState,
-                                           C extends GameConfig = GameConfig,
+                                           C extends RulesConfig = RulesConfig,
                                            L = void,
                                            R extends Rules<M, S, C, L> = Rules<M, S, C, L>>
     extends Minimax<M, S, C, L, BoardValue, R>
@@ -63,4 +63,4 @@ export abstract class PlayerMetricsMinimax<M extends Move,
   }
 }
 
-export abstract class AbstractMinimax extends Minimax<Move, GameState, GameConfig, unknown> {}
+export abstract class AbstractMinimax extends Minimax<Move, GameState, RulesConfig, unknown> {}

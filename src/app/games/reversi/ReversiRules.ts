@@ -12,7 +12,7 @@ import { ReversiFailure } from './ReversiFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 
 export type ReversiLegalityInformation = Coord[];
@@ -25,10 +25,10 @@ export class ReversiMoveWithSwitched {
 }
 
 export class ReversiNode
-    extends MGPNode<ReversiRules, ReversiMove, ReversiState, GameConfig, ReversiLegalityInformation> {}
+    extends MGPNode<ReversiRules, ReversiMove, ReversiState, RulesConfig, ReversiLegalityInformation> {}
 
 @Debug.log
-export class ReversiRules extends Rules<ReversiMove, ReversiState, GameConfig, ReversiLegalityInformation> {
+export class ReversiRules extends Rules<ReversiMove, ReversiState, RulesConfig, ReversiLegalityInformation> {
 
     private static singleton: MGPOptional<ReversiRules> = MGPOptional.empty();
 

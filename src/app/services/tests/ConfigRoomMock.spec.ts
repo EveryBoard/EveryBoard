@@ -29,7 +29,7 @@ export class ConfigRoomServiceMock {
                 maximalMoveDuration: 60,
                 totalPartDuration: 300,
                 gameType: 42,
-                gameConfig: {},
+                rulesConfig: {},
             });
         });
     }

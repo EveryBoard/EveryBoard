@@ -4,7 +4,7 @@ import { NewGameMove } from '../NewGameMove';
 import { NewGameBoardValue, NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
 import { NewGameDummyMinimax } from '../NewGameDummyMinimax';
-import { NewGameConfig } from '../NewGameConfig';
+import { NewRulesConfig } from '../NewRulesConfig';
 
 /**
  * This is the test suite for the rules
@@ -14,7 +14,7 @@ describe('NewGameRules', () => {
     let rules: NewGameRules;
     let minimaxes: Minimax<NewGameMove,
                            NewGameState,
-                           NewGameConfig,
+                           NewRulesConfig,
                            NewGameLegalityInfo,
                            NewGameBoardValue>[];
 

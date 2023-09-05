@@ -11,7 +11,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
-import { getDefaultConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
 
 describe('DemoCardComponent', () => {
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
@@ -82,9 +82,19 @@ describe('DemoCardComponent', () => {
     describe('getConfig', () => {
         it('should provide initial default config to game component', fakeAsync(async() => {
             // Given any demo card
+            const defaultRulesConfig: RulesConfig = { mais_quelles_belles_chaussettes: 42 };
+            loadNode({
+                name: 'P4',
+                node: new P4Node(P4State.getInitialState()),
+                click: MGPOptional.empty(),
+            });
+
             // When calling getConfig
-            // TODO getDefaultConfig
+            spyOn(RulesConfigUtils, 'getDefaultConfig').and.returnValue(defaultRulesConfig);
+            const actualDefaultRulesConfig: RulesConfig = await testUtils.getComponent().getConfig();
+
             // Then the return should be the default game config
+            expect(actualDefaultRulesConfig).toBe(defaultRulesConfig);
         }));
     });
 });

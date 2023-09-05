@@ -4,7 +4,7 @@ import { GoState, GoPiece } from '../GoState';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from '../GoGroupDatasFactory';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('GoBoardDatas', () => {
 
@@ -18,7 +18,7 @@ describe('GoBoardDatas', () => {
 
     const height: number = 5;
 
-    const config: GameConfig = { width, height };
+    const config: RulesConfig = { width, height };
 
     it('should create one big group for initial board', () => {
         const board: Table<GoPiece> = GoState.getStartingBoard(config);

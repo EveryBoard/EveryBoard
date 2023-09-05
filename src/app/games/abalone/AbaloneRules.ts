@@ -12,17 +12,17 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
 export class AbaloneNode extends MGPNode<AbaloneRules,
                                          AbaloneMove,
                                          AbaloneState,
-                                         GameConfig,
+                                         RulesConfig,
                                          AbaloneLegalityInformation> {}
 
-export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, GameConfig, AbaloneLegalityInformation> {
+export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, RulesConfig, AbaloneLegalityInformation> {
 
     private static singleton: MGPOptional<AbaloneRules> = MGPOptional.empty();
 

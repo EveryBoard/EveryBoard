@@ -15,7 +15,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 
@@ -229,7 +229,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         // TODO FOR REVIEW: ticketter l'obligation de override ou plutôt l'autre ?
         return 'tutorial-player';
     }
-    public async getConfig(): Promise<GameConfig> {
+    public async getConfig(): Promise<RulesConfig> {
         const gameURL: string = this.getGameName();
         const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
         return {}; // TODO: DO IT

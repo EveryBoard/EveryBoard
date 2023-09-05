@@ -12,7 +12,7 @@ import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('AbaloneRules', () => {
 
@@ -21,7 +21,7 @@ describe('AbaloneRules', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     let rules: AbaloneRules;
-    let minimaxes: Minimax<AbaloneMove, AbaloneState, GameConfig, AbaloneLegalityInformation>[];
+    let minimaxes: Minimax<AbaloneMove, AbaloneState, RulesConfig, AbaloneLegalityInformation>[];
 
     beforeEach(() => {
         rules = AbaloneRules.get();

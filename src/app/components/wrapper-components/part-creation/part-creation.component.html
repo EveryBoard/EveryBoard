@@ -144,7 +144,7 @@
                 </div>
                 <app-rules-configuration [configDescription]="configDescription"
                                          [userIsCreator]="true"
-                                         (updateCallback)="saveGameConfig($event)">
+                                         (updateCallback)="saveRulesConfig($event)">
                 </app-rules-configuration>
             </fieldset>
             <div class="field">
@@ -198,7 +198,7 @@
                         </ul>
                         <app-rules-configuration [configDescription]="configDescription"
                                                  [userIsCreator]="false"
-                                                 [config]="currentConfigRoom?.gameConfig">
+                                                 [rulesConfigToDisplay]="currentConfigRoom?.rulesConfig">
                         </app-rules-configuration>
                         <button class="button is-primary"
                                 (click)="acceptConfig()"

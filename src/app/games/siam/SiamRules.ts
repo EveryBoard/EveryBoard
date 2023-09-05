@@ -14,7 +14,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 export class SiamLegalityInformation {
     public constructor(public readonly resultingBoard: Table<SiamPiece>,
@@ -22,10 +22,10 @@ export class SiamLegalityInformation {
     }
 }
 
-export class SiamNode extends MGPNode<SiamRules, SiamMove, SiamState, GameConfig, SiamLegalityInformation> {}
+export class SiamNode extends MGPNode<SiamRules, SiamMove, SiamState, RulesConfig, SiamLegalityInformation> {}
 
 @Debug.log
-export class SiamRules extends Rules<SiamMove, SiamState, GameConfig, SiamLegalityInformation> {
+export class SiamRules extends Rules<SiamMove, SiamState, RulesConfig, SiamLegalityInformation> {
 
     private static singleton: MGPOptional<SiamRules> = MGPOptional.empty();
 

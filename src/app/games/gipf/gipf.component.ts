@@ -19,7 +19,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfTutorial } from './GipfTutorial';
 import { Utils } from 'src/app/utils/utils';
-import { GameConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -31,7 +31,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                                           GipfMove,
                                                           GipfState,
                                                           FourStatePiece,
-                                                          GameConfig,
+                                                          RulesConfig,
                                                           GipfLegalityInformation>
 {
     private static readonly PHASE_INITIAL_CAPTURE: number = 0;

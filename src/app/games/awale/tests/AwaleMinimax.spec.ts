@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleNode, AwaleRules, MancalaConfig } from '../AwaleRules';
+import { AwaleNode, AwaleRules, mancalaConfig } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
@@ -16,10 +16,9 @@ describe('AwaleMinimax', () => {
         minimax = new AwaleMinimax(rules, 'AwaleMinimax');
     });
     it('should not throw at first choice', () => {
-        const config: MancalaConfig = { seed_by_house: 4, width: 4 };
-        const node: AwaleNode = rules.getInitialNode();
+        const node: AwaleNode = rules.getInitialNode(mancalaConfig);
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
-        expect(rules.isLegal(bestMove, AwaleState.getInitialState(config)).isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, AwaleState.getInitialState(mancalaConfig)).isSuccess()).toBeTrue();
     });
     it('should choose capture when possible (at depth 1)', () => {
         // Given a state with a possible capture
