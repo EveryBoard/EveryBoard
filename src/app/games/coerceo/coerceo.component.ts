@@ -190,16 +190,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                     corner5x + ', ' + corner5y + ', ' +
                     corner0x + ', ' + corner0y;
     }
-    public getLinePoints(x: number, y: number): string {
-        const points: Coord[] = this.getTriangleCornerCoords(x, y);
-        if (x % 3 === 0) {
-            return points[0].x + ',' + points[0].y + ',' + points[1].x + ',' + points[1].y;
-        } else if (x % 3 === 1) {
-            return points[0].x + ',' + points[0].y + ',' + points[2].x + ',' + points[2].y;
-        } else {
-            return points[1].x + ',' + points[1].y + ',' + points[2].x + ',' + points[2].y;
-        }
-    }
     public mustShowTilesOf(player: Player): boolean {
         if (this.tiles[player.value] > 0) {
             return true;
