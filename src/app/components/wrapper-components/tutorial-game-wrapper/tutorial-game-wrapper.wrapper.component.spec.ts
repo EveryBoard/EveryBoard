@@ -806,7 +806,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // When doing any move
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
-            tick(10);
+            tick(10); // TODO FOR REVIEW: constantiser 10 comme "tutorialgamewrapper.tutorialawaitedthingy" ?
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
             await testUtils.expectMoveSuccess('#choosePiece_15', move);
             tick(10);
@@ -833,7 +833,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             await wrapper.startTutorial(tutorial);
 
-            // When doing that move
+            // When doing that click
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // expect to see steps success message on component
@@ -921,6 +921,35 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // Then the actual click is performed and the solution message is shown
             testUtils.expectElementToExist('#selected');
             const expectedMessage: string = 'Bravo !';
+            const currentMessage: string =
+                testUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            expect(currentMessage).toBe(expectedMessage);
+        }));
+        it('should not throw for click leading to move', fakeAsync(async() => {
+            // Given a TutorialStep with several clics
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'do that only choice you have, in one click',
+                    new QuartoState([
+                        [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
+                        [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],
+                        [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
+                        [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
+                    ], 15, QuartoPiece.BAAB),
+                    ['#chooseCoord_3_3'],
+                    'Congratulations!',
+                    'Perdu.',
+                ),
+            ];
+            await wrapper.startTutorial(tutorial);
+
+            // When doing that click-move
+            const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
+            await testUtils.expectMoveSuccess('#chooseCoord_3_3', move);
+
+            // expect to see steps success message on component
+            const expectedMessage: string = 'Congratulations!';
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);

@@ -67,16 +67,15 @@ export class KalahTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`End of the game`,
-            $localize`At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don't have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.<br/><br/>You're playing Dark, win!`,
+            $localize`At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don't have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just need one more point to win and will get it next turn if you allow it.<br/><br/>You're playing Dark, win!`,
             new MancalaState([
-                [0, 0, 0, 0, 0, 0],
-                [0, 2, 0, 0, 0, 1],
-            ], 0, [22, 23]),
+                [0, 0, 0, 0, 2, 0],
+                [2, 0, 0, 0, 0, 1],
+            ], 0, [19, 24]),
             [
-                KalahMove.of(MancalaDistribution.THREE),
                 KalahMove.of(MancalaDistribution.FIVE),
             ],
-            $localize`Congratulations, you won!`,
+            $localize`Since there is no longer seeds in the opponent houses, all your seeds have been captured by you. Congratulations, you won!`,
             $localize`Failed, you gave the opponent a seed! Try again.`,
         ),
     ];

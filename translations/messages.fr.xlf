@@ -1114,9 +1114,13 @@
         <source>You did not capture, try again!</source>
         <target>Vous n'avez pas capturé, réessayez !</target>
       </trans-unit>
-      <trans-unit id="6542017808867499457" datatype="html">
-        <source>At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don&apos;t have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
-        <target>À n'importe quel moment, si un joueur a plus de 24 graines dans son Kalah, il gagne. Cela peut arriver avant que le plateau soit vide, mais, il y a un autre moyen. Quand au début de votre tour, vous n'avez plus de graine dans vos maisons, la partie est finie et votre adversaire récolte toutes ses maisons, ce qui automatiquement mène à sa victoire. Ici, votre adversaire vous a juste donné sa dernière graine, si vous réussissez à ne pas lui donner de graine, vous gagnez.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez !</target>
+      <trans-unit id="960197745594900358" datatype="html">
+        <source>At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don&apos;t have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just need one more point to win and will get it next turn if you allow it.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
+        <target>À n'importe quel moment, si un joueur a plus de 24 graines dans son Kalah, il gagne. Cela peut arriver avant que le plateau soit vide, mais, il y a un autre moyen. Quand vous n'avez plus aucune graine dans vos maison, le jeu s'arrête et votre adversaire prends toutes les graines restantes de ses maisons. Ici, votre adversaire n'as besoin que d'un point en plus pour gagner, et il l'aura au prochain tour si vous ne faites rien.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez !</target>
+      </trans-unit>
+      <trans-unit id="7013769989797891949" datatype="html">
+        <source>Since there is no longer seeds in the opponent houses, all your seeds have been captured by you. Congratulations, you won!</source>
+        <target>Puisqu'il n'y a plus de graines dans les maisons adverses, vous avez capturé toutes vos graines. Félicitations, vous avez gagné !</target>
       </trans-unit>
       <trans-unit id="902849596357033257" datatype="html">
         <source>Failed, you gave the opponent a seed! Try again.</source>
