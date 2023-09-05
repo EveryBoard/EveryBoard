@@ -379,14 +379,14 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
     public getBoardTransformation(): string {
         const translation: string = 'translate(' + this.SPACE_SIZE + ', 0)';
-        const rotation: string = 'rotate(' + (this.role.value * 180) + ' ' + this.HORIZONTAL_CENTER + ' ' + this.VERTICAL_CENTER + ')';
+        const rotation: string = 'rotate(' + (this.pointOfView.value * 180) + ' ' + this.HORIZONTAL_CENTER + ' ' + this.VERTICAL_CENTER + ')';
         return translation + ' ' + rotation;
     }
     public getCapturesTransformation(player: Player): string {
         const scale: string = 'scale(0.5, 0.5)';
         const translationX: number = - this.SPACE_SIZE / 2;
         let translationY: number = this.SPACE_SIZE / 2;
-        if (player === this.role) {
+        if (player === this.pointOfView) {
             translationY += (10 * this.SPACE_SIZE) + (4 * this.STROKE_WIDTH);
         }
         const translation: string = 'translate(' + translationX + ', ' + translationY + ')';

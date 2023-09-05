@@ -280,6 +280,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.gameComponent.node = success.get();
         this.updateBoardAndShowLastMove();
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
+        this.gameComponent.setInteractive(this.currentPlayer.name === this.getPlayer().name);
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
     }

@@ -391,6 +391,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         return [];
     }
     public getHighlightedCoords(): Coord[] {
+        if (this.isInteractive === false) return [];
         if (this.firstPiece.isPresent()) {
             return this.phalanxValidLandings.concat(this.validExtensions);
         } else {
@@ -401,12 +402,10 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const pieces: Coord[] = [];
         const state: EpaminondasState = this.getState();
         const player: Player = state.getCurrentPlayer();
-        if (player === this.role) {
-            for (let y: number = 0; y < this.board.length; y++) {
-                for (let x: number = 0; x < this.board[y].length; x++) {
-                    if (this.board[y][x] === player) {
-                        pieces.push(new Coord(x, y));
-                    }
+        for (let y: number = 0; y < this.board.length; y++) {
+            for (let x: number = 0; x < this.board[y].length; x++) {
+                if (this.board[y][x] === player) {
+                    pieces.push(new Coord(x, y));
                 }
             }
         }

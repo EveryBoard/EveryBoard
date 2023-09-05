@@ -103,10 +103,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         // check if ai's turn has come, if so, make her start after a delay
         const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {
+            this.gameComponent.setInteractive(false);
             // bot's turn
             window.setTimeout(async() => {
                 await this.doAIMove(playingMinimax.get());
             }, this.botTimeOut);
+        } else {
+            this.gameComponent.setInteractive(true);
+            this.cdr.detectChanges();
         }
     }
     private getPlayingAI(): MGPOptional<AbstractMinimax> {

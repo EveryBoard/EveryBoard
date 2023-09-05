@@ -117,7 +117,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     private pieceBelongToCurrentPlayer(coord: Coord): boolean {
         const state: S = this.getState();
         const player: Player = state.getCurrentPlayer();
-        return this.role === player && state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
+        return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
     public override cancelMoveAttempt(): void {
         this.chosen = MGPOptional.empty();
@@ -172,7 +172,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     private isClickable(coord: Coord): boolean {
         // Show if the piece can be clicked
-        return this.pieceBelongToCurrentPlayer(coord);
+        return this.isInteractive && this.pieceBelongToCurrentPlayer(coord);
     }
     public isInvader(x: number, y: number): boolean {
         return this.board[y][x] === TaflPawn.INVADERS;

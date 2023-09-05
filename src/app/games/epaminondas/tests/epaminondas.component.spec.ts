@@ -446,8 +446,8 @@ describe('EpaminondasComponent', () => {
         expect(epaminondasComponent.getRectClasses(0, 11)).toEqual(['moved-fill']);
     }));
     it('should not highlight any piece when observing', fakeAsync(async() => {
-        // Given a state and an observer
-        testUtils.getWrapper().setRole(PlayerOrNone.NONE);
+        // Given a state and an observer, i.e., when it is not interactive
+        testUtils.getGameComponent().setInteractive(false);
         // When displaying the state
         // Then no coordinate should be clickable
         expect(testUtils.getGameComponent().getHighlightedCoords().length).toBe(0);

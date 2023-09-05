@@ -91,16 +91,23 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
-    public role: PlayerOrNone;
+    // This is where the player is seeing the board from.
+    public pointOfView: Player;
 
-    /* all game rules should be able to call the game-wrapper
-     * the aim is that the game-wrapper will take care of manage what follow
-     * ie: - if it's online, he'll tell the game-component when the remote opponent has played
-     *     - if it's offline, he'll tell the game-component what the bot have done
-     */
+    // This is true when the view is interactive, e.g., to display clickable pieces
+    protected isInteractive: boolean = false;
 
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
+    }
+    public setPointOfView(pointOfView: Player): void {
+        this.pointOfView = pointOfView;
+        if (this.hasAsymmetricBoard) {
+            this.rotation = 'rotate(' + (this.pointOfView.value * 180) + ')';
+        }
+    }
+    public setInteractive(interactive: boolean): void {
+        this.isInteractive = interactive;
     }
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);

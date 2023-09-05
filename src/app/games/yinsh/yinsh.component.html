@@ -69,7 +69,7 @@
           (click)="onClick(coord)"
           class="indicator"/>
     <g *ngFor="let player of Player.PLAYERS"
-       [attr.transform]="'rotate(' + ((role.value + 1) * 180) + ' 532.5 780)'">
+       [attr.transform]="'rotate(' + ((pointOfView.value + 1) * 180) + ' 532.5 780)'">
         <g *ngFor="let _ of [].constructor(viewInfo.sideRings[player.value]); index as ring">
             <circle id="player_{{ player.value }}_sideRing_{{ ring + 1 }}"
                     [attr.cx]="(player.value === 0 ? 15 : 1050) + (player.value === 0 ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"

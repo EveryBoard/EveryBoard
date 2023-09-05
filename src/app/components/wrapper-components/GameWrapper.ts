@@ -41,6 +41,7 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
+    // The role of the player, meaning who the player is playing
     public role: PlayerOrNone = PlayerOrNone.NONE;
 
     public endGame: boolean = false;
@@ -104,9 +105,10 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public setRole(role: PlayerOrNone): void {
         this.role = role;
-        this.gameComponent.role = this.role;
-        if (this.gameComponent.hasAsymmetricBoard) {
-            this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
+        if (role !== PlayerOrNone.ZERO) {
+            this.gameComponent.setPointOfView(role as Player);
+        } else {
+            this.gameComponent.setPointOfView(Player.ZERO);
         }
         this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
     }
