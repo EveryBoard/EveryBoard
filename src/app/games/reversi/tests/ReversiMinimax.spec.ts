@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';

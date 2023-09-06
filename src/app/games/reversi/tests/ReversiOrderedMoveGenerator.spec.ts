@@ -12,11 +12,9 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 
 describe('ReversiOrderedMoveGenerator', () => {
 
-    let rules: ReversiRules;
     let moveGenerator: ReversiOrderedMoveGenerator;
 
     beforeEach(() => {
-        rules = ReversiRules.get();
         moveGenerator = new ReversiOrderedMoveGenerator();
     });
 
