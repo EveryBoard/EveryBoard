@@ -97,7 +97,7 @@ export class GameService {
     public deletePart(partId: string): Promise<void> {
         return this.partDAO.delete(partId);
     }
-    public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<void> {
+    public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<StartingPartConfig> {
         await this.configRoomService.acceptConfig(partId);
 
         const update: StartingPartConfig = this.getStartingConfig(configRoom);
@@ -109,6 +109,7 @@ export class GameService {
         }
         await this.partDAO.update(partId, update);
         await this.gameEventService.startGame(partId, accepter);
+        return update;
     }
     public getPart(partId: string): Promise<MGPOptional<Part>> {
         return this.partDAO.read(partId);

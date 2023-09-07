@@ -114,6 +114,7 @@ export class ConfigRoomService {
     public async deleteConfigRoom(configRoomId: string, candidates: MinimalUser[]): Promise<void> {
         // We need to delete the candidates before the actual configRoom,
         // for the security rules to check that we are allowed to delete the configRoom
+        // TODO: remove this with backend
         await Promise.all(candidates.map((candidate: MinimalUser): Promise<void> =>
             this.removeCandidate(configRoomId, candidate)));
         await this.configRoomDAO.delete(configRoomId);
