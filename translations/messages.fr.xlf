@@ -174,10 +174,6 @@
         <source>Very simple game, but, will you be able to win everytime?</source>
         <target>Un jeu très simple, mais, saurez-vous gagner à chaque fois ?</target>
       </trans-unit>
-      <trans-unit id="6262000022886850348" datatype="html">
-        <source>The international version of the famous African strategy game!</source>
-        <target>La version internationale du fameux jeu de stratégie africain !</target>
-      </trans-unit>
       <trans-unit id="5716165296000343717" datatype="html">
         <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
         <target>La version irlandaise de la famille de jeu Tafl ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
@@ -298,9 +294,13 @@
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
         <target>Le jeu de plateau des Vikings ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
-      <trans-unit id="504259640490128380" datatype="html">
-        <source>Modern version of the Mancala board game family.</source>
-        <target>Adaptation moderne d'un jeu de la famille des Mancalas.</target>
+      <trans-unit id="6188072401668860107" datatype="html">
+        <source>A modern version of the famous African strategy game!</source>
+        <target>Une version moderne du jeu de stratégie africain connu!</target>
+      </trans-unit>
+      <trans-unit id="8852931932150400681" datatype="html">
+        <source>The most widespread of the Mancalas.</source>
+        <target>Le plus répandu des jeux de la famille Mancala.</target>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
@@ -1070,68 +1070,76 @@
         <source>You should choose a non-empty house to distribute.</source>
         <target>Vous devez égréner une maison qui n'est pas vide.</target>
       </trans-unit>
-      <trans-unit id="271201472468525420" datatype="html">
-        <source>You should distribute but you do not.</source>
-        <target>Vous devez égréner mais ne le faites pas.</target>
+      <trans-unit id="8846202449877054997" datatype="html">
+        <source>You should feed but you do not.</source>
+        <target>Vous devez nourrir mais ne le faites pas.</target>
       </trans-unit>
-      <trans-unit id="1854732749925914827" datatype="html">
-        <source>Bonus fact: Kalah has been created in America in 1940 by William Julius Champion Jr.</source>
-        <target>Info bonus: Kalah a été crée aux U.S.A en 1940 par William Julius Champion Jr.</target>
+      <trans-unit id="6065363643959580719" datatype="html">
+        <source>Bonus fact: Kalah has been created in the U.S.A in 1940 by William Julius Champion Jr.</source>
+        <target>Info bonus : Kalah a été crée aux U.S.A en 1940 par William Julius Champion Jr.</target>
       </trans-unit>
       <trans-unit id="7111322038810092184" datatype="html">
         <source>The Kalah (1/2)</source>
         <target>Le Kalah (1/2)</target>
       </trans-unit>
-      <trans-unit id="4509512877416195771" datatype="html">
-        <source>The houses on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, your seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your kalah then feed opponent&apos;s houses.</source>
-        <target>Les maisons à l'extrême gauche et droite, non alignées sur les autres, sont les kalah, le vôtre est à gauche, celui de l'adversaire à droite. Quand vous distrubez, avant de passer de votre dernière maison à la première de l'adversaire, vous devez déposer une graine dans votre kalah. Mais vous ne devrai pas distribuer dans le kalah adverse. Quand vous capturez, les graines sont déposées dans votre kalah.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faite un mouveent qui apsse par votre kalah puis par les maisons adverses.</target>
+      <trans-unit id="1494658367285976347" datatype="html">
+        <source>The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah, but you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that passes through your Kalah then feeds opponent&apos;s houses.</source>
+        <target>Les maisons à l'extrême gauche et droite, non alignées avec les autres, sont les Kalah, le vôtre est à gauche, celui de l'adversaire à droite. Quand vous distribuez, avant de passer de votre dernière maison à la première de l'adversaire, vous devez déposer une graine dans votre Kalah. Mais vous ne devrez pas distribuer dans le Kalah adverse. Quand vous capturez, les graines sont déposées dans votre Kalah.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites un mouvement qui passe par votre Kalah puis par les maisons adverses.</target>
       </trans-unit>
-      <trans-unit id="5407801196980144019" datatype="html">
-        <source>As you see, three houses have been fed in addition to your kalah.</source>
-        <target>Voilà, trois maisons on été remplies en plus de votre kalah.</target>
+      <trans-unit id="108833396164233870" datatype="html">
+        <source>As you see, three houses have been fed in addition to your Kalah.</source>
+        <target>Voilà, trois maisons on été remplies en plus de votre Kalah.</target>
       </trans-unit>
-      <trans-unit id="8271077564662598313" datatype="html">
-        <source>Failed. Choose the three leftermost house on the bottom.</source>
+      <trans-unit id="7327320572157893918" datatype="html">
+        <source>Failed. Choose the three leftmost house on the bottom.</source>
         <target>Raté. Distribuez une des trois maisons du bas les plus à gauche.</target>
       </trans-unit>
       <trans-unit id="6340571023242332704" datatype="html">
         <source>The Kalah (2/2)</source>
         <target>Le Kalah (2/2)</target>
       </trans-unit>
-      <trans-unit id="8979647594925459000" datatype="html">
-        <source>When ending in the Kalah, you must distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that end up in the Kalah then do a second move!</source>
-        <target>Quand votre distribution fini dans le kalah, vous êtes authorisé à distribuer à nouveau.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite la distribution qui termine dans votre kalah, puis une seconde distribution!</target>
+      <trans-unit id="5657099545651336771" datatype="html">
+        <source>When ending in the Kalah, you must distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that ends up in the Kalah then do a second distribution!</source>
+        <target>Quand votre distribution finit dans le Kalah, vous êtes autorisé à distribuer à nouveau.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites la distribution qui termine dans votre Kalah, puis une seconde distribution !</target>
       </trans-unit>
-      <trans-unit id="6244569030236259143" datatype="html">
-        <source>This move only distributed one house, do one distribution that ends in the Kalah then a second one!</source>
-        <target>Ce coup ne distribue qu'une seule maison, faites une distribution qui finit dans le kalah puis une deuxième!</target>
+      <trans-unit id="1468463450299215954" datatype="html">
+        <source>This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!</source>
+        <target>Ce coup ne distribue qu'une seule maison, faites une distribution qui finit dans le Kalah puis une deuxième !</target>
       </trans-unit>
       <trans-unit id="723370864893318309" datatype="html">
         <source>When the last seed of a distribution ends up in one of your empty houses, if the opposite house is filled, then you capture both houses. On this board, such a move is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
-        <target>Quand votre dernière graine fini dans une de vos maisons vides, si la maison au dessus est remplie, alors vous capturez le graines de ces deux maisons. Sur ce plateau, c'est faisable.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture!</target>
+        <target>Quand votre dernière graine finit dans une de vos maisons vides, si la maison en face est remplie, alors vous capturez le graines de ces deux maisons. Sur ce plateau, c'est faisable.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture !</target>
       </trans-unit>
-      <trans-unit id="1165257353049752736" datatype="html">
-        <source>At any moment, when one player have more than 24 seeds in their kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don&apos;t have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
-        <target>À n'importe quel moment, si un joueur a plus de 24 graines dans son kalah, il gagne. Cela peut arriver avant que le plateau soit vide, mais, il peut aussi avoir un autre moyen. Quand au début de votre tour, vous n'avez plus de graine dans vos maisons, la partie est finie et votre adversaire récoltes toutes ses maisons, ce qui automatiquement mène à sa victoire. Ici, votre adversaire vous a juste donné sa dernière graine, si vous réussissez à ne pas lui donner de graine, vous gagnez.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez!</target>
+      <trans-unit id="1044092391656953455" datatype="html">
+        <source>You did not capture, try again!</source>
+        <target>Vous n'avez pas capturé, réessayez !</target>
+      </trans-unit>
+      <trans-unit id="960197745594900358" datatype="html">
+        <source>At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don&apos;t have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just need one more point to win and will get it next turn if you allow it.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
+        <target>À n'importe quel moment, si un joueur a plus de 24 graines dans son Kalah, il gagne. Cela peut arriver avant que le plateau soit vide, mais, il y a un autre moyen. Quand vous n'avez plus aucune graine dans vos maison, le jeu s'arrête et votre adversaire prends toutes les graines restantes de ses maisons. Ici, votre adversaire n'a besoin que d'un point en plus pour gagner, et il l'aura au prochain tour si vous ne faites rien.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez !</target>
+      </trans-unit>
+      <trans-unit id="7013769989797891949" datatype="html">
+        <source>Since there is no longer seeds in the opponent houses, all your seeds have been captured by you. Congratulations, you won!</source>
+        <target>Puisqu'il n'y a plus de graines dans les maisons adverses, vous avez capturé toutes vos graines. Félicitations, vous avez gagné !</target>
       </trans-unit>
       <trans-unit id="902849596357033257" datatype="html">
         <source>Failed, you gave the opponent a seed! Try again.</source>
-        <target>Raté, vous avez donné un graine à l'adversaire! Réessayez!</target>
+        <target>Raté, vous avez donné un graine à l'adversaire ! Réessayez !</target>
       </trans-unit>
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
         <target>Égrénage</target>
       </trans-unit>
-      <trans-unit id="3960906110055575363" datatype="html">
-        <source>The main move in mancala games is sowing, let&apos;s see how seeds are sown. As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightermost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightermost house!</source>
-        <target>Le mouvement principal aux mancalas est la distribution. Voyons voir comment les graines sont distribuées. Vous jouez Foncé, les 6 maisons du bas sont les votres.&lt;br/&gt;&lt;br&gt;Cliquez sur la maison la plus à droite pour distribuer les graines qu'elle contient: elles seront égrenée dans le sens horloger, une graine par maison!</target>
+      <trans-unit id="935549280838012268" datatype="html">
+        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
+        <target>Le mouvement principal aux mancalas est la distribution. Voyons voir comment les graines sont distribuées. Vous jouez Foncé, les 6 maisons du bas sont les vôtres.&lt;br/&gt;&lt;br&gt;Cliquez sur la maison la plus à droite pour distribuer les graines qu'elle contient : elles seront égrenée dans le sens horaire, une graine par maison !</target>
       </trans-unit>
       <trans-unit id="6994033934467498174" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
         <target>Voilà, regardez les 4 maisons suivant la maison choisie dans le sens horaire, elle comptent maintenant 5 graines. C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans le sens horaire depuis la maison d’où elles viennent.</target>
       </trans-unit>
-      <trans-unit id="3137932316267051789" datatype="html">
-        <source>Failed. Choose the rightermost house on the bottom.</source>
+      <trans-unit id="8587148937080588417" datatype="html">
+        <source>Failed. Choose the rightmost house on the bottom.</source>
         <target>Raté. Distribuez la maison en bas à droite.</target>
       </trans-unit>
       <trans-unit id="8109801868756013772" datatype="html">
@@ -1170,9 +1178,9 @@
         <source>Multiple captures</source>
         <target>Capture composée</target>
       </trans-unit>
-      <trans-unit id="8132141725426684303" datatype="html">
-        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which contains now 3, so this will be a capture. But now, the house right before it contains 2, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
-        <target>En distribuant la maison la plus à gauche, vous terminerez dans la deuxième maison la plus à gauche, qui en contient maintenant 3, donc ce sera une capture. Mais maintenant, la maison immédiatement précédente en contient 2, ce qui est également capturable, donc cette maison sera capturée aussi !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture !</target>
+      <trans-unit id="4514452777310919130" datatype="html">
+        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which now contains 2 seeds, so this will be a capture. But now, the house right before it contains 3 seeds, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+        <target>En distribuant la maison la plus à gauche, vous terminerez dans la deuxième maison la plus à gauche, qui en contient maintenant 2, donc ce sera une capture. Mais maintenant, la maison juste à gauche en contient 3, ce qui est également capturable, donc cette maison sera capturée aussi !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture !</target>
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
@@ -1204,7 +1212,7 @@
       </trans-unit>
       <trans-unit id="1347673606182808434" datatype="html">
         <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!</source>
-        <target>Bravo ! Constatez que la capture s&apos;est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons !</target>
+        <target>Bravo ! Constatez que la capture s&apos;est interrompue en arrivant dans votre territoire car on ne peut pas capturer ses propres maisons !</target>
       </trans-unit>
       <trans-unit id="7890197140479173967" datatype="html">
         <source>You have only captured one house, try again!</source>
@@ -1214,11 +1222,9 @@
         <source>Do not starve</source>
         <target>Ne pas affamer</target>
       </trans-unit>
-      <trans-unit id="9161677839138932324" datatype="html">
-        <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. Try it.</source>
-        <target>Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire !&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé. Lancez-vous !</target>
+      <trans-unit id="4974882008918401392" datatype="html">
+        <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try it.</source>
+        <target>Vous avez une très belle capture qui semble possible. Il semble que vous puissiez capturer tous les pions de l’adversaire !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Lancez-vous !</target>
       </trans-unit>
       <trans-unit id="5327525705025836061" datatype="html">
         <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
@@ -1249,11 +1255,9 @@
         <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, sow the leftmost house.</source>
         <target>Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, distribuez la maison la plus à gauche.</target>
       </trans-unit>
-      <trans-unit id="51867831368251774" datatype="html">
-        <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
-         Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
-        <target>Aussi, dès qu&apos;un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp.
-        Ici, c&apos;était à vous de jouer et au joueur suivant de récolter toutes les graines restantes, en mettant ainsi fin à la partie.</target>
+      <trans-unit id="4966070806582905191" datatype="html">
+        <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
+        <target>Aussi, dès qu&apos;un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp. Ici, c&apos;était à vous de jouer et au joueur suivant de récolter toutes les graines restantes, en mettant ainsi fin à la partie.</target>
       </trans-unit>
       <trans-unit id="8840015526202664476" datatype="html">
         <source>You must distribute one of your houses.</source>
@@ -2584,7 +2588,7 @@
       </trans-unit>
       <trans-unit id="7013110290486741787" datatype="html">
         <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
-        <target>Une capture arrive quand vous sautez diagonalement par dessus une pièce adverse et atterrissez immédiatement derrière. Vous devez capturer quand vous le pouvez. C'est le cas ici : cliquez sur la pièce qui doit capturer, et ensuite sur sa destination&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
+        <target>Une capture arrive quand vous sautez diagonalement par dessus une pièce adverse et atterrissez immédiatement derrière. Vous devez capturer quand vous le pouvez. C'est le cas ici : cliquez sur la pièce qui doit capturer, et ensuite sur sa destination&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture !</target>
       </trans-unit>
       <trans-unit id="3662184238859847370" datatype="html">
         <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
@@ -3006,17 +3010,13 @@
         <source>This is not the winning move. Try again.</source>
         <target>Ce n'est pas le mouvement gagnant. Essayez encore.</target>
       </trans-unit>
-      <trans-unit id="7409362923921756680" datatype="html">
-        <source>Mancala</source>
-        <target>Mancala</target>
+      <trans-unit id="387119594039428962" datatype="html">
+        <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>
+        <target><x id="PH" equiv-text="this.gameName"/> est un Mancala. Mancala est le nom d'une famille de jeux de plateau datant au moins du troisième siècle. Les mancalas sont des jeux de distribution (égrenage) et capture. Leur but est de capturer le plus de graines. Les cases sont appelées des maisons. Comme vous jouez Foncé, vos 6 maisons sont celles du bas.</target>
       </trans-unit>
-      <trans-unit id="3263956491690387831" datatype="html">
-        <source>Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you&apos;re playing Dark, the 6 houses on the bottom are yours.</source>
-        <target>Mancala est le nom d'une famille de jeux de plateau datant au moins du troisième siècle. Les mancalas sont des jeux de distribution (égrenage) et captures. Leur but est de capturer le plus de graines. Les cases sont appelées des maisons. Comme vous jouez Foncé, vous 6 maisons sont celles du bas.</target>
-      </trans-unit>
-      <trans-unit id="590668854902440450" datatype="html">
-        <source>Bonus fact: Awalé is the more common of all Mancalas.</source>
-        <target>Info bonus: L'awalé est le plus populaire des mancalas.</target>
+      <trans-unit id="9104781897718296194" datatype="html">
+        <source>Bonus fact: Awalé is the most common of all Mancalas.</source>
+        <target>Info bonus : l'Awalé est le plus populaire des mancalas.</target>
       </trans-unit>
       <trans-unit id="6266016430504496647" datatype="html">
         <source>Please put your piece in an incomplete column.</source>

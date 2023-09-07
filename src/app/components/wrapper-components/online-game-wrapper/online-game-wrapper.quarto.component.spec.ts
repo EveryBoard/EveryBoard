@@ -181,16 +181,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let role: PlayerOrNone;
 
     const FIRST_MOVE: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BABB);
-
     const SECOND_MOVE: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
-
     const THIRD_MOVE: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
+    const FOURTH_MOVE: QuartoMove = new QuartoMove(3, 0, QuartoPiece.BBAA);
 
     const FIRST_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(FIRST_MOVE);
-
     const SECOND_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(SECOND_MOVE);
-
     const THIRD_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(THIRD_MOVE);
+    const FOURTH_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(FOURTH_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const result: MGPValidation = await wrapper.gameComponent.chooseMove(move);
@@ -301,13 +299,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.chronoOneTurn.isIdle()).withContext('chrono one turn should be idle').toBeTrue();
         expect(wrapper.endGame).toBeTrue();
     }
-    async function prepareStartedGameWithMoves(encodedMoves: JSONValue[]): Promise<void> {
+    async function prepareStartedGameWithMoves(encodedMoves: JSONValue[], waitForPartToStart: boolean = true)
+    : Promise<void>
+    {
         // 1. Creating the mocks and testUtils but NOT component
+        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
         // 2. Setting the db with the encodedMoves including
+        await prepareMoves(encodedMoves);
         // 3. Setting the component and making it start like it would
-
-        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-
+        if (waitForPartToStart) {
+            tick(2);
+        }
+    }
+    async function prepareMoves(encodedMoves: JSONValue[]): Promise<void> {
         let offset: number = 0;
         let turn: number = 0;
         if (role === Player.ONE) {
@@ -389,7 +393,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(true);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
-        it(`should not trigger animation when receiving you own move`, fakeAsync(async() => {
+        it(`should not trigger animation when receiving your own move`, fakeAsync(async() => {
             // Given a board where it's player's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
@@ -397,8 +401,35 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
             await doMove(FIRST_MOVE, true);
 
-            // Then gameComponent.updateBoard should have been called with (false)
+            // Then gameComponent.updateBoard should have been called with false
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(false);
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it(`should not trigger animation when receiving several moves`, fakeAsync(async() => {
+            // Given a board where you arrive late
+            const encodedMoves: JSONValue[] = [
+                FIRST_MOVE_ENCODED,
+                SECOND_MOVE_ENCODED,
+                THIRD_MOVE_ENCODED,
+                FOURTH_MOVE_ENCODED,
+            ];
+            await prepareStartedGameWithMoves(encodedMoves, false);
+            let numberOfCall: number = 0;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            spyOn<any>(testUtils.getWrapper(), 'onReceivedMove').and.callFake((_: any, isLastMoveOfBatch: boolean) => {
+                numberOfCall++;
+                // Then only once move should have been animated
+                if (numberOfCall === 4) {
+                    expect(isLastMoveOfBatch).withContext('last call should have been true').toBeTrue();
+                } else {
+                    expect(isLastMoveOfBatch).withContext('first calls should have been false').toBeFalse();
+                }
+            });
+
+            // When receiving several pairs of moves
+            tick(2);
+
+            // Finish the part (the real Then is in the callback fo onReceivedMove)
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
@@ -421,10 +452,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('Late Arrival', () => {
         it('should allow user to arrive late on the game (on their turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)
-            await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED]);
+            await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], false);
 
             // When arriving and playing
-            tick(0);
+            tick(2);
 
             // Then the new move should be done
             expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(2);
@@ -432,10 +463,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should allow user to arrive late on the game (not on their turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)
-            await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED]);
+            await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED], false);
 
             // When arriving and playing
-            tick(0);
+            tick(2);
 
             // Then the new move should be done
             expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(3);

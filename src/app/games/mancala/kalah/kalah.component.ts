@@ -7,7 +7,7 @@ import { MancalaMultipleSowComponent } from '../commons/MancalaMultipleSowCompon
 
 import { KalahRules } from './KalahRules';
 import { KalahMove } from './KalahMove';
-import { KalahDummyMinimax } from './KalahDummyMinimax';
+import { KalahScoreMinimax } from './KalahDummyMinimax';
 import { KalahTutorial } from './KalahTutorial';
 
 @Component({
@@ -25,7 +25,7 @@ export class KalahComponent extends MancalaMultipleSowComponent<KalahRules, Kala
         this.rules = KalahRules.get();
         this.node = this.rules.getInitialNode();
         this.availableMinimaxes = [
-            new KalahDummyMinimax(),
+            new KalahScoreMinimax(),
         ];
         this.encoder = KalahMove.encoder;
         this.tutorial = new KalahTutorial().tutorial;

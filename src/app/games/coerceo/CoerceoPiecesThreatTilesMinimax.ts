@@ -148,7 +148,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             const landing: Coord = piece.getNext(dir.direction, 1);
             const landingTileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(landing);
             if (startingTileUpperLeft.equals(landingTileUpperLeft) === false &&
-                CoerceoState.isOnBoard(landing) === true &&
+                CoerceoState.isOnBoard(landing) &&
                 state.getPieceAt(landing) === FourStatePiece.EMPTY)
             {
                 return true;

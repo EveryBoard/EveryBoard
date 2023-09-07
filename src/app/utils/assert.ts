@@ -1,6 +1,7 @@
 import { ErrorLoggerService } from '../services/ErrorLoggerService';
 
 // @deprecated Prefer to use Utils.assert instead
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function assert(condition: boolean, message: string, notStringMessage?: any): void {
     if (condition === false) {
         // We log the error but we also throw an exception

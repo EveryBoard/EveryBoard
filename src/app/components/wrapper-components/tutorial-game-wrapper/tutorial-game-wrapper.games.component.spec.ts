@@ -184,17 +184,17 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     HiveRules.get(),
                     hiveTutorial[8],
                     HiveMove.move(new Coord(1, 0), new Coord(0, 1)).get(),
-                    MGPValidation.failure($localize`You have not freed your queen, try again!`),
+                    MGPValidation.failure('You have not freed your queen, try again!'),
                 ], [
                     KalahRules.get(),
                     kalahTutorial[4],
                     KalahMove.of(MancalaDistribution.ZERO),
-                    MGPValidation.failure($localize`This move only distributed one house, do one distribution that ends in the Kalah then a second one!`),
+                    MGPValidation.failure('This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!'),
                 ], [
                     KalahRules.get(),
                     kalahTutorial[5],
                     KalahMove.of(MancalaDistribution.FOUR),
-                    MGPValidation.failure($localize`You did not capture, try again!`),
+                    MGPValidation.failure('You did not capture, try again!'),
                 ], [
                     LinesOfActionRules.get(),
                     linesOfActionTutorial[4],

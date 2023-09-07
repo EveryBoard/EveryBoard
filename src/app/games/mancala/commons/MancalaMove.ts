@@ -43,10 +43,10 @@ export class MancalaDistribution {
 
 export abstract class MancalaMove extends Move {
 
-    protected constructor(public readonly subMoves: MancalaDistribution[]) {
+    protected constructor(public readonly distributions: MancalaDistribution[]) {
         super();
     }
     [Symbol.iterator](): IterableIterator<MancalaDistribution> {
-        return this.subMoves.values();
+        return this.distributions.values();
     }
 }

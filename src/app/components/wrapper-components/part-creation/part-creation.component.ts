@@ -65,8 +65,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      * with the part creation component
      */
     public static TOKEN_INTERVAL: number = 5 * 1000;
-
-    public static TOKEN_TIMEOUT: number = PartCreationComponent.TOKEN_INTERVAL * 2;
+    public static TOKEN_TIMEOUT: number = 5 * 1000 * 2;
 
     public partType: typeof PartType = PartType;
 

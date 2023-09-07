@@ -13,25 +13,25 @@ describe('KalahMove', () => {
         });
     });
     it('should be iterable', () => {
-        // Given a move with several sub move
+        // Given a move with several distributions
         const move: KalahMove = KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.TWO]);
-        const subMoveList: MancalaDistribution[] = [];
+        const distributions: MancalaDistribution[] = [];
 
         // When iterating on it
-        for (const subMove of move) {
-            subMoveList.push(subMove);
+        for (const distribution of move) {
+            distributions.push(distribution);
         }
 
-        // Then it should give us the moves in the good order
-        const expectedSubMoveList: MancalaDistribution[] = [MancalaDistribution.ONE, MancalaDistribution.TWO];
-        expect(ArrayUtils.compareArray(subMoveList, expectedSubMoveList)).toBeTrue();
+        // Then it should give us the moves in the expected order
+        const expectedDistributions: MancalaDistribution[] = [MancalaDistribution.ONE, MancalaDistribution.TWO];
+        expect(ArrayUtils.compareArray(distributions, expectedDistributions)).toBeTrue();
     });
     describe('add', () => {
-        it('should return new move with one more subMoves at the end', () => {
+        it('should return new move with one more distribution at the end', () => {
             // Given a basic move
             const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
 
-            // When calling "add(subMove)" on it
+            // When calling "add(distribution)" on it
             const longerMove: KalahMove = move.add(MancalaDistribution.ONE);
 
             // Then whe should have a new move

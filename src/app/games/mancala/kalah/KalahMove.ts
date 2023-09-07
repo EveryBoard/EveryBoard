@@ -6,22 +6,25 @@ export class KalahMove extends MancalaMove {
 
     public static encoder: Encoder<KalahMove> = Encoder.tuple(
         [Encoder.list(MancalaDistribution.encoder)],
-        (move: KalahMove) => [move.subMoves],
+        (move: KalahMove) => [move.distributions],
         (value: [MancalaDistribution[]]) => KalahMove.of(value[0][0], value[0].slice(1)),
     );
-    public static of(mandatoryMove: MancalaDistribution, bonusMoves: MancalaDistribution[] = []): KalahMove {
-        const subMoves: MancalaDistribution[] = [mandatoryMove];
-        subMoves.push(...bonusMoves);
-        return new KalahMove(subMoves);
+    public static of(mandatoryDistribution: MancalaDistribution, bonusDistributionns: MancalaDistribution[] = [])
+    : KalahMove
+    {
+        const distributions: MancalaDistribution[] = [mandatoryDistribution];
+        distributions.push(...bonusDistributionns);
+        return new KalahMove(distributions);
     }
     public add(move: MancalaDistribution): KalahMove {
-        return KalahMove.of(this.subMoves[0],
-                            this.subMoves.slice(1).concat(move));
+        return KalahMove.of(this.distributions[0],
+                            this.distributions.slice(1).concat(move));
     }
     public override toString(): string {
-        return 'KalahMove([' + this.subMoves.map((move: MancalaDistribution) => move.x).join(', ') + '])';
+        const distributions: number[] = this.distributions.map((move: MancalaDistribution) => move.x);
+        return 'KalahMove([' + distributions.join(', ') + '])';
     }
     public override equals(other: this): boolean {
-        return ArrayUtils.compareArray(this.subMoves, other.subMoves);
+        return ArrayUtils.compareArray(this.distributions, other.distributions);
     }
 }

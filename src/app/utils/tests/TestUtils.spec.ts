@@ -177,7 +177,7 @@ export class SimpleComponentTestUtils<T> {
             await this.whenStable();
         }
         if (waitInMs !== undefined) {
-            tick(waitInMs); // Yeah, not really 1ms, but we want to flush asynchronous tasks
+            tick(waitInMs);
         }
         this.detectChanges();
     }
@@ -364,9 +364,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
         await this.clickElement(elementName, false, waitInMs);
 
-        expect(this.cancelMoveSpy).not.withContext(context).toHaveBeenCalledWith();
-        expect(this.chooseMoveSpy).not.withContext(context).toHaveBeenCalledWith();
-        expect(this.onLegalUserMoveSpy).not.withContext(context).toHaveBeenCalledWith();
+        expect(this.cancelMoveSpy).withContext(context).not.toHaveBeenCalledWith();
+        expect(this.chooseMoveSpy).withContext(context).not.toHaveBeenCalledWith();
+        expect(this.onLegalUserMoveSpy).withContext(context).not.toHaveBeenCalledWith();
     }
     public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
                                                         nameInFunction: string,

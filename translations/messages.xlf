@@ -63,13 +63,13 @@
         <source>Learn the rules</source>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> (waiting for opponent)</source>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (waiting for opponent)</source>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
@@ -155,8 +155,8 @@
       <trans-unit id="6379805581447060110" datatype="html">
         <source>Very simple game, but, will you be able to win everytime?</source>
       </trans-unit>
-      <trans-unit id="6262000022886850348" datatype="html">
-        <source>The international version of the famous African strategy game!</source>
+      <trans-unit id="8852931932150400681" datatype="html">
+        <source>The most widespread of the Mancalas.</source>
       </trans-unit>
       <trans-unit id="5716165296000343717" datatype="html">
         <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
@@ -194,8 +194,8 @@
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
-      <trans-unit id="504259640490128380" datatype="html">
-        <source>Modern version of the Mancala board game family.</source>
+      <trans-unit id="6188072401668860107" datatype="html">
+        <source>A modern version of the famous African strategy game!</source>
       </trans-unit>
       <trans-unit id="3910056094130316471" datatype="html">
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
@@ -483,7 +483,7 @@
         <source>Level <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="nent.scores.get()[0] }}"/> points</source>
+        <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get()[0] }}"/> points</source>
       </trans-unit>
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
@@ -567,22 +567,22 @@
         <source>You lost.</source>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getWinner().get().name }}"/> won.</source>
+        <source><x id="INTERPOLATION" equiv-text="currentPart.getWinner().get().name }}"/> won.</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has reached their time limit. You won.</source>
+        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has reached their time limit. You won.</source>
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has reached their time limit.</source>
+        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has resigned.</source>
+        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has resigned.</source>
       </trans-unit>
       <trans-unit id="3492340771384313804" datatype="html">
         <source>Resign</source>
@@ -678,10 +678,10 @@
         <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
       </trans-unit>
       <trans-unit id="6747612030990351046" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
       </trans-unit>
       <trans-unit id="7215535622740824911" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="creator }}"/> plays first</source>
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> plays first</source>
       </trans-unit>
       <trans-unit id="8496859383343230204" datatype="html">
         <source>you play first</source>
@@ -702,10 +702,10 @@
         <source>One moment...</source>
       </trans-unit>
       <trans-unit id="5068486659312004369" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="creator }}"/> is configuring the game.</source>
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> is configuring the game.</source>
       </trans-unit>
       <trans-unit id="4218388977213486334" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
       </trans-unit>
       <trans-unit id="4412958068611913614" datatype="html">
         <source>custom</source>
@@ -1960,26 +1960,11 @@
       <trans-unit id="1645842992024065193" datatype="html">
         <source>This is not the winning move. Try again.</source>
       </trans-unit>
-      <trans-unit id="7409362923921756680" datatype="html">
-        <source>Mancala</source>
+      <trans-unit id="387119594039428962" datatype="html">
+        <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>
       </trans-unit>
-      <trans-unit id="3263956491690387831" datatype="html">
-        <source>Mancala is the name of a family of board games that date back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. As you&apos;re playing Dark, the 6 houses on the bottom are yours.</source>
-      </trans-unit>
-      <trans-unit id="590668854902440450" datatype="html">
-        <source>Bonus fact: Awalé is the more common of all Mancalas.</source>
-      </trans-unit>
-      <trans-unit id="2949583224863920715" datatype="html">
-        <source>Sowing</source>
-      </trans-unit>
-      <trans-unit id="3960906110055575363" datatype="html">
-        <source>The main move in mancala games is sowing, let&apos;s see how seeds are sown. As you&apos;re playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightermost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightermost house!</source>
-      </trans-unit>
-      <trans-unit id="6994033934467498174" datatype="html">
-        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
-      </trans-unit>
-      <trans-unit id="3137932316267051789" datatype="html">
-        <source>Failed. Choose the rightermost house on the bottom.</source>
+      <trans-unit id="9104781897718296194" datatype="html">
+        <source>Bonus fact: Awalé is the most common of all Mancalas.</source>
       </trans-unit>
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
@@ -2001,8 +1986,8 @@
       <trans-unit id="8065050610159894114" datatype="html">
         <source>Failed. Try again and sow from the leftmost house.</source>
       </trans-unit>
-      <trans-unit id="8132141725426684303" datatype="html">
-        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which contains now 3, so this will be a capture. But now, the house right before it contains 2, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+      <trans-unit id="4514452777310919130" datatype="html">
+        <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which now contains 2 seeds, so this will be a capture. But now, the house right before it contains 3 seeds, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
@@ -2031,9 +2016,8 @@
       <trans-unit id="2796272222228002710" datatype="html">
         <source>Do not starve</source>
       </trans-unit>
-      <trans-unit id="9161677839138932324" datatype="html">
-        <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. Try it.</source>
+      <trans-unit id="4974882008918401392" datatype="html">
+        <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try it.</source>
       </trans-unit>
       <trans-unit id="5327525705025836061" datatype="html">
         <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
@@ -2052,9 +2036,8 @@
       <trans-unit id="6064716171153653290" datatype="html">
         <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, sow the leftmost house.</source>
       </trans-unit>
-      <trans-unit id="51867831368251774" datatype="html">
-        <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
-         Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
+      <trans-unit id="4966070806582905191" datatype="html">
+        <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
       </trans-unit>
       <trans-unit id="8840015526202664476" datatype="html">
         <source>You must distribute one of your houses.</source>
@@ -2062,38 +2045,56 @@
       <trans-unit id="4189334243342030215" datatype="html">
         <source>You should choose a non-empty house to distribute.</source>
       </trans-unit>
-      <trans-unit id="271201472468525420" datatype="html">
-        <source>You should distribute but you do not.</source>
+      <trans-unit id="8846202449877054997" datatype="html">
+        <source>You should feed but you do not.</source>
       </trans-unit>
-      <trans-unit id="1854732749925914827" datatype="html">
-        <source>Bonus fact: Kalah has been created in America in 1940 by William Julius Champion Jr.</source>
+      <trans-unit id="2949583224863920715" datatype="html">
+        <source>Sowing</source>
+      </trans-unit>
+      <trans-unit id="935549280838012268" datatype="html">
+        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
+      </trans-unit>
+      <trans-unit id="6994033934467498174" datatype="html">
+        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
+      </trans-unit>
+      <trans-unit id="8587148937080588417" datatype="html">
+        <source>Failed. Choose the rightmost house on the bottom.</source>
+      </trans-unit>
+      <trans-unit id="6065363643959580719" datatype="html">
+        <source>Bonus fact: Kalah has been created in the U.S.A in 1940 by William Julius Champion Jr.</source>
       </trans-unit>
       <trans-unit id="7111322038810092184" datatype="html">
         <source>The Kalah (1/2)</source>
       </trans-unit>
-      <trans-unit id="4509512877416195771" datatype="html">
-        <source>The houses on the extreme left and right, unaligned to the others, are the kalah, yours on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your kalah. But you won&apos;t have to drop seed in your opponent&apos;s kalah. When you make a capture, your seeds are put in your kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that pass through your kalah then feed opponent&apos;s houses.</source>
+      <trans-unit id="1494658367285976347" datatype="html">
+        <source>The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah, but you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that passes through your Kalah then feeds opponent&apos;s houses.</source>
       </trans-unit>
-      <trans-unit id="5407801196980144019" datatype="html">
-        <source>As you see, three houses have been fed in addition to your kalah.</source>
+      <trans-unit id="108833396164233870" datatype="html">
+        <source>As you see, three houses have been fed in addition to your Kalah.</source>
       </trans-unit>
-      <trans-unit id="8271077564662598313" datatype="html">
-        <source>Failed. Choose the three leftermost house on the bottom.</source>
+      <trans-unit id="7327320572157893918" datatype="html">
+        <source>Failed. Choose the three leftmost house on the bottom.</source>
       </trans-unit>
       <trans-unit id="6340571023242332704" datatype="html">
         <source>The Kalah (2/2)</source>
       </trans-unit>
-      <trans-unit id="8979647594925459000" datatype="html">
-        <source>When ending in the Kalah, you must distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that end up in the Kalah then do a second move!</source>
+      <trans-unit id="5657099545651336771" datatype="html">
+        <source>When ending in the Kalah, you must distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that ends up in the Kalah then do a second distribution!</source>
       </trans-unit>
-      <trans-unit id="6244569030236259143" datatype="html">
-        <source>This move only distributed one house, do one distribution that ends in the Kalah then a second one!</source>
+      <trans-unit id="1468463450299215954" datatype="html">
+        <source>This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!</source>
       </trans-unit>
       <trans-unit id="723370864893318309" datatype="html">
         <source>When the last seed of a distribution ends up in one of your empty houses, if the opposite house is filled, then you capture both houses. On this board, such a move is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
       </trans-unit>
-      <trans-unit id="1165257353049752736" datatype="html">
-        <source>At any moment, when one player have more than 24 seeds in their kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don&apos;t have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just gave you their last seed. If you manage not to distribute any seeds in their houses, you win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
+      <trans-unit id="1044092391656953455" datatype="html">
+        <source>You did not capture, try again!</source>
+      </trans-unit>
+      <trans-unit id="960197745594900358" datatype="html">
+        <source>At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don&apos;t have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just need one more point to win and will get it next turn if you allow it.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, win!</source>
+      </trans-unit>
+      <trans-unit id="7013769989797891949" datatype="html">
+        <source>Since there is no longer seeds in the opponent houses, all your seeds have been captured by you. Congratulations, you won!</source>
       </trans-unit>
       <trans-unit id="902849596357033257" datatype="html">
         <source>Failed, you gave the opponent a seed! Try again.</source>

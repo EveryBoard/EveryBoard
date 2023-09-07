@@ -139,7 +139,6 @@ describe('LocalGameWrapperComponent', () => {
             expect(state.turn).toBe(2);
 
             // When clicking on restart button
-            testUtils.expectElementToExist('#restartButton');
             await testUtils.expectInterfaceClickSuccess('#restartButton');
 
             // Then it should go back to first turn
@@ -159,8 +158,6 @@ describe('LocalGameWrapperComponent', () => {
             await testUtils.setupState(state);
 
             await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
-
-            testUtils.expectElementToExist('#restartButton');
 
             await testUtils.expectInterfaceClickSuccess('#restartButton');
 
@@ -183,7 +180,6 @@ describe('LocalGameWrapperComponent', () => {
 
             // When restarting the game
             spyOn(testUtils.getGameComponent(), 'hideLastMove').and.callThrough();
-            testUtils.expectElementToExist('#restartButton');
             await testUtils.expectInterfaceClickSuccess('#restartButton');
 
             // Then it should go back to first turn
@@ -210,12 +206,12 @@ describe('LocalGameWrapperComponent', () => {
         it('should show level when non-human player is selected, and propose AI to play', fakeAsync(async() => {
             // Given any board
 
-            // When selecting player zero as AI
+            // When selecting player zero as AI and letting it play
             const component: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             await testUtils.choosingAIOrHuman(Player.ZERO, 'AI');
             spyOn(component, 'proposeAIToPlay').and.callThrough();
             await testUtils.choosingAILevel(Player.ZERO);
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then proposeAIToPlay should have been called, so that IA play
             expect(component.proposeAIToPlay).toHaveBeenCalledTimes(2);
@@ -256,7 +252,7 @@ describe('LocalGameWrapperComponent', () => {
             await testUtils.whenStable();
 
             expect(proposeAIToPlay).toHaveBeenCalledTimes(1);
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
         }));
         it('should propose AI 2 to play when selecting her just before her turn', fakeAsync(async() => {
             // Given wrapper on which a first move have been done
@@ -274,7 +270,7 @@ describe('LocalGameWrapperComponent', () => {
             selectDepth.value = selectDepth.options[1].value;
             selectDepth.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
             await testUtils.whenStable();
 
             // Then it should have proposed AI to play
@@ -371,7 +367,7 @@ describe('LocalGameWrapperComponent', () => {
 
             // When selecting AI, and AI then doing winning move
             await testUtils.selectAIPlayer(Player.ZERO);
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then 'You lost' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
@@ -403,11 +399,11 @@ describe('LocalGameWrapperComponent', () => {
             const state: P4State = new P4State(board, 40);
             await testUtils.setupState(state);
             await testUtils.selectAIPlayer(Player.ZERO);
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // When AI zero does the winning move
             await testUtils.selectAIPlayer(Player.ONE);
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then 'AI (Player 0) won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
@@ -450,8 +446,8 @@ describe('LocalGameWrapperComponent', () => {
         // Then the AI metrics are shown
         testUtils.expectElementToExist('#AIMetrics');
     }));
-    describe('takeBack', () => {
-        it('should allow to go back one move when human move has been made', fakeAsync(async() => {
+    describe('Take Back', () => {
+        it('should take back one turn when human move has been made', fakeAsync(async() => {
             // Given a board with a move already done
             const state: P4State = testUtils.getGameComponent().getState();
             expect(state.turn).toBe(0);
@@ -467,16 +463,35 @@ describe('LocalGameWrapperComponent', () => {
             expect(testUtils.getGameComponent().getTurn()).toBe(0);
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledTimes(1);
         }));
-        it('should not allow to take back when no human move has been made', fakeAsync(async() => {
+        it('should take back two turns when playing against IA', fakeAsync(async() => {
+            // Given a game component on which you play against IA, at turn N+2, and it's human turn
+            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+            await testUtils.selectAIPlayer(Player.ONE);
+
+            // When user take back
+            expect(testUtils.getGameComponent().getTurn()).toBe(2);
+            await testUtils.expectInterfaceClickSuccess('#takeBack');
+
+            // Then it should take back to user turn, hence back to turn N
+            expect(testUtils.getGameComponent().getTurn()).toBe(0);
+        }));
+        it('should not allow to take back when only AI move has been made', fakeAsync(async() => {
             // Given a board with the first move made by AI
             await testUtils.selectAIPlayer(Player.ZERO);
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
+            expect(testUtils.getGameComponent().getTurn()).toBe(1); // AI just played
 
             // When searching for takeBack button
-            const takeBackButton: DebugElement = testUtils.findElement('#takeBack');
-
             // Then it should not be visible
-            expect(takeBackButton).toBeFalsy();
+            testUtils.expectElementNotToExist('#takeBack');
+        }));
+        it('should not allow to take back when no move has been made', fakeAsync(async() => {
+            // Given a board with no move done
+
+            // When searching for takeBack button
+            // Then it should not be visible
+            testUtils.expectElementNotToExist('#takeBack');
         }));
         it('should cancelMoveAttempt when taking back', fakeAsync(async() => {
             // Given a board where a move could be in construction
@@ -491,62 +506,23 @@ describe('LocalGameWrapperComponent', () => {
             // And hence the potentially move in construction undone from the board
             expect(component.cancelMoveAttempt).toHaveBeenCalledOnceWith();
         }));
-        it('should take back to player turn when playing against IA', fakeAsync(async() => {
-            // Given a game component on which you play against IA, at turn N+2, and it's human turn
-            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
-            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+        it('should not allow to take back when AI vs. AI', fakeAsync(async() => {
+            // Given a board on which AI plays against AI
+            await testUtils.selectAIPlayer(Player.ZERO);
+            expect(testUtils.getGameComponent().getState().turn).toBe(0);
+            testUtils.expectElementNotToExist('#takeBack');
+            tick( LocalGameWrapperComponent.AI_TIMEOUT);
+            expect(testUtils.getGameComponent().getState().turn).toBe(1);
+            testUtils.expectElementNotToExist('#takeBack');
+
+            // When searching for takeBack button
+            // Then it should not be visible
             await testUtils.selectAIPlayer(Player.ONE);
-
-            // When user take back
-            expect(testUtils.getGameComponent().getTurn()).toBe(2);
-            await testUtils.expectInterfaceClickSuccess('#takeBack');
-
-            // Then it should take back to user turn, hence back to turn N
-            expect(testUtils.getGameComponent().getTurn()).toBe(0);
-        }));
-        it('should not display takeBack button when only AI played so far', fakeAsync(async() => {
-            // Given a game component on which you play against IA, at turn N+2, and it's human turn
-            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
-            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
-            await testUtils.selectAIPlayer(Player.ONE);
-
-            // When user take back
-            expect(testUtils.getGameComponent().getTurn()).toBe(2);
-            await testUtils.expectInterfaceClickSuccess('#takeBack');
-
-            // Then it should take back to user turn, hence back to turn N
-            expect(testUtils.getGameComponent().getTurn()).toBe(0);
-        }));
-        it('should take back to users turn when playing against AI', fakeAsync(async() => {
-            // Given a board, where each player played at least one move, where AI just played
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerOneSelect').nativeElement;
-            selectAI.value = selectAI.options[1].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneDepthSelect').nativeElement;
-            selectDepth.value = selectDepth.options[1].value;
-            selectDepth.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
-
-            const state: P4State = testUtils.getGameComponent().getState();
-            expect(state.turn).toBe(0);
-
-            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
-            expect(testUtils.getGameComponent().getTurn()).toBe(1);
-
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT);
-            expect(testUtils.getGameComponent().getTurn()).toBe(2);
-
-            // // When taking back
-            spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
-            await testUtils.expectInterfaceClickSuccess('#takeBack');
-
-            // // expect to be back two turn, not one
-            expect(testUtils.getGameComponent().getTurn()).toBe(0);
-
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
+            expect(testUtils.getGameComponent().getState().turn).toBe(2);
+            testUtils.expectElementNotToExist('#takeBack');
+            // disactivate AI to stop timeout generation
+            tick(40 * LocalGameWrapperComponent.AI_TIMEOUT);
         }));
     });
 });

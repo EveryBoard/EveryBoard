@@ -1,16 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import { KalahDummyMinimax } from '../KalahDummyMinimax';
+import { KalahScoreMinimax } from '../KalahDummyMinimax';
 import { KalahMove } from '../KalahMove';
 import { KalahNode } from '../KalahRules';
 import { MancalaState } from '../../commons/MancalaState';
 import { MancalaDistribution } from '../../commons/MancalaMove';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('KalahDummyMinimax', () => {
 
-    let minimax: KalahDummyMinimax;
+    let minimax: KalahScoreMinimax;
 
     beforeEach(() => {
-        minimax = new KalahDummyMinimax();
+        minimax = new KalahScoreMinimax();
     });
     it('should have all move options', () => {
         // Given an initial node
@@ -23,7 +26,7 @@ describe('KalahDummyMinimax', () => {
         // Then there should be 5 moves of one sub-moves, and 5 moves of two sub-moves
         expect(moves.length).toBe(10);
     });
-    it('Given a state where possible moves must end in kalah', () => {
+    it('Given a state where possible moves must end in Kalah', () => {
         // Given a state with possible moves
         const state: MancalaState = new MancalaState([
             [5, 2, 3, 2, 1, 2],
@@ -60,5 +63,24 @@ describe('KalahDummyMinimax', () => {
 
         // Then the minimax should take it
         expect(best).toEqual(expectedBestMove);
+    });
+    it('should board with better score', () => {
+        // Given a board with a big score
+        const board: number[][] = [
+            [0, 0, 0, 3, 2, 1],
+            [1, 2, 3, 0, 0, 0],
+        ];
+        const strongState: MancalaState = new MancalaState(board, 0, [10, 0]);
+        // And a board with a little score
+        const weakState: MancalaState = new MancalaState(board, 0, [0, 0]);
+
+        // When comparing both
+        // Then the bigger score should be better
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakState,
+                                                           MGPOptional.empty(),
+                                                           strongState,
+                                                           MGPOptional.empty(),
+                                                           Player.ZERO);
     });
 });

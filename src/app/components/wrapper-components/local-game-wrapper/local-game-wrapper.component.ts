@@ -24,7 +24,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static readonly BOT_TIMEOUT: number = 1000;
+    public static readonly AI_TIMEOUT: number = 1000;
 
     public aiDepths: [string, string] = ['0', '0'];
 
@@ -107,7 +107,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // bot's turn
             window.setTimeout(async() => {
                 await this.doAIMove(playingMinimax.get());
-            }, LocalGameWrapperComponent.BOT_TIMEOUT);
+            }, LocalGameWrapperComponent.AI_TIMEOUT);
         }
     }
     private getPlayingAI(): MGPOptional<AbstractMinimax> {
@@ -148,8 +148,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public canTakeBack(): boolean {
         if (this.players[0].equalsValue('human')) {
             return this.gameComponent.getTurn() > 0;
-        } else {
+        } else if (this.players[1].equalsValue('human')) {
             return this.gameComponent.getTurn() > 1;
+        } else {
+            return false;
         }
     }
     public async takeBack(): Promise<void> {

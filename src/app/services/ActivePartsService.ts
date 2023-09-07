@@ -5,9 +5,7 @@ import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 
 @Injectable({
-    // This ensures that any component using this service has its unique ActivePartsService
-    // It prevents multiple subscriptions/unsubscriptions issues.
-    providedIn: 'any',
+    providedIn: 'root',
 })
 /*
  * This service handles non-finished games, and is used by the server component

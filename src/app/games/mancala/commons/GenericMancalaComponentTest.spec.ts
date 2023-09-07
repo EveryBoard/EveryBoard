@@ -1,4 +1,3 @@
-
 /* eslint-disable max-lines-per-function */
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
@@ -28,10 +27,12 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R, M>,
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
         const playerY: number = state.getCurrentPlayerY();
-        const lastDistribution: MancalaDistribution = move.subMoves[move.subMoves.length - 1];
+        const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
         let lastDistributionSeedNumber: number = state.getPieceAtXY(lastDistribution.x, playerY);
         if (lastDistributionSeedNumber > (2 * MancalaState.WIDTH)) {
-            lastDistributionSeedNumber++; // it'll take TIMEOUT_BETWEEN_SEED ms skipping the initial house
+            // Since we are distributing enough seed to do the whole turn
+            // it'll take TIMEOUT_BETWEEN_SEED ms to skip the initial house
+            lastDistributionSeedNumber++;
         }
         // The time to move the seeds
         const moveDuration: number = (lastDistributionSeedNumber + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEED;
@@ -76,7 +77,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R, M>,
                 this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
             } else {
                 const playerY: number = actionAndResult.state.getCurrentPlayerY();
-                const startingCoord: Coord = new Coord(actionAndResult.move.subMoves[0].x, playerY);
+                const startingCoord: Coord = new Coord(actionAndResult.move.distributions[0].x, playerY);
                 if (startingCoord.equals(coordAndContent.coord)) { // Initial house
                     const classes: string[] = ['base', 'last-move-stroke', playerFill];
                     this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
@@ -110,7 +111,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R, M>,
         }
     }
     public getSuffix(mancalaActionAndResult: MancalaActionAndResult<MancalaMove>): string {
-        const lastMoveX: number = mancalaActionAndResult.move.subMoves[0].x;
+        const lastMoveX: number = mancalaActionAndResult.move.distributions[0].x;
         const suffix: string = lastMoveX + '_' + (mancalaActionAndResult.state.turn + 1) % 2;
         return suffix;
     }
@@ -138,7 +139,7 @@ export class MancalaTestEntries<C extends MancalaComponent<R, M>,
     capture: MancalaActionAndResult<M>;
     fillThenCapture: MancalaActionAndResult<M>;
 }
-export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
+export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                                         R extends MancalaRules<M>,
                                         M extends MancalaMove>(entries: MancalaTestEntries<C, R, M>)
 : void
@@ -310,13 +311,6 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
             await mancalaTestUtils.testUtils.expectClickFailure('#store_player_0', reason);
         }));
         describe('Move Animation', () => {
-            async function triggerOpponentMove(coord: Coord): Promise<void> {
-                const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
-                const move: M = gameComponent.generateMove(coord.x);
-                await gameComponent.chooseMove(move);
-                // Void cause we don't want to await it
-                void gameComponent.updateBoard(true);
-            }
             for (const actor of ['user', 'not_the_user']) {
                 let receiveMoveOrDoClick: (coord: Coord) => Promise<void>;
                 if (actor === 'user') {
@@ -327,7 +321,10 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
                     };
                 } else {
                     receiveMoveOrDoClick = async(coord: Coord): Promise<void> => {
-                        return triggerOpponentMove(coord);
+                        const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
+                        const move: M = gameComponent.generateMove(coord.x);
+                        await gameComponent.chooseMove(move);
+                        void gameComponent.updateBoard(true); // void, so it starts but doesn't wait the animation's end
                     };
                 }
                 it('should show right after the first seed being drop (' + actor + ')', fakeAsync(async() => {
@@ -388,7 +385,10 @@ export function DoMancalaComponentTests<C extends MancalaComponent<R, M>,
             }));
             it('should make click impossible during opponent move animation', fakeAsync(async() => {
                 // Given a move triggered by the opponent
-                void triggerOpponentMove(new Coord(2, 1));
+                const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
+                const move: M = gameComponent.generateMove(2);
+                await gameComponent.chooseMove(move);
+                void gameComponent.updateBoard(true); // void, so it starts but doesn't wait the animation's end
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but bot finished yet
                 spyOn(mancalaTestUtils.testUtils.getGameComponent() as MancalaComponent<R, M>, 'onLegalClick').and.callThrough();
 

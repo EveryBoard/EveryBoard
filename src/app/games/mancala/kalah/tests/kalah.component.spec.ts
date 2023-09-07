@@ -8,7 +8,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 
 import { MancalaDistribution } from '../../commons/MancalaMove';
-import { DoMancalaComponentTests, MancalaComponentTestUtils } from '../../commons/GenericMancalaComponentTest.spec';
+import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../commons/GenericMancalaComponentTest.spec';
 import { MancalaState } from '../../commons/MancalaState';
 import { MancalaFailure } from '../../commons/MancalaFailure';
 import { MancalaComponent } from '../../commons/MancalaComponent';
@@ -22,7 +22,7 @@ describe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules, KalahMove>;
 
-    DoMancalaComponentTests({
+    doMancalaComponentTests({
         component: KalahComponent,
         gameName: 'Kalah',
 
@@ -90,8 +90,8 @@ describe('KalahComponent', () => {
             mancalaTestUtils = new MancalaComponentTestUtils(testUtils);
         }));
         describe('Animations', () => {
-            it('should feed the kalah during animation', fakeAsync(async() => {
-                // Given a board where a distribution pass by the kalah
+            it('should feed the Kalah during animation', fakeAsync(async() => {
+                // Given a board where a distribution pass by the Kalah
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click_1_1');
                 expect(element).withContext('Element "#click_1_1" should exist').toBeTruthy();
                 element.triggerEventHandler('click', null);
@@ -101,22 +101,22 @@ describe('KalahComponent', () => {
                 // When passing right after the last house in player's territory
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
 
-                // Then the next fed house should be the kalah
+                // Then the next fed house should be the Kalah
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
                 mancalaTestUtils.testUtils.expectElementToHaveClass('#circle_-1_-1', 'moved-stroke');
                 tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
             }));
-            it('should feed the kalah twice during animation of double-distribution-move', fakeAsync(async() => {
+            it('should feed the Kalah twice during animation of double-distribution-move', fakeAsync(async() => {
                 // Given a board where a first distribution has been done and the second started
                 await mancalaTestUtils.expectMancalaClickSuccess(new Coord(3, 1));
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click_0_1');
                 element.triggerEventHandler('click', null);
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
-                // When waiting for the first sub-move (in kalah) to happend
+                // When waiting for the first sub-move (in Kalah) to happend
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
 
-                // Then the kalah should be fed a second time
+                // Then the Kalah should be fed a second time
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 2 ', ' +2 ');
                 tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
             }));
@@ -126,7 +126,7 @@ describe('KalahComponent', () => {
                 await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
 
                 // Then the 1000ms pause of the AI should be done first
-                tick(LocalGameWrapperComponent.BOT_TIMEOUT);
+                tick(LocalGameWrapperComponent.AI_TIMEOUT);
                 // Then it should take TIMEOUT_BETWEEN_SEED ms to empty the initial house
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
                 // Then 4 * TIMEOUT_BETWEEN_SEED ms to sow the 4 seeds
@@ -134,7 +134,7 @@ describe('KalahComponent', () => {
 
                 // Then second turn start, 1000ms pause that this test is about
                 tick(MancalaComponent.TIMEOUT_BETWEEN_DISTRIBUTION);
-                // and to optimise gain, AI will still play a move that pass through the kalah
+                // and to optimise gain, AI will still play a move that pass through the Kalah
                 // hence a move in column 0 1 or 2, which will all be of 5 seeds now
                 // so again TIMEOUT_BETWEEN_SEED ms to empty the second initial house
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
@@ -218,7 +218,7 @@ describe('KalahComponent', () => {
             mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_0_1', ['base', 'player0-fill']);
             mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_-1_-1', ['base', 'player0-fill']);
         }));
-        it('should allow triple distribution move', fakeAsync(async() => {
+        it('should allow triple distribution move (player one)', fakeAsync(async() => {
             // Given a state where multiple capture are possible
             const state: MancalaState = new MancalaState([
                 [6, 1, 7, 6, 1, 7],
@@ -235,7 +235,7 @@ describe('KalahComponent', () => {
             // Then the move should be legal
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_1_0', move);
         }));
-        it('should allow triple distribution move (2)', fakeAsync(async() => {
+        it('should allow triple distribution move (player zero)', fakeAsync(async() => {
             // Given a state where multiple capture are possible
             const state: MancalaState = new MancalaState([
                 [5, 0, 6, 6, 0, 6],
@@ -285,23 +285,23 @@ describe('KalahComponent', () => {
             // Then the board should be restored
             mancalaTestUtils.expectHouseToContain(new Coord(0, 1), ' 4 ');
         }));
-        it('should show number of seed dropped in kalah after AI move', fakeAsync(async() => {
+        it('should show number of seed dropped in Kalah after AI move', fakeAsync(async() => {
             // Given a move Player.ZERO only choice is dropping a seed in the Kalah
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 1, 0, 0],
-                [4, 0, 0, 1, 0, 0],
+                [0, 4, 0, 0, 0, 0],
             ], 0, [0, 0]);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When giving turn to AI to play and waiting for move
             await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
             // 1000ms for AI to take action + 1000 for the distribution
-            tick(LocalGameWrapperComponent.BOT_TIMEOUT + (5 * MancalaComponent.TIMEOUT_BETWEEN_SEED));
+            tick(LocalGameWrapperComponent.AI_TIMEOUT + (5 * MancalaComponent.TIMEOUT_BETWEEN_SEED));
 
             // Then the " +1 " in Kalah secondary message should have disappeared
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
         }));
-        it('should allow to stop distribution in the kalah when no more piece available', fakeAsync(async() => {
+        it('should allow to stop distribution in the Kalah when no more piece available', fakeAsync(async() => {
             // Given a move where current player has no more non-kalah sub-moves
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],

@@ -13,8 +13,6 @@ export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, MancalaState> {}
 
 export class AwaleRules extends MancalaRules<AwaleMove> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
     public static get(): AwaleRules {
@@ -25,7 +23,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
     }
     private constructor() {
         super({
-            passByPlayerKalah: false,
+            passByPlayerStore: false,
             mustFeed: true,
             feedOriginalHouse: false,
         });
@@ -40,12 +38,6 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         const resultingState: MancalaState = distributionResult.resultingState;
         return this.captureIfLegal(landingCoord.x, landingCoord.y, resultingState);
     }
-    /**
-     * Modifies the move to addPart the capture.
-     * Modifies the board to get the after-move result.
-     * Returns -1 if it is not legal, if so, the board should not be affected
-     * Returns the number captured otherwise
-     */
     public isLegal(move: AwaleMove, state: MancalaState): MGPValidation {
         const opponent: Player = state.getCurrentOpponent();
         const playerY: number = state.getCurrentPlayerY();
