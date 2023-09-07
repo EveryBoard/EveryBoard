@@ -151,9 +151,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
-            window.setTimeout(() => {
-                this.cdr.detectChanges();
-            }, 10);
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
