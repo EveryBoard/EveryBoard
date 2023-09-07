@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -38,10 +38,8 @@ interface SquareInfo {
     templateUrl: './conspirateurs.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class ConspirateursComponent
-    extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState>
-    implements OnInit
-{
+export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
+
     public PIECE_RADIUS: number;
     public ALL_SHELTERS: Coord[] = ConspirateursState.ALL_SHELTERS;
     public CENTRAL_ZONE_START: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
@@ -71,10 +69,7 @@ export class ConspirateursComponent
         this.encoder = ConspirateursMove.encoder;
         this.tutorial = new ConspirateursTutorial().tutorial;
     }
-    public ngOnInit(): void {
-        this.updateBoard();
-    }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
     }
     private updateViewInfo(): void {
@@ -143,7 +138,7 @@ export class ConspirateursComponent
             }
         }
     }
-    public override showLastMove(move: ConspirateursMove): void {
+    public override async showLastMove(move: ConspirateursMove): Promise<void> {
         if (ConspirateursMove.isDrop(move)) {
             this.viewInfo.boardInfo[move.coord.y][move.coord.x].squareClasses.push('moved-fill');
         } else if (ConspirateursMove.isSimple(move)) {
@@ -160,13 +155,13 @@ export class ConspirateursComponent
             }
         }
     }
-    public override cancelMoveAttempt(): void {
+    public override async cancelMoveAttempt(): Promise<void> {
         this.jumpInConstruction = MGPOptional.empty();
         this.selected = MGPOptional.empty();
-        this.updateBoard();
+        await this.updateBoard(false);
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -174,7 +169,7 @@ export class ConspirateursComponent
         const state: ConspirateursState = this.getState();
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             if (this.selected.equalsValue(coord)) {
-                this.cancelMoveAttempt();
+                await this.cancelMoveAttempt();
             } else {
                 this.selected = MGPOptional.of(coord);
                 this.jumpInConstruction = MGPOptional.empty();

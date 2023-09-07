@@ -59,15 +59,14 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
         this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.SPACE_SIZE;
         this.ARROWS = this.generateArrowsCoord();
-        this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
         this.lastDrop = MGPOptional.empty();
         this.lastRotation = MGPOptional.empty();
     }
-    public override showLastMove(move: PentagoMove): void {
+    public override async showLastMove(move: PentagoMove): Promise<void> {
         this.cancelMoveAttempt();
         this.movedBlock = move.blockTurned;
         const localCoord: Coord = new Coord(move.coord.x % 3 - 1, move.coord.y % 3 - 1);
@@ -118,7 +117,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         const lastMoveBlockIndex: number = lastMoveBlockY * 2 + lastMoveBlockX;
         return lastMove.blockTurned.equalsValue(lastMoveBlockIndex);
     }
-    public hidePreviousMove(): void {
+    public override hideLastMove(): void {
         this.lastDrop = MGPOptional.empty();
         this.movedBlock = MGPOptional.empty();
         this.lastRotation = MGPOptional.empty();
@@ -156,11 +155,11 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.canSkipRotation = false;
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.hidePreviousMove();
+        this.hideLastMove();
         if (this.board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
@@ -209,7 +208,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     }
     public async rotate(arrow: ArrowInfo): Promise<MGPValidation> {
         const clockwise: string = arrow.clockwise ? 'clockwise' : 'counterclockwise';
-        const clickValidity: MGPValidation = this.canUserPlay('#rotate_' + arrow.blockIndex + '_' + clockwise);
+        const clickValidity: MGPValidation = await this.canUserPlay('#rotate_' + arrow.blockIndex + '_' + clockwise);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -219,7 +218,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         return this.chooseMove(move);
     }
     public async skipRotation(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#skipRotation');
+        const clickValidity: MGPValidation = await this.canUserPlay('#skipRotation');
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

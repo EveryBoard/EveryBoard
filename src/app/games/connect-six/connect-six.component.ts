@@ -38,13 +38,13 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.encoder = ConnectSixMove.encoder;
         this.tutorial = new ConnectSixTutorial().tutorial;
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
         this.createHoshis();
     }
-    public override showLastMove(move: ConnectSixMove): void {
+    public override async showLastMove(move: ConnectSixMove): Promise<void> {
         if (move instanceof ConnectSixFirstMove) {
             this.lastMoved = [move.coord];
         } else {
@@ -52,7 +52,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
