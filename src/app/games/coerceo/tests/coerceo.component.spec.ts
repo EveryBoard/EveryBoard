@@ -19,14 +19,10 @@ describe('CoerceoComponent', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
-        const gameComponent: CoerceoComponent = testUtils.getGameComponent();
-        expect(gameComponent.isEmptySpace(x, y)).toBeTrue();
-        expect(gameComponent.getEmptyClass(x, y)).toBe('captured-alternate-fill');
+        testUtils.expectElementToHaveClass('#space_' + x + '_' + y, 'captured-alternate-fill');
     }
     function expectCoordToBeOfCapturedFill(x: number, y: number): void {
-        const gameComponent: CoerceoComponent = testUtils.getGameComponent();
-        expect(gameComponent.isPyramid(x, y)).toBeTrue();
-        expect(gameComponent.getPyramidClass(x, y)).toBe('captured-fill');
+        testUtils.expectElementToHaveClass('#pyramid_' + x + '_' + y, 'captured-fill');
     }
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');
@@ -237,8 +233,8 @@ describe('CoerceoComponent', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             testUtils.setupState(state, undefined, CoerceoRegularMove.of(new Coord(8, 9), new Coord(6, 9)));
-            testUtils.expectElementToHaveClasses('#last_end_6_9', ['base', 'no-fill', 'last-move-stroke']);
-            testUtils.expectElementToHaveClasses('#last_start_8_9', ['base', 'no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#last_end_6_9', ['base', 'no-fill', 'mid-stroke', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#last_start_8_9', ['base', 'no-fill', 'mid-stroke', 'last-move-stroke']);
 
             // When applying a tile exchange
             await testUtils.expectMoveSuccess('#click_6_9',
