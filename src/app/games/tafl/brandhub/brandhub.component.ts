@@ -9,7 +9,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
-import { TaflHeuristic } from '../TaflHeuristic';
+import { TaflPieceHeuristic } from '../TaflPieceHeuristic';
 import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
 import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlHeuristic';
 
@@ -26,7 +26,7 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
         this.node = this.rules.getInitialNode();
         const moveGenerator: TaflMoveGenerator<BrandhubMove, BrandhubState> = new TaflMoveGenerator(this.rules);
         this.availableAIs = [
-            new Minimax('Minimax', this.rules, new TaflHeuristic(this.rules), moveGenerator),
+            new Minimax('Piece', this.rules, new TaflPieceHeuristic(this.rules), moveGenerator),
             new Minimax('Piece > Influence', this.rules, new TaflPieceAndInfluenceHeuristic(this.rules), moveGenerator),
             new Minimax('Piece > Control', this.rules, new TaflPieceAndControlHeuristic(this.rules), moveGenerator),
             new Minimax('Escape > Piece > Control',

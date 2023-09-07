@@ -9,10 +9,10 @@ import { BrandhubState } from '../brandhub/BrandhubState';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { TaflHeuristic } from '../TaflHeuristic';
+import { TaflPieceHeuristic } from '../TaflPieceHeuristic';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
 
-describe('TaflMinimax', () => {
+describe('TaflPieceMinimax', () => {
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;
@@ -37,7 +37,7 @@ describe('TaflMinimax', () => {
 
         const rules: TablutRules = TablutRules.get();
         const minimax: Minimax<TablutMove, TablutState> =
-            new Minimax('Minimax', rules, new TaflHeuristic(rules), new TaflMoveGenerator(rules));
+            new Minimax('Piece', rules, new TaflPieceHeuristic(rules), new TaflMoveGenerator(rules));
         const bestMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 });
         expect(bestMove).toEqual(winnerMove);
     });

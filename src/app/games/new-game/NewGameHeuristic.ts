@@ -19,6 +19,6 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
      * is often what you want.
      */
     public getBoardValue(node: NewGameNode): BoardValue {
-        return new BoardValue(0);
+        return new BoardValue(node.gameState.turn);
     }
 }

@@ -67,7 +67,7 @@ describe('ReversiHeuristic', () => {
         const boardValue: number = heuristic.getBoardValue(node).value;
         expect(boardValue).toBe(1);
     });
-    it('should prioritize taking control of the corners', () => {
+    it('should prefer owning the corners', () => {
         // Given two boards where we control the corner in one, and not in the other
         const weakerBoard: Table<PlayerOrNone> = [
             [_, X, O, _, _, _, _, _],

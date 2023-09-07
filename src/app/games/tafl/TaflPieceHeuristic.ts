@@ -4,7 +4,7 @@ import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 
-export class TaflHeuristic<M extends TaflMove, S extends TaflState> extends PlayerMetricHeuristic<M, S> {
+export class TaflPieceHeuristic<M extends TaflMove, S extends TaflState> extends PlayerMetricHeuristic<M, S> {
 
     public constructor(public readonly rules: TaflRules<M, S>) {
         super();

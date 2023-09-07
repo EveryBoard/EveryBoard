@@ -2,7 +2,7 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
-import { ReversiNode, ReversiRules } from '../ReversiRules';
+import { ReversiNode } from '../ReversiRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ReversiOrderedMoveGenerator } from '../ReversiOrderedMoveGenerator';
 

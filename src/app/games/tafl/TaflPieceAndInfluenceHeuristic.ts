@@ -12,9 +12,9 @@ import { TaflMove } from './TaflMove';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TaflHeuristic } from './TaflHeuristic';
+import { TaflPieceHeuristic } from './TaflPieceHeuristic';
 
-export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflState> extends TaflHeuristic<M, S> {
+export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflState> extends TaflPieceHeuristic<M, S> {
 
     protected width: number;
 
