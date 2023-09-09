@@ -32,12 +32,12 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickFailure('#click_0_0', EncapsuleFailure.INVALID_PIECE_SELECTED());
         }));
         it('should forbid selecting a piece that is not remaining', fakeAsync(async() => {
-            testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, []));
+            await testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, []));
 
             testUtils.expectElementNotToExist('#piece_0_SMALL_DARK_0');
         }));
         it('should forbid selecting a piece from the other player', fakeAsync(async() => {
-            testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, [EncapsulePiece.SMALL_LIGHT]));
+            await testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, [EncapsulePiece.SMALL_LIGHT]));
 
             await testUtils.expectClickFailure('#piece_1_SMALL_LIGHT_0', EncapsuleFailure.NOT_DROPPABLE());
         }));
@@ -48,7 +48,7 @@ describe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            testUtils.setupState(new EncapsuleState(board, P0Turn, []));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, []));
 
             await testUtils.expectClickFailure('#click_0_1', EncapsuleFailure.INVALID_PIECE_SELECTED());
         }));
@@ -68,7 +68,7 @@ describe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            testUtils.setupState(new EncapsuleState(board, 1, []));
+            await testUtils.setupState(new EncapsuleState(board, 1, []));
 
             // When clicking on this coord
             await testUtils.expectClickSuccess('#click_0_1');
@@ -91,7 +91,7 @@ describe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.MEDIUM_DARK]));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.MEDIUM_DARK]));
             await testUtils.expectClickSuccess('#piece_0_MEDIUM_DARK_0');
 
             const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.MEDIUM_DARK, new Coord(0, 1));
@@ -104,7 +104,7 @@ describe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_DARK]));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_DARK]));
             await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_0');
 
             const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 1));
@@ -117,7 +117,7 @@ describe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            testUtils.setupState(new EncapsuleState(board, P0Turn, []));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, []));
 
             await testUtils.expectClickSuccess('#click_0_1');
 
@@ -132,7 +132,7 @@ describe('EncapsuleComponent', () => {
                 [x, X, _],
                 [_, _, _],
             ];
-            testUtils.setupState(new EncapsuleState(board, P0Turn, []));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, []));
 
             await testUtils.expectClickSuccess('#click_1_1');
 
@@ -147,7 +147,7 @@ describe('EncapsuleComponent', () => {
                 [x, X, _],
                 [_, _, _],
             ];
-            testUtils.setupState(new EncapsuleState(board, P0Turn, []));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, []));
 
             await testUtils.expectClickSuccess('#click_0_1');
 
@@ -161,7 +161,7 @@ describe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_DARK]));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_DARK]));
 
             await testUtils.expectClickSuccess('#click_0_1');
 
@@ -196,7 +196,7 @@ describe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            testUtils.setupState(new EncapsuleState(board, 1, []));
+            await testUtils.setupState(new EncapsuleState(board, 1, []));
             await testUtils.expectClickSuccess('#click_0_1');
 
             // When clicking on this coord again

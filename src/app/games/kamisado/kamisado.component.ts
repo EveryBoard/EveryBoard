@@ -48,7 +48,6 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         this.encoder = KamisadoMove.encoder;
         this.tutorial = new KamisadoTutorial().tutorial;
         this.canPass = false;
-        this.updateBoard();
     }
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;
@@ -62,7 +61,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public piecePlayerClass(piece: KamisadoPiece): string {
         return this.getPlayerClass(piece.player);
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: KamisadoState = this.getState();
         this.board = state.getCopiedBoard();
         this.lastPieceMove = MGPOptional.empty();
@@ -77,7 +76,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             this.chosen = state.coordToPlay;
         }
     }
-    public override showLastMove(move: KamisadoMove): void {
+    public override async showLastMove(move: KamisadoMove): Promise<void> {
         if (KamisadoMove.isPiece(move)) {
             this.lastPieceMove = MGPOptional.of(move);
         }
@@ -87,7 +86,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         return this.chooseMove(KamisadoMove.PASS);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -117,7 +116,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             }
         }
     }
-    public choosePiece(x: number, y: number): MGPValidation {
+    public async choosePiece(x: number, y: number): Promise<MGPValidation> {
         const piece: KamisadoPiece = this.getState().getPieceAtXY(x, y);
         const opponent: Player = this.getState().getCurrentOpponent();
         if (piece.belongsTo(opponent)) {

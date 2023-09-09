@@ -12,6 +12,14 @@ import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
+import { TaflMoveGenerator } from './TaflMoveGenerator';
+import { AI, AIOptions } from 'src/app/jscaip/AI';
+import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
+import { TaflPieceAndControlHeuristic } from './TaflPieceAndControlHeuristic';
+import { TaflPieceHeuristic } from './TaflPieceHeuristic';
+import { TaflEscapeThenPieceThenControlHeuristic } from './TaflEscapeThenPieceThenControlHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
     extends RectangularGameComponent<R, M, S, TaflPawn>
@@ -35,12 +43,12 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         return begin + ' ' + begin + ' ' + width + ' ' + width;
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
         this.updateViewInfo();
     }
-    public override showLastMove(move: M): void {
+    public override async showLastMove(move: M): Promise<void> {
         const previousState: S = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
@@ -75,7 +83,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.viewInfo = { pieceClasses };
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -102,7 +110,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
             return this.cancelMove(move.getReason());
         }
     }
-    private choosePiece(coord: Coord): MGPValidation {
+    private async choosePiece(coord: Coord): Promise<MGPValidation> {
         if (this.board[coord.y][coord.x] === TaflPawn.UNOCCUPIED) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
@@ -179,5 +187,18 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
+    }
+    protected createAIs(): AI<TaflMove, S, AIOptions>[] {
+        const moveGenerator: TaflMoveGenerator<M, S> = new TaflMoveGenerator(this.rules);
+        return [
+            new Minimax('Piece', this.rules, new TaflPieceHeuristic(this.rules), moveGenerator),
+            new Minimax('Piece > Influence', this.rules, new TaflPieceAndInfluenceHeuristic(this.rules), moveGenerator),
+            new Minimax('Piece > Control', this.rules, new TaflPieceAndControlHeuristic(this.rules), moveGenerator),
+            new Minimax('Escape > Piece > Control',
+                        this.rules,
+                        new TaflEscapeThenPieceThenControlHeuristic(this.rules),
+                        moveGenerator),
+            new MCTS('MCTS', moveGenerator, this.rules),
+        ];
     }
 }

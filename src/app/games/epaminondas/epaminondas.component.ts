@@ -66,15 +66,14 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         ];
         this.encoder = EpaminondasMove.encoder;
         this.tutorial = new EpaminondasTutorial().tutorial;
-        this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.firstPiece = MGPOptional.empty();
         this.lastPiece = MGPOptional.empty();
-        this.hidePreviousMove();
+        this.hideLastMove();
         this.board = this.getState().getCopiedBoard();
     }
-    public override showLastMove(move: EpaminondasMove): void {
+    public override async showLastMove(move: EpaminondasMove): Promise<void> {
         let moved: Coord = move.coord;
         this.moveds = [moved];
         for (let i: number = 1; i < (move.stepSize + move.movedPieces); i++) {
@@ -91,7 +90,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -119,7 +118,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
     }
-    private hidePreviousMove(): void {
+    public override hideLastMove(): void {
         this.capturedCoords = [];
         this.moveds = [];
     }
@@ -231,7 +230,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.phalanxValidLandings = [];
         this.lastPiece = MGPOptional.empty();
         this.phalanxMiddles = [];
-        this.hidePreviousMove();
+        this.hideLastMove();
     }
     private async secondClick(x: number, y: number): Promise<MGPValidation> {
         const clicked: Coord = new Coord(x, y);

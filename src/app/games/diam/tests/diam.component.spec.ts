@@ -39,7 +39,7 @@ describe('DiamComponent', () => {
                 [__, __, __, __, __, __, __, X2],
                 [__, __, __, __, __, __, __, O2],
             ], 4);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When clicking on B2
             // Then this is not a legal selection for a shift
             await testUtils.expectClickFailure('#click_7_1', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -66,7 +66,7 @@ describe('DiamComponent', () => {
                 [__, __, __, __, __, __, __, X2],
                 [__, __, __, __, __, __, __, O2],
             ], 4);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on it
             await testUtils.expectClickSuccess('#click_7_0');
@@ -94,7 +94,7 @@ describe('DiamComponent', () => {
                 [X1, __, __, __, __, __, __, __],
                 [O1, __, __, __, __, __, __, __],
             ], 0);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_0_0');
 
             // When clicking on an opponent piece on the top of a column
@@ -111,7 +111,7 @@ describe('DiamComponent', () => {
                 [X1, __, __, __, __, __, __, __],
                 [O1, __, __, __, __, __, __, __],
             ], 0);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_0_0');
 
             // When dropping a piece on the full stack
@@ -129,7 +129,7 @@ describe('DiamComponent', () => {
                 [X1, __, __, __, __, __, __, X2],
                 [O1, __, __, __, __, __, __, O2],
             ], 4);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When clicking on A2 (in 7, 0) and then on the first column (0)
             await testUtils.expectClickSuccess('#click_7_0');
             const move: DiamMove = DiamMoveShift.ofRepresentation(new Coord(7, 3), 'clockwise');
@@ -144,7 +144,7 @@ describe('DiamComponent', () => {
                 [O1, __, __, __, __, __, __, X2],
                 [X1, __, __, __, __, __, __, O2],
             ], 4);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When clicking on A1 and then on the last column
             // Then the move should be legal
             await testUtils.expectClickSuccess('#click_0_1');
@@ -159,7 +159,7 @@ describe('DiamComponent', () => {
                 [__, __, __, __, __, __, __, X2],
                 [__, __, __, __, __, __, __, O2],
             ], 4);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When clicking on A2 and then somewhere else than the first line
             // Then the move should be not legal
             await testUtils.expectClickSuccess('#click_7_0');
@@ -173,7 +173,7 @@ describe('DiamComponent', () => {
                 [O1, __, __, __, __, __, __, X2],
                 [O1, __, __, __, __, __, __, O2],
             ], 4);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on B2
             await testUtils.expectClickSuccess('#click_7_0');
@@ -191,7 +191,7 @@ describe('DiamComponent', () => {
                 [X1, __, __, __, __, __, __, __],
                 [O1, __, __, __, __, __, __, __],
             ], 0);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_0_0');
 
             // When clicking on a player piece in game
@@ -218,7 +218,7 @@ describe('DiamComponent', () => {
                 [__, __, __, __, __, __, __, X2],
                 [__, __, __, __, __, __, __, O2],
             ], 4);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_7_0');
 
             // When clicking on it again
@@ -239,7 +239,7 @@ describe('DiamComponent', () => {
             ], 0);
 
             // When rendering the board
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then this piece should not rendered
             testUtils.expectElementNotToExist('#piece_PLAYER_ZERO_0');
@@ -254,7 +254,7 @@ describe('DiamComponent', () => {
             ], 4);
 
             // When rendering the board
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then we should see the number of remaining pieces
             testUtils.expectElementToExist('#piece_PLAYER_ONE_1_2'); // X2 remains (third of them)
@@ -277,7 +277,7 @@ describe('DiamComponent', () => {
             ], 4);
 
             // When rendering the board
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then only the winning pieces should be shown as victory
             testUtils.expectElementToHaveClass('#click_0_1', 'victory-stroke');

@@ -84,13 +84,12 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.encoder = ApagosMove.encoder;
         this.tutorial = new ApagosTutorial().tutorial;
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
-        this.updateBoard();
     }
     public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.showPossibleDrops();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
         this.remainingZero = state.remaining.get(Player.ZERO).get();
@@ -99,13 +98,13 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.hideLastMove();
         this.showPossibleDrops();
     }
-    public hideLastMove(): void {
+    public override hideLastMove(): void {
         this.movedSquare = [];
         this.droppedPiece = MGPOptional.empty();
         this.leftPiece = MGPOptional.empty();
         this.selectedPiece = MGPOptional.empty();
     }
-    public override showLastMove(move: ApagosMove): void {
+    public override async showLastMove(move: ApagosMove): Promise<void> {
         if (move.isDrop()) {
             this.showLastDrop(move);
         } else {
@@ -205,7 +204,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
     public async onArrowClick(x: number, player: Player): Promise<MGPValidation> {
         const playerString: string = (player === Player.ZERO) ? 'zero' : 'one';
-        const clickValidity: MGPValidation = this.canUserPlay('#dropArrow_' + playerString + '_' + x);
+        const clickValidity: MGPValidation = await this.canUserPlay('#dropArrow_' + playerString + '_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -255,7 +254,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     }
     public async onSquareClick(x: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#square_' + x);
+        const clickValidity: MGPValidation = await this.canUserPlay('#square_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

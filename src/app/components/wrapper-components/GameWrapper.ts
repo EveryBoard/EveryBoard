@@ -62,7 +62,7 @@ export abstract class GameWrapper<P extends Comparable> {
         const gameCreatedSuccessfully: boolean = await this.createGameComponent();
         if (gameCreatedSuccessfully) {
             this.gameComponent.node = this.gameComponent.rules.getInitialNode();
-            this.gameComponent.updateBoard();
+            await this.gameComponent.updateBoard(false);
         }
         return gameCreatedSuccessfully;
     }
@@ -82,38 +82,37 @@ export abstract class GameWrapper<P extends Comparable> {
             Utils.getNonNullable(this.boardRef).createComponent(component.get());
         this.gameComponent = componentRef.instance;
 
-
         // chooseMove is called by the game component when a move is done
         this.gameComponent.chooseMove = (m: Move): Promise<MGPValidation> => {
             // the game wrapper can then act accordingly to the chosen move.
             return this.receiveValidMove(m);
         };
         // canUserPlay is called upon a click by the user
-        this.gameComponent.canUserPlay = (elementName: string): MGPValidation => {
+        this.gameComponent.canUserPlay = (elementName: string): Promise<MGPValidation> => {
             return this.canUserPlay(elementName);
         };
         this.gameComponent.isPlayerTurn = (): boolean => {
             return this.isPlayerTurn();
         };
         // Mostly for interception by TutorialGameWrapper
-        this.gameComponent.cancelMoveOnWrapper = (reason?: string): void => {
-            this.onCancelMove(reason);
+        this.gameComponent.cancelMoveOnWrapper = (reason?: string): Promise<void> => {
+            return this.onCancelMove(reason);
         };
-        this.setRole(this.role);
+        await this.setRole(this.role);
         return true;
     }
-    public setRole(role: PlayerOrNone): void {
+    public async setRole(role: PlayerOrNone): Promise<void> {
         this.role = role;
         this.gameComponent.role = this.role;
         if (this.gameComponent.hasAsymmetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
-        this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
+        await this.updateBoardAndShowLastMove(false); // Trigger redrawing of the board (might need to be rotated 180°)
     }
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, this.gameComponent.getState());
         if (legality.isFailure()) {
-            this.gameComponent.cancelMove(legality.getReason());
+            await this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);
         }
         this.gameComponent.cancelMoveAttempt();
@@ -122,11 +121,11 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public abstract onCancelMove(_reason?: string): void;
+    public abstract onCancelMove(_reason?: string): Promise<void>;
 
     public abstract getPlayer(): P;
 
-    public canUserPlay(_clickedElementName: string): MGPValidation {
+    public async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
             return MGPValidation.failure(message);
@@ -159,19 +158,20 @@ export abstract class GameWrapper<P extends Comparable> {
     public getBoardHighlight(): string[] {
         if (this.endGame) {
             return ['endgame-bg'];
-        }
-        if (this.isPlayerTurn()) {
+        } else if (this.isPlayerTurn()) {
             const turn: number = this.gameComponent.getTurn();
             return ['player' + (turn % 2) + '-bg'];
+        } else {
+            return [];
         }
-        return [];
     }
-    protected updateBoardAndShowLastMove(): void {
+    protected async updateBoardAndShowLastMove(triggerAnimation: boolean): Promise<void> {
         this.gameComponent.cancelMoveAttempt();
-        this.gameComponent.updateBoard();
+        this.gameComponent.hideLastMove();
+        await this.gameComponent.updateBoard(triggerAnimation);
         if (this.gameComponent.node.previousMove.isPresent()) {
             const move: Move = this.gameComponent.node.previousMove.get();
-            this.gameComponent.showLastMove(move);
+            await this.gameComponent.showLastMove(move);
         }
     }
 }

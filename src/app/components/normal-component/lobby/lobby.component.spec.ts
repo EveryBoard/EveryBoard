@@ -265,7 +265,7 @@ describe('LobbyComponent', () => {
                 const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
                 await shouldForbidToJoinPart([unstartedPartUserDidNotCreate], reason);
             }));
-            it('should allow user to have his created part in two tabs', fakeAsync(async() => {
+            it('should allow user to have their created part in two tabs', fakeAsync(async() => {
                 // And a lobby where the same part is obviously already
                 await shouldAllowJoinPart([unstartedPartUserCreated]);
             }));

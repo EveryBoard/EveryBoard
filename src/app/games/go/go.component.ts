@@ -51,10 +51,9 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         this.canPass = true;
         this.boardHeight = this.getState().board.length;
         this.boardWidth = this.getState().board[0].length;
-        this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -63,7 +62,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         const resultlessMove: GoMove = new GoMove(x, y);
         return this.chooseMove(resultlessMove);
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: GoState = this.getState();
         const move: MGPOptional<GoMove> = this.node.previousMove;
         const phase: Phase = state.phase;

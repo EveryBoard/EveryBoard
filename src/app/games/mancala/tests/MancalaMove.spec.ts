@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleRules } from '../AwaleRules';
-import { AwaleMove } from '../AwaleMove';
+import { AwaleRules } from '../awale/AwaleRules';
+import { AwaleMove } from '../awale/AwaleMove';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
-import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
+import { AwaleMoveGenerator } from '../awale/AwaleMoveGenerator';
 
 describe('AwaleMove', () => {
 

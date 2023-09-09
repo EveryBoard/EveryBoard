@@ -59,7 +59,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         ];
         this.encoder = PylosMove.encoder;
         this.tutorial = new PylosTutorial().tutorial;
-        this.updateBoard();
     }
     public getPiecesCyForPlayer(player: Player): number {
         if (player === Player.ONE) {
@@ -89,7 +88,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
                this.chosenSecondCapture.equalsValue(coord);
     }
     public async onPieceClick(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
+        const clickValidity: MGPValidation = await this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -163,7 +162,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
     public async validateCapture(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#capture_validation');
+        const clickValidity: MGPValidation = await this.canUserPlay('#capture_validation');
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -198,7 +197,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.capturables = [];
     }
     public async onDrop(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#drop_' + x + '_' + y + '_' + z);
+        const clickValidity: MGPValidation = await this.canUserPlay('#drop_' + x + '_' + y + '_' + z);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -293,7 +292,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
         return pieces;
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.constructedState = this.state;
         this.lastMove = this.node.previousMove;
@@ -303,7 +302,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.cancelMoveAttempt();
         this.hideLastMove();
     }
-    public override showLastMove(move: PylosMove): void {
+    public override async showLastMove(move: PylosMove): Promise<void> {
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastStartingCoord = move.startingCoord;
         this.lastFirstCapture = move.firstCapture;
@@ -314,7 +313,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             this.highCapture = this.lastFirstCapture;
         }
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.lastStartingCoord = MGPOptional.empty();
         this.lastLandingCoord = MGPOptional.empty();
         this.lastFirstCapture = MGPOptional.empty();

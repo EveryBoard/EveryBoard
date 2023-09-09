@@ -66,7 +66,7 @@ describe('ConspirateursComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             // When it is displayed
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // Then player 0 Should have 19 pieces (0 to 18) and player 1 should have 20 (0 to 19)
             testUtils.expectElementNotToExist('#sidePiece_0_19');
             testUtils.expectElementToExist('#sidePiece_0_18');
@@ -74,7 +74,7 @@ describe('ConspirateursComponent', () => {
         }));
     });
     describe('move phase', () => {
-        beforeEach(() => {
+        beforeEach(async() => {
             // Given a state after the drop phase
             const state: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -95,7 +95,7 @@ describe('ConspirateursComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
         });
         it('should cancel jump when clicking on another piece of the player', fakeAsync(async() => {
             // Given a jump being in construction
@@ -218,7 +218,7 @@ describe('ConspirateursComponent', () => {
             [O, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 60);
         // When the state is displayed
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         // The its pieces are highlighted
         testUtils.expectElementToHaveClass('#click_0_0', 'victory-fill');
     }));

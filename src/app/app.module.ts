@@ -43,7 +43,7 @@ import { NextGameLoadingComponent } from './components/normal-component/next-gam
 
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
-import { AwaleComponent } from './games/awale/awale.component';
+import { AwaleComponent } from './games/mancala/awale/awale.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { ConnectSixComponent } from './games/connect-six/connect-six.component';
@@ -56,6 +56,7 @@ import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
 import { HiveComponent } from './games/hive/hive.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
+import { KalahComponent } from './games/mancala/kalah/kalah.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LascaComponent } from './games/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
@@ -64,6 +65,7 @@ import { MartianChessComponent } from './games/martian-chess/martian-chess.compo
 import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
 import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
 import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
+import { NumberedCircleComponent } from './games/mancala/common/numbered-circle.component';
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
 import { PenteComponent } from './games/pente/pente.component';
@@ -189,7 +191,7 @@ export class FirebaseProviders {
 
         AbaloneComponent,
         ApagosComponent,
-        AwaleComponent,
+        AwaleComponent, NumberedCircleComponent,
         BrandhubComponent,
         CoerceoComponent,
         ConnectSixComponent,
@@ -202,6 +204,7 @@ export class FirebaseProviders {
         GoComponent,
         HiveComponent, HivePieceComponent,
         HnefataflComponent,
+        KalahComponent,
         KamisadoComponent,
         LascaComponent,
         LinesOfActionComponent,

@@ -5,13 +5,6 @@ import { TablutRules } from './TablutRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TablutTutorial } from './TablutTutorial';
 import { TaflComponent } from '../tafl.component';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { TaflPieceHeuristic } from '../TaflPieceHeuristic';
-import { TaflMoveGenerator } from '../TaflMoveGenerator';
-import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
-import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
-import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlHeuristic';
 
 @Component({
     selector: 'app-tablut',
@@ -24,19 +17,8 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
         super(messageDisplayer, TablutMove.from);
         this.rules = TablutRules.get();
         this.node = this.rules.getInitialNode();
-        const moveGenerator: TaflMoveGenerator<TablutMove, TablutState> = new TaflMoveGenerator(this.rules);
-        this.availableAIs = [
-            new Minimax('Piece', this.rules, new TaflPieceHeuristic(this.rules), moveGenerator),
-            new Minimax('Piece > Influence', this.rules, new TaflPieceAndInfluenceHeuristic(this.rules), moveGenerator),
-            new Minimax('Piece > Control', this.rules, new TaflPieceAndControlHeuristic(this.rules), moveGenerator),
-            new Minimax('Escape > Piece > Control',
-                        this.rules,
-                        new TaflEscapeThenPieceThenControlHeuristic(this.rules),
-                        moveGenerator),
-            new MCTS('MCTS', moveGenerator, this.rules),
-        ];
+        this.availableAIs = this.createAIs();
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;
-        this.updateBoard();
     }
 }

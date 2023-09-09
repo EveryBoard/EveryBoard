@@ -1,8 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleMove } from 'src/app/games/awale/AwaleMove';
-import { AwaleMoveGenerator } from 'src/app/games/awale/AwaleMoveGenerator';
-import { AwaleRules } from 'src/app/games/awale/AwaleRules';
-import { AwaleState } from 'src/app/games/awale/AwaleState';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoMoveGenerator } from 'src/app/games/quarto/QuartoMoveGenerator';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -12,6 +8,10 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { AITimeLimitOptions } from '../AI';
 import { Coord } from '../Coord';
 import { MCTS } from '../MCTS';
+import { AwaleMove } from 'src/app/games/mancala/awale/AwaleMove';
+import { AwaleMoveGenerator } from 'src/app/games/mancala/awale/AwaleMoveGenerator';
+import { AwaleRules } from 'src/app/games/mancala/awale/AwaleRules';
+import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 
 describe('MCTS', () => {
 
@@ -61,7 +61,7 @@ describe('MCTS', () => {
     });
     it('should not fail on games that are too long', () => {
         // Given a MCTS for a game that has a tendency to give long random games
-        const otherMcts: MCTS<AwaleMove, AwaleState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
+        const otherMcts: MCTS<AwaleMove, MancalaState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
         otherMcts.maxGameLength = 10; // Limit it heavily to ensure we will exhaust the limit (for coverage)
         // When searching for the best move
         const beforeSearch: number = Date.now();
