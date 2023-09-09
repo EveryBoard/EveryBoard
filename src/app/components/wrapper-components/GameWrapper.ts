@@ -41,7 +41,10 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
-    // The role of the player, meaning who the player is playing
+    /**
+     * The role of the player, i.e., ZERO if we are the first player, ONE if we are the second player,
+     * and NONE if we are observing
+     */
     public role: PlayerOrNone = PlayerOrNone.NONE;
 
     public endGame: boolean = false;
@@ -105,10 +108,10 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public setRole(role: PlayerOrNone): void {
         this.role = role;
-        if (role !== PlayerOrNone.ZERO) {
-            this.gameComponent.setPointOfView(role as Player);
-        } else {
+        if (role === PlayerOrNone.NONE) {
             this.gameComponent.setPointOfView(Player.ZERO);
+        } else {
+            this.gameComponent.setPointOfView(role as Player);
         }
         this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
     }

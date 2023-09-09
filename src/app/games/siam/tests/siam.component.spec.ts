@@ -299,7 +299,7 @@ describe('SiamComponent', () => {
         expectTranslationYToBe(playerZeroRemainingPiecesTranslation, -100);
         expectTranslationYToBe(playerOneRemainingPiecesTranslation, 700);
     });
-    it('should display current player pieces on the bottom (observer)', () => {
+    it('should display player zero pieces on the bottom (observer)', () => {
         // Given a state
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],

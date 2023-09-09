@@ -92,10 +92,10 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public cancelMoveOnWrapper: (reason?: string) => void;
 
     // This is where the player is seeing the board from.
-    public pointOfView: Player;
+    public pointOfView: Player = Player.ZERO;
 
     // This is true when the view is interactive, e.g., to display clickable pieces
-    protected isInteractive: boolean = false;
+    protected readonly isInteractive: boolean = false;
 
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();

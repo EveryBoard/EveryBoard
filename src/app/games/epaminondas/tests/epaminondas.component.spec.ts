@@ -450,6 +450,6 @@ describe('EpaminondasComponent', () => {
         testUtils.getGameComponent().setInteractive(false);
         // When displaying the state
         // Then no coordinate should be clickable
-        expect(testUtils.getGameComponent().getHighlightedCoords().length).toBe(0);
+        testUtils.expectElementNotToExist('.clickable-stroke');
     }));
 });

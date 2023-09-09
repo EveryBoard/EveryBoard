@@ -256,7 +256,7 @@ describe('LascaComponent', () => {
         }));
     });
     describe('experience as second player (reversed board)', () => {
-        it('should have first player on top in a reversed board', fakeAsync(async() => {
+        it('should have first player on top', fakeAsync(async() => {
             // Given a board that been reversed
             testUtils.getGameComponent().setPointOfView(Player.ONE);
 
