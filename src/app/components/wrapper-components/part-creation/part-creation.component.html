@@ -142,7 +142,7 @@
                         </ng-template>
                     </div>
                 </div>
-                <app-rules-configuration [configDescription]="configDescription"
+                <app-rules-configuration [rulesConfigDescription]="rulesConfigDescription"
                                          [userIsCreator]="true"
                                          (updateCallback)="saveRulesConfig($event)">
                 </app-rules-configuration>
@@ -196,7 +196,7 @@
                             <li i18n>a turn lasts at most <strong>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }} </strong></li>
                             <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
                         </ul>
-                        <app-rules-configuration [configDescription]="configDescription"
+                        <app-rules-configuration [rulesConfigDescription]="rulesConfigDescription"
                                                  [userIsCreator]="false"
                                                  [rulesConfigToDisplay]="currentConfigRoom?.rulesConfig">
                         </app-rules-configuration>

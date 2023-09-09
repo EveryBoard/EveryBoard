@@ -47,7 +47,6 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesConfig, RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
 
 @Component({})
 export class BlankComponent {}

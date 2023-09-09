@@ -2,26 +2,34 @@
     <p class="title" i18n>Configuration of your {{ gameName }} part</p>
     <form [formGroup]="rulesConfigForm">
         <fieldset [disabled]="userIsCreator === false">
-            <div *ngFor="let configParameter of configDescription.fields"
-                 id="{{ configParameter.name }}_{{ configParameter.type }}_config"
+            <div *ngFor="let configParameter of rulesConfigDescription.fields"
+                 id="{{ configParameter.name }}_config"
                  class="field is-horizontal">
                 <div class="field-label is-normal">
                     <label class="label">{{ configParameter.name }}</label>
                 </div>
-                <div *ngIf="configParameter.type === 'number'"
+                <div *ngIf="isNumber(configParameter.defaultValue)"
                      class="field-body">
                     <div class="field">
-                        <div class="control">
+                        <div class="control has-icons-right">
                             <input id="{{ configParameter.name }}_number_config_input"
                                    [formControlName]="configParameter.name"
                                    type="number"
                                    class="input"
                                    required
                                    i18n-placeholder placeholder="{{ configParameter.name }}" />
+                            <span class="icon is-small is-right">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </span>
+                        </div>
+                        <div *ngIf="isInvalid(configParameter.name)"
+                             class="message is-danger"
+                             role="alert">
+                            <div class="message-header" i18n>Minimum 1.</div>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="configParameter.type === 'boolean'"
+                <div *ngIf="isBoolean(configParameter.defaultValue)"
                      class="field-body">
                     <div class="field">
                         <div class="control">

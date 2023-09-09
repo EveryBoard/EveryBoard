@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { P4Minimax } from '../P4Minimax';
 import { P4Move } from '../P4Move';
-import { P4State } from '../P4State';
+import { P4State, p4Config } from '../P4State';
 import { P4Node, P4Rules } from '../P4Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -59,12 +59,12 @@ describe('P4Minimax', () => {
                                                            Player.ZERO);
     });
     it('First choice should be center at all AI depths', () => {
-        const initialState: P4State = P4State.getInitialState();
+        const initialState: P4State = P4State.getInitialState(p4Config);
         for (let depth: number = 1; depth < 6; depth ++) {
             const node: P4Node = new P4Node(initialState);
             expect(node.findBestMove(depth, minimax))
                 .withContext('depth ' + depth + ' should still think center is better')
-                .toEqual(P4Move.THREE);
+                .toEqual(P4Move.of(3));
         }
     });
     it('Minimax should prune when instructed to do so', () => {
@@ -80,7 +80,7 @@ describe('P4Minimax', () => {
         getListMovesSpy.calls.reset();
 
         // When computing the same information with alpha-beta pruning enabled
-        node = new P4Node(P4State.getInitialState());
+        node = new P4Node(P4State.getInitialState(p4Config));
         node.findBestMove(3, minimax, false, true);
         const callsToGetBoardValueWithPruning: number = getBoardValueSpy.calls.count();
         const callsToGetListMovesWithPruning: number = getListMovesSpy.calls.count();

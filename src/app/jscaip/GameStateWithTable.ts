@@ -23,7 +23,9 @@ export abstract class GameStateWithTable<P> extends GameState {
         }
     }
     public isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(this.board[0].length, this.board.length);
+        const width: number = this.board[0].length;
+        const height: number = this.board.length;
+        return coord.isInRange(width, height);
     }
     public getPieceAtXY(x: number, y: number): P {
         return this.getPieceAt(new Coord(x, y));

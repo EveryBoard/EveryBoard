@@ -19,7 +19,7 @@ export class GoTutorial extends Tutorial {
         The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
         (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
         For this tutorial, we will use a smaller board for pedagogical purposes.`,
-            GoState.getInitialState({}),
+            GoState.getInitialState({ width: 19, height: 19 }),
         ),
         TutorialStep.informational(
             $localize`Goal of the game`,

@@ -64,7 +64,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const games: GameInfo[] =
             GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL);
         if (games.length > 0) {
-            const rulesConfigDescription: RulesConfigDescription = games[0].configDescription;
+            const rulesConfigDescription: RulesConfigDescription = games[0].rulesConfigDescription;
             this.rulesConfig = RulesConfigUtils.getDefaultConfig(rulesConfigDescription);
         }
     }
@@ -200,7 +200,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.gameComponent.showLastMove(move);
         }
     }
-    public async getConfig(): Promise<RulesConfig> {
+    public override async getConfig(): Promise<RulesConfig> {
         // Linter seem to think that the unscubscription line can be reached before the subscription
         // yet this is false, so this explain the weird instanciation
         let subcription: Subscription = { unsubscribe: () => {} } as Subscription;

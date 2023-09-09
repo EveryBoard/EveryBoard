@@ -3,7 +3,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
-import { GoState, GoPiece, Phase } from '../GoState';
+import { GoState, GoPiece, Phase, GoConfig } from '../GoState';
 import { GoNode, GoRules } from '../GoRules';
 import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
@@ -19,7 +19,7 @@ describe('GoMinimax', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const config: RulesConfig = { width: 5, height: 5 };
+    const config: GoConfig = { width: 5, height: 5 };
 
     beforeEach(() => {
         const rules: GoRules = GoRules.get();

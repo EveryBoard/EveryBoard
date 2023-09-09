@@ -17,7 +17,7 @@ export class TaflMinimax extends PlayerMetricsMinimax<TaflMove,
                                                       TaflState,
                                                       TaflConfig,
                                                       void,
-                                                      TaflRules<TaflMove, TaflState>> // TODO: remove thoses
+                                                      TaflRules<TaflMove, TaflState>>
 {
     public getListMoves(node: TaflNode): TaflMove[] {
         const state: TaflState = node.gameState;

@@ -16,8 +16,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-
 
 type TutorialPlayer = 'tutorial-player';
 @Component({
@@ -61,30 +59,30 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public async ngAfterViewInit(): Promise<void> {
         const createdSuccessfully: boolean = await this.afterViewInit();
         if (createdSuccessfully) {
-            this.start();
+            await this.start();
         }
     }
-    public start(): void {
+    public async start(): Promise<void> {
         const tutorial: TutorialStep[] = this.gameComponent.tutorial;
-        this.startTutorial(tutorial);
+        await this.startTutorial(tutorial);
     }
-    public startTutorial(tutorial: TutorialStep[]): void {
+    public async startTutorial(tutorial: TutorialStep[]): Promise<void> {
         this.steps = tutorial;
         this.tutorialOver = false;
         this.stepFinished = this.getCompletionArray();
         this.successfulSteps = 0;
-        this.showStep(0);
+        await this.showStep(0);
     }
     private getCompletionArray(): boolean[] {
         return this.steps.map(() => {
             return false;
         });
     }
-    public changeStep(event: Event): void {
+    public async changeStep(event: Event): Promise<void> {
         const target: HTMLSelectElement = event.target as HTMLSelectElement;
-        this.showStep(Number.parseInt(target.value, 10));
+        await this.showStep(Number.parseInt(target.value, 10));
     }
-    private showStep(stepIndex: number): void {
+    private async showStep(stepIndex: number): Promise<void> {
         this.moveAttemptMade = false;
         this.stepFinished[stepIndex] = false;
         this.updateSuccessCount();
@@ -95,7 +93,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new MGPNode(currentStep.state,
                                               MGPOptional.empty(),
                                               currentStep.previousMove);
-        // this.gameComponent.node = this.gameComponent.rules.getInitialNode(this.gameComponent.config); // TODO: nope
+        const rulesConfig: RulesConfig = await this.getConfig();
+        this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig);
         // Set role will update view with updateBoardAndShowLastMove
         this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();
@@ -134,9 +133,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         // We don't cover the click case here, it is covered in canUserPlay
         this.cdr.detectChanges();
     }
-    public retry(): void {
+    public async retry(): Promise<void> {
         this.moveAttemptMade = false;
-        this.showStep(this.stepIndex);
+        await this.showStep(this.stepIndex);
     }
     public override canUserPlay(elementName: string): MGPValidation {
         this.currentReason = MGPOptional.empty();
@@ -182,7 +181,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
         this.successfulSteps = count;
     }
-    public next(): void {
+    public async next(): Promise<void> {
         if (this.steps[this.stepIndex].isInformation()) {
             this.stepFinished[this.stepIndex] = true;
             this.updateSuccessCount();
@@ -195,7 +194,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             while (this.stepFinished[indexUndone] === true) {
                 indexUndone = (indexUndone + 1) % this.steps.length;
             }
-            this.showStep(indexUndone);
+            await this.showStep(indexUndone);
         }
     }
     public async showSolution(): Promise<void> {
@@ -205,11 +204,11 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             step as TutorialStepWithSolution | TutorialStepClick;
         const solution: Move | Click = solutionStep.getSolution();
         if (solution instanceof Move) {
-            this.showStep(this.stepIndex);
+            await this.showStep(this.stepIndex);
             this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution).get();
             this.updateBoardAndShowLastMove();
         } else {
-            this.showStep(this.stepIndex);
+            await this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;
             element.dispatchEvent(new Event('click'));
         }
@@ -228,10 +227,5 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public override getPlayer(): TutorialPlayer {
         // TODO FOR REVIEW: ticketter l'obligation de override ou plutôt l'autre ?
         return 'tutorial-player';
-    }
-    public async getConfig(): Promise<RulesConfig> {
-        const gameURL: string = this.getGameName();
-        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
-        return {}; // TODO: DO IT
     }
 }

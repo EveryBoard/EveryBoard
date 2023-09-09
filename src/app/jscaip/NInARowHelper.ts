@@ -10,7 +10,7 @@ import { SCORE } from './SCORE';
 
 export class NInARowHelper<T> {
 
-    public constructor(private readonly isInRange: (coord: Coord) => boolean,
+    public constructor(private readonly isInRange: (coord: Coord) => boolean, // TODO: generalize this based on state.isOnBoard
                        private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
                        private readonly N: number)
     {

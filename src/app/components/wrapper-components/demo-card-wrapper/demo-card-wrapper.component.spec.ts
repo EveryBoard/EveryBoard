@@ -4,7 +4,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { LodestoneNode } from 'src/app/games/lodestone/LodestoneRules';
 import { LodestoneState } from 'src/app/games/lodestone/LodestoneState';
 import { P4Node } from 'src/app/games/p4/P4Rules';
-import { P4State } from 'src/app/games/p4/P4State';
+import { P4State, p4Config } from 'src/app/games/p4/P4State';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -27,7 +27,7 @@ describe('DemoCardComponent', () => {
     }));
     it('should display the game from the point of view the current player', fakeAsync(async() => {
         // Given a demo component
-        const board: Table<PlayerOrNone> = P4State.getInitialState().board; // dummy board
+        const board: Table<PlayerOrNone> = P4State.getInitialState(p4Config).board; // dummy board
 
         // When displaying it for a given game
         loadNode({
@@ -41,8 +41,8 @@ describe('DemoCardComponent', () => {
         const game: DebugElement = testUtils.findElement('app-p4');
         expect(game).withContext('game component should be displayed').toBeTruthy();
         // from the point of view of the current player
-        expect(testUtils.getComponent().gameComponent?.role).toBe(Player.ONE);
-        expect(testUtils.getComponent().gameComponent?.isPlayerTurn()).toBeTrue();
+        expect(testUtils.getComponent().gameComponent.role).toBe(Player.ONE);
+        expect(testUtils.getComponent().gameComponent.isPlayerTurn()).toBeTrue();
     }));
     it('should simulate clicks', fakeAsync(async() => {
         // Given a demo component
@@ -60,7 +60,7 @@ describe('DemoCardComponent', () => {
         // Given a demo component displayed for a game
         loadNode({
             name: 'P4',
-            node: new P4Node(P4State.getInitialState()),
+            node: new P4Node(P4State.getInitialState(p4Config)),
             click: MGPOptional.empty(),
         });
         const rules: AbstractRules = testUtils.getComponent().gameComponent.rules;
@@ -85,7 +85,7 @@ describe('DemoCardComponent', () => {
             const defaultRulesConfig: RulesConfig = { mais_quelles_belles_chaussettes: 42 };
             loadNode({
                 name: 'P4',
-                node: new P4Node(P4State.getInitialState()),
+                node: new P4Node(P4State.getInitialState(p4Config)),
                 click: MGPOptional.empty(),
             });
 

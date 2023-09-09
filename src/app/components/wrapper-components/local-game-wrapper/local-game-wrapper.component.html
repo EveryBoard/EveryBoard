@@ -103,7 +103,7 @@
     </div>
 </div>
 <div *ngIf="configSetted === false">
-    <app-rules-configuration [configDescription]="getRulesConfigDescription()"
+    <app-rules-configuration [rulesConfigDescription]="getRulesConfigDescription()"
                              [userIsCreator]="true"
                              (updateCallback)="updateConfig($event)">
     </app-rules-configuration>

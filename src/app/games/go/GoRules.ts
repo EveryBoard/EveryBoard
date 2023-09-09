@@ -1,5 +1,5 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { GoState, Phase, GoPiece } from './GoState';
+import { GoState, Phase, GoPiece, GoConfig, goConfig } from './GoState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
 import { Player } from 'src/app/jscaip/Player';
@@ -14,14 +14,13 @@ import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 export type GoLegalityInformation = Coord[];
 
-export class GoNode extends MGPNode<GoRules, GoMove, GoState, RulesConfig, GoLegalityInformation> {}
+export class GoNode extends MGPNode<GoRules, GoMove, GoState, GoConfig, GoLegalityInformation> {}
 
 @Debug.log
-export class GoRules extends Rules<GoMove, GoState, RulesConfig, GoLegalityInformation> {
+export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformation> {
 
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
 
@@ -32,7 +31,7 @@ export class GoRules extends Rules<GoMove, GoState, RulesConfig, GoLegalityInfor
         return GoRules.singleton.get();
     }
     private constructor() {
-        super(GoState, {});
+        super(GoState, goConfig);
     }
     public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         if (GoRules.isPass(move)) {

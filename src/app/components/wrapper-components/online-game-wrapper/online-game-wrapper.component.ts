@@ -554,7 +554,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.gameEventsSubscription.unsubscribe();
         }
     }
-    public async getConfig(): Promise<RulesConfig> {
+    public override async getConfig(): Promise<RulesConfig> {
         return this.configRoom.rulesConfig;
     }
 }

@@ -12,7 +12,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Comparable } from 'src/app/utils/Comparable';
-import { RulesConfig, RulesConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
 
 export class GameWrapperMessages {
 
@@ -135,7 +135,12 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
 
     public abstract getPlayer(): P;
 
-    public abstract getConfig(): Promise<RulesConfig>;
+    public async getConfig(): Promise<RulesConfig> { // TODO: check for each 4 wrappers
+        const gameURL: string = this.getGameName();
+        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
+        const rulesConfigDescription: RulesConfigDescription = game.rulesConfigDescription;
+        return RulesConfigUtils.getDefaultConfig(rulesConfigDescription);
+    }
 
     public canUserPlay(_clickedElementName: string): MGPValidation {
         if (this.role === PlayerOrNone.NONE) {
@@ -196,7 +201,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
         if (game.length === 0) {
             return { fields: [] };
         } else {
-            return game[0].configDescription;
+            return game[0].rulesConfigDescription;
         }
     }
 }

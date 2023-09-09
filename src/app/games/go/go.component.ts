@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
-import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
+import { GoState, Phase, GoPiece, goConfig, GoConfig } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
@@ -12,7 +12,6 @@ import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -22,7 +21,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 @Debug.log
 export class GoComponent
-    extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, RulesConfig, GoLegalityInformation>
+    extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GoConfig, GoLegalityInformation>
     implements OnInit
 {
     public boardInfo: GroupDatas<GoPiece>;
@@ -42,7 +41,7 @@ export class GoComponent
         super(messageDisplayer, actRoute);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = GoRules.get();
-        this.node = this.rules.getInitialNode({});
+        this.node = this.rules.getInitialNode(goConfig);
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),
         ];
@@ -52,7 +51,7 @@ export class GoComponent
         this.updateBoard();
     }
     public async ngOnInit(): Promise<void> {
-        const config: RulesConfig = await this.getRulesConfigFromWrapper();
+        const config: GoConfig = await this.getRulesConfigFromWrapper();
         this.node = this.rules.getInitialNode(config);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

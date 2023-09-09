@@ -7,7 +7,6 @@ export const NewRulesConfigDescription: RulesConfigDescription = {
             // the name of the parameter that could configure your game (ex: board size)'
             name: 'the_name_you_will_use_in_your_rules_and_states', // TODO var-like-name + localisable-name
             defaultValue: 9,
-            type: 'number', // help to decide what type of input to use in the game configurations screen
         },
     ],
 };

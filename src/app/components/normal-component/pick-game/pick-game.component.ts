@@ -202,37 +202,42 @@ class GameDescription {
 class RulesConfigDescriptions {
 
     public static readonly BRANDHUB: RulesConfigDescription = { fields: [
-        { name: 'CASTLE_IS_LEFT_FOR_GOOD', type: 'boolean', defaultValue: true },
-        { name: 'BORDER_CAN_SURROUND_KING', type: 'boolean', defaultValue: false },
-        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', type: 'boolean', defaultValue: true },
-        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', type: 'boolean', defaultValue: true },
-        { name: 'INVADER_STARTS', type: 'boolean', defaultValue: true },
+        { name: 'CASTLE_IS_LEFT_FOR_GOOD', defaultValue: true },
+        { name: 'BORDER_CAN_SURROUND_KING', defaultValue: false },
+        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', defaultValue: true },
+        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', defaultValue: true },
+        { name: 'INVADER_STARTS', defaultValue: true },
     ] };
 
     public static readonly GO: RulesConfigDescription = { fields: [
-        { name: 'height', type: 'number', defaultValue: 9 },
-        { name: 'width', type: 'number', defaultValue: 9 },
+        { name: 'width', defaultValue: 19 },
+        { name: 'height', defaultValue: 19 },
     ] };
 
     public static readonly HNEFATAFL: RulesConfigDescription = { fields: [
-        { name: 'CASTLE_IS_LEFT_FOR_GOOD', type: 'boolean', defaultValue: false },
-        { name: 'BORDER_CAN_SURROUND_KING', type: 'boolean', defaultValue: true },
-        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', type: 'boolean', defaultValue: false },
-        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', type: 'boolean', defaultValue: false },
-        { name: 'INVADER_STARTS', type: 'boolean', defaultValue: true },
+        { name: 'CASTLE_IS_LEFT_FOR_GOOD', defaultValue: false },
+        { name: 'BORDER_CAN_SURROUND_KING', defaultValue: true },
+        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', defaultValue: false },
+        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', defaultValue: false },
+        { name: 'INVADER_STARTS', defaultValue: true },
     ] };
 
     public static readonly MANCALAS: RulesConfigDescription = { fields: [
-        { name: 'width', type: 'number', defaultValue: 6 },
-        { name: 'seed_by_house', type: 'number', defaultValue: 4 },
+        { name: 'width', defaultValue: 6 },
+        { name: 'seed_by_house', defaultValue: 4 },
+    ] };
+
+    public static readonly P4: RulesConfigDescription = { fields: [
+        { name: 'width', defaultValue: 7 },
+        { name: 'height', defaultValue: 6 },
     ] };
 
     public static readonly TABLUT: RulesConfigDescription = { fields: [
-        { name: 'CASTLE_IS_LEFT_FOR_GOOD', type: 'boolean', defaultValue: false },
-        { name: 'BORDER_CAN_SURROUND_KING', type: 'boolean', defaultValue: true },
-        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', type: 'boolean', defaultValue: false },
-        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', type: 'boolean', defaultValue: false },
-        { name: 'INVADER_STARTS', type: 'boolean', defaultValue: true },
+        { name: 'CASTLE_IS_LEFT_FOR_GOOD', defaultValue: false },
+        { name: 'BORDER_CAN_SURROUND_KING', defaultValue: true },
+        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', defaultValue: false },
+        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', defaultValue: false },
+        { name: 'INVADER_STARTS', defaultValue: true },
     ] };
 
 }
@@ -242,13 +247,14 @@ export const rulesConfigDescriptionMap: MGPMap<string, RulesConfigDescription> =
     { key: 'Brandhub', value: RulesConfigDescriptions.BRANDHUB },
     { key: 'Go', value: RulesConfigDescriptions.GO },
     { key: 'Hnefatafl', value: RulesConfigDescriptions.HNEFATAFL },
+    { key: 'P4', value: RulesConfigDescriptions.P4 },
     { key: 'Tablut', value: RulesConfigDescriptions.TABLUT },
 ]);
 
 export class GameInfo {
     // Games sorted by creation date
     public static ALL_GAMES: () => GameInfo[] = () => [
-        new GameInfo($localize`Four in a Row`, 'P4', P4Component, new P4Tutorial(), P4Rules.get(), new Date('2018-08-28'), GameDescription.P4()),
+        new GameInfo($localize`Four in a Row`, 'P4', P4Component, new P4Tutorial(), P4Rules.get(), new Date('2018-08-28'), GameDescription.P4(), RulesConfigDescriptions.P4),
         new GameInfo($localize`Awalé`, 'Awale', AwaleComponent, new AwaleTutorial(), AwaleRules.get(), new Date('2018-11-29'), GameDescription.AWALE(), RulesConfigDescriptions.MANCALAS), // 93 days after P4
         new GameInfo($localize`Quarto`, 'Quarto', QuartoComponent, new QuartoTutorial(), QuartoRules.get(), new Date('2018-12-09'), GameDescription.QUARTO()), // 10 days after Awale
         new GameInfo($localize`Tablut`, 'Tablut', TablutComponent, new TablutTutorial(), TablutRules.get(), new Date('2018-12-27'), GameDescription.TABLUT(), RulesConfigDescriptions.TABLUT), // 26 days after Quarto
@@ -298,7 +304,7 @@ export class GameInfo {
                        public readonly rules: AbstractRules,
                        public readonly creationDate: Date,
                        public readonly description: string,
-                       public readonly configDescription: RulesConfigDescription = { fields: [] },
+                       public readonly rulesConfigDescription: RulesConfigDescription = { fields: [] },
                        public readonly display: boolean = true)
     {
     }

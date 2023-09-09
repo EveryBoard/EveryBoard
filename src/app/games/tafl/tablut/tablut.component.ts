@@ -22,7 +22,7 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
     public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
         super(messageDisplayer, actRoute, TablutMove.from);
         this.rules = TablutRules.get();
-        this.node = this.rules.getInitialNode(tablutConfig); // TODO: or not !
+        this.node = this.rules.getInitialNode(tablutConfig);
         this.availableMinimaxes = [
             new TaflMinimax(this.rules, 'DummyBot'),
             new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),

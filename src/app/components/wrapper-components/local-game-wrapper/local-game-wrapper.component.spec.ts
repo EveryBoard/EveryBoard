@@ -29,6 +29,10 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
+
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
@@ -47,12 +51,25 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
     }));
 });
 
-describe('LocalGameWrapperComponent', () => {
+describe('LocalGameWrapperComponent (rules config phase)', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
-    const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = PlayerOrNone.ZERO;
-    const X: PlayerOrNone = PlayerOrNone.ONE;
+
+    beforeEach(fakeAsync(async() => {
+        testUtils = await ComponentTestUtils.forGame<P4Component>('P4');
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        TestBed.inject(ErrorLoggerService);
+    }));
+
+    it('should show partCreation config at start', () => {
+        testUtils.expectToBeCreated();
+        expect('TODO').toBe('DONE');
+    });
+});
+
+describe('LocalGameWrapperComponent (game phase)', () => {
+
+    let testUtils: ComponentTestUtils<P4Component>;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<P4Component>('P4');
@@ -76,7 +93,7 @@ describe('LocalGameWrapperComponent', () => {
     it('connected user should be able to play', fakeAsync(async() => {
         // Given the initial board
         // When doing a move
-        await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+        await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
         // Then the turn should be incremented
         expect(testUtils.getGameComponent().getTurn()).toBe(1);
     }));
@@ -84,7 +101,7 @@ describe('LocalGameWrapperComponent', () => {
         const state: P4State = testUtils.getGameComponent().getState();
         expect(state.turn).toBe(0);
 
-        await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+        await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
         expect(testUtils.getGameComponent().getTurn()).toBe(1);
 
         spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
@@ -105,7 +122,7 @@ describe('LocalGameWrapperComponent', () => {
         const state: P4State = new P4State(board, 41);
         testUtils.setupState(state);
 
-        await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+        await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
         testUtils.expectElementToExist('#draw');
     }));
     it('should not allow clicks after the end of the game', fakeAsync(async() => {
@@ -121,7 +138,7 @@ describe('LocalGameWrapperComponent', () => {
         const state: P4State = new P4State(board, 41);
         testUtils.setupState(state);
         // When finishing the game
-        await testUtils.expectMoveSuccess('#click_0', P4Move.ZERO);
+        await testUtils.expectMoveSuccess('#click_0', P4Move.of(0));
         // Then it should not be possible to click again
         await testUtils.expectClickFailure('#click_3', GameWrapperMessages.GAME_HAS_ENDED());
     }));
@@ -153,7 +170,7 @@ describe('LocalGameWrapperComponent', () => {
             ];
             const state: P4State = new P4State(board, 41);
             testUtils.setupState(state);
-            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+            await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
 
             // When restarting the game
             await testUtils.expectInterfaceClickSuccess('#restartButton');
@@ -256,7 +273,7 @@ describe('LocalGameWrapperComponent', () => {
         }));
         it('should propose AI 2 to play when selecting her just before her turn', async() => {
             // Given wrapper on which a first move have been done
-            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
 
             // When clicking on AI then its level
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerOneSelect').nativeElement;
@@ -291,7 +308,7 @@ describe('LocalGameWrapperComponent', () => {
             const state: P4State = testUtils.getGameComponent().getState();
             expect(state.turn).toBe(0);
 
-            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
             expect(testUtils.getGameComponent().getTurn()).toBe(1);
 
             // eslint-disable-next-line dot-notation
@@ -312,7 +329,7 @@ describe('LocalGameWrapperComponent', () => {
             // Given a board on which some illegal move are possible from the AI
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPOptional.empty());
-            spyOn(testUtils.getGameComponent().node, 'findBestMove').and.returnValue(P4Move.ZERO);
+            spyOn(testUtils.getGameComponent().node, 'findBestMove').and.returnValue(P4Move.of(0));
 
             // When it is the turn of the bugged AI (that performs an illegal move)
             const minimax: P4Minimax = new P4Minimax(P4Rules.get(), 'P4');
@@ -377,7 +394,7 @@ describe('LocalGameWrapperComponent', () => {
             testUtils.setupState(state);
 
             // When player zero does the winning move
-            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+            await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
 
             // Then 'Player 0 won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
@@ -395,7 +412,7 @@ describe('LocalGameWrapperComponent', () => {
             ];
             const state: P4State = new P4State(board, 37);
             testUtils.setupState(state);
-            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
 
             // When selecting AI, and AI then doing winning move
             await selectAIPlayer(Player.ZERO);
@@ -412,7 +429,7 @@ describe('LocalGameWrapperComponent', () => {
             await selectAIPlayer(Player.ZERO);
 
             // When user does the winning move
-            await testUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+            await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
 
             // Then 'You won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
@@ -446,14 +463,14 @@ describe('LocalGameWrapperComponent', () => {
         it('should showLastMove when there is one', fakeAsync(async() => {
             // Given a component with a last move
             const component: P4Component = testUtils.getGameComponent();
-            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
             testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.FOUR);
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.of(4));
         }));
         it('should not showLastMove when there is none', fakeAsync(async() => {
             // Given a component with a last move
@@ -470,7 +487,7 @@ describe('LocalGameWrapperComponent', () => {
     it('should display AI metrics when parameter is set to true', fakeAsync(async() => {
         // Given a component where we want to show the AI metrics in the middle of a part
         (testUtils.getWrapper() as LocalGameWrapperComponent).displayAIMetrics = true;
-        await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+        await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
 
         // When displaying it
         testUtils.detectChanges();
@@ -481,7 +498,7 @@ describe('LocalGameWrapperComponent', () => {
     describe('takeBack', () => {
         it('should allow to go back one move', fakeAsync(async() => {
             // Given a board with a move already done
-            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
 
             // When taking back
             spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
@@ -493,7 +510,7 @@ describe('LocalGameWrapperComponent', () => {
         }));
         it('should cancelMoveAttempt when taking back', fakeAsync(async() => {
             // Given a board where a move could be in construction
-            await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
 
             // When calling take back
             const component: P4Component = testUtils.getGameComponent();

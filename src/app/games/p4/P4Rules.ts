@@ -1,7 +1,7 @@
 import { Coord } from '../../jscaip/Coord';
 import { Rules } from '../../jscaip/Rules';
 import { MGPNode } from '../../jscaip/MGPNode';
-import { P4State } from './P4State';
+import { P4Config, P4State, p4Config } from './P4State';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Utils, Debug } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
@@ -12,15 +12,14 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
+export class P4Node extends MGPNode<P4Rules, P4Move, P4State, P4Config> {}
 
 @Debug.log
-export class P4Rules extends Rules<P4Move, P4State> {
+export class P4Rules extends Rules<P4Move, P4State, P4Config> {
 
     private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
 
-    public static readonly P4_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(P4State.isOnBoard, Utils.identity, 4);
+    public readonly P4_HELPER: NInARowHelper<PlayerOrNone>;
 
     public static get(): P4Rules {
         if (P4Rules.singleton.isAbsent()) {
@@ -28,36 +27,16 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return P4Rules.singleton.get();
     }
-    public static getVictoriousCoords(state: P4State): Coord[] {
-        return P4Rules.P4_HELPER.getVictoriousCoord(state);
-    }
-    public static getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
-        let y: number = 0;
-        while (y < P4State.HEIGHT && board[y][x] === PlayerOrNone.NONE) {
-            y++;
-        }
-        return y - 1;
-    }
-    public static getListMoves(node: P4Node): P4Move[] {
-        // should be called only if the game is not over
-        const originalState: P4State = node.gameState;
-        const moves: P4Move[] = [];
-
-        for (let x: number = 0; x < P4State.WIDTH; x++) {
-            if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
-                const move: P4Move = P4Move.of(x);
-                moves.push(move);
-            }
-        }
-        return moves;
-    }
     private constructor() {
-        super(P4State, {});
+        super(P4State, p4Config);
+        this.P4_HELPER = new NInARowHelper((c: Coord) => c.isInRange(p4Config.width, p4Config.height),
+                                           Utils.identity,
+                                           4);
     }
     public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
-        const y: number = P4Rules.getLowestUnoccupiedSpace(board, x);
+        const y: number = P4Rules.get().getLowestUnoccupiedSpace(board, x);
 
         const turn: number = state.turn;
 
@@ -74,10 +53,33 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;
-        const victoriousCoord: Coord[] = P4Rules.P4_HELPER.getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.P4_HELPER.getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
         return state.turn === 42 ? GameStatus.DRAW : GameStatus.ONGOING;
+    }
+    public getVictoriousCoords(state: P4State): Coord[] {
+        return this.P4_HELPER.getVictoriousCoord(state);
+    }
+    public getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
+        let y: number = 0;
+        while (y < this.config.height && board[y][x] === PlayerOrNone.NONE) {
+            y++;
+        }
+        return y - 1;
+    }
+    public getListMoves(node: P4Node): P4Move[] {
+        // should be called only if the game is not over
+        const originalState: P4State = node.gameState;
+        const moves: P4Move[] = [];
+
+        for (let x: number = 0; x < this.config.width; x++) {
+            if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
+                const move: P4Move = P4Move.of(x);
+                moves.push(move);
+            }
+        }
+        return moves;
     }
 }

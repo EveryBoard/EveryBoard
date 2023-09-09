@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { P4Node, P4Rules } from '../P4Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { P4State } from '../P4State';
+import { P4State, p4Config } from '../P4State';
 import { P4Move } from '../P4Move';
 import { P4Minimax } from '../P4Minimax';
 import { P4Failure } from '../P4Failure';
@@ -28,7 +28,7 @@ describe('P4Rules', () => {
     });
     it('should drop piece on the lowest space of the column', () => {
         // Given the initial board
-        const state: P4State = P4State.getInitialState();
+        const state: P4State = P4State.getInitialState(p4Config);
 
         // When playing in column 3
         const move: P4Move = P4Move.of(3);
@@ -160,8 +160,8 @@ describe('P4Rules', () => {
             [_, _, X, X, _, _, _],
             [_, _, O, O, _, _, _],
         ];
-        expect(P4Rules.getLowestUnoccupiedSpace(board, 0)).toBe(5);
-        expect(P4Rules.getLowestUnoccupiedSpace(board, 2)).toBe(0);
-        expect(P4Rules.getLowestUnoccupiedSpace(board, 3)).toBe(-1);
+        expect(P4Rules.get().getLowestUnoccupiedSpace(board, 0)).toBe(5);
+        expect(P4Rules.get().getLowestUnoccupiedSpace(board, 2)).toBe(0);
+        expect(P4Rules.get().getLowestUnoccupiedSpace(board, 3)).toBe(-1);
     });
 });

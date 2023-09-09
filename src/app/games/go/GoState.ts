@@ -83,6 +83,17 @@ export enum Phase {
     ACCEPT = 'ACCEPT',
     FINISHED = 'FINISHED'
 }
+
+export type GoConfig = {
+    width: number;
+    height: number;
+};
+
+export const goConfig: GoConfig = {
+    width: 19,
+    height: 19,
+};
+
 export class GoState extends GameStateWithTable<GoPiece> {
 
     public readonly koCoord: MGPOptional<Coord>;
@@ -102,9 +113,10 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.koCoord = koCoord;
         this.phase = phase;
     }
-    public static getInitialState(config: RulesConfig): GoState {
+    public static getInitialState(config: GoConfig): GoState {
         if (config['width'] === undefined) {
-            config = { width: 13, height: 5 };
+            console.log(config, 'kipet')
+            throw new Error('sodku')
         }
         const board: Table<GoPiece> = GoState.getStartingBoard(config);
         return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);

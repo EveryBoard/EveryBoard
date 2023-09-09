@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { GoMove } from '../GoMove';
-import { Phase, GoState, GoPiece } from '../GoState';
+import { Phase, GoState, GoPiece, GoConfig } from '../GoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -25,7 +25,7 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const config: RulesConfig = { width: 5, height: 5 };
+    const config: GoConfig = { width: 5, height: 5 };
 
     beforeEach(() => {
         rules = GoRules.get();

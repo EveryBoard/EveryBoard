@@ -7,8 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Move } from 'src/app/jscaip/Move';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { RulesConfig, RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
 
 export type DemoNodeInfo = {
     name: string, // The name of the game
@@ -69,11 +67,5 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
     public onCancelMove(_reason?: string | undefined): void {
         return;
-    }
-    public async getConfig(): Promise<RulesConfig> {
-        const gameURL: string = this.getGameName();
-        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
-        const configDescription: RulesConfigDescription = game.configDescription;
-        return RulesConfigUtils.getDefaultConfig(configDescription);
     }
 }

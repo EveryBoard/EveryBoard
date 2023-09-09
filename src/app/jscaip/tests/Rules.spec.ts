@@ -57,7 +57,7 @@ describe('Rules', () => {
         spyOn(node, 'getSonByMove').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
-        const resultingNode: MGPOptional<AbstractNode> = rules.choose(node, P4Move.ZERO);
+        const resultingNode: MGPOptional<AbstractNode> = rules.choose(node, P4Move.of(0));
 
         // he should be created and chosen
         expect(resultingNode.isPresent()).toBeTrue();
@@ -83,7 +83,7 @@ describe('Rules', () => {
         it('should return MGPOptional.empty() when the move was illegal', () => {
             // Given a node and a move that will be deemed illegal
             const node: AbstractNode = rules.getInitialNode({});
-            const illegalMove: P4Move = P4Move.FIVE;
+            const illegalMove: P4Move = P4Move.of(5);
             spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure(''));
 
             // When checking if the move is legal

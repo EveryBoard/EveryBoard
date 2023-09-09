@@ -1,10 +1,16 @@
-export type ConfigDescriptionTypeValue = 'string' | 'number' | 'boolean';
-
 export type ConfigDescriptionType = string | number | boolean;
 
 export type ConfigParameter = {
     name: string,
-    type: ConfigDescriptionTypeValue; // TODO: comment faire matcher les deux types ?
+    defaultValue: ConfigDescriptionType;
+};
+
+export type TypedConfigParameter = {
+
+    variableName: string;
+
+    localisableName: () => string;
+
     defaultValue: ConfigDescriptionType;
 };
 
