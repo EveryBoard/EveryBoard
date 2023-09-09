@@ -31,7 +31,7 @@ describe('QuartoComponent', () => {
                 [NULL, NULL, NULL, NULL],
             ];
             const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AAAB);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When clicking on an occupied square
             // Then the move should be rejected
             await testUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
@@ -82,7 +82,7 @@ describe('QuartoComponent', () => {
             ];
             const pieceInHand: QuartoPiece = QuartoPiece.BAAB;
             const state: QuartoState = new QuartoState(board, 15, pieceInHand);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on the last empty square
             // Then the move should be accepted
@@ -110,7 +110,7 @@ describe('QuartoComponent', () => {
             testUtils.expectElementNotToExist('#droppedPiece_0_0');
         }));
     });
-    it('should not show a piece in hand at the very last turn when all pieces are on the board', () => {
+    it('should not show a piece in hand at the very last turn when all pieces are on the board', fakeAsync(async() => {
         // Given a state of a part finished at the last turn
         const board: QuartoPiece[][] = [
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
@@ -122,8 +122,8 @@ describe('QuartoComponent', () => {
         const state: QuartoState = new QuartoState(board, 16, pieceInHand);
 
         // When displaying it
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         // Then it should not show any piece in hand
         testUtils.expectElementNotToExist('#pieceInHand');
-    });
+    }));
 });

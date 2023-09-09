@@ -33,7 +33,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
             new PenteAlignmentMinimax(this.rules, 'Alignment'),
         ];
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: PenteState = this.getState();
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);
@@ -41,10 +41,9 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.createHoshis();
         this.cancelMoveAttempt();
     }
-    public override showLastMove(): void {
-        const move: PenteMove = this.node.move.get();
+    public override async showLastMove(move: PenteMove): Promise<void> {
         this.lastMoved = MGPOptional.of(move.coord);
-        const opponent: Player = this.getCurrentPlayer().getOpponent();
+        const opponent: Player = this.getCurrentOpponent();
         this.captured = PenteRules.get().getCaptures(move.coord, this.getPreviousState(), opponent);
     }
     public override cancelMoveAttempt(): void {
@@ -52,7 +51,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.captured = [];
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

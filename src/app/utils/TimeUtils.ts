@@ -7,3 +7,12 @@ export function getMilliseconds(time: Timestamp): number {
 export function getMillisecondsElapsed(first: Timestamp, second: Timestamp): number {
     return getMilliseconds(second) - getMilliseconds(first);
 }
+
+export class TimeUtils {
+
+    public static async sleep(ms: number): Promise<void> {
+        return new Promise((resolve: (result: void) => void) => {
+            window.setTimeout(resolve, ms);
+        });
+    }
+}

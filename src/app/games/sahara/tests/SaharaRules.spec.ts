@@ -10,6 +10,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaFailure } from '../SaharaFailure';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('SaharaRules', () => {
 
@@ -19,7 +20,7 @@ describe('SaharaRules', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     let rules: SaharaRules;
-    let minimaxes: SaharaMinimax[];
+    let minimaxes: Minimax<SaharaMove, SaharaState>[];
 
     beforeEach(() => {
         rules = SaharaRules.get();

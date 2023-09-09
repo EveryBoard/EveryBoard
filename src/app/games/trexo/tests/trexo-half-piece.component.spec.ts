@@ -94,7 +94,7 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.expectElementNotToExist('#line_3_to_6');
     });
 
-    it(`should display parallelogram as open to the left when it is the righter part of the tile`, () => {
+    it(`should display parallelogram as open to the left when it is the rightmost part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the right part of the tile
         component.move = TrexoMove.from(new Coord(1, 1), new Coord(0, 1)).get();
         component.pieceClasses = [];

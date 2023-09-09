@@ -111,7 +111,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    constructor(messageDisplayer: MessageDisplayer)
+    {
         super(messageDisplayer);
         this.rules = HiveRules.get();
         this.node = this.rules.getInitialNode();
@@ -126,10 +127,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
         this.canPass = false;
-        this.updateBoard();
     }
-    public updateBoard(): void {
-        this.cancelMoveAttempt();
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.layers = [];
         for (const coord of this.getState().occupiedSpaces()) {
             const stack: HivePieceStack = this.getState().getAt(coord);
@@ -242,7 +241,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.inspectedStack = MGPOptional.empty();
         this.computeViewBox();
     }
-    public override showLastMove(move: HiveMove): void {
+    public override async showLastMove(move: HiveMove): Promise<void> {
         for (const coord of this.getLastMoveCoords(move)) {
             this.highlight(coord, 'last-move-stroke');
             this.ground.highlightStroke(coord, 'last-move-stroke');
@@ -291,11 +290,11 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
     public async selectRemaining(piece: HivePiece): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay(`#remainingPiece_${piece.toString() }`);
+        const clickValidity: MGPValidation = await this.canUserPlay(`#remainingPiece_${piece.toString() }`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (piece.owner === this.getCurrentPlayer().getOpponent()) {
+        if (piece.owner === this.getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (piece.kind !== 'QueenBee' && HiveRules.get().mustPlaceQueenBee(this.getState())) {
@@ -315,14 +314,16 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         return MGPValidation.SUCCESS;
     }
-    public selectStack(x: number, y: number): Promise<MGPValidation> {
-        return this.select(new Coord(x, y), 'piece');
+    public async selectStack(x: number, y: number): Promise<MGPValidation> {
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'piece');
+        return selectionValidity;
     }
-    public selectSpace(x: number, y: number): Promise<MGPValidation> {
-        return this.select(new Coord(x, y), 'space');
+    public async selectSpace(x: number, y: number): Promise<MGPValidation> {
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'space');
+        return selectionValidity;
     }
     private async select(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);
+        const clickValidity: MGPValidation = await this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -360,7 +361,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     private async selectStart(coord: Coord, stack: HivePieceStack): Promise<MGPValidation> {
         const state: HiveState = this.getState();
         const piece: HivePiece = stack.topPiece();
-        if (piece.owner === state.getCurrentPlayer().getOpponent()) {
+        if (piece.owner === state.getCurrentOpponent()) {
             // If the stack clicked is not owned by the player,
             // the player can still select it in order to inspect it
             if (stack.size() === 1) {

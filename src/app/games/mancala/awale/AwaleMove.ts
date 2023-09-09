@@ -1,8 +1,8 @@
 import { Encoder } from 'src/app/utils/Encoder';
-import { Move } from 'src/app/jscaip/Move';
 import { Utils } from 'src/app/utils/utils';
+import { MancalaDistribution, MancalaMove } from '../commons/MancalaMove';
 
-export class AwaleMove extends Move {
+export class AwaleMove extends MancalaMove {
 
     public static readonly ZERO: AwaleMove = new AwaleMove(0);
 
@@ -34,7 +34,7 @@ export class AwaleMove extends Move {
         }
     }
     private constructor(public readonly x: number) {
-        super();
+        super([MancalaDistribution.of(x)]);
     }
     public equals(other: AwaleMove): boolean {
         if (other === this) return true;

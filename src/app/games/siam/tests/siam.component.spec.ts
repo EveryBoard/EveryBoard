@@ -83,7 +83,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When trying to select the opponent's piece
         // Then it should fail
@@ -99,7 +99,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When performing a rotation
         // Then it should succeed
@@ -116,7 +116,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When moving forward
         // Then it should succeed
@@ -133,7 +133,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When performing a move
         const move: SiamMove = SiamMove.from(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
@@ -154,7 +154,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When making the piece exit the board
         // Then the orientation of the piece does not have to be chosen
@@ -204,7 +204,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#remainingPieces_0');
 
         // When the player clicks on the piece on the board
@@ -225,7 +225,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
         await testUtils.expectClickSuccess('#square_4_3');
 
@@ -245,7 +245,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
 
         // When the player clicks on a mountain
@@ -262,7 +262,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When the player inserts a piece in the same corner by selecting an arrow
         await testUtils.expectClickSuccess('#remainingPieces_0');
@@ -277,7 +277,7 @@ describe('SiamComponent', () => {
         // In a SVG transform, f is the y coordinate
         expect(transform.matrix.f).toBe(y);
     }
-    it('should display current player pieces on the bottom (Player.ONE)', () => {
+    it('should display current player pieces on the bottom (Player.ONE)', fakeAsync(async() => {
         // Given a state from the point of view of player 1
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -289,7 +289,7 @@ describe('SiamComponent', () => {
         const state: SiamState = new SiamState(board, 1);
 
         // When the game is displayed
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Then player 1's pieces should be on the bottom
         const playerOneRemainingPiecesTranslation: SVGTransform =
@@ -298,8 +298,8 @@ describe('SiamComponent', () => {
             testUtils.findElement('#remainingPieces_0_0').nativeElement.transform.baseVal.getItem(0);
         expectTranslationYToBe(playerZeroRemainingPiecesTranslation, -100);
         expectTranslationYToBe(playerOneRemainingPiecesTranslation, 700);
-    });
-    it('should display player zero pieces on the bottom (observer)', () => {
+    }));
+    it('should display player zero pieces on the bottom (observer)', fakeAsync(async() => {
         // Given a state
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
@@ -311,8 +311,8 @@ describe('SiamComponent', () => {
         const state: SiamState = new SiamState(board, 0);
 
         // When the game is displayed for an observer
-        testUtils.setupState(state);
-        testUtils.getWrapper().setRole(PlayerOrNone.NONE);
+        await testUtils.setupState(state);
+        await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
 
         // Then player 0's pieces should be on the bottom
         const playerOneRemainingPiecesTranslation: SVGTransform =
@@ -321,5 +321,5 @@ describe('SiamComponent', () => {
             testUtils.findElement('#remainingPieces_0_0').nativeElement.transform.baseVal.getItem(0);
         expectTranslationYToBe(playerZeroRemainingPiecesTranslation, 700);
         expectTranslationYToBe(playerOneRemainingPiecesTranslation, -100);
-    });
+    }));
 });

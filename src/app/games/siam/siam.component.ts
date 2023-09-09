@@ -57,14 +57,13 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         ];
         this.encoder = SiamMove.encoder;
         this.tutorial = new SiamTutorial().tutorial;
-        this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: SiamState = this.getState();
         this.board = state.board;
         this.movedPieces = [];
     }
-    public override showLastMove(move: SiamMove): void {
+    public override async showLastMove(move: SiamMove): Promise<void> {
         this.lastMove = MGPOptional.of(move);
         const previousGameState: SiamState = this.getPreviousState();
         this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState).get().moved;
@@ -78,7 +77,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.indicatorArrows = [];
     }
     public async selectPieceForInsertion(player: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#remainingPieces_' + player.value);
+        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.value);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -109,7 +108,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return MGPValidation.SUCCESS;
     }
     public async selectOrientation(move: SiamMove): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#orientation_' + move.landingOrientation.toString());
+        const clickValidity: MGPValidation = await this.canUserPlay('#orientation_' + move.landingOrientation.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -118,7 +117,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
     public async clickSquare(x: number, y: number, internalCall: boolean = false): Promise<MGPValidation> {
         if (internalCall === false) {
-            const clickValidity: MGPValidation = this.canUserPlay('#square_' + x + '_' + y);
+            const clickValidity: MGPValidation = await this.canUserPlay('#square_' + x + '_' + y);
             if (clickValidity.isFailure()) {
                 return this.cancelMove(clickValidity.getReason());
             }
@@ -159,7 +158,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     private async insertPiece(clickedCoord: Coord): Promise<MGPValidation> {
         if (this.selectedLanding.isPresent()) {
             // The landing is already selected, we cancel the move to avoid any confusion
-            this.cancelMove(SiamFailure.MUST_SELECT_ORIENTATION());
+            await this.cancelMove(SiamFailure.MUST_SELECT_ORIENTATION());
             return MGPValidation.SUCCESS;
         }
         // Inserting a new piece, the player just clicked on the landing
@@ -187,7 +186,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         Utils.assert(availableMoves.length > 0, 'SiamComponent.performMoveOrShowOrientationArrows expects at least one move');
         if (availableMoves.length === 1) {
             // There's only one possible move, so perform it
-            this.cancelMove();
             return this.chooseMove(availableMoves[0]);
         } else {
             // Since there's more than a single move, the player will have to select the orientation
@@ -226,7 +224,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return MGPValidation.SUCCESS;
     }
     public async clickArrow(arrow: SiamIndicatorArrow): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#indicator_' + arrow.target.x + '_' + arrow.target.y + '_' + arrow.move.landingOrientation);
+        const clickValidity: MGPValidation = await this.canUserPlay('#indicator_' + arrow.target.x + '_' + arrow.target.y + '_' + arrow.move.landingOrientation);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

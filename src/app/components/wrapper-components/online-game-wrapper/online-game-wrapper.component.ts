@@ -6,7 +6,7 @@ import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserSe
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
-import { Part, PartDocument, GameEvent, GameEventMove, GameEventRequest, GameEventReply, GameEventAction, RequestType } from '../../../domain/Part';
+import { Part, PartDocument, GameEvent, GameEventMove, GameEventReply, RequestType } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { CurrentGame, User } from '../../../domain/User';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
@@ -213,31 +213,31 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const mutex: Mutex = new Mutex(); // Need to ensure we receive events one at a time
         const callback: (events: GameEvent[]) => Promise<void> = async(events: GameEvent[]): Promise<void> => {
             await mutex.runExclusive(async() => {
+                const numberOfMoves: number = events.filter((g: GameEvent) => g.eventType === 'Move').length;
+                let numberOfMovesDone: number = 0;
                 this.beforeEventsBatch();
                 for (const event of events) {
                     switch (event.eventType) {
                         case 'Move':
-                            const moveEvent: GameEventMove = event as GameEventMove;
-                            await this.onReceivedMove(moveEvent);
+                            const isLastMove: boolean = (numberOfMovesDone + 1 === numberOfMoves);
+                            await this.onReceivedMove(event, isLastMove);
+                            numberOfMovesDone += 1;
                             break;
                         case 'Request':
-                            const requestEvent: GameEventRequest = event as GameEventRequest;
-                            this.requestManager.onReceivedRequest(requestEvent);
+                            this.requestManager.onReceivedRequest(event);
                             break;
                         case 'Reply':
-                            const replyEvent: GameEventReply = event as GameEventReply;
                             const mustHandle: boolean =
-                                await this.requestManager.onReceivedReply(replyEvent, this.role as Player);
+                                await this.requestManager.onReceivedReply(event, this.role as Player);
                             if (mustHandle) {
-                                await this.handleReply(replyEvent);
+                                await this.handleReply(event);
                             }
                             break;
                         default:
                             Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
-                            const actionEvent: GameEventAction = event as GameEventAction;
-                            this.timeManager.onReceivedAction(actionEvent);
-                            if (actionEvent.action === 'EndGame') await this.onGameEnd();
-                            else if (actionEvent.action === 'StartGame') await this.onGameStart();
+                            this.timeManager.onReceivedAction(event);
+                            if (event.action === 'EndGame') await this.onGameEnd();
+                            else if (event.action === 'StartGame') await this.onGameStart();
                             break;
                     }
                 }
@@ -250,7 +250,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         switch (reply.requestType) {
             case 'TakeBack':
                 const accepter: Player = Player.of(reply.player);
-                this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
+                await this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
                 break;
             case 'Rematch':
                 await this.router.navigate(['/nextGameLoading']);
@@ -266,7 +266,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.currentGameService.removeCurrentGame();
         this.endGame = true;
     }
-    private async onReceivedMove(moveEvent: GameEventMove): Promise<void> {
+    private async onReceivedMove(moveEvent: GameEventMove, isLastMoveOfBatch: boolean): Promise<void> {
         const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
@@ -278,7 +278,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const success: MGPOptional<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
         Utils.assert(success.isPresent(), 'Chosen move should be legal after all checks, but it is not!');
         this.gameComponent.node = success.get();
-        this.updateBoardAndShowLastMove();
+        if (this.role === PlayerOrNone.NONE) {
+            await this.updateBoardAndShowLastMove(isLastMoveOfBatch);
+        } else {
+            // We only animate the move of opponent, because the users move has already been animated before sending it
+            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value;
+            await this.updateBoardAndShowLastMove(triggerAnimation && isLastMoveOfBatch);
+        }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         this.gameComponent.setInteractive(this.currentPlayer.name === this.getPlayer().name);
         this.timeManager.onReceivedMove(moveEvent);
@@ -292,15 +298,20 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const serverTime: Timestamp = await this.userService.getServerTime(this.connectedUserService.user.get().id);
         this.timeManager.afterEventsBatch(this.endGame, player, serverTime);
     }
-    private takeBackToPreviousPlayerTurn(player: Player): void {
+    private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
         // Take back once, in any case
         this.gameComponent.node = this.gameComponent.node.mother.get();
         if (this.gameComponent.getCurrentPlayer() !== player) {
+            Utils.assert(this.gameComponent.getTurn() > 0, 'Should not allow player that never played to take back');
             // Take back a second time to make sure it end up on player's turn
             this.gameComponent.node = this.gameComponent.node.mother.get();
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        this.updateBoardAndShowLastMove();
+        if (this.gameComponent.getTurn() === 0) {
+            await this.updateBoardAndShowLastMove(false);
+        } else {
+            await this.updateBoardAndShowLastMove(true);
+        }
     }
     public canResign(): boolean {
         Utils.assert(this.isPlaying(), 'Non playing should not call canResign');
@@ -378,13 +389,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async setRealObserverRole(): Promise<MGPOptional<MinimalUser>> {
         let opponent: MGPOptional<MinimalUser> = MGPOptional.empty();
         if (this.players[0].equalsValue(this.getPlayer())) {
-            this.setRole(Player.ZERO);
+            await this.setRole(Player.ZERO);
             opponent = this.players[1];
         } else if (this.players[1].equalsValue(this.getPlayer())) {
-            this.setRole(Player.ONE);
+            await this.setRole(Player.ONE);
             opponent = this.players[0];
         } else {
-            this.setRole(PlayerOrNone.NONE);
+            await this.setRole(PlayerOrNone.NONE);
         }
         await this.currentGameService.updateCurrentGame({
             ...this.currentGame.get(),
@@ -538,10 +549,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const giver: Player = this.role as Player;
         return this.gameService.addTurnTime(this.currentPartId, giver);
     }
-    public onCancelMove(reason?: string): void {
+    public async onCancelMove(reason?: string): Promise<void> {
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
-            this.gameComponent.showLastMove(move);
+            await this.gameComponent.showLastMove(move);
         }
     }
     public async ngOnDestroy(): Promise<void> {

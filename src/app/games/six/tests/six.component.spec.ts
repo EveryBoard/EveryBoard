@@ -30,7 +30,7 @@ describe('SixComponent', () => {
                 [O],
             ];
             const state: SixState = SixState.ofRepresentation(board, 41);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));
@@ -48,14 +48,14 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.ofRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#neighbor_1_1', SixFailure.CAN_NO_LONGER_DROP());
         }));
         it('should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
             await testUtils.expectClickFailure('#piece_0_0', SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         }));
-        it('should selected piece when clicking on it (in moving phase)', fakeAsync(async() => {
+        it('should select piece when clicking on it (in moving phase)', fakeAsync(async() => {
             // Given a board in moving phase
             const board: Table<PlayerOrNone> = [
                 [O],
@@ -66,7 +66,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.ofRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on one of the user's pieces
             await testUtils.expectClickSuccess('#piece_0_0');
@@ -86,14 +86,13 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.ofRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             const gameComponent: SixComponent = testUtils.getGameComponent();
             await testUtils.expectClickSuccess('#piece_0_0');
             testUtils.expectElementToExist('#selectedPiece_0_0');
             const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(0, 6));
             await testUtils.expectMoveSuccess('#neighbor_0_6', move);
-
             testUtils.expectElementToExist('#leftCoord_0_0');
             testUtils.expectElementToExist('#lastDrop_0_6');
             expect(gameComponent.getPieceClass(new Coord(0, 6))).toBe('player0-fill');
@@ -109,7 +108,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.ofRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // When clicking on it again
@@ -121,6 +120,7 @@ describe('SixComponent', () => {
     });
     describe('Third click (cutting)', () => {
         it('should ask to cut when needed', fakeAsync(async() => {
+            // Given a board with a chosen piece and chosen landing
             const board: Table<PlayerOrNone> = [
                 [O, _, O],
                 [X, _, O],
@@ -128,7 +128,7 @@ describe('SixComponent', () => {
                 [X, _, _],
             ];
             const state: SixState = SixState.ofRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Choosing piece
             await testUtils.expectClickSuccess('#piece_1_2');
@@ -166,7 +166,7 @@ describe('SixComponent', () => {
                 [X, _, _],
             ];
             const state: SixState = SixState.ofRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Choosing piece
             await testUtils.expectClickSuccess('#piece_1_2');
@@ -191,7 +191,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.ofRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
             // When the user clicks on an empty space instead of selecting a group
@@ -209,7 +209,7 @@ describe('SixComponent', () => {
                 [X],
             ];
             const state: SixState = SixState.ofRepresentation(board, 40);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
@@ -225,7 +225,7 @@ describe('SixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, X],
             ];
             const state: SixState = SixState.ofRepresentation(board, 42);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece_0_0');
             const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(-1, 1));

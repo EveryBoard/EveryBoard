@@ -99,7 +99,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             }));
             it('should show captured piece and left spaces', fakeAsync(async() => {
                 // Given a board where a capture is ready to be made
-                testUtils.setupState(entries.stateReadyForCapture);
+                await testUtils.setupState(entries.stateReadyForCapture);
                 const firstCoord: Coord = entries.capture.getStart();
                 await testUtils.expectClickSuccess('#click_' + firstCoord.x + '_' + firstCoord.y);
 
@@ -139,7 +139,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             }));
             it('should cancelMove when trying to jump over another piece', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
-                testUtils.setupState(entries.stateReadyForJumpOver);
+                await testUtils.setupState(entries.stateReadyForJumpOver);
                 const firstCoord: string = entries.jumpOver.getStart().x + '_' + entries.jumpOver.getStart().y;
                 await testUtils.expectClickSuccess('#click_' + firstCoord);
 

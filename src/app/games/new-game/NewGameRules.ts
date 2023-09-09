@@ -33,7 +33,7 @@ export class NewGameBoardValue extends BoardValue {
 /**
  * Defining the game node class is only for cosmetic purposes. It reduces the length of the argument to `getGameStatus`.
  */
-export class NewGameNode extends MGPNode<Rules<NewGameMove, NewGameState, NewGameLegalityInfo, NewGameBoardValue>,
+export class NewGameNode extends MGPNode<NewGameRules,
                                          NewGameMove,
                                          NewGameState,
                                          NewGameLegalityInfo,

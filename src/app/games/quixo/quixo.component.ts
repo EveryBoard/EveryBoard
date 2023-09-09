@@ -42,9 +42,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         ];
         this.encoder = QuixoMove.encoder;
         this.tutorial = new QuixoTutorial().tutorial;
-        this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
         this.lastMoveCoord = this.node.move.map((move: QuixoMove) => move.coord);
@@ -64,8 +63,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) classes.push('victory-stroke');
         return classes;
     }
-    public onBoardClick(x: number, y: number): MGPValidation {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+    public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -95,7 +94,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         return directions;
     }
     public async chooseDirection(direction: Orthogonal): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#chooseDirection_' + direction.toString());
+        const clickValidity: MGPValidation = await this.canUserPlay('#chooseDirection_' + direction.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
