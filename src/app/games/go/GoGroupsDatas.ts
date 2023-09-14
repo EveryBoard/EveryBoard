@@ -84,6 +84,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             return nonEmptyWrapper.getAnyPair().get().key;
         } else {
             throw new Error(`Can't call getWrapper on non-mono-wrapped group`);
+            // TODO FOR REVIEW: ticketter la centralisation des throw (pour être mis au courant ci ceci arrive)
         }
     }
     public getNeighborsEntryPoints(): Coord[] {

@@ -49,7 +49,7 @@ describe('DvonnComponent', () => {
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
         // When it is displayed
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         // Then the player can pass
         const move: DvonnMove = DvonnMove.PASS;
         await testUtils.expectPassSuccess(move);
@@ -67,7 +67,7 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
-        testUtils.setupState(new DvonnState(board, 0, false));
+        await testUtils.setupState(new DvonnState(board, 0, false));
 
         // When doing that disconnection
         await testUtils.expectClickSuccess('#click_3_1');
@@ -86,7 +86,7 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
-        testUtils.setupState(new DvonnState(board, 0, false));
+        await testUtils.setupState(new DvonnState(board, 0, false));
 
         // When doing that disconnection
         await testUtils.expectClickSuccess('#click_3_1');
@@ -122,7 +122,7 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
-        testUtils.setupState(new DvonnState(board, 0, false));
+        await testUtils.setupState(new DvonnState(board, 0, false));
         await testUtils.expectClickSuccess('#click_2_0');
         // When the user clicks on an invalid destination for this move, that is a valid piece for another move
         await testUtils.expectClickSuccess('#click_4_1');
@@ -139,7 +139,7 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
-        testUtils.setupState(new DvonnState(board, 0, false));
+        await testUtils.setupState(new DvonnState(board, 0, false));
         await testUtils.expectClickSuccess('#click_2_0');
         // When the user click on a valid yet illegal destination, that is a valid for another move
         await testUtils.expectClickSuccess('#click_2_2');

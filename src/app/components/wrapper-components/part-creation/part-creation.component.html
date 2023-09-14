@@ -142,7 +142,8 @@
                         </ng-template>
                     </div>
                 </div>
-                <app-rules-configuration [rulesConfigDescription]="rulesConfigDescription"
+                <app-rules-configuration id="rulesConfigurationComponent"
+                                         [rulesConfigDescription]="rulesConfigDescription"
                                          [userIsCreator]="true"
                                          (updateCallback)="saveRulesConfig($event)">
                 </app-rules-configuration>
@@ -150,7 +151,7 @@
             <div class="field">
                 <div class="buttons has-addons">
                     <button class="button is-primary"
-                            [disabled]="!viewInfo.canProposeConfig"
+                            [disabled]="!(viewInfo.canProposeConfig && rulesConfig.isPresent())"
                             (click)="proposeConfig()"
                             id="proposeConfig"
                             i18n>Propose configuration</button>

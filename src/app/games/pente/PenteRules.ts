@@ -19,7 +19,7 @@ export class PenteNode extends MGPNode<Rules<PenteMove, PenteState>,
 export class PenteRules extends Rules<PenteMove, PenteState> {
 
     public static readonly PENTE_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(PenteMove.isOnBoard, Utils.identity, 5);
+        new NInARowHelper(Utils.identity, 5);
 
     private static singleton: MGPOptional<PenteRules> = MGPOptional.empty();
 

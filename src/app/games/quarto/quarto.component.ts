@@ -44,9 +44,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.encoder = QuartoMove.encoder;
         this.tutorial = new QuartoTutorial().tutorial;
         this.pieceInHand = this.getState().pieceInHand;
-        this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
         const move: MGPOptional<QuartoMove> = this.node.move;
         this.board = state.getCopiedBoard();
@@ -57,7 +56,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
-        const clickValidity: MGPValidation = this.canUserPlay('#chooseCoord_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#chooseCoord_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -85,7 +84,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#choosePiece_' + givenPiece);
+        const clickValidity: MGPValidation = await this.canUserPlay('#choosePiece_' + givenPiece);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -106,7 +105,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             return this.chooseMove(chosenMove);
         }
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
     public override cancelMoveAttempt(): void {
@@ -114,11 +113,11 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.pieceToGive = MGPOptional.empty();
         this.chosen = MGPOptional.empty();
     }
-    public deselectDroppedPiece(): MGPValidation {
+    public async deselectDroppedPiece(): Promise<MGPValidation> {
         // So it does not throw when there is no dese chosen piece (used in clickValidity test)
         const chosen: Coord = this.chosen.getOrElse(new Coord(404, 404));
         const droppedPieceName: string = '#droppedPiece_' + chosen.x + '_' + chosen.y;
-        const clickValidity: MGPValidation = this.canUserPlay(droppedPieceName);
+        const clickValidity: MGPValidation = await this.canUserPlay(droppedPieceName);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

@@ -6,14 +6,11 @@ import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
-import { Localized } from 'src/app/utils/LocaleUtils';
 
 const _: MartianChessPiece = MartianChessPiece.EMPTY;
 const A: MartianChessPiece = MartianChessPiece.PAWN;
 const B: MartianChessPiece = MartianChessPiece.DRONE;
 const C: MartianChessPiece = MartianChessPiece.QUEEN;
-
-export const NOT_A_FIELD_PROMOTION: Localized = () => $localize`This is not a field promotion!`;
 
 export class MartianChessTutorial extends Tutorial {
 
@@ -114,7 +111,7 @@ export class MartianChessTutorial extends Tutorial {
                 MartianChessMove.from(new Coord(2, 2), new Coord(1, 1)).get(),
             ],
             $localize`Congratulations!`,
-            NOT_A_FIELD_PROMOTION(),
+            $localize`This is not a field promotion!`,
         ),
         TutorialStep.fromPredicate(
             $localize`Field Promotion (2/2)`,
@@ -135,7 +132,7 @@ export class MartianChessTutorial extends Tutorial {
                 if (landed === MartianChessPiece.QUEEN) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure(NOT_A_FIELD_PROMOTION());
+                    return MGPValidation.failure($localize`This is not a field promotion!`);
                 }
             },
             $localize`Congratulations!`,

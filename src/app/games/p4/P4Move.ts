@@ -17,7 +17,7 @@ export class P4Move extends Move {
         super();
     }
     public equals(other: P4Move): boolean {
-        return this === other;
+        return this.x === other.x;
     }
     public toString(): string {
         return 'P4Move(' + this.x + ')';

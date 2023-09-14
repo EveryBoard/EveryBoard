@@ -1,22 +1,28 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
+import { TaflConfig } from '../TaflConfig';
 
 export class BrandhubState extends TaflState {
 
-    public static getInitialState(): BrandhubState {
+    public static getInitialState(rulesConfig: TaflConfig): BrandhubState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
-        const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
-        const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
-        const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+        let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+        let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
+        let K: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+        if (rulesConfig.invaderStarts === false) {
+            I = TaflPawn.PLAYER_ONE_PAWN;
+            D = TaflPawn.PLAYER_ZERO_PAWN;
+            K = TaflPawn.PLAYER_ZERO_KING;
+        }
         const board: Table<TaflPawn> = [
-            [_, _, _, x, _, _, _],
-            [_, _, _, x, _, _, _],
-            [_, _, _, i, _, _, _],
-            [x, x, i, A, i, x, x],
-            [_, _, _, i, _, _, _],
-            [_, _, _, x, _, _, _],
-            [_, _, _, x, _, _, _],
+            [_, _, _, I, _, _, _],
+            [_, _, _, I, _, _, _],
+            [_, _, _, D, _, _, _],
+            [I, I, D, K, D, I, I],
+            [_, _, _, D, _, _, _],
+            [_, _, _, I, _, _, _],
+            [_, _, _, I, _, _, _],
         ];
         return new BrandhubState(board, 0);
     }

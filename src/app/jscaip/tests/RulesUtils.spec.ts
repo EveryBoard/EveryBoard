@@ -24,9 +24,9 @@ export class RulesUtils {
                                     L,
                                     B extends BoardValue,
                                     C extends RulesConfig = RulesConfig>(rules: R,
-                                                                       state: S,
-                                                                       move: M,
-                                                                       expectedState: S)
+                                                                         state: S,
+                                                                         move: M,
+                                                                         expectedState: S)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state);
@@ -47,9 +47,9 @@ export class RulesUtils {
                                     S extends GameState,
                                     L,
                                     C extends RulesConfig = RulesConfig>(rules: R,
-                                                                       state: S,
-                                                                       move: M,
-                                                                       reason: string)
+                                                                         state: S,
+                                                                         move: M,
+                                                                         reason: string)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state);
@@ -61,9 +61,9 @@ export class RulesUtils {
                                        S extends GameState,
                                        L,
                                        C extends RulesConfig>(rules: R,
-                                                             node: MGPNode<R, M, S, C, L>,
-                                                             player: Player,
-                                                             minimaxes: Minimax<M, S, C, L>[])
+                                                              node: MGPNode<R, M, S, C, L>,
+                                                              player: Player,
+                                                              minimaxes: Minimax<M, S, C, L>[])
     : void
     {
         expect(rules.getGameStatus(node))
@@ -80,8 +80,8 @@ export class RulesUtils {
                                     S extends GameState,
                                     L,
                                     C extends RulesConfig>(rules: R,
-                                                          node: MGPNode<R, M, S, C, L>,
-                                                          minimaxes: Minimax<M, S, C, L>[])
+                                                           node: MGPNode<R, M, S, C, L>,
+                                                           minimaxes: Minimax<M, S, C, L>[])
     : void
     {
         expect(rules.getGameStatus(node)).toEqual(GameStatus.ONGOING);
@@ -100,8 +100,8 @@ export class RulesUtils {
                                  S extends GameState,
                                  L,
                                  C extends RulesConfig>(rules: R,
-                                                       node: MGPNode<R, M, S, C, L>,
-                                                       minimaxes: Minimax<M, S, C, L>[])
+                                                        node: MGPNode<R, M, S, C, L>,
+                                                        minimaxes: Minimax<M, S, C, L>[])
     : void
     {
         expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
@@ -132,11 +132,11 @@ export class RulesUtils {
                                                           S extends GameState,
                                                           L,
                                                           C extends RulesConfig>(minimax: Minimax<M, S, C, L>,
-                                                                                weakState: S,
-                                                                                weakMove: MGPOptional<M>,
-                                                                                strongState: S,
-                                                                                strongMove: MGPOptional<M>,
-                                                                                player: Player)
+                                                                                 weakState: S,
+                                                                                 weakMove: MGPOptional<M>,
+                                                                                 strongState: S,
+                                                                                 strongMove: MGPOptional<M>,
+                                                                                 player: Player)
     : void
     {
         const weakNode: MGPNode<Rules<M, S, C, L>, M, S, C, L> = new MGPNode(weakState, MGPOptional.empty(), weakMove);
@@ -169,7 +169,8 @@ export class RulesUtils {
     }
     public static expectToThrowAndLog(func: () => void, error: string): void {
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-        expect(func).toThrowError('Assertion failure: ' + error);
+        const expectedErrorMessage: string = 'Assertion failure: ' + error;
+        expect(func).withContext('Excpected function to throw error "' + expectedErrorMessage + '"').toThrowError(expectedErrorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
     }
     /**
@@ -183,9 +184,9 @@ export class RulesUtils {
                              M extends Move,
                              L,
                              C extends RulesConfig>(ruler: Rules<M, S, C, L>,
-                                                   encodedMoves: JSONValue[],
-                                                   state: S,
-                                                   moveDecoder: (em: JSONValue) => M)
+                                                    encodedMoves: JSONValue[],
+                                                    state: S,
+                                                    moveDecoder: (em: JSONValue) => M)
     : S
     {
         let i: number = 0;

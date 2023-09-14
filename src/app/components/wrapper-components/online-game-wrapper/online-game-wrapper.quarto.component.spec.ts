@@ -149,7 +149,8 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
-    /* Life cycle summary
+    /**
+     * Life cycle summary
      * component construction (beforeEach)
      * stage 0
      * ngOnInit (triggered by detectChanges)
@@ -181,16 +182,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let role: PlayerOrNone;
 
     const FIRST_MOVE: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BABB);
-
     const SECOND_MOVE: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
-
     const THIRD_MOVE: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
+    const FOURTH_MOVE: QuartoMove = new QuartoMove(3, 0, QuartoPiece.BBAA);
 
     const FIRST_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(FIRST_MOVE);
-
     const SECOND_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(SECOND_MOVE);
-
     const THIRD_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(THIRD_MOVE);
+    const FOURTH_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(FOURTH_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const result: MGPValidation = await wrapper.gameComponent.chooseMove(move);
@@ -228,7 +227,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(0);
     }
     async function askTakeBack(): Promise<void> {
-        return await testUtils.clickElement('#proposeTakeBack');
+        await testUtils.clickElement('#proposeTakeBack');
+        tick(0);
     }
     async function acceptTakeBack(): Promise<void> {
         return await testUtils.clickElement('#accept');
@@ -300,13 +300,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.chronoOneTurn.isIdle()).withContext('chrono one turn should be idle').toBeTrue();
         expect(wrapper.endGame).toBeTrue();
     }
-    async function prepareStartedGameWithMoves(encodedMoves: JSONValue[]): Promise<void> {
+    async function prepareStartedGameWithMoves(encodedMoves: JSONValue[], waitForPartToStart: boolean = true)
+    : Promise<void>
+    {
         // 1. Creating the mocks and testUtils but NOT component
+        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
         // 2. Setting the db with the encodedMoves including
+        await prepareMoves(encodedMoves);
         // 3. Setting the component and making it start like it would
-
-        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-
+        if (waitForPartToStart) {
+            tick(2);
+        }
+    }
+    async function prepareMoves(encodedMoves: JSONValue[]): Promise<void> {
         let offset: number = 0;
         let turn: number = 0;
         if (role === Player.ONE) {
@@ -374,6 +380,60 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
+    describe('Animation', () => {
+        it(`should trigger animation when receiving opponent's move`, fakeAsync(async() => {
+            // Given a board where it's the opponent's turn
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await doMove(FIRST_MOVE, true);
+
+            // When receiving opponent's move
+            spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
+            await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
+
+            // Then gameComponent.updateBoard should have been called with true, to show animation
+            expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(true);
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it(`should not trigger animation when receiving your own move`, fakeAsync(async() => {
+            // Given a board where it's player's turn
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+
+            // When doing you move
+            spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
+            await doMove(FIRST_MOVE, true);
+
+            // Then gameComponent.updateBoard should have been called with false
+            expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(false);
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it(`should not trigger animation when receiving several moves`, fakeAsync(async() => {
+            // Given a board where you arrive late
+            const encodedMoves: JSONValue[] = [
+                FIRST_MOVE_ENCODED,
+                SECOND_MOVE_ENCODED,
+                THIRD_MOVE_ENCODED,
+                FOURTH_MOVE_ENCODED,
+            ];
+            await prepareStartedGameWithMoves(encodedMoves, false);
+            let numberOfCall: number = 0;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            spyOn<any>(testUtils.getWrapper(), 'onReceivedMove').and.callFake((_: any, isLastMoveOfBatch: boolean) => {
+                numberOfCall++;
+                // Then only once move should have been animated
+                if (numberOfCall === 4) {
+                    expect(isLastMoveOfBatch).withContext('last call should have been true').toBeTrue();
+                } else {
+                    expect(isLastMoveOfBatch).withContext('first calls should have been false').toBeFalse();
+                }
+            });
+
+            // When receiving several pairs of moves
+            tick(2);
+
+            // Finish the part (the real Then is in the callback fo onReceivedMove)
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+    });
     it('should allow sending and receiving moves (opponent)', fakeAsync(async() => {
         // Given a started part
         await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
@@ -393,10 +453,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('Late Arrival', () => {
         it('should allow user to arrive late on the game (on their turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)
-            await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED]);
+            await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], false);
 
             // When arriving and playing
-            tick(0);
+            tick(2);
 
             // Then the new move should be done
             expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(2);
@@ -404,10 +464,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should allow user to arrive late on the game (not on their turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)
-            await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED]);
+            await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED], false);
 
             // When arriving and playing
-            tick(0);
+            tick(2);
 
             // Then the new move should be done
             expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(3);
@@ -873,7 +933,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await acceptTakeBack();
                 tick(0);
 
-                // Then count down should be resumed for opponent and user should receive his decision time back
+                // Then count down should be resumed for opponent and user should receive their decision time back
                 expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -893,6 +953,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveReply(Player.ONE, 'Accept', 'TakeBack');
                 const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
                 expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
+                tick(0);
 
                 // Then turn should be changed to 0 and resumeCountDown be called
                 expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
@@ -1422,7 +1483,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToBeDisabled('#proposeRematch');
 
             // When it is finished
-            await testUtils.expectInterfaceClickSuccess('#resign', true);
+            await testUtils.expectInterfaceClickSuccess('#resign', 0);
 
             // Then it should allow to propose rematch
             testUtils.expectElementToBeEnabled('#proposeRematch');
@@ -1632,6 +1693,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then we should not notify the timeout
             expect(gameService.notifyTimeout).not.toHaveBeenCalled();
         }));
+        describe('Animation', () => {
+            it(`should trigger animation when receiving player move (observer)`, fakeAsync(async() => {
+                // Given any turn
+                await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
+
+                // When receiving players's move
+                spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
+                await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
+
+                // Then gameComponent.updateBoard should have been called with true, to show animation
+                expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(true);
+                tick(wrapper.configRoom.maximalMoveDuration * 1000);
+            }));
+        });
     });
     describe('Visuals', () => {
         it('should highlight each player name in their respective color', fakeAsync(async() => {
@@ -1694,7 +1769,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.getWrapper().onCancelMove();
+            await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
             expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
@@ -1706,7 +1781,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
-            testUtils.getWrapper().onCancelMove();
+            await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();

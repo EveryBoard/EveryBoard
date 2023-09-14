@@ -18,7 +18,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
     private static singleton: MGPOptional<TeekoRules> = MGPOptional.empty();
 
     public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(TeekoState.isOnBoard, Utils.identity, 4);
+        new NInARowHelper(Utils.identity, 4);
 
     public static get(): TeekoRules {
         if (TeekoRules.singleton.isAbsent()) {

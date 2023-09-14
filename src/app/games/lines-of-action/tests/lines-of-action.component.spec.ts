@@ -37,7 +37,7 @@ describe('LinesOfActionComponent', () => {
                 [_, O, _, O, O, O, O, _],
             ];
             const state: LinesOfActionState = new LinesOfActionState(board, 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }));
@@ -84,7 +84,7 @@ describe('LinesOfActionComponent', () => {
                 [_, O, _, O, O, O, O, _],
             ];
             const state: LinesOfActionState = new LinesOfActionState(board, 0);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click_2_0');
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
@@ -130,7 +130,7 @@ describe('LinesOfActionComponent', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
-        testUtils.setupState(state, LinesOfActionState.getInitialState(), move);
+        await testUtils.setupState(state, LinesOfActionState.getInitialState(), move);
 
         // When taking it back
         await testUtils.expectInterfaceClickSuccess('#takeBack');

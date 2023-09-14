@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="'0 0 ' + (QuixoState.SIZE * SPACE_SIZE) + ' ' + (QuixoState.SIZE * SPACE_SIZE)"
+     [attr.viewBox]="getViewBox()"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <polygon id="triangle" points="0 0, 100 50, 0 100"/>

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     viewBox="-4 -4 300 308"
+     viewBox="-55 -55 610 610"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let spaceContent of line; index as x"
@@ -8,19 +8,22 @@
            (click)="onClick(x, y)"
         >
             <g *ngIf="spaceContent.isPlayer()">
-                <polygon [attr.points]="getPyramidCoordinate(x, y)"
+                <polygon [attr.points]="getPyramidPoints(x, y)"
+                         [attr.transform]="getTriangleTranslate(x, y)"
                          [ngClass]="getPlayerClassFor(x, y)"
-                         class="base small-stroke"
+                         class="base mid-stroke"
                 />
             </g>
             <g *ngIf="spaceContent.value === 2">
                 <polygon *ngIf="(x + y) % 2 === 1"
-                         [attr.points]="getTriangleCoordinate(x, y)"
-                         class="base small-stroke"
+                         [attr.points]="getTrianglePoints(x, y)"
+                         [attr.transform]="getTriangleTranslate(x, y)"
+                         class="base mid-stroke"
                 />
-                <polygon *ngIf="(x+y)%2 === 0"
-                         [attr.points]="getTriangleCoordinate(x, y)"
-                         class="base small-stroke background2"
+                <polygon *ngIf="(x + y) % 2 === 0"
+                         [attr.points]="getTrianglePoints(x, y)"
+                         [attr.transform]="getTriangleTranslate(x, y)"
+                         class="base mid-stroke background2"
                 />
             </g>
         </g>
@@ -28,19 +31,23 @@
     <ng-container *ngIf="chosenCoord.isPresent() else lastMove">
         <polygon *ngFor="let possibleLanding of possibleLandings"
                  id="possible_landing_{{ possibleLanding.x }}_{{ possibleLanding.y }}"
-                 [attr.points]="getTriangleCoordinate(possibleLanding.x, possibleLanding.y)"
-                 class="base no-fill small-stroke selected-stroke"/>
+                 [attr.points]="getTrianglePoints(possibleLanding.x, possibleLanding.y)"
+                 [attr.transform]="getTriangleTranslate(possibleLanding.x, possibleLanding.y)"
+                 class="base no-fill mid-stroke selected-stroke"/>
         <polygon *ngIf="chosenCoord.isPresent()"
                  id="chosen_coord_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
-                 [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
-                 class="base no-fill small-stroke selected-stroke"/>
+                 [attr.points]="getTrianglePoints(chosenCoord.get().x, chosenCoord.get().y)"
+                 [attr.transform]="getTriangleTranslate(chosenCoord.get().x, chosenCoord.get().y)"
+                 class="base no-fill mid-stroke selected-stroke"/>
     </ng-container>
     <ng-template #lastMove>
         <ng-container *ngIf="lastMoved.isPresent()">
-            <polygon [attr.points]="getTriangleCoordinate(lastCoord.get().x, lastCoord.get().y)"
-                     class="base no-fill small-stroke moved-stroke"/>
-            <polygon [attr.points]="getTriangleCoordinate(lastMoved.get().x, lastMoved.get().y)"
-                     class="base no-fill small-stroke moved-stroke"/>
+            <polygon [attr.points]="getTrianglePoints(lastCoord.get().x, lastCoord.get().y)"
+                     [attr.transform]="getTriangleTranslate(lastCoord.get().x, lastCoord.get().y)"
+                     class="base no-fill mid-stroke moved-stroke"/>
+            <polygon [attr.points]="getTrianglePoints(lastMoved.get().x, lastMoved.get().y)"
+                     [attr.transform]="getTriangleTranslate(lastMoved.get().x, lastMoved.get().y)"
+                     class="base no-fill mid-stroke moved-stroke"/>
         </ng-container>
     </ng-template>
 </svg>

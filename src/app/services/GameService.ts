@@ -57,7 +57,6 @@ export class GameService {
             playerZero,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
-            rulesConfig: {}, // TODO: veux on procéder ainsi ?
         };
         return this.partDAO.create(newPart);
     }
@@ -66,7 +65,7 @@ export class GameService {
     }
     public async createPartConfigRoomAndChat(typeGame: string): Promise<string> {
         const gameId: string = await this.createUnstartedPart(typeGame);
-        await this.configRoomService.createInitialConfigRoom(gameId);
+        await this.configRoomService.createInitialConfigRoom(gameId, typeGame);
         await this.createChat(gameId);
         return gameId;
     }
@@ -93,7 +92,6 @@ export class GameService {
             playerOne,
             turn: 0,
             beginning: serverTimestamp(),
-            // TODO: check si il faut mettre une config par défaut
         };
     }
     public deletePart(partId: string): Promise<void> {
@@ -109,7 +107,7 @@ export class GameService {
         } else {
             accepter = Player.ZERO;
         }
-        await this.partDAO.update(partId, update as Part); // TODO: check why ?
+        await this.partDAO.update(partId, update);
         await this.gameEventService.startGame(partId, accepter);
     }
     public getPart(partId: string): Promise<MGPOptional<Part>> {
@@ -181,12 +179,13 @@ export class GameService {
             partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
         const startingConfig: StartingPartConfig = this.getStartingConfig(newConfigRoom);
-        // TODO: unit tester que le transfer de la config précédent est fait
+        // TODO: unit tester que la partie commence bien avec les rules de la config room
+        // TODO: unit tester que getInitialState est appelé avec rulesConfig dans LGWC
+        // TODO: unit tester que getInitialState est appelé avec rulesConfig dans OGWC
         const newPart: Part = {
             typeGame: part.typeGame,
             result: MGPResult.UNACHIEVED.value,
             ...startingConfig,
-            rulesConfig: configRoom.rulesConfig,
         };
 
         const rematchId: string = await this.partDAO.create(newPart);

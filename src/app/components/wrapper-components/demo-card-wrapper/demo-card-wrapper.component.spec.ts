@@ -52,7 +52,6 @@ describe('DemoCardComponent', () => {
             node: new LodestoneNode(LodestoneState.getInitialState()),
             click: MGPOptional.of('#lodestone_push_orthogonal'),
         });
-
         // Then it should have performed a click
         testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
     }));
@@ -75,7 +74,7 @@ describe('DemoCardComponent', () => {
     it('should do nothing when you pass', fakeAsync(async() => {
         // Given any starting state of component
         // When passing
-        const result: void = testUtils.getComponent().onCancelMove('not even necessary');
+        const result: void = await testUtils.getComponent().onCancelMove('not even necessary');
         // Then nothing should have happend (for coverage sake)
         expect(result).withContext('should be null').toBe();
     }));
@@ -90,7 +89,7 @@ describe('DemoCardComponent', () => {
             });
 
             // When calling getConfig
-            spyOn(RulesConfigUtils, 'getDefaultConfig').and.returnValue(defaultRulesConfig);
+            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
             const actualDefaultRulesConfig: RulesConfig = await testUtils.getComponent().getConfig();
 
             // Then the return should be the default game config

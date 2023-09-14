@@ -29,9 +29,7 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
     }
     private constructor() {
         super(P4State, p4Config);
-        this.P4_HELPER = new NInARowHelper((c: Coord) => c.isInRange(p4Config.width, p4Config.height),
-                                           Utils.identity,
-                                           4);
+        this.P4_HELPER = new NInARowHelper(Utils.identity, 4);
     }
     public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
         const x: number = move.x;

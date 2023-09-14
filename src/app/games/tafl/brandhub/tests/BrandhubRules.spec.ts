@@ -13,6 +13,7 @@ import { TaflMinimax } from '../../TaflMinimax';
 import { TaflPieceAndInfluenceMinimax } from '../../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlMinimax } from '../../TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from '../../TaflEscapeThenPieceThenControlMinimax';
+import { brandhubConfig } from '../brandhubConfig';
 
 describe('BrandhubRules', () => {
 
@@ -36,7 +37,7 @@ describe('BrandhubRules', () => {
     });
     it('should allow first move by invader', () => {
         // Given the initial board
-        const state: BrandhubState = BrandhubState.getInitialState();
+        const state: BrandhubState = BrandhubState.getInitialState(brandhubConfig);
 
         // When moving an invader
         const move: BrandhubMove = BrandhubMove.of(new Coord(1, 3), new Coord(1, 6));

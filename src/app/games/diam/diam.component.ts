@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -52,7 +52,7 @@ interface LastMoved {
     templateUrl: './diam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> implements OnInit {
+export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
     private static readonly CENTER: Coord[] = [
         new Coord(40, 160),
         new Coord(100, 50),
@@ -103,11 +103,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         this.encoder = DiamMoveEncoder;
         this.tutorial = new DiamTutorial().tutorial;
     }
-    public ngOnInit(): void {
-        this.updateBoard();
-    }
     public async onSpaceClick(x: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -135,7 +132,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         }
     }
     public async onPieceInGameClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -143,7 +140,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         const clickedPiece: DiamPiece = this.getState().getPieceAt(clicked);
         if (clickedPiece.owner === this.getCurrentPlayer()) {
             if (this.isSelected(null, clicked)) {
-                this.cancelMoveAttempt();
+                await this.cancelMoveAttempt();
             } else {
                 this.selected = MGPOptional.of({ type: 'pieceFromBoard', position: clicked });
             }
@@ -157,7 +154,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         }
     }
     public async onRemainingPieceClick(piece: DiamPiece, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay(this.getPieceId(piece, z));
+        const clickValidity: MGPValidation = await this.canUserPlay(this.getPieceId(piece, z));
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -190,7 +187,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             return selected.piece === piece;
         }
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
     }
     private getLastMovedFromDrop(drop: DiamMoveDrop, stateBefore: DiamState): LastMoved[] {
@@ -237,7 +234,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             };
         }
     }
-    public override showLastMove(move: DiamMove): void {
+    public override async showLastMove(move: DiamMove): Promise<void> {
         this.showLastMoveOnSpaces(move);
         this.showLastMoveOnPieces(move);
     }
@@ -381,8 +378,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     private getDrawPositionOnBoard(x: number, y: number): Coord {
         return DiamComponent.CENTER[x].getNext(new Vector(0, -y * DiamComponent.PIECE_HEIGHT));
     }
-    public override cancelMoveAttempt(): void {
+    public override async cancelMoveAttempt(): Promise<void> {
         this.selected = MGPOptional.empty();
-        this.updateBoard();
+        await this.updateBoard(false);
     }
 }

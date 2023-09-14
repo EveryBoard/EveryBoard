@@ -29,7 +29,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         super(QuixoState, {});
     }
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(QuixoState.isOnBoard, Utils.identity, QuixoState.SIZE);
+        new NInARowHelper(Utils.identity, QuixoState.SIZE);
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();

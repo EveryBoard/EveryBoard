@@ -5,7 +5,8 @@ export const NewRulesConfigDescription: RulesConfigDescription = {
     fields: [
         {
             // the name of the parameter that could configure your game (ex: board size)'
-            name: 'the_name_you_will_use_in_your_rules_and_states', // TODO var-like-name + localisable-name
+            name: 'the_name_you_will_use_in_your_rules_and_states',
+            i18nName: () => 'some localisable string to be read by user',
             defaultValue: 9,
         },
     ],

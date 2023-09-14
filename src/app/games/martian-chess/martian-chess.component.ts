@@ -168,7 +168,6 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.encoder = MartianChessMove.encoder;
         this.tutorial = new MartianChessTutorial().tutorial;
         this.scores = MGPOptional.of([0, 0]);
-        this.updateBoard();
     }
     public getConfigViewTranslation(): string {
         const padding: number = 0;
@@ -192,7 +191,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const right: string = (0.75 * this.SPACE_SIZE) + ' ' + c;
         return up + ', ' + center + ', ' + right;
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
         const scoreZero: number = this.state.getScoreOf(Player.ZERO);
@@ -229,7 +228,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         this.displayModePanel = false;
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -323,7 +322,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.callTheClock = false;
     }
     public async onClockClick(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#clockOrCountDownView');
+        const clickValidity: MGPValidation = await this.canUserPlay('#clockOrCountDownView');
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

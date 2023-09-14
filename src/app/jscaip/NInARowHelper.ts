@@ -10,8 +10,7 @@ import { SCORE } from './SCORE';
 
 export class NInARowHelper<T> {
 
-    public constructor(private readonly isInRange: (coord: Coord) => boolean, // TODO: generalize this based on state.isOnBoard
-                       private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
+    public constructor(private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
                        private readonly N: number)
     {
     }
@@ -86,7 +85,7 @@ export class NInARowHelper<T> {
         let coord: Coord = new Coord(i.x + dir.x, i.y + dir.y);
         let testedCoords: number = 1;
         const opponent: Player = ally.getOpponent();
-        while (this.isInRange(coord) && testedCoords < this.N) {
+        while (state.isOnBoard(coord) && testedCoords < this.N) {
             // while we're on the board
             const currentSpace: T = state.getPieceAt(coord);
             if (this.getOwner(currentSpace, state) === opponent) {

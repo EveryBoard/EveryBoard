@@ -4,9 +4,9 @@ import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
 import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
 import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
-import { AwaleComponent } from 'src/app/games/awale/awale.component';
-import { AwaleRules } from 'src/app/games/awale/AwaleRules';
-import { AwaleTutorial } from 'src/app/games/awale/AwaleTutorial';
+import { AwaleComponent } from 'src/app/games/mancala/awale/awale.component';
+import { AwaleRules } from 'src/app/games/mancala/awale/AwaleRules';
+import { AwaleTutorial } from 'src/app/games/mancala/awale/AwaleTutorial';
 import { AbaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
 import { AbaloneRules } from 'src/app/games/abalone/AbaloneRules';
 
@@ -54,6 +54,9 @@ import { HnefataflRules } from 'src/app/games/tafl/hnefatafl/HnefataflRules';
 import { HnefataflTutorial } from 'src/app/games/tafl/hnefatafl/HnefataflTutorial';
 import { HnefataflComponent } from 'src/app/games/tafl/hnefatafl/hnefatafl.component';
 
+import { KalahComponent } from 'src/app/games/mancala/kalah/kalah.component';
+import { KalahTutorial } from 'src/app/games/mancala/kalah/KalahTutorial';
+import { KalahRules } from 'src/app/games/mancala/kalah/KalahRules';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
 import { KamisadoTutorial } from 'src/app/games/kamisado/KamisadoTutorial';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
@@ -133,7 +136,7 @@ class GameDescription {
 
     public static readonly APAGOS: Localized = () => $localize`Very simple game, but, will you be able to win everytime?`;
 
-    public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
+    public static readonly AWALE: Localized = () => $localize`The most widespread of the Mancalas.`;
 
     public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
@@ -158,6 +161,8 @@ class GameDescription {
     public static readonly HIVE: Localized = () => $localize`You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent's queen in order to win!`;
 
     public static readonly HNEFATAFL: Localized = () => $localize`The Viking board game! Invaders must capture the king, defender must make him escape!`;
+
+    public static readonly KALAH: Localized = () => $localize`A modern version of the famous African strategy game!`;
 
     public static readonly KAMISADO: Localized = () => $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
@@ -201,52 +206,64 @@ class GameDescription {
 
 class RulesConfigDescriptions {
 
+    public static readonly AWALE: RulesConfigDescription = { fields: [
+        { name: 'width', i18nName: (): string => $localize`Width`, defaultValue: 6 },
+        { name: 'seedByHouse', i18nName: (): string => $localize`Seed by house`, defaultValue: 4 },
+        { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`, defaultValue: false },
+        { name: 'mustFeed', i18nName: (): string => $localize`Must feed`, defaultValue: true },
+        { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: false },
+    ] };
+
     public static readonly BRANDHUB: RulesConfigDescription = { fields: [
-        { name: 'CASTLE_IS_LEFT_FOR_GOOD', defaultValue: true },
-        { name: 'BORDER_CAN_SURROUND_KING', defaultValue: false },
-        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', defaultValue: true },
-        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', defaultValue: true },
-        { name: 'INVADER_STARTS', defaultValue: true },
+        { name: 'castleIsLeftForGood', i18nName: (): string => $localize`Castle is left for good`, defaultValue: true },
+        { name: 'borderCanSurroundKing', i18nName: (): string => $localize`Border can surround king`, defaultValue: false },
+        { name: 'centralThroneCanSurroundKing', i18nName: (): string => $localize`Central throne can surround king`, defaultValue: true },
+        { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: true },
+        { name: 'invaderStarts', i18nName: (): string => $localize`Invader Starts`, defaultValue: true },
     ] };
 
     public static readonly GO: RulesConfigDescription = { fields: [
-        { name: 'width', defaultValue: 19 },
-        { name: 'height', defaultValue: 19 },
+        { name: 'width', i18nName: (): string => $localize`Width`, defaultValue: 19 },
+        { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 19 },
     ] };
 
     public static readonly HNEFATAFL: RulesConfigDescription = { fields: [
-        { name: 'CASTLE_IS_LEFT_FOR_GOOD', defaultValue: false },
-        { name: 'BORDER_CAN_SURROUND_KING', defaultValue: true },
-        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', defaultValue: false },
-        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', defaultValue: false },
-        { name: 'INVADER_STARTS', defaultValue: true },
+        { name: 'castleIsLeftForGood', i18nName: (): string => $localize`Castle is left for good`, defaultValue: false },
+        { name: 'borderCanSurroundKing', i18nName: (): string => $localize`Border can surround king`, defaultValue: true },
+        { name: 'centralThroneCanSurroundKing', i18nName: (): string => $localize`Central throne can surround king`, defaultValue: false },
+        { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: false },
+        { name: 'invaderStarts', i18nName: (): string => $localize`Invader Starts`, defaultValue: true },
     ] };
 
-    public static readonly MANCALAS: RulesConfigDescription = { fields: [
-        { name: 'width', defaultValue: 6 },
-        { name: 'seed_by_house', defaultValue: 4 },
+    public static readonly KALAH: RulesConfigDescription = { fields: [
+        { name: 'width', i18nName: (): string => $localize`Width`, defaultValue: 6 },
+        { name: 'seedByHouse', i18nName: (): string => $localize`Seed by house`, defaultValue: 4 },
+        { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`, defaultValue: true },
+        { name: 'mustFeed', i18nName: (): string => $localize`Must feed`, defaultValue: false },
+        { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: true },
     ] };
 
     public static readonly P4: RulesConfigDescription = { fields: [
-        { name: 'width', defaultValue: 7 },
-        { name: 'height', defaultValue: 6 },
+        { name: 'width', i18nName: (): string => $localize`Width`, defaultValue: 7 },
+        { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 6 },
     ] };
 
     public static readonly TABLUT: RulesConfigDescription = { fields: [
-        { name: 'CASTLE_IS_LEFT_FOR_GOOD', defaultValue: false },
-        { name: 'BORDER_CAN_SURROUND_KING', defaultValue: true },
-        { name: 'CENTRAL_THRONE_CAN_SURROUND_KING', defaultValue: false },
-        { name: 'KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED', defaultValue: false },
-        { name: 'INVADER_STARTS', defaultValue: true },
+        { name: 'castleIsLeftForGood', i18nName: (): string => $localize`Castle is left for good`, defaultValue: false },
+        { name: 'borderCanSurroundKing', i18nName: (): string => $localize`Border can surround king`, defaultValue: true },
+        { name: 'centralThroneCanSurroundKing', i18nName: (): string => $localize`Central throne can surround king`, defaultValue: false },
+        { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: false },
+        { name: 'invaderStarts', i18nName: (): string => $localize`Invader Starts`, defaultValue: true },
     ] };
 
 }
 
 export const rulesConfigDescriptionMap: MGPMap<string, RulesConfigDescription> = new MGPMap([
-    { key: 'Awale', value: RulesConfigDescriptions.MANCALAS },
+    { key: 'Awale', value: RulesConfigDescriptions.AWALE },
     { key: 'Brandhub', value: RulesConfigDescriptions.BRANDHUB },
     { key: 'Go', value: RulesConfigDescriptions.GO },
     { key: 'Hnefatafl', value: RulesConfigDescriptions.HNEFATAFL },
+    { key: 'Kalah', value: RulesConfigDescriptions.KALAH },
     { key: 'P4', value: RulesConfigDescriptions.P4 },
     { key: 'Tablut', value: RulesConfigDescriptions.TABLUT },
 ]);
@@ -255,7 +272,7 @@ export class GameInfo {
     // Games sorted by creation date
     public static ALL_GAMES: () => GameInfo[] = () => [
         new GameInfo($localize`Four in a Row`, 'P4', P4Component, new P4Tutorial(), P4Rules.get(), new Date('2018-08-28'), GameDescription.P4(), RulesConfigDescriptions.P4),
-        new GameInfo($localize`Awalé`, 'Awale', AwaleComponent, new AwaleTutorial(), AwaleRules.get(), new Date('2018-11-29'), GameDescription.AWALE(), RulesConfigDescriptions.MANCALAS), // 93 days after P4
+        new GameInfo($localize`Awalé`, 'Awale', AwaleComponent, new AwaleTutorial(), AwaleRules.get(), new Date('2018-11-29'), GameDescription.AWALE(), RulesConfigDescriptions.AWALE), // 93 days after P4
         new GameInfo($localize`Quarto`, 'Quarto', QuartoComponent, new QuartoTutorial(), QuartoRules.get(), new Date('2018-12-09'), GameDescription.QUARTO()), // 10 days after Awale
         new GameInfo($localize`Tablut`, 'Tablut', TablutComponent, new TablutTutorial(), TablutRules.get(), new Date('2018-12-27'), GameDescription.TABLUT(), RulesConfigDescriptions.TABLUT), // 26 days after Quarto
 
@@ -293,6 +310,7 @@ export class GameInfo {
         new GameInfo($localize`Connect Six`, 'ConnectSix', ConnectSixComponent, new ConnectSixTutorial(), ConnectSixRules.get(), new Date('2023-05-13'), GameDescription.CONNECT_SIX()),
         new GameInfo($localize`Pente`, 'Pente', PenteComponent, new PenteTutorial(), PenteRules.get(), new Date('2023-05-20'), GameDescription.PENTE()),
         new GameInfo($localize`Teeko`, 'Teeko', TeekoComponent, new TeekoTutorial(), TeekoRules.get(), new Date('2023-07-30'), GameDescription.TEEKO()),
+        new GameInfo($localize`Kalah`, 'Kalah', KalahComponent, new KalahTutorial(), KalahRules.get(), new Date('2023-09-07'), GameDescription.KALAH(), RulesConfigDescriptions.KALAH),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -23,6 +23,7 @@ import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { RulesConfig, RulesConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -65,7 +66,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      * with the part creation component
      */
     public static TOKEN_INTERVAL: number = 5 * 1000;
-
     public static TOKEN_TIMEOUT: number = 5 * 1000 * 2;
 
     public partType: typeof PartType = PartType;
@@ -76,6 +76,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
+
+    @ViewChild('rulesConfigurationComponent') public rulesConfigurationComponent: RulesConfigurationComponent;
 
     public gameStarted: boolean = false;
 
@@ -106,6 +108,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public configFormGroup: FormGroup;
 
     public allDocDeleted: boolean = false;
+
+    protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty(); // Provided by RulesConfigurationComponent
 
     public constructor(public readonly router: Router,
                        public readonly actRoute: ActivatedRoute,
@@ -306,7 +310,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.configRoomService.reviewConfig(this.partId);
     }
     public async proposeConfig(): Promise<void> {
-        // TODO UNIT TEST: when proposeConfig, the change made in the rulesConfig must be saved from here
         const chosenOpponentName: string = this.getForm('chosenOpponent').value;
         const partType: string = this.getForm('partType').value;
         const maxMoveDur: number = this.getForm('maximalMoveDuration').value;
@@ -318,7 +321,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                     PartType.of(partType),
                                                     maxMoveDur,
                                                     FirstPlayer.of(firstPlayer),
-                                                    totalPartDuration);
+                                                    totalPartDuration,
+                                                    this.rulesConfig.get());
     }
     public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
@@ -342,6 +346,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return this.onGameCanceled();
         } else {
             const configRoom: ConfigRoom = configRoomOpt.get();
+            if (this.rulesConfig.isAbsent()) {
+                console.log('setting default config cause rulesConfig is absent')
+                this.rulesConfig = MGPOptional.of(configRoom.rulesConfig);
+            }
             if (this.chosenOpponentJustLeft(configRoom) &&
                 this.userIsCreator(configRoom))
             {
@@ -483,6 +491,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         // triggers the redirection that will be applied for every subscribed user
         return this.gameService.acceptConfig(this.partId, Utils.getNonNullable(this.currentConfigRoom));
     }
+
+    public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
+        console.log("received rules config, its", rulesConfig)
+        this.rulesConfig = rulesConfig;
+    }
+
     public async ngOnDestroy(): Promise<void> {
         // This will unsubscribe from all observables
         this.ngUnsubscribe.next();
@@ -518,9 +532,5 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             await this.currentGameService.removeCurrentGame();
             await this.configRoomService.cancelJoining(this.partId);
         }
-    }
-
-    public saveRulesConfig(rulesConfig: RulesConfig): Promise<void> {
-        return this.configRoomService.changeRulesConfig(this.partId, rulesConfig);
     }
 }

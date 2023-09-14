@@ -16,7 +16,11 @@ import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePiec
 import { LodestoneState, LodestonePositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
 import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
-export class LodestoneNode extends MGPNode<LodestoneRules, LodestoneMove, LodestoneState, RulesConfig, LodestoneInfos> {}
+export class LodestoneNode extends MGPNode<LodestoneRules,
+                                           LodestoneMove,
+                                           LodestoneState,
+                                           RulesConfig,
+                                           LodestoneInfos> {}
 
 export type LodestoneInfos = {
     board: LodestonePiece[][]

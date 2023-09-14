@@ -19,14 +19,10 @@ describe('CoerceoComponent', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
-        const gameComponent: CoerceoComponent = testUtils.getGameComponent();
-        expect(gameComponent.isEmptySpace(x, y)).toBeTrue();
-        expect(gameComponent.getEmptyClass(x, y)).toBe('captured-alternate-fill');
+        testUtils.expectElementToHaveClass('#space_' + x + '_' + y, 'captured-alternate-fill');
     }
     function expectCoordToBeOfCapturedFill(x: number, y: number): void {
-        const gameComponent: CoerceoComponent = testUtils.getGameComponent();
-        expect(gameComponent.isPyramid(x, y)).toBeTrue();
-        expect(gameComponent.getPyramidClass(x, y)).toBe('captured-fill');
+        testUtils.expectElementToHaveClass('#pyramid_' + x + '_' + y, 'captured-fill');
     }
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');
@@ -39,7 +35,7 @@ describe('CoerceoComponent', () => {
             const board: Table<FourStatePiece> = CoerceoState.getInitialState().getCopiedBoard();
             const state: CoerceoState = new CoerceoState(board, 0, [1, 0], [0, 0]);
             testUtils.expectElementNotToExist('#tilesCount0');
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             testUtils.expectElementToExist('#tilesCount0');
         }));
         it('should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
@@ -73,7 +69,7 @@ describe('CoerceoComponent', () => {
             const previousMove: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(8, 6));
 
             // When rendering the board
-            testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, previousState, previousMove);
 
             // Then we should see removed tiles
             expectCoordToBeOfCapturedFill(8, 6);
@@ -116,7 +112,7 @@ describe('CoerceoComponent', () => {
             const state: CoerceoState = new CoerceoState(board, 3, [0, 0], [1, 0]);
 
             // When rendering the board
-            testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, previousState, previousMove);
 
             // Then we should see removed tiles
             expectCoordToBeOfCapturedFill(8, 6);
@@ -236,9 +232,9 @@ describe('CoerceoComponent', () => {
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
-            testUtils.setupState(state, undefined, CoerceoRegularMove.of(new Coord(8, 9), new Coord(6, 9)));
-            testUtils.expectElementToHaveClasses('#last_end_6_9', ['base', 'no-fill', 'last-move-stroke']);
-            testUtils.expectElementToHaveClasses('#last_start_8_9', ['base', 'no-fill', 'last-move-stroke']);
+            await testUtils.setupState(state, undefined, CoerceoRegularMove.of(new Coord(8, 9), new Coord(6, 9)));
+            testUtils.expectElementToHaveClasses('#last_end_6_9', ['base', 'no-fill', 'mid-stroke', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#last_start_8_9', ['base', 'no-fill', 'mid-stroke', 'last-move-stroke']);
 
             // When applying a tile exchange
             await testUtils.expectMoveSuccess('#click_6_9',

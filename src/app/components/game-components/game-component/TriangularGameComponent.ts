@@ -16,52 +16,66 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, C, L>,
                                               L = void>
     extends GameComponent<R, M, S, C, L>
 {
-    public override SPACE_SIZE: number = 50;
+    public override SPACE_SIZE: number = 100;
 
     public board: Table<P>;
 
-    public getTriangleCornerCoords(x: number, y: number): Coord[] {
-        if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
-        else return this.getUpwardCoordinate(x, y);
+    protected getTriangleCornerCoords(x: number, y: number): Coord[] {
+        if ((x + y) % 2 === 0) {
+            return this.getUpwardCoordinate();
+        } else {
+            return this.getDownwardCoordinate();
+        }
     }
-    public getTriangleCoordinate(x: number, y: number): string {
+    public getTrianglePoints(x: number, y: number): string {
         const coords: Coord[] = this.getTriangleCornerCoords(x, y);
         const strings: string[] = coords.map((c: Coord) => c.x + ',' + c.y);
         return strings.reduce((sum: string, last: string) => sum + ',' + last);
     }
-    public getDownwardCoordinate(x: number, y: number): Coord[] {
-        const left: number = this.SPACE_SIZE * 0.5 * x;
-        const middle: number = this.SPACE_SIZE * 0.5 * (x + 1);
-        const right: number = this.SPACE_SIZE * 0.5 * (x + 2);
-        const top: number = this.SPACE_SIZE * y;
-        const bottom: number = this.SPACE_SIZE * (y + 1);
+    public getTriangleTranslateCoord(x: number, y: number): Coord {
+        const translateX: number = 0.5 * x * this.SPACE_SIZE;
+        const translateY: number = y * this.SPACE_SIZE;
+        return new Coord(translateX, translateY);
+    }
+    public getTriangleTranslate(x: number, y: number): string {
+        const translate: Coord = this.getTriangleTranslateCoord(x, y);
+        return 'translate(' + translate.x + ', ' + translate.y + ')';
+    }
+    private getDownwardCoordinate(): Coord[] {
+        const left: number = - this.SPACE_SIZE / 2;
+        const middle: number = 0;
+        const right: number = this.SPACE_SIZE / 2;
+        const top: number = - this.SPACE_SIZE / 2;
+        const bottom: number = this.SPACE_SIZE / 2;
         const leftCorner: Coord = new Coord(left, top);
         const middleCorner: Coord = new Coord(middle, bottom);
         const rightCorner: Coord = new Coord(right, top);
         return [leftCorner, middleCorner, rightCorner, leftCorner];
     }
-    public getUpwardCoordinate(x: number, y: number): Coord[] {
-        const left: number = this.SPACE_SIZE * 0.5 * x;
-        const middle: number = this.SPACE_SIZE * 0.5 * (x + 1);
-        const right: number = this.SPACE_SIZE * 0.5 * (x + 2);
-        const top: number = this.SPACE_SIZE * y;
-        const bottom: number = this.SPACE_SIZE * (y + 1);
+    private getUpwardCoordinate(): Coord[] {
+        const left: number = - this.SPACE_SIZE / 2;
+        const middle: number = 0;
+        const right: number = this.SPACE_SIZE / 2;
+        const top: number = - this.SPACE_SIZE / 2;
+        const bottom: number = this.SPACE_SIZE / 2;
         const leftCorner: Coord = new Coord(left, bottom);
         const middleCorner: Coord = new Coord(middle, top);
         const rightCorner: Coord = new Coord(right, bottom);
         return [leftCorner, middleCorner, rightCorner, leftCorner];
     }
-    public getPyramidCoordinate(x: number, y: number): string {
-        if ((x+y)%2 === 1) return this.getDownwardPyramidCoordinate(x, y);
-        else return this.getUpwardPyramidCoordinate(x, y);
+    public getPyramidPoints(x: number, y: number): string {
+        if ((x + y) % 2 === 1) {
+            return this.getDownwardPyramidPoints();
+        } else {
+            return this.getUpwardPyramidPoints();
+        }
     }
-    public getDownwardPyramidCoordinate(x: number, y: number): string {
-        const zx: number = this.SPACE_SIZE * x / 2;
-        const zy: number = this.SPACE_SIZE * y;
-        const UP_LEFT: string = zx + ', ' + zy;
-        const UP_RIGHT: string = (zx+this.SPACE_SIZE) + ', ' + zy;
-        const DOWN_CENTER: string = (zx+(this.SPACE_SIZE/2)) + ', ' + (zy+this.SPACE_SIZE);
-        const CENTER: string = (zx+(this.SPACE_SIZE / 2)) + ', ' + (zy+(this.SPACE_SIZE / 2));
+    private getDownwardPyramidPoints(): string {
+        const halfWidth: number = this.SPACE_SIZE / 2;
+        const UP_LEFT: string = (- halfWidth) + ', ' + (- halfWidth);
+        const UP_RIGHT: string = halfWidth + ', ' + (- halfWidth);
+        const DOWN_CENTER: string = '0, ' + halfWidth;
+        const CENTER: string = '0, 0';
         return UP_LEFT + ',' +
                DOWN_CENTER + ',' +
                CENTER + ',' +
@@ -74,13 +88,12 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, C, L>,
                CENTER + ',' +
                UP_RIGHT;
     }
-    public getUpwardPyramidCoordinate(x: number, y: number): string {
-        const zx: number = this.SPACE_SIZE * x / 2;
-        const zy: number = (y + 1) * this.SPACE_SIZE;
-        const DOWN_LEFT: string = zx + ', ' + zy;
-        const DOWN_RIGHT: string = (zx + this.SPACE_SIZE) + ', ' + zy;
-        const UP_CENTER: string = (zx + (this.SPACE_SIZE / 2)) + ', ' + (zy - this.SPACE_SIZE);
-        const CENTER: string = (zx + (this.SPACE_SIZE / 2)) + ', ' + (zy- (this.SPACE_SIZE / 2));
+    private getUpwardPyramidPoints(): string {
+        const halfWidth: number = this.SPACE_SIZE / 2;
+        const DOWN_LEFT: string = (- halfWidth) + ', ' + halfWidth;
+        const DOWN_RIGHT: string = halfWidth + ', ' + halfWidth;
+        const UP_CENTER: string = '0, ' + (- halfWidth);
+        const CENTER: string = '0, 0';
         return DOWN_LEFT + ',' +
                UP_CENTER + ',' +
                CENTER + ',' +

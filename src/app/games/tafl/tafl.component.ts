@@ -14,6 +14,10 @@ import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { ActivatedRoute } from '@angular/router';
 import { TaflConfig } from './TaflConfig';
+import { TaflMinimax } from './TaflMinimax';
+import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
 
 export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
     extends RectangularGameComponent<R, M, S, TaflPawn, TaflConfig>
@@ -39,12 +43,12 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const width: number = (abstractWidth * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         return begin + ' ' + begin + ' ' + width + ' ' + width;
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
         this.updateViewInfo();
     }
-    public override showLastMove(move: M): void {
+    public override async showLastMove(move: M): Promise<void> {
         const previousState: S = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
@@ -79,7 +83,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.viewInfo = { pieceClasses };
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -106,7 +110,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
             return this.cancelMove(move.getReason());
         }
     }
-    private choosePiece(coord: Coord): MGPValidation {
+    private async choosePiece(coord: Coord): Promise<MGPValidation> {
         if (this.board[coord.y][coord.x] === TaflPawn.UNOCCUPIED) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
@@ -183,5 +187,13 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
+    }
+    protected createMinimaxes(): TaflMinimax[] {
+        return [
+            new TaflMinimax(this.rules, 'DummyBot'),
+            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
+            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
+            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
+        ];
     }
 }

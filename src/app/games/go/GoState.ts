@@ -114,10 +114,6 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.phase = phase;
     }
     public static getInitialState(config: GoConfig): GoState {
-        if (config['width'] === undefined) {
-            console.log(config, 'kipet')
-            throw new Error('sodku')
-        }
         const board: Table<GoPiece> = GoState.getStartingBoard(config);
         return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
     }
@@ -125,8 +121,10 @@ export class GoState extends GameStateWithTable<GoPiece> {
         return [this.captured[0], this.captured[1]];
     }
     public static getStartingBoard(config: RulesConfig): Table<GoPiece> {
+        // eslint-disable-next-line dot-notation
         const width: number = config['width'] as number;
         Utils.assert(width !== undefined, 'Go RulesConfig must have a field width');
+        // eslint-disable-next-line dot-notation
         const height: number = config['height'] as number;
         Utils.assert(height !== undefined, 'Go RulesConfig must have a field height');
         return ArrayUtils.createTable(width, height, GoPiece.EMPTY);

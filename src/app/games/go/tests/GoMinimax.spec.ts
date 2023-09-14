@@ -5,7 +5,6 @@ import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { GoState, GoPiece, Phase, GoConfig } from '../GoState';
 import { GoNode, GoRules } from '../GoRules';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
 
 describe('GoMinimax', () => {
 

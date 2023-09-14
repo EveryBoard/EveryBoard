@@ -10,7 +10,7 @@ import { Localized } from '../utils/LocaleUtils';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
-import { RulesConfig } from '../jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigUtils } from '../jscaip/ConfigUtil';
 
 @Injectable({
     providedIn: 'root',
@@ -65,7 +65,7 @@ export class ConfigRoomService {
         const subCollection: IFirestoreDAO<FirestoreJSONObject> = this.configRoomDAO.subCollectionDAO(configRoomId, 'candidates');
         return subCollection.observingWhere([], observer);
     }
-    public async createInitialConfigRoom(configRoomId: string): Promise<void> {
+    public async createInitialConfigRoom(configRoomId: string, gameName: string): Promise<void> {
         const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const newConfigRoom: ConfigRoom = {
             chosenOpponent: null,
@@ -75,7 +75,7 @@ export class ConfigRoomService {
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator,
-            rulesConfig: {}, // TODO: check to input here the default values of the config
+            rulesConfig: RulesConfigUtils.getGameDefaultConfig(gameName),
         };
         return this.configRoomDAO.set(configRoomId, newConfigRoom);
     }
@@ -125,7 +125,8 @@ export class ConfigRoomService {
                                partType: PartType,
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
-                               totalPartDuration: number)
+                               totalPartDuration: number,
+                               rulesConfig: RulesConfig)
     : Promise<void>
     {
         return this.configRoomDAO.update(configRoomId, {
@@ -135,6 +136,7 @@ export class ConfigRoomService {
             maximalMoveDuration,
             totalPartDuration,
             firstPlayer: firstPlayer.value,
+            rulesConfig,
         });
     }
     public setChosenOpponent(configRoomId: string, chosenOpponent: MinimalUser): Promise<void> {

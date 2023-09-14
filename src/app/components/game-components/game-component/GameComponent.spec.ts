@@ -80,6 +80,10 @@ describe('GameComponent', () => {
             selectRemaining: [new HivePiece(Player.ZERO, 'QueenBee')],
         },
         Hnefatafl: { onClick: [0, 0] },
+        Kalah: {
+            onClick: [0, 0],
+            onStoreClick: [0],
+        },
         Kamisado: { onClick: [0, 0] },
         Lasca: { onClick: [0, 0] },
         LinesOfAction: { onClick: [0, 0] },
@@ -155,7 +159,7 @@ describe('GameComponent', () => {
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
                 await ComponentTestUtils.forGame(gameInfo.urlName);
             const component: AbstractGameComponent = testUtils.getGameComponent();
-            testUtils.getWrapper().role = PlayerOrNone.NONE; // TODO: setRole ?
+            await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
             testUtils.detectChanges();
             tick(0);
             expect(component).toBeDefined();
@@ -186,6 +190,7 @@ describe('GameComponent', () => {
             expect(component.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
+            expect(component.availableMinimaxes.length).withContext('minimax list empty for ' + gameInfo.urlName).toBeGreaterThan(0);
         }));
     }
 });

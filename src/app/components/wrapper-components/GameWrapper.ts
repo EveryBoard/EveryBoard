@@ -54,24 +54,27 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
     {
         super(actRoute);
     }
+
     private getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
         const gameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
+
     protected async afterViewInit(): Promise<boolean> {
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
             const rulesConfig: RulesConfig = await this.getConfig();
-            this.createGameComponent(componentType.get());
+            await this.createGameComponent(componentType.get());
             this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig);
-            this.gameComponent.updateBoard();
+            await this.gameComponent.updateBoard(false);
             return true;
         } else {
             return false;
         }
     }
+
     private async getMatchingComponentAndNavigateOutIfAbsent(): Promise<MGPOptional<Type<AbstractGameComponent>>> {
         const gameName: string = this.getGameName();
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
@@ -82,13 +85,13 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
             return component;
         }
     }
-    private createGameComponent(component: Type<AbstractGameComponent>): void {
+
+    private async createGameComponent(component: Type<AbstractGameComponent>): Promise<void> {
         Utils.assert(this.boardRef != null, 'Board element should be present');
 
         const componentRef: ComponentRef<AbstractGameComponent> =
             Utils.getNonNullable(this.boardRef).createComponent(component);
         this.gameComponent = componentRef.instance;
-
 
         // chooseMove is called by the game component when a move is done
         this.gameComponent.chooseMove = (m: Move): Promise<MGPValidation> => {
@@ -96,53 +99,54 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
             return this.receiveValidMove(m);
         };
         // canUserPlay is called upon a click by the user
-        this.gameComponent.canUserPlay = (elementName: string): MGPValidation => {
+        this.gameComponent.canUserPlay = (elementName: string): Promise<MGPValidation> => {
             return this.canUserPlay(elementName);
         };
         this.gameComponent.isPlayerTurn = (): boolean => {
             return this.isPlayerTurn();
         };
         // Mostly for interception by TutorialGameWrapper
-        this.gameComponent.cancelMoveOnWrapper = (reason?: string): void => {
-            this.onCancelMove(reason);
+        this.gameComponent.cancelMoveOnWrapper = (reason?: string): Promise<void> => {
+            return this.onCancelMove(reason);
         };
         this.gameComponent.getRulesConfigFromWrapper = (): Promise<RulesConfig> => {
             return this.getConfig();
         };
-        this.setRole(this.role);
+        await this.setRole(this.role);
     }
-    public setRole(role: PlayerOrNone): void {
+
+    public async setRole(role: PlayerOrNone): Promise<void> {
         this.role = role;
         this.gameComponent.role = this.role;
         if (this.gameComponent.hasAsymmetricBoard) {
             this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
         }
-        this.updateBoardAndShowLastMove(); // Trigger redrawing of the board (might need to be rotated 180°)
+        await this.updateBoardAndShowLastMove(false); // Trigger redrawing of the board (might need to be rotated 180°)
     }
+
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, this.gameComponent.getState());
         if (legality.isFailure()) {
-            this.gameComponent.cancelMove(legality.getReason());
+            await this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);
         }
         this.gameComponent.cancelMoveAttempt();
         await this.onLegalUserMove(move);
         return MGPValidation.SUCCESS;
     }
+
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public abstract onCancelMove(_reason?: string): void;
+    public abstract onCancelMove(_reason?: string): Promise<void>;
 
     public abstract getPlayer(): P;
 
     public async getConfig(): Promise<RulesConfig> { // TODO: check for each 4 wrappers
-        const gameURL: string = this.getGameName();
-        const game: GameInfo = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameURL)[0];
-        const rulesConfigDescription: RulesConfigDescription = game.rulesConfigDescription;
-        return RulesConfigUtils.getDefaultConfig(rulesConfigDescription);
+        const gameName: string = this.getGameName();
+        return RulesConfigUtils.getGameDefaultConfig(gameName);
     }
 
-    public canUserPlay(_clickedElementName: string): MGPValidation {
+    public async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
         if (this.role === PlayerOrNone.NONE) {
             const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
             return MGPValidation.failure(message);
@@ -155,6 +159,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
         }
         return MGPValidation.SUCCESS;
     }
+
     public isPlayerTurn(): boolean {
         if (this.role === PlayerOrNone.NONE) {
             return false;
@@ -172,22 +177,25 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
             return true;
         }
     }
+
     public getBoardHighlight(): string[] {
         if (this.endGame) {
             return ['endgame-bg'];
-        }
-        if (this.isPlayerTurn()) {
+        } else if (this.isPlayerTurn()) {
             const turn: number = this.gameComponent.getTurn();
             return ['player' + (turn % 2) + '-bg'];
+        } else {
+            return [];
         }
-        return [];
     }
-    protected updateBoardAndShowLastMove(): void {
+
+    protected async updateBoardAndShowLastMove(triggerAnimation: boolean): Promise<void> {
         this.gameComponent.cancelMoveAttempt();
-        this.gameComponent.updateBoard();
+        this.gameComponent.hideLastMove();
+        await this.gameComponent.updateBoard(triggerAnimation);
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
-            this.gameComponent.showLastMove(move);
+            await this.gameComponent.showLastMove(move);
         }
     }
 

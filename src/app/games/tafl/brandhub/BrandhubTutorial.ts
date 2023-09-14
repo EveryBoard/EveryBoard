@@ -3,6 +3,7 @@ import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
 import { BrandhubState } from 'src/app/games/tafl/brandhub/BrandhubState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { brandhubConfig } from './brandhubConfig';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -14,12 +15,12 @@ export class BrandhubTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
-            BrandhubState.getInitialState(),
+            BrandhubState.getInitialState(brandhubConfig),
         ),
         TutorialStep.anyMove(
             $localize`Moving`,
             $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move: <ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a corner throne.</li><li>Once the king left his central throne, no piece can land on it, but all can pass over it.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
-            BrandhubState.getInitialState(),
+            BrandhubState.getInitialState(brandhubConfig),
             BrandhubMove.of(new Coord(3, 1), new Coord(1, 1)),
             $localize`Congratulations!`,
         ),

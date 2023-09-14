@@ -77,9 +77,9 @@ describe('PartCreationComponent', () => {
         testUtils.detectChanges();
         tick(0);
     }
-    async function clickElement(elementName: string): Promise<void> {
+    async function clickElement(elementName: string): Promise<void> { // Ticketted Refactor (2022.124)
         testUtils.detectChanges();
-        await testUtils.clickElement(elementName, false); // Ticketted Refactor (2022.124)
+        await testUtils.clickElement(elementName, false);
     }
     function expectElementToExist(elementName: string): void { // Ticketted Refactor (2022.124)
         testUtils.detectChanges();
@@ -112,6 +112,7 @@ describe('PartCreationComponent', () => {
         currentGameService = TestBed.inject(CurrentGameService);
         component = testUtils.getComponent();
         component.partId = 'configRoomId';
+        component.rulesConfigDescription = { fields: [] };
         await chatDAO.set('configRoomId', { messages: [], status: 'dummy status' });
         await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
@@ -373,6 +374,7 @@ describe('PartCreationComponent', () => {
                     totalPartDuration: 1000,
                     chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                     firstPlayer: FirstPlayer.RANDOM.value,
+                    rulesConfig: {},
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -396,6 +398,7 @@ describe('PartCreationComponent', () => {
                     totalPartDuration: 900,
                     chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                     firstPlayer: FirstPlayer.RANDOM.value,
+                    rulesConfig: {},
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -415,6 +418,59 @@ describe('PartCreationComponent', () => {
                     partStatus: PartStatus.CONFIG_PROPOSED.value,
                 };
                 expect(component.currentConfigRoom).toEqual(proposedConfig);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+            it('should not transfer rules config when modifying field', fakeAsync(async() => {
+                // Given a component where creator selected a config and chose an opponent
+                awaitComponentInitialization();
+                await mockCandidateArrival();
+                await chooseOpponent();
+
+                // When changing a rules config but not saving config
+                component.saveRulesConfig(MGPOptional.of({ chaussettes_de_crepes: 5 }));
+
+                // Then the config should not have been sent yet
+                const proposedConfig: ConfigRoom = {
+                    ...ConfigRoomMocks.INITIAL,
+                    chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+                };
+                expect(component.currentConfigRoom).toEqual(proposedConfig);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+            it('should transfer rules config when proposing config', fakeAsync(async() => {
+                // Given a component where creator selected a config and chose an opponent
+                awaitComponentInitialization();
+                await mockCandidateArrival();
+                await chooseOpponent();
+
+                // When changing a rules config then proposing config
+                component.saveRulesConfig(MGPOptional.of({ chaussettes_de_crepes: 5 }));
+                await proposeConfig();
+
+                // Then currentConfigRoom should be updated with the proposed config
+                const proposedConfig: ConfigRoom = {
+                    ...ConfigRoomMocks.INITIAL_RANDOM,
+                    chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+                    partStatus: PartStatus.CONFIG_PROPOSED.value,
+                    rulesConfig: {
+                        chaussettes_de_crepes: 5,
+                    },
+                };
+                expect(component.currentConfigRoom).toEqual(proposedConfig);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+            it('should disable config proposition button when rules config is invalid', fakeAsync(async() => {
+                // Given a component where creator selected a config and chose an opponent
+                awaitComponentInitialization();
+                await mockCandidateArrival();
+                await chooseOpponent();
+
+                // When changing a rules config to something illegal
+                // (then as a rule, we'll get informed by an empty optional)
+                component.saveRulesConfig(MGPOptional.empty());
+
+                // Then the propose config should be disabled
+                testUtils.expectElementToBeDisabled('#proposeConfig');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });

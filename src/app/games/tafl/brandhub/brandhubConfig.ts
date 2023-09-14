@@ -2,13 +2,13 @@ import { TaflConfig } from '../TaflConfig';
 
 export const brandhubConfig: TaflConfig = {
 
-    CASTLE_IS_LEFT_FOR_GOOD: true,
+    castleIsLeftForGood: true,
 
-    BORDER_CAN_SURROUND_KING: false,
+    borderCanSurroundKing: false,
 
-    CENTRAL_THRONE_CAN_SURROUND_KING: true,
+    centralThroneCanSurroundKing: true,
 
-    KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: true,
+    kingFarFromHomeCanBeSandwiched: true,
 
-    INVADER_STARTS: true,
+    invaderStarts: true,
 };

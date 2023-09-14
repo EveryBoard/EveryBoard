@@ -1,6 +1,6 @@
 import { Move } from '../../../jscaip/Move';
 import { Rules } from '../../../jscaip/Rules';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -63,6 +63,7 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
                                     L = void,
                                     B extends BoardValue = BoardValue>
     extends BaseGameComponent
+    implements OnInit
 {
     public encoder: Encoder<M>;
 
@@ -97,19 +98,13 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
 
     public chooseMove: (move: M) => Promise<MGPValidation>;
 
-    public canUserPlay: (element: string) => MGPValidation;
+    public canUserPlay: (element: string) => Promise<MGPValidation>;
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
     public getRulesConfigFromWrapper: () => Promise<C>;
 
     public role: PlayerOrNone;
-
-    /* all game rules should be able to call the game-wrapper
-     * the aim is that the game-wrapper will take care of manage what follow
-     * ie: - if it's online, he'll tell the game-component when the remote opponent has played
-     *     - if it's offline, he'll tell the game-component what the bot have done
-     */
 
     public constructor(public readonly messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
         super(actRoute);
@@ -118,9 +113,12 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
+        if (this.node.move.isPresent()) {
+            await this.showLastMove(this.node.move.get());
+        }
         if (reason == null) {
             return MGPValidation.SUCCESS;
         } else {
@@ -131,7 +129,7 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
     public cancelMoveAttempt(): void {
         // Override if need be
     }
-    public abstract updateBoard(): void;
+    public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {
         const gameName: string = this.constructor.name;
@@ -144,14 +142,27 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
     public getCurrentPlayer(): Player {
         return this.node.gameState.getCurrentPlayer();
     }
+    public getCurrentOpponent(): Player {
+        return this.node.gameState.getCurrentOpponent();
+    }
     public getState(): S {
         return this.node.gameState;
     }
     public getPreviousState(): S {
         return this.node.mother.get().gameState;
     }
-    public showLastMove(move: M): void {
+    public async showLastMove(move: M): Promise<void> {
         // Not needed by default
+        return;
+    }
+    public hideLastMove(): void {
+        // Not needed by default
+        return;
+    }
+
+    public async ngOnInit(): Promise<void> {
+        const config: C = await this.getRulesConfigFromWrapper();
+        this.node = this.rules.getInitialNode(config);
     }
 }
 

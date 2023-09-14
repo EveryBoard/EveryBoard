@@ -19,15 +19,15 @@ import { MyTaflState } from './MyTaflState.spec';
 
 export const myTaflConfig: TaflConfig = {
 
-    CASTLE_IS_LEFT_FOR_GOOD: true,
+    castleIsLeftForGood: true,
 
-    INVADER_STARTS: true,
+    invaderStarts: true,
 
-    KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: true,
+    kingFarFromHomeCanBeSandwiched: true,
 
-    CENTRAL_THRONE_CAN_SURROUND_KING: true,
+    centralThroneCanSurroundKing: true,
 
-    BORDER_CAN_SURROUND_KING: true,
+    borderCanSurroundKing: true,
 };
 
 describe('TaflRules', () => {

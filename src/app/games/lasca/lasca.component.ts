@@ -76,9 +76,8 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.encoder = LascaMove.encoder;
         this.tutorial = new LascaTutorial().tutorial;
         this.canPass = false;
-        this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.lastMove = this.node.move;
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
@@ -132,7 +131,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             squareClasses: [],
         };
     }
-    public override showLastMove(move: LascaMove): void {
+    public override async showLastMove(move: LascaMove): Promise<void> {
         this.showLastCapture(move);
         this.showSteppedOnCoord(move);
     }
@@ -183,7 +182,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             };
         }
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.createAdaptedBoardFrom(this.getState());
         this.rotateAdaptedBoardIfNeeded();
     }
@@ -192,7 +191,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             x = (LascaState.SIZE - 1) - x;
             y = (LascaState.SIZE - 1) - y;
         }
-        const clickValidity: MGPValidation = this.canUserPlay('#coord_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#coord_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -280,7 +279,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             return this.selectPiece(clicked);
         }
     }
-    private selectPiece(coord: Coord): MGPValidation {
+    private async selectPiece(coord: Coord): Promise<MGPValidation> {
         this.capturedCoords = [];
         if (this.legalMoves.some((move: LascaMove) => move.getStartingCoord().equals(coord))) {
             this.currentMoveClicks = [coord];

@@ -23,7 +23,6 @@ xdescribe('ActivePartsService', () => {
         result: 5,
         turn: 0,
         typeGame: 'P4',
-        rulesConfig: {},
     };
 
     beforeEach(fakeAsync(async() => {

@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleNode, AwaleRules, mancalaConfig } from '../AwaleRules';
+import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
-import { AwaleState } from '../AwaleState';
+import { MancalaState } from 'src/app/games/mancala/commons/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('AwaleMinimax', () => {
@@ -13,12 +13,12 @@ describe('AwaleMinimax', () => {
 
     beforeEach(() => {
         rules = AwaleRules.get();
-        minimax = new AwaleMinimax(rules, 'AwaleMinimax');
+        minimax = new AwaleMinimax();
     });
     it('should not throw at first choice', () => {
-        const node: AwaleNode = rules.getInitialNode(mancalaConfig);
+        const node: AwaleNode = rules.getInitialNode(AwaleRules.DEFAULT_CONFIG);
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
-        expect(rules.isLegal(bestMove, AwaleState.getInitialState(mancalaConfig)).isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, MancalaState.getInitialState(AwaleRules.DEFAULT_CONFIG)).isSuccess()).toBeTrue();
     });
     it('should choose capture when possible (at depth 1)', () => {
         // Given a state with a possible capture
@@ -26,7 +26,7 @@ describe('AwaleMinimax', () => {
             [4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 1],
         ];
-        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = node.findBestMove(1, minimax);
@@ -39,7 +39,7 @@ describe('AwaleMinimax', () => {
             [0, 0, 0, 0, 3, 1],
             [0, 0, 0, 0, 1, 0],
         ];
-        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
@@ -52,7 +52,7 @@ describe('AwaleMinimax', () => {
             [1, 0, 0, 0, 0, 1],
             [0, 0, 0, 0, 0, 0],
         ];
-        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
         const node: AwaleNode = new AwaleNode(state);
         // When listing the moves
         const moves: AwaleMove[] = minimax.getListMoves(node);
@@ -66,7 +66,7 @@ describe('AwaleMinimax', () => {
             [1, 0, 0, 0, 0, 7],
             [0, 1, 0, 0, 0, 0],
         ];
-        const state: AwaleState = new AwaleState(board, 1, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = node.findBestMove(1, minimax);

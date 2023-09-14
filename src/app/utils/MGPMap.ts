@@ -143,7 +143,6 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         return true;
     }
 }
-
 export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>> extends MGPMap<K, V> {
 
     public reverse(): ReversibleMap<V, MGPSet<K>> {

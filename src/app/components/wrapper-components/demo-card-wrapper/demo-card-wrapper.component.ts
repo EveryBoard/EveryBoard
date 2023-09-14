@@ -23,7 +23,6 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     @Input() public demoNodeInfo: DemoNodeInfo;
 
     @ViewChild('board', { read: ViewContainerRef })
-
     public override boardRef: ViewContainerRef | null = null;
 
     public constructor(actRoute: ActivatedRoute,
@@ -42,11 +41,11 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     public async ngAfterViewInit(): Promise<void> {
-        setTimeout(async() => {
+        window.setTimeout(async() => {
             await this.afterViewInit();
             this.gameComponent.node = this.demoNodeInfo.node;
             // The board needs to be updated to render the changed node, setRole will do it
-            this.setRole(this.gameComponent.getCurrentPlayer());
+            await this.setRole(this.gameComponent.getCurrentPlayer());
             // Need to detect changes before potentially clicking,
             // and otherwise we'll get an angular exception in our tests
             this.cdr.detectChanges();
@@ -65,7 +64,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public override getPlayer(): string {
         return 'no-player';
     }
-    public onCancelMove(_reason?: string | undefined): void {
+    public async onCancelMove(_reason?: string | undefined): Promise<void> {
         return;
     }
 }

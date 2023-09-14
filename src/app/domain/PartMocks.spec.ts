@@ -10,7 +10,6 @@ export class PartMocks {
         playerZero: UserMocks.CREATOR_MINIMAL_USER,
         turn: -1,
         result: MGPResult.UNACHIEVED.value,
-        rulesConfig: {},
     };
 
     public static readonly OTHER_UNSTARTED: Part = {
@@ -18,7 +17,6 @@ export class PartMocks {
         playerZero: { id: 'not-creator-id', name: 'not_creator' },
         turn: -1,
         result: MGPResult.UNACHIEVED.value,
-        rulesConfig: {},
     };
 
     public static readonly STARTED: Part = {
@@ -28,7 +26,6 @@ export class PartMocks {
         result: MGPResult.UNACHIEVED.value,
         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
         beginning: serverTimestamp(),
-        rulesConfig: {},
     };
 
     public static readonly OTHER_STARTED: Part = {
@@ -38,7 +35,6 @@ export class PartMocks {
         result: MGPResult.UNACHIEVED.value,
         playerOne: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
         beginning: serverTimestamp(),
-        rulesConfig: {},
     };
 
     public static readonly FINISHED: Part = {
@@ -50,6 +46,5 @@ export class PartMocks {
         beginning: serverTimestamp(),
         loser: UserMocks.CREATOR_MINIMAL_USER,
         winner: UserMocks.OPPONENT_MINIMAL_USER,
-        rulesConfig: {},
     };
 }

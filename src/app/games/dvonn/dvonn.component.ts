@@ -50,10 +50,10 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.state = this.getState();
         this.hexaBoard = this.getState().board;
     }
-    public hideLastMove(): void {
+    public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         this.state = this.getState();
         this.disconnecteds = [];
@@ -61,7 +61,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.canPass = this.rules.canOnlyPass(this.state);
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
-    public override showLastMove(move: DvonnMove): void {
+    public override async showLastMove(move: DvonnMove): Promise<void> {
         this.lastMove = MGPOptional.of(move);
         const previousState: DvonnState = this.getPreviousState();
         const state: DvonnState = this.getState();
@@ -90,7 +90,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         return await this.chooseMove(DvonnMove.PASS);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -104,7 +104,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             return await this.chooseDestination(x, y);
         }
     }
-    public choosePiece(x: number, y: number): MGPValidation {
+    public async choosePiece(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
         const legal: MGPValidation = this.rules.isMovablePiece(this.getState(), coord);
         if (legal.isSuccess()) {

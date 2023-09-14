@@ -23,8 +23,9 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
 
-xdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
 
@@ -63,7 +64,6 @@ xdescribe('GameService', () => {
             playerOne: UserMocks.OPPONENT_MINIMAL_USER,
             turn: 2,
             result: MGPResult.UNACHIEVED.value,
-            rulesConfig: {},
         };
         await partDAO.set('partId', part);
 
@@ -142,36 +142,38 @@ xdescribe('GameService', () => {
             expect(gameEventService.startGame).toHaveBeenCalledWith('partId', Player.ONE);
         }));
     });
-    it('createPartConfigRoomAndChat should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
-        const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
-        const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
-        // Install some mocks to check what we need
-        // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
-        let chatCreated: boolean = false;
-        let configRoomCreated: boolean = false;
-        spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
-            chatCreated = true;
-        });
-        spyOn(configRoomDAO, 'set').and.callFake(async(): Promise<void> => {
-            expect(chatCreated).withContext('configRoom should be created before the chat').toBeFalse();
-            configRoomCreated = true;
-        });
-        spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
-            expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
-            expect(configRoomCreated).withContext('part should be created before the configRoom').toBeFalse();
-            return 'partId';
-        });
+    describe('createPartConfigRoomAndChat', () => {
+        it('should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
+            const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
+            const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
+            // Install some mocks to check what we need
+            // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
+            let chatCreated: boolean = false;
+            let configRoomCreated: boolean = false;
+            spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
+                chatCreated = true;
+            });
+            spyOn(configRoomDAO, 'set').and.callFake(async(): Promise<void> => {
+                expect(chatCreated).withContext('configRoom should be created before the chat').toBeFalse();
+                configRoomCreated = true;
+            });
+            spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
+                expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
+                expect(configRoomCreated).withContext('part should be created before the configRoom').toBeFalse();
+                return 'partId';
+            });
 
-        // When calling createPartConfigRoomAndChat
-        await gameService.createPartConfigRoomAndChat('Quarto');
-        // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
-        // Moreover, everything needs to have been called eventually
-        const part: Part = PartMocks.INITIAL;
-        const configRoom: ConfigRoom = ConfigRoomMocks.INITIAL_RANDOM;
-        expect(partDAO.create).toHaveBeenCalledOnceWith(part);
-        expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
-        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
-    }));
+            // When calling createPartConfigRoomAndChat
+            await gameService.createPartConfigRoomAndChat('Quarto');
+            // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
+            // Moreover, everything needs to have been called eventually
+            const part: Part = PartMocks.INITIAL;
+            const configRoom: ConfigRoom = ConfigRoomMocks.INITIAL_RANDOM;
+            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
+            expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
+            expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
+        }));
+    });
     describe('getStartingConfig', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
             // Given a configRoom config asking random start
@@ -310,7 +312,6 @@ xdescribe('GameService', () => {
                 playerOne: UserMocks.OPPONENT_MINIMAL_USER,
                 turn: 1,
                 result: MGPResult.UNACHIEVED.value,
-                rulesConfig: {},
             };
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();

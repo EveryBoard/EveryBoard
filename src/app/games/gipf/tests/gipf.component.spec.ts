@@ -74,7 +74,7 @@ describe('GipfComponent', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on a space/piece not part of a capture
             // Then it should be a failure
@@ -92,7 +92,7 @@ describe('GipfComponent', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking a piece amongst the capturable one
             await testUtils.expectClickSuccess('#click_3_3');
@@ -115,7 +115,7 @@ describe('GipfComponent', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on a piece part of the capture
             await testUtils.expectClickSuccess('#click_3_3');
@@ -138,7 +138,7 @@ describe('GipfComponent', () => {
                 [_, _, B, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on that space
             // Then it should be a failure due to ambiguity
@@ -156,7 +156,7 @@ describe('GipfComponent', () => {
                 [B, A, B, A, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on that space
             // Then it should be a failure
@@ -174,7 +174,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_3_3');
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
@@ -194,7 +194,7 @@ describe('GipfComponent', () => {
             [_, _, B, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Perform the placement to prepare for final capture
         await testUtils.expectClickSuccess('#click_0_3');
@@ -212,7 +212,7 @@ describe('GipfComponent', () => {
             [_, _, B, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_3');
         await testUtils.expectClickSuccess('#click_1_3');
@@ -236,7 +236,7 @@ describe('GipfComponent', () => {
             [_, B, _, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.UP_RIGHT));
         const move: GipfMove = new GipfMove(placement, [], []);
@@ -258,7 +258,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         expect(testUtils.getGameComponent().possibleCaptures).toContain(new GipfCapture([
             new Coord(3, 2),
@@ -278,7 +278,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_3_3');
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
@@ -304,7 +304,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_3_3');
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
@@ -328,7 +328,7 @@ describe('GipfComponent', () => {
             [_, B, _, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_1_6');
         expect(testUtils.getGameComponent().arrows.length).toBe(1);
@@ -345,7 +345,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(6, 3),
                                                               MGPOptional.empty()),
@@ -375,7 +375,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(5, 4),
                                                               MGPOptional.of(HexaDirection.LEFT)),
@@ -407,7 +407,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_3_3');
         await testUtils.expectClickSuccess('#click_4_5');
@@ -429,7 +429,7 @@ describe('GipfComponent', () => {
             [_, _, _, A, N, N, N],
         ];
         const state: GipfState = new GipfState(board, P0Turn, [8, 4], [2, 3]);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         const move: GipfMove = new GipfMove(
             new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),

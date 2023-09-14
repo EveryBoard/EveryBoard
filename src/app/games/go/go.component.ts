@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
@@ -22,7 +22,6 @@ import { ActivatedRoute } from '@angular/router';
 @Debug.log
 export class GoComponent
     extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GoConfig, GoLegalityInformation>
-    implements OnInit
 {
     public boardInfo: GroupDatas<GoPiece>;
 
@@ -48,14 +47,11 @@ export class GoComponent
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
-        this.updateBoard();
-    }
-    public async ngOnInit(): Promise<void> {
-        const config: GoConfig = await this.getRulesConfigFromWrapper();
-        this.node = this.rules.getInitialNode(config);
+        this.boardHeight = this.getState().board.length;
+        this.boardWidth = this.getState().board[0].length;
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -64,7 +60,7 @@ export class GoComponent
         const resultlessMove: GoMove = new GoMove(x, y);
         return this.chooseMove(resultlessMove);
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: GoState = this.getState();
         this.boardHeight = state.board.length;
         this.boardWidth = state.board[0].length;

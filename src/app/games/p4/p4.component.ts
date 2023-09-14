@@ -32,29 +32,27 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         ];
         this.encoder = P4Move.encoder;
         this.tutorial = new P4Tutorial().tutorial;
-        this.updateBoard();
     }
     public async onClick(x: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: P4Move = P4Move.of(x);
         return await this.chooseMove(chosenMove);
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: P4State = this.getState();
 
         this.victoryCoords = P4Rules.get().getVictoriousCoords(state);
         this.board = state.board;
-        this.hideLastMove();
     }
-    public override showLastMove(move: P4Move): void {
+    public override async showLastMove(move: P4Move): Promise<void> {
         const state: P4State = this.getState();
         const y: number = P4Rules.get().getLowestUnoccupiedSpace(state.board, move.x) + 1;
         this.last = MGPOptional.of(new Coord(move.x, y));
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.last = MGPOptional.empty();
     }
     public getSquareFillClass(x: number, y: number): string[] {

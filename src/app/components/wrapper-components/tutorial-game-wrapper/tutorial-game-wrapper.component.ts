@@ -7,7 +7,6 @@ import { AbstractNode, MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
@@ -44,7 +43,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                 connectedUserService: ConnectedUserService)
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
-        this.role = Player.ZERO; // The user is playing, not observing
     }
     public getNumberOfSteps(): number {
         return this.steps.length;
@@ -93,18 +91,18 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new MGPNode(currentStep.state,
                                               MGPOptional.empty(),
                                               currentStep.previousMove);
-        const rulesConfig: RulesConfig = await this.getConfig();
-        this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig);
+        // const rulesConfig: RulesConfig = await this.getConfig();
+        // this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig);
         // Set role will update view with updateBoardAndShowLastMove
-        this.setRole(this.gameComponent.getCurrentPlayer());
+        await this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         const node: MGPOptional<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
-        assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
+        Utils.assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
         this.gameComponent.node = node.get();
-        this.updateBoardAndShowLastMove();
+        await this.updateBoardAndShowLastMove(false);
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const previousState: GameState = this.gameComponent.getPreviousState();
@@ -119,8 +117,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         } else if (currentStep.isAnyMove()) {
             Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
             this.showStepSuccess(currentStep.getSuccessMessage());
-        } else {
-            assert(currentStep.isMove(), 'cannot reach here with a click step');
+        } else if (currentStep.isMove()) {
             const currentStepMove: TutorialStepMove = currentStep as TutorialStepMove;
             if (currentStepMove.acceptedMoves.some((m: Move) => m.equals(move))) {
                 Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
@@ -129,6 +126,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                 Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'not the move that was awaited.');
                 this.currentReason = MGPOptional.of(currentStepMove.getFailureMessage());
             }
+        } else {
+            // No need to do anything there, canUserPlay did it
+            Utils.assert(currentStep.isClick(), 'Here, we should have a click');
         }
         // We don't cover the click case here, it is covered in canUserPlay
         this.cdr.detectChanges();
@@ -137,14 +137,14 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.moveAttemptMade = false;
         await this.showStep(this.stepIndex);
     }
-    public override canUserPlay(elementName: string): MGPValidation {
+    public override async canUserPlay(elementName: string): Promise<MGPValidation> {
         this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
             return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
-            this.updateBoardAndShowLastMove();
+            await this.updateBoardAndShowLastMove(false);
             this.moveAttemptMade = true;
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess(currentStep.getSuccessMessage());
@@ -153,15 +153,12 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
-            window.setTimeout(() => {
-                this.cdr.detectChanges();
-            }, 10);
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
         }
     }
-    public onCancelMove(reason?: string): void {
+    public async onCancelMove(reason?: string): Promise<void> {
         if (reason !== undefined) {
             this.currentReason = MGPOptional.of(reason);
         }
@@ -199,14 +196,14 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
     public async showSolution(): Promise<void> {
         const step: TutorialStep = this.steps[this.stepIndex];
-        assert(step.hasSolution(), 'step must have solution');
+        Utils.assert(step.hasSolution(), 'step must have solution');
         const solutionStep: TutorialStepWithSolution | TutorialStepClick =
             step as TutorialStepWithSolution | TutorialStepClick;
         const solution: Move | Click = solutionStep.getSolution();
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
             this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution).get();
-            this.updateBoardAndShowLastMove();
+            await this.updateBoardAndShowLastMove(true);
         } else {
             await this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;

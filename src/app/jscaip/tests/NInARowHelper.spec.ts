@@ -14,13 +14,10 @@ class AbstractState extends GameStateWithTable<PlayerOrNone> {}
 
 describe('N In A Row Helper', () => {
 
-    function isInRange(coord: Coord): boolean {
-        return coord.isInRange(4, 4);
-    }
     describe('getBoardValue', () => {
         it('should count exactly one victory', () => {
             // Given a helper
-            const helper: NInARowHelper<PlayerOrNone> = new NInARowHelper(isInRange, Utils.identity, 4);
+            const helper: NInARowHelper<PlayerOrNone> = new NInARowHelper(Utils.identity, 4);
 
             // When asking it the board value of a board with a victory
             const board: Table<PlayerOrNone> = [

@@ -6,7 +6,7 @@ import { QuixoMove } from './QuixoMove';
 
 export class QuixoState extends GameStateWithTable<PlayerOrNone> {
 
-    public static readonly SIZE: number = 5;
+    public static readonly SIZE: number = 5; // CHECK USE
 
     public static getInitialState(): QuixoState {
         const initialBoard: PlayerOrNone[][] = ArrayUtils.createTable(QuixoState.SIZE,

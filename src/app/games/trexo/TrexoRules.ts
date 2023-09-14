@@ -27,7 +27,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return piece.getOwner();
     }
     public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
-        new NInARowHelper(TrexoState.isOnBoard, TrexoRules.getOwner, 5);
+        new NInARowHelper(TrexoRules.getOwner, 5);
 
     private constructor() {
         super(TrexoState, {});

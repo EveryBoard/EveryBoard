@@ -16,8 +16,9 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
 
-xdescribe('ConfigRoomService', () => {
+describe('ConfigRoomService', () => {
 
     let configRoomDAO: ConfigRoomDAO;
 
@@ -59,17 +60,37 @@ xdescribe('ConfigRoomService', () => {
         // Then it should delegate to the DAO
         expect(configRoomDAO.set).toHaveBeenCalledOnceWith('configRoomId', ConfigRoomMocks.INITIAL);
     }));
-    it('createInitialConfigRoom should delegate to the DAO set method', fakeAsync(async() => {
-        // Given a ConfigRoomService
-        spyOn(configRoomDAO, 'set').and.resolveTo();
-        TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+    describe('createInitialConfigRoom', () => {
+        it('should delegate to the DAO set method', fakeAsync(async() => {
+            // Given a ConfigRoomService
+            spyOn(configRoomDAO, 'set').and.resolveTo();
+            TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
-        // When creating the initial configRoom
-        await configRoomService.createInitialConfigRoom('id');
+            // When creating the initial configRoom
+            await configRoomService.createInitialConfigRoom('id', 'Quarto');
 
-        // Then it should delegate to the DAO and create the initial configRoom
-        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.INITIAL_RANDOM);
-    }));
+            // Then it should delegate to the DAO and create the initial configRoom
+            expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.INITIAL_RANDOM);
+        }));
+        it('should create the config room with the default rules config', fakeAsync(async() => {
+            // Given a game that is configurable
+            spyOn(configRoomDAO, 'set').and.resolveTo();
+            TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+            const configurableGame: string = 'P4'; // Amongst others
+            const defaultConfig: RulesConfig = { mais_quelles_belles_chaussettes: 73 };
+            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultConfig);
+
+            // When creating part of this type
+            await configRoomService.createInitialConfigRoom('id', configurableGame);
+
+            // Then it should be created with the initial config rules
+            const roomConfig: ConfigRoom = {
+                ...ConfigRoomMocks.INITIAL_RANDOM,
+                rulesConfig: defaultConfig,
+            };
+            expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', roomConfig);
+        }));
+    });
     describe('joinGame', () => {
         it('should call configRoomService.addCandidate even when called while already in the game', fakeAsync(async() => {
             // Given a configRoom and a connected user that is candidate in the room

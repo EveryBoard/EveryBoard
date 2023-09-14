@@ -130,7 +130,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             };
         });
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         const state: YinshState = this.getState();
         this.scores = MGPOptional.of(state.countScores());
@@ -230,7 +230,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.currentlyMoved = [];
         this.moveToInitialCaptureOrMovePhase();
     }
-    public override showLastMove(move: YinshMove): void {
+    public override async showLastMove(move: YinshMove): Promise<void> {
         if (move.isInitialPlacement()) {
             this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved-fill'];
         } else {
@@ -260,12 +260,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         for (const coord of capture.capturedSpaces) {
             this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['captured-fill'];
             if (alsoShowPiece) {
-                this.markRemovedMarker(coord, this.getState().getCurrentPlayer().getOpponent());
+                this.markRemovedMarker(coord, this.getState().getCurrentOpponent());
             }
         }
         this.viewInfo.spaceInfo[capture.ringTaken.get().y][capture.ringTaken.get().x].spaceClasses = ['captured-fill'];
         if (alsoShowPiece) {
-            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentPlayer().getOpponent());
+            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentOpponent());
         }
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
@@ -279,7 +279,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         return MGPValidation.SUCCESS;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
