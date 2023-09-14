@@ -23,6 +23,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         seedByHouse: 4,
         width: 6,
     };
+
     private static singleton: MGPOptional<KalahRules> = MGPOptional.empty();
 
     public static get(): KalahRules {
@@ -97,7 +98,10 @@ export class KalahRules extends MancalaRules<KalahMove> {
         const distributedState: MancalaState = distributionResult.resultingState;
         const capturelessResult: MancalaCaptureResult = {
             capturedSum: 0,
-            captureMap: [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]],
+            captureMap: [
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+            ],
             resultingState: distributedState,
         };
         if (distributionResult.endsUpInKalah) {
@@ -112,7 +116,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
                 // We can capture
                 const board: number[][] = distributedState.getCopiedBoard();
                 const capturedSum: number = board[0][landingSpace.x] + board[1][landingSpace.x];
-                const captureMap: number[][] = ArrayUtils.createTable(MancalaState.WIDTH, 2, 0);
+                const captureMap: number[][] = ArrayUtils.createTable(distributedState.board[0].length, 2, 0);
                 captureMap[0][landingSpace.x] = board[0][landingSpace.x];
                 captureMap[1][landingSpace.x] = board[1][landingSpace.x];
                 board[0][landingSpace.x] = 0;

@@ -198,9 +198,9 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When restarting the game
             await testUtils.expectInterfaceClickSuccess('#restartButton');
+            tick(0);
 
             // Then the draw indication should be removed and we should be back at turn 0
-            tick(0);
             expect(testUtils.getGameComponent().getTurn()).toBe(0);
             testUtils.expectElementNotToExist('#draw');
         }));

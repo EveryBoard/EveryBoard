@@ -1258,6 +1258,9 @@
       <trans-unit id="2281492801612237310" datatype="html">
         <source>End of the game</source>
       </trans-unit>
+      <trans-unit id="2281492801612237310" datatype="html">
+        <source>End of the game</source>
+      </trans-unit>
       <trans-unit id="4959059457063090536" datatype="html">
         <source>When no more move is possible for both players, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make your last move.</source>
       </trans-unit>
@@ -1553,6 +1556,9 @@
             Here, Dark has 9 territories on the left, and Light has 8 on the right.
             The top part belongs to no one.
             Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
+      </trans-unit>
+      <trans-unit id="6009621890963077533" datatype="html">
+        <source>Simple capture</source>
       </trans-unit>
       <trans-unit id="6009621890963077533" datatype="html">
         <source>Simple capture</source>

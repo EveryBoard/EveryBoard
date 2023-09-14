@@ -41,7 +41,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     public static isStarving(player: Player, board: Table<number>): boolean {
         let i: number = 0;
         const playerY: number = player.getOpponent().value; // For player 0 has row 1
-        while (i < MancalaState.WIDTH) {
+        while (i < board[0].length) {
             if (board[playerY][i++] > 0) {
                 return false; // found some food there, so not starving
             }
@@ -135,7 +135,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
             previousDropWasKalah = endUpInKalah;
             endUpInKalah = false;
             // get next space
-            const nextCoord: MGPOptional<Coord> = this.getNextCoord(coord, player, previousDropWasKalah);
+            const nextCoord: MGPOptional<Coord> = this.getNextCoord(coord, player, previousDropWasKalah, state);
             endUpInKalah = nextCoord.isAbsent();
 
             if (endUpInKalah) {
@@ -159,9 +159,11 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
             resultingState: new MancalaState(resultingBoard, state.turn, state.getScoresCopy()),
         };
     }
-    public getNextCoord(coord: Coord, player: Player, previousDropWasKalah: boolean): MGPOptional<Coord> {
+    public getNextCoord(coord: Coord, player: Player, previousDropWasKalah: boolean, state: MancalaState)
+    : MGPOptional<Coord>
+    {
         if (coord.y === 0) {
-            if (coord.x === (MancalaState.WIDTH - 1)) {
+            if (coord.x === (state.board[0].length - 1)) {
                 if (this.config.passByPlayerStore && player === Player.ONE && previousDropWasKalah === false) {
                     return MGPOptional.empty(); // This seed is dropped in the Kalah
                 } else {
@@ -184,12 +186,12 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     }
     public doesDistribute(x: number, y: number, board: Table<number>): boolean {
         if (y === 0) { // distribution from left to right
-            return board[y][x] > ((MancalaState.WIDTH - 1) - x);
+            return board[y][x] > ((board[0].length - 1) - x);
         }
         return board[y][x] > x; // distribution from right to left
     }
     public canDistribute(player: Player, board: Table<number>): boolean {
-        for (let x: number = 0; x < MancalaState.WIDTH; x++) {
+        for (let x: number = 0; x < board[0].length; x++) {
             if (this.doesDistribute(x, player.getOpponent().value, board)) {
                 return true;
             }
@@ -209,7 +211,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         const captureMap: number[][] = ArrayUtils.copyBiArray(postCaptureResult.captureMap);
         let x: number = 0;
         const mansoonedY: number = mansooningPlayer.getOpponent().value;
-        while (x < MancalaState.WIDTH) {
+        while (x < state.board[0].length) {
             capturedSum += resultingBoard[mansoonedY][x];
             captureMap[mansoonedY][x] += resultingBoard[mansoonedY][x];
             resultingBoard[mansoonedY][x] = 0;

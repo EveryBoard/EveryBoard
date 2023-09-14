@@ -154,7 +154,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores));
         await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
         while (seedsInHand > 0) {
-            const nextCoord: MGPOptional<Coord> = this.rules.getNextCoord(coord, player, currentDropIsStore);
+            const nextCoord: MGPOptional<Coord> = this.rules.getNextCoord(coord, player, currentDropIsStore, state);
             currentDropIsStore = nextCoord.isAbsent();
             if (currentDropIsStore) {
                 seedsInHand--;

@@ -32,7 +32,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R, M>,
         const playerY: number = state.getCurrentPlayerY();
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
         let lastDistributionSeedNumber: number = state.getPieceAtXY(lastDistribution.x, playerY);
-        if (lastDistributionSeedNumber > (2 * MancalaState.WIDTH)) {
+        if (lastDistributionSeedNumber > (2 * state.board[0].length)) {
             // Since we are distributing enough seed to do the whole turn
             // it'll take TIMEOUT_BETWEEN_SEED ms to skip the initial house
             lastDistributionSeedNumber++;

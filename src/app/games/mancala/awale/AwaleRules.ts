@@ -21,6 +21,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         seedByHouse: 4,
         width: 6,
     };
+
     private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
     public static get(): AwaleRules {
@@ -29,9 +30,11 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         }
         return AwaleRules.singleton.get();
     }
+
     private constructor() {
         super(AwaleRules.DEFAULT_CONFIG);
     }
+
     public distributeMove(move: AwaleMove, state: MancalaState): MancalaDistributionResult {
         const playerY: number = state.getCurrentPlayerY();
         return this.distributeHouse(move.x, playerY, state);
@@ -86,7 +89,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
              * so one ending condition of the loop is reaching index MancalaState.WIDTH
              */
             direction = +1;
-            limit = MancalaState.WIDTH;
+            limit = state.board[0].length;
         }
 
         do {

@@ -21,7 +21,7 @@ export class KalahScoreMinimax extends PlayerMetricsMinimax<KalahMove,
     public override getListMoves(node: KalahNode): KalahMove[] {
         const moves: KalahMove[] = [];
         const playerY: number = node.gameState.getCurrentPlayerY();
-        for (let x: number = 0; x < MancalaState.WIDTH; x++) {
+        for (let x: number = 0; x < node.gameState.board[0].length; x++) {
             if (node.gameState.getPieceAtXY(x, playerY) > 0) {
                 const state: MancalaState = node.gameState;
                 const move: KalahMove = KalahMove.of(MancalaDistribution.of(x));
@@ -39,7 +39,7 @@ export class KalahScoreMinimax extends PlayerMetricsMinimax<KalahMove,
         const playerHasPieces: boolean = MancalaRules.isStarving(stateAfterDistribution.getCurrentPlayer(),
                                                                  stateAfterDistribution.board) === false;
         if (distributionResult.endsUpInKalah && playerHasPieces) {
-            for (let x: number = 0; x < MancalaState.WIDTH; x++) {
+            for (let x: number = 0; x < stateAfterDistribution.board[0].length; x++) {
                 if (stateAfterDistribution.getPieceAtXY(x, y) > 0) {
                     const move: KalahMove = currentMove.add(MancalaDistribution.of(x));
                     moves.push(...this.getPossibleMoveContinuations(stateAfterDistribution, x, y, move));

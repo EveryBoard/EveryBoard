@@ -85,9 +85,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }
         }, 1);
     }
+
     private async createRulesConfigAndStartComponent(): Promise<boolean> {
         return this.afterViewInit();
     }
+
     public async updatePlayer(player: Player): Promise<void> {
         this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
         if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {

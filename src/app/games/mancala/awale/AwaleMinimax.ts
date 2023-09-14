@@ -1,4 +1,5 @@
 import { MancalaState } from '../commons/MancalaState';
+import { AwaleMove } from './AwaleMove';
 import { AwaleNode, AwaleRules } from './AwaleRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -6,7 +7,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from '../../../utils/MGPValidation';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { MancalaDistributionResult } from '../commons/MancalaRules';
-import { AwaleMove } from './AwaleMove';
 import { MancalaConfig } from '../commons/MancalaConfig';
 
 export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, MancalaState, MancalaConfig> {
@@ -21,7 +21,7 @@ export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, MancalaState, 
         const player: number = (turn + 1) % 2; // So player zero is on row 1
         let newMove: AwaleMove;
         let x: number = 0;
-        while (x < MancalaState.WIDTH) {
+        while (x < state.board[0].length) {
             // for each house that might be playable
             if (state.getPieceAtXY(x, player) !== 0) {
                 // if the house is not empty
@@ -56,7 +56,7 @@ export class AwaleMinimax extends PlayerMetricsMinimax<AwaleMove, MancalaState, 
             let sameTerritoryValue: number = 0;
             if (endHouse.y === playerY) {
                 captured = 0;
-                if (toDistribute <= MancalaState.WIDTH) {
+                if (toDistribute <= node.gameState.board[0].length) {
                     sameTerritoryValue = 10;
                 }
             } else {

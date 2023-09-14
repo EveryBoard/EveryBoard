@@ -4,8 +4,6 @@ import { MancalaConfig } from './MancalaConfig';
 
 export class MancalaState extends GameStateWithTable<number> {
 
-    public static readonly WIDTH: number = 6;
-
     public static getInitialState(config: MancalaConfig): MancalaState {
         const board: number[][] = ArrayUtils.createTable(config.width, 2, config.seedByHouse);
         return new MancalaState(board, 0, [0, 0]);
