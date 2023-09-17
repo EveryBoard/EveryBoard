@@ -16,7 +16,7 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ConfigRoomService', () => {
 

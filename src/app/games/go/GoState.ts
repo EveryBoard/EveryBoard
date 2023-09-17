@@ -5,7 +5,7 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';

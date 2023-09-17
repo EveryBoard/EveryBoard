@@ -12,7 +12,7 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessFailure } from './MartianChessFailure';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export interface MartianChessMoveResult {
 

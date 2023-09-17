@@ -5,7 +5,7 @@ import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiLegalityInformation } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ReversiMinimax
     extends PlayerMetricsMinimax<ReversiMove, ReversiState, RulesConfig, ReversiLegalityInformation>

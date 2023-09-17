@@ -4,7 +4,7 @@ import { RulesConfigurationComponent } from './rules-configuration.component';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('RulesConfigurationComponent', () => {
 

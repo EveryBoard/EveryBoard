@@ -10,7 +10,7 @@ import { GoFailure } from '../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('GoRules', () => {
 

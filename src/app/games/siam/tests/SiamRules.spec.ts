@@ -13,7 +13,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('SiamRules', () => {
 

@@ -13,7 +13,7 @@ import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from '../LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LodestoneRules', () => {
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;

@@ -13,7 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('GipfRules', () => {
 

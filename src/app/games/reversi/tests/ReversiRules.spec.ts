@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from '../ReversiFailure';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ReversiRules', () => {
 

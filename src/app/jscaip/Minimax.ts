@@ -4,7 +4,7 @@ import { BoardValue } from './BoardValue';
 import { Rules } from './Rules';
 import { GameState } from './GameState';
 import { GameStatus } from './GameStatus';
-import { RulesConfig } from './ConfigUtil';
+import { RulesConfig } from './RulesConfigUtil';
 
 export abstract class Minimax<M extends Move,
                               S extends GameState,

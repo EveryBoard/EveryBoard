@@ -6,7 +6,7 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { NewRulesConfig, NewRulesConfigDescription } from './NewRulesConfig';
 
 /**

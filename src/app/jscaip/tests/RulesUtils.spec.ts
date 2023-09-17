@@ -14,7 +14,7 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { GameStatus } from '../GameStatus';
 import { BoardValue } from '../BoardValue';
 import { JSONValue, Utils } from 'src/app/utils/utils';
-import { RulesConfig } from '../ConfigUtil';
+import { RulesConfig } from '../RulesConfigUtil';
 
 export class RulesUtils {
 

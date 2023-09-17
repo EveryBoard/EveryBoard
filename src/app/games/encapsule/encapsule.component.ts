@@ -15,7 +15,7 @@ import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

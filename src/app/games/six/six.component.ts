@@ -18,7 +18,7 @@ import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

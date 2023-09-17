@@ -10,7 +10,7 @@ import { EncapsuleFailure } from './EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;

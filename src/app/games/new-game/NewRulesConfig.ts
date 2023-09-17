@@ -1,4 +1,4 @@
-import { RulesConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfigDescription } from 'src/app/jscaip/RulesConfigUtil';
 
 // Note: RulesConfigDescriptions object are right now centralised in RulesConfigDescriptions
 export const NewRulesConfigDescription: RulesConfigDescription = {

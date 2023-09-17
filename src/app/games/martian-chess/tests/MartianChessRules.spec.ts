@@ -15,7 +15,7 @@ import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from '../
 import { MartianChessFailure } from '../MartianChessFailure';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessRules', () => {
 

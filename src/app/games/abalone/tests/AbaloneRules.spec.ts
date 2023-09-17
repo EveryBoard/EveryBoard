@@ -12,7 +12,7 @@ import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('AbaloneRules', () => {
 

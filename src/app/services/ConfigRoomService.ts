@@ -10,7 +10,7 @@ import { Localized } from '../utils/LocaleUtils';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
-import { RulesConfig, RulesConfigUtils } from '../jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigUtils } from '../jscaip/RulesConfigUtil';
 
 @Injectable({
     providedIn: 'root',

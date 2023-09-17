@@ -14,7 +14,7 @@ import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type YinshLegalityInformation = YinshState
 

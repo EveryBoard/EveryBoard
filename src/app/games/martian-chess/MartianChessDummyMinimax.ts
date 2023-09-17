@@ -8,7 +8,7 @@ import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './M
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class MartianChessDummyMinimax
     extends PlayerMetricsMinimax<MartianChessMove, MartianChessState, RulesConfig, MartianChessMoveResult> {

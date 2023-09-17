@@ -4,7 +4,7 @@ import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * This component is used for games that are played on a Goban.

@@ -6,7 +6,7 @@ import { Debug } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode, SiamLegalityInformation } from './SiamRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Debug.log
 export class SiamMinimax extends Minimax<SiamMove, SiamState, RulesConfig, SiamLegalityInformation> {

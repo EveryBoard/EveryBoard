@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { P4State } from './P4State';
+import { P4State, p4Config } from './P4State';
 import { P4Rules } from './P4Rules';
 import { P4Minimax } from './P4Minimax';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -26,7 +26,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
         super(messageDisplayer, actRoute);
         this.rules = P4Rules.get();
-        this.node = this.rules.getInitialNode();
+        this.node = this.rules.getInitialNode(p4Config);
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),
         ];

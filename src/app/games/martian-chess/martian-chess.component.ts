@@ -14,7 +14,7 @@ import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessTutorial } from './MartianChessTutorial';
 import { Direction } from 'src/app/jscaip/Direction';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 import { Utils } from 'src/app/utils/utils';
 

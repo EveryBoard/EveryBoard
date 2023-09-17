@@ -12,11 +12,8 @@ import { TaflMinimax } from '../TaflMinimax';
 import { TaflMove } from '../TaflMove';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
-import { RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { TaflConfig } from '../TaflConfig';
-import { rulesConfigDescriptionMap } from 'src/app/components/normal-component/pick-game/pick-game.component';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-
 
 export class TaflTestEntries<C extends TaflComponent<R, M, S>,
                              R extends TaflRules<M, S>,

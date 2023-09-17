@@ -11,7 +11,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Player } from './Player';
 import { GameState } from './GameState';
 import { MGPFallible } from '../utils/MGPFallible';
-import { RulesConfig } from './ConfigUtil';
+import { RulesConfig } from './RulesConfigUtil';
 
 export class MGPNodeStats {
     public static createdNodes: number = 0;

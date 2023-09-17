@@ -8,7 +8,7 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestoneOrientation, LodestonePiece } from './LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
 import { LodestoneState } from './LodestoneState';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LodestoneDummyMinimax extends Minimax<LodestoneMove, LodestoneState, RulesConfig, LodestoneInfos> {
     public getListMoves(node: LodestoneNode): LodestoneMove[] {

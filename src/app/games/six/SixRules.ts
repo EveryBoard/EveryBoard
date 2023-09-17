@@ -14,7 +14,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SixBoardValue } from './SixMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
 
 export type SixLegalityInformation = MGPSet<Coord>;

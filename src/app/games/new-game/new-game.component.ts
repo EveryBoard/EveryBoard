@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { NewGameDummyMinimax } from './NewGameDummyMinimax';
 import { NewGameTutorial } from './NewGameTutorial';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 /**

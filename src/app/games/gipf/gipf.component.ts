@@ -19,7 +19,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfTutorial } from './GipfTutorial';
 import { Utils } from 'src/app/utils/utils';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

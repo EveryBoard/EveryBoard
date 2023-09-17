@@ -12,7 +12,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Comparable } from 'src/app/utils/Comparable';
-import { RulesConfig, RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 export class GameWrapperMessages {
 

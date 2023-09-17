@@ -5,7 +5,7 @@ import { GameComponent } from './GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({ template: '' })
 export abstract class TriangularGameComponent<R extends Rules<M, S, C, L>,

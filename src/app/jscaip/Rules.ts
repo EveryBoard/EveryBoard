@@ -8,7 +8,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BoardValue } from './BoardValue';
 import { GameStatus } from './GameStatus';
-import { RulesConfig } from './ConfigUtil';
+import { RulesConfig } from './RulesConfigUtil';
 
 
 export abstract class Rules<M extends Move,

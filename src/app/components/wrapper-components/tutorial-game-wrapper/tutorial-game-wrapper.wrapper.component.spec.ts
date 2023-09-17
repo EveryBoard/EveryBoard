@@ -19,7 +19,7 @@ import { NotFoundComponent } from '../../normal-component/not-found/not-found.co
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Comparable } from 'src/app/utils/Comparable';
 import { Player } from 'src/app/jscaip/Player';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {

@@ -1,6 +1,8 @@
+/* eslint-disable no-multi-spaces */
 import { rulesConfigDescriptionMap } from '../components/normal-component/pick-game/pick-game.component';
 import { Localized } from '../utils/LocaleUtils';
 import { MGPOptional } from '../utils/MGPOptional';
+import { MGPValidation } from '../utils/MGPValidation';
 
 export type ConfigDescriptionType = string | number | boolean;
 
@@ -8,6 +10,7 @@ export type ConfigParameter = {
     name: string;
     i18nName: Localized;
     defaultValue: ConfigDescriptionType;
+    isValid?: (value: ConfigDescriptionType) => MGPValidation;
 };
 
 export type RulesConfigDescription = {
@@ -38,4 +41,5 @@ export class RulesConfigUtils {
         }
         return rulesConfig;
     }
+
 }

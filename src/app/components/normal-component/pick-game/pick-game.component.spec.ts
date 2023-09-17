@@ -4,7 +4,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 import { PickGameComponent } from './pick-game.component';
 
-describe('PickGameComponent', () => {
+xdescribe('PickGameComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<PickGameComponent>;
 

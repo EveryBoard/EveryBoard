@@ -7,7 +7,7 @@ import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class AbaloneDummyMinimax
     extends PlayerMetricsMinimax<AbaloneMove, AbaloneState, RulesConfig, AbaloneLegalityInformation>

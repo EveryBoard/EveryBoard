@@ -7,7 +7,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameComponent } from './GameComponent';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({ template: '' })
 export abstract class HexagonalGameComponent<R extends Rules<M, S, C, L, B>,

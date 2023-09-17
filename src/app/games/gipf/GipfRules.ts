@@ -14,7 +14,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type GipfLegalityInformation = GipfState
 

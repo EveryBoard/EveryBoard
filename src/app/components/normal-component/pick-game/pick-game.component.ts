@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-spaces */
 import { Component, EventEmitter, Output, Type } from '@angular/core';
 
 import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
@@ -127,8 +128,9 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { RulesConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfigDescription } from 'src/app/jscaip/RulesConfigUtil';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 class GameDescription {
 
@@ -204,58 +206,85 @@ class GameDescription {
 
 }
 
-class RulesConfigDescriptions {
+export class RulesConfigDescriptions {
 
-    public static readonly AWALE: RulesConfigDescription = { fields: [
-        { name: 'width', i18nName: (): string => $localize`Width`, defaultValue: 6 },
-        { name: 'seedByHouse', i18nName: (): string => $localize`Seed by house`, defaultValue: 4 },
-        { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`, defaultValue: false },
-        { name: 'mustFeed', i18nName: (): string => $localize`Must feed`, defaultValue: true },
-        { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: false },
-    ] };
+    public static readonly AWALE: RulesConfigDescription = {
+        fields: [
+            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6 },
+            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4 },
+            { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`,  defaultValue: false },
+            { name: 'mustFeed',          i18nName: (): string => $localize`Must feed`,            defaultValue: true },
+            { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: false },
+        ],
+    };
 
-    public static readonly BRANDHUB: RulesConfigDescription = { fields: [
-        { name: 'castleIsLeftForGood', i18nName: (): string => $localize`Castle is left for good`, defaultValue: true },
-        { name: 'borderCanSurroundKing', i18nName: (): string => $localize`Border can surround king`, defaultValue: false },
-        { name: 'centralThroneCanSurroundKing', i18nName: (): string => $localize`Central throne can surround king`, defaultValue: true },
-        { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: true },
-        { name: 'invaderStarts', i18nName: (): string => $localize`Invader Starts`, defaultValue: true },
-    ] };
+    public static readonly BRANDHUB: RulesConfigDescription = {
+        fields: [
+            { name: 'castleIsLeftForGood',            i18nName: (): string => $localize`Castle is left for good`,              defaultValue: true },
+            { name: 'borderCanSurroundKing',          i18nName: (): string => $localize`Border can surround king`,             defaultValue: false },
+            { name: 'centralThroneCanSurroundKing',   i18nName: (): string => $localize`Central throne can surround king`,     defaultValue: true },
+            { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: true },
+            { name: 'invaderStarts',                  i18nName: (): string => $localize`Invader Starts`,                       defaultValue: true },
+        ],
+    };
 
-    public static readonly GO: RulesConfigDescription = { fields: [
-        { name: 'width', i18nName: (): string => $localize`Width`, defaultValue: 19 },
-        { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 19 },
-    ] };
+    public static readonly GO: RulesConfigDescription = {
+        fields: [
+            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 19, isValid: getNumericRangeChecker(3, 25) },
+            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 19 },
+        ],
+    };
 
-    public static readonly HNEFATAFL: RulesConfigDescription = { fields: [
-        { name: 'castleIsLeftForGood', i18nName: (): string => $localize`Castle is left for good`, defaultValue: false },
-        { name: 'borderCanSurroundKing', i18nName: (): string => $localize`Border can surround king`, defaultValue: true },
-        { name: 'centralThroneCanSurroundKing', i18nName: (): string => $localize`Central throne can surround king`, defaultValue: false },
-        { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: false },
-        { name: 'invaderStarts', i18nName: (): string => $localize`Invader Starts`, defaultValue: true },
-    ] };
+    public static readonly HNEFATAFL: RulesConfigDescription = {
+        fields: [
+            { name: 'castleIsLeftForGood',            i18nName: (): string => $localize`Castle is left for good`,              defaultValue: false },
+            { name: 'borderCanSurroundKing',          i18nName: (): string => $localize`Border can surround king`,             defaultValue: true },
+            { name: 'centralThroneCanSurroundKing',   i18nName: (): string => $localize`Central throne can surround king`,     defaultValue: false },
+            { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: false },
+            { name: 'invaderStarts',                  i18nName: (): string => $localize`Invader Starts`,                       defaultValue: true },
+        ],
+    };
 
-    public static readonly KALAH: RulesConfigDescription = { fields: [
-        { name: 'width', i18nName: (): string => $localize`Width`, defaultValue: 6 },
-        { name: 'seedByHouse', i18nName: (): string => $localize`Seed by house`, defaultValue: 4 },
-        { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`, defaultValue: true },
-        { name: 'mustFeed', i18nName: (): string => $localize`Must feed`, defaultValue: false },
-        { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: true },
-    ] };
+    public static readonly KALAH: RulesConfigDescription = {
+        fields: [
+            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6 },
+            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4 },
+            { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`,  defaultValue: true },
+            { name: 'mustFeed',          i18nName: (): string => $localize`Must feed`,            defaultValue: false },
+            { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: true },
+        ],
+    };
 
-    public static readonly P4: RulesConfigDescription = { fields: [
-        { name: 'width', i18nName: (): string => $localize`Width`, defaultValue: 7 },
-        { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 6 },
-    ] };
+    public static readonly P4: RulesConfigDescription = {
+        fields: [
+            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 7 },
+            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 6 },
+        ],
+    };
 
-    public static readonly TABLUT: RulesConfigDescription = { fields: [
-        { name: 'castleIsLeftForGood', i18nName: (): string => $localize`Castle is left for good`, defaultValue: false },
-        { name: 'borderCanSurroundKing', i18nName: (): string => $localize`Border can surround king`, defaultValue: true },
-        { name: 'centralThroneCanSurroundKing', i18nName: (): string => $localize`Central throne can surround king`, defaultValue: false },
-        { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: false },
-        { name: 'invaderStarts', i18nName: (): string => $localize`Invader Starts`, defaultValue: true },
-    ] };
+    public static readonly TABLUT: RulesConfigDescription = {
+        fields: [
+            { name: 'castleIsLeftForGood',            i18nName: (): string => $localize`Castle is left for good`,              defaultValue: false },
+            { name: 'borderCanSurroundKing',          i18nName: (): string => $localize`Border can surround king`,             defaultValue: true },
+            { name: 'centralThroneCanSurroundKing',   i18nName: (): string => $localize`Central throne can surround king`,     defaultValue: false },
+            { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: false },
+            { name: 'invaderStarts',                  i18nName: (): string => $localize`Invader Starts`,                       defaultValue: true },
+        ],
+    };
 
+}
+
+function getNumericRangeChecker(min: number, max: number): (v: number) => MGPValidation {
+    // TODO: check component that use those display thoses!
+    return (value: number) => {
+        if (value < min) {
+            return MGPValidation.failure($localize`${ value } + ' is too low, minimum is ${ min }`);
+        } else if (max < value) {
+            return MGPValidation.failure($localize`${ value } + ' is too high, maximum is ${ max }`);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
+    };
 }
 
 export const rulesConfigDescriptionMap: MGPMap<string, RulesConfigDescription> = new MGPMap([

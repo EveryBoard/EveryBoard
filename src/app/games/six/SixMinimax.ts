@@ -13,7 +13,7 @@ import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
 import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SixBoardValue extends BoardValue {
 

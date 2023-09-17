@@ -12,7 +12,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Vector } from 'src/app/jscaip/Vector';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('SixRules', () => {
 

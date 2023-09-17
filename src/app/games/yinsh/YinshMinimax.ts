@@ -8,7 +8,7 @@ import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshNode, YinshRules } from './YinshRules';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class YinshMinimax
     extends PlayerMetricsMinimax<YinshMove, YinshState, RulesConfig, YinshLegalityInformation, YinshRules> {

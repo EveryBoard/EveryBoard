@@ -11,7 +11,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DemoCardComponent', () => {
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;

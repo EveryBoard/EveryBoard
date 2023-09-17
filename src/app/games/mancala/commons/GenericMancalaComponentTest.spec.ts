@@ -15,8 +15,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaConfig } from './MancalaConfig';
-import { RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
-import { rulesConfigDescriptionMap } from 'src/app/components/normal-component/pick-game/pick-game.component';
+import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;
 

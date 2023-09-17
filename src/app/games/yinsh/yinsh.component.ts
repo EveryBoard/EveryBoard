@@ -18,7 +18,7 @@ import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 interface SpaceInfo {

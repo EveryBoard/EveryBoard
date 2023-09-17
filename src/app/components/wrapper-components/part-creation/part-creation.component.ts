@@ -22,7 +22,7 @@ import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { RulesConfig, RulesConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig, RulesConfigDescription } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 
 interface PartCreationViewInfo {
@@ -347,7 +347,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         } else {
             const configRoom: ConfigRoom = configRoomOpt.get();
             if (this.rulesConfig.isAbsent()) {
-                console.log('setting default config cause rulesConfig is absent')
                 this.rulesConfig = MGPOptional.of(configRoom.rulesConfig);
             }
             if (this.chosenOpponentJustLeft(configRoom) &&
@@ -493,7 +492,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
-        console.log("received rules config, its", rulesConfig)
         this.rulesConfig = rulesConfig;
     }
 

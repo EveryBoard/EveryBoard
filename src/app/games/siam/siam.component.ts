@@ -17,7 +17,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SiamFailure } from './SiamFailure';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 export type SiamIndicatorArrow = {

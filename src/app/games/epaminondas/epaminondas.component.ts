@@ -16,7 +16,7 @@ import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

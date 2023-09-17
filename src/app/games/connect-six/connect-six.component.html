@@ -13,17 +13,17 @@
            (click)="onClick(x, y)">
             <circle *ngIf="spaceContent.isPlayer() else empty"
                     id="piece_{{ x }}_{{ y }}"
-                    [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * x)"
-                    [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * y)"
-                    [attr.r]="SPACE_SIZE * 0.22"
+                    [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
+                    [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
+                    [attr.r]="SPACE_SIZE * 0.44"
                     [ngClass]="getSpaceClass(x, y)"
                     class="base"
             />
             <ng-template #empty>
-                <rect [attr.width]="SPACE_SIZE * 0.5"
-                      [attr.height]="SPACE_SIZE * 0.5"
-                      [attr.x]="SPACE_SIZE * 0.5 * x"
-                      [attr.y]="SPACE_SIZE * 0.5 * y"
+                <rect [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
+                      [attr.x]="SPACE_SIZE * x"
+                      [attr.y]="SPACE_SIZE * y"
                       class="base no-stroke"
                       fill-opacity="0"
                 />
@@ -51,9 +51,9 @@
     <circle *ngIf="droppedCoord.isPresent()"
             id="dropped"
             (click)="onClick(droppedCoord.get().x, droppedCoord.get().y)"
-            [attr.cx]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * droppedCoord.get().x)"
-            [attr.cy]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * 0.5 * droppedCoord.get().y)"
-            [attr.r]="SPACE_SIZE * 0.22"
+            [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().x)"
+            [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().y)"
+            [attr.r]="SPACE_SIZE * 0.44"
             [ngClass]="getSpaceClass(droppedCoord.get().x, droppedCoord.get().y)"
             class="base moved-stroke"
     />

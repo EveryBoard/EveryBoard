@@ -14,7 +14,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { RulesConfig } from 'src/app/jscaip/ConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 /**

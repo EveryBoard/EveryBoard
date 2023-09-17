@@ -1,5 +1,8 @@
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
 import { AbstractNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
@@ -15,9 +18,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -56,20 +57,15 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.role = Player.ZERO; // The user is playing, not observing
         this.setDefaultRulesConfig();
     }
-    /**
-     * Will set the default rules config
-     * Will not do it if the game don't exist, this will be handled later
-     */
+
+    // Will set the default rules config
+    // Will set it to {} if the game don't exist, but an error will be handled by some other function
     private setDefaultRulesConfig(): void {
         const gameName: string = this.getGameName();
-        const games: GameInfo[] =
-            GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameName);
-        if (games.length > 0) {
-            this.rulesConfig = MGPOptional.of(RulesConfigUtils.getGameDefaultConfig(gameName));
-        } else {
-            // TODO: check that it is a needed check
-        }
+        const defaultConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);
+        this.rulesConfig = MGPOptional.of(defaultConfig);
     }
+
     public getCreatedNodes(): number {
         return MGPNodeStats.createdNodes;
     }

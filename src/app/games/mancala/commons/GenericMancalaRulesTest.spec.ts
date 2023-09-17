@@ -9,8 +9,7 @@ import { AbstractNode, MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MancalaConfig } from './MancalaConfig';
-import { RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
-import { rulesConfigDescriptionMap } from 'src/app/components/normal-component/pick-game/pick-game.component';
+import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 export class MancalaRulesTestEntries<M extends MancalaMove> {
     gameName: string; // 'Awale', 'Kalah', etc

@@ -23,7 +23,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/ConfigUtil';
 
 describe('GameService', () => {
 

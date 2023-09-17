@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ConfigDescriptionType, ConfigParameter, RulesConfig, RulesConfigDescription } from 'src/app/jscaip/ConfigUtil';
+import { ConfigDescriptionType, ConfigParameter, RulesConfig, RulesConfigDescription } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { BaseGameComponent } from '../../game-components/game-component/GameComponent';
 import { ActivatedRoute } from '@angular/router';
