@@ -85,6 +85,27 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         // Then game component should be created
         testUtils.expectElementToExist('#board');
     }));
+
+});
+
+describe('LocalGameWrapperComponent (game without config)', () => {
+
+    let testUtils: ComponentTestUtils<P4Component>;
+
+    beforeEach(fakeAsync(async() => {
+        testUtils = await ComponentTestUtils.forGame<P4Component>('Epaminondas', true, false);
+        ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
+        TestBed.inject(ErrorLoggerService);
+    }));
+
+    it('should start game immediately when no configuration are needed', fakeAsync(async() => {
+        // Given any game needing no config, like Epaminondas
+        // When displaying them
+        // Then game component should be created
+        testUtils.expectElementToExist('#board');
+        // And the config not
+        testUtils.expectElementNotToExist('#rulesConfigComponent');
+    }));
 });
 
 describe('LocalGameWrapperComponent (game phase)', () => {

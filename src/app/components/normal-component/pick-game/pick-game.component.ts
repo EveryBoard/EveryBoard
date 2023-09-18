@@ -210,8 +210,8 @@ export class RulesConfigDescriptions {
 
     public static readonly AWALE: RulesConfigDescription = {
         fields: [
-            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6 },
-            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4 },
+            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6, isValid: getNumericRangeChecker(1, 99) },
+            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4, isValid: getNumericRangeChecker(3, 25) },
             { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`,  defaultValue: false },
             { name: 'mustFeed',          i18nName: (): string => $localize`Must feed`,            defaultValue: true },
             { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: false },
@@ -230,8 +230,8 @@ export class RulesConfigDescriptions {
 
     public static readonly GO: RulesConfigDescription = {
         fields: [
-            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 19, isValid: getNumericRangeChecker(3, 25) },
-            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 19 },
+            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 19, isValid: getNumericRangeChecker(1, 99) },
+            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 19, isValid: getNumericRangeChecker(1, 99) },
         ],
     };
 
@@ -247,8 +247,8 @@ export class RulesConfigDescriptions {
 
     public static readonly KALAH: RulesConfigDescription = {
         fields: [
-            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6 },
-            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4 },
+            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6, isValid: getNumericRangeChecker(1, 99) },
+            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4, isValid: getNumericRangeChecker(1, 99) },
             { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`,  defaultValue: true },
             { name: 'mustFeed',          i18nName: (): string => $localize`Must feed`,            defaultValue: false },
             { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: true },
@@ -257,8 +257,8 @@ export class RulesConfigDescriptions {
 
     public static readonly P4: RulesConfigDescription = {
         fields: [
-            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 7 },
-            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 6 },
+            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 7, isValid: getNumericRangeChecker(1, 99) },
+            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 6, isValid: getNumericRangeChecker(1, 99) },
         ],
     };
 
@@ -275,12 +275,11 @@ export class RulesConfigDescriptions {
 }
 
 function getNumericRangeChecker(min: number, max: number): (v: number) => MGPValidation {
-    // TODO: check component that use those display thoses!
     return (value: number) => {
         if (value < min) {
-            return MGPValidation.failure($localize`${ value } + ' is too low, minimum is ${ min }`);
+            return MGPValidation.failure($localize`${ value } is too low, minimum is ${ min }`);
         } else if (max < value) {
-            return MGPValidation.failure($localize`${ value } + ' is too high, maximum is ${ max }`);
+            return MGPValidation.failure($localize`${ value } is too high, maximum is ${ max }`);
         } else {
             return MGPValidation.SUCCESS;
         }

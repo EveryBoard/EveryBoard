@@ -55,14 +55,17 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
-        return state.turn === 42 ? GameStatus.DRAW : GameStatus.ONGOING;
+        const width: number = state.board[0].length;
+        const height: number = state.board.length;
+        return state.turn === (width * height) ? GameStatus.DRAW : GameStatus.ONGOING;
     }
     public getVictoriousCoords(state: P4State): Coord[] {
         return this.P4_HELPER.getVictoriousCoord(state);
     }
     public getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
-        while (y < this.config.height && board[y][x] === PlayerOrNone.NONE) {
+        const height: number = board.length;
+        while (y < height && board[y][x] === PlayerOrNone.NONE) {
             y++;
         }
         return y - 1;

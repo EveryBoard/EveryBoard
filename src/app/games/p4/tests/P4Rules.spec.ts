@@ -7,7 +7,7 @@ import { P4Minimax } from '../P4Minimax';
 import { P4Failure } from '../P4Failure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 
 describe('P4Rules', () => {
 
@@ -20,7 +20,7 @@ describe('P4Rules', () => {
     beforeEach(() => {
         rules = P4Rules.get();
         minimaxes = [
-            new P4Minimax(rules, 'P4Minimax'),
+            // TODO: check that isDraw don't care about score for Rules Tests ?
         ];
     });
     it('should be created', () => {
@@ -45,92 +45,89 @@ describe('P4Rules', () => {
         const expectedState: P4State = new P4State(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('First player should win vertically', () => {
-        // Given a board with 3 aligned pieces
-        const board: Table<PlayerOrNone> = [
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, O, _, _, _],
-            [_, _, _, O, _, _, _],
-            [_, _, X, O, X, _, X],
-        ];
-        const state: P4State = new P4State(board, 6);
 
-        // When aligning a fourth piece
-        const move: P4Move = P4Move.of(3);
+    describe('end game', () => {
 
-        // Then the move should be legal and player zero winner
-        const expectedBoard: Table<PlayerOrNone> = [
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, O, _, _, _],
-            [_, _, _, O, _, _, _],
-            [_, _, _, O, _, _, _],
-            [_, _, X, O, X, _, X],
-        ];
-        const expectedState: P4State = new P4State(expectedBoard, 7);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: P4Node = new P4Node(expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
-    });
-    it('Second player should win vertically', () => {
-        // Given a board with 3 aligned pieces
-        const board: Table<PlayerOrNone> = [
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, X, _, _, _],
-            [_, _, _, X, _, _, _],
-            [_, O, O, X, O, O, _],
-        ];
-        const state: P4State = new P4State(board, 7);
+        it('First player should win vertically', () => {
+            // Given a board with 3 aligned pieces
+            const board: Table<PlayerOrNone> = [
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, X, O, X, _, X],
+            ];
+            const state: P4State = new P4State(board, 6);
 
-        // When aligning a fourth piece
-        const move: P4Move = P4Move.of(3);
+            // When aligning a fourth piece
+            const move: P4Move = P4Move.of(3);
 
-        // Then the move should be legal and player zero winner
-        const expectedBoard: Table<PlayerOrNone> = [
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, X, _, _, _],
-            [_, _, _, X, _, _, _],
-            [_, _, _, X, _, _, _],
-            [_, O, O, X, O, O, _],
-        ];
-        const expectedState: P4State = new P4State(expectedBoard, 8);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: P4Node = new P4Node(expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
-    });
-    it('should be a draw', () => {
-        // Given a penultian board without victory
-        const board: Table<PlayerOrNone> = [
-            [O, O, O, _, O, O, O],
-            [X, X, X, O, X, X, X],
-            [O, O, O, X, O, O, O],
-            [X, X, X, O, X, X, X],
-            [O, O, O, X, O, O, O],
-            [X, X, X, O, X, X, X],
-        ];
-        const state: P4State = new P4State(board, 41);
+            // Then the move should be legal and player zero winner
+            const expectedBoard: Table<PlayerOrNone> = [
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, X, O, X, _, X],
+            ];
+            const expectedState: P4State = new P4State(expectedBoard, 7);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const node: P4Node = new P4Node(expectedState);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        });
 
-        // When doing the last move
-        const move: P4Move = P4Move.of(3);
+        it('Second player should win vertically', () => {
+            // Given a board with 3 aligned pieces
+            const board: Table<PlayerOrNone> = [
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, X, _, _, _],
+                [_, _, _, X, _, _, _],
+                [_, O, O, X, O, O, _],
+            ];
+            const state: P4State = new P4State(board, 7);
 
-        // Then the game should be a hard draw
-        const expectedBoard: Table<PlayerOrNone> = [
-            [O, O, O, X, O, O, O],
-            [X, X, X, O, X, X, X],
-            [O, O, O, X, O, O, O],
-            [X, X, X, O, X, X, X],
-            [O, O, O, X, O, O, O],
-            [X, X, X, O, X, X, X],
-        ];
-        const expectedState: P4State = new P4State(expectedBoard, 42);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: P4Node = new P4Node(expectedState);
-        RulesUtils.expectToBeDraw(rules, node, minimaxes);
+            // When aligning a fourth piece
+            const move: P4Move = P4Move.of(3);
+
+            // Then the move should be legal and player zero winner
+            const expectedBoard: Table<PlayerOrNone> = [
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, X, _, _, _],
+                [_, _, _, X, _, _, _],
+                [_, _, _, X, _, _, _],
+                [_, O, O, X, O, O, _],
+            ];
+            const expectedState: P4State = new P4State(expectedBoard, 8);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const node: P4Node = new P4Node(expectedState);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        });
+
+        it('should be a draw once the board is full (smaller boards config)', () => {
+            // Given a board without victory, whose turn is equal to width * height - 1
+            const width: number = 75;
+            const height: number = 33;
+            const board: Table<PlayerOrNone> = ArrayUtils.createTable(width, height, PlayerOrNone.NONE);
+            const turn: number = width * height - 1; // The logic is based on the turn, it does not check the board
+            const state: P4State = new P4State(board, turn);
+
+            // When doing the last move
+            const move: P4Move = P4Move.of(3);
+
+            // Then the game should be a hard draw
+            const expectedBoard: PlayerOrNone[][] = ArrayUtils.createTable(width, height, PlayerOrNone.NONE);
+            expectedBoard[height - 1][move.x] = Player.ofTurn(turn);
+            const finalTurn: number = width * height;
+            const expectedState: P4State = new P4State(expectedBoard, finalTurn);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const node: P4Node = new P4Node(expectedState);
+            RulesUtils.expectToBeDraw(rules, node, minimaxes);
+        });
     });
     it('should forbid placing a piece on a full column', () => {
         // Given a board with a full column

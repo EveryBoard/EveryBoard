@@ -239,10 +239,6 @@ export class SimpleComponentTestUtils<T> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();
-        console.log(element)
-        ///////////// ANOTHER WAY
-        // const button: HTMLButtonElement = this.fixture.debugElement.nativeElement.querySelector(elementName);
-        // expect(button.attributes.getNamedItem('ng-reflect-disabled')?.value).toBeTruthy();
     }
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
@@ -293,9 +289,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1); // Need to be at least 1ms
-        if (testUtils.getWrapper() instanceof LocalGameWrapperComponent &&
-            chooseDefaultConfig)
-        {
+        if (testUtils.getWrapper() instanceof LocalGameWrapperComponent && chooseDefaultConfig) {
             await testUtils.acceptDefaultConfig();
         }
         if (chooseDefaultConfig) {
@@ -323,8 +317,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
 
     public async acceptDefaultConfig(): Promise<void> {
-        await this.clickElement('#startGameWithConfig');
-        tick(1);
+        if (this.findElement('#startGameWithConfig') != null) {
+            await this.clickElement('#startGameWithConfig');
+            tick(1);
+        }
     }
     public bindGameComponent(): void {
         expect(this.component.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();

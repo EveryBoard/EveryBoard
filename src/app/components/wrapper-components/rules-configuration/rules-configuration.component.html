@@ -22,10 +22,11 @@
                                 <i class="fas fa-exclamation-triangle"></i>
                             </span>
                         </div>
-                        <div *ngIf="isInvalid(configParameter.name)"
+                        <div *ngIf="isInvalid(configParameter.name, configParameter.isValid)"
                              class="message is-danger"
                              role="alert">
-                            <div class="message-header" i18n>Minimum 1.</div>
+                            <div id="{{ configParameter.name }}_number_config_error"
+                                 class="message-header">{{ getErrorMessage(configParameter) }}</div>
                         </div>
                     </div>
                 </div>

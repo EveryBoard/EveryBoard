@@ -178,7 +178,11 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(2);
         }));
         it('stage three should make the game component appear at last', fakeAsync(async() => {
-            await prepareComponent(ConfigRoomMocks.WITH_ACCEPTED_CONFIG, PartMocks.INITIAL);
+            const configRoom: ConfigRoom = {
+                ...ConfigRoomMocks.WITH_ACCEPTED_CONFIG,
+                rulesConfig: { width: 7, height: 6 },
+            };
+            await prepareComponent(configRoom, PartMocks.INITIAL);
             testUtils.detectChanges();
             tick(0);
 

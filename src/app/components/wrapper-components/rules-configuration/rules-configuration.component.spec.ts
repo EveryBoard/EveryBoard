@@ -5,6 +5,7 @@ import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/test
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 describe('RulesConfigurationComponent', () => {
 
@@ -39,8 +40,23 @@ describe('RulesConfigurationComponent', () => {
         describe('number config', () => {
             beforeEach(() => {
                 component.rulesConfigDescription = { fields: [
-                    { name: 'nombre', i18nName: (): string => 'nombre', defaultValue: 5 },
-                    { name: 'canailleDeBoule', i18nName: (): string => 'canaille', defaultValue: 12 },
+                    {
+                        name: 'nombre',
+                        i18nName: (): string => 'nombre',
+                        defaultValue: 5,
+                        isValid: (v: number): MGPValidation => {
+                            if (v < 1) {
+                                return MGPValidation.failure('too smol');
+                            } else {
+                                return MGPValidation.SUCCESS;
+                            }
+                        },
+                    },
+                    {
+                        name: 'canailleDeBoule',
+                        i18nName: (): string => 'canaille',
+                        defaultValue: 12,
+                    },
                 ] };
             });
             it('should propose a number input when given a config of type number', fakeAsync(async() => {
@@ -75,8 +91,8 @@ describe('RulesConfigurationComponent', () => {
                 const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ nombre: 5, canailleDeBoule: 149 });
                 expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
             }));
-            it('should emit an empty optional when changing value to 0 or bellow', fakeAsync(async() => {
-                // Given a component loaded with a config description
+            it('should emit an empty optional when applying invalid change', fakeAsync(async() => {
+                // Given a component loaded with a config description that has a validator
                 spyOn(component.updateCallback, 'emit').and.callThrough();
                 testUtils.detectChanges();
 
@@ -85,6 +101,16 @@ describe('RulesConfigurationComponent', () => {
 
                 // Then the resulting value should not have been emitted
                 expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
+            }));
+            it('should display custom validation error when applying invalid change', fakeAsync(async() => {
+                // Given a component loaded with a config description that has a validator
+                testUtils.detectChanges();
+
+                // When modifying config to null or negative
+                component.rulesConfigForm.get('nombre')?.setValue(0);
+
+                // Then the resulting value should not have been emitted
+                expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('too smol');
             }));
         });
         describe('boolean config', () => {

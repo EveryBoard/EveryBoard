@@ -12,10 +12,12 @@ import { SCORE } from 'src/app/jscaip/SCORE';
 export class P4Minimax extends Minimax<P4Move, P4State, P4Config> {
 
     public getListMoves(node: P4Node): P4Move[] {
+        const width: number = node.gameState.board[0].length;
+        const virtualCX: number = Math.floor((width - 1) / 2);
         return P4Rules.get().getListMoves(node)
             .sort((left: P4Move, right: P4Move) => {
-                const distanceFromCenterLeft: number = Math.abs(left.x - 3);
-                const distanceFromCenterRight: number = Math.abs(right.x - 3);
+                const distanceFromCenterLeft: number = Math.abs(left.x - virtualCX);
+                const distanceFromCenterRight: number = Math.abs(right.x - virtualCX);
                 return distanceFromCenterLeft - distanceFromCenterRight;
             });
     }

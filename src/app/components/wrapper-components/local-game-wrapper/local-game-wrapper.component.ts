@@ -228,6 +228,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public updateConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
+        if (rulesConfig.isPresent() && Object.keys(rulesConfig.get()).length === 0) {
+            this.markConfigAsFilled();
+        }
     }
     public markConfigAsFilled(): void {
         this.configSetted = true;
