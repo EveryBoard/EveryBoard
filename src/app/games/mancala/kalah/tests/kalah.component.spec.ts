@@ -28,7 +28,7 @@ describe('KalahComponent', () => {
 
         distribution: {
             state: MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG),
-            move: KalahMove.of(MancalaDistribution.ZERO),
+            move: KalahMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
                 { x: 1, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
@@ -39,8 +39,8 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [5, 5, 5, 4, 4, 4],
                 [0, 4, 4, 4, 4, 4],
-            ], 1, [1, 0]),
-            move: KalahMove.of(MancalaDistribution.ZERO),
+            ], 1, [1, 0], 4),
+            move: KalahMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
                 { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -53,8 +53,8 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 2, 0],
                 [1, 0, 0, 0, 0, 1],
-            ], 100, [0, 0]),
-            move: KalahMove.of(MancalaDistribution.FIVE),
+            ], 100, [0, 0], 4),
+            move: KalahMove.of(MancalaDistribution.of(5)),
             result: [
                 { x: 4, y: 0, content: { mainContent: ' -2 ' } },
                 { x: 4, y: 1, content: { mainContent: ' -1 ' } },
@@ -65,8 +65,8 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 6, 6, 5, 5, 5],
                 [6, 0, 5, 0, 4, 4],
-            ], 2, [0, 0]),
-            move: KalahMove.of(MancalaDistribution.FIVE),
+            ], 2, [0, 0], 4),
+            move: KalahMove.of(MancalaDistribution.of(5)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' -6 ' } },
                 { x: 1, y: 1, content: { mainContent: ' -1 ' } },
@@ -76,8 +76,8 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [8, 0, 0, 0, 0, 0],
-            ], 0, [0, 0]),
-            move: KalahMove.of(MancalaDistribution.ZERO),
+            ], 0, [0, 0], 4),
+            move: KalahMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 5, y: 0, content: { mainContent: ' -1 ' } },
                 { x: 5, y: 1, content: { mainContent: ' -1 ' } },
@@ -146,7 +146,7 @@ describe('KalahComponent', () => {
                 const state: MancalaState = new MancalaState([
                     [0, 1, 0, 0, 0, 0],
                     [0, 0, 13, 0, 0, 0],
-                ], 0, [0, 0]);
+                ], 0, [0, 0], 4);
                 await mancalaTestUtils.testUtils.setupState(state);
 
                 // When distributing the house
@@ -193,7 +193,7 @@ describe('KalahComponent', () => {
             // Given any board where first distribution has been done
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(3, 1));
             // When doing double distribution move
-            const move: KalahMove = KalahMove.of(MancalaDistribution.THREE, [MancalaDistribution.ZERO]);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
             // Then it should be a success
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_0_1', move);
         }));
@@ -223,14 +223,14 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [6, 1, 7, 6, 1, 7],
                 [2, 1, 6, 2, 2, 5],
-            ], 3, [4, 2]);
+            ], 3, [4, 2], 4);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the complex move
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(0, 0));
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(4, 0));
-            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO,
-                                                 [MancalaDistribution.FOUR, MancalaDistribution.ONE]);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(0),
+                                                 [MancalaDistribution.of(4), MancalaDistribution.of(1)]);
 
             // Then the move should be legal
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_1_0', move);
@@ -240,14 +240,14 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [5, 0, 6, 6, 0, 6],
                 [0, 5, 5, 1, 5, 5],
-            ], 2, [2, 2]);
+            ], 2, [2, 2], 4);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the complex move
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(4, 1));
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(0, 1));
-            const move: KalahMove = KalahMove.of(MancalaDistribution.FOUR,
-                                                 [MancalaDistribution.ZERO, MancalaDistribution.FIVE]);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(4),
+                                                 [MancalaDistribution.of(0), MancalaDistribution.of(5)]);
 
             // Then the move should be legal
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_5_1', move);
@@ -258,13 +258,13 @@ describe('KalahComponent', () => {
                 [4, 4, 4, 4, 4, 4],
                 [0, 0, 0, 2, 0, 0],
             ];
-            const previousState: MancalaState = new MancalaState(previousBoard, 4, [0, 0]);
+            const previousState: MancalaState = new MancalaState(previousBoard, 4, [0, 0], 4);
             const board: Table<number> = [
                 [4, 0, 4, 4, 4, 4],
                 [0, 0, 1, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 5, [5, 0]);
-            const move: KalahMove = KalahMove.of(MancalaDistribution.THREE);
+            const state: MancalaState = new MancalaState(board, 5, [5, 0], 4);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(3));
             await mancalaTestUtils.testUtils.setupState(state, previousState, move);
 
             // When starting a multiple-capture move
@@ -276,7 +276,7 @@ describe('KalahComponent', () => {
         }));
         it('should get back to original board when taking back move', fakeAsync(async() => {
             // Given a board where a first move has been done
-            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(0));
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_0_1', move);
 
             // When taking back
@@ -290,7 +290,7 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 1, 0, 0],
                 [0, 4, 0, 0, 0, 0],
-            ], 0, [0, 0]);
+            ], 0, [0, 0], 4);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When giving turn to AI to play and waiting for move
@@ -306,11 +306,11 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
-            ], 10, [13, 9]);
+            ], 10, [13, 9], 4);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the only move possible for the remaining sub-move
-            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(0));
 
             // Then that normally-illegal move should be accepted
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_0_1', move);

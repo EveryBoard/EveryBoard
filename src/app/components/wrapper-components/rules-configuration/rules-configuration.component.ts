@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { ConfigDescriptionType, ConfigParameter, RulesConfig, RulesConfigDescription } from 'src/app/jscaip/RulesConfigUtil';
+import { ConfigDescriptionType, ConfigParameter, NumberConfigParameter, RulesConfig, RulesConfigDescription } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { BaseGameComponent } from '../../game-components/game-component/GameComponent';
 import { ActivatedRoute } from '@angular/router';
@@ -70,12 +70,13 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
 
     private getFormControl(configParameter: ConfigParameter, value: ConfigDescriptionType): FormControl {
         let formControl: FormControl;
-        const validator: CustomValidator = this.getValidator(configParameter.isValid);
-        if (typeof configParameter.defaultValue === 'boolean') {
-            formControl = new FormControl(value, validator) as FormControl<boolean>;
-        } else {
-            Utils.expectToBe(typeof configParameter.defaultValue, 'number');
+        if (typeof configParameter.defaultValue === 'number') {
+            const numberConfigParameter: NumberConfigParameter = configParameter;
+            const validator: CustomValidator = this.getNumberValidator(numberConfigParameter.isValid);
             formControl = new FormControl(value, validator) as FormControl<number>;
+        } else {
+            Utils.expectToBe(typeof configParameter.defaultValue, 'boolean');
+            formControl = new FormControl(value) as FormControl<boolean>;
         }
         if (this.userIsCreator === false) {
             formControl.disable();
@@ -86,25 +87,18 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         return formControl;
     }
 
-    private getValidator(isValid?: ((value: ConfigDescriptionType) => MGPValidation)): CustomValidator {
-        if (isValid === undefined) {
-            return (c: AbstractControl) => {
-                return null;
-            };
-        } else {
-            return (control: AbstractControl) => {
-                return { invalidTruc: isValid(control.value).isFailure() };
-            };
-        }
+    private getNumberValidator(isValid: ((value: number | null) => MGPValidation)): CustomValidator {
+        return (control: AbstractControl) => {
+            return { invalidTruc: isValid(control.value).isFailure() };
+        };
     }
 
     public onUpdate(): void {
-        // TODO: unit test that when I remove some default value, I cannot click
         if (this.userIsCreator) {
             const rulesConfig: RulesConfig = {};
             for (const rulesConfigDescription of this.rulesConfigDescription.fields) {
                 const name: string = rulesConfigDescription.name;
-                if (this.isInvalid(name, rulesConfigDescription.isValid)) {
+                if (this.isInvalid(name, rulesConfigDescription)) {
                     // This inform the parent component that an invalid update has been done
                     this.updateCallback.emit(MGPOptional.empty());
                     return; // In order not to send update when form is invalid
@@ -125,29 +119,25 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         return typeof value === 'boolean';
     }
 
-    public isInvalid(name: string, isValid?: (v: ConfigDescriptionType) => MGPValidation): boolean {
+    public isInvalid(name: string, configParameter: ConfigParameter): boolean {
         const fieldValue: ConfigDescriptionType = this.rulesConfigForm.controls[name].value;
-        if (typeof fieldValue === 'boolean') {
+        if (typeof configParameter.defaultValue === 'number') {
+            const numberConfigParameter: NumberConfigParameter = configParameter;
+            const validity: MGPValidation = numberConfigParameter.isValid(fieldValue as number);
+            return validity.isFailure();
+        } else {
+            Utils.expectToBe(typeof configParameter.defaultValue, 'boolean');
             // Angular make thoses controls invalid when they are boolean, not sure why
             return false; // So we return false cause they cannot be invalid, checked or not, its always valid
-        } else {
-            if (isValid === undefined) {
-                return false;
-            } else {
-                const validity: MGPValidation = isValid(fieldValue);
-                return validity.isFailure();
-            }
         }
     }
 
     public getErrorMessage(configParameter: ConfigParameter): string {
-        if (configParameter.isValid === undefined) {
-            return 'des chaussettes mon peyo';
-        } else {
-            const fieldValue: ConfigDescriptionType =
-                this.rulesConfigForm.controls[configParameter.name].value;
-            const validity: MGPValidation = configParameter.isValid(fieldValue);
-            return validity.getReason();
-        }
+        // eslint-disable-next-line dot-notation
+        Utils.assert(configParameter['isValid'] != null, 'Here, configParameter.isValid should be defined');
+        const fieldValue: number | null = this.rulesConfigForm.controls[configParameter.name].value;
+        // eslint-disable-next-line dot-notation
+        const validity: MGPValidation = configParameter['isValid'](fieldValue);
+        return validity.getReason();
     }
 }

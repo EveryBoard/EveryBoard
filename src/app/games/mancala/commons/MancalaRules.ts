@@ -89,13 +89,16 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     }
     public getGameStatus(node: MGPNode<MancalaRules<Move>, Move, MancalaState>): GameStatus {
         const state: MancalaState = node.gameState;
-        if (state.scores[0] > 24) {
+        const width: number = node.gameState.board[0].length;
+        const seedByHouse: number = node.gameState.seedByHouse;
+        const halfOfTotalSeeds: number = width * seedByHouse;
+        if (state.scores[0] > halfOfTotalSeeds) {
             return GameStatus.ZERO_WON;
         }
-        if (state.scores[1] > 24) {
+        if (state.scores[1] > halfOfTotalSeeds) {
             return GameStatus.ONE_WON;
         }
-        if (state.scores[0] === 24 && state.scores[1] === 24) {
+        if (state.scores[0] === halfOfTotalSeeds && state.scores[1] === halfOfTotalSeeds) {
             return GameStatus.DRAW;
         }
         return GameStatus.ONGOING;
@@ -112,7 +115,8 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         }
         return new MancalaState(resultingState.board,
                                 resultingState.turn + 1,
-                                resultingState.scores);
+                                resultingState.scores,
+                                resultingState.seedByHouse);
     }
     /**
      * Simply distribute then group of stone in (x, y)
@@ -156,7 +160,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
             filledCoords: filledCoords,
             passedByKalahNTimes,
             endsUpInKalah: endUpInKalah,
-            resultingState: new MancalaState(resultingBoard, state.turn, state.getScoresCopy()),
+            resultingState: new MancalaState(resultingBoard, state.turn, state.getScoresCopy(), state.seedByHouse),
         };
     }
     public getNextCoord(coord: Coord, player: Player, previousDropWasKalah: boolean, state: MancalaState)
@@ -221,7 +225,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         return {
             capturedSum,
             captureMap,
-            resultingState: new MancalaState(resultingBoard, state.turn, captured),
+            resultingState: new MancalaState(resultingBoard, state.turn, captured, state.seedByHouse),
         };
     }
 }

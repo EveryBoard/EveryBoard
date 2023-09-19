@@ -5,14 +5,13 @@ import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class EpaminondasMinimax
-    extends Minimax<EpaminondasMove, EpaminondasState, RulesConfig, EpaminondasLegalityInformation>
+    extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
 {
     public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
@@ -28,14 +27,14 @@ export class EpaminondasMinimax
                 for (const direction of Direction.DIRECTIONS) {
                     let movedPieces: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            state.getPieceAt(nextCoord) === player)
                     {
                         movedPieces += 1;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
                     let stepSize: number = 1;
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            stepSize <= movedPieces &&
                            state.getPieceAt(nextCoord) === empty)
                     {
@@ -44,7 +43,7 @@ export class EpaminondasMinimax
                         stepSize++;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
-                    if (EpaminondasState.isOnBoard(nextCoord) &&
+                    if (state.isOnBoard(nextCoord) &&
                         stepSize <= movedPieces &&
                         state.getPieceAt(nextCoord) === opponent)
                     {
@@ -82,15 +81,17 @@ export class EpaminondasMinimax
         return new BoardValue(this.getPieceCountPlusRowDomination(node.gameState));
     }
     public getPieceCountPlusRowDomination(state: EpaminondasState): number {
-        const SCORE_BY_PIECE: number = EpaminondasState.WIDTH * 13 * 11;
+        const width: number = state.board[0].length;
+        const height: number = state.board.length;
+        const SCORE_BY_PIECE: number = width * 13 * 11;
         const SCORE_BY_ROW_DOMINATION: number = 2;
         const SCORE_BY_PRESENCE: number = 1;
         const SCORE_BY_ALIGNEMENT: number = 1;
         let total: number = 0;
-        for (let y: number = 0; y < EpaminondasState.HEIGHT; y++) {
+        for (let y: number = 0; y < height; y++) {
             let row: number = 0;
             const wasPresent: number[] = [0, 0];
-            for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
+            for (let x: number = 0; x < width; x++) {
                 const coord: Coord = new Coord(x, y);
                 const player: PlayerOrNone = state.getPieceAt(coord);
                 if (player.isPlayer()) {
@@ -100,7 +101,7 @@ export class EpaminondasMinimax
                     row += mod;
                     for (const dir of [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT]) {
                         let neighbor: Coord = coord.getNext(dir, 1);
-                        while (EpaminondasState.isOnBoard(neighbor) &&
+                        while (state.isOnBoard(neighbor) &&
                                state.getPieceAt(neighbor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;

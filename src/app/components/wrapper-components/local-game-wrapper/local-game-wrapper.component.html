@@ -102,7 +102,8 @@
         </div>
     </div>
 </div>
-<div *ngIf="configSetted === false">
+<div *ngIf="configSetted === false"
+     class="box">
     <app-rules-configuration id="rulesConfigComponent"
                              [rulesConfigDescription]="getRulesConfigDescription()"
                              [userIsCreator]="true"
@@ -115,6 +116,7 @@
                 <div class="control">
                     <button id="startGameWithConfig"
                             class="button is-primary is-fullwidth"
+                            [disabled]="rulesConfig.isAbsent()"
                             (click)="markConfigAsFilled()"
                             i18n>Start with this config</button>
                 </div>

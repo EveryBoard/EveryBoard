@@ -77,13 +77,9 @@ export abstract class Rules<M extends Move,
             this.config = config;
         }
         // eslint-disable-next-line dot-notation
-        if (config == null) {
-            const initialState: S = this.stateType['getInitialState']({ chausseLaKoek: true });
-            return new MGPNode(initialState);
-        } else {
-            const initialState: S = this.stateType['getInitialState'](config);
-            return new MGPNode(initialState);
-        }
+        console.log('getInitialNode', config)
+        const initialState: S = this.stateType['getInitialState'](config);
+        return new MGPNode(initialState);
     }
     public abstract getGameStatus(node: MGPNode<Rules<M, S, C, L>, M, S, C, L>): GameStatus;
 }

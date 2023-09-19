@@ -13,10 +13,9 @@ import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 type TutorialPlayer = 'tutorial-player';
+
 @Component({
     selector: 'app-tutorial-game-wrapper',
     templateUrl: './tutorial-game-wrapper.component.html',
@@ -91,8 +90,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new MGPNode(currentStep.state,
                                               MGPOptional.empty(),
                                               currentStep.previousMove);
-        // const rulesConfig: RulesConfig = await this.getConfig();
-        // this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig);
         // Set role will update view with updateBoardAndShowLastMove
         await this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();

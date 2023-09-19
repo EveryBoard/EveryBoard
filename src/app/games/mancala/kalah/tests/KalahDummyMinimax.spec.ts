@@ -31,7 +31,7 @@ describe('KalahDummyMinimax', () => {
         const state: MancalaState = new MancalaState([
             [5, 2, 3, 2, 1, 2],
             [1, 0, 0, 0, 0, 0],
-        ], 24, [13, 20]);
+        ], 24, [13, 20], 4);
         const node: KalahNode = new KalahNode(state);
 
         // When calculating the list of possible moves
@@ -46,18 +46,18 @@ describe('KalahDummyMinimax', () => {
             [0, 0, 0, 3, 2, 1],
             [1, 2, 3, 0, 0, 0],
         ];
-        const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 0, [0, 0], 4);
         const node: KalahNode = new KalahNode(state);
 
         // When choosing the best choice
         const expectedBestMove: KalahMove =
-            KalahMove.of(MancalaDistribution.ZERO,
+            KalahMove.of(MancalaDistribution.of(0),
                          [
-                             MancalaDistribution.ONE,
-                             MancalaDistribution.ZERO,
-                             MancalaDistribution.TWO,
-                             MancalaDistribution.ZERO,
-                             MancalaDistribution.ONE,
+                             MancalaDistribution.of(1),
+                             MancalaDistribution.of(0),
+                             MancalaDistribution.of(2),
+                             MancalaDistribution.of(0),
+                             MancalaDistribution.of(1),
                          ]);
         const best: KalahMove = node.findBestMove(1, minimax);
 
@@ -70,9 +70,9 @@ describe('KalahDummyMinimax', () => {
             [0, 0, 0, 3, 2, 1],
             [1, 2, 3, 0, 0, 0],
         ];
-        const strongState: MancalaState = new MancalaState(board, 0, [10, 0]);
+        const strongState: MancalaState = new MancalaState(board, 0, [10, 0], 4);
         // And a board with a little score
-        const weakState: MancalaState = new MancalaState(board, 0, [0, 0]);
+        const weakState: MancalaState = new MancalaState(board, 0, [0, 0], 4);
 
         // When comparing both
         // Then the bigger score should be better

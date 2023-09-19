@@ -9,7 +9,7 @@ export interface TaflConfig extends RulesConfig {
 
     // once the king leave the castle he cannot re-station there
     readonly castleIsLeftForGood: boolean;
-    // a border can be counted as participating to a 4-opponent capture
+    // an Edge can be counted as participating to a 4-opponent capture
     readonly borderCanSurroundKing: boolean;
     // the king can be captured by only three invaders if he's against a throne
     readonly centralThroneCanSurroundKing: boolean;

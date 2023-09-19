@@ -104,7 +104,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         return {
             capturedSum,
             captureMap,
-            resultingState: new MancalaState(resultingBoard, state.turn, captured),
+            resultingState: new MancalaState(resultingBoard, state.turn, captured, state.seedByHouse),
         };
     }
     public captureIfLegal(x: number, y: number, state: MancalaState): MancalaCaptureResult {

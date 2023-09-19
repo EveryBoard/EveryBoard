@@ -86,7 +86,8 @@ export class KalahRules extends MancalaRules<KalahMove> {
         captured[playerValue] += passedByKalahNTimes;
         const distributedState: MancalaState = new MancalaState(postDistributionState.getCopiedBoard(),
                                                                 postDistributionState.turn,
-                                                                captured);
+                                                                captured,
+                                                                postDistributionState.seedByHouse);
         return {
             endsUpInKalah: endUpInKalah,
             filledCoords: filledCoords,
@@ -125,7 +126,8 @@ export class KalahRules extends MancalaRules<KalahMove> {
                 captured[distributedState.getCurrentPlayer().value] += capturedSum;
                 const postCaptureState: MancalaState = new MancalaState(board,
                                                                         distributedState.turn,
-                                                                        captured);
+                                                                        captured,
+                                                                        distributedState.seedByHouse);
                 return {
                     capturedSum, captureMap, resultingState: postCaptureState,
                 };

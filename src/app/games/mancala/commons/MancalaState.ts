@@ -6,9 +6,13 @@ export class MancalaState extends GameStateWithTable<number> {
 
     public static getInitialState(config: MancalaConfig): MancalaState {
         const board: number[][] = ArrayUtils.createTable(config.width, 2, config.seedByHouse);
-        return new MancalaState(board, 0, [0, 0]);
+        return new MancalaState(board, 0, [0, 0], config.seedByHouse);
     }
-    public constructor(b: Table<number>, turn: number, public readonly scores: readonly [number, number]) {
+    public constructor(b: Table<number>,
+                       turn: number,
+                       public readonly scores: readonly [number, number],
+                       public readonly seedByHouse: number)
+    {
         super(b, turn);
     }
     public getScoresCopy(): [number, number] {

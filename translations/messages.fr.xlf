@@ -306,6 +306,62 @@
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
       </trans-unit>
+      <trans-unit id="8720126581400014790" datatype="html">
+        <source>Value is mandatory</source>
+        <target>Valeur obligatoire</target>
+      </trans-unit>
+      <trans-unit id="69725534523676367" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too low, minimum is <x id="PH_1" equiv-text="min"/></source>
+        <target><x id="PH" equiv-text="value"/> est trop bas, le minimum est <x id="PH_1" equiv-text="min"/></target>
+      </trans-unit>
+      <trans-unit id="1461430439573127397" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too high, maximum is <x id="PH_1" equiv-text="max"/></source>
+        <target><x id="PH" equiv-text="value"/> est trop haut, le maximum est <x id="PH_1" equiv-text="max"/></target>
+      </trans-unit>
+      <trans-unit id="2018922024247045709" datatype="html">
+        <source>Width</source>
+        <target>Largeur</target>
+      </trans-unit>
+      <trans-unit id="1139009493669322983" datatype="html">
+        <source>Seed by house</source>
+        <target>Graines par maison</target>
+      </trans-unit>
+      <trans-unit id="1086558575410854374" datatype="html">
+        <source>Feed original house</source>
+        <target>Graines par maison</target>
+      </trans-unit>
+      <trans-unit id="1571603835358328677" datatype="html">
+        <source>Must feed</source>
+        <target>Nourrir est obligatoire</target>
+      </trans-unit>
+      <trans-unit id="7654623560547531779" datatype="html">
+        <source>Pass by player store</source>
+        <target>Passer par le magasin</target>
+      </trans-unit>
+      <trans-unit id="9195784792324730674" datatype="html">
+        <source>Central throne is left for good</source>
+        <target>Le thrône central est quitté définitivement</target>
+      </trans-unit>
+      <trans-unit id="6759318691734948333" datatype="html">
+        <source>Edge can surround king</source>
+        <target>L'arrête peut encercler le roi</target>
+      </trans-unit>
+      <trans-unit id="2642196868516331796" datatype="html">
+        <source>Central throne can surround king</source>
+        <target>Le trône central peut encercler le roi</target>
+      </trans-unit>
+      <trans-unit id="3540730147473795195" datatype="html">
+        <source>King far from home can be sandwiched</source>
+        <target>Le roi loin du trône central peut être sandwiché</target>
+      </trans-unit>
+      <trans-unit id="843632127033881976" datatype="html">
+        <source>Invader Starts</source>
+        <target>L'envahisseur commence</target>
+      </trans-unit>
+      <trans-unit id="3033623772164647792" datatype="html">
+        <source>Height</source>
+        <target>Hauteur</target>
+      </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
         <target>Puissance 4</target>
@@ -642,6 +698,10 @@
         <source>Start a new game</source>
         <target>Commencer une nouvelle partie</target>
       </trans-unit>
+      <trans-unit id="342909021169073473" datatype="html">
+        <source>Start with this config</source>
+        <target>Commencer avec cette configuration</target>
+      </trans-unit>
       <trans-unit id="960848013465225718" datatype="html">
         <source>You won</source>
         <target>Vous avez gagné</target>
@@ -901,6 +961,10 @@
       <trans-unit id="3852843717175527075" datatype="html">
         <source>The game has been canceled!</source>
         <target>La partie a été annulée !</target>
+      </trans-unit>
+      <trans-unit id="7694289842795780023" datatype="html">
+        <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> part</source>
+        <target>Configuration de votre partie de <x id="INTERPOLATION" equiv-text="{{ gameName }}"/></target>
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
         <source><x id="PH" equiv-text="username"/> left the game, please pick another opponent.</source>

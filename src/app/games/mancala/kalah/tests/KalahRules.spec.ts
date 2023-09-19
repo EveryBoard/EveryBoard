@@ -24,7 +24,7 @@ describe('KalahRules', () => {
             gameName: 'Kalah',
             minimaxes,
             rules,
-            simpleMove: KalahMove.of(MancalaDistribution.FIVE),
+            simpleMove: KalahMove.of(MancalaDistribution.of(5)),
         });
     });
     describe('distribution', () => {
@@ -33,14 +33,14 @@ describe('KalahRules', () => {
             const state: MancalaState = MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG);
 
             // When doing a simple move
-            const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(5));
 
             // Then the seed should be distributed
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [4, 5, 5, 5, 5, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should feed initial house', () => {
@@ -48,17 +48,17 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [13, 0, 0, 0, 0, 0],
-            ], 0, [0, 0]);
+            ], 0, [0, 0], 4);
 
             // When doing a simple move
-            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(0));
 
             // Then the seed should be distributed (and then by default that means a capture)
             const expectedBoard: Table<number> = [
                 [0, 1, 1, 1, 1, 1],
                 [0, 1, 1, 1, 1, 1],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [3, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [3, 0], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow to distribute twice when first landing end up in the Kalah', () => {
@@ -66,14 +66,14 @@ describe('KalahRules', () => {
             const state: MancalaState = MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG);
 
             // When doing the double distribution
-            const move: KalahMove = KalahMove.of(MancalaDistribution.THREE, [MancalaDistribution.FIVE]);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(5)]);
 
             // Then two distributiong must have been done and one piece dropped in the Kalah
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [5, 6, 6, 1, 5, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should throw when distributing twice when first landing did not end in the Kalah', () => {
@@ -81,7 +81,7 @@ describe('KalahRules', () => {
             const state: MancalaState = MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG);
 
             // When doing the double distribution
-            const move: KalahMove = KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.TWO]);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(2)]);
 
             // Then the move should be wildly considered as illegal, you scumbag hacker !
             const reason: string = 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE';
@@ -94,7 +94,7 @@ describe('KalahRules', () => {
             const state: MancalaState = MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG);
 
             // When doing it
-            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(0));
 
             // Then one of your seeds would be dropped in your Kalah
             // YEAH YOU READ THAT RIGHT, UP YOURS !!
@@ -102,7 +102,7 @@ describe('KalahRules', () => {
                 [5, 5, 5, 4, 4, 4],
                 [0, 4, 4, 4, 4, 4],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it(`should not drop a piece in opponent's Kalah when passing by`, () => {
@@ -111,17 +111,17 @@ describe('KalahRules', () => {
                 [4, 4, 4, 4, 4, 4],
                 [8, 4, 4, 4, 4, 4],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 0, [0, 0], 4);
 
             // When doing it
-            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(0));
 
             // Then one of your seeds would be dropped in your Kalah but not in the opponent's
             const expectedBoard: Table<number> = [
                 [5, 5, 5, 5, 5, 5],
                 [0, 4, 4, 4, 4, 5],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid to stop distributing after landing in your Kalah', () => {
@@ -129,7 +129,7 @@ describe('KalahRules', () => {
             const state: MancalaState = MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG);
 
             // When doing the move
-            const move: KalahMove = KalahMove.of(MancalaDistribution.THREE);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(3));
 
             // Then it should be refused
             const reason: string = 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE';
@@ -142,24 +142,24 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 1, 4, 1, 5, 4],
-            ], 10, [13, 9]);
+            ], 10, [13, 9], 4);
 
             // When doing that complex move
             const move: KalahMove =
-            KalahMove.of(MancalaDistribution.ZERO,
+            KalahMove.of(MancalaDistribution.of(0),
                          [
-                             MancalaDistribution.FOUR,
-                             MancalaDistribution.ZERO,
-                             MancalaDistribution.ONE,
-                             MancalaDistribution.ZERO,
-                             MancalaDistribution.FIVE,
+                             MancalaDistribution.of(4),
+                             MancalaDistribution.of(0),
+                             MancalaDistribution.of(1),
+                             MancalaDistribution.of(0),
+                             MancalaDistribution.of(5),
                          ]);
 
             // Then it should be legal
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [0, 1, 6, 3, 1, 0],
-            ], 11, [18, 9]);
+            ], 11, [18, 9], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow to stop distribution in the Kalah when no more piece available', () => {
@@ -167,17 +167,17 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
-            ], 10, [13, 9]);
+            ], 10, [13, 9], 4);
 
             // When doing the only move possible for the remaining sub-move
-            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(0));
 
             // Then that normally-illegal move should be accepted
             // And since player gave their last stone, monsoon
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
-            ], 11, [14, 19]);
+            ], 11, [14, 19], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
     });
@@ -188,17 +188,17 @@ describe('KalahRules', () => {
                 [0, 0, 0, 0, 0, 1],
                 [0, 3, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [22, 22]);
+            const state: MancalaState = new MancalaState(board, 1, [22, 22], 4);
 
             // When current player player give its last stone
-            const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(5));
 
             // Then the move should be the last of the game and Player.ZERO should monsoon
             const expectedBoard: Table<number> = [
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23], 4);
             const node: KalahNode = new KalahNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
@@ -209,17 +209,17 @@ describe('KalahRules', () => {
                 [0, 0, 0, 0, 2, 0],
                 [0, 1, 0, 0, 0, 1],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [22, 22]);
+            const state: MancalaState = new MancalaState(board, 0, [22, 22], 4);
 
             // When current player capture opponent last stones
-            const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(5));
 
             // Then the move should be the last of the game and Player.ZERO should monsoon
             const expectedBoard: Table<number> = [
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [26, 22]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [26, 22], 4);
             const node: KalahNode = new KalahNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
@@ -230,17 +230,17 @@ describe('KalahRules', () => {
                 [0, 0, 0, 0, 0, 2],
                 [0, 1, 2, 3, 4, 4],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [10, 22]);
+            const state: MancalaState = new MancalaState(board, 1, [10, 22], 4);
 
             // When player give its last stone
-            const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(5));
 
             // Then, since the other player can't distribute, all its pieces should be mansooned
             const expectedBoard: Table<number> = [
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: KalahNode = new KalahNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
@@ -253,17 +253,17 @@ describe('KalahRules', () => {
                 [4, 4, 4, 4, 4, 4],
                 [0, 0, 0, 0, 2, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 4, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 4, [0, 0], 4);
 
             // When doing a move that end up in this house of your
-            const move: KalahMove = KalahMove.of(MancalaDistribution.FOUR);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(4));
 
             // Then you should capture both houses
             const expectedBoard: Table<number> = [
                 [4, 4, 0, 4, 4, 4],
                 [0, 0, 0, 1, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 5, [5, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 5, [5, 0], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it(`should not capture parallel opponent's house when landing in an occupied house of yours`, () => {
@@ -272,17 +272,17 @@ describe('KalahRules', () => {
                 [4, 4, 4, 4, 4, 4],
                 [0, 0, 1, 0, 2, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 4, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 4, [0, 0], 4);
 
             // When doing a move that end up in this house of yours but after doing a full turn first
-            const move: KalahMove = KalahMove.of(MancalaDistribution.FOUR);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(4));
 
             // Then you should not capture anything
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [0, 0, 2, 1, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 5, [0, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 5, [0, 0], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should capture when landing on empty space inside your territory', () => {
@@ -291,17 +291,17 @@ describe('KalahRules', () => {
                 [0, 0, 0, 1, 0, 7],
                 [8, 0, 0, 1, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 0, [0, 0], 4);
 
             // When doing the move
-            const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(0));
 
             // Then the capture should be done too
             const expectedBoard: Table<number> = [
                 [1, 1, 1, 2, 1, 0],
                 [0, 0, 0, 1, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [10, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [10, 0], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow long capture', () => {
@@ -309,24 +309,24 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 2, 3, 0, 0, 0],
-            ], 0, [0, 0]);
+            ], 0, [0, 0], 4);
 
             // When doing that complex move
             const move: KalahMove =
-            KalahMove.of(MancalaDistribution.ZERO,
+            KalahMove.of(MancalaDistribution.of(0),
                          [
-                             MancalaDistribution.ONE,
-                             MancalaDistribution.ZERO,
-                             MancalaDistribution.TWO,
-                             MancalaDistribution.ZERO,
-                             MancalaDistribution.ONE,
+                             MancalaDistribution.of(1),
+                             MancalaDistribution.of(0),
+                             MancalaDistribution.of(2),
+                             MancalaDistribution.of(0),
+                             MancalaDistribution.of(1),
                          ]);
 
             // Then it should be legal
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
-            ], 1, [5, 0]);
+            ], 1, [5, 0], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
     });

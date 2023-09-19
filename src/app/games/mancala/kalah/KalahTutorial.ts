@@ -21,7 +21,7 @@ export class KalahTutorial extends Tutorial {
             $localize`Bonus fact: Kalah has been created in the U.S.A in 1940 by William Julius Champion Jr.`,
             MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG),
         ),
-        MancalaTutorial.SOWING(KalahMove.of(MancalaDistribution.FIVE), KalahRules.DEFAULT_CONFIG),
+        MancalaTutorial.SOWING(KalahMove.of(MancalaDistribution.of(5)), KalahRules.DEFAULT_CONFIG),
 
         TutorialStep.forClick(
             $localize`The Kalah (1/2)`,
@@ -39,7 +39,7 @@ export class KalahTutorial extends Tutorial {
             $localize`The Kalah (2/2)`,
             $localize`When ending in the Kalah, you must distribute again.<br/><br/>You're playing Dark, play the house that ends up in the Kalah then do a second distribution!`,
             MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG),
-            KalahMove.of(MancalaDistribution.THREE, [MancalaDistribution.ONE]),
+            KalahMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(1)]),
             (move: KalahMove, _previous: MancalaState, _result: MancalaState) => {
                 if (move.distributions.length === 1) {
                     return MGPValidation.failure($localize`This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!`);
@@ -55,8 +55,8 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 4, 4, 4, 4, 4],
                 [0, 2, 0, 2, 4, 0],
-            ], 4, [0, 0]),
-            KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.ZERO, MancalaDistribution.THREE]),
+            ], 4, [0, 0], 4),
+            KalahMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(0), MancalaDistribution.of(3)]),
             (_move: KalahMove, _state: MancalaState, resultingState: MancalaState) => {
                 if (resultingState.getPieceAtXY(1, 0) === 0) {
                     return MGPValidation.SUCCESS;
@@ -72,9 +72,9 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 0, 0, 0, 2, 0],
                 [2, 0, 0, 0, 0, 1],
-            ], 0, [19, 24]),
+            ], 0, [19, 24], 4),
             [
-                KalahMove.of(MancalaDistribution.FIVE),
+                KalahMove.of(MancalaDistribution.of(5)),
             ],
             $localize`Since there is no longer seeds in the opponent houses, all your seeds have been captured by you. Congratulations, you won!`,
             $localize`Failed, you gave the opponent a seed! Try again.`,

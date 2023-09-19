@@ -41,7 +41,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public configSetted: boolean = false;
 
-    private rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
+    public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
     private readonly configBS: BehaviorSubject<MGPOptional<RulesConfig>> = new BehaviorSubject(MGPOptional.empty());
     private readonly configObs: Observable<MGPOptional<RulesConfig>> = this.configBS.asObservable();

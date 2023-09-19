@@ -7,13 +7,12 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                                                           EpaminondasState,
-                                                          RulesConfig,
+                                                          EpaminondasConfig,
                                                           EpaminondasLegalityInformation>
 {
 
@@ -49,7 +48,9 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         return new BoardValue(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
     private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {
-        const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * EpaminondasState.WIDTH;
+        const width: number = state.board[0].length;
+        const height: number = state.board.length;
+        const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * width;
         const SCORE_BY_ALIGNEMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13
         const MAX_NUMBER_OF_ALIGNEMENT: number = (24*16) + (4*15);
         const SCORE_BY_PIECE: number = (MAX_NUMBER_OF_ALIGNEMENT * SCORE_BY_ALIGNEMENT) + 1; // OLDLY 25*13
@@ -61,7 +62,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                 let avancement: number; // entre 0 et 11
                 let dirs: Direction[];
                 if (player === Player.ZERO) {
-                    avancement = EpaminondasState.HEIGHT - coord.y;
+                    avancement = height - coord.y;
                     dirs = [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT];
                 } else {
                     avancement = coord.y + 1;
@@ -72,7 +73,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                 total += SCORE_BY_PIECE * mod;
                 for (const dir of dirs) {
                     let neighbor: Coord = coord.getNext(dir, 1);
-                    while (EpaminondasState.isOnBoard(neighbor) &&
+                    while (state.isOnBoard(neighbor) &&
                            state.getPieceAt(neighbor) === player)
                     {
                         total += mod * SCORE_BY_ALIGNEMENT;

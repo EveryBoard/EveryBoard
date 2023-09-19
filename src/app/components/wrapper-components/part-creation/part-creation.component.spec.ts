@@ -420,6 +420,7 @@ describe('PartCreationComponent', () => {
                 expect(component.currentConfigRoom).toEqual(proposedConfig);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
             it('should not transfer rules config when modifying field', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 awaitComponentInitialization();
@@ -437,6 +438,7 @@ describe('PartCreationComponent', () => {
                 expect(component.currentConfigRoom).toEqual(proposedConfig);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
             it('should transfer rules config when proposing config', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 awaitComponentInitialization();
@@ -459,6 +461,7 @@ describe('PartCreationComponent', () => {
                 expect(component.currentConfigRoom).toEqual(proposedConfig);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
             it('should disable config proposition button when rules config is invalid', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 awaitComponentInitialization();
@@ -473,6 +476,7 @@ describe('PartCreationComponent', () => {
                 testUtils.expectElementToBeDisabled('#proposeConfig');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Form interaction', () => {
             it('should modify configRoom, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
-import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules, epaminondasConfig } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasMinimax } from 'src/app/games/epaminondas/EpaminondasMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -16,7 +16,6 @@ import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -28,7 +27,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                                    EpaminondasMove,
                                                                    EpaminondasState,
                                                                    PlayerOrNone,
-                                                                   RulesConfig,
+                                                                   EpaminondasConfig,
                                                                    EpaminondasLegalityInformation>
 {
     public NONE: PlayerOrNone = PlayerOrNone.NONE;
@@ -53,7 +52,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.rules = EpaminondasRules.get();
-        this.node = this.rules.getInitialNode();
+        this.node = this.rules.getInitialNode(epaminondasConfig);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),
             new PositionalEpaminondasMinimax(this.rules, 'Positional'),
@@ -77,7 +76,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         const previousNode: EpaminondasNode = this.node.mother.get();
         const PREVIOUS_OPPONENT: Player = previousNode.gameState.getCurrentOpponent();
-        while (EpaminondasState.isOnBoard(moved) &&
+        while (previousNode.gameState.isOnBoard(moved) &&
                previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT)
         {
             this.capturedCoords.push(moved);
@@ -124,12 +123,12 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.getFirstPieceExtensions(PLAYER);
         }
     }
-    private getFirstPieceExtensions(PLAYER: Player): Coord[] {
+    private getFirstPieceExtensions(player: Player): Coord[] {
         const extensions: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
             let coord: Coord = this.firstPiece.get().getNext(direction, 1);
-            while (EpaminondasState.isOnBoard(coord) &&
-                   this.board[coord.y][coord.x] === PLAYER)
+            while (this.getState().isOnBoard(coord) &&
+                   this.board[coord.y][coord.x] === player)
             {
                 extensions.push(coord);
                 coord = coord.getNext(direction, 1);
@@ -149,7 +148,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     private getExtensionsToward(coord: Coord, direction: Direction, PLAYER: Player): Coord[] {
         const extensions: Coord[] = [];
-        while (EpaminondasState.isOnBoard(coord) &&
+        while (this.getState().isOnBoard(coord) &&
                this.board[coord.y][coord.x] === PLAYER)
         {
             extensions.push(coord);
@@ -181,7 +180,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const neighbors: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
             const coord: Coord = this.firstPiece.get().getNext(direction, 1);
-            if (EpaminondasState.isOnBoard(coord) &&
+            if (this.getState().isOnBoard(coord) &&
                 this.board[coord.y][coord.x] === PlayerOrNone.NONE)
             {
                 neighbors.push(coord);
@@ -193,7 +192,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
         const landings: Coord[] = [];
-        while (EpaminondasState.isOnBoard(landing) &&
+        while (this.getState().isOnBoard(landing) &&
                landings.length < phalanxSize &&
                this.board[landing.y][landing.x] !== player)
         {
@@ -211,7 +210,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     private getPhalanxLength(firstPiece: Coord, direction: Direction, owner: Player): number {
         let length: number = 0;
-        while (EpaminondasState.isOnBoard(firstPiece) &&
+        while (this.getState().isOnBoard(firstPiece) &&
                this.board[firstPiece.y][firstPiece.x] === owner)
         {
             length++;

@@ -109,9 +109,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
         this.gameComponent.cancelMoveOnWrapper = (reason?: string): Promise<void> => {
             return this.onCancelMove(reason);
         };
-        this.gameComponent.getRulesConfigFromWrapper = (): Promise<RulesConfig> => {
-            return this.getConfig();
-        };
         await this.setRole(this.role);
     }
 
@@ -141,7 +138,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
 
     public abstract getPlayer(): P;
 
-    public async getConfig(): Promise<RulesConfig> { // TODO: check for each 4 wrappers
+    public async getConfig(): Promise<RulesConfig> {
         const gameName: string = this.getGameName();
         return RulesConfigUtils.getGameDefaultConfig(gameName);
     }

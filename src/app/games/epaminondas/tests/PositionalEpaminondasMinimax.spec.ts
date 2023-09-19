@@ -4,7 +4,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules, epaminondasConfig } from '../EpaminondasRules';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -22,7 +22,7 @@ describe('PositionalEpaminondasMinimax', () => {
         minimax = new PositionalEpaminondasMinimax(rules, 'EpaminondasMinimax');
     });
     it('should filter number of choices', () => {
-        const node: EpaminondasNode = rules.getInitialNode();
+        const node: EpaminondasNode = rules.getInitialNode(epaminondasConfig);
         expect(minimax.getListMoves(node).length).toBeLessThan(114);
     });
     it('should not filter number of choices if it is below 40', () => {

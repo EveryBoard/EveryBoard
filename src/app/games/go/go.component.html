@@ -85,7 +85,7 @@
           [attr.height]="SPACE_SIZE * 0.5"
           [attr.x]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().x)"
           [attr.y]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().y)"
-          class="captured-stroke no-fill"
+          class="captured-stroke mid-stroke no-fill"
     />
     <circle *ngFor="let capture of captures"
             (click)="onClick(capture.x, capture.y)"

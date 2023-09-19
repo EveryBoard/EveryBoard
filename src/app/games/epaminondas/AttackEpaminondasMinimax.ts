@@ -27,8 +27,10 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     }
     public getDefense(state: EpaminondasState): number {
         let score: number = 0;
-        for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
-            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ZERO) {
+        const width: number = state.board[0].length;
+        const height: number = state.board.length;
+        for (let x: number = 0; x < width; x++) {
+            if (state.getPieceAtXY(x, height - 1) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
             if (state.getPieceAtXY(x, 0) === Player.ONE) {
@@ -45,7 +47,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
                 for (let dx: number = -1; dx <= 1; dx++) {
                     for (let dy: number = -1; dy <= 1; dy++) {
                         const coord: Coord = coordAndContent.coord.getNext(new Coord(dx, dy), 1);
-                        if (EpaminondasState.isOnBoard(coord)) {
+                        if (state.isOnBoard(coord)) {
                             const neighbor: PlayerOrNone = state.getPieceAt(coord);
                             if (neighbor === owner) {
                                 score += 1 * owner.getScoreModifier();
@@ -62,11 +64,13 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     }
     public getOffense(state: EpaminondasState): number {
         let score: number = 0;
-        for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
+        const width: number = state.board[0].length;
+        const height: number = state.board.length;
+        for (let x: number = 0; x < width; x++) {
             if (state.getPieceAtXY(x, 0) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
-            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ONE) {
+            if (state.getPieceAtXY(x, height - 1) === Player.ONE) {
                 score += Player.ONE.getScoreModifier();
             }
         }
@@ -74,7 +78,8 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     }
     public getCenter(state: EpaminondasState): number {
         let score: number = 0;
-        const cx: number = (EpaminondasState.WIDTH - 1) / 2;
+        const width: number = state.board[0].length;
+        const cx: number = (width - 1) / 2;
         for (const coordAndContent of state.getCoordsAndContents()) {
             const owner: PlayerOrNone = coordAndContent.content;
             if (owner.isPlayer()) {
@@ -94,14 +99,14 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
                 for (const direction of Direction.DIRECTIONS) {
                     let movedPieces: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            state.getPieceAt(nextCoord) === owner)
                     {
                         movedPieces += 1;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
                     let stepSize: number = 1;
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            stepSize <= movedPieces &&
                            state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
                     {

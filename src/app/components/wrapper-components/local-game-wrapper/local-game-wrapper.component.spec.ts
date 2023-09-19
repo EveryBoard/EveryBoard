@@ -75,6 +75,17 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         testUtils.expectElementToExist('#startGameWithConfig');
     }));
 
+    it('should disable button to accept default configuration when receiving empty optional from child component', fakeAsync(async() => {
+        // Given any game needing a config, like P4
+        const component: LocalGameWrapperComponent = testUtils.getComponent() as LocalGameWrapperComponent;
+
+        // When receiving MGPOptional.empty from children component
+        component.updateConfig(MGPOptional.empty());
+
+        // Then the button to accept default rules config should be disabled
+        testUtils.expectElementToBeDisabled('#startGameWithConfig');
+    }));
+
     it('game component should be created once you click on the button', fakeAsync(async() => {
         // Given any game needing a config, like P4
 
@@ -86,6 +97,8 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         testUtils.expectElementToExist('#board');
     }));
 
+    it('should call ');
+
 });
 
 describe('LocalGameWrapperComponent (game without config)', () => {
@@ -93,13 +106,13 @@ describe('LocalGameWrapperComponent (game without config)', () => {
     let testUtils: ComponentTestUtils<P4Component>;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.forGame<P4Component>('Epaminondas', true, false);
+        testUtils = await ComponentTestUtils.forGame<P4Component>('Quarto', true, false);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));
 
     it('should start game immediately when no configuration are needed', fakeAsync(async() => {
-        // Given any game needing no config, like Epaminondas
+        // Given any game needing no config, like Quarto
         // When displaying them
         // Then game component should be created
         testUtils.expectElementToExist('#board');

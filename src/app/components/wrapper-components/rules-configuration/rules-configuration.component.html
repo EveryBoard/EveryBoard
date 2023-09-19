@@ -1,4 +1,4 @@
-<div class="box">
+<div>
     <p class="title" i18n>Configuration of your {{ gameName }} part</p>
     <form [formGroup]="rulesConfigForm">
         <fieldset>
@@ -6,7 +6,7 @@
                  id="{{ configParameter.name }}_config"
                  class="field is-horizontal">
                 <div class="field-label is-normal">
-                    <label class="label">{{ configParameter.name }}</label>
+                    <label class="label">{{ configParameter.i18nName() }}</label>
                 </div>
                 <div *ngIf="isNumber(configParameter.defaultValue)"
                      class="field-body">
@@ -17,12 +17,12 @@
                                    type="number"
                                    class="input"
                                    required
-                                   i18n-placeholder placeholder="{{ configParameter.name }}" />
+                                   placeholder="{{ configParameter.i18nName() }}" />
                             <span class="icon is-small is-right">
                                 <i class="fas fa-exclamation-triangle"></i>
                             </span>
                         </div>
-                        <div *ngIf="isInvalid(configParameter.name, configParameter.isValid)"
+                        <div *ngIf="isInvalid(configParameter.name, configParameter)"
                              class="message is-danger"
                              role="alert">
                             <div id="{{ configParameter.name }}_number_config_error"
@@ -39,7 +39,7 @@
                                    type="checkbox"
                                    class="checkbox"
                                    required
-                                   i18n-placeholder placeholder="{{ configParameter.name }}" />
+                                   placeholder="{{ configParameter.i18nName() }}" />
                         </div>
                     </div>
                 </div>

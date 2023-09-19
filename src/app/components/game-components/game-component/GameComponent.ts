@@ -1,6 +1,6 @@
 import { Move } from '../../../jscaip/Move';
 import { Rules } from '../../../jscaip/Rules';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -63,7 +63,6 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
                                     L = void,
                                     B extends BoardValue = BoardValue>
     extends BaseGameComponent
-    implements OnInit
 {
     public encoder: Encoder<M>;
 
@@ -101,8 +100,6 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
     public canUserPlay: (element: string) => Promise<MGPValidation>;
 
     public cancelMoveOnWrapper: (reason?: string) => void;
-
-    public getRulesConfigFromWrapper: () => Promise<C>;
 
     public role: PlayerOrNone;
 
@@ -160,10 +157,6 @@ export abstract class GameComponent<R extends Rules<M, S, C, L, B>,
         return;
     }
 
-    public async ngOnInit(): Promise<void> {
-        const config: C = await this.getRulesConfigFromWrapper();
-        this.node = this.rules.getInitialNode(config);
-    }
 }
 
 export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, RulesConfig, unknown>,

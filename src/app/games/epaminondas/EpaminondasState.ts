@@ -1,40 +1,25 @@
-import { Table } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Coord } from 'src/app/jscaip/Coord';
+import { EpaminondasConfig } from './EpaminondasRules';
 
 export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
-    public static readonly WIDTH: number = 14;
-
-    public static readonly HEIGHT: number = 12;
-
-    public static getInitialState(): EpaminondasState {
+    public static getInitialState(config: EpaminondasConfig): EpaminondasState {
+        console.log('getInitialState', config)
         const _: PlayerOrNone = PlayerOrNone.NONE;
         const O: PlayerOrNone = PlayerOrNone.ZERO;
         const X: PlayerOrNone = PlayerOrNone.ONE;
-        const board: Table<PlayerOrNone> = [
-            [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
-            [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
-            [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
-        ];
+        const upperBoard: PlayerOrNone[][] = ArrayUtils.createTable(config.width, config.rowOfSoldier, X);
+        const middleBoard: PlayerOrNone[][] = ArrayUtils.createTable(config.width, config.emptyHeight, _);
+        const lowerBoard: PlayerOrNone[][] = ArrayUtils.createTable(config.width, config.rowOfSoldier, O);
+        const board: Table<PlayerOrNone> = upperBoard.concat(middleBoard).concat(lowerBoard);
         return new EpaminondasState(board, 0);
-    }
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(EpaminondasState.WIDTH, EpaminondasState.HEIGHT);
     }
     public count(piece: Player, row: number): number {
         let result: number = 0;
-        for (let x: number = 0; x < 14; x++) {
+        const width: number = this.board[0].length;
+        for (let x: number = 0; x < width; x++) {
             if (this.board[row][x] === piece) {
                 result++;
             }

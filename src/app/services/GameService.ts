@@ -179,9 +179,6 @@ export class GameService {
             partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
         const startingConfig: StartingPartConfig = this.getStartingConfig(newConfigRoom);
-        // TODO: unit tester que la partie commence bien avec les rules de la config room
-        // TODO: unit tester que getInitialState est appelé avec rulesConfig dans LGWC
-        // TODO: unit tester que getInitialState est appelé avec rulesConfig dans OGWC
         const newPart: Part = {
             typeGame: part.typeGame,
             result: MGPResult.UNACHIEVED.value,

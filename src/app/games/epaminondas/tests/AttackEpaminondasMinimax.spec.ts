@@ -6,7 +6,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules, epaminondasConfig } from '../EpaminondasRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('AttackEpaminondasMinimax', () => {
@@ -22,7 +22,7 @@ describe('AttackEpaminondasMinimax', () => {
         minimax = new AttackEpaminondasMinimax(rules, 'AttackEpaminondasMinimax');
     });
     it('should propose 114 moves at first turn', () => {
-        const node: EpaminondasNode = rules.getInitialNode();
+        const node: EpaminondasNode = rules.getInitialNode(epaminondasConfig);
         expect(minimax.getListMoves(node).length).toBe(114);
     });
     it('should consider possible capture the best move', () => {

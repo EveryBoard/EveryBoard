@@ -11,19 +11,29 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+
+export type EpaminondasConfig = {
+    width: number;
+    emptyHeight: number;
+    rowOfSoldier: number;
+};
+
+export const epaminondasConfig: EpaminondasConfig = {
+    width: 14,
+    emptyHeight: 8,
+    rowOfSoldier: 2,
+};
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
-
 
 export class EpaminondasNode extends MGPNode<EpaminondasRules,
                                              EpaminondasMove,
                                              EpaminondasState,
-                                             RulesConfig,
+                                             EpaminondasConfig,
                                              EpaminondasLegalityInformation> {}
 
 export class EpaminondasRules
-    extends Rules<EpaminondasMove, EpaminondasState, RulesConfig, EpaminondasLegalityInformation>
+    extends Rules<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
 {
     private static singleton: MGPOptional<EpaminondasRules> = MGPOptional.empty();
 
@@ -34,7 +44,7 @@ export class EpaminondasRules
         return EpaminondasRules.singleton.get();
     }
     private constructor() {
-        super(EpaminondasState, {});
+        super(EpaminondasState, epaminondasConfig);
     }
     public static isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {
         const phalanxValidity: MGPValidation = this.getPhalanxValidity(state, move);
@@ -59,7 +69,7 @@ export class EpaminondasRules
         let soldierIndex: number = 0;
         const opponent: Player = state.getCurrentOpponent();
         while (soldierIndex < move.movedPieces) {
-            if (EpaminondasState.isOnBoard(coord) === false) {
+            if (state.isOnBoard(coord) === false) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
             const spaceContent: PlayerOrNone = state.getPieceAt(coord);
@@ -84,7 +94,7 @@ export class EpaminondasRules
         while (landingIndex + 1 < move.stepSize) {
             newBoard[emptied.y][emptied.x] = PlayerOrNone.NONE;
             newBoard[landingCoord.y][landingCoord.x] = currentPlayer;
-            if (EpaminondasState.isOnBoard(landingCoord) === false) {
+            if (state.isOnBoard(landingCoord) === false) {
                 return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
             }
             if (state.getPieceAt(landingCoord).isPlayer()) {
@@ -94,7 +104,7 @@ export class EpaminondasRules
             landingCoord = landingCoord.getNext(move.direction, 1);
             emptied = emptied.getNext(move.direction, 1);
         }
-        if (EpaminondasState.isOnBoard(landingCoord) === false) {
+        if (state.isOnBoard(landingCoord) === false) {
             return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
         }
         if (state.getPieceAt(landingCoord) === currentPlayer) {
@@ -112,7 +122,7 @@ export class EpaminondasRules
     {
         let capturedSoldier: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
         let captured: number = 0;
-        while (EpaminondasState.isOnBoard(capturedSoldier) &&
+        while (oldState.isOnBoard(capturedSoldier) &&
                oldState.getPieceAt(capturedSoldier) === opponent)
         {
             // Capture
@@ -141,7 +151,8 @@ export class EpaminondasRules
     public getGameStatus(node: EpaminondasNode): GameStatus {
         const state: EpaminondasState = node.gameState;
         const zerosInFirstLine: number = state.count(Player.ZERO, 0);
-        const onesInLastLine: number = state.count(Player.ONE, EpaminondasState.HEIGHT - 1);
+        const height: number = state.board.length;
+        const onesInLastLine: number = state.count(Player.ONE, height - 1);
         if (state.turn % 2 === 0) {
             if (zerosInFirstLine > onesInLastLine) {
                 return GameStatus.ZERO_WON;

@@ -3,7 +3,6 @@ import { P4Node, P4Rules } from '../P4Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4State, p4Config } from '../P4State';
 import { P4Move } from '../P4Move';
-import { P4Minimax } from '../P4Minimax';
 import { P4Failure } from '../P4Failure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -21,6 +20,7 @@ describe('P4Rules', () => {
         rules = P4Rules.get();
         minimaxes = [
             // TODO: check that isDraw don't care about score for Rules Tests ?
+            // AKA TODO FOR REVIEW: ça c'est bien un futur conflit après MCTS ?
         ];
     });
     it('should be created', () => {

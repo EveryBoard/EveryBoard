@@ -254,6 +254,15 @@
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
       </trans-unit>
+      <trans-unit id="8720126581400014790" datatype="html">
+        <source>Value is mandatory</source>
+      </trans-unit>
+      <trans-unit id="69725534523676367" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too low, minimum is <x id="PH_1" equiv-text="min"/></source>
+      </trans-unit>
+      <trans-unit id="1461430439573127397" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too high, maximum is <x id="PH_1" equiv-text="max"/></source>
+      </trans-unit>
       <trans-unit id="2018922024247045709" datatype="html">
         <source>Width</source>
       </trans-unit>
@@ -269,11 +278,11 @@
       <trans-unit id="7654623560547531779" datatype="html">
         <source>Pass by player store</source>
       </trans-unit>
-      <trans-unit id="2690953521879675694" datatype="html">
-        <source>Castle is left for good</source>
+      <trans-unit id="9195784792324730674" datatype="html">
+        <source>Central throne is left for good</source>
       </trans-unit>
-      <trans-unit id="2489038482937652587" datatype="html">
-        <source>Border can surround king</source>
+      <trans-unit id="6759318691734948333" datatype="html">
+        <source>Edge can surround king</source>
       </trans-unit>
       <trans-unit id="2642196868516331796" datatype="html">
         <source>Central throne can surround king</source>
@@ -760,12 +769,6 @@
       </trans-unit>
       <trans-unit id="7694289842795780023" datatype="html">
         <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> part</source>
-      </trans-unit>
-      <trans-unit id="187187500641108332" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ configParameter.name }}"/></source>
-      </trans-unit>
-      <trans-unit id="7359671237575156131" datatype="html">
-        <source>Minimum 1.</source>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>

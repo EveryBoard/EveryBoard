@@ -6,11 +6,20 @@ import { MGPValidation } from '../utils/MGPValidation';
 
 export type ConfigDescriptionType = string | number | boolean;
 
-export type ConfigParameter = {
+export type ConfigParameter = NumberConfigParameter | BooleanConfigParameter;
+
+type BaseConfigParameter = {
     name: string;
     i18nName: Localized;
-    defaultValue: ConfigDescriptionType;
-    isValid?: (value: ConfigDescriptionType) => MGPValidation;
+};
+
+export type NumberConfigParameter = BaseConfigParameter & {
+    defaultValue: number;
+    isValid: (value: number | null) => MGPValidation;
+};
+
+export type BooleanConfigParameter = BaseConfigParameter & {
+    defaultValue: boolean;
 };
 
 export type RulesConfigDescription = {

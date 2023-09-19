@@ -206,12 +206,30 @@ class GameDescription {
 
 }
 
+export class MGPValidators {
+
+    public static range(min: number, max: number): (v: number | null) => MGPValidation {
+        return (value: number | null) => {
+            if (value == null) {
+                return MGPValidation.failure($localize`Value is mandatory`);
+            }
+            if (value < min) {
+                return MGPValidation.failure($localize`${ value } is too low, minimum is ${ min }`);
+            } else if (max < value) {
+                return MGPValidation.failure($localize`${ value } is too high, maximum is ${ max }`);
+            } else {
+                return MGPValidation.SUCCESS;
+            }
+        };
+    }
+}
+
 export class RulesConfigDescriptions {
 
     public static readonly AWALE: RulesConfigDescription = {
         fields: [
-            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6, isValid: getNumericRangeChecker(1, 99) },
-            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4, isValid: getNumericRangeChecker(3, 25) },
+            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6, isValid: MGPValidators.range(1, 99) },
+            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4, isValid: MGPValidators.range(3, 25) },
             { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`,  defaultValue: false },
             { name: 'mustFeed',          i18nName: (): string => $localize`Must feed`,            defaultValue: true },
             { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: false },
@@ -220,25 +238,33 @@ export class RulesConfigDescriptions {
 
     public static readonly BRANDHUB: RulesConfigDescription = {
         fields: [
-            { name: 'castleIsLeftForGood',            i18nName: (): string => $localize`Castle is left for good`,              defaultValue: true },
-            { name: 'borderCanSurroundKing',          i18nName: (): string => $localize`Border can surround king`,             defaultValue: false },
+            { name: 'castleIsLeftForGood',            i18nName: (): string => $localize`Central throne is left for good`,      defaultValue: true },
+            { name: 'borderCanSurroundKing',          i18nName: (): string => $localize`Edge can surround king`,               defaultValue: false },
             { name: 'centralThroneCanSurroundKing',   i18nName: (): string => $localize`Central throne can surround king`,     defaultValue: true },
             { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: true },
             { name: 'invaderStarts',                  i18nName: (): string => $localize`Invader Starts`,                       defaultValue: true },
         ],
     };
 
+    public static readonly EPAMINONDAS: RulesConfigDescription = {
+        fields: [
+            { name: 'width',        i18nName: (): string => $localize`salukes`, defaultValue: 14, isValid: MGPValidators.range(1, 99) },
+            { name: 'emptyHeight',  i18nName: (): string => $localize`salukes`, defaultValue: 2,  isValid: MGPValidators.range(1, 99) },
+            { name: 'rowOfSoldier', i18nName: (): string => $localize`salukes`, defaultValue: 8,  isValid: MGPValidators.range(1, 99) },
+        ],
+    };
+
     public static readonly GO: RulesConfigDescription = {
         fields: [
-            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 19, isValid: getNumericRangeChecker(1, 99) },
-            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 19, isValid: getNumericRangeChecker(1, 99) },
+            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 19, isValid: MGPValidators.range(1, 99) },
+            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 19, isValid: MGPValidators.range(1, 99) },
         ],
     };
 
     public static readonly HNEFATAFL: RulesConfigDescription = {
         fields: [
-            { name: 'castleIsLeftForGood',            i18nName: (): string => $localize`Castle is left for good`,              defaultValue: false },
-            { name: 'borderCanSurroundKing',          i18nName: (): string => $localize`Border can surround king`,             defaultValue: true },
+            { name: 'castleIsLeftForGood',            i18nName: (): string => $localize`Central throne is left for good`,      defaultValue: false },
+            { name: 'borderCanSurroundKing',          i18nName: (): string => $localize`Edge can surround king`,               defaultValue: true },
             { name: 'centralThroneCanSurroundKing',   i18nName: (): string => $localize`Central throne can surround king`,     defaultValue: false },
             { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: false },
             { name: 'invaderStarts',                  i18nName: (): string => $localize`Invader Starts`,                       defaultValue: true },
@@ -247,8 +273,8 @@ export class RulesConfigDescriptions {
 
     public static readonly KALAH: RulesConfigDescription = {
         fields: [
-            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6, isValid: getNumericRangeChecker(1, 99) },
-            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4, isValid: getNumericRangeChecker(1, 99) },
+            { name: 'width',             i18nName: (): string => $localize`Width`,                defaultValue: 6, isValid: MGPValidators.range(1, 99) },
+            { name: 'seedByHouse',       i18nName: (): string => $localize`Seed by house`,        defaultValue: 4, isValid: MGPValidators.range(1, 99) },
             { name: 'feedOriginalHouse', i18nName: (): string => $localize`Feed original house`,  defaultValue: true },
             { name: 'mustFeed',          i18nName: (): string => $localize`Must feed`,            defaultValue: false },
             { name: 'passByPlayerStore', i18nName: (): string => $localize`Pass by player store`, defaultValue: true },
@@ -257,38 +283,37 @@ export class RulesConfigDescriptions {
 
     public static readonly P4: RulesConfigDescription = {
         fields: [
-            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 7, isValid: getNumericRangeChecker(1, 99) },
-            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 6, isValid: getNumericRangeChecker(1, 99) },
+            { name: 'width',  i18nName: (): string => $localize`Width`,  defaultValue: 7, isValid: MGPValidators.range(1, 99) },
+            { name: 'height', i18nName: (): string => $localize`Height`, defaultValue: 6, isValid: MGPValidators.range(1, 99) },
         ],
     };
 
     public static readonly TABLUT: RulesConfigDescription = {
         fields: [
-            { name: 'castleIsLeftForGood',            i18nName: (): string => $localize`Castle is left for good`,              defaultValue: false },
-            { name: 'borderCanSurroundKing',          i18nName: (): string => $localize`Border can surround king`,             defaultValue: true },
+            { name: 'castleIsLeftForGood',            i18nName: (): string => $localize`Central throne is left for good`,      defaultValue: false },
+            { name: 'borderCanSurroundKing',          i18nName: (): string => $localize`Edge can surround king`,               defaultValue: true },
             { name: 'centralThroneCanSurroundKing',   i18nName: (): string => $localize`Central throne can surround king`,     defaultValue: false },
             { name: 'kingFarFromHomeCanBeSandwiched', i18nName: (): string => $localize`King far from home can be sandwiched`, defaultValue: false },
             { name: 'invaderStarts',                  i18nName: (): string => $localize`Invader Starts`,                       defaultValue: true },
         ],
     };
 
-}
-
-function getNumericRangeChecker(min: number, max: number): (v: number) => MGPValidation {
-    return (value: number) => {
-        if (value < min) {
-            return MGPValidation.failure($localize`${ value } is too low, minimum is ${ min }`);
-        } else if (max < value) {
-            return MGPValidation.failure($localize`${ value } is too high, maximum is ${ max }`);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
-    };
+    public static readonly ALL_GAMES: RulesConfigDescription[] = [
+        RulesConfigDescriptions.AWALE,
+        RulesConfigDescriptions.BRANDHUB,
+        RulesConfigDescriptions.EPAMINONDAS,
+        RulesConfigDescriptions.GO,
+        RulesConfigDescriptions.HNEFATAFL,
+        RulesConfigDescriptions.KALAH,
+        RulesConfigDescriptions.P4,
+        RulesConfigDescriptions.TABLUT,
+    ];
 }
 
 export const rulesConfigDescriptionMap: MGPMap<string, RulesConfigDescription> = new MGPMap([
     { key: 'Awale', value: RulesConfigDescriptions.AWALE },
     { key: 'Brandhub', value: RulesConfigDescriptions.BRANDHUB },
+    { key: 'Epaminondas', value: RulesConfigDescriptions.EPAMINONDAS },
     { key: 'Go', value: RulesConfigDescriptions.GO },
     { key: 'Hnefatafl', value: RulesConfigDescriptions.HNEFATAFL },
     { key: 'Kalah', value: RulesConfigDescriptions.KALAH },
@@ -315,7 +340,7 @@ export class GameInfo {
         new GameInfo($localize`Quixo`, 'Quixo', QuixoComponent, new QuixoTutorial(), QuixoRules.get(), new Date('2020-10-15'), GameDescription.QUIXO()), // 13 days after Pylos
         new GameInfo($localize`Dvonn`, 'Dvonn', DvonnComponent, new DvonnTutorial(), DvonnRules.get(), new Date('2020-10-21'), GameDescription.DVONN()), // 18 days after Kamisado *Quentin
 
-        new GameInfo($localize`Epaminondas`, 'Epaminondas', EpaminondasComponent, new EpaminondasTutorial(), EpaminondasRules.get(), new Date('2021-01-16'), GameDescription.EPAMINONDAS()), // 22 days after Quixo
+        new GameInfo($localize`Epaminondas`, 'Epaminondas', EpaminondasComponent, new EpaminondasTutorial(), EpaminondasRules.get(), new Date('2021-01-16'), GameDescription.EPAMINONDAS(), RulesConfigDescriptions.EPAMINONDAS), // 22 days after Quixo
         new GameInfo($localize`Gipf`, 'Gipf', GipfComponent, new GipfTutorial(), GipfRules.get(), new Date('2021-02-22'), GameDescription.GIPF()), // 4 months after Dvonn *Quentin
         new GameInfo($localize`Coerceo`, 'Coerceo', CoerceoComponent, new CoerceoTutorial(), CoerceoRules.get(), new Date('2021-03-21'), GameDescription.COERCEO()), // 76 days after Epaminondas
         new GameInfo($localize`Six`, 'Six', SixComponent, new SixTutorial(), SixRules.get(), new Date('2021-04-08'), GameDescription.SIX()), // 18 days after Coerceo

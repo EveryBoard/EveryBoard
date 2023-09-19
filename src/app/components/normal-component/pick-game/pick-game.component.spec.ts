@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { PickGameComponent, RulesConfigDescriptions } from './pick-game.component';
 
-import { PickGameComponent } from './pick-game.component';
-
-xdescribe('PickGameComponent', () => {
+describe('PickGameComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<PickGameComponent>;
 
@@ -25,4 +24,15 @@ xdescribe('PickGameComponent', () => {
 
         expect(testUtils.getComponent().pickGame.emit).toHaveBeenCalledWith(gameSelection.options[2].innerText);
     }));
+
+});
+
+describe('RulesConfigDescriptions', () => {
+    it('should have a i18nName for each game', () => {
+        for (const game of RulesConfigDescriptions.ALL_GAMES) {
+            for (const field of game.fields) {
+                expect(field.i18nName().length).toBeGreaterThan(0);
+            }
+        }
+    });
 });

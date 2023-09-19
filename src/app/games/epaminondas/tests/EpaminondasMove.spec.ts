@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules, epaminondasConfig } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
@@ -35,7 +35,7 @@ describe('EpaminondasMove: ', () => {
     it('should have a bijective encoder', () => {
         const rules: EpaminondasRules = EpaminondasRules.get();
         const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
-        const node: EpaminondasNode = rules.getInitialNode();
+        const node: EpaminondasNode = rules.getInitialNode(epaminondasConfig);
         const moves: EpaminondasMove[] = minimax.getListMoves(node);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);

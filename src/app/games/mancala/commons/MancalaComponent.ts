@@ -51,6 +51,16 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
     }
+    public override getViewBox(): string {
+        const left: number = - this.STROKE_WIDTH / 2;
+        const up: number = - this.STROKE_WIDTH / 2;
+        const width: number = this.getWidth() + this.STROKE_WIDTH;
+        const height: number = (2 * this.SPACE_SIZE) + 50;
+        return left + ' ' + up + ' ' + width + ' ' + height;
+    }
+    public getWidth(): number {
+        return 60 + ((2 + this.board[0].length) * this.SPACE_SIZE);
+    }
     public override async showLastMove(move: M): Promise<void> {
         this.droppedInStore = [0, 0];
         const previousState: MancalaState = this.getPreviousState();
@@ -151,7 +161,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         const scores: [number, number] = state.getScoresCopy();
         resultingBoard[coord.y][coord.x] = 0;
         // Changing immediately the chosen house
-        this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores));
+        this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores, state.seedByHouse));
         await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
         while (seedsInHand > 0) {
             const nextCoord: MGPOptional<Coord> = this.rules.getNextCoord(coord, player, currentDropIsStore, state);
@@ -170,7 +180,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
                     seedsInHand--; // drop in this space a piece we have in hand
                 }
             }
-            this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores));
+            this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores, state.seedByHouse));
             await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
         }
     }

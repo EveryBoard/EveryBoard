@@ -1,15 +1,23 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { P4Move } from '../P4Move';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('P4Move', () => {
 
     describe('of', () => {
+
         it('should assign the correct x property', () => {
             for (let i: number = 0; i < 7; i++) {
                 expect(P4Move.of(i).x).toBe(i);
             }
         });
+
+        it('should throw when creating negative x indexes', () => {
+            RulesUtils.expectToThrowAndLog(() => P4Move.of(-1),
+                                           'P4Move should be a positive integer!');
+        });
+
     });
     describe('equals', () => {
         it('should consider identical move equal', () => {

@@ -1,5 +1,6 @@
 import { Encoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
+import { Utils } from 'src/app/utils/utils';
 
 export class P4Move extends Move {
 
@@ -10,6 +11,7 @@ export class P4Move extends Move {
     );
 
     public static of(x: number): P4Move {
+        Utils.assert(x >= 0, 'P4Move should be a positive integer!');
         return new P4Move(x);
     }
 

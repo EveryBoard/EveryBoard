@@ -7,7 +7,7 @@ import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { NewRulesConfig, NewRulesConfigDescription } from './NewRulesConfig';
+import { NewRulesConfig, newRulesConfigDescription } from './NewRulesConfig';
 
 /**
  * This class is optional.
@@ -69,7 +69,7 @@ export class NewGameRules
      * The constructor is made private to avoid creating other instances of this class.
      */
     private constructor() {
-        const config: NewRulesConfig = RulesConfigUtils.getDefaultConfig(NewRulesConfigDescription) as NewRulesConfig;
+        const config: NewRulesConfig = RulesConfigUtils.getDefaultConfig(newRulesConfigDescription) as NewRulesConfig;
         super(NewGameState, config);
     }
 
