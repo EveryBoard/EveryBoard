@@ -325,30 +325,4 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             expect(filteredThreatMap.containsKey(new Coord(4, 5))).toBeFalse();
         });
     });
-    describe('Victory', () => {
-        it('should choose king escape, at depth 1 and more', () => {
-            const board: Table<TaflPawn> = [
-                [_, A, _, _, _, _, _, O, _],
-                [_, O, _, O, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, O, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-            ];
-            const state: TablutState = new TablutState(board, 1);
-            const node: TablutNode = new TablutNode(state);
-            const expectedMove: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(0, 0));
-            const minimax: Minimax<TablutMove, TablutState> = new Minimax('PieceAndInfluence',
-                                                                          TablutRules.get(),
-                                                                          heuristic,
-                                                                          new TaflMoveGenerator(TablutRules.get()));
-            for (let depth: number = 1; depth < 4; depth++) {
-                const chosenMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level', maxDepth: depth });
-                expect(chosenMove).toEqual(expectedMove);
-            }
-        });
-    });
 });

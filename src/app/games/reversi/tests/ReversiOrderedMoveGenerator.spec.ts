@@ -21,14 +21,14 @@ describe('ReversiOrderedMoveGenerator', () => {
     it('should propose moves on the corner first', () => {
         // Given a board where zero can play on a corner
         const board: Table<PlayerOrNone> = [
-            [_, X, O, X, _, _, _, _],
-            [_, _, O, _, _, _, _, _],
-            [_, _, O, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, O, _, _],
+            [_, _, _, _, _, O, _, _],
+            [_, _, _, _, X, O, X, _],
         ];
         const state: ReversiState = new ReversiState(board, 2);
         const node: ReversiNode = new ReversiNode(state);
@@ -36,6 +36,6 @@ describe('ReversiOrderedMoveGenerator', () => {
         const moves: ReversiMove[] = moveGenerator.getListMoves(node);
         // Then it should contain the move in the corner first
         expect(moves.length).toBe(2);
-        expect(moves[0]).toEqual(new ReversiMove(0, 0));
+        expect(moves[0]).toEqual(new ReversiMove(ReversiState.BOARD_WIDTH-1, ReversiState.BOARD_HEIGHT-1));
     });
 });

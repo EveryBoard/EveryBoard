@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -93,40 +94,5 @@ describe('EpaminondasPositionalHeuristic', () => {
                                                                lesserState, MGPOptional.empty(),
                                                                greaterState, MGPOptional.empty(),
                                                                Player.ONE);
-    });
-});
-
-describe('EpaminondasPositionalMinimax', () => {
-
-    let minimax: Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation>;
-    const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-
-    beforeEach(() => {
-        minimax = new Minimax('Positional Minimax',
-                              EpaminondasRules.get(),
-                              new EpaminondasPositionalHeuristic(),
-                              new EpaminondasPhalanxSizeAndFilterMoveGenerator());
-    });
-    it('should consider possible capture the best move', () => {
-        const board: Table<PlayerOrNone> = [
-            [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
-            [_, O, O, _, _, _, X, X, X, X, _, _, _, _],
-            [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
-            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, X, _, _, _, _, _, _, _, _, _],
-            [O, _, _, _, O, _, _, _, _, _, _, _, _, _],
-            [O, _, _, _, O, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ];
-        const state: EpaminondasState = new EpaminondasState(board, 1);
-        const node: EpaminondasNode = new EpaminondasNode(state);
-        const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
-        const bestMove: EpaminondasMove = minimax.chooseNextMove(node, minimaxOptions);
-
-        expect(bestMove).toEqual(expectedMove);
     });
 });

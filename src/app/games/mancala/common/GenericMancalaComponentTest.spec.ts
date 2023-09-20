@@ -133,6 +133,7 @@ export class MancalaTestEntries<C extends MancalaComponent<R, M>,
 {
     component: Type<C>; // KalahComponent, AwaleComponent, etc
     gameName: string; // 'Kalah', 'Awale', etc
+    moveGenerator: MoveGenerator<M, MancalaState>;
 
     distribution: MancalaActionAndResult<M>;
     secondDistribution: MancalaActionAndResult<M>;
@@ -142,8 +143,7 @@ export class MancalaTestEntries<C extends MancalaComponent<R, M>,
 }
 export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                                         R extends MancalaRules<M>,
-                                        M extends MancalaMove>(entries: MancalaTestEntries<C, R, M>,
-                                                               moveGenerator: MoveGenerator<M, MancalaState>)
+                                        M extends MancalaMove>(entries: MancalaTestEntries<C, R, M>)
 : void
 {
     let mancalaTestUtils: MancalaComponentTestUtils<C, R, M>;
@@ -151,7 +151,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
     describe(entries.gameName + ' component generic tests', () => {
         beforeEach(fakeAsync(async() => {
             const testUtils: ComponentTestUtils<C> = await ComponentTestUtils.forGame<C>(entries.gameName);
-            mancalaTestUtils = new MancalaComponentTestUtils(testUtils, moveGenerator);
+            mancalaTestUtils = new MancalaComponentTestUtils(testUtils, entries.moveGenerator);
         }));
         it('should create', () => {
             mancalaTestUtils.testUtils.expectToBeCreated();

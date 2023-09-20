@@ -26,8 +26,8 @@ describe('NewGameHeuristic', () => {
         const weakState: NewGameState = NewGameState.getInitialState();
         const strongState: NewGameState = new NewGameState(42);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               strongState, MGPOptional.empty(),
                                                                weakState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ONE);
     });
 });
