@@ -1,5 +1,5 @@
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -66,6 +66,9 @@ export class EpaminondasRules
     }
     public static getPhalanxValidity(state: EpaminondasState, move: EpaminondasMove): MGPValidation {
         let coord: Coord = move.coord;
+        if (state.isOnBoard(coord) === false) {
+            return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
+        }
         let soldierIndex: number = 0;
         const opponent: Player = state.getCurrentOpponent();
         while (soldierIndex < move.movedPieces) {

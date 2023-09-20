@@ -1,4 +1,4 @@
-import { GoState, GoPiece, Phase, GoConfig } from './GoState';
+import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
 import { Debug } from 'src/app/utils/utils';
 import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
@@ -6,9 +6,10 @@ import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
 @Debug.log
-export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GoConfig, GoLegalityInformation> {
+export class GoMinimax extends PlayerMetricsMinimax<GoMove, GoState, GobanConfig, GoLegalityInformation> {
 
     public getListMoves(node: GoNode): GoMove[] {
 

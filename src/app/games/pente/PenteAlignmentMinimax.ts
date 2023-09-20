@@ -6,8 +6,9 @@ import { PenteMove } from './PenteMove';
 import { PenteNode, PenteRules } from './PenteRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
-export class PenteAlignmentMinimax extends Minimax<PenteMove, PenteState> {
+export class PenteAlignmentMinimax extends Minimax<PenteMove, PenteState, GobanConfig> {
     public getListMoves(node: PenteNode): PenteMove[] {
         const state: PenteState = node.gameState;
         const moves: PenteMove[] = [];

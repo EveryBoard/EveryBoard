@@ -7,18 +7,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 describe('ConnectSixMove', () => {
     describe('ConnectSixDrops', () => {
         describe('from', () => {
-            it('should not create move where first coord is out of board', () => {
-                function tryingOutOfRangeFirstCoord(): void {
-                    ConnectSixDrops.of(new Coord(-1, -1), new Coord(0, 0));
-                }
-                RulesUtils.expectToThrowAndLog(tryingOutOfRangeFirstCoord, 'FIRST_COORD_IS_OUT_OF_RANGE');
-            });
-            it('should not create move where second coord is out of board', () => {
-                function tryingOutOfRangeSecondCoord(): void {
-                    ConnectSixDrops.of(new Coord(0, 0), new Coord(-1, -1));
-                }
-                RulesUtils.expectToThrowAndLog(tryingOutOfRangeSecondCoord, 'SECOND_COORD_IS_OUT_OF_RANGE');
-            });
+
             it('should not create move where first coord and second coord are the same', () => {
                 function tryingIdenticalCoords(): void {
                     ConnectSixDrops.of(new Coord(0, 0), new Coord(0, 0));
@@ -60,12 +49,7 @@ describe('ConnectSixMove', () => {
         });
     });
     describe('ConnectSixFirstMove', () => {
-        it('should not create move when coord is out of board', () => {
-            function tryingOutOfRangeCoord(): void {
-                ConnectSixFirstMove.of(new Coord(-1, -1));
-            }
-            RulesUtils.expectToThrowAndLog(tryingOutOfRangeCoord, 'FIRST_COORD_IS_OUT_OF_RANGE');
-        });
+
         it('should create move when coord is in the board', () => {
             const move: ConnectSixFirstMove = ConnectSixFirstMove.of(new Coord(0, 0));
             expect(move).toBeTruthy();

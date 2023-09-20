@@ -6,7 +6,6 @@ import { EpaminondasConfig } from './EpaminondasRules';
 export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
     public static getInitialState(config: EpaminondasConfig): EpaminondasState {
-        console.log('getInitialState', config)
         const _: PlayerOrNone = PlayerOrNone.NONE;
         const O: PlayerOrNone = PlayerOrNone.ZERO;
         const X: PlayerOrNone = PlayerOrNone.ONE;

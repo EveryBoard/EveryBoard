@@ -11,13 +11,14 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { ActivatedRoute } from '@angular/router';
+import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
 
 @Component({
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, PenteState, PlayerOrNone> {
+export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, PenteState, PlayerOrNone, GobanConfig> {
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
@@ -27,7 +28,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         super(messageDisplayer, actRoute);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = PenteRules.get();
-        this.node = this.rules.getInitialNode();
+        this.node = this.rules.getInitialNode(gobanConfig);
         this.encoder = PenteMove.encoder;
         this.tutorial = new PenteTutorial().tutorial;
         this.availableMinimaxes = [

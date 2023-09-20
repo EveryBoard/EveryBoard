@@ -11,22 +11,26 @@ import { SCORE } from 'src/app/jscaip/SCORE';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
-export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> {
+export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState, GobanConfig> {
 
     public override getListMoves(node: ConnectSixNode): ConnectSixMove[] {
         if (node.gameState.turn === 0) {
-            return this.getFirstMove();
+            return this.getFirstMove(node.gameState);
         } else {
             return this.getListDrops(node);
         }
     }
-    private getFirstMove(): ConnectSixFirstMove[] {
-        const width: number = ConnectSixState.WIDTH;
-        const height: number = ConnectSixState.HEIGHT;
-        const cx: number = Math.floor(width/2);
-        const cy: number = Math.floor(height/2);
-        return [ConnectSixFirstMove.of(new Coord(cx, cy))];
+    private getFirstMove(state: ConnectSixState): ConnectSixFirstMove[] {
+        const width: number = state.board[0].length;
+        const height: number = state.board.length;
+        const cx: number = Math.floor(width / 2);
+        const cy: number = Math.floor(height / 2);
+        const center: Coord = new Coord(cx, cy);
+        return [
+            ConnectSixFirstMove.of(center),
+        ];
     }
     private getListDrops(node: ConnectSixNode): ConnectSixMove[] {
         const availableFirstCoords: Coord[] = this.getAvailableCoords(node.gameState);
@@ -59,7 +63,9 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
      *     (x, y) is empty but has occupied neighbors
      */
     private getUsefulCoordsMap(state: ConnectSixState): boolean[][] {
-        const usefulCoord: boolean[][] = ArrayUtils.createTable(ConnectSixState.WIDTH, ConnectSixState.HEIGHT, false);
+        const width: number = state.board[0].length;
+        const height: number = state.board.length;
+        const usefulCoord: boolean[][] = ArrayUtils.createTable(width, height, false);
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content.isPlayer()) {
                 this.addNeighboringCoord(usefulCoord, coordAndContent.coord);
@@ -74,10 +80,12 @@ export class ConnectSixMinimax extends Minimax<ConnectSixMove, ConnectSixState> 
      */
     private addNeighboringCoord(usefulCoord: boolean[][], coord: Coord): void {
         const usefulDistance: number = 1; // At two, it's already too much calculation for the minimax sadly
+        const width: number = usefulCoord[0].length;
+        const height: number = usefulCoord.length;
         const minX: number = Math.max(0, coord.x - usefulDistance);
         const minY: number = Math.max(0, coord.y - usefulDistance);
-        const maxX: number = Math.min(ConnectSixState.WIDTH - 1, coord.x + usefulDistance);
-        const maxY: number = Math.min(ConnectSixState.HEIGHT - 1, coord.y + usefulDistance);
+        const maxX: number = Math.min(width - 1, coord.x + usefulDistance);
+        const maxY: number = Math.min(height - 1, coord.y + usefulDistance);
         for (let y: number = minY; y <= maxY; y++) {
             for (let x: number = minX; x <= maxX; x++) {
                 usefulCoord[y][x] = true;

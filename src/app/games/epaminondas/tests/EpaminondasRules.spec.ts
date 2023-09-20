@@ -4,7 +4,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules, epaminondasConfig } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
@@ -13,6 +13,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 
 describe('EpaminondasRules', () => {
 
@@ -128,6 +129,19 @@ describe('EpaminondasRules', () => {
         const reason: string = EpaminondasFailure.SOMETHING_IN_PHALANX_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+
+    it('should forbid out of range move', () => {
+        // Given any state
+        const state: EpaminondasState = EpaminondasState.getInitialState(epaminondasConfig);
+
+        // When doing a move starting out of range
+        const move: EpaminondasMove = new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT);
+
+        // Then it should be illegal
+        const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
+
     it('should forbid to capture greater phalanx', () => {
         // Given a board with two phalanx in opposition to each other
         const board: Table<PlayerOrNone> = [

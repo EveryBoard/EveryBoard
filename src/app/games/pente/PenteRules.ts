@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
@@ -11,12 +11,14 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
+import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
 
-export class PenteNode extends MGPNode<Rules<PenteMove, PenteState>,
+export class PenteNode extends MGPNode<Rules<PenteMove, PenteState, GobanConfig>,
                                        PenteMove,
-                                       PenteState> {}
+                                       PenteState,
+                                       GobanConfig> {}
 
-export class PenteRules extends Rules<PenteMove, PenteState> {
+export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
 
     public static readonly PENTE_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 5);
@@ -30,11 +32,13 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
         return PenteRules.singleton.get();
     }
     private constructor() {
-        super(PenteState, {});
+        super(PenteState, gobanConfig);
     }
 
     public isLegal(move: PenteMove, state: PenteState): MGPValidation {
-        if (state.getPieceAt(move.coord).isPlayer()) {
+        if (state.isOnBoard(move.coord) === false) {
+            return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.coord));
+        } else if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         } else {
             return MGPValidation.SUCCESS;
@@ -59,9 +63,9 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
             const firstCapture: Coord = coord.getNext(direction, 1);
             const secondCapture: Coord = coord.getNext(direction, 2);
             const sandwicher: Coord = coord.getNext(direction, 3);
-            if (PenteMove.isOnBoard(firstCapture) && state.getPieceAt(firstCapture) === opponent &&
-                PenteMove.isOnBoard(secondCapture) && state.getPieceAt(secondCapture) === opponent &&
-                PenteMove.isOnBoard(sandwicher) && state.getPieceAt(sandwicher) === player)
+            if (state.isOnBoard(firstCapture) && state.getPieceAt(firstCapture) === opponent &&
+                state.isOnBoard(secondCapture) && state.getPieceAt(secondCapture) === opponent &&
+                state.isOnBoard(sandwicher) && state.getPieceAt(sandwicher) === player)
             {
                 captures.push(firstCapture);
                 captures.push(secondCapture);
@@ -86,8 +90,10 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
         }
     }
     private stillHaveEmptySquare(state: PenteState): boolean {
-        for (let y: number = 0; y < PenteState.SIZE; y++) {
-            for (let x: number = 0; x < PenteState.SIZE; x++) {
+        const width: number = state.board[0].length;
+        const height: number = state.board.length;
+        for (let y: number = 0; y < height; y++) {
+            for (let x: number = 0; x < width; x++) {
                 if (state.board[y][x] === PlayerOrNone.NONE) {
                     return true;
                 }

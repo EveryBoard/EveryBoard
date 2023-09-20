@@ -48,14 +48,24 @@ export abstract class GobanGameComponent<R extends Rules<M, S, C, L>,
                 new Coord(horizontalMiddle, down),
             );
         }
+        // if (width % 2 === 1 && height % 2 === 1) {
+        if (true) {
+            this.hoshis.push(
+                new Coord(horizontalMiddle, verticalMiddle),
+            ); // TODO: test
+        }
+        /**
+         * Bonjour le jaaj
+         * commentaire de jaaj
+         */
         this.hoshis.push(
-            new Coord(horizontalMiddle, verticalMiddle),
             new Coord(left, up),
             new Coord(left, down),
             new Coord(right, up),
             new Coord(right, down),
         );
     }
+
     public isHoshi(x: number, y: number): boolean {
         return this.hoshis.some((c: Coord): boolean => c.x === x && c.y === y);
     }

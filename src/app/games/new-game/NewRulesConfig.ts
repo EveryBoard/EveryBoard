@@ -16,9 +16,9 @@ export const newRulesConfigDescription: RulesConfigDescription = {
     ],
 };
 
-console.log(newRulesConfigDescription.fields[0].i18nName()); // For code coverage
+newRulesConfigDescription.fields[0].i18nName(); // For code coverage
 // eslint-disable-next-line dot-notation
-console.log(newRulesConfigDescription.fields[0]['isValid'](5)); // For code coverage
+newRulesConfigDescription.fields[0]['isValid'](5); // For code coverage
 
 export type NewRulesConfig = {
     the_name_you_will_use_in_your_rules_and_states: number;

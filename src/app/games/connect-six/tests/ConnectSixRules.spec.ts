@@ -4,10 +4,11 @@ import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ConnectSixMinimax } from '../ConnectSixMinimax';
+import { gobanConfig } from 'src/app/jscaip/GobanConfig';
 
 describe('ConnectSixRules', () => {
     /**
@@ -32,9 +33,22 @@ describe('ConnectSixRules', () => {
         ];
     });
     describe('first turn', () => {
+
+        it('should not create move when coord is out of board', () => {
+            // Given the initial state
+            const state: ConnectSixState = ConnectSixState.getInitialState(gobanConfig);
+
+            // When dropping out of the board
+            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(-1, -1)) as ConnectSixMove;
+
+            // Then it should be illegal
+            const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+
         it('shoud allow the first player play only one piece', () => {
             // Given the initial state
-            const state: ConnectSixState = ConnectSixState.getInitialState();
+            const state: ConnectSixState = ConnectSixState.getInitialState(gobanConfig);
 
             // When dropping one piece
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
@@ -59,13 +73,13 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-
+// TODO: NO CENTER HOSHI IN EVEN BOARDS
             // Then the move should be a success
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should refuse move that drop two pieces on first turn', () => {
             // Given the first turn
-            const state: ConnectSixState = ConnectSixState.getInitialState();
+            const state: ConnectSixState = ConnectSixState.getInitialState(gobanConfig);
             // When dropping two pieces
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(11, 11), new Coord(10, 10));
             // Then the attempt would have throw
@@ -75,7 +89,74 @@ describe('ConnectSixRules', () => {
             RulesUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'First move should be instance of ConnectSixFirstMove');
         });
     });
+
     describe('next turns', () => {
+
+        it('should forbid move where second coord is out of range', () => {
+            // Given any board on second turn
+            const state: ConnectSixState = new ConnectSixState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+
+            // When doing a move who'se second coord is out of range
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(0, 0), new Coord(-1, -1)) as ConnectSixMove;
+
+            // Then it should fail
+            const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+
+        it('should forbid move where first coord is out of range', () => {
+            // Given any board on second turn
+            const state: ConnectSixState = new ConnectSixState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+
+            // When doing a move who'se second coord is out of range
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(-2, -2), new Coord(0, 0)) as ConnectSixMove;
+
+            // Then it should fail
+            const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-2, -2));
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+
+// TODO: go 13*3 soit centré
         it('should refuse dropping first coord on another piece', () => {
             // Given a board with pieces on it
             const state: ConnectSixState = new ConnectSixState([

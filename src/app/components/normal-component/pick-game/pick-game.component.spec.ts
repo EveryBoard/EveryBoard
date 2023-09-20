@@ -28,9 +28,9 @@ describe('PickGameComponent', () => {
 });
 
 describe('RulesConfigDescriptions', () => {
-    it('should have a i18nName for each game', () => {
-        for (const game of RulesConfigDescriptions.ALL_GAMES) {
-            for (const field of game.fields) {
+    it('should have a i18nName for each description', () => {
+        for (const description of RulesConfigDescriptions.ALL) {
+            for (const field of description.fields) {
                 expect(field.i18nName().length).toBeGreaterThan(0);
             }
         }

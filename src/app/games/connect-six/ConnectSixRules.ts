@@ -6,14 +6,15 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectS
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
 
-export class ConnectSixNode extends MGPNode<ConnectSixRules, ConnectSixMove, ConnectSixState> {}
+export class ConnectSixNode extends MGPNode<ConnectSixRules, ConnectSixMove, ConnectSixState, GobanConfig> {}
 
-export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
+export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, GobanConfig> {
 
     private static singleton: MGPOptional<ConnectSixRules> = MGPOptional.empty();
 
@@ -30,7 +31,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
     private constructor() {
-        super(ConnectSixState, {});
+        super(ConnectSixState, gobanConfig);
     }
     public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _info: void): ConnectSixState {
         if (move instanceof ConnectSixDrops) {
@@ -57,10 +58,21 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
     public isLegal(move: ConnectSixMove, state: ConnectSixState): MGPValidation {
         if (state.turn === 0) {
             Utils.assert(move instanceof ConnectSixFirstMove, 'First move should be instance of ConnectSixFirstMove');
+            const firstMove: ConnectSixFirstMove = move as ConnectSixFirstMove;
+            if (state.isOnBoard(firstMove.coord) === false) {
+                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(firstMove.coord));
+            }
             return MGPValidation.SUCCESS;
         } else {
             Utils.assert(move instanceof ConnectSixDrops, 'non-firsts moves should be instance of ConnectSixDrops');
-            return this.isLegalDrops(move as ConnectSixDrops, state);
+            const nextMove: ConnectSixDrops = move as ConnectSixDrops;
+            if (state.isOnBoard(nextMove.getFirst()) === false) {
+                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(nextMove.getFirst()));
+            } else if (state.isOnBoard(nextMove.getSecond()) === false) {
+                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(nextMove.getSecond()));
+            } else {
+                return this.isLegalDrops(move as ConnectSixDrops, state);
+            }
         }
     }
     public isLegalDrops(move: ConnectSixDrops, state: ConnectSixState): MGPValidation {

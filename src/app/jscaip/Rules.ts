@@ -77,7 +77,6 @@ export abstract class Rules<M extends Move,
             this.config = config;
         }
         // eslint-disable-next-line dot-notation
-        console.log('getInitialNode', config)
         const initialState: S = this.stateType['getInitialState'](config);
         return new MGPNode(initialState);
     }

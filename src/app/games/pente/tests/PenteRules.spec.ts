@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -8,6 +8,7 @@ import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
 import { PenteAlignmentMinimax } from '../PenteAlignmentMinimax';
+import { gobanConfig } from 'src/app/jscaip/GobanConfig';
 
 describe('PenteRules', () => {
 
@@ -26,7 +27,7 @@ describe('PenteRules', () => {
     });
     it('should allow a drop on an empty space', () => {
         // Given a state
-        const state: PenteState = PenteState.getInitialState();
+        const state: PenteState = PenteState.getInitialState(gobanConfig);
 
         // When doing a drop on an empty space
         const move: PenteMove = PenteMove.of(new Coord(9, 8));
@@ -55,9 +56,22 @@ describe('PenteRules', () => {
         ], [0, 0], 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
+    it('should refuse move going out of the board', () => {
+        // Given any board
+        const state: PenteState = PenteState.getInitialState(gobanConfig);
+
+        // When doing drop outside the board
+        const move: PenteMove = PenteMove.of(new Coord(-1, 0));
+
+        // Then it should be refused
+        const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
+
     it('should forbid a drop on an occupied space', () => {
         // Given a state
-        const state: PenteState = PenteState.getInitialState();
+        const state: PenteState = PenteState.getInitialState(gobanConfig);
 
         // When doing a drop on an occupied space
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
@@ -170,7 +184,7 @@ describe('PenteRules', () => {
     });
     it('should be ongoing if there are still available spaces and no victory', () => {
         // Given a state with available spaces and no victory
-        const state: PenteState = PenteState.getInitialState();
+        const state: PenteState = PenteState.getInitialState(gobanConfig);
         const node: PenteNode = new PenteNode(state);
         // Then it should be ongoing
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);

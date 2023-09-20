@@ -8,12 +8,6 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('EpaminondasMove: ', () => {
 
-    it('should forbid out of range coords', () => {
-        function createLeftOfBoardCoord(): void {
-            new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT);
-        }
-        RulesUtils.expectToThrowAndLog(createLeftOfBoardCoord, 'Illegal coord outside of board (-1, 0).');
-    });
     it('should forbid creation of a move that moves too much', () => {
         function movingAPhalanxTooMuch(): void {
             new EpaminondasMove(0, 0, 2, 3, Direction.UP);

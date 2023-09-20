@@ -6,6 +6,7 @@ import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { gobanConfig } from 'src/app/jscaip/GobanConfig';
 
 describe('ConnectSixMinimax', () => {
 
@@ -20,9 +21,9 @@ describe('ConnectSixMinimax', () => {
     });
     it('should propose only one move at first turns', () => {
         // Given the initial node
-        const width: number = ConnectSixState.WIDTH;
-        const height: number = ConnectSixState.HEIGHT;
-        const state: ConnectSixState = ConnectSixState.getInitialState();
+        const width: number = gobanConfig.width;
+        const height: number = gobanConfig.height;
+        const state: ConnectSixState = ConnectSixState.getInitialState(gobanConfig);
         const node: ConnectSixNode = new ConnectSixNode(state);
 
         // When asking it the list of move at the first turn

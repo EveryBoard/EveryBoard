@@ -12,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { ConnectSixMinimax } from './ConnectSixMinimax';
 import { ActivatedRoute } from '@angular/router';
+import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
 
 @Component({
     selector: 'app-connect-six',
@@ -21,7 +22,8 @@ import { ActivatedRoute } from '@angular/router';
 export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                                                             ConnectSixMove,
                                                             ConnectSixState,
-                                                            PlayerOrNone>
+                                                            PlayerOrNone,
+                                                            GobanConfig>
 {
     public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -32,7 +34,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
         super(messageDisplayer, actRoute);
         this.rules = ConnectSixRules.get();
-        this.node = this.rules.getInitialNode();
+        this.node = this.rules.getInitialNode(gobanConfig);
         this.availableMinimaxes = [
             new ConnectSixMinimax(this.rules, 'Minimax'),
         ];

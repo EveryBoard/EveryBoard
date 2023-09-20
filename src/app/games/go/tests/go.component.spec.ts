@@ -51,7 +51,8 @@ describe('GoComponent', () => {
         const secondMove: GoMove = new GoMove(2, 2);
         await testUtils.expectMoveSuccess('#click_2_2', secondMove);
     }));
-    describe('hoshi', () => {
+    fdescribe('hoshi', () => {
+
         it('shoud be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
             const board: Table<GoPiece> = ArrayUtils.createTable(19, 19, GoPiece.EMPTY);
@@ -60,8 +61,6 @@ describe('GoComponent', () => {
             // When displaying it
             await testUtils.setupState(state);
 
-            // Then it should have hoshi in the middle (9, 9)
-            testUtils.expectElementToExist('#hoshi_9_9'); // Middle Middle
             // Then it should have hoshi in (3, 3) and (cx, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
             testUtils.expectElementToExist('#hoshi_9_3'); // Middle Up
@@ -72,6 +71,7 @@ describe('GoComponent', () => {
             testUtils.expectElementToExist('#hoshi_3_15'); // Left Down
             testUtils.expectElementToExist('#hoshi_3_9'); // Left Middle
         }));
+
         it('shoud be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
             const board: Table<GoPiece> = ArrayUtils.createTable(13, 13, GoPiece.EMPTY);
@@ -79,8 +79,6 @@ describe('GoComponent', () => {
 
             // When displaying it
             await testUtils.setupState(state);
-            // Then it should have hoshi in the middle (6, 6)
-            testUtils.expectElementToExist('#hoshi_6_6'); // Middle Middle
 
             // Then it should have hoshi in (3, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
@@ -93,6 +91,7 @@ describe('GoComponent', () => {
             testUtils.expectElementToExist('#hoshi_6_9'); // Middle Down
             testUtils.expectElementToExist('#hoshi_3_6'); // Left Middle
         }));
+
         it('shoud be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
             const board: Table<GoPiece> = ArrayUtils.createTable(9, 9, GoPiece.EMPTY);
@@ -101,9 +100,6 @@ describe('GoComponent', () => {
             // When displaying it
             await testUtils.setupState(state);
 
-            // Then it should have hoshi in the middle (4, 4)
-            testUtils.expectElementToExist('#blank_board');
-            testUtils.expectElementToExist('#hoshi_4_4'); // Middle Middle
             // Then it should have hoshi in (2, 2) and (cx, 2) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_2_2'); // Left Up
             testUtils.expectElementToExist('#hoshi_6_2'); // Right Up
@@ -115,5 +111,33 @@ describe('GoComponent', () => {
             testUtils.expectElementNotToExist('#hoshi_6_4'); // Right Middle
             testUtils.expectElementNotToExist('#hoshi_2_4'); // Left Middle
         }));
+
+        it('should have a tengen when board has an odd width and height', fakeAsync(async() => {
+            // Given a (odd x odd) board
+            const board: Table<GoPiece> = ArrayUtils.createTable(9, 9, GoPiece.EMPTY);
+            const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+
+            // When displaying it
+            await testUtils.setupState(state);
+
+            // Then it should have a tengen in (4, 4)
+            testUtils.expectElementToExist('#hoshi_4_4'); // middle middle
+        }));
+
+        it('should not have a tengen when board has an even width and height', fakeAsync(async() => {
+            // Given a (even x even) board
+            const board: Table<GoPiece> = ArrayUtils.createTable(10, 10, GoPiece.EMPTY);
+            const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+
+            // When displaying it
+            await testUtils.setupState(state);
+
+            // Then it should not have a tengen
+            testUtils.expectElementNotToExist('#hoshi_4_4'); // middle middle
+            testUtils.expectElementNotToExist('#hoshi_4_5'); // middle middle
+            testUtils.expectElementNotToExist('#hoshi_5_5'); // middle middle
+            testUtils.expectElementNotToExist('#hoshi_5_4'); // middle middle
+        }));
+
     });
 });

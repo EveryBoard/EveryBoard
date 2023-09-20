@@ -3,9 +3,9 @@ import { GoNode, GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { GoConfig } from '../GoState';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
-const config: GoConfig = { width: 5, height: 5 };
+const config: GobanConfig = { width: 5, height: 5 };
 
 describe('GoMove', () => {
 

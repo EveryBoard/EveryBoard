@@ -7,6 +7,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 export class GoPiece implements ComparableObject {
@@ -84,16 +85,6 @@ export enum Phase {
     FINISHED = 'FINISHED'
 }
 
-export type GoConfig = {
-    width: number;
-    height: number;
-};
-
-export const goConfig: GoConfig = {
-    width: 19,
-    height: 19,
-};
-
 export class GoState extends GameStateWithTable<GoPiece> {
 
     public readonly koCoord: MGPOptional<Coord>;
@@ -113,7 +104,7 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.koCoord = koCoord;
         this.phase = phase;
     }
-    public static getInitialState(config: GoConfig): GoState {
+    public static getInitialState(config: GobanConfig): GoState {
         const board: Table<GoPiece> = GoState.getStartingBoard(config);
         return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
     }
