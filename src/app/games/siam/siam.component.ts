@@ -253,7 +253,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const remainingPieces: number = this.playerPieces(player);
         const closenessFactor: number = 3;
         const maxRemainingPieces: number = 5;
-        let x: number = (maxRemainingPieces + 1)/closenessFactor;
+        let x: number = (maxRemainingPieces + 1) / closenessFactor;
         let y: number;
         let orientation: Orthogonal;
         if (player === this.getPointOfView()) {

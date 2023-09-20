@@ -275,7 +275,7 @@ describe('SiamComponent', () => {
 
     function expectTranslationYToBe(elementSelector: string, y: number): void {
         const element: DebugElement = testUtils.findElement(elementSelector);
-        const transform: SVGTransform = element.nativeElement.transform.baseVal.getItem(0)
+        const transform: SVGTransform = element.nativeElement.transform.baseVal.getItem(0);
         expect(transform.type).toBe(SVGTransform.SVG_TRANSFORM_TRANSLATE);
         // In a SVG transform, f is the y coordinate
         expect(transform.matrix.f).toBe(y);
@@ -295,8 +295,8 @@ describe('SiamComponent', () => {
         await testUtils.setupState(state);
 
         // Then Player.ONE's pieces should be on the bottom
-        expectTranslationYToBe('#remainingPieces_1_0', -100);
-        expectTranslationYToBe('#remainingPeices_0_0', 700);
+        expectTranslationYToBe('#remainingPieces_0_0', -100);
+        expectTranslationYToBe('#remainingPieces_1_0', 700);
     }));
     it('should display player zero pieces on the bottom (observer)', fakeAsync(async() => {
         // Given a state
@@ -314,7 +314,7 @@ describe('SiamComponent', () => {
         await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
 
         // Then player 0's pieces should be on the bottom
-        expectTranslationYToBe('#remainingPieces_1_0', 700);
-        expectTranslationYToBe('#remainingPieces_0_0', -100);
+        expectTranslationYToBe('#remainingPieces_0_0', 700);
+        expectTranslationYToBe('#remainingPieces_1_0', -100);
     }));
 });

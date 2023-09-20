@@ -61,14 +61,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }, 1);
     }
     public async updatePlayer(player: Player): Promise<void> {
-        console.log('update player')
         this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
         if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
-            await this.setRole(Player.ONE);
             this.gameComponent.setInteractive(false);
+            await this.setRole(Player.ONE);
         } else {
-            await this.setRole(Player.ZERO);
             this.gameComponent.setInteractive(true);
+            await this.setRole(Player.ZERO);
         }
         this.proposeAIToPlay();
     }
@@ -76,7 +75,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
         await this.updateBoard(false);
         this.proposeAIToPlay();
-        this.cdr.detectChanges();
     }
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
         await this.updateBoardAndShowLastMove(triggerAnimation);
@@ -107,10 +105,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         // check if ai's turn has come, if so, make her start after a delay
         const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {
+            this.gameComponent.setInteractive(false);
             // bot's turn
             window.setTimeout(async() => {
                 await this.doAIMove(playingMinimax.get());
             }, LocalGameWrapperComponent.AI_TIMEOUT);
+        } else {
+            this.gameComponent.setInteractive(true);
+            this.cdr.detectChanges();
         }
     }
     private getPlayingAI(): MGPOptional<AbstractMinimax> {
