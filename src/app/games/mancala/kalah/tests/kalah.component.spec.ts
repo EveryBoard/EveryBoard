@@ -26,6 +26,7 @@ describe('KalahComponent', () => {
     doMancalaComponentTests({
         component: KalahComponent,
         gameName: 'Kalah',
+        moveGenerator: new KalahMoveGenerator(),
 
         distribution: {
             state: MancalaState.getInitialState(),
@@ -84,7 +85,7 @@ describe('KalahComponent', () => {
                 { x: 5, y: 1, content: { mainContent: ' -1 ' } },
             ],
         },
-    }, new KalahMoveGenerator());
+    });
     describe('Kalah-Specific Tests', () => {
         beforeEach(fakeAsync(async() => {
             const testUtils: ComponentTestUtils<KalahComponent> = await ComponentTestUtils.forGame<KalahComponent>('Kalah');

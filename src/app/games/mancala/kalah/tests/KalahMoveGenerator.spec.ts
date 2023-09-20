@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { KalahMove } from '../KalahMove';
-import { KalahNode, KalahRules } from '../KalahRules';
+import { KalahNode } from '../KalahRules';
 import { MancalaState } from '../../common/MancalaState';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
 

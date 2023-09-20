@@ -19,7 +19,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
 
     beforeEach(() => {
         const rules: TablutRules = TablutRules.get();
-        const heuristic: TaflPieceAndInfluenceHeuristic<TablutMove, TablutState> = new TaflPieceAndInfluenceHeuristic(rules);
+        const heuristic: TaflPieceAndInfluenceHeuristic<TablutMove, TablutState> =
+            new TaflPieceAndInfluenceHeuristic(rules);
         minimax = new Minimax('PieceAndInfluence',
                               TablutRules.get(),
                               heuristic,

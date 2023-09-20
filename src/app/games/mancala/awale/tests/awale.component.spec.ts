@@ -10,6 +10,7 @@ describe('AwaleComponent', () => {
     doMancalaComponentTests({
         component: AwaleComponent,
         gameName: 'Awale',
+        moveGenerator: new AwaleMoveGenerator(),
         distribution: {
             state: MancalaState.getInitialState(),
             move: AwaleMove.ZERO,
@@ -58,5 +59,5 @@ describe('AwaleComponent', () => {
             move: AwaleMove.ZERO,
             result: [{ x: 5, y: 0, content: { mainContent: ' -2 ' } }],
         },
-    }, new AwaleMoveGenerator());
+    });
 });

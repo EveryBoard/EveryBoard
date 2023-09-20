@@ -2,7 +2,7 @@
 import { Direction } from 'src/app/jscaip/Direction';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { EpaminondasRules, EpaminondasLegalityInformation } from '../EpaminondasRules';
 import { EpaminondasHeuristic } from '../EpaminondasHeuristic';
