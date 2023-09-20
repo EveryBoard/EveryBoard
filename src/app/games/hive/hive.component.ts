@@ -261,7 +261,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         const shift: number = this.getRemainingPieceShift(piece);
         const x: number = this.boardViewBox.center().x + shift * this.SPACE_SIZE * 4;
         let y: number;
-        if (piece.owner === this.pointOfView) {
+        if (piece.owner === this.getPointOfView()) {
             // Current player is below
             y = this.boardViewBox.bottom() + (this.SPACE_SIZE * 3);
         } else {

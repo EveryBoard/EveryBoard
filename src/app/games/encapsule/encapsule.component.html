@@ -7,7 +7,7 @@
         <g *ngFor="let piece of getRemainingPieces(player); index as pieceIdx">
             <circle id="piece_{{ player.value }}_{{ piece.toString() }}_{{ pieceIdx }}"
                     (click)="onPieceClick(player.value, piece, pieceIdx)"
-                    [attr.transform]="'rotate(' + ((this.pointOfView.value + player.value) * 180) + ' ' + CENTER + ' ' + CENTER + ')'"
+                    [attr.transform]="'rotate(' + ((this.getPointOfView().value + player.value) * 180) + ' ' + CENTER + ' ' + CENTER + ')'"
                     [attr.r]="getPieceRadius(piece)"
                     [attr.cx]="getRemainingPieceCenterCoord(player, pieceIdx).x"
                     [attr.cy]="getRemainingPieceCenterCoord(player, pieceIdx).y"

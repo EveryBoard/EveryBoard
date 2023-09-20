@@ -285,7 +285,7 @@ describe('LascaComponent', () => {
             testUtils.expectElementNotToHaveClass('#square_6_4', 'selectable-fill');
         }));
         it('should show lastMove reversed', fakeAsync(async() => {
-            // Given a board on which it is player one's turn
+            // Given a board shown from Player.ONE's point of view
             await testUtils.expectClickSuccess('#coord_4_4');
             const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
             await testUtils.expectMoveSuccess('#coord_3_3', move);

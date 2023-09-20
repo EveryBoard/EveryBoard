@@ -160,7 +160,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     }
     private getSpaceInfoAt(unadapedCoord: Coord): SpaceInfo {
         // Adapt the coord if needed so we don't affect the "centrally symmetrical" coord to this one
-        if (this.pointOfView === Player.ONE && this.adaptedBoard.isAlreadySwitched) {
+        if (this.getPointOfView() === Player.ONE && this.adaptedBoard.isAlreadySwitched) {
             const max: number = LascaState.SIZE - 1;
             const adaptedCoord: Coord = new Coord(max - unadapedCoord.x, max - unadapedCoord.y);
             return this.adaptedBoard.spaceInfo[adaptedCoord.y][adaptedCoord.x];
@@ -169,7 +169,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
     private rotateAdaptedBoardIfNeeded(): void {
-        if (this.pointOfView === Player.ONE) {
+        if (this.getPointOfView() === Player.ONE) {
             const rotatedAdaptedBoard: SpaceInfo[][] = [];
             for (let y: number = 0; y < LascaState.SIZE; y++) {
                 rotatedAdaptedBoard[(LascaState.SIZE - 1) - y] = [];

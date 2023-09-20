@@ -222,7 +222,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         return 'translate(' + this.getPieceCx(x) + ', ' + this.getPieceCy(y) + ')';
     }
     public getPieceRotation(): string {
-        return 'rotate(' + this.pointOfView.value * 180 + ')';
+        return 'rotate(' + this.getPointOfView().value * 180 + ')';
     }
     public getHouseSecondaryContent(x: number, y: number): MGPOptional<string> {
         const previousContent: number = this.getPreviousStableState().getPieceAtXY(x, y);

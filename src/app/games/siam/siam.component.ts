@@ -256,7 +256,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         let x: number = (maxRemainingPieces + 1)/closenessFactor;
         let y: number;
         let orientation: Orthogonal;
-        if (player === this.pointOfView) {
+        if (player === this.getPointOfView()) {
             x += ((piece + 1) + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
             y = 7;
             orientation = Orthogonal.LEFT;
