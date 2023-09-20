@@ -1,72 +1,86 @@
-// import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-// import { DiaballikLegalityInfo, DiaballikRules } from './DiaballikRules';
-// import { DiaballikMove } from './DiaballikMove';
-// import { DiaballikState } from './DiaballikState';
-// import { Component } from '@angular/core';
-// import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-// import { DiaballikDummyMinimax } from './DiaballikDummyMinimax';
-// import { DiaballikTutorial } from './DiaballikTutorial';
-//
-// /**
-//  * This is an Angular directive to specify that this is a component of the app.
-//  * You just have adapt the selector and template URL here.
-//  */
-// @Component({
-//     selector: 'app-new-game',
-//     templateUrl: './new-game.component.html',
-//     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-// })
-// /**
-//  * This is the component.
-//  * The generic base class is `GameComponent`.
-//  * If you have a rectangular game, you might want to use `RectangularGameComponent` instead.
-//  */
-// export class DiaballikComponent extends GameComponent<DiaballikRules,
-//                                                     DiaballikMove,
-//                                                     DiaballikState,
-//                                                     DiaballikLegalityInfo>
-// {
-//     /**
-//      * The component constructor always takes the same parameters.
-//      * It must set up the `rules`, `node`, `encoder`, `encoder`, and `availableMinimaxes` fields.
-//      * The minimax list can remain empty.
-//      */
-//     public constructor(messageDisplayer: MessageDisplayer) {
-//         super(messageDisplayer);
-//         // If the board you draw must be rotated of 180° when you play the second player, enable the following:
-//         // this.hasAsymetricBoard = true;
-//         // If your game has scores in-game, enable the following:
-//         // this.scores = MGPOptional.of([0, 0]);
-//         this.rules = DiaballikRules.get();
-//         this.node = this.rules.getInitialNode();
-//         this.encoder = DiaballikMove.encoder;
-//         this.tutorial = new DiaballikTutorial().tutorial;
-//         this.availableMinimaxes = [
-//             new DiaballikDummyMinimax(this.rules, 'New Game Dummy Minimax'),
-//         ];
-//     }
-//     /**
-//      * This method updates the displayed board.
-//      */
-//     public updateBoard(): void {
-//     }
-//     /**
-//      * This method should display the last move in the component
-//      */
-//     public override showLastMove(move: DiaballikMove): void {
-//     }
-//     /**
-//      * This method should clear out any data coming from a move attempt
-//      */
-//     public override cancelMoveAttempt(): void {
-//     }
-//
-//
-//     /**
-//      * In the component's HTML, you will likely set onClick elements.
-//      * You can call back to the component, and call `this.chooseMove` to apply a move.
-//      * In case you want to cancel a move, you can call `this.cancelMove`.
-//      * It takes an optional parameter, being a toast to show to the user upon the move cancelation.
-//      */
-//
-// }
+import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
+import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
+import { DiaballikMove } from './DiaballikMove';
+import { DiaballikPiece, DiaballikState } from './DiaballikState';
+import { Component } from '@angular/core';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { DiaballikTutorial } from './DiaballikTutorial';
+import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Coord } from 'src/app/jscaip/Coord';
+import { Table } from 'src/app/utils/ArrayUtils';
+
+@Component({
+    selector: 'app-diaballik',
+    templateUrl: './diaballik.component.html',
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+})
+
+export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikMove, DiaballikState, DiaballikState> {
+
+    public board: Table<DiaballikPiece>;
+
+    private currentSelection: MGPOptional<Coord> = MGPOptional.empty();
+    private moveTranslations: [MGPOptional<Coord>, MGPOptional<Coord>] = [MGPOptional.empty(), MGPOptional.empty()];
+    private movePass: MGPOptional<Coord> = MGPOptional.empty();
+
+    private lastMoveCoords: Coord[] = [];
+    private victoryCoord: MGPOptional<Coord> = MGPOptional.empty();
+    private defeatCoords: Coord[] = [];
+
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
+        this.hasAsymmetricBoard = true;
+        this.rules = DiaballikRules.get();
+        this.node = this.rules.getInitialNode();
+        this.encoder = DiaballikMove.encoder;
+        this.tutorial = new DiaballikTutorial().tutorial;
+        this.availableMinimaxes = [
+            //new DiaballikMinimax(this.rules, 'Minimax'),
+        ];
+    }
+    public updateBoard(): void {
+        const state: DiaballikState = this.node.gameState;
+        this.board = state.board;
+        const victoryOrDefeatCoords: MGPOptional<VictoryOrDefeatCoords> = this.rules.getVictoryOrDefeatCoords(state);
+        if (victoryOrDefeatCoords.isPresent()) {
+            if (victoryOrDefeatCoords instanceof VictoryCoord) {
+                this.victoryCoord = MGPOptional.of(victoryOrDefeatCoords.coord);
+            } else if (victoryOrDefeatCoords instanceof DefeatCoords) {
+                this.defeatCoords = victoryOrDefeatCoords.coords;
+            }
+        }
+    }
+    public override showLastMove(move: DiaballikMove): void {
+        this.lastMoveCoords = [];
+        for (const subMove of move.getSubMoves()) {
+            this.lastMoveCoords.push(subMove.getStart(), subMove.getEnd());
+        }
+    }
+    public override cancelMoveAttempt(): void {
+        this.currentSelection = MGPOptional.empty();
+        this.moveTranslations = [MGPOptional.empty(), MGPOptional.empty()];
+        this.movePass = MGPOptional.empty();
+    }
+    public getSpaceClasses(x: number, y: number): string[] {
+        const coord: Coord = new Coord(x, y);
+        const classes: string[] = [];
+        if (this.lastMoveCoords.includes(coord)) {
+            classes.push('last-move');
+        }
+        if (this.victoryCoord.equalsValue(coord)) {
+            classes.push('victory-stroke');
+        }
+        if (this.defeatCoords.includes(coord)) {
+            classes.push('captured-stroke');
+        }
+        return classes;
+    }
+    public getPieceClasses(x: number, y: number): string[] {
+        const coord: Coord = new Coord(x, y);
+        if (this.lastMoveCoords.includes(coord)) {
+            return ['last-move-stroke'];
+        }
+        return [];
+    }
+}

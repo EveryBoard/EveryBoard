@@ -3,11 +3,19 @@ import { MathUtils } from '../utils/MathUtils';
 
 export class Vector implements ComparableObject {
 
-    public constructor(public readonly x: number,
-        public readonly y: number) {}
+    public constructor(public readonly x: number, public readonly y: number) {}
 
     public equals(other: Vector): boolean {
         return this.x === other.x && this.y === other.y;
+    }
+    public isUnitary(): boolean {
+        return this.x + this.y === 1;
+    }
+    public isOrthogonal(): boolean {
+        return this.x === 0 || this.y === 0;
+    }
+    public isDiagonal(): boolean {
+        return this.x !== 0 && this.y !== 0;
     }
     public isDiagonalOfLength(length: number): boolean {
         return Math.abs(this.x) === length &&

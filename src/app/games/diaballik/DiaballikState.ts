@@ -30,13 +30,13 @@ export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
         const Ẋ: DiaballikPiece = DiaballikPiece.ONE_WITH_BALL;
         const _: DiaballikPiece = DiaballikPiece.NONE;
         const board: Table<DiaballikPiece> = [
-            [O, O, O, Ȯ, O, O, O],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
             [X, X, X, Ẋ, X, X, X],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [O, O, O, Ȯ, O, O, O],
         ];
         return new DiaballikState(board, 0);
     }

@@ -124,6 +124,9 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { DiaballikComponent } from 'src/app/games/diaballik/diaballik.component';
+import { DiaballikTutorial } from 'src/app/games/diaballik/DiaballikTutorial';
+import { DiaballikRules } from 'src/app/games/diaballik/DiaballikRules';
 
 class GameDescription {
 
@@ -142,6 +145,8 @@ class GameDescription {
     public static readonly CONSPIRATEURS: Localized = () => $localize`Hide all of your pieces before your opponent does, or risk to be discovered!`;
 
     public static readonly DIAM: Localized = () => $localize`Drop your pieces and move them around to align two pieces of the same color across the board to win!`;
+
+    public static readonly DIABALLIK: Localized = () => $localize`Pass the ball up to the side of the opponent to win the game!`;
 
     public static readonly DVONN: Localized = () => $localize`Stack your pieces and control as many stacks as you can to win!`;
 
@@ -239,6 +244,7 @@ export class GameInfo {
         new GameInfo($localize`Connect Six`, 'ConnectSix', ConnectSixComponent, new ConnectSixTutorial(), ConnectSixRules.get(), new Date('2023-05-13'), GameDescription.CONNECT_SIX()),
         new GameInfo($localize`Pente`, 'Pente', PenteComponent, new PenteTutorial(), PenteRules.get(), new Date('2023-05-20'), GameDescription.PENTE()),
         new GameInfo($localize`Teeko`, 'Teeko', TeekoComponent, new TeekoTutorial(), TeekoRules.get(), new Date('2023-07-30'), GameDescription.TEEKO()),
+        new GameInfo($localize`Diaballik`, 'Diaballik', DiaballikComponent, new DiaballikTutorial(), DiaballikRules.get(), new Date('2023-09-20'), GameDescription.DIABALLIK()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
