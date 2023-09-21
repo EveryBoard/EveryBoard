@@ -12,7 +12,7 @@ describe('AwaleOrderedMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new AwaleOrderedMoveGenerator();
     });
-    fit('should order by captured houses', () => {
+    it('should order by captured houses', () => {
         // Given a state with a possible capture
         const board: Table<number> = [
             [0, 0, 0, 0, 1, 1],
