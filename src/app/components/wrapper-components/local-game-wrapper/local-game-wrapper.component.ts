@@ -101,25 +101,36 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }
         }
     }
+
     public proposeAIToPlay(): void {
-        // check if ai's turn has come, if so, make her start after a delay
-        const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
-        if (playingMinimax.isPresent()) {
+        if (this.hasSelectedAI()) {
+            // It is AI's turn, let it play after a small delay
             this.gameComponent.setInteractive(false);
-            // bot's turn
-            window.setTimeout(async() => {
-                await this.doAIMove(playingMinimax.get());
-            }, LocalGameWrapperComponent.AI_TIMEOUT);
+            const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
+            if (playingMinimax.isPresent()) {
+                window.setTimeout(async() => {
+                    await this.doAIMove(playingMinimax.get());
+                }, LocalGameWrapperComponent.AI_TIMEOUT);
+            }
+            // If playingMinimax is absent, that means the user selected an AI without a level.
+            // We do nothing in this case.
         } else {
             this.gameComponent.setInteractive(true);
             this.cdr.detectChanges();
         }
     }
-    private getPlayingAI(): MGPOptional<AbstractMinimax> {
+
+    private hasSelectedAI(): boolean {
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.node).isEndGame) {
             // No AI is playing when the game is finished
-            return MGPOptional.empty();
+            return false;
         }
+
+        const playerIndex: number = this.gameComponent.getTurn() % 2;
+        return this.playerSelection[playerIndex] !== 'human';
+    }
+
+    private getPlayingAI(): MGPOptional<AbstractMinimax> {
         const playerIndex: number = this.gameComponent.getTurn() % 2;
         if (this.aiDepths[playerIndex] === '0') {
             // No AI is playing if its level is set to 0
