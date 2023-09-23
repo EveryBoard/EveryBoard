@@ -260,7 +260,7 @@ describe('LascaComponent', () => {
             // Given a board that has been reversed
             testUtils.getGameComponent().setPointOfView(Player.ONE);
 
-            // When displaying it it
+            // When displaying it
             // We need to force the updateBoard to trigger the redrawing of the board
             await testUtils.getGameComponent().updateBoard(false);
             testUtils.detectChanges();

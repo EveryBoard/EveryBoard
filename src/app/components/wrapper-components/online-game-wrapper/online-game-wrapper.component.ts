@@ -68,7 +68,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private gameEventsSubscription: Subscription = new Subscription();
     private currentGameSubscription: Subscription = new Subscription();
 
-    public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
+    public readonly OFFLINE_FONT_COLOR: { [key: string]: string } = { color: 'lightgrey' };
 
     public readonly globalTimeMessage: string = $localize`5 minutes`;
     public readonly turnTimeMessage: string = $localize`30 seconds`;
@@ -264,6 +264,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async onGameEnd(): Promise<void> {
         await this.currentGameService.removeCurrentGame();
+        this.gameComponent.setInteractive(false);
         this.endGame = true;
     }
     private async onReceivedMove(moveEvent: GameEventMove, isLastMoveOfBatch: boolean): Promise<void> {
@@ -285,10 +286,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value;
             await this.updateBoardAndShowLastMove(triggerAnimation && isLastMoveOfBatch);
         }
-        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        this.gameComponent.setInteractive(this.currentPlayer.name === this.getPlayer().name);
+        this.setCurrentPlayerAccordingToCurrentTurn();
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
+    }
+    private setCurrentPlayerAccordingToCurrentTurn(): void {
+        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
+        this.gameComponent.setInteractive(this.currentPlayer.name === this.getPlayer().name);
     }
     private beforeEventsBatch(): void {
         this.timeManager.beforeEventsBatch(this.endGame);
@@ -306,12 +310,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // Take back a second time to make sure it end up on player's turn
             this.gameComponent.node = this.gameComponent.node.mother.get();
         }
-        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        if (this.gameComponent.getTurn() === 0) {
-            await this.updateBoardAndShowLastMove(false);
-        } else {
-            await this.updateBoardAndShowLastMove(true);
-        }
+        this.setCurrentPlayerAccordingToCurrentTurn();
+        const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
+        await this.updateBoardAndShowLastMove(triggerAnimation);
     }
     public canResign(): boolean {
         Utils.assert(this.isPlaying(), 'Non playing should not call canResign');
@@ -376,7 +377,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             MGPOptional.ofNullable(part.data.playerOne),
         ];
         Utils.assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
-        this.currentPlayer = this.players[part.data.turn % 2].get();
+        this.setCurrentPlayerAccordingToCurrentTurn();
         const opponent: MGPOptional<MinimalUser> = await this.setRealObserverRole();
         if (opponent.isPresent()) {
             const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>) => {

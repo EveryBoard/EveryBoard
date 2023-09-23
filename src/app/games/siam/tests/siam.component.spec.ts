@@ -281,7 +281,7 @@ describe('SiamComponent', () => {
         expect(transform.matrix.f).toBe(y);
     }
     it('should display current player pieces on the bottom (Player.ONE)', fakeAsync(async() => {
-        // Given a state from the point of view of Player.ONE
+        // Given a state
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -291,8 +291,9 @@ describe('SiamComponent', () => {
         ];
         const state: SiamState = new SiamState(board, 1);
 
-        // When the game is displayed
+        // When the game is displayed from the point of view of Player.ONE
         await testUtils.setupState(state);
+        testUtils.getGameComponent().setPointOfView(Player.ONE);
 
         // Then Player.ONE's pieces should be on the bottom
         expectTranslationYToBe('#remainingPieces_0_0', -100);

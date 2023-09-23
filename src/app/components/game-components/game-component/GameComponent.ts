@@ -8,7 +8,7 @@ import { Encoder } from 'src/app/utils/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
-import { Utils } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -47,6 +47,7 @@ export abstract class BaseGameComponent {
     template: '',
     styleUrls: ['./game-component.scss'],
 })
+@Debug.log
 export abstract class GameComponent<R extends Rules<M, S, L, B>,
                                     M extends Move,
                                     S extends GameState,
@@ -106,7 +107,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public setPointOfView(pointOfView: Player): void {
         this.pointOfView = pointOfView;
         if (this.hasAsymmetricBoard) {
-            this.rotation = 'rotate(' + (this.pointOfView.value * 180) + ')';
+            this.rotation = 'rotate(' + (pointOfView.value * 180) + ')';
         }
     }
     public setInteractive(interactive: boolean): void {

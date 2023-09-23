@@ -40,8 +40,8 @@ describe('DemoCardComponent', () => {
         const game: DebugElement = testUtils.findElement('app-p4');
         expect(game).withContext('game component should be displayed').toBeTruthy();
         // from the point of view of the current player
-        expect(testUtils.getComponent().gameComponent?.getPointOfView()).toBe(Player.ONE);
-        expect(testUtils.getComponent().gameComponent?.isPlayerTurn()).toBeTrue();
+        expect(testUtils.getComponent().gameComponent.getPointOfView()).toBe(Player.ONE);
+        expect(testUtils.getComponent().gameComponent.isPlayerTurn()).toBeTrue();
     }));
     it('should simulate clicks', fakeAsync(async() => {
         // Given a demo component
