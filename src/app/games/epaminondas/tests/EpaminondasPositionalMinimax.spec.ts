@@ -3,12 +3,11 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
-import { EpaminondasPositionalHeuristic } from '../EpaminondasPositionalHeuristic';
-import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasLegalityInformation, EpaminondasNode } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
+import { EpaminondasPositionalMinimax } from '../EpaminondasPositionalMinimax';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -20,10 +19,7 @@ describe('EpaminondasPositionalMinimax', () => {
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
 
     beforeEach(() => {
-        minimax = new Minimax('Positional Minimax',
-                              EpaminondasRules.get(),
-                              new EpaminondasPositionalHeuristic(),
-                              new EpaminondasPhalanxSizeAndFilterMoveGenerator());
+        minimax = new EpaminondasPositionalMinimax();
     });
     it('should consider possible capture the best move', () => {
         const board: Table<PlayerOrNone> = [

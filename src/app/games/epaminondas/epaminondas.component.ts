@@ -14,12 +14,10 @@ import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/MCTS';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { EpaminondasPositionalHeuristic } from './EpaminondasPositionalHeuristic';
-import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from './EpaminondasPhalanxSizeAndFilterMoveGenerator';
-import { EpaminondasHeuristic } from './EpaminondasHeuristic';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
-import { EpaminondasAttackHeuristic } from './EpaminondasAttackHeuristic';
+import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
+import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
+import { EpaminondasMinimax } from './EpaminondasMinimax';
 
 @Component({
     selector: 'app-epaminondas',
@@ -56,12 +54,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.rules = EpaminondasRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Minimax', this.rules, new EpaminondasHeuristic(), new EpaminondasMoveGenerator()),
-            new Minimax('Positional',
-                        this.rules,
-                        new EpaminondasPositionalHeuristic(),
-                        new EpaminondasPhalanxSizeAndFilterMoveGenerator()),
-            new Minimax('Attack', this.rules, new EpaminondasAttackHeuristic(), new EpaminondasMoveGenerator()),
+            new EpaminondasMinimax(),
+            new EpaminondasPositionalMinimax(),
+            new EpaminondasAttackMinimax(),
             new MCTS('MCTS', new EpaminondasMoveGenerator(), this.rules),
         ];
         this.encoder = EpaminondasMove.encoder;
@@ -81,9 +76,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             this.moveds.push(moved);
         }
         const previousNode: EpaminondasNode = this.node.parent.get();
-        const PREVIOUS_OPPONENT: Player = previousNode.gameState.getCurrentOpponent();
+        const previousOpponent: Player = previousNode.gameState.getCurrentOpponent();
         while (EpaminondasState.isOnBoard(moved) &&
-               previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT)
+               previousNode.gameState.getPieceAt(moved) === previousOpponent)
         {
             this.capturedCoords.push(moved);
             moved = moved.getNext(move.direction, 1);

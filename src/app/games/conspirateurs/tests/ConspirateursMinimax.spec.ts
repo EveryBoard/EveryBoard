@@ -1,10 +1,9 @@
 import { ConspirateursMove } from '../ConspirateursMove';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
-import { ConspirateursOrderedMoveGenerator } from '../ConspirateursOrderedMoveGenerator';
-import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { ConspirateursState } from '../ConspirateursState';
+import { ConspirateursMinimax } from '../ConspirateursMinimax';
 
 describe('ConspirateursMinimax', () => {
 
@@ -14,10 +13,7 @@ describe('ConspirateursMinimax', () => {
 
     beforeEach(() => {
         rules = ConspirateursRules.get();
-        minimax = new Minimax('Jump',
-                              ConspirateursRules.get(),
-                              new ConspirateursHeuristic(),
-                              new ConspirateursOrderedMoveGenerator());
+        minimax = new ConspirateursMinimax();
     });
     it('should be able to finish when playing with itself', () => {
         // Given a component where AI plays against AI

@@ -3,12 +3,11 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
-import { SixLegalityInformation, SixNode, SixRules } from '../SixRules';
+import { SixLegalityInformation, SixNode } from '../SixRules';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { SixHeuristic } from '../SixHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
+import { SixMinimax } from '../SixMinimax';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
@@ -20,7 +19,7 @@ describe('SixMinimax', () => {
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
 
     beforeEach(() => {
-        minimax = new Minimax('Minimax', SixRules.get(), new SixHeuristic(), new SixFilteredMoveGenerator());
+        minimax = new SixMinimax();
     });
     it('should not consider moving piece that are blocking an opponent victory', () => {
         // Given a board with only one non losing move

@@ -17,9 +17,8 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SiamFailure } from './SiamFailure';
 import { MCTS } from 'src/app/jscaip/MCTS';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { SiamHeuristic } from './SiamHeuristic';
 import { SiamMoveGenerator } from './SiamMoveGenerator';
+import { SiamMinimax } from './SiamMinimax';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -56,7 +55,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.rules = SiamRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Minimax', this.rules, new SiamHeuristic(), new SiamMoveGenerator()),
+            new SiamMinimax(),
             new MCTS('MCTS', new SiamMoveGenerator(), this.rules),
         ];
         this.encoder = SiamMove.encoder;

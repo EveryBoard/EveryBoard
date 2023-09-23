@@ -1,18 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { KalahMove } from '../KalahMove';
-import { KalahNode, KalahRules } from '../KalahRules';
+import { KalahNode } from '../KalahRules';
 import { MancalaState } from '../../common/MancalaState';
 import { MancalaDistribution } from '../../common/MancalaMove';
-import { KalahMoveGenerator } from '../KalahMoveGenerator';
-import { KalahScoreHeuristic } from '../KalahScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { KalahScoreMinimax } from '../KalahScoreMinimax';
 
 describe('KalahScoreMinimax', () => {
 
     let minimax: Minimax<KalahMove, MancalaState>;
 
     beforeEach(() => {
-        minimax = new Minimax('Score', KalahRules.get(), new KalahScoreHeuristic(), new KalahMoveGenerator());
+        minimax = new KalahScoreMinimax();
     });
     it('should choose longest distribution when there is no capture', () => {
         // Given a board with a big distribution possible

@@ -5,10 +5,9 @@ import { NewGameState } from './NewGameState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { NewGameTutorial } from './NewGameTutorial';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { MCTS } from 'src/app/jscaip/MCTS';
-import { NewGameHeuristic } from './NewGameHeuristic';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
+import { NewGameMinimax } from './NewGameMinimax';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.
@@ -45,7 +44,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
         this.encoder = NewGameMove.encoder;
         this.tutorial = new NewGameTutorial().tutorial;
         this.availableAIs = [
-            new Minimax('Dummy', this.rules, new NewGameHeuristic(), new NewGameMoveGenerator()),
+            new NewGameMinimax(),
             new MCTS('MCTS', new NewGameMoveGenerator(), this.rules),
         ];
     }

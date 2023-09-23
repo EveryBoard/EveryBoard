@@ -8,13 +8,11 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { TaflPawn } from '../TaflPawn';
 import { TablutState } from '../tablut/TablutState';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
-import { TablutNode, TablutRules } from '../tablut/TablutRules';
+import { TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { TaflMoveGenerator } from '../TaflMoveGenerator';
 
 describe('TablutPieceAndInfluenceHeuristic', () => {
 
@@ -323,32 +321,6 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(4, 5))).toBeFalse();
-        });
-    });
-    describe('Victory', () => {
-        it('should choose king escape, at depth 1 and more', () => {
-            const board: Table<TaflPawn> = [
-                [_, A, _, _, _, _, _, O, _],
-                [_, O, _, O, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, O, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-            ];
-            const state: TablutState = new TablutState(board, 1);
-            const node: TablutNode = new TablutNode(state);
-            const expectedMove: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(0, 0));
-            const minimax: Minimax<TablutMove, TablutState> = new Minimax('PieceAndInfluence',
-                                                                          TablutRules.get(),
-                                                                          heuristic,
-                                                                          new TaflMoveGenerator(TablutRules.get()));
-            for (let depth: number = 1; depth < 4; depth++) {
-                const chosenMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level', maxDepth: depth });
-                expect(chosenMove).toEqual(expectedMove);
-            }
         });
     });
 });

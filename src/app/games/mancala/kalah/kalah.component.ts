@@ -5,10 +5,9 @@ import { MancalaMultipleSowComponent } from '../common/MancalaMultipleSowCompone
 import { KalahRules } from './KalahRules';
 import { KalahMove } from './KalahMove';
 import { KalahTutorial } from './KalahTutorial';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { KalahMoveGenerator } from './KalahMoveGenerator';
-import { KalahScoreHeuristic } from './KalahScoreHeuristic';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { KalahScoreMinimax } from './KalahScoreMinimax';
 
 @Component({
     selector: 'app-kalah-component',
@@ -25,7 +24,7 @@ export class KalahComponent extends MancalaMultipleSowComponent<KalahRules, Kala
         this.rules = KalahRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Score', this.rules, new KalahScoreHeuristic(), new KalahMoveGenerator()),
+            new KalahScoreMinimax(),
             new MCTS('MCTS', new KalahMoveGenerator(), this.rules),
         ];
         this.encoder = KalahMove.encoder;

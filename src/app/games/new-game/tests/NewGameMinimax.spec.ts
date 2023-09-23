@@ -1,8 +1,8 @@
 import { NewGameState } from '../NewGameState';
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/Minimax';
 import { NewGameMove } from '../NewGameMove';
-import { NewGameMoveGenerator } from '../NewGameMoveGenerator';
-import { NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
+import { NewGameLegalityInfo, NewGameNode } from '../NewGameRules';
+import { NewGameMinimax } from '../NewGameMinimax';
 
 /**
  * These are the tests for the minimax.
@@ -13,7 +13,7 @@ describe('NewGameMinimax', () => {
     let minimax: Minimax<NewGameMove, NewGameState, NewGameLegalityInfo>;
 
     beforeEach(() => {
-        minimax = new Minimax('Dummy', NewGameRules.get(), new DummyHeuristic(), new NewGameMoveGenerator());
+        minimax = new NewGameMinimax();
     });
     it('should select some move', () => {
         // Given state

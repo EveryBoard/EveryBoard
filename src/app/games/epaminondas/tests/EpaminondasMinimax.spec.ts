@@ -4,12 +4,11 @@ import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { EpaminondasRules, EpaminondasLegalityInformation } from '../EpaminondasRules';
-import { EpaminondasHeuristic } from '../EpaminondasHeuristic';
+import { EpaminondasLegalityInformation } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasNode } from '../EpaminondasRules';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
+import { EpaminondasMinimax } from '../EpaminondasMinimax';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -21,7 +20,7 @@ describe('EpaminondasMinimax', () => {
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
 
     beforeEach(() => {
-        minimax = new Minimax('Minimax', EpaminondasRules.get(), new EpaminondasHeuristic(), new EpaminondasMoveGenerator());
+        minimax = new EpaminondasMinimax();
     });
     it('should consider possible capture the best move', () => {
         const board: Table<PlayerOrNone> = [

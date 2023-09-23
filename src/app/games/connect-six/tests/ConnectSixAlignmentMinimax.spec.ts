@@ -1,16 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixDrops, ConnectSixMove } from '../ConnectSixMove';
-import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
+import { ConnectSixNode } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
-import { ConnectSixAlignmentHeuristic } from '../ConnectSixAlignmentHeuristic';
+import { ConnectSixAlignmentMinimax } from '../ConnectSixAlignmentMinimax';
 
-describe('ConnectSixAlignmentHeuristic', () => {
+describe('ConnectSixAlignmentMinimax', () => {
 
     let minimax: Minimax<ConnectSixMove, ConnectSixState>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
@@ -20,10 +19,7 @@ describe('ConnectSixAlignmentHeuristic', () => {
     const O: PlayerOrNone = PlayerOrNone.ZERO;
 
     beforeEach(() => {
-        minimax = new Minimax('Alignment',
-                              ConnectSixRules.get(),
-                              new ConnectSixAlignmentHeuristic(),
-                              new ConnectSixMoveGenerator());
+        minimax = new ConnectSixAlignmentMinimax();
     });
     it('should do winning move when one is possible', () => {
         // Given a board where there is place for a victory of first player

@@ -14,10 +14,8 @@ import { ConspirateursState } from './ConspirateursState';
 import { ConspirateursTutorial } from './ConspirateursTutorial';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MCTS } from 'src/app/jscaip/MCTS';
-import { ConspirateursHeuristic } from './ConspirateursHeuristic';
-import { ConspirateursOrderedMoveGenerator } from './ConspirateursOrderedMoveGenerator';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
+import { ConspirateursMinimax } from './ConspirateursMinimax';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
@@ -68,10 +66,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.rules = ConspirateursRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Jump',
-                        this.rules,
-                        new ConspirateursHeuristic(),
-                        new ConspirateursOrderedMoveGenerator()),
+            new ConspirateursMinimax(),
             new MCTS('MCTS', new ConspirateursMoveGenerator(), this.rules),
         ];
         this.encoder = ConspirateursMove.encoder;

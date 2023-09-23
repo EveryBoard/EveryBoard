@@ -14,12 +14,11 @@ import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMoveGenerator } from './TaflMoveGenerator';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
-import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
-import { TaflPieceAndControlHeuristic } from './TaflPieceAndControlHeuristic';
-import { TaflPieceHeuristic } from './TaflPieceHeuristic';
-import { TaflEscapeThenPieceThenControlHeuristic } from './TaflEscapeThenPieceThenControlHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
+import { TaflPieceMinimax } from './TaflPieceMinimax';
+import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
 
 export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
     extends RectangularGameComponent<R, M, S, TaflPawn>
@@ -191,13 +190,10 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     protected createAIs(): AI<TaflMove, S, AIOptions>[] {
         const moveGenerator: TaflMoveGenerator<M, S> = new TaflMoveGenerator(this.rules);
         return [
-            new Minimax('Piece', this.rules, new TaflPieceHeuristic(this.rules), moveGenerator),
-            new Minimax('Piece > Influence', this.rules, new TaflPieceAndInfluenceHeuristic(this.rules), moveGenerator),
-            new Minimax('Piece > Control', this.rules, new TaflPieceAndControlHeuristic(this.rules), moveGenerator),
-            new Minimax('Escape > Piece > Control',
-                        this.rules,
-                        new TaflEscapeThenPieceThenControlHeuristic(this.rules),
-                        moveGenerator),
+            new TaflPieceMinimax(this.rules),
+            new TaflPieceAndInfluenceMinimax(this.rules),
+            new TaflPieceAndControlMinimax(this.rules),
+            new TaflEscapeThenPieceThenControlMinimax(this.rules),
             new MCTS('MCTS', moveGenerator, this.rules),
         ];
     }

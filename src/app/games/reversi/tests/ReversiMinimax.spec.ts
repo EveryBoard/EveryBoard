@@ -3,9 +3,8 @@ import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
-import { ReversiHeuristic } from '../ReversiHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
+import { ReversiMinimax } from '../ReversiMinimax';
 
 describe('ReversiMinimax', () => {
 
@@ -15,7 +14,7 @@ describe('ReversiMinimax', () => {
 
     beforeEach(() => {
         rules = ReversiRules.get();
-        minimax = new Minimax('Minimax', ReversiRules.get(), new ReversiHeuristic(), new ReversiMoveGenerator());
+        minimax = new ReversiMinimax();
     });
     it('should not throw at first choice', () => {
         const node: ReversiNode = rules.getInitialNode();

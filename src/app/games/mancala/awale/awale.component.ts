@@ -4,11 +4,9 @@ import { AwaleMove } from './AwaleMove';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AwaleTutorial } from './AwaleTutorial';
 import { MancalaSingleSowComponent } from '../common/MancalaSingleSowComponent';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { AwaleOrderedMoveGenerator } from './AwaleOrderedMoveGenerator';
-import { AwaleScoreHeuristic } from './AwaleScoreHeuristic';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { AwaleScoreMinimax } from './AwaleScoreMinimax';
 
 @Component({
     selector: 'app-awale-component',
@@ -24,7 +22,7 @@ export class AwaleComponent extends MancalaSingleSowComponent<AwaleRules, AwaleM
         this.rules = AwaleRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Score', this.rules, new AwaleScoreHeuristic(), new AwaleOrderedMoveGenerator()),
+            new AwaleScoreMinimax(),
             new MCTS('MCTS', new AwaleMoveGenerator(), this.rules),
         ];
         this.encoder = AwaleMove.encoder;
