@@ -10,7 +10,7 @@ export class EpaminondasPositionalMinimax
 {
 
     public constructor() {
-        super('Positional',
+        super($localize`Positional`,
               EpaminondasRules.get(),
               new EpaminondasPositionalHeuristic(),
               new EpaminondasPhalanxSizeAndFilterMoveGenerator());

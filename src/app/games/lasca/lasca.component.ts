@@ -72,8 +72,8 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.rules = LascaRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Control', this.rules, new LascaControlHeuristic(), this.moveGenerator),
-            new Minimax('Control and Domination',
+            new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),
+            new Minimax($localize`Control and Domination`,
                         this.rules,
                         new LascaControlAndDominationHeuristic(),
                         this.moveGenerator),

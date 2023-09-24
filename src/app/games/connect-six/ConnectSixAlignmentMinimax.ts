@@ -8,6 +8,6 @@ import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
 export class ConnectSixAlignmentMinimax extends Minimax<ConnectSixMove, ConnectSixState> {
 
     public constructor() {
-        super('Alignment', ConnectSixRules.get(), new ConnectSixAlignmentHeuristic(), new ConnectSixMoveGenerator());
+        super($localize`Alignment`, ConnectSixRules.get(), new ConnectSixAlignmentHeuristic(), new ConnectSixMoveGenerator());
     }
 }

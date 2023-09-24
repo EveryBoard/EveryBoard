@@ -99,7 +99,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         this.rules = DiamRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Dummy', this.rules, new DummyHeuristic(), new DiamMoveGenerator()),
+            new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new DiamMoveGenerator()),
             new MCTS('MCTS', new DiamMoveGenerator(), this.rules),
         ];
         this.encoder = DiamMoveEncoder;

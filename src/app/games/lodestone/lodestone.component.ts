@@ -133,7 +133,7 @@ export class LodestoneComponent
         this.node = this.rules.getInitialNode();
         this.tutorial = new LodestoneTutorial().tutorial;
         this.availableAIs = [
-            new Minimax('Score', this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
+            new Minimax($localize`Score`, this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
             new MCTS('MCTS', new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;

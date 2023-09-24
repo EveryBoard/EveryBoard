@@ -82,7 +82,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.rules = TrexoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Alignment', this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
+            new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
             new MCTS('MCTS', new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;

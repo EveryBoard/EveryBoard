@@ -63,13 +63,13 @@
         <source>Learn the rules</source>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="me.get().typeGame }}"/> (waiting for opponent)</source>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (waiting for opponent)</source>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
@@ -480,10 +480,10 @@
         <source>Pick the options</source>
       </trans-unit>
       <trans-unit id="187187500641108332" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="me }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="option.name }}"/></source>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="nent.scores.get()[0] }}"/> points</source>
+        <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get()[0] }}"/> points</source>
       </trans-unit>
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
@@ -567,22 +567,22 @@
         <source>You lost.</source>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getWinner().get().name }}"/> won.</source>
+        <source><x id="INTERPOLATION" equiv-text="currentPart.getWinner().get().name }}"/> won.</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has reached their time limit. You won.</source>
+        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has reached their time limit. You won.</source>
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has reached their time limit.</source>
+        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="rt.getLoser().get().name }}"/> has resigned.</source>
+        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has resigned.</source>
       </trans-unit>
       <trans-unit id="3492340771384313804" datatype="html">
         <source>Resign</source>
@@ -678,10 +678,10 @@
         <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
       </trans-unit>
       <trans-unit id="6747612030990351046" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
       </trans-unit>
       <trans-unit id="7215535622740824911" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="creator }}"/> plays first</source>
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> plays first</source>
       </trans-unit>
       <trans-unit id="8496859383343230204" datatype="html">
         <source>you play first</source>
@@ -702,10 +702,10 @@
         <source>One moment...</source>
       </trans-unit>
       <trans-unit id="5068486659312004369" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="creator }}"/> is configuring the game.</source>
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> is configuring the game.</source>
       </trans-unit>
       <trans-unit id="4218388977213486334" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
       </trans-unit>
       <trans-unit id="4412958068611913614" datatype="html">
         <source>custom</source>
@@ -807,6 +807,9 @@
       </trans-unit>
       <trans-unit id="8017917529851412468" datatype="html">
         <source>Failed. Try again.</source>
+      </trans-unit>
+      <trans-unit id="7123653594948067002" datatype="html">
+        <source>Score</source>
       </trans-unit>
       <trans-unit id="4382056880714150954" datatype="html">
         <source>Pieces should only move downward!</source>
@@ -943,6 +946,15 @@
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
       </trans-unit>
+      <trans-unit id="8182472154276317003" datatype="html">
+        <source>Pieces &gt; Threats &gt; Tiles</source>
+      </trans-unit>
+      <trans-unit id="7668715639068435496" datatype="html">
+        <source>Captures &gt; Freedom</source>
+      </trans-unit>
+      <trans-unit id="8560978883976627945" datatype="html">
+        <source>Alignment</source>
+      </trans-unit>
       <trans-unit id="3987391810258758141" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
       </trans-unit>
@@ -978,6 +990,9 @@
       </trans-unit>
       <trans-unit id="309495911608325428" datatype="html">
         <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
+      </trans-unit>
+      <trans-unit id="4649711232397678200" datatype="html">
+        <source>Jump</source>
       </trans-unit>
       <trans-unit id="9123148140915098130" datatype="html">
         <source>Board and aim of the game</source>
@@ -1072,6 +1087,9 @@
       <trans-unit id="3765076912748475454" datatype="html">
         <source>Failed, try to shift a stack of pieces to the left.</source>
       </trans-unit>
+      <trans-unit id="7535479567631818273" datatype="html">
+        <source>Dummy</source>
+      </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
       </trans-unit>
@@ -1160,6 +1178,9 @@
       <trans-unit id="8876232297721386956" datatype="html">
         <source>Bad idea, by moving on the source you would have won a point.</source>
       </trans-unit>
+      <trans-unit id="5456673610183497320" datatype="html">
+        <source>Stacks</source>
+      </trans-unit>
       <trans-unit id="6059738106874378452" datatype="html">
         <source>You do not have pieces of this type anymore.</source>
       </trans-unit>
@@ -1206,6 +1227,9 @@
       <trans-unit id="6204412729347708092" datatype="html">
         <source>You won, but the exercise is to win while moving a piece!</source>
       </trans-unit>
+      <trans-unit id="360730166369316579" datatype="html">
+        <source>Attack</source>
+      </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
       </trans-unit>
@@ -1235,6 +1259,9 @@
       </trans-unit>
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="4563771339790181195" datatype="html">
+        <source>Positional</source>
       </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
@@ -1800,6 +1827,12 @@
       </trans-unit>
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>
+      </trans-unit>
+      <trans-unit id="318262165361158083" datatype="html">
+        <source>Control</source>
+      </trans-unit>
+      <trans-unit id="7668804973365582935" datatype="html">
+        <source>Control and Domination</source>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -2764,6 +2797,9 @@
       <trans-unit id="4274208426593680443" datatype="html">
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
       </trans-unit>
+      <trans-unit id="8695715656464271140" datatype="html">
+        <source>Escape &gt; Piece &gt; Control</source>
+      </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>
       </trans-unit>
@@ -2775,6 +2811,15 @@
       </trans-unit>
       <trans-unit id="6790757046240382671" datatype="html">
         <source>Tafl moves must be orthogonal.</source>
+      </trans-unit>
+      <trans-unit id="3530929110760161785" datatype="html">
+        <source>Piece &gt; Control</source>
+      </trans-unit>
+      <trans-unit id="2830054137821712897" datatype="html">
+        <source>Piece &gt; Influence</source>
+      </trans-unit>
+      <trans-unit id="2296247521191141043" datatype="html">
+        <source>Piece</source>
       </trans-unit>
       <trans-unit id="3469374446011769111" datatype="html">
         <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>

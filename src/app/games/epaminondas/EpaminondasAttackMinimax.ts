@@ -10,7 +10,7 @@ export class EpaminondasAttackMinimax
 {
 
     public constructor() {
-        super('Attack',
+        super($localize`Attack`,
               EpaminondasRules.get(),
               new EpaminondasAttackHeuristic(),
               new EpaminondasPhalanxSizeAndFilterMoveGenerator());

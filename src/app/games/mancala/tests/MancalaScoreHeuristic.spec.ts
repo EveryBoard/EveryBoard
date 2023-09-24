@@ -1,16 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { MancalaState } from '../../common/MancalaState';
+import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { MancalaMove } from '../common/MancalaMove';
+import { MancalaScoreHeuristic } from '../common/MancalaScoreHeurisic';
+import { MancalaState } from '../common/MancalaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { KalahScoreHeuristic } from '../KalahScoreHeuristic';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 
-describe('KalahScoreHeuristic', () => {
+describe('MancalaScoreHeuristic', () => {
 
-    let heuristic: KalahScoreHeuristic;
+    let heuristic: MancalaScoreHeuristic<MancalaMove>;
 
     beforeEach(() => {
-        heuristic = new KalahScoreHeuristic();
+        heuristic = new MancalaScoreHeuristic();
     });
     it('should prefer board with better score', () => {
         // Given a board with a big score

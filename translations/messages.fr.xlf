@@ -1190,6 +1190,10 @@
         <source>Failed. Try again.</source>
         <target>Perdu. Recommencez.</target>
       </trans-unit>
+      <trans-unit id="7123653594948067002" datatype="html">
+        <source>Score</source>
+        <target>Score</target>
+      </trans-unit>
       <trans-unit id="437214181691581058" datatype="html">
         <source>Interrupted capture</source>
         <target>Capture interrompue</target>
@@ -1404,6 +1408,18 @@
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
       </trans-unit>
+      <trans-unit id="8182472154276317003" datatype="html">
+        <source>Pieces &gt; Threats &gt; Tiles</source>
+        <target>Pièces &gt; Menaces &gt; Tuiles</target>
+      </trans-unit>
+      <trans-unit id="7668715639068435496" datatype="html">
+        <source>Captures &gt; Freedom</source>
+        <target>Captures &gt; Libertés</target>
+      </trans-unit>
+      <trans-unit id="8560978883976627945" datatype="html">
+        <source>Alignment</source>
+        <target>Alignement</target>
+      </trans-unit>
       <trans-unit id="3987391810258758141" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
         <target>Connect Six se joue sur un plateau de 19x19, sur lequel des pièces sont placées sur les intersections. Le but du jeu est d'aligner six de vos pièces.</target>
@@ -1451,6 +1467,10 @@
       <trans-unit id="309495911608325428" datatype="html">
         <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
         <target>Vous passez deux fois par la même case dans votre mouvement. Ce n'est pas autorisé.</target>
+      </trans-unit>
+      <trans-unit id="4649711232397678200" datatype="html">
+        <source>Jump</source>
+        <target>Sauts</target>
       </trans-unit>
       <trans-unit id="9123148140915098130" datatype="html">
         <source>Board and aim of the game</source>
@@ -1567,6 +1587,10 @@
       <trans-unit id="3765076912748475454" datatype="html">
         <source>Failed, try to shift a stack of pieces to the left.</source>
         <target>Raté, essayez de déplacer une pile de pièces vers la gauche.</target>
+      </trans-unit>
+      <trans-unit id="7535479567631818273" datatype="html">
+        <source>Dummy</source>
+        <target>Simplet</target>
       </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
@@ -1695,6 +1719,10 @@
         <source>Bad idea, by moving on the source you would have won a point.</source>
         <target>Mauvaise idée, en déplaçant votre pile sur la source, vous auriez gagné votre pièce et gagné un point.</target>
       </trans-unit>
+      <trans-unit id="5456673610183497320" datatype="html">
+        <source>Stacks</source>
+        <target>Piles</target>
+      </trans-unit>
       <trans-unit id="6059738106874378452" datatype="html">
         <source>You do not have pieces of this type anymore.</source>
         <target>Vous n&apos;avez plus de pièces de ce type.</target>
@@ -1767,6 +1795,10 @@
         <source>You won, but the exercise is to win while moving a piece!</source>
         <target>Vous avez gagné, mais le but de l'exercice est de gagner en faisant un déplacmement !</target>
       </trans-unit>
+      <trans-unit id="360730166369316579" datatype="html">
+        <source>Attack</source>
+        <target>Attaque</target>
+      </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
         <target>La distance de déplacement de votre phalange la fait sortir du plateau.</target>
@@ -1806,6 +1838,10 @@
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
         <target>Une phalange ne peut pas contenir de pièce de l'adversaire.</target>
+      </trans-unit>
+      <trans-unit id="4563771339790181195" datatype="html">
+        <source>Positional</source>
+        <target>Positionnel</target>
       </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
@@ -2621,6 +2657,14 @@
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>
         <target>Vous n'avez pas déplacé votre officier.</target>
+      </trans-unit>
++      <trans-unit id="318262165361158083" datatype="html">
+        <source>Control</source>
+        <target>Contrôle</target>
+      </trans-unit>
+      <trans-unit id="7668804973365582935" datatype="html">
+        <source>Control and Domination</source>
+        <target>Contrôle et domination</target>
       </trans-unit>
       <trans-unit id="6522624192206928831" datatype="html">
         <source>Minority capture is allowed</source>
@@ -3876,6 +3920,10 @@
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
         <target>Raté. Vous avez coupé le plateau en deux parties, mais avez gardé la partie où vous êtes en minorité. Vous avez donc perdu ! Essayez à nouveau.</target>
       </trans-unit>
+      <trans-unit id="8695715656464271140" datatype="html">
+        <source>Escape &gt; Piece &gt; Control</source>
+        <target>Fuite &gt; Pièces &gt; Contrôle</target>
+      </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>
         <target>Vous ne pouvez pas atterrir sur une case occupée.</target>
@@ -3895,6 +3943,18 @@
       <trans-unit id="6790757046240382671" datatype="html">
         <source>Tafl moves must be orthogonal.</source>
         <target>Les mouvements aux jeux de Tafl doivent être orthogonaux.</target>
+      </trans-unit>
+      <trans-unit id="3530929110760161785" datatype="html">
+        <source>Piece &gt; Control</source>
+        <target>Pièces &gt; Contrôle</target>
+      </trans-unit>
+      <trans-unit id="2830054137821712897" datatype="html">
+        <source>Piece &gt; Influence</source>
+        <target>Pièces &gt; Influence</target>
+      </trans-unit>
+      <trans-unit id="2296247521191141043" datatype="html">
+        <source>Piece</source>
+        <target>Pièces</target>
       </trans-unit>
       <trans-unit id="3469374446011769111" datatype="html">
         <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>

@@ -5,9 +5,9 @@ import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursHeuristic } from './ConspirateursHeuristic';
 import { ConspirateursOrderedMoveGenerator } from './ConspirateursOrderedMoveGenerator';
 
-export class ConspirateursMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
+export class ConspirateursJumpMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
 
     public constructor() {
-        super('Jump', ConspirateursRules.get(), new ConspirateursHeuristic(), new ConspirateursOrderedMoveGenerator());
+        super($localize`Jump`, ConspirateursRules.get(), new ConspirateursHeuristic(), new ConspirateursOrderedMoveGenerator());
     }
 }
