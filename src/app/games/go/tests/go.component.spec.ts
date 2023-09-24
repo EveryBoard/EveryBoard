@@ -51,7 +51,7 @@ describe('GoComponent', () => {
         const secondMove: GoMove = new GoMove(2, 2);
         await testUtils.expectMoveSuccess('#click_2_2', secondMove);
     }));
-    fdescribe('hoshi', () => {
+    describe('hoshi', () => {
 
         it('shoud be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board

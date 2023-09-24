@@ -1,11 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { GoNode, GoRules } from '../GoRules';
+import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
-const config: GobanConfig = { width: 5, height: 5 };
+const config: GoConfig = { width: 5, height: 5, handicap: 0 };
 
 describe('GoMove', () => {
 

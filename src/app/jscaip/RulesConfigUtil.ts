@@ -1,10 +1,10 @@
 /* eslint-disable no-multi-spaces */
-import { rulesConfigDescriptionMap } from '../components/normal-component/pick-game/pick-game.component';
+import { RulesConfigDescription, defaultRCDC, rulesConfigDescriptionMap } from '../components/normal-component/pick-game/pick-game.component';
 import { Localized } from '../utils/LocaleUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPValidation } from '../utils/MGPValidation';
 
-export type ConfigDescriptionType = string | number | boolean;
+export type ConfigDescriptionType = number | boolean;
 
 export type ConfigParameter = NumberConfigParameter | BooleanConfigParameter;
 
@@ -22,9 +22,9 @@ export type BooleanConfigParameter = BaseConfigParameter & {
     defaultValue: boolean;
 };
 
-export type RulesConfigDescription = {
-    // Wrapping this into field to make it different for RulesConfig in Typescript eyes
-    fields: ConfigParameter[];
+export type NamedRulesConfig<R extends object> = {
+    config: R;
+    name: Localized;
 };
 
 export type RulesConfig = {
@@ -34,21 +34,24 @@ export type RulesConfig = {
 export class RulesConfigUtils {
 
     public static getDefaultConfig(rulesConfigDescription: RulesConfigDescription): RulesConfig {
-        const rulesConfig: RulesConfig = {};
-        for (const configParameter of rulesConfigDescription.fields) {
-            rulesConfig[configParameter.name] = configParameter.defaultValue;
-        }
-        return rulesConfig;
+        // const rulesConfig: RulesConfig = {};
+        // for (const configParameter of rulesConfigDescription.fields) {
+            // rulesConfig[configParameter.name] = configParameter.defaultValue;
+        // }
+        return rulesConfigDescription.getDefaultConfig().config;
     }
 
     public static getGameDefaultConfig(gameName: string): RulesConfig {
-        const rulesConfigDescription: MGPOptional<RulesConfigDescription> =
-                rulesConfigDescriptionMap.get(gameName);
-        const rulesConfig: RulesConfig = {};
-        for (const configParameter of rulesConfigDescription.getOrElse({ fields: [] }).fields) {
-            rulesConfig[configParameter.name] = configParameter.defaultValue;
-        }
-        return rulesConfig;
+        const rulesConfigDescriptionOpt: MGPOptional<RulesConfigDescription> =
+            rulesConfigDescriptionMap.get(gameName);
+        const rulesConfigDescription: RulesConfigDescription =
+            rulesConfigDescriptionOpt.getOrElse(defaultRCDC);
+        // const rulesConfig: RulesConfig = {};
+        // for (const configParameter of rulesConfigDescription.getDefaultConfig()) {
+        //     rulesConfig[configParameter.name] = configParameter.defaultValue;
+        // }
+        // return rulesConfig;
+        return rulesConfigDescription.getDefaultConfig().config;
     }
 
 }

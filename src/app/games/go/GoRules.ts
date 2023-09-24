@@ -14,14 +14,25 @@ import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
 export type GoLegalityInformation = Coord[];
 
-export class GoNode extends MGPNode<GoRules, GoMove, GoState, GobanConfig, GoLegalityInformation> {}
+export type GoConfig = GobanConfig & {
+
+    handicap: number;
+};
+
+export const goConfig: GoConfig = {
+    width: 19,
+    height: 19,
+    handicap: 0,
+};
+
+export class GoNode extends MGPNode<GoRules, GoMove, GoState, GoConfig, GoLegalityInformation> {}
 
 @Debug.log
-export class GoRules extends Rules<GoMove, GoState, GobanConfig, GoLegalityInformation> {
+export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformation> {
 
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
 
@@ -32,7 +43,7 @@ export class GoRules extends Rules<GoMove, GoState, GobanConfig, GoLegalityInfor
         return GoRules.singleton.get();
     }
     private constructor() {
-        super(GoState, gobanConfig);
+        super(GoState, goConfig);
     }
     public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         if (GoRules.isPass(move)) {

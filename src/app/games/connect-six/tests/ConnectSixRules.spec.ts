@@ -73,7 +73,6 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-// TODO: NO CENTER HOSHI IN EVEN BOARDS
             // Then the move should be a success
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
@@ -156,7 +155,6 @@ describe('ConnectSixRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
 
-// TODO: go 13*3 soit centré
         it('should refuse dropping first coord on another piece', () => {
             // Given a board with pieces on it
             const state: ConnectSixState = new ConnectSixState([

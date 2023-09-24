@@ -4,8 +4,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { GoState, GoPiece, Phase } from '../GoState';
-import { GoNode, GoRules } from '../GoRules';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GoConfig, GoNode, GoRules } from '../GoRules';
 
 describe('GoMinimax', () => {
 
@@ -19,7 +18,7 @@ describe('GoMinimax', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const config: GobanConfig = { width: 5, height: 5 };
+    const config: GoConfig = { width: 5, height: 5, handicap: 0 };
 
     beforeEach(() => {
         const rules: GoRules = GoRules.get();

@@ -2,44 +2,44 @@
     <p class="title" i18n>Configuration of your {{ gameName }} part</p>
     <form [formGroup]="rulesConfigForm">
         <fieldset>
-            <div *ngFor="let configParameter of rulesConfigDescription.fields"
-                 id="{{ configParameter.name }}_config"
+            <div *ngFor="let configParameter of getFields()"
+                 id="{{ configParameter }}_config"
                  class="field is-horizontal">
                 <div class="field-label is-normal">
-                    <label class="label">{{ configParameter.i18nName() }}</label>
+                    <label class="label">{{ rulesConfigDescription.getI18nName(configParameter) }}</label>
                 </div>
-                <div *ngIf="isNumber(configParameter.defaultValue)"
+                <div *ngIf="isNumber(configParameter)"
                      class="field-body">
                     <div class="field">
                         <div class="control has-icons-right">
-                            <input id="{{ configParameter.name }}_number_config_input"
-                                   [formControlName]="configParameter.name"
+                            <input id="{{ configParameter }}_number_config_input"
+                                   [formControlName]="configParameter"
                                    type="number"
                                    class="input"
                                    required
-                                   placeholder="{{ configParameter.i18nName() }}" />
+                                   placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
                             <span class="icon is-small is-right">
                                 <i class="fas fa-exclamation-triangle"></i>
                             </span>
                         </div>
-                        <div *ngIf="isInvalid(configParameter.name, configParameter)"
+                        <div *ngIf="isInvalid(configParameter)"
                              class="message is-danger"
                              role="alert">
-                            <div id="{{ configParameter.name }}_number_config_error"
+                            <div id="{{ configParameter }}_number_config_error"
                                  class="message-header">{{ getErrorMessage(configParameter) }}</div>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="isBoolean(configParameter.defaultValue)"
+                <div *ngIf="isBoolean(configParameter)"
                      class="field-body">
                     <div class="field">
                         <div class="control">
-                            <input id="{{ configParameter.name }}_boolean_config_input"
-                                   [formControlName]="configParameter.name"
+                            <input id="{{ configParameter }}_boolean_config_input"
+                                   [formControlName]="configParameter"
                                    type="checkbox"
                                    class="checkbox"
                                    required
-                                   placeholder="{{ configParameter.i18nName() }}" />
+                                   placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
                         </div>
                     </div>
                 </div>

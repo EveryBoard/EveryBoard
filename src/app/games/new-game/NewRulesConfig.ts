@@ -1,24 +1,24 @@
-import { RulesConfigDescription } from 'src/app/jscaip/RulesConfigUtil';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidators, RulesConfigDescription } from 'src/app/components/normal-component/pick-game/pick-game.component';
 
 // Note: RulesConfigDescriptions object are right now centralised in RulesConfigDescriptions
-export const newRulesConfigDescription: RulesConfigDescription = {
-    fields: [
-        {
-            // the name of the parameter that could configure your game (ex: board size)'
-            name: 'the_name_you_will_use_in_your_rules_and_states',
-            i18nName: () => 'some localisable string to be read by user',
-            defaultValue: 9,
-            isValid: (value: number | null): MGPValidation => {
-                return MGPValidation.failure('Return a localizable message saying why this config choice is unacceptable');
-            },
+export const newRulesConfigDescription: RulesConfigDescription =
+    new RulesConfigDescription({
+        name: () => 'the internationalisable name of that standard config',
+        config: {
+            the_name_you_will_use_in_your_rules_and_states: 5,
         },
-    ],
-};
+    }, {
+        the_name_you_will_use_in_your_rules_and_states: () => `the translatable and writable name of this parameter`,
+    }, [
+        // OTHER DEFAULT CONFIGS TODO
+    ], {
+        the_name_you_will_use_in_your_rules_and_states: MGPValidators.range(1, 2), // TODO EXPLAIN
+    });
+            // isValid: (value: number | null): MGPValidation => {
+                // return MGPValidation.failure('Return a localizable message saying why this config choice is unacceptable');
+            // },
 
-newRulesConfigDescription.fields[0].i18nName(); // For code coverage
-// eslint-disable-next-line dot-notation
-newRulesConfigDescription.fields[0]['isValid'](5); // For code coverage
+newRulesConfigDescription.getDefaultConfig().name(); // For code coverage
 
 export type NewRulesConfig = {
     the_name_you_will_use_in_your_rules_and_states: number;

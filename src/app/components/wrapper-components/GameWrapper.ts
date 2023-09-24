@@ -4,7 +4,7 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
-import { GameInfo } from '../normal-component/pick-game/pick-game.component';
+import { GameInfo, RulesConfigDescription, defaultRCDC } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent, BaseGameComponent } from '../game-components/game-component/GameComponent';
@@ -12,7 +12,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Comparable } from 'src/app/utils/Comparable';
-import { RulesConfig, RulesConfigDescription, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 export class GameWrapperMessages {
 
@@ -204,7 +204,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
     public getRulesConfigDescriptionByName(gameName: string): RulesConfigDescription {
         const game: GameInfo[] = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameName);
         if (game.length === 0) {
-            return { fields: [] };
+            return defaultRCDC;
         } else {
             return game[0].rulesConfigDescription;
         }

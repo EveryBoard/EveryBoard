@@ -4,18 +4,17 @@ import { Phase, GoState, GoPiece } from '../GoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GoLegalityInformation, GoNode, GoRules } from '../GoRules';
+import { GoConfig, GoLegalityInformation, GoNode, GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoFailure } from '../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
 describe('GoRules', () => {
 
     let rules: GoRules;
-    let minimaxes: Minimax<GoMove, GoState, GobanConfig, GoLegalityInformation>[];
+    let minimaxes: Minimax<GoMove, GoState, GoConfig, GoLegalityInformation>[];
 
     const X: GoPiece = GoPiece.LIGHT;
     const O: GoPiece = GoPiece.DARK;
@@ -25,7 +24,7 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const config: GobanConfig = { width: 5, height: 5 };
+    const config: GoConfig = { width: 5, height: 5, handicap: 0 };
 
     beforeEach(() => {
         rules = GoRules.get();

@@ -5,8 +5,7 @@ import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/test
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPValidators } from '../../normal-component/pick-game/pick-game.component';
+import { MGPValidator, MGPValidators, RulesConfigDescription, defaultRCDC } from '../../normal-component/pick-game/pick-game.component';
 
 describe('RulesConfigurationComponent', () => {
 
@@ -14,13 +13,13 @@ describe('RulesConfigurationComponent', () => {
 
     let component: RulesConfigurationComponent;
 
-    let isValid: (v: number | null) => MGPValidation;
+    let isValid: MGPValidator;
 
     beforeEach(async() => {
         const actRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, actRoute);
         component = testUtils.getComponent();
-        isValid = MGPValidators.range(1, 99);
+        isValid = MGPValidators.range(1, 99); // TODO MOVE UP
     });
 
     it('should create', () => {
@@ -29,7 +28,7 @@ describe('RulesConfigurationComponent', () => {
 
     it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
         // Given a rules config component provided with an empty configuration
-        component.rulesConfigDescription = { fields: [] };
+        component.rulesConfigDescription = defaultRCDC;
         spyOn(component.updateCallback, 'emit').and.callThrough();
 
         // When initialising
@@ -49,20 +48,23 @@ describe('RulesConfigurationComponent', () => {
         describe('number config', () => {
 
             beforeEach(() => {
-                component.rulesConfigDescription = { fields: [
+                component.rulesConfigDescription = new RulesConfigDescription(
                     {
-                        name: 'nombre',
-                        i18nName: (): string => 'nombre',
-                        defaultValue: 5,
-                        isValid,
+                        name: (): string => 'name',
+                        config: {
+                            nombre: 5,
+                            canailleDeBoule: 12,
+                        },
                     },
                     {
-                        name: 'canailleDeBoule',
-                        i18nName: (): string => 'canaille',
-                        defaultValue: 12,
-                        isValid,
+                        nombre: (): string => 'nombre',
+                        canailleDeBoule: (): string => 'canaille',
+                    }, [
+                    ], {
+                        nombre: MGPValidators.range(1, 99),
+                        canailleDeBoule: MGPValidators.range(1, 99),
                     },
-                ] };
+                );
             });
 
             it('should propose a number input when given a config of type number', fakeAsync(async() => {
@@ -154,10 +156,20 @@ describe('RulesConfigurationComponent', () => {
         describe('boolean config', () => {
 
             beforeEach(() => {
-                component.rulesConfigDescription = { fields: [
-                    { name: 'boolean', i18nName: (): string => 'all hail Georges Bool', defaultValue: true },
-                    { name: 'truth', i18nName: (): string => 'Truth', defaultValue: false },
-                ] };
+                component.rulesConfigDescription =
+                    new RulesConfigDescription(
+                        {
+                            name: (): string => 'config name',
+                            config: {
+                                booleen: true,
+                                truth: false,
+                            },
+                        },
+                        {
+                            booleen: (): string => 'booleen',
+                            truth: (): string => 'veritasserum',
+                        },
+                    );
             });
 
             it('should propose a boolean input when given a config of type boolean', fakeAsync(async() => {
@@ -166,7 +178,7 @@ describe('RulesConfigurationComponent', () => {
                 // When rendering component
                 testUtils.detectChanges();
                 // Then there should be a number configurator
-                testUtils.expectElementToExist('#boolean_config');
+                testUtils.expectElementToExist('#booleen_config');
             }));
 
             it('should emit new value when changing value', fakeAsync(async() => {
@@ -175,10 +187,10 @@ describe('RulesConfigurationComponent', () => {
                 testUtils.detectChanges();
 
                 // When modifying config
-                component.rulesConfigForm.get('boolean')?.setValue(false);
+                component.rulesConfigForm.get('booleen')?.setValue(false);
 
                 // Then the resulting value
-                const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ boolean: false, truth: false });
+                const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ booleen: false, truth: false });
                 expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
             }));
 
@@ -191,7 +203,7 @@ describe('RulesConfigurationComponent', () => {
                 component.rulesConfigForm.get('truth')?.setValue(true);
 
                 // Then the resulting value should be the default, for the unmodified one
-                const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ boolean: true, truth: true });
+                const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ booleen: true, truth: true });
                 expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
             }));
 
@@ -203,19 +215,32 @@ describe('RulesConfigurationComponent', () => {
 
         beforeEach(() => {
             component.userIsCreator = false;
-            component.rulesConfigToDisplay = {
-                nombre: 5,
-                canailleDeBoule: 12,
-            };
         });
 
         describe('number config', () => {
 
             beforeEach(() => {
-                component.rulesConfigDescription = { fields: [
-                    { name: 'nombre', i18nName: (): string => 'nombre', defaultValue: 5, isValid },
-                    { name: 'canailleDeBoule', i18nName: (): string => 'canaille', defaultValue: 12, isValid },
-                ] };
+                component.rulesConfigToDisplay = {
+                    nombre: 5,
+                    canailleDeBoule: 12,
+                };
+                component.rulesConfigDescription = new RulesConfigDescription(
+                    {
+                        name: (): string => 'name',
+                        config: {
+                            nombre: 5,
+                            canailleDeBoule: 12,
+                        },
+                    },
+                    {
+                        nombre: (): string => 'nombre',
+                        canailleDeBoule: (): string => 'canaille',
+                    }, [
+                    ], {
+                        nombre: MGPValidators.range(1, 99),
+                        canailleDeBoule: MGPValidators.range(1, 99),
+                    },
+                );
             });
 
             it('should propose a disabled number input when given a config of type number', fakeAsync(async() => {
@@ -247,10 +272,24 @@ describe('RulesConfigurationComponent', () => {
         describe('boolean config', () => {
 
             beforeEach(() => {
-                component.rulesConfigDescription = { fields: [
-                    { name: 'boolean', i18nName: (): string => 'all hail Georges Bool', defaultValue: true },
-                    { name: 'truth', i18nName: (): string => 'Truth', defaultValue: false },
-                ] };
+                component.rulesConfigToDisplay = {
+                    booleen: false,
+                    truth: true, // TODO check that you display this, not the default
+                };
+                component.rulesConfigDescription =
+                    new RulesConfigDescription(
+                        {
+                            name: (): string => 'config name',
+                            config: {
+                                booleen: true,
+                                truth: false,
+                            },
+                        },
+                        {
+                            booleen: (): string => 'booleen',
+                            truth: (): string => 'veritasserum',
+                        },
+                    );
             });
 
             it('should propose a disabled boolean input when given a config of type number', fakeAsync(async() => {
@@ -259,7 +298,7 @@ describe('RulesConfigurationComponent', () => {
                 // When rendering component
                 testUtils.detectChanges();
                 // Then there should be a fieldset, but disabled
-                testUtils.expectElementToBeDisabled('#boolean_boolean_config_input');
+                testUtils.expectElementToBeDisabled('#booleen_boolean_config_input');
             }));
 
             it('should not trigger update callback when changing value and throw', () => {
@@ -271,7 +310,7 @@ describe('RulesConfigurationComponent', () => {
 
                 // When modifying config (technically impossible but setValue don't need the HTML possibility to do it)
                 // And unit testing that this should not be doable is actually more future proof)
-                component.rulesConfigForm.get('boolean')?.setValue(false);
+                component.rulesConfigForm.get('booleen')?.setValue(false);
                 // Then there should have been no emission, but an error
                 expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('RulesConfiguration', error);
                 expect(component.updateCallback.emit).not.toHaveBeenCalled();

@@ -67,6 +67,7 @@ export class PartType {
 }
 
 export type IPartStatus = number;
+
 export class PartStatus {
     private constructor(public value: IPartStatus) {}
     // part created, no ChosenOpponent => waiting for acceptable candidate

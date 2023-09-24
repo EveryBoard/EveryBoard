@@ -22,8 +22,9 @@ import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { RulesConfig, RulesConfigDescription } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
+import { RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
