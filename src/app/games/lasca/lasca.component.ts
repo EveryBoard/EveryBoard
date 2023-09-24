@@ -153,9 +153,11 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
     private showPossibleMoves(): void {
-        for (const validMove of this.legalMoves) {
-            const startingCoord: Coord = validMove.getStartingCoord();
-            this.getSpaceInfoAt(startingCoord).squareClasses.push('selectable-fill');
+        if (this.isInteractive) {
+            for (const validMove of this.legalMoves) {
+                const startingCoord: Coord = validMove.getStartingCoord();
+                this.getSpaceInfoAt(startingCoord).squareClasses.push('selectable-fill');
+            }
         }
     }
     private getSpaceInfoAt(unadapedCoord: Coord): SpaceInfo {

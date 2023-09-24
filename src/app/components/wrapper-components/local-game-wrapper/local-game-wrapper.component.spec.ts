@@ -80,6 +80,12 @@ describe('LocalGameWrapperComponent', () => {
         // Then the turn should be incremented
         expect(testUtils.getGameComponent().getTurn()).toBe(1);
     }));
+    it('should be interactive by default', fakeAsync(async() => {
+        // Given a game
+        // When displaying it
+        // Then it is interactive
+        expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
+    }));
     it('should show draw', fakeAsync(async() => {
         const board: PlayerOrNone[][] = [
             [O, O, O, _, O, O, O],

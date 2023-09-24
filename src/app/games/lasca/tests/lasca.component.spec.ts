@@ -325,4 +325,22 @@ describe('LascaComponent', () => {
             testUtils.expectElementToExist('#square_6_6_piece_2');
         }));
     });
+    describe('interactivity', () => {
+        it('should show possible selections when interactive', fakeAsync(async() => {
+            // Given a state
+            // When it is interactive
+            testUtils.getGameComponent().setInteractive(true);
+            // Then it should show possible selections
+            testUtils.expectElementToExist('.selectable-fill');
+        }));
+        it('should not show possible selections for opponent', fakeAsync(async() => {
+            // Given a state
+            // When it is not interactive
+            testUtils.getGameComponent().setInteractive(false);
+            await testUtils.setupState(LascaState.getInitialState());
+            // Then it should not show possible selections
+            testUtils.expectElementNotToExist('.selectable-fill');
+        }));
+
+    });
 });

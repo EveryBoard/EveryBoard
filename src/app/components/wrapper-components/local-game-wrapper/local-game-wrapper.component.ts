@@ -32,7 +32,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
-
     public displayAIMetrics: boolean = false;
 
     public constructor(actRoute: ActivatedRoute,
@@ -69,12 +68,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.gameComponent.setInteractive(true);
             await this.setRole(Player.ZERO);
         }
-        this.proposeAIToPlay();
+        await this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
-        await this.updateBoard(false);
-        this.proposeAIToPlay();
+        await this.proposeAIToPlay();
     }
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
         await this.updateBoardAndShowLastMove(triggerAnimation);
@@ -102,10 +100,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    public proposeAIToPlay(): void {
+    public async proposeAIToPlay(): Promise<void> {
         if (this.hasSelectedAI()) {
             // It is AI's turn, let it play after a small delay
             this.gameComponent.setInteractive(false);
+            await this.updateBoard(false);
             const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
             if (playingMinimax.isPresent()) {
                 window.setTimeout(async() => {
@@ -116,6 +115,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // We do nothing in this case.
         } else {
             this.gameComponent.setInteractive(true);
+            await this.updateBoard(false);
             this.cdr.detectChanges();
         }
     }
@@ -154,7 +154,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.gameComponent.node = nextNode.get();
             await this.updateBoard(true);
             this.cdr.detectChanges();
-            this.proposeAIToPlay();
+            await this.proposeAIToPlay();
             return MGPValidation.SUCCESS;
         } else {
             this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
@@ -184,11 +184,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
     public async restartGame(): Promise<void> {
         this.gameComponent.node = this.gameComponent.rules.getInitialNode();
-        this.gameComponent.hideLastMove();
-        await this.gameComponent.updateBoard(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
-        this.proposeAIToPlay();
+        await this.proposeAIToPlay();
     }
     public getPlayer(): string {
         return 'human';
