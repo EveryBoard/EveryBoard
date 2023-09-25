@@ -65,7 +65,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     public isLegal(move: DiaballikMove, state: DiaballikState): MGPFallible<DiaballikState> {
         let currentState: DiaballikState = state;
         for (const subMove of move.getSubMoves()) {
-            const legality: MGPFallible<DiaballikState> = this.isLegalSubMove(state, subMove);
+            const legality: MGPFallible<DiaballikState> = this.isLegalSubMove(currentState, subMove);
             if (legality.isFailure()) {
                 return legality;
             }

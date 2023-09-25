@@ -70,7 +70,7 @@ fdescribe('DiaballikRules', () => {
 
         // When doing a move containing one translation and one pass
         const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
+            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(2, 6)).get()),
                               MGPOptional.empty());
 

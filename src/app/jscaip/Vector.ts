@@ -9,7 +9,7 @@ export class Vector implements ComparableObject {
         return this.x === other.x && this.y === other.y;
     }
     public isUnitary(): boolean {
-        return this.x + this.y === 1;
+        return Math.abs(this.x) + Math.abs(this.y) === 1;
     }
     public isOrthogonal(): boolean {
         return this.x === 0 || this.y === 0;
