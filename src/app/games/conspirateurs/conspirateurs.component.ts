@@ -67,7 +67,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new ConspirateursJumpMinimax(),
-            new MCTS('MCTS', new ConspirateursMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new ConspirateursMoveGenerator(), this.rules),
         ];
         this.encoder = ConspirateursMove.encoder;
         this.tutorial = new ConspirateursTutorial().tutorial;

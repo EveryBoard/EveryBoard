@@ -41,8 +41,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         this.rules = QuixoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Minimax', this.rules, new QuixoHeuristic(), new QuixoMoveGenerator()),
-            new MCTS('MCTS', new QuixoMoveGenerator(), this.rules),
+            new Minimax($localize`Minimax`, this.rules, new QuixoHeuristic(), new QuixoMoveGenerator()),
+            new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),
         ];
         this.encoder = QuixoMove.encoder;
         this.tutorial = new QuixoTutorial().tutorial;

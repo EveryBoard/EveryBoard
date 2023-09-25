@@ -194,7 +194,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
             new TaflPieceAndInfluenceMinimax(this.rules),
             new TaflPieceAndControlMinimax(this.rules),
             new TaflEscapeThenPieceThenControlMinimax(this.rules),
-            new MCTS('MCTS', moveGenerator, this.rules),
+            new MCTS($localize`MCTS`, moveGenerator, this.rules),
         ];
     }
 }

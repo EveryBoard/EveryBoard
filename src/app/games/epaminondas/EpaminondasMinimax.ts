@@ -8,7 +8,7 @@ import { EpaminondasHeuristic } from './EpaminondasHeuristic';
 export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
 
     public constructor() {
-        super('Minimax',
+        super($localize`Minimax`,
               EpaminondasRules.get(),
               new EpaminondasHeuristic(),
               new EpaminondasPhalanxSizeAndFilterMoveGenerator());

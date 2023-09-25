@@ -53,8 +53,8 @@ export class SixComponent
         this.rules = SixRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Minimax', this.rules, new SixHeuristic(), new SixFilteredMoveGenerator()),
-            new MCTS('MCTS', new SixMoveGenerator(), this.rules),
+            new Minimax($localize`Minimax`, this.rules, new SixHeuristic(), new SixFilteredMoveGenerator()),
+            new MCTS($localize`MCTS`, new SixMoveGenerator(), this.rules),
         ];
         this.encoder = SixMove.encoder;
         this.tutorial = new SixTutorial().tutorial;

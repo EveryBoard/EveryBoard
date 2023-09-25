@@ -6,8 +6,6 @@ import { KalahRules } from './KalahRules';
 import { KalahMove } from './KalahMove';
 import { KalahTutorial } from './KalahTutorial';
 import { KalahMoveGenerator } from './KalahMoveGenerator';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { KalahScoreMinimax } from './KalahScoreMinimax';
 
 @Component({
     selector: 'app-kalah-component',
@@ -23,10 +21,7 @@ export class KalahComponent extends MancalaMultipleSowComponent<KalahRules, Kala
         super(messageDisplayer, cdr);
         this.rules = KalahRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableAIs = [
-            new KalahScoreMinimax(),
-            new MCTS('MCTS', new KalahMoveGenerator(), this.rules),
-        ];
+        this.availableAIs = this.createAIs(new KalahMoveGenerator());
         this.encoder = KalahMove.encoder;
         this.tutorial = new KalahTutorial().tutorial;
     }

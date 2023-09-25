@@ -36,7 +36,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new ConnectSixAlignmentMinimax(),
-            new MCTS('MCTS', new ConnectSixMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new ConnectSixMoveGenerator(), this.rules),
         ];
         this.encoder = ConnectSixMove.encoder;
         this.tutorial = new ConnectSixTutorial().tutorial;

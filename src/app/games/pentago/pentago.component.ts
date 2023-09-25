@@ -54,7 +54,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new PentagoMoveGenerator()),
-            new MCTS('MCTS', new PentagoMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new PentagoMoveGenerator(), this.rules),
         ];
         this.encoder = PentagoMove.encoder;
         this.tutorial = new PentagoTutorial().tutorial;

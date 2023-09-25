@@ -134,7 +134,7 @@ export class LodestoneComponent
         this.tutorial = new LodestoneTutorial().tutorial;
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
-            new MCTS('MCTS', new LodestoneMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;

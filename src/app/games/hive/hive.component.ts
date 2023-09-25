@@ -120,8 +120,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.rules = HiveRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Minimax', HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator()),
-            new MCTS('MCTS', new HiveMoveGenerator(), this.rules),
+            new Minimax($localize`Minimax`, HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator()),
+            new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),
         ];
         this.encoder = HiveMove.encoder;
         this.tutorial = new HiveTutorial().tutorial;

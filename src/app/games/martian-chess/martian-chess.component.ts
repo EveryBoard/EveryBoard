@@ -160,7 +160,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new MartianChessScoreHeuristic(), new MartianChessMoveGenerator()),
-            new MCTS('MCTS', new MartianChessMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new MartianChessMoveGenerator(), this.rules),
         ];
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();

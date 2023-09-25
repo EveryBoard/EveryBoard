@@ -103,7 +103,7 @@ export class YinshComponent
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new YinshScoreHeuristic(), new YinshMoveGenerator()),
-            new MCTS('MCTS', new YinshMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new YinshMoveGenerator(), this.rules),
         ];
         this.encoder = YinshMove.encoder;
         this.tutorial = new YinshTutorial().tutorial;

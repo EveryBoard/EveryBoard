@@ -8,6 +8,6 @@ import { SiamLegalityInformation, SiamRules } from './SiamRules';
 export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInformation> {
 
     public constructor() {
-        super('Minimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator());
+        super($localize`Minimax`, SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator());
     }
 }

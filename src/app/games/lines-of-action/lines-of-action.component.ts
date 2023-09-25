@@ -40,8 +40,8 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.rules = LinesOfActionRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
-            new Minimax('Minimax', this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),
-            new MCTS('MCTS', new LinesOfActionMoveGenerator(), this.rules),
+            new Minimax($localize`Minimax`, this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),
+            new MCTS($localize`MCTS`, new LinesOfActionMoveGenerator(), this.rules),
         ];
         this.encoder = LinesOfActionMove.encoder;
         this.tutorial = new LinesOfActionTutorial().tutorial;

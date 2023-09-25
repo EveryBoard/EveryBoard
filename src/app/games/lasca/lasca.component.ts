@@ -77,7 +77,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
                         this.rules,
                         new LascaControlAndDominationHeuristic(),
                         this.moveGenerator),
-            new MCTS('MCTS', this.moveGenerator, this.rules),
+            new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];
         this.encoder = LascaMove.encoder;
         this.tutorial = new LascaTutorial().tutorial;

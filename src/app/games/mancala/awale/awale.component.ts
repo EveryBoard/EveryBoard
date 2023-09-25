@@ -5,8 +5,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AwaleTutorial } from './AwaleTutorial';
 import { MancalaSingleSowComponent } from '../common/MancalaSingleSowComponent';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { AwaleScoreMinimax } from './AwaleScoreMinimax';
 
 @Component({
     selector: 'app-awale-component',
@@ -21,10 +19,7 @@ export class AwaleComponent extends MancalaSingleSowComponent<AwaleRules, AwaleM
         super(messageDisplayer, cdr);
         this.rules = AwaleRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableAIs = [
-            new AwaleScoreMinimax(),
-            new MCTS('MCTS', new AwaleMoveGenerator(), this.rules),
-        ];
+        this.availableAIs = this.createAIs(new AwaleMoveGenerator());
         this.encoder = AwaleMove.encoder;
         this.tutorial = new AwaleTutorial().tutorial;
     }

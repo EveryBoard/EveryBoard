@@ -57,7 +57,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             new EpaminondasMinimax(),
             new EpaminondasPositionalMinimax(),
             new EpaminondasAttackMinimax(),
-            new MCTS('MCTS', new EpaminondasMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new EpaminondasMoveGenerator(), this.rules),
         ];
         this.encoder = EpaminondasMove.encoder;
         this.tutorial = new EpaminondasTutorial().tutorial;

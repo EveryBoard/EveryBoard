@@ -58,7 +58,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                         new CoerceoPiecesThreatsTilesHeuristic(),
                         new CoerceoOrderedMoveGenerator()),
             new Minimax($localize`Captures > Freedom`, this.rules, new CoerceoCapturesAndFreedomHeuristic(), new CoerceoMoveGenerator()),
-            new MCTS('MCTS', new CoerceoMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new CoerceoMoveGenerator(), this.rules),
         ];
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;

@@ -8,6 +8,6 @@ import { P4Heuristic } from './P4Heuristic';
 export class P4Minimax extends Minimax<P4Move, P4State> {
 
     public constructor() {
-        super('Minimax', P4Rules.get(), new P4Heuristic(), new P4MoveGenerator());
+        super($localize`Minimax`, P4Rules.get(), new P4Heuristic(), new P4MoveGenerator());
     }
 }

@@ -1194,6 +1194,10 @@
         <source>Score</source>
         <target>Score</target>
       </trans-unit>
+      <trans-unit id="7183112140529419891" datatype="html">
+        <source>MCTS</source>
+        <target>MCTS</target>
+      </trans-unit>
       <trans-unit id="437214181691581058" datatype="html">
         <source>Interrupted capture</source>
         <target>Capture interrompue</target>
@@ -2658,7 +2662,7 @@
         <source>You did not move your officer.</source>
         <target>Vous n'avez pas déplacé votre officier.</target>
       </trans-unit>
-+      <trans-unit id="318262165361158083" datatype="html">
+      <trans-unit id="318262165361158083" datatype="html">
         <source>Control</source>
         <target>Contrôle</target>
       </trans-unit>
@@ -3101,6 +3105,10 @@
         <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
         <target>Mauvais choix, votre adversaire va gagner au prochain tour quelle que soit la pièce déposée !</target>
       </trans-unit>
+      <trans-unit id="8400174784913655582" datatype="html">
+        <source>Minimax</source>
+        <target>Minimax</target>
+      </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.
         Place your piece so that you create a horizontal alignment of 4 of your pieces.</source>
@@ -3502,7 +3510,7 @@
         <source>Capture (2/2)</source>
         <target>Capture (2/2)</target>
       </trans-unit>
-+      <trans-unit id="4872428604450835795" datatype="html">
+      <trans-unit id="4872428604450835795" datatype="html">
         <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing light here. Play on the bottom left to see a capture.</source>
         <target>Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.&lt;br/&gt;&lt;br/&gt;
@@ -3920,8 +3928,8 @@
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
         <target>Raté. Vous avez coupé le plateau en deux parties, mais avez gardé la partie où vous êtes en minorité. Vous avez donc perdu ! Essayez à nouveau.</target>
       </trans-unit>
-      <trans-unit id="8695715656464271140" datatype="html">
-        <source>Escape &gt; Piece &gt; Control</source>
+      <trans-unit id="2976149661707388406" datatype="html">
+        <source>Escape &gt; Pieces &gt; Control</source>
         <target>Fuite &gt; Pièces &gt; Contrôle</target>
       </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
@@ -3944,16 +3952,16 @@
         <source>Tafl moves must be orthogonal.</source>
         <target>Les mouvements aux jeux de Tafl doivent être orthogonaux.</target>
       </trans-unit>
-      <trans-unit id="3530929110760161785" datatype="html">
-        <source>Piece &gt; Control</source>
+      <trans-unit id="7623537877233304257" datatype="html">
+        <source>Pieces &gt; Control</source>
         <target>Pièces &gt; Contrôle</target>
       </trans-unit>
-      <trans-unit id="2830054137821712897" datatype="html">
-        <source>Piece &gt; Influence</source>
+      <trans-unit id="1760148711911088235" datatype="html">
+        <source>Pieces &gt; Influence</source>
         <target>Pièces &gt; Influence</target>
       </trans-unit>
-      <trans-unit id="2296247521191141043" datatype="html">
-        <source>Piece</source>
+      <trans-unit id="3372037160964274985" datatype="html">
+        <source>Pieces</source>
         <target>Pièces</target>
       </trans-unit>
       <trans-unit id="3469374446011769111" datatype="html">

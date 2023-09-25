@@ -13,6 +13,9 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MancalaFailure } from './MancalaFailure';
 import { TimeUtils } from 'src/app/utils/TimeUtils';
 import { Utils } from 'src/app/utils/utils';
+import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI';
+import { MancalaScoreMinimax } from './MancalaScoreMinimax';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 export abstract class MancalaComponent<R extends MancalaRules<M>, M extends MancalaMove>
     extends RectangularGameComponent<R, M, MancalaState, number>
@@ -279,6 +282,14 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.board = this.constructedState.board;
         this.cdr.detectChanges();
     }
+
+    protected createAIs(moveGenerator: MoveGenerator<M, MancalaState>): AI<M, MancalaState, AIOptions>[] {
+        return [
+            new MancalaScoreMinimax(this.rules, moveGenerator),
+            new MCTS($localize`MCTS`, moveGenerator, this.rules),
+        ];
+    }
+
     /**
      * Used to create or update this.currentMove
      * for single sow it will always be creating it

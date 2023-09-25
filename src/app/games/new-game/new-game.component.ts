@@ -45,7 +45,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
         this.tutorial = new NewGameTutorial().tutorial;
         this.availableAIs = [
             new NewGameMinimax(),
-            new MCTS('MCTS', new NewGameMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),
         ];
     }
     /**

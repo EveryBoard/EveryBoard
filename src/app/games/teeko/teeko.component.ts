@@ -38,8 +38,8 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.encoder = TeekoMove.encoder;
         this.tutorial = new TeekoTutorial().tutorial;
         this.availableAIs = [
-            new Minimax('Minimax', this.rules, new TeekoHeuristic(), new TeekoMoveGenerator()),
-            new MCTS('MCTS', new TeekoMoveGenerator(), this.rules),
+            new Minimax($localize`Minimax`, this.rules, new TeekoHeuristic(), new TeekoMoveGenerator()),
+            new MCTS($localize`MCTS`, new TeekoMoveGenerator(), this.rules),
         ];
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

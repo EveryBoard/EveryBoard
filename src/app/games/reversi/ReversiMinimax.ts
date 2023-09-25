@@ -8,6 +8,6 @@ import { ReversiHeuristic } from './ReversiHeuristic';
 export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiLegalityInformation> {
 
     public constructor() {
-        super('Minimax', ReversiRules.get(), new ReversiHeuristic(), new ReversiMoveGenerator());
+        super($localize`Minimax`, ReversiRules.get(), new ReversiHeuristic(), new ReversiMoveGenerator());
     }
 }

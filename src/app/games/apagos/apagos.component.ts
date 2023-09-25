@@ -78,8 +78,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.node = this.rules.getInitialNode();
         this.hasAsymmetricBoard = true;
         this.availableAIs = [
-            new Minimax('Minimax', this.rules, new ApagosHeuristic(), new ApagosMoveGenerator()),
-            new MCTS('MCTS', new ApagosMoveGenerator(), this.rules),
+            new Minimax($localize`Minimax`, this.rules, new ApagosHeuristic(), new ApagosMoveGenerator()),
+            new MCTS($localize`MCTS`, new ApagosMoveGenerator(), this.rules),
         ];
         this.encoder = ApagosMove.encoder;
         this.tutorial = new ApagosTutorial().tutorial;

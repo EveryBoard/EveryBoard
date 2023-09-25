@@ -34,7 +34,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.tutorial = new PenteTutorial().tutorial;
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
-            new MCTS('MCTS', new PenteMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
