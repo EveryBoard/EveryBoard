@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, Type, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -24,7 +24,8 @@ import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-import { RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo, RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
+import { GameState } from 'src/app/jscaip/GameState';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -494,6 +495,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
+    }
+
+    public getStateType(): Type<GameState> {
+        const gameName: string = 'Tablut';
+        return GameInfo.ALL_GAMES().filter((game: GameInfo) => game.name === gameName)[0].rules.stateType;
     }
 
     public async ngOnDestroy(): Promise<void> {

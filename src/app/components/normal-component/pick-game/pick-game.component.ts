@@ -231,7 +231,7 @@ export class MGPValidators {
     }
 }
 
-export class RulesConfigDescription<R extends object = RulesConfig> {
+export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
 
     public standardConfigs: NamedRulesConfig<R>[];
 
@@ -259,8 +259,16 @@ export class RulesConfigDescription<R extends object = RulesConfig> {
         return this.standardConfigs[0];
     }
 
+    public getNonDefaultConfigs(): NamedRulesConfig<R>[] {
+        return this.standardConfigs.slice(1);
+    }
+
     public getI18nName(field: string): string {
         return this.translations[field]();
+    }
+
+    public getConfig(configName: string): R {
+        return this.standardConfigs.filter((v: NamedRulesConfig) => v.name() === configName)[0].config;
     }
 }
 
@@ -295,8 +303,6 @@ export class RulesConfigDescriptions {
         width: MGPValidators.range(1, 99),
         seedByHouse: MGPValidators.range(1, 99),
     });
-
-    // TODO: les validatoooors lo!
 
     public static readonly BRANDHUB: RulesConfigDescription<TaflConfig> = new RulesConfigDescription({
         name: (): string => $localize`Brandhub`,
@@ -334,7 +340,7 @@ export class RulesConfigDescriptions {
     });
 
     public static readonly GO: RulesConfigDescription = new RulesConfigDescription({
-        name: (): string => $localize`Go`,
+        name: (): string => $localize`19 x 19`,
         config: {
             width: 19,
             height: 19,
@@ -343,9 +349,22 @@ export class RulesConfigDescriptions {
     }, {
         width: (): string => $localize`Width`,
         height: (): string => $localize`Height`,
-        handicap: (): string => $localize`Handicap`, // TODO: n'accepter le handicap que sur une certaine taille minimum ?
-    }, [
-    ], {
+        handicap: (): string => $localize`Handicap`,
+    }, [{
+        name: (): string => $localize`13 x 13`,
+        config: {
+            width: 13,
+            height: 13,
+            handicap: 0,
+        },
+    }, {
+        name: (): string => $localize`9 x 9`,
+        config: {
+            width: 9,
+            height: 9,
+            handicap: 0,
+        },
+    }], {
         width: MGPValidators.range(1, 99),
         height: MGPValidators.range(1, 99),
         handicap: MGPValidators.range(0, 9),

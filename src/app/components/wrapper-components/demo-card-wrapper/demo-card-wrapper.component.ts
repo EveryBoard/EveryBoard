@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, SimpleChange, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { AbstractNode } from 'src/app/jscaip/MGPNode';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -18,12 +18,20 @@ export type DemoNodeInfo = {
     selector: 'app-demo-card',
     template: `<div #board></div>`,
 })
-export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit {
+export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
 
     @Input() public demoNodeInfo: DemoNodeInfo;
 
     @ViewChild('board', { read: ViewContainerRef })
     public override boardRef: ViewContainerRef | null = null;
+
+    public async ngOnChanges(_changes: SimpleChanges): Promise<void> {
+        if (this.gameComponent != null) {
+            this.gameComponent.node = this.demoNodeInfo.node;
+            await this.gameComponent.updateBoard(false);
+            this.cdr.detectChanges();
+        }
+    }
 
     public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,

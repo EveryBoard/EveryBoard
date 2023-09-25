@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -19,6 +19,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -151,6 +152,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 return this.players[playerIndex].equalsValue(a.name);
             }));
     }
+
+    public getStateType(): Type<GameState> {
+        const gameName: string = this.getGameName();
+        return GameInfo.ALL_GAMES().filter((game: GameInfo) => game.name === gameName)[0].rules.stateType;
+    }
+
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;

@@ -28,7 +28,7 @@ export class ConfigRoomDAOMock extends FirestoreDAOMock<ConfigRoom> {
     }
 }
 
-xdescribe('ConfigRoomDAOMock', () => {
+describe('ConfigRoomDAOMock', () => {
 
     let configRoomDAOMock: ConfigRoomDAOMock;
 
@@ -43,7 +43,7 @@ xdescribe('ConfigRoomDAOMock', () => {
     });
     it('Total update should update', fakeAsync(async() => {
         // Given an initial configRoom to which we subscribed
-        await configRoomDAOMock.set('configRoomId', ConfigRoomMocks.INITIAL);
+        await configRoomDAOMock.set('configRoomId', ConfigRoomMocks.INITIAL({}));
 
         expect(lastConfigRoom).toEqual(MGPOptional.empty());
         expect(callCount).toBe(0);
@@ -55,19 +55,19 @@ xdescribe('ConfigRoomDAOMock', () => {
         });
 
         expect(callCount).toEqual(1);
-        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.INITIAL);
+        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.INITIAL({}));
 
         // When it is updated
-        await configRoomDAOMock.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+        await configRoomDAOMock.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT({}));
 
         // Then we should have seen the update
         expect(callCount).toEqual(2);
-        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT({}));
         subscription.unsubscribe();
     }));
     it('Partial update should update', fakeAsync(async() => {
         // Given an initial configRoom to which we subscribed
-        await configRoomDAOMock.set('configRoomId', ConfigRoomMocks.INITIAL);
+        await configRoomDAOMock.set('configRoomId', ConfigRoomMocks.INITIAL({}));
 
         expect(callCount).toEqual(0);
         expect(lastConfigRoom).toEqual(MGPOptional.empty());
@@ -79,14 +79,14 @@ xdescribe('ConfigRoomDAOMock', () => {
         });
 
         expect(callCount).toEqual(1);
-        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.INITIAL);
+        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.INITIAL({}));
 
         // When it is updated
         await configRoomDAOMock.update('configRoomId', { chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER });
 
         // Then we should see the update
         expect(callCount).toEqual(2);
-        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT({}));
         subscription.unsubscribe();
     }));
 });

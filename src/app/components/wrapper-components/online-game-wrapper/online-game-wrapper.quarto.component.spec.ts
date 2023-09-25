@@ -38,6 +38,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;
@@ -102,8 +103,9 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     preparationOptions: PreparationOptions = PreparationOptions.def)
 : Promise<PreparationResult<T>>
 {
+    const rulesConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(game);
     const testUtils: ComponentTestUtils<T, MinimalUser> = await ComponentTestUtils.basic(game);
-    await prepareMockDBContent(ConfigRoomMocks.INITIAL);
+    await prepareMockDBContent(ConfigRoomMocks.INITIAL(rulesConfig));
     ConnectedUserServiceMock.setUser(user);
     testUtils.prepareFixture(OnlineGameWrapperComponent);
     if (preparationOptions.runClocks === false) {
@@ -118,7 +120,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
     testUtils.detectChanges();
     const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
-    await configRoomDAO.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+    await configRoomDAO.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT(rulesConfig));
     testUtils.detectChanges();
     let role: PlayerOrNone = PlayerOrNone.NONE;
     if (user.id === UserMocks.CREATOR_AUTH_USER.id) {
@@ -126,7 +128,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     } else if (user.id === UserMocks.OPPONENT_AUTH_USER.id) {
         role = Player.ONE;
     }
-    let configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG;
+    let configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG(rulesConfig);
     await configRoomDAO.update('configRoomId', configRoom);
     testUtils.detectChanges();
     if (preparationOptions.shorterGlobalClock === true) {

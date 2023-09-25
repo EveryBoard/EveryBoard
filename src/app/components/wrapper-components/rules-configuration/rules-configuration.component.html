@@ -1,6 +1,22 @@
 <div>
     <p class="title" i18n>Configuration of your {{ gameName }} part</p>
-    <form [formGroup]="rulesConfigForm">
+
+    <div class="select is-primary is-fullwidth">
+        <select id="ruleSelect"
+                (change)="onChange($event)">
+            <option [value]="rulesConfigDescription.getDefaultConfig().name()" selected>
+                {{ rulesConfigDescription.getDefaultConfig().name() }}
+            </option>
+            <option *ngFor="let standardConfig of rulesConfigDescription.getNonDefaultConfigs()"
+                    [value]="standardConfig.name()">
+                {{ standardConfig.name() }}
+            </option>
+            <option value="Custom" i18n>Custom</option>
+        </select>
+    </div>
+
+    <form [formGroup]="rulesConfigForm"
+          id="{{ getChosenConfig() }}_values">
         <fieldset>
             <div *ngFor="let configParameter of getFields()"
                  id="{{ configParameter }}_config"
@@ -23,8 +39,8 @@
                             </span>
                         </div>
                         <div *ngIf="isInvalid(configParameter)"
-                             class="message is-danger"
-                             role="alert">
+                              class="message is-danger"
+                              role="alert">
                             <div id="{{ configParameter }}_number_config_error"
                                  class="message-header">{{ getErrorMessage(configParameter) }}</div>
                         </div>
@@ -46,4 +62,5 @@
             </div>
         </fieldset>
     </form>
+    <app-demo-card [demoNodeInfo]="configDemo"></app-demo-card>
 </div>

@@ -143,6 +143,7 @@
                     </div>
                 </div>
                 <app-rules-configuration id="rulesConfigurationComponent"
+                                         [stateType]="getStateType()"
                                          [rulesConfigDescription]="rulesConfigDescription"
                                          [userIsCreator]="true"
                                          (updateCallback)="saveRulesConfig($event)">
@@ -198,6 +199,7 @@
                             <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
                         </ul>
                         <app-rules-configuration [rulesConfigDescription]="rulesConfigDescription"
+                                                 [stateType]="getStateType()"
                                                  [userIsCreator]="false"
                                                  [rulesConfigToDisplay]="currentConfigRoom?.rulesConfig">
                         </app-rules-configuration>

@@ -22,7 +22,7 @@ export type BooleanConfigParameter = BaseConfigParameter & {
     defaultValue: boolean;
 };
 
-export type NamedRulesConfig<R extends object> = {
+export type NamedRulesConfig<R extends RulesConfig = RulesConfig> = {
     config: R;
     name: Localized;
 };
@@ -34,10 +34,6 @@ export type RulesConfig = {
 export class RulesConfigUtils {
 
     public static getDefaultConfig(rulesConfigDescription: RulesConfigDescription): RulesConfig {
-        // const rulesConfig: RulesConfig = {};
-        // for (const configParameter of rulesConfigDescription.fields) {
-            // rulesConfig[configParameter.name] = configParameter.defaultValue;
-        // }
         return rulesConfigDescription.getDefaultConfig().config;
     }
 

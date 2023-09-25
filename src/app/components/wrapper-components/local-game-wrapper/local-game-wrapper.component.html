@@ -105,6 +105,7 @@
 <div *ngIf="configSetted === false"
      class="box">
     <app-rules-configuration id="rulesConfigComponent"
+                             [stateType]="getStateType()"
                              [rulesConfigDescription]="getRulesConfigDescription()"
                              [userIsCreator]="true"
                              (updateCallback)="updateConfig($event)">

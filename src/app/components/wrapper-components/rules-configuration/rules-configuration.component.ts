@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Type } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { ConfigDescriptionType, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
@@ -8,6 +8,9 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidator, RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
+import { AbstractNode, MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameState } from 'src/app/jscaip/GameState';
 
 type ConfigFormJson = {
     [member: string]: FormControl<ConfigDescriptionType>;
@@ -21,6 +24,8 @@ type CustomValidator = (c: AbstractControl) => { invalidTruc: boolean } | null;
 })
 export class RulesConfigurationComponent extends BaseGameComponent implements OnInit {
 
+    @Input() stateType: Type<GameState>;
+
     @Input() rulesConfigDescription: RulesConfigDescription;
 
     @Input() rulesConfigToDisplay?: RulesConfig;
@@ -33,12 +38,22 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
      */
     @Output() updateCallback: EventEmitter<MGPOptional<RulesConfig>> = new EventEmitter<MGPOptional<RulesConfig>>();
 
+    public configDemo: DemoNodeInfo;
+
     public rulesConfigForm: FormGroup = new FormGroup({});
 
     public gameName: string; // Instanciated onInit
 
-    public constructor(actRoute: ActivatedRoute) {
+    private chosenConfig: string = '';
+
+    public constructor(actRoute: ActivatedRoute,
+                       private readonly cdr: ChangeDetectorRef)
+    {
         super(actRoute);
+    }
+
+    public getChosenConfig(): string {
+        return this.chosenConfig;
     }
 
     public ngOnInit(): void {
@@ -46,32 +61,44 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         this.gameName = this.getGameName();
         const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
         if (Object.keys(config).length === 0) {
-            return this.updateCallback.emit(MGPOptional.of({}));
+            return this.updateCallback.emit(MGPOptional.of({})); // TODO: validate config?
         }
+        this.setChosenConfig(this.rulesConfigDescription.getDefaultConfig().name());
+        this.setConfigDemo(config);
+    }
+
+    private setConfigDemo(config: RulesConfig): void {
+        // eslint-disable-next-line dot-notation
+        const node: AbstractNode = new MGPNode(this.stateType['getInitialState'](config));
+        this.configDemo = {
+            click: MGPOptional.empty(),
+            name: this.gameName,
+            node,
+        };
+        this.cdr.detectChanges();
+    }
+
+    private generateForm(config: RulesConfig, configurable: boolean): void {
         const group: ConfigFormJson = {};
 
-        console.log('ngOnInit got', config)
         Object.keys(config).forEach((parameterName: string) => {
             const value: ConfigDescriptionType =
-                this.getRulesConfigDescriptionValue(parameterName, config[parameterName]);
+                this.getRulesConfigDescriptionValue(parameterName,
+                                                    config[parameterName]);
 
-            group[parameterName] = this.getFormControl(parameterName, value);
+            group[parameterName] = this.getFormControl(parameterName, value, configurable);
         });
         this.rulesConfigForm = new FormGroup(group);
     }
+
     private assertParamsAreCoherent(): void {
         if (this.userIsCreator === false) {
             Utils.assert(this.rulesConfigToDisplay != null,
-                         'Config should be provided to non-creator in RulesConfigurationComponent TODO TESTEZ ME LA CHAAAATTE');
-            const rulesConfigToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
-            Utils.assert(Object.keys(rulesConfigToDisplay).length > 0,
-                         'Config should be provided to non-creator in RulesConfigurationComponent TODO TESTEZ MEL Q');
-            console.log('so our non null rulesCOnfigToDisplay is ', this.rulesConfigToDisplay);
+                         'Config should be provided to non-creator in RulesConfigurationComponent');
         }
     }
 
     private getRulesConfigDescriptionValue(name: string, defaultValue: ConfigDescriptionType): ConfigDescriptionType {
-        console.log('getRulesConfigDescriptionValue', name, defaultValue, this.userIsCreator)
         if (this.userIsCreator === false) {
             const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
             defaultValue = configuration[name];
@@ -79,8 +106,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         return defaultValue;
     }
 
-    private getFormControl(parameterName: string, value: ConfigDescriptionType): FormControl {
-        console.log('getFormControl', parameterName, value)
+    private getFormControl(parameterName: string, value: ConfigDescriptionType, configurable: boolean): FormControl {
         let formControl: FormControl;
         if (typeof value === 'number') {
             const mgpValidators: MGPValidator = this.rulesConfigDescription.validator[parameterName];
@@ -91,7 +117,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
             Utils.expectToBe(typeof value, 'boolean');
             formControl = new FormControl(value) as FormControl<boolean>;
         }
-        if (this.userIsCreator === false) {
+        if (configurable === false) {
             formControl.disable();
         }
         formControl.valueChanges.subscribe(() => {
@@ -107,7 +133,11 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     public onUpdate(): void {
-        if (this.userIsCreator) {
+        if (this.userIsCreator === false) {
+            ErrorLoggerService.logError('RulesConfiguration', 'Only creator should be able to modify rules config');
+        } else if (this.chosenConfig !== 'Custom') {
+            ErrorLoggerService.logError('RulesConfiguration', 'Only Customifiable config should be modified!');
+        } else {
             const rulesConfig: RulesConfig = {};
             const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
             const parameterNames: string[] = Object.keys(config);
@@ -119,9 +149,8 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
                 }
                 rulesConfig[parameterName] = this.rulesConfigForm.controls[parameterName].value;
             }
+            this.setConfigDemo(rulesConfig);
             this.updateCallback.emit(MGPOptional.of(rulesConfig));
-        } else {
-            ErrorLoggerService.logError('RulesConfiguration', 'Only creator should be able to modify rules config');
         }
     }
 
@@ -161,4 +190,24 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
         return Object.keys(config);
     }
+
+    public onChange(event: Event): void {
+        const select: HTMLSelectElement = event.target as HTMLSelectElement;
+        this.setChosenConfig(select.value);
+    }
+
+    private setChosenConfig(configName: string): void {
+        this.chosenConfig = configName;
+        let config: RulesConfig;
+        if (this.chosenConfig === 'Custom') {
+            config = this.rulesConfigDescription.getDefaultConfig().config;
+            this.generateForm(config, this.userIsCreator);
+        } else {
+            config = this.rulesConfigDescription.getConfig(this.chosenConfig);
+            this.generateForm(config, false);
+            this.updateCallback.emit(MGPOptional.of(config)); // As standard config are always legal
+        }
+        this.setConfigDemo(config);
+    }
+
 }

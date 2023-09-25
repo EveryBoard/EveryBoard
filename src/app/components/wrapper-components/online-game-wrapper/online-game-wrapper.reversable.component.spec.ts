@@ -28,10 +28,8 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         expect(wrapper.gameComponent.rotation).toBe('rotate(0)');
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
-    fit('should have a rotation applied for player one', fakeAsync(async() => {
+    it('should have a rotation applied for player one', fakeAsync(async() => {
         // Given a game started for opponent (Player.ONE)
-        Debug.enableLog([true, true], 'ConfigRoomService');
-        Debug.enableLog([true, true], 'ConfigRoomDAOMock');
         testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.OPPONENT_AUTH_USER,
                                                                  'Awale',
                                                                  PreparationOptions.dontWait)).testUtils;

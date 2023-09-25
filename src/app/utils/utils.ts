@@ -46,7 +46,16 @@ export class Debug {
         } else {
             verbosity[className] = entryExit;
         }
-        localStorage.setItem('verbosity', JSON.stringify(verbosity));
+        const stringifiedVerbosity: string = Debug.getStringified(verbosity);
+        localStorage.setItem('verbosity', stringifiedVerbosity);
+    }
+    private static getStringified(o: object): string {
+        try {
+            const str: string = JSON.stringify(o);
+            return str;
+        } catch (e) {
+            return 'recursive and not stringifiable!';
+        }
     }
     private static isVerbose(name: string): [boolean, boolean] {
         /* eslint-disable dot-notation */
@@ -88,13 +97,12 @@ export class Debug {
             const originalMethod: (...args: unknown[]) => unknown = descriptor.value;
             descriptor.value = function(...args: unknown[]): unknown {
                 if (Debug.isMethodVerboseEntry(className, propertyName)) {
-                    const strArgs: string = Array.from(args).map((arg: unknown): string =>
-                        JSON.stringify(arg)).join(', ');
+                    const strArgs: string = Array.from(args).map(Debug.getStringified).join(', ');
                     console.log(`> ${className}.${propertyName}(${strArgs})`);
                 }
                 const result: unknown = originalMethod.apply(this, args);
                 if (Debug.isMethodVerboseExit(className, propertyName)) {
-                    console.log(`< ${className}.${propertyName} -> ${JSON.stringify(result)}`);
+                    console.log(`< ${className}.${propertyName} -> ${Debug.getStringified(result as object)}`);
                 }
                 return result;
             };

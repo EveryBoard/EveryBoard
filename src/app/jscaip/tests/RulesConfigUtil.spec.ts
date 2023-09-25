@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { NamedRulesConfig } from '../RulesConfigUtil';
+import { NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { RulesUtils } from './RulesUtils.spec';
 import { MGPValidator, MGPValidators, RulesConfigDescription } from 'src/app/components/normal-component/pick-game/pick-game.component';
 
@@ -55,7 +55,7 @@ describe('RulesConfigUtil', () => {
 
         it('should throw when standard config are of different type', () => {
             // Given any RulesConfigDescriptionClass
-            interface MaConfigInterface {
+            interface MaConfigInterface extends RulesConfig {
                 helaRosee: number;
             }
             const defaultConfig: NamedRulesConfig<MaConfigInterface> = {
