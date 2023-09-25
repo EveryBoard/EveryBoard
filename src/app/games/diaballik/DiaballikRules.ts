@@ -18,11 +18,13 @@ export class DiaballikFailure {
 
     public static MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE: Localized = () => $localize`You must move by exactly one orthogonal space.`;
 
-    public static PASS_MUST_BE_STRAIGHT: Localized = () => $localize`A pass must be done in a straight line, orthogonally or vertically`;
+    public static PASS_MUST_BE_STRAIGHT: Localized = () => $localize`A pass must be done in a straight line, orthogonally or vertically.`;
 
-    public static PASS_PATH_OBSTRUCTED: Localized = () => $localize`The path of this pass is obstructed`;
+    public static PASS_PATH_OBSTRUCTED: Localized = () => $localize`The path of this pass is obstructed.`;
 
     public static PASS_MUST_BE_IN_STRAIGHT_LINE: Localized = () => $localize`A pass must be done in a straight line, orthogonally or diagonally.`;
+
+    public static CAN_ONLY_DO_ONE_PASS: Localized = () => $localize`You can only perform one pass per turn.`;
 }
 
 export class VictoryOrDefeatCoords {

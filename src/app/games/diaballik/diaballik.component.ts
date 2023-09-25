@@ -39,6 +39,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
             //new DiaballikMinimax(this.rules, 'Minimax'),
         ];
     }
+
     public updateBoard(): void {
         const state: DiaballikState = this.node.gameState;
         this.board = state.board;
@@ -51,17 +52,20 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
             }
         }
     }
+
     public override showLastMove(move: DiaballikMove): void {
         this.lastMoveCoords = [];
         for (const subMove of move.getSubMoves()) {
             this.lastMoveCoords.push(subMove.getStart(), subMove.getEnd());
         }
     }
+
     public override cancelMoveAttempt(): void {
         this.currentSelection = MGPOptional.empty();
         this.moveTranslations = [MGPOptional.empty(), MGPOptional.empty()];
         this.movePass = MGPOptional.empty();
     }
+
     public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
@@ -72,10 +76,11 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
             classes.push('victory-stroke');
         }
         if (this.defeatCoords.includes(coord)) {
-            classes.push('captured-stroke');
+            classes.push('defeat-stroke');
         }
         return classes;
     }
+
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.lastMoveCoords.includes(coord)) {

@@ -6,8 +6,10 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
+import { DiaballikFailure } from '../DiaballikRules';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-describe('DiaballikComponent', () => {
+fdescribe('DiaballikComponent', () => {
 
     let testUtils: ComponentTestUtils<DiaballikComponent>;
 
@@ -20,7 +22,7 @@ describe('DiaballikComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<DiaballikComponent>('Diaballik');
     }));
-    it('should create', () => {
+    fit('should create', () => {
         testUtils.expectToBeCreated();
     });
     it('should finish the move when clicking on the done button', fakeAsync(async() => {
@@ -69,7 +71,46 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementNotToExist('#indicator_0_6'); // obstructed path, not a target
     }));
     it('should forbid selecting the piece that holds the ball if a pass has already been done', fakeAsync(async() => {
-        // TODO: can the pass be done mid-mode or is it only the last part of the move?
+        // Given a state where a pass has already been done for the current move
+        testUtils.expectClickSuccess('#piece_3_6');
+        testUtils.expectClickSuccess('#piece 2_6');
+        // When selecting the piece with the ball
+        // Then it should fail
+        testUtils.expectClickFailure('#piece_2_6', DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
+    }));
+    it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
+        // Given a state
+        // When clicking on a piece of the opponent
+        // Then it should fail
+        testUtils.expectClickFailure('#piece_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+    }));
+    it('should forbid passing the ball to an opponent', fakeAsync(async() => {
+        // Given a state where the piece with the ball has been selected
+        testUtils.expectClickSuccess('#piece_3_6');
+        // When passing the ball to the opponent
+        // Then it should fail
+        testUtils.expectClickFailure('#piece_3_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+    }));
+    it('should forbid moving on anotehr piece', fakeAsync(async() => {
+        // Given a state
+        // When trying to move on another piece
+        testUtils.expectClickSuccess('#piece_0 6');
+        // Then it should fail
+        testUtils.expectClickFailure('#piece_1_6', RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+    }));
+    it('should forbid moving diagonally', fakeAsync(async() => {
+        // Given a state
+        // When moving a piece diagonally
+        testUtils.expectClickSuccess('#piece_0_6');
+        // Then it should fail
+        testUtils.expectClickFailure('#piece_1_5', DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
+    }));
+    it('should forbid moving more than one space at a time', fakeAsync(async() => {
+        // Given a state
+        // When moving a piece by multiple spaces
+        testUtils.expectClickSuccess('#piece_0_6');
+        // Then it should fail
+        testUtils.expectClickFailure('#piece_0_3', DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
     }));
     it('should show the last move', fakeAsync(async() => {
         // Given a state with a last move
@@ -112,5 +153,27 @@ describe('DiaballikComponent', () => {
         testUtils.setupState(state);
         // Then it should show the victory
         testUtils.expectElementToHaveClass('#piece_3_0', 'victory-stroke');
+    }));
+    it('should show the defeat upon blocking the opponent', fakeAsync(async() => {
+        // Given a state with a defeat due to blocking the opponent
+        const state: DiaballikState = new DiaballikState([
+            [X, X, X, Ẋ, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _],
+            [O, X, _, _, _, _, _],
+            [_, O, _, X, _, _, _],
+            [_, _, O, Ȯ, O, O, O],
+        ], 0);
+        // When displaying it
+        testUtils.setupState(state);
+        // Then it should show the defeat
+        testUtils.expectElementToHaveClass('#piece_0_4', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_1_5', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_2_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_3_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_4_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_5_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_6_6', 'defeat-stroke');
     }));
 });
