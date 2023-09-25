@@ -42,8 +42,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.username = user.email;
             }});
         this.currentGameSubscription =
-            this.currentGameService.subscribeToCurrentGame((focusedPart: MGPOptional<CurrentGame>) => {
-                this.currentGame = focusedPart;
+            this.currentGameService.subscribeToCurrentGame((currentGame: MGPOptional<CurrentGame>) => {
+                this.currentGame = currentGame;
             });
     }
     public async logout(): Promise<void> {

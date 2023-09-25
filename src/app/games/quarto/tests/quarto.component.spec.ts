@@ -31,7 +31,7 @@ describe('QuartoComponent', () => {
                 [NULL, NULL, NULL, NULL],
             ];
             const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AAAB);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When clicking on an occupied square
             // Then the move should be rejected
             await testUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
@@ -82,7 +82,7 @@ describe('QuartoComponent', () => {
             ];
             const pieceInHand: QuartoPiece = QuartoPiece.BAAB;
             const state: QuartoState = new QuartoState(board, 15, pieceInHand);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on the last empty square
             // Then the move should be accepted

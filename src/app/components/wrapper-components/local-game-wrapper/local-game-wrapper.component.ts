@@ -4,7 +4,7 @@ import { AbstractNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { Debug } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractMinimax } from 'src/app/jscaip/Minimax';
@@ -24,13 +24,14 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
+    public static readonly AI_TIMEOUT: number = 1000;
+
     public aiDepths: [string, string] = ['0', '0'];
 
     public playerSelection: [string, string] = ['human', 'human'];
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
-    public botTimeOut: number = 1000;
 
     public displayAIMetrics: boolean = false;
 
@@ -51,30 +52,31 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
-        setTimeout(async() => {
+        window.setTimeout(async() => {
             const createdSuccessfully: boolean = await this.afterViewInit();
             if (createdSuccessfully) {
-                this.restartGame();
+                await this.restartGame();
                 this.cdr.detectChanges();
             }
         }, 1);
     }
-    public updatePlayer(player: Player): void {
+    public async updatePlayer(player: Player): Promise<void> {
         this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
         if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
-            this.setRole(Player.ONE);
+            await this.setRole(Player.ONE);
         } else {
-            this.setRole(Player.ZERO);
+            await this.setRole(Player.ZERO);
         }
         this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
-        this.updateBoard();
+        await this.updateBoard(false);
         this.proposeAIToPlay();
+        this.cdr.detectChanges();
     }
-    public updateBoard(): void {
-        this.updateBoardAndShowLastMove();
+    public async updateBoard(triggerAnimation: boolean): Promise<void> {
+        await this.updateBoardAndShowLastMove(triggerAnimation);
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
@@ -96,7 +98,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     }
                 }
             }
-
         }
     }
     public proposeAIToPlay(): void {
@@ -106,7 +107,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // bot's turn
             window.setTimeout(async() => {
                 await this.doAIMove(playingMinimax.get());
-            }, this.botTimeOut);
+            }, LocalGameWrapperComponent.AI_TIMEOUT);
         }
     }
     private getPlayingAI(): MGPOptional<AbstractMinimax> {
@@ -135,7 +136,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const nextNode: MGPOptional<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
         if (nextNode.isPresent()) {
             this.gameComponent.node = nextNode.get();
-            this.updateBoard();
+            await this.updateBoard(true);
             this.cdr.detectChanges();
             this.proposeAIToPlay();
             return MGPValidation.SUCCESS;
@@ -145,21 +146,30 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
     public canTakeBack(): boolean {
-        return this.gameComponent.getTurn() > 0;
+        if (this.players[0].equalsValue('human')) {
+            return this.gameComponent.getTurn() > 0;
+        } else if (this.players[1].equalsValue('human')) {
+            return this.gameComponent.getTurn() > 1;
+        } else {
+            return false;
+        }
     }
-    public takeBack(): void {
+    public async takeBack(): Promise<void> {
         this.gameComponent.node = this.gameComponent.node.mother.get();
         if (this.isAITurn()) {
+            Utils.assert(this.gameComponent.node.mother.isPresent(),
+                         'Cannot take back in first turn when AI is Player.ZERO');
             this.gameComponent.node = this.gameComponent.node.mother.get();
         }
-        this.updateBoardAndShowLastMove();
+        await this.updateBoardAndShowLastMove(false);
     }
     private isAITurn(): boolean {
         return this.getPlayingAI().isPresent();
     }
-    public restartGame(): void {
+    public async restartGame(): Promise<void> {
         this.gameComponent.node = this.gameComponent.rules.getInitialNode();
-        this.gameComponent.updateBoard();
+        this.gameComponent.hideLastMove();
+        await this.gameComponent.updateBoard(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
         this.proposeAIToPlay();
@@ -167,10 +177,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public getPlayer(): string {
         return 'human';
     }
-    public onCancelMove(reason?: string): void {
+    public async onCancelMove(reason?: string): Promise<void> {
         if (this.gameComponent.node.move.isPresent()) {
             const move: Move = this.gameComponent.node.move.get();
-            this.gameComponent.showLastMove(move);
+            await this.gameComponent.showLastMove(move);
         }
     }
 }

@@ -4,9 +4,9 @@ import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
 import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
 import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
-import { AwaleComponent } from 'src/app/games/awale/awale.component';
-import { AwaleRules } from 'src/app/games/awale/AwaleRules';
-import { AwaleTutorial } from 'src/app/games/awale/AwaleTutorial';
+import { AwaleComponent } from 'src/app/games/mancala/awale/awale.component';
+import { AwaleRules } from 'src/app/games/mancala/awale/AwaleRules';
+import { AwaleTutorial } from 'src/app/games/mancala/awale/AwaleTutorial';
 import { AbaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
 import { AbaloneRules } from 'src/app/games/abalone/AbaloneRules';
 
@@ -54,6 +54,9 @@ import { HnefataflRules } from 'src/app/games/tafl/hnefatafl/HnefataflRules';
 import { HnefataflTutorial } from 'src/app/games/tafl/hnefatafl/HnefataflTutorial';
 import { HnefataflComponent } from 'src/app/games/tafl/hnefatafl/hnefatafl.component';
 
+import { KalahComponent } from 'src/app/games/mancala/kalah/kalah.component';
+import { KalahTutorial } from 'src/app/games/mancala/kalah/KalahTutorial';
+import { KalahRules } from 'src/app/games/mancala/kalah/KalahRules';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
 import { KamisadoTutorial } from 'src/app/games/kamisado/KamisadoTutorial';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
@@ -134,7 +137,7 @@ class GameDescription {
 
     public static readonly APAGOS: Localized = () => $localize`Very simple game, but, will you be able to win everytime?`;
 
-    public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
+    public static readonly AWALE: Localized = () => $localize`The most widespread of the Mancalas.`;
 
     public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
@@ -161,6 +164,8 @@ class GameDescription {
     public static readonly HIVE: Localized = () => $localize`You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent's queen in order to win!`;
 
     public static readonly HNEFATAFL: Localized = () => $localize`The Viking board game! Invaders must capture the king, defender must make him escape!`;
+
+    public static readonly KALAH: Localized = () => $localize`A modern version of the famous African strategy game!`;
 
     public static readonly KAMISADO: Localized = () => $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
@@ -244,6 +249,7 @@ export class GameInfo {
         new GameInfo($localize`Connect Six`, 'ConnectSix', ConnectSixComponent, new ConnectSixTutorial(), ConnectSixRules.get(), new Date('2023-05-13'), GameDescription.CONNECT_SIX()),
         new GameInfo($localize`Pente`, 'Pente', PenteComponent, new PenteTutorial(), PenteRules.get(), new Date('2023-05-20'), GameDescription.PENTE()),
         new GameInfo($localize`Teeko`, 'Teeko', TeekoComponent, new TeekoTutorial(), TeekoRules.get(), new Date('2023-07-30'), GameDescription.TEEKO()),
+        new GameInfo($localize`Kalah`, 'Kalah', KalahComponent, new KalahTutorial(), KalahRules.get(), new Date('2023-09-07'), GameDescription.KALAH()),
         new GameInfo($localize`Diaballik`, 'Diaballik', DiaballikComponent, new DiaballikTutorial(), DiaballikRules.get(), new Date('2023-09-20'), GameDescription.DIABALLIK()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d

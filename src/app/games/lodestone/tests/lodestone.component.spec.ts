@@ -180,7 +180,7 @@ describe('LodestoneComponent', () => {
                 top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
             };
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When filling the pressure plate
             await testUtils.expectClickSuccess('#square_0_0');
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
@@ -213,7 +213,7 @@ describe('LodestoneComponent', () => {
                 top: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ONE, 2),
             };
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When filling the pressure plate
             await testUtils.expectClickSuccess('#square_0_1');
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
@@ -243,7 +243,7 @@ describe('LodestoneComponent', () => {
                 top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
             };
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When filling the pressure plate in the middle of a move
             await testUtils.expectClickSuccess('#square_1_0');
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
@@ -277,7 +277,7 @@ describe('LodestoneComponent', () => {
                 top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
             };
             const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When performing a move that crumbles the pressure plate, taking the lodestone with it
             await testUtils.expectClickSuccess('#square_1_0');
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
@@ -321,12 +321,12 @@ describe('LodestoneComponent', () => {
             ]);
             const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
             // When displaying the state
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // Then it should only show the available lodestones
             testUtils.expectElementToExist('#lodestone_push_orthogonal');
             testUtils.expectElementToExist('#lodestone_push_diagonal');
         }));
-        it('should display score as number of captured pieces', () => {
+        it('should display score as number of captured pieces', fakeAsync(async() => {
             // Given a state
             const board: Table<LodestonePiece> = [
                 [A, A, A, A, _, _, _, _],
@@ -340,9 +340,9 @@ describe('LodestoneComponent', () => {
             ];
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
             // When displaying the state
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // Then the score should be the number of pieces captured
             expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of([22, 20]));
-        });
+        }));
     });
 });

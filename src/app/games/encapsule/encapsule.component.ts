@@ -46,9 +46,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         ];
         this.encoder = EncapsuleMove.encoder;
         this.tutorial = new EncapsuleTutorial().tutorial;
-        this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
         const move: MGPOptional<EncapsuleMove> = this.node.move;
@@ -69,7 +68,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return this.getState().getRemainingPiecesOfPlayer(player);
     }
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -106,7 +105,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
     public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
         const clickedId: string = '#piece_' + player + '_' + piece.toString() + '_' + index;
-        const clickValidity: MGPValidation = this.canUserPlay(clickedId);
+        const clickValidity: MGPValidation = await this.canUserPlay(clickedId);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

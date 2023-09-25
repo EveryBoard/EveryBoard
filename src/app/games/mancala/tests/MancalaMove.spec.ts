@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleNode, AwaleRules } from '../AwaleRules';
-import { AwaleMinimax } from '../AwaleMinimax';
-import { AwaleMove } from '../AwaleMove';
+import { AwaleNode, AwaleRules } from '../awale/AwaleRules';
+import { AwaleMinimax } from '../awale/AwaleMinimax';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { AwaleMove } from '../awale/AwaleMove';
 
 describe('AwaleMove', () => {
 
     it('should have a bijective encoder', () => {
         const rules: AwaleRules = AwaleRules.get();
-        const minimax: AwaleMinimax = new AwaleMinimax(rules, 'AwaleMinimax');
+        const minimax: AwaleMinimax = new AwaleMinimax();
         const node: AwaleNode = rules.getInitialNode();
         const firstTurnMoves: AwaleMove[] = minimax.getListMoves(node);
         for (const move of firstTurnMoves) {

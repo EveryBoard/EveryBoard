@@ -46,7 +46,7 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#square_4_4', 'selectable-fill');
             testUtils.expectElementToHaveClass('#square_6_4', 'selectable-fill');
         });
-        it('should highlight piece that can move this turn (when forced capture)', () => {
+        it('should highlight piece that can move this turn (when forced capture)', fakeAsync(async() => {
             // Given a board where current player have 3 "mobile" pieces but one must capture
             const state: LascaState = LascaState.of([
                 [_v, __, _v, __, _v, __, _v],
@@ -59,14 +59,14 @@ describe('LascaComponent', () => {
             ], 1);
 
             // When displaying the board
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then only the one that must capture must be "selectable-fill"
             testUtils.expectElementToHaveClass('#square_0_2', 'selectable-fill');
             testUtils.expectElementNotToHaveClass('#square_2_2', 'selectable-fill');
             testUtils.expectElementNotToHaveClass('#square_4_2', 'selectable-fill');
             testUtils.expectElementNotToHaveClass('#square_6_2', 'selectable-fill');
-        });
+        }));
         it(`should forbid clicking on opponent's pieces`, fakeAsync(async() => {
             // Given any board
             // When clicking on the opponent's piece
@@ -184,7 +184,7 @@ describe('LascaComponent', () => {
                 [__, __, __, _u, __, _u, __],
                 [_u, __, __, __, _u, __, _u],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord_2_2');
 
             // When doing a capture
@@ -204,7 +204,7 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, __, __],
                 [_u, __, _u, __, _u, __, _u],
             ], 0);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord_1_1');
 
             // When doing the promoting-move
@@ -225,7 +225,7 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, _u, __],
                 [__, __, __, __, __, __, __],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord_2_2');
 
             // When doing the first capture
@@ -245,7 +245,7 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, _u, __],
                 [__, __, __, __, __, __, __],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord_2_2');
 
             // When doing that illegal capture
@@ -261,7 +261,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord_4_4');
             const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
             await testUtils.expectMoveSuccess('#coord_3_3', move);
-            testUtils.getWrapper().setRole(PlayerOrNone.ONE);
+            await testUtils.getWrapper().setRole(PlayerOrNone.ONE);
 
             // When clicking on one of your piece
             // Then the board should be reversed
@@ -280,7 +280,7 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, _u, __],
                 [__, __, __, __, __, __, __],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord_2_2');
             await testUtils.expectClickSuccess('#coord_4_4');
 
@@ -298,7 +298,7 @@ describe('LascaComponent', () => {
     describe('displaying reversed board', () => {
         it('should have first player on top in a reversed board', fakeAsync(async() => {
             // Given a board that been reversed
-            testUtils.getWrapper().setRole(Player.ONE);
+            await testUtils.getWrapper().setRole(Player.ONE);
 
             // When clicking on (2, 2)
             // Then it should have selected square (4, 4)
@@ -309,7 +309,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord_2_4');
             const move: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(1, 3)).get();
             await testUtils.expectMoveSuccess('#coord_1_3', move); // First move is set
-            testUtils.getWrapper().setRole(Player.ONE); // changing role
+            await testUtils.getWrapper().setRole(Player.ONE); // changing role
             await testUtils.expectClickSuccessWithAsymmetricNaming('#coord_6_4', '#coord_0_2'); // Making the first click
 
             // When clicking on a invalid landing piece
