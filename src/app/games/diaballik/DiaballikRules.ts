@@ -82,7 +82,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             return this.isLegalPass(state, subMove);
         }
     }
-    private isLegalTranslation(state: DiaballikState, translation: DiaballikTranslation): MGPFallible<DiaballikState> {
+    public isLegalTranslation(state: DiaballikState, translation: DiaballikTranslation): MGPFallible<DiaballikState> {
         // The origin must be a piece owned by the player
         const start: Coord = translation.getStart();
         const startPiece: DiaballikPiece = state.getPieceAt(start);
@@ -106,7 +106,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         const stateAfterTranslation: DiaballikState = new DiaballikState(updatedBoard, state.turn);
         return MGPFallible.success(stateAfterTranslation);
     }
-    private isLegalPass(state: DiaballikState, pass: DiaballikPass): MGPFallible<DiaballikState> {
+    public isLegalPass(state: DiaballikState, pass: DiaballikPass): MGPFallible<DiaballikState> {
         // The origin must be a piece of the player that holds the ball
         const start: Coord = pass.getStart();
         const startPiece: DiaballikPiece = state.getPieceAt(start);

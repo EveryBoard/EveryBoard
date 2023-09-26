@@ -1,14 +1,16 @@
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
-import { DiaballikMove } from './DiaballikMove';
+import { DefeatCoords, DiaballikFailure, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
+import { DiaballikMove, DiaballikPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { DiaballikTutorial } from './DiaballikTutorial';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Player } from 'src/app/jscaip/Player';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 @Component({
     selector: 'app-diaballik',
@@ -18,11 +20,13 @@ import { Table } from 'src/app/utils/ArrayUtils';
 
 export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikMove, DiaballikState, DiaballikState> {
 
-    public board: Table<DiaballikPiece>;
+    public stateInConstruction: DiaballikState;
+    public WIDTH: number;
+    public HEIGHT: number;
 
     private currentSelection: MGPOptional<Coord> = MGPOptional.empty();
-    private moveTranslations: [MGPOptional<Coord>, MGPOptional<Coord>] = [MGPOptional.empty(), MGPOptional.empty()];
-    private movePass: MGPOptional<Coord> = MGPOptional.empty();
+    private hasMadePass: boolean = false;
+    private subMoves: DiaballikSubMove[] = [];
 
     private lastMoveCoords: Coord[] = [];
     private victoryCoord: MGPOptional<Coord> = MGPOptional.empty();
@@ -33,6 +37,8 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         this.hasAsymmetricBoard = true;
         this.rules = DiaballikRules.get();
         this.node = this.rules.getInitialNode();
+        this.WIDTH = this.getState().board.length;
+        this.HEIGHT = this.getState().board[0].length;
         this.encoder = DiaballikMove.encoder;
         this.tutorial = new DiaballikTutorial().tutorial;
         this.availableMinimaxes = [
@@ -40,9 +46,9 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         ];
     }
 
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: DiaballikState = this.node.gameState;
-        this.board = state.board;
+        this.stateInConstruction = state;
         const victoryOrDefeatCoords: MGPOptional<VictoryOrDefeatCoords> = this.rules.getVictoryOrDefeatCoords(state);
         if (victoryOrDefeatCoords.isPresent()) {
             if (victoryOrDefeatCoords instanceof VictoryCoord) {
@@ -53,7 +59,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         }
     }
 
-    public override showLastMove(move: DiaballikMove): void {
+    public override async showLastMove(move: DiaballikMove): Promise<void> {
         this.lastMoveCoords = [];
         for (const subMove of move.getSubMoves()) {
             this.lastMoveCoords.push(subMove.getStart(), subMove.getEnd());
@@ -61,9 +67,10 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     }
 
     public override cancelMoveAttempt(): void {
+        this.stateInConstruction = this.getState();
         this.currentSelection = MGPOptional.empty();
-        this.moveTranslations = [MGPOptional.empty(), MGPOptional.empty()];
-        this.movePass = MGPOptional.empty();
+        this.hasMadePass = false;
+        this.subMoves = [];
     }
 
     public getSpaceClasses(x: number, y: number): string[] {
@@ -81,11 +88,122 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         return classes;
     }
 
-    public getPieceClasses(x: number, y: number): string[] {
+    public getPieceClasses(x: number, y: number, piece: DiaballikPiece): string[] {
         const coord: Coord = new Coord(x, y);
+        const classes: string[] = [this.getPlayerClass(piece.owner)];
         if (this.lastMoveCoords.includes(coord)) {
-            return ['last-move-stroke'];
+            classes.push('last-move-stroke')
         }
-        return [];
+        if (piece.holdsBall === false && this.currentSelection.equalsValue(new Coord(x, y))) {
+            classes.push('selected-stroke');
+        }
+        return classes;
     }
+
+    public getBallClasses(x: number, y: number, piece: DiaballikPiece): string[] {
+        const coord: Coord = new Coord(x, y);
+        const classes: string[] = [this.getPlayerClass(piece.owner)];
+        if (this.lastMoveCoords.includes(coord)) {
+            classes.push('last-move-stroke')
+        }
+        if (this.currentSelection.equalsValue(new Coord(x, y))) {
+            classes.push('selected-stroke');
+        }
+        return classes;
+    }
+
+    private async addSubMove(subMove: DiaballikSubMove, stateAfterSubMove: DiaballikState): Promise<MGPValidation> {
+        this.currentSelection = MGPOptional.empty();
+        this.subMoves.push(subMove);
+        this.stateInConstruction = stateAfterSubMove;
+        if (this.subMoves.length === 3) {
+            const move: DiaballikMove =
+                new DiaballikMove(this.subMoves[0], MGPOptional.of(this.subMoves[1]), MGPOptional.of(this.subMoves[2]));
+            return this.chooseMove(move);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
+    }
+
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
+        const clickedCoord: Coord = new Coord(x, y);
+        const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
+        const player: Player = this.getCurrentPlayer();
+        if (this.currentSelection.isPresent()) {
+            const selection: Coord = this.currentSelection.get();
+            if (selection.equals(clickedCoord)) {
+                // Just deselects
+                this.currentSelection = MGPOptional.empty();
+                return MGPValidation.SUCCESS;
+            }
+            if (this.stateInConstruction.getPieceAt(selection).holdsBall) {
+                const pass: MGPFallible<DiaballikPass> = DiaballikPass.from(selection, clickedCoord);
+                if (pass.isSuccess()) {
+                    const passLegality: MGPFallible<DiaballikState> =
+                        this.rules.isLegalPass(this.stateInConstruction, pass.get());
+                    if (passLegality.isSuccess()) {
+                        this.hasMadePass = true;
+                        return this.addSubMove(pass.get(), passLegality.get());
+                    } else {
+                        return this.cancelMove(passLegality.getReason());
+                    }
+                } else {
+                    return this.cancelMove(pass.getReason());
+                }
+            } else {
+                const translation: MGPFallible<DiaballikTranslation> = DiaballikTranslation.from(selection, clickedCoord);
+                if (translation.isSuccess()) {
+                    const translationLegality: MGPFallible<DiaballikState> =
+                        this.rules.isLegalTranslation(this.stateInConstruction, translation.get());
+                    if (translationLegality.isSuccess()) {
+                        return this.addSubMove(translation.get(), translationLegality.get());
+                    } else {
+                        return this.cancelMove(translationLegality.getReason());
+                    }
+                } else {
+                    return this.cancelMove(translation.getReason());
+                }
+            }
+        } else {
+            // No piece selected, select this one if it is a player piece
+            if (clickedPiece.owner === this.getCurrentPlayer()) {
+                if (this.hasMadePass && clickedPiece.holdsBall) {
+                    // Only one pass is allowed, so we don't allow to select the piece holding the ball anymore
+                    return this.cancelMove(DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
+                } else {
+                    this.currentSelection = MGPOptional.of(clickedCoord);
+                    return MGPValidation.SUCCESS;
+                }
+            } else {
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            }
+        }
+    }
+
+    public showDoneButton(): boolean {
+        return this.subMoves.length >= 1; // TODO atfer merging design-enhancements: && this.isInteractive
+    }
+
+    public async done(): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#done');
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
+        let second: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
+        if (this.subMoves.length >= 2) {
+            second = MGPOptional.of(this.subMoves[1]);
+        }
+        // Note: user can't click on done if there are either no sub move (button doesn't appear)
+        // or if there are three submoves (as the move would have been performed directly)
+
+        const move: DiaballikMove = new DiaballikMove(this.subMoves[0], second, MGPOptional.empty());
+        return this.chooseMove(move);
+    }
+
 }

@@ -107,6 +107,7 @@ import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { GameEventService } from './services/GameEventService';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
+import { DiaballikComponent } from './games/diaballik/diaballik.component';
 
 registerLocaleData(localeFr);
 
@@ -197,6 +198,7 @@ export class FirebaseProviders {
         ConnectSixComponent,
         ConspirateursComponent,
         DiamComponent,
+        DiaballikComponent,
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,
