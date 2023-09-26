@@ -21,16 +21,18 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikMove, DiaballikState, DiaballikState> {
 
     public stateInConstruction: DiaballikState;
+
     public WIDTH: number;
     public HEIGHT: number;
+
+    public victoryCoord: MGPOptional<Coord> = MGPOptional.empty();
+    public defeatCoords: Coord[] = [];
 
     private currentSelection: MGPOptional<Coord> = MGPOptional.empty();
     private hasMadePass: boolean = false;
     private subMoves: DiaballikSubMove[] = [];
 
     private lastMoveCoords: Coord[] = [];
-    private victoryCoord: MGPOptional<Coord> = MGPOptional.empty();
-    private defeatCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -49,12 +51,14 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: DiaballikState = this.node.gameState;
         this.stateInConstruction = state;
-        const victoryOrDefeatCoords: MGPOptional<VictoryOrDefeatCoords> = this.rules.getVictoryOrDefeatCoords(state);
-        if (victoryOrDefeatCoords.isPresent()) {
-            if (victoryOrDefeatCoords instanceof VictoryCoord) {
-                this.victoryCoord = MGPOptional.of(victoryOrDefeatCoords.coord);
-            } else if (victoryOrDefeatCoords instanceof DefeatCoords) {
-                this.defeatCoords = victoryOrDefeatCoords.coords;
+        const possibleVictory: MGPOptional<VictoryOrDefeatCoords> = this.rules.getVictoryOrDefeatCoords(state);
+        if (possibleVictory.isPresent()) {
+            const victory: VictoryOrDefeatCoords = possibleVictory.get();
+            if (victory instanceof VictoryCoord) {
+                this.victoryCoord = MGPOptional.of(victory.coord);
+            } else if (victory instanceof DefeatCoords) {
+                console.log('it is a defeat')
+                this.defeatCoords = victory.coords;
             }
         }
     }
@@ -126,7 +130,6 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        console.log('#click_' + x + '_' + y);
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -134,9 +137,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
 
         const clickedCoord: Coord = new Coord(x, y);
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
-        const player: Player = this.getCurrentPlayer();
         if (this.currentSelection.isPresent()) {
-            console.log('selection presetn')
             const selection: Coord = this.currentSelection.get();
             if (selection.equals(clickedCoord)) {
                 // Just deselects

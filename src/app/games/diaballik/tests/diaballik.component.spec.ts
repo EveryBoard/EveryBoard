@@ -140,7 +140,7 @@ fdescribe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#click_3_5', 'last-move');
         testUtils.expectElementToHaveClass('#click_3_5', 'last-move-stroke');
     }));
-    it('should show the victory', fakeAsync(async() => {
+    fit('should show the victory', fakeAsync(async() => {
         // Given a state with victory
         const state: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, Ȯ, X, X],
@@ -154,9 +154,9 @@ fdescribe('DiaballikComponent', () => {
         // When displaying it
         await testUtils.setupState(state);
         // Then it should show the victory
-        testUtils.expectElementToHaveClass('#click_3_0', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory_4_0', 'victory-stroke');
     }));
-    it('should show the defeat upon blocking the opponent', fakeAsync(async() => {
+    fit('should show the defeat upon blocking the opponent', fakeAsync(async() => {
         // Given a state with a defeat due to blocking the opponent
         const state: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, _, _, _],
@@ -170,12 +170,12 @@ fdescribe('DiaballikComponent', () => {
         // When displaying it
         await testUtils.setupState(state);
         // Then it should show the defeat
-        testUtils.expectElementToHaveClass('#click_0_4', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#click_1_5', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#click_2_6', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#click_3_6', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#click_4_6', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#click_5_6', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#click_6_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#defeat_0_4', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#defeat_1_5', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#defeat_2_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#defeat_3_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#defeat_4_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#defeat_5_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#defeat_6_6', 'defeat-stroke');
     }));
 });

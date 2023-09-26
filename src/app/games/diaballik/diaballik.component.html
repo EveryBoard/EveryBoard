@@ -33,6 +33,20 @@
             />
         </g>
     </g>
+    <rect *ngIf="victoryCoord.isPresent()"
+       id="victory_{{ victoryCoord.get().x }}_{{ victoryCoord.get().y }}"
+       class="base no-fill victory-stroke"
+       [attr.x]="SPACE_SIZE * victoryCoord.get().x"
+       [attr.y]="SPACE_SIZE * victoryCoord.get().y"
+       [attr.width]="SPACE_SIZE"
+       [attr.height]="SPACE_SIZE" />
+    <rect *ngFor="let coord of defeatCoords"
+       id="defeat_{{ coord.x }}_{{ coord.y }}"
+       class="base no-fill defeat-stroke"
+        [attr.x]="SPACE_SIZE * coord.x"
+        [attr.y]="SPACE_SIZE * coord.y"
+        [attr.width]="SPACE_SIZE"
+        [attr.height]="SPACE_SIZE" />
 
     <g *ngIf="showDoneButton()"
        id="done"
