@@ -7,7 +7,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 
-fdescribe('DiaballikRules', () => {
+describe('DiaballikRules', () => {
 
     let rules: DiaballikRules;
 

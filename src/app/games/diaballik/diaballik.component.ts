@@ -126,6 +126,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
+        console.log('#click_' + x + '_' + y);
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -135,6 +136,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
         const player: Player = this.getCurrentPlayer();
         if (this.currentSelection.isPresent()) {
+            console.log('selection presetn')
             const selection: Coord = this.currentSelection.get();
             if (selection.equals(clickedCoord)) {
                 // Just deselects
@@ -142,32 +144,9 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
                 return MGPValidation.SUCCESS;
             }
             if (this.stateInConstruction.getPieceAt(selection).holdsBall) {
-                const pass: MGPFallible<DiaballikPass> = DiaballikPass.from(selection, clickedCoord);
-                if (pass.isSuccess()) {
-                    const passLegality: MGPFallible<DiaballikState> =
-                        this.rules.isLegalPass(this.stateInConstruction, pass.get());
-                    if (passLegality.isSuccess()) {
-                        this.hasMadePass = true;
-                        return this.addSubMove(pass.get(), passLegality.get());
-                    } else {
-                        return this.cancelMove(passLegality.getReason());
-                    }
-                } else {
-                    return this.cancelMove(pass.getReason());
-                }
+                return this.performPass(selection, clickedCoord);
             } else {
-                const translation: MGPFallible<DiaballikTranslation> = DiaballikTranslation.from(selection, clickedCoord);
-                if (translation.isSuccess()) {
-                    const translationLegality: MGPFallible<DiaballikState> =
-                        this.rules.isLegalTranslation(this.stateInConstruction, translation.get());
-                    if (translationLegality.isSuccess()) {
-                        return this.addSubMove(translation.get(), translationLegality.get());
-                    } else {
-                        return this.cancelMove(translationLegality.getReason());
-                    }
-                } else {
-                    return this.cancelMove(translation.getReason());
-                }
+                return this.performTranslation(selection, clickedCoord);
             }
         } else {
             // No piece selected, select this one if it is a player piece
@@ -182,6 +161,37 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
             } else {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
+        }
+    }
+
+    private performPass(start: Coord, end: Coord): Promise<MGPValidation> {
+        const pass: MGPFallible<DiaballikPass> = DiaballikPass.from(start, end);
+        if (pass.isSuccess()) {
+            const passLegality: MGPFallible<DiaballikState> =
+                this.rules.isLegalPass(this.stateInConstruction, pass.get());
+            if (passLegality.isSuccess()) {
+                this.hasMadePass = true;
+                return this.addSubMove(pass.get(), passLegality.get());
+            } else {
+                return this.cancelMove(passLegality.getReason());
+            }
+        } else {
+            return this.cancelMove(pass.getReason());
+        }
+    }
+
+    private performTranslation(start: Coord, end: Coord): Promise<MGPValidation> {
+        const translation: MGPFallible<DiaballikTranslation> = DiaballikTranslation.from(start, end);
+        if (translation.isSuccess()) {
+            const translationLegality: MGPFallible<DiaballikState> =
+                this.rules.isLegalTranslation(this.stateInConstruction, translation.get());
+            if (translationLegality.isSuccess()) {
+                return this.addSubMove(translation.get(), translationLegality.get());
+            } else {
+                return this.cancelMove(translationLegality.getReason());
+            }
+        } else {
+            return this.cancelMove(translation.getReason());
         }
     }
 
