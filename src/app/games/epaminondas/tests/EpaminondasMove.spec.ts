@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
-import { EpaminondasMinimax } from '../EpaminondasMinimax';
+import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
 
 describe('EpaminondasMove: ', () => {
 
@@ -34,12 +34,8 @@ describe('EpaminondasMove: ', () => {
     });
     it('should have a bijective encoder', () => {
         const rules: EpaminondasRules = EpaminondasRules.get();
-        const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
-        const node: EpaminondasNode = rules.getInitialNode();
-        const moves: EpaminondasMove[] = minimax.getListMoves(node);
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
-        }
+        const moveGenerator: EpaminondasMoveGenerator = new EpaminondasMoveGenerator();
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, EpaminondasMove.encoder);
     });
     it('should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);

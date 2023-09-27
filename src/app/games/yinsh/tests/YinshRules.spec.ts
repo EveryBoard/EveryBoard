@@ -5,12 +5,10 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { YinshFailure } from '../YinshFailure';
 import { YinshState } from '../YinshState';
-import { YinshMinimax } from '../YinshMinimax';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
-import { YinshLegalityInformation, YinshNode, YinshRules } from '../YinshRules';
+import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
 describe('YinshRules', () => {
@@ -24,11 +22,9 @@ describe('YinshRules', () => {
 
     let rules: YinshRules;
 
-    let minimaxes: Minimax<YinshMove, YinshState, YinshLegalityInformation>[];
 
     beforeEach(() => {
         rules = YinshRules.get();
-        minimaxes = [new YinshMinimax(rules, 'YinshMinimax')];
     });
     describe('isLegal and applyLegalMove', () => {
         it('should initially allow placing rings', () => {
@@ -663,12 +659,12 @@ describe('YinshRules', () => {
         it('should detect victory for a player if it obtains more than 3 rings (Player.ZERO)', () => {
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [3, 0], 20);
             const node: YinshNode = new YinshNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should detect victory for a player if it obtains more than 3 rings (Player.ONE)', () => {
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [0, 3], 20);
             const node: YinshNode = new YinshNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });
 });

@@ -4,10 +4,10 @@ import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
+import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
 
 describe('MartianChessMove', () => {
 
@@ -53,9 +53,9 @@ describe('MartianChessMove', () => {
     });
     it('should have a bijective encoder', () => {
         const rules: MartianChessRules = MartianChessRules.get();
-        const minimax: MartianChessDummyMinimax = new MartianChessDummyMinimax(rules, 'dummy');
+        const moveGenerator: MartianChessMoveGenerator = new MartianChessMoveGenerator();
         const node: MartianChessNode = rules.getInitialNode();
-        const firstTurnMoves: MartianChessMove[] = minimax.getListMoves(node);
+        const firstTurnMoves: MartianChessMove[] = moveGenerator.getListMoves(node);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(MartianChessMove.encoder, move);
         }

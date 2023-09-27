@@ -17,7 +17,7 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
         super(messageDisplayer, BrandhubMove.from);
         this.rules = BrandhubRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = this.createMinimaxes();
+        this.availableAIs = this.createAIs();
         this.encoder = BrandhubMove.encoder;
         this.tutorial = new BrandhubTutorial().tutorial;
     }

@@ -3,7 +3,6 @@ import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { SixLegalityInformation, SixRules } from 'src/app/games/six/SixRules';
-import { SixBoardValue, SixMinimax } from 'src/app/games/six/SixMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
@@ -18,6 +17,11 @@ import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { SixHeuristic } from './SixHeuristic';
+import { SixMoveGenerator } from './SixMoveGenerator';
+import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
 
 @Component({
     selector: 'app-six',
@@ -25,7 +29,7 @@ import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class SixComponent
-    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixLegalityInformation, SixBoardValue>
+    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixLegalityInformation>
 {
     public state: SixState;
 
@@ -48,8 +52,9 @@ export class SixComponent
         super(messageDisplayer);
         this.rules = SixRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new SixMinimax(this.rules, 'SixMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new SixHeuristic(), new SixFilteredMoveGenerator()),
+            new MCTS($localize`MCTS`, new SixMoveGenerator(), this.rules),
         ];
         this.encoder = SixMove.encoder;
         this.tutorial = new SixTutorial().tutorial;
@@ -67,7 +72,7 @@ export class SixComponent
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.node.gameState;
-        const lastMove: MGPOptional<SixMove> = this.node.move;
+        const lastMove: MGPOptional<SixMove> = this.node.previousMove;
         if (lastMove.isAbsent()) {
             // For tutorial
             this.hideLastMove();
@@ -104,7 +109,7 @@ export class SixComponent
         const newPieces: Coord[] = this.getState().getPieceCoords();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {
-            const start: MGPOptional<Coord> = this.node.move.get().start;
+            const start: MGPOptional<Coord> = this.node.previousMove.get().start;
             if (start.equalsValue(oldPiece) === false &&
                 newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece)) === false)
             {

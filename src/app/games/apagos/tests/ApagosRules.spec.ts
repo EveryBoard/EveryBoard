@@ -1,9 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { ApagosCoord } from '../ApagosCoord';
-import { ApagosDummyMinimax } from '../ApagosDummyMinimax';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosNode, ApagosRules } from '../ApagosRules';
@@ -12,8 +10,6 @@ import { ApagosState } from '../ApagosState';
 describe('ApagosRules', () => {
 
     let rules: ApagosRules;
-
-    let minimaxes: Minimax<ApagosMove, ApagosState>[];
 
     let stateWithOneFullSquare: ApagosState;
 
@@ -26,9 +22,6 @@ describe('ApagosRules', () => {
     });
     beforeEach(() => {
         rules = ApagosRules.get();
-        minimaxes = [
-            new ApagosDummyMinimax(rules, 'ApagosDummyMinimax'),
-        ];
     });
     it('should refuse dropping on a full square', () => {
         // Given a board with one full square
@@ -122,7 +115,7 @@ describe('ApagosRules', () => {
         ], 0, 0);
         // Then we should know who won
         const node: ApagosNode = new ApagosNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should know who is winning (Player.ONE)', () => {
         // Given a ended part state
@@ -133,6 +126,6 @@ describe('ApagosRules', () => {
         ], 0, 0);
         // Then we should know who won
         const node: ApagosNode = new ApagosNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
 });

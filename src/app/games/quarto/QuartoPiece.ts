@@ -54,7 +54,7 @@ export class QuartoPiece implements ComparableObject {
             throw new Error('Invalid piece (' + piece + ')');
         }
     }
-    private constructor(public value: number) { }
+    private constructor(public value: number) {}
 
     public equals(other: QuartoPiece): boolean {
         return this === other;

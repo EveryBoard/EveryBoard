@@ -4,9 +4,7 @@ import { BoardValue } from './BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { GameStateWithTable } from './GameStateWithTable';
-import { MGPNode } from './MGPNode';
 import { Player, PlayerOrNone } from './Player';
-import { SCORE } from './SCORE';
 
 export class NInARowHelper<T> {
 
@@ -112,7 +110,7 @@ export class NInARowHelper<T> {
             if (this.getOwner(coordAndContents.content, state).isPlayer()) {
                 const coord: Coord = coordAndContents.coord;
                 const squareScore: number = this.getSquareScore(state, coord);
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                if (BoardValue.isVictory(squareScore)) {
                     if (squareScore === Player.ZERO.getVictoryValue() ||
                         squareScore === Player.ONE.getVictoryValue())
                     {

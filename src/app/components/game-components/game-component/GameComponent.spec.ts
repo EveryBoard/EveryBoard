@@ -174,7 +174,7 @@ describe('GameComponent', () => {
             }
         }
     }));
-    it('should have an encoder, tutorial and minimax for every game', fakeAsync(async() =>{
+    it('should have an encoder, tutorial and AI for every game', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES()) {
             // Given a game
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
@@ -190,7 +190,23 @@ describe('GameComponent', () => {
             expect(component.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
-            expect(component.availableMinimaxes.length).withContext('minimax list empty for ' + gameInfo.urlName).toBeGreaterThan(0);
+            expect(component.availableAIs.length).withContext('AI list empty for ' + gameInfo.urlName).toBeGreaterThan(0);
+        }
+    }));
+    it('should have an AI for every game', fakeAsync(async() => {
+        for (const gameInfo of GameInfo.ALL_GAMES()) {
+            // Given a game
+            activatedRouteStub.setRoute('compo', gameInfo.urlName);
+            const testUtils: ComponentTestUtils<AbstractGameComponent> =
+                await ComponentTestUtils.forGame(gameInfo.urlName, false);
+
+            // When displaying the game
+            const component: AbstractGameComponent = testUtils.getGameComponent();
+            testUtils.detectChanges();
+            tick(0);
+
+            // Then it should have at least one AI
+            expect(component.availableAIs.length).withContext('AI missing for ' + gameInfo.urlName).toBeGreaterThan(0);
         }
     }));
 });

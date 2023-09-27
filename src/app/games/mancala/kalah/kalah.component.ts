@@ -1,18 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-
-import { MancalaDistribution } from '../commons/MancalaMove';
-import { MancalaMultipleSowComponent } from '../commons/MancalaMultipleSowComponent';
-
+import { MancalaDistribution } from '../common/MancalaMove';
+import { MancalaMultipleSowComponent } from '../common/MancalaMultipleSowComponent';
 import { KalahRules } from './KalahRules';
 import { KalahMove } from './KalahMove';
-import { KalahScoreMinimax } from './KalahDummyMinimax';
 import { KalahTutorial } from './KalahTutorial';
+import { KalahMoveGenerator } from './KalahMoveGenerator';
 
 @Component({
     selector: 'app-kalah-component',
-    templateUrl: './../commons/mancala.component.html',
+    templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -24,9 +21,7 @@ export class KalahComponent extends MancalaMultipleSowComponent<KalahRules, Kala
         super(messageDisplayer, cdr);
         this.rules = KalahRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new KalahScoreMinimax(),
-        ];
+        this.availableAIs = this.createAIs(new KalahMoveGenerator());
         this.encoder = KalahMove.encoder;
         this.tutorial = new KalahTutorial().tutorial;
     }

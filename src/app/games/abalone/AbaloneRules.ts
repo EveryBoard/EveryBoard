@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -15,7 +15,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
-export class AbaloneNode extends MGPNode<AbaloneRules, AbaloneMove, AbaloneState, AbaloneLegalityInformation> {}
+export class AbaloneNode extends GameNode<AbaloneMove, AbaloneState> {}
 
 export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
 

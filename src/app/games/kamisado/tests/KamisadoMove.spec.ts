@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
-import { KamisadoMinimax } from '../KamisadoMinimax';
+import { KamisadoRules } from '../KamisadoRules';
 import { KamisadoMove } from '../KamisadoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
 
 describe('KamisadoMove', () => {
 
@@ -13,13 +14,9 @@ describe('KamisadoMove', () => {
     });
     it('should have a bijective encoder', () => {
         const rules: KamisadoRules = KamisadoRules.get();
-        const minimax: KamisadoMinimax = new KamisadoMinimax(rules, 'KamisadoMinimax');
-        const node: KamisadoNode = rules.getInitialNode();
-        const moves: KamisadoMove[] = minimax.getListMoves(node);
-        moves.push(KamisadoMove.PASS);
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(KamisadoMove.encoder, move);
-        }
+        const moveGenerator: KamisadoMoveGenerator = new KamisadoMoveGenerator();
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, KamisadoMove.encoder);
+        EncoderTestUtils.expectToBeBijective(KamisadoMove.encoder, KamisadoMove.PASS);
     });
     it('should force move to start and end inside the board', () => {
         expect(() => KamisadoMove.of(new Coord(-1, 2), new Coord(2, 2))).toThrowError();
