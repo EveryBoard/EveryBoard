@@ -1,4 +1,3 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { DiaballikMove, DiaballikPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
@@ -11,6 +10,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { GameNode } from 'src/app/jscaip/GameNode';
 
 export class DiaballikFailure {
 
@@ -47,7 +47,7 @@ export class DefeatCoords extends VictoryOrDefeatCoords {
     }
 }
 
-export class DiaballikNode extends MGPNode<Rules<DiaballikMove, DiaballikState, DiaballikState>, DiaballikMove, DiaballikState, DiaballikState> {}
+export class DiaballikNode extends GameNode<DiaballikMove, DiaballikState> {}
 
 export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, DiaballikState> {
 

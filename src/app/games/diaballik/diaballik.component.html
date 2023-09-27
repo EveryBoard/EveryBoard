@@ -48,6 +48,14 @@
         [attr.width]="SPACE_SIZE"
         [attr.height]="SPACE_SIZE" />
 
+    <rect *ngFor="let coord of indicators"
+          [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+          [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+          [attr.width]="INDICATOR_SIZE"
+          [attr.height]="INDICATOR_SIZE"
+          (click)="onClick(coord.x, coord.y)"
+          class="indicator"/>
+
     <g *ngIf="showDoneButton()"
        id="done"
        (click)="done()"

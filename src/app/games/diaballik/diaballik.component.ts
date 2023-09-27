@@ -9,8 +9,9 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { DiaballikMinimax } from './DiaballikMinimax';
+import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
 
 @Component({
     selector: 'app-diaballik',
@@ -24,9 +25,12 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
 
     public WIDTH: number;
     public HEIGHT: number;
+    public INDICATOR_SIZE: number = 20;
 
     public victoryCoord: MGPOptional<Coord> = MGPOptional.empty();
     public defeatCoords: Coord[] = [];
+
+    public indicators: Coord[] = [];
 
     private currentSelection: MGPOptional<Coord> = MGPOptional.empty();
     private hasMadePass: boolean = false;
@@ -34,6 +38,8 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
 
     private lastMovedBallCoords: Coord[] = [];
     private lastMovedPiecesCoords: Coord[] = [];
+
+    private moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator();
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -44,8 +50,8 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         this.HEIGHT = this.getState().board[0].length;
         this.encoder = DiaballikMove.encoder;
         this.tutorial = new DiaballikTutorial().tutorial;
-        this.availableMinimaxes = [
-            //new DiaballikMinimax(this.rules, 'Minimax'),
+        this.availableAIs = [
+            new DiaballikMinimax(),
         ];
     }
 
@@ -58,7 +64,6 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
             if (victory instanceof VictoryCoord) {
                 this.victoryCoord = MGPOptional.of(victory.coord);
             } else if (victory instanceof DefeatCoords) {
-                console.log('it is a defeat')
                 this.defeatCoords = victory.coords;
             }
         }
@@ -81,16 +86,17 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         this.currentSelection = MGPOptional.empty();
         this.hasMadePass = false;
         this.subMoves = [];
+        this.indicators = [];
     }
 
     public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         if (this.lastMovedPiecesCoords.some((c: Coord) => c.equals(coord))) {
-            classes.push('last-move-fill');
+            classes.push('moved-fill');
         }
         if (this.lastMovedBallCoords.some((c: Coord) => c.equals(coord))) {
-            classes.push('last-move-fill');
+            classes.push('moved-fill');
         }
         if (this.victoryCoord.equalsValue(coord)) {
             classes.push('victory-stroke');
@@ -127,6 +133,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
 
     private async addSubMove(subMove: DiaballikSubMove, stateAfterSubMove: DiaballikState): Promise<MGPValidation> {
         this.currentSelection = MGPOptional.empty();
+        this.indicators = [];
         this.subMoves.push(subMove);
         this.stateInConstruction = stateAfterSubMove;
         if (this.subMoves.length === 3) {
@@ -151,6 +158,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
             if (selection.equals(clickedCoord)) {
                 // Just deselects
                 this.currentSelection = MGPOptional.empty();
+                this.indicators = [];
                 return MGPValidation.SUCCESS;
             }
             if (this.stateInConstruction.getPieceAt(selection).holdsBall) {
@@ -166,6 +174,12 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
                     return this.cancelMove(DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
                 } else {
                     this.currentSelection = MGPOptional.of(clickedCoord);
+                    if (clickedPiece.holdsBall) {
+                        this.indicators = this.moveGenerator.getPassEnds(this.stateInConstruction, clickedCoord);
+                        console.log(this.indicators.length)
+                    } else {
+                        this.indicators = this.moveGenerator.getTranslationEnds(this.stateInConstruction, clickedCoord);
+                    }
                     return MGPValidation.SUCCESS;
                 }
             } else {

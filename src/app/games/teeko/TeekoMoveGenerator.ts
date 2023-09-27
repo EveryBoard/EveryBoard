@@ -18,7 +18,7 @@ export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState> {
         const moves: TeekoMove[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
-            if (state.getPieceAt(coord).isPlayer() === false) {
+            if (coordAndContent.content.isPlayer() === false) {
                 const newMove: TeekoDropMove = TeekoDropMove.from(coord).get();
                 moves.push(newMove);
             }
