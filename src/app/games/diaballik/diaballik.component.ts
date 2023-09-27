@@ -32,7 +32,8 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     private hasMadePass: boolean = false;
     private subMoves: DiaballikSubMove[] = [];
 
-    private lastMoveCoords: Coord[] = [];
+    private lastMovedBallCoords: Coord[] = [];
+    private lastMovedPiecesCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -64,9 +65,14 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     }
 
     public override async showLastMove(move: DiaballikMove): Promise<void> {
-        this.lastMoveCoords = [];
+        this.lastMovedPiecesCoords = [];
+        this.lastMovedBallCoords = [];
         for (const subMove of move.getSubMoves()) {
-            this.lastMoveCoords.push(subMove.getStart(), subMove.getEnd());
+            if (subMove instanceof DiaballikTranslation) {
+              this.lastMovedPiecesCoords.push(subMove.getStart(), subMove.getEnd());
+            } else if (subMove instanceof DiaballikPass) {
+                this.lastMovedBallCoords.push(subMove.getStart(), subMove.getEnd());
+            }
         }
     }
 
@@ -80,13 +86,16 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
-        if (this.lastMoveCoords.includes(coord)) {
-            classes.push('last-move');
+        if (this.lastMovedPiecesCoords.some((c: Coord) => c.equals(coord))) {
+            classes.push('last-move-fill');
+        }
+        if (this.lastMovedBallCoords.some((c: Coord) => c.equals(coord))) {
+            classes.push('last-move-fill');
         }
         if (this.victoryCoord.equalsValue(coord)) {
             classes.push('victory-stroke');
         }
-        if (this.defeatCoords.includes(coord)) {
+        if (this.defeatCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('defeat-stroke');
         }
         return classes;
@@ -95,7 +104,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     public getPieceClasses(x: number, y: number, piece: DiaballikPiece): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(piece.owner)];
-        if (this.lastMoveCoords.includes(coord)) {
+        if (this.lastMovedPiecesCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('last-move-stroke')
         }
         if (piece.holdsBall === false && this.currentSelection.equalsValue(new Coord(x, y))) {
@@ -107,7 +116,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     public getBallClasses(x: number, y: number, piece: DiaballikPiece): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(piece.owner)];
-        if (this.lastMoveCoords.includes(coord)) {
+        if (this.lastMovedBallCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('last-move-stroke')
         }
         if (this.currentSelection.equalsValue(new Coord(x, y))) {

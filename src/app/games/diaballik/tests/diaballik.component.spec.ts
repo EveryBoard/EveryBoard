@@ -54,7 +54,7 @@ fdescribe('DiaballikComponent', () => {
         // Then it should succeed
         await testUtils.expectMoveSuccess('#click_4_6', move);
     }));
-    it('should show possible targets when selecting a piece without ball', fakeAsync(async() => {
+    fit('should show possible targets when selecting a piece without ball', fakeAsync(async() => {
         // Given a state
         // When selecting a piece without ball
         await testUtils.expectClickSuccess('#click_0_6');
@@ -128,19 +128,21 @@ fdescribe('DiaballikComponent', () => {
                               MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
         await testUtils.expectMoveSuccess('#click_4_6', move);
         // Then it should show the last move
-        testUtils.expectElementToHaveClass('#click_0_6', 'last-move');
-        testUtils.expectElementToHaveClass('#click_0_5', 'last-move');
-        testUtils.expectElementToHaveClass('#click_0_5', 'last-move-stroke');
+        testUtils.expectElementToHaveClass('#space_0_6', 'last-move-fill');
+        testUtils.expectElementToHaveClass('#space_0_5', 'last-move-fill');
+        testUtils.expectElementToHaveClass('#piece_0_5', 'last-move-stroke');
 
-        testUtils.expectElementToHaveClass('#click_1_6', 'last-move');
-        testUtils.expectElementToHaveClass('#click_1_5', 'last-move');
-        testUtils.expectElementToHaveClass('#click_1_5', 'last-move-stroke');
+        testUtils.expectElementToHaveClass('#space_1_6', 'last-move-fill');
+        testUtils.expectElementToHaveClass('#space_1_5', 'last-move-fill');
+        testUtils.expectElementToHaveClass('#piece_1_5', 'last-move-stroke');
 
-        testUtils.expectElementToHaveClass('#click_3_6', 'last-move');
-        testUtils.expectElementToHaveClass('#click_3_5', 'last-move');
-        testUtils.expectElementToHaveClass('#click_3_5', 'last-move-stroke');
+        testUtils.expectElementToHaveClass('#space_3_6', 'last-move-fill');
+        testUtils.expectElementToHaveClass('#space_4_6', 'last-move-fill');
+        // Only the ball is highlighted for the pass
+        testUtils.expectElementNotToHaveClass('#piece_4_6', 'last-move-stroke');
+        testUtils.expectElementToHaveClass('#ball_4_6', 'last-move-stroke');
     }));
-    fit('should show the victory', fakeAsync(async() => {
+    it('should show the victory', fakeAsync(async() => {
         // Given a state with victory
         const state: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, Ȯ, X, X],
@@ -156,7 +158,7 @@ fdescribe('DiaballikComponent', () => {
         // Then it should show the victory
         testUtils.expectElementToHaveClass('#victory_4_0', 'victory-stroke');
     }));
-    fit('should show the defeat upon blocking the opponent', fakeAsync(async() => {
+    it('should show the defeat upon blocking the opponent', fakeAsync(async() => {
         // Given a state with a defeat due to blocking the opponent
         const state: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, _, _, _],

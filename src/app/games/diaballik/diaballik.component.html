@@ -24,7 +24,7 @@
                     [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
             />
             <circle *ngIf="square.holdsBall"
-                    id="piece_{{ x }}_{{ y }}"
+                    id="ball_{{ x }}_{{ y }}"
                     class="base"
                     [ngClass]="getBallClasses(x, y, square)"
                     [attr.r]="22"
