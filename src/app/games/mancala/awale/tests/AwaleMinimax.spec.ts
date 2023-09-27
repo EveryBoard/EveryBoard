@@ -5,7 +5,8 @@ import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { AwaleScoreMinimax } from '../AwaleScoreMinimax';
+import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';
+import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 
 describe('AwaleScoreMinimax', () => {
 
@@ -16,7 +17,7 @@ describe('AwaleScoreMinimax', () => {
 
     beforeEach(() => {
         rules = AwaleRules.get();
-        minimax = new AwaleScoreMinimax();
+        minimax = new MancalaScoreMinimax(rules, new AwaleMoveGenerator());
     });
     it('should not throw at first choice', () => {
         const node: AwaleNode = rules.getInitialNode();

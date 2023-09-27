@@ -1,13 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Combinatorics } from 'src/app/utils/Combinatorics';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GipfCapture } from '../gipf/GipfMove';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshNode, YinshRules } from './YinshRules';
-import { GipfMoveGenerator } from '../gipf/GipfMoveGenerator';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { GipfCapture, GipfProjectHelper } from 'src/app/jscaip/GipfProjectHelper';
 
 export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
 
@@ -46,7 +45,7 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
         const rules: YinshRules = YinshRules.get();
         const possibleCaptures: YinshCapture[] = rules.getPossibleCaptures(state);
         const ringCoords: Coord[] = this.getRingCoords(state);
-        return GipfMoveGenerator.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures)
+        return GipfProjectHelper.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures)
             .map((captureCombination: GipfCapture[]): YinshCapture[][] => {
                 return Combinatorics.getCombinations(ringCoords, captureCombination.length)
                     .map((ringsTaken: Coord[]): YinshCapture[] => {
