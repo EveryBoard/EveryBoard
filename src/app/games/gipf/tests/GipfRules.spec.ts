@@ -2,7 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GipfCapture, GipfMove, GipfPlacement } from '../GipfMove';
+import { GipfMove, GipfPlacement } from '../GipfMove';
 import { GipfState } from '../GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfLegalityInformation, GipfNode, GipfRules } from '../GipfRules';
@@ -11,6 +11,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 
 describe('GipfRules', () => {
 

@@ -10,7 +10,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexagonalGameComponent }
     from '../../components/game-components/game-component/HexagonalGameComponent';
-import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
+import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
@@ -22,6 +22,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfScoreHeuristic } from './GipfScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 
 @Component({
     selector: 'app-gipf',
