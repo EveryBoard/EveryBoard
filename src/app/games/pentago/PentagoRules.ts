@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -11,7 +11,7 @@ import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
-export class PentagoNode extends MGPNode<PentagoRules, PentagoMove, PentagoState> {}
+export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 
 export class PentagoRules extends Rules<PentagoMove, PentagoState> {
 

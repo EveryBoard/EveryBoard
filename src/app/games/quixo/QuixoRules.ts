@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { QuixoState } from './QuixoState';
@@ -13,7 +13,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
+export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
 export class QuixoRules extends Rules<QuixoMove, QuixoState> {
 

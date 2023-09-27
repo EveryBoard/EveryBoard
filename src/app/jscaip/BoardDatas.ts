@@ -41,7 +41,7 @@ export class BoardDatas {
 
 export class GroupInfos {
     public constructor(readonly coords: ReadonlyArray<Coord>,
-                       readonly neighborsEntryPoints: ReadonlyArray<Coord>) { }
+                       readonly neighborsEntryPoints: ReadonlyArray<Coord>) {}
 }
 
 @Debug.log

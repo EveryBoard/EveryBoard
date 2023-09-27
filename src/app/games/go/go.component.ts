@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
-import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Debug } from 'src/app/utils/utils';
@@ -12,6 +11,10 @@ import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { GoHeuristic } from './GoHeuristic';
+import { GoMoveGenerator } from './GoMoveGenerator';
 
 @Component({
     selector: 'app-go',
@@ -39,8 +42,9 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         this.scores = MGPOptional.of([0, 0]);
         this.rules = GoRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new GoMinimax(this.rules, 'GoMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, GoRules.get(), new GoHeuristic(), new GoMoveGenerator()),
+            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
@@ -60,7 +64,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: GoState = this.getState();
-        const move: MGPOptional<GoMove> = this.node.move;
+        const move: MGPOptional<GoMove> = this.node.previousMove;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();

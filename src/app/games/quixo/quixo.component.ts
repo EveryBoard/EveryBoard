@@ -5,7 +5,6 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
-import { QuixoMinimax } from 'src/app/games/quixo/QuixoMinimax';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -13,6 +12,10 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { QuixoTutorial } from './QuixoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { QuixoMoveGenerator } from './QuixoMoveGenerator';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { QuixoHeuristic } from './QuixoHeuristic';
 
 @Component({
     selector: 'app-quixo',
@@ -37,8 +40,9 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         super(messageDisplayer);
         this.rules = QuixoRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new QuixoMinimax(this.rules, 'QuixoMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new QuixoHeuristic(), new QuixoMoveGenerator()),
+            new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),
         ];
         this.encoder = QuixoMove.encoder;
         this.tutorial = new QuixoTutorial().tutorial;
@@ -46,7 +50,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
-        this.lastMoveCoord = this.node.move.map((move: QuixoMove) => move.coord);
+        this.lastMoveCoord = this.node.previousMove.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
     public override cancelMoveAttempt(): void {

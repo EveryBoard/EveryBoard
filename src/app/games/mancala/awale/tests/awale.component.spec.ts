@@ -1,14 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleComponent } from '../awale.component';
 import { AwaleMove } from '../AwaleMove';
-import { MancalaState } from 'src/app/games/mancala/commons/MancalaState';
-import { doMancalaComponentTests as doMancalaComponentTests } from '../../commons/GenericMancalaComponentTest.spec';
+import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
+import { doMancalaComponentTests as doMancalaComponentTests } from '../../common/GenericMancalaComponentTest.spec';
+import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 
 describe('AwaleComponent', () => {
 
     doMancalaComponentTests({
         component: AwaleComponent,
         gameName: 'Awale',
+        moveGenerator: new AwaleMoveGenerator(),
         distribution: {
             state: MancalaState.getInitialState(),
             move: AwaleMove.ZERO,

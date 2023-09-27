@@ -1,5 +1,5 @@
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { assert } from 'src/app/utils/assert';
@@ -12,7 +12,7 @@ import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 
-export class ApagosNode extends MGPNode<ApagosRules, ApagosMove, ApagosState> {}
+export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
 export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 

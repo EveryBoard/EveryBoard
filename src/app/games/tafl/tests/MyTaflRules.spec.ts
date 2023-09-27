@@ -1,9 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TaflRules } from '../TaflRules';
+import { TaflNode, TaflRules } from '../TaflRules';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflState } from './MyTaflState.spec';
 import { myTaflConfig } from './TaflRules.spec';
+
+export class MyTaflNode extends TaflNode<MyTaflMove, MyTaflState> {}
 
 export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
 

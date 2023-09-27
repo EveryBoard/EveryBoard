@@ -7,7 +7,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MartianChessDummyMinimax } from './MartianChessDummyMinimax';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
@@ -15,6 +14,10 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessTutorial } from './MartianChessTutorial';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Utils } from 'src/app/utils/utils';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
+import { MartianChessScoreHeuristic } from './MartianChessScoreHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,
@@ -35,7 +38,7 @@ export type MartianChessPoint = 'Concentric Circles' | 'Dots' | 'Horizontal Poin
  * When drawing a 3x3 board, its a width of 3x100 + half strokes on each side, so 308x308
  * The advantage is that by only drawing the empty squares you get a grid with all horizontal and vertical
  * and all inside and outside lines equals.
- * Then for those pattern it's bettern to think that we draw from the coord (-4, -4)
+ * Then for those pattern it's better to think that we draw from the coord (-4, -4)
  * and that the width is 308.
  *
  * For the inside circle, his center must still be (50, 50), but is radius cannot be 50 to avoid overlap,
@@ -155,8 +158,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.hasAsymmetricBoard = true;
         this.rules = MartianChessRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new MartianChessDummyMinimax(this.rules, 'Martian Chess Dummy Minimax'),
+        this.availableAIs = [
+            new Minimax($localize`Score`, this.rules, new MartianChessScoreHeuristic(), new MartianChessMoveGenerator()),
+            new MCTS($localize`MCTS`, new MartianChessMoveGenerator(), this.rules),
         ];
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();
@@ -208,8 +212,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(clickedCoord)) {
             classes.push('selected-stroke');
         }
-        if (this.node.move.isPresent()) {
-            const move: MartianChessMove = this.node.move.get();
+        if (this.node.previousMove.isPresent()) {
+            const move: MartianChessMove = this.node.previousMove.get();
             if (move.getEnd().equals(clickedCoord)) {
                 const previousPiece: MartianChessPiece = this.getPreviousState().getPieceAt(clickedCoord);
                 const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
@@ -344,13 +348,13 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getSquareClasses(x: number, y: number): string[] {
         const square: Coord = new Coord(x, y);
         const classes: string[] = ['base'];
-        if (this.node.move.isPresent()) {
+        if (this.node.previousMove.isPresent()) {
             const node: MartianChessNode = this.node;
-            const move: MartianChessMove = node.move.get();
+            const move: MartianChessMove = node.previousMove.get();
             if (move.getStart().equals(square)) {
                 classes.push('moved-fill');
             } else if (move.getEnd().equals(square)) {
-                const previousPiece: MartianChessPiece = node.mother.get().gameState.getPieceAt(square);
+                const previousPiece: MartianChessPiece = node.parent.get().gameState.getPieceAt(square);
                 const wasEmpty: boolean = previousPiece === MartianChessPiece.EMPTY;
                 if (wasEmpty) {
                     classes.push('moved-fill');

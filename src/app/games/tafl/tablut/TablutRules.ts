@@ -1,11 +1,11 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { tablutConfig } from './tablutConfig';
 import { TablutMove } from './TablutMove';
 import { TablutState } from './TablutState';
 import { TaflRules } from '../TaflRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState> {}
+export class TablutNode extends GameNode<TablutMove, TablutState> {}
 
 export class TablutRules extends TaflRules<TablutMove, TablutState> {
 

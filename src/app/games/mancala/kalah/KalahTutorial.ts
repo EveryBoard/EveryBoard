@@ -1,9 +1,9 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { MancalaState } from '../commons/MancalaState';
+import { MancalaState } from '../common/MancalaState';
 import { KalahMove } from './KalahMove';
-import { MancalaDistribution } from '../commons/MancalaMove';
+import { MancalaDistribution } from '../common/MancalaMove';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MancalaTutorial } from '../commons/MancalaTutorial';
+import { MancalaTutorial } from '../common/MancalaTutorial';
 
 export class KalahTutorial extends Tutorial {
 

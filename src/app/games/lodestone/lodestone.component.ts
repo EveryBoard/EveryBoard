@@ -11,13 +11,16 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
-import { LodestoneDummyMinimax } from './LodestoneDummyMinimax';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneTutorial } from './LodestoneTutorial';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
+import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 interface LodestoneInfo {
     direction: LodestoneDirection,
@@ -129,8 +132,9 @@ export class LodestoneComponent
         this.rules = LodestoneRules.get();
         this.node = this.rules.getInitialNode();
         this.tutorial = new LodestoneTutorial().tutorial;
-        this.availableMinimaxes = [
-            new LodestoneDummyMinimax(this.rules, 'LodestoneDummyMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Score`, this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
+            new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;

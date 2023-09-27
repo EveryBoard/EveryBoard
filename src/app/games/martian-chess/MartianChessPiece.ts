@@ -28,7 +28,7 @@ export class MartianChessPiece {
                 return MartianChessPiece.QUEEN;
         }
     }
-    private constructor(private readonly value: number) { }
+    private constructor(private readonly value: number) {}
 
     public getValue(): number {
         return this.value;

@@ -6,24 +6,18 @@ import { PentagoMove } from '../PentagoMove';
 import { PentagoNode, PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { PentagoMinimax } from '../PentagoMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PentagoRules', () => {
 
     let rules: PentagoRules;
-    let minimaxes: Minimax<PentagoMove, PentagoState>[];
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = PentagoRules.get();
-        minimaxes = [
-            new PentagoMinimax(rules, 'PentagoMinimax'),
-        ];
     });
     it('it should be illegal to drop piece on occupied space', () => {
         const board: Table<PlayerOrNone> = [
@@ -112,7 +106,7 @@ describe('PentagoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('it should be able to twist any board anti-clockwise', () => {
         const board: Table<PlayerOrNone> = [
@@ -136,7 +130,7 @@ describe('PentagoRules', () => {
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, false);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     describe('victories', () => {
         it('it should notice victory', () => {
@@ -161,7 +155,7 @@ describe('PentagoRules', () => {
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('it should notice draw by end game', () => {
             const board: Table<PlayerOrNone> = [
@@ -185,7 +179,7 @@ describe('PentagoRules', () => {
             const expectedState: PentagoState = new PentagoState(expectedBoard, 36);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node);
         });
         it('it should notice draw by double-victory', () => {
             const board: Table<PlayerOrNone> = [
@@ -209,7 +203,7 @@ describe('PentagoRules', () => {
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node);
         });
     });
 });

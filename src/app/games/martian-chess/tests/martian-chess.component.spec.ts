@@ -109,7 +109,7 @@ describe('MartianChessComponent', () => {
         // When cliking on one of your other piece that cannot be your landing coord
         await testUtils.expectClickSuccess('#click_2_6');
 
-        // Then the move should not have been cancelled but the first piece selected changed
+        // Then the move should not have been canceled but the first piece selected changed
         testUtils.expectElementToHaveClass('#drone_2_6', 'selected-stroke');
     }));
     it('should propose illegal move so that a toast is given to explain', fakeAsync(async() => {

@@ -55,7 +55,7 @@ import { LodestoneTutorial } from 'src/app/games/lodestone/LodestoneTutorial';
 import { LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
 import { LodestoneMove } from 'src/app/games/lodestone/LodestoneMove';
 
-import { MancalaDistribution } from 'src/app/games/mancala/commons/MancalaMove';
+import { MancalaDistribution } from 'src/app/games/mancala/common/MancalaMove';
 
 import { MartianChessTutorial } from 'src/app/games/martian-chess/MartianChessTutorial';
 import { MartianChessRules } from 'src/app/games/martian-chess/MartianChessRules';
