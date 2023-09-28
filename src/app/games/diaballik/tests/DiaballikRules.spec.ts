@@ -259,7 +259,7 @@ describe('DiaballikRules', () => {
         const node: DiaballikNode = new DiaballikNode(state);
         // When checking for victory
         // Then it should detect a victory for the blocked player
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, []);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should detect victory (Player.ZERO)', () => {
         // Given a state where player zero has pushed their ball to the end
@@ -275,7 +275,7 @@ describe('DiaballikRules', () => {
         const node: DiaballikNode = new DiaballikNode(state);
         // When checking for victory
         // Then it should detect the victory
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, []);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should detect victory (Player.ONE)', () => {
         // Given a state where player one has pushed their ball to the end
@@ -291,6 +291,6 @@ describe('DiaballikRules', () => {
         const node: DiaballikNode = new DiaballikNode(state);
         // When checking for victory
         // Then it should detect the victory
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, []);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
 });

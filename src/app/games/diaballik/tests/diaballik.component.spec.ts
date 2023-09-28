@@ -8,7 +8,7 @@ import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { DiaballikFailure } from '../DiaballikRules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-fdescribe('DiaballikComponent', () => {
+describe('DiaballikComponent', () => {
 
     let testUtils: ComponentTestUtils<DiaballikComponent>;
 
@@ -54,7 +54,7 @@ fdescribe('DiaballikComponent', () => {
         // Then it should succeed
         await testUtils.expectMoveSuccess('#click_4_6', move);
     }));
-    fit('should show possible targets when selecting a piece without ball', fakeAsync(async() => {
+    it('should show possible targets when selecting a piece without ball', fakeAsync(async() => {
         // Given a state
         // When selecting a piece without ball
         await testUtils.expectClickSuccess('#click_0_6');
@@ -128,16 +128,16 @@ fdescribe('DiaballikComponent', () => {
                               MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
         await testUtils.expectMoveSuccess('#click_4_6', move);
         // Then it should show the last move
-        testUtils.expectElementToHaveClass('#space_0_6', 'last-move-fill');
-        testUtils.expectElementToHaveClass('#space_0_5', 'last-move-fill');
+        testUtils.expectElementToHaveClass('#space_0_6', 'moved-fill');
+        testUtils.expectElementToHaveClass('#space_0_5', 'moved-fill');
         testUtils.expectElementToHaveClass('#piece_0_5', 'last-move-stroke');
 
-        testUtils.expectElementToHaveClass('#space_1_6', 'last-move-fill');
-        testUtils.expectElementToHaveClass('#space_1_5', 'last-move-fill');
+        testUtils.expectElementToHaveClass('#space_1_6', 'moved-fill');
+        testUtils.expectElementToHaveClass('#space_1_5', 'moved-fill');
         testUtils.expectElementToHaveClass('#piece_1_5', 'last-move-stroke');
 
-        testUtils.expectElementToHaveClass('#space_3_6', 'last-move-fill');
-        testUtils.expectElementToHaveClass('#space_4_6', 'last-move-fill');
+        testUtils.expectElementToHaveClass('#space_3_6', 'moved-fill');
+        testUtils.expectElementToHaveClass('#space_4_6', 'moved-fill');
         // Only the ball is highlighted for the pass
         testUtils.expectElementNotToHaveClass('#piece_4_6', 'last-move-stroke');
         testUtils.expectElementToHaveClass('#ball_4_6', 'last-move-stroke');

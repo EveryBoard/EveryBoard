@@ -72,7 +72,6 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         for (const direction of Direction.factory.all) {
             let coord: Coord = start.getNext(direction);
             while (DiaballikState.isOnBoard(coord)) {
-                console.log('checking ' + coord)
                 const piece: DiaballikPiece = state.getPieceAt(coord);
                 if (piece.owner === player) {
                     ends.push(coord);

@@ -12,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { DiaballikMinimax } from './DiaballikMinimax';
 import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
+import { MCTS } from 'src/app/jscaip/MCTS';
 
 @Component({
     selector: 'app-diaballik',
@@ -52,6 +53,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         this.tutorial = new DiaballikTutorial().tutorial;
         this.availableAIs = [
             new DiaballikMinimax(),
+            new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];
     }
 

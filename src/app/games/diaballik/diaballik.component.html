@@ -49,6 +49,7 @@
         [attr.height]="SPACE_SIZE" />
 
     <rect *ngFor="let coord of indicators"
+          id="indicator_{{ coord.x }}_{{ coord.y }}"
           [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
           [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
           [attr.width]="INDICATOR_SIZE"
