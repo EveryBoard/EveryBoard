@@ -24,7 +24,7 @@ type CustomValidator = (c: AbstractControl) => { invalidTruc: boolean } | null;
 })
 export class RulesConfigurationComponent extends BaseGameComponent implements OnInit {
 
-    @Input() stateType: Type<GameState>;
+    @Input() stateType: Type<GameState> | null;
 
     @Input() rulesConfigDescription: RulesConfigDescription;
 
@@ -60,22 +60,26 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         this.assertParamsAreCoherent();
         this.gameName = this.getGameName();
         const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
-        if (Object.keys(config).length === 0) {
-            return this.updateCallback.emit(MGPOptional.of({})); // TODO: validate config?
-        }
-        this.setChosenConfig(this.rulesConfigDescription.getDefaultConfig().name());
+        this.setChosenConfig(this.rulesConfigDescription.getDefaultConfig().name(), false);
         this.setConfigDemo(config);
+        if (Object.keys(config).length === 0) {
+            return this.updateCallback.emit(MGPOptional.of({}));
+        }
     }
 
     private setConfigDemo(config: RulesConfig): void {
-        // eslint-disable-next-line dot-notation
-        const node: AbstractNode = new MGPNode(this.stateType['getInitialState'](config));
-        this.configDemo = {
-            click: MGPOptional.empty(),
-            name: this.gameName,
-            node,
-        };
-        this.cdr.detectChanges();
+        if (this.stateType == null) {
+            console.log('TODOELPET')
+        } else {
+            // eslint-disable-next-line dot-notation
+            const node: AbstractNode = new MGPNode(this.stateType['getInitialState'](config));
+            this.configDemo = {
+                click: MGPOptional.empty(),
+                name: this.gameName,
+                node,
+            };
+            this.cdr.detectChanges();
+        }
     }
 
     private generateForm(config: RulesConfig, configurable: boolean): void {
@@ -196,7 +200,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         this.setChosenConfig(select.value);
     }
 
-    private setChosenConfig(configName: string): void {
+    private setChosenConfig(configName: string, emit: boolean = true): void {
         this.chosenConfig = configName;
         let config: RulesConfig;
         if (this.chosenConfig === 'Custom') {
@@ -205,7 +209,9 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         } else {
             config = this.rulesConfigDescription.getConfig(this.chosenConfig);
             this.generateForm(config, false);
-            this.updateCallback.emit(MGPOptional.of(config)); // As standard config are always legal
+            if (emit) {
+                this.updateCallback.emit(MGPOptional.of(config)); // As standard config are always legal
+            }
         }
         this.setConfigDemo(config);
     }

@@ -153,9 +153,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }));
     }
 
-    public getStateType(): Type<GameState> {
+    public getStateType(): Type<GameState> | null {
         const gameName: string = this.getGameName();
-        return GameInfo.ALL_GAMES().filter((game: GameInfo) => game.name === gameName)[0].rules.stateType;
+        const gameInfos: GameInfo[] = GameInfo.ALL_GAMES().filter((game: GameInfo) => game.urlName === gameName);
+        if (gameInfos.length > 0) {
+            return gameInfos[0].rules.stateType;
+        } else {
+            return null;
+        }
     }
 
     public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {

@@ -284,7 +284,7 @@ export const defaultRCDC: RulesConfigDescription =
 export class RulesConfigDescriptions {
 
     public static readonly AWALE: RulesConfigDescription<MancalaConfig> = new RulesConfigDescription({
-        name: (): string => $localize`Awale`,
+        name: (): string => $localize`Awalé`,
         config: {
             width: 6,
             seedByHouse: 4,
@@ -424,7 +424,7 @@ export class RulesConfigDescriptions {
     });
 
     public static readonly P4: RulesConfigDescription<P4Config> = new RulesConfigDescription({
-        name: (): string => $localize`P4`,
+        name: (): string => $localize`Default`,
         config: {
             width: 7,
             height: 6,

@@ -62,5 +62,9 @@
             </div>
         </fieldset>
     </form>
-    <app-demo-card [demoNodeInfo]="configDemo"></app-demo-card>
+
+    <app-demo-card id="demoCard"
+                   *ngIf="stateType !== null"
+                   [demoNodeInfo]="configDemo"></app-demo-card>
+
 </div>

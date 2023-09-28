@@ -263,6 +263,12 @@
       <trans-unit id="1461430439573127397" datatype="html">
         <source><x id="PH" equiv-text="value"/> is too high, maximum is <x id="PH_1" equiv-text="max"/></source>
       </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+      </trans-unit>
+      <trans-unit id="1525715186822490677" datatype="html">
+        <source>Awalé</source>
+      </trans-unit>
       <trans-unit id="2018922024247045709" datatype="html">
         <source>Width</source>
       </trans-unit>
@@ -277,6 +283,9 @@
       </trans-unit>
       <trans-unit id="7654623560547531779" datatype="html">
         <source>Pass by player store</source>
+      </trans-unit>
+      <trans-unit id="947579386294731197" datatype="html">
+        <source>Brandhub</source>
       </trans-unit>
       <trans-unit id="9195784792324730674" datatype="html">
         <source>Central throne is left for good</source>
@@ -293,14 +302,35 @@
       <trans-unit id="843632127033881976" datatype="html">
         <source>Invader Starts</source>
       </trans-unit>
+      <trans-unit id="7644192101130519142" datatype="html">
+        <source>Epaminondas</source>
+      </trans-unit>
+      <trans-unit id="5348930337239726346" datatype="html">
+        <source>Number of empty rows</source>
+      </trans-unit>
+      <trans-unit id="7516610645583911732" datatype="html">
+        <source>Number of soldier rows</source>
+      </trans-unit>
+      <trans-unit id="2969677193390047071" datatype="html">
+        <source>19 x 19</source>
+      </trans-unit>
       <trans-unit id="3033623772164647792" datatype="html">
         <source>Height</source>
       </trans-unit>
+      <trans-unit id="287623417167941506" datatype="html">
+        <source>Handicap</source>
+      </trans-unit>
+      <trans-unit id="6402320009813668873" datatype="html">
+        <source>13 x 13</source>
+      </trans-unit>
+      <trans-unit id="4066004856246691695" datatype="html">
+        <source>9 x 9</source>
+      </trans-unit>
+      <trans-unit id="4321462166273172721" datatype="html">
+        <source>Kalah</source>
+      </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
-      </trans-unit>
-      <trans-unit id="1525715186822490677" datatype="html">
-        <source>Awalé</source>
       </trans-unit>
       <trans-unit id="8844589419403065948" datatype="html">
         <source>Quarto</source>
@@ -335,9 +365,6 @@
       <trans-unit id="8191425615273627117" datatype="html">
         <source>Dvonn</source>
       </trans-unit>
-      <trans-unit id="7644192101130519142" datatype="html">
-        <source>Epaminondas</source>
-      </trans-unit>
       <trans-unit id="4541467181400942955" datatype="html">
         <source>Gipf</source>
       </trans-unit>
@@ -364,9 +391,6 @@
       </trans-unit>
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
-      </trans-unit>
-      <trans-unit id="947579386294731197" datatype="html">
-        <source>Brandhub</source>
       </trans-unit>
       <trans-unit id="4214831981215024999" datatype="html">
         <source>Conspirateurs</source>
@@ -397,9 +421,6 @@
       </trans-unit>
       <trans-unit id="6202245590217996824" datatype="html">
         <source>Teeko</source>
-      </trans-unit>
-      <trans-unit id="4321462166273172721" datatype="html">
-        <source>Kalah</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>

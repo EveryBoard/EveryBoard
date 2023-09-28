@@ -9,6 +9,7 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MGPValidators, RulesConfigDescription, defaultRCDC } from '../../normal-component/pick-game/pick-game.component';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Utils } from 'src/app/utils/utils';
+import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 
 describe('RulesConfigurationComponent', () => {
 
@@ -28,6 +29,7 @@ describe('RulesConfigurationComponent', () => {
         const actRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, actRoute);
         component = testUtils.getComponent();
+        component.stateType = KamisadoState; // A game needing no config
     });
 
     it('should create', () => {
@@ -73,6 +75,35 @@ describe('RulesConfigurationComponent', () => {
 
         // Then default values should be displayed
         testUtils.expectElementToExist('#the_default_config_name_values');
+    }));
+
+    it('should not throw when stateType is missing due to unexisting game', fakeAsync(async() => {
+        // Given any component from creator point of view
+        component.stateType = null;
+        component.userIsCreator = true;
+        component.rulesConfigDescription = new RulesConfigDescription(
+            {
+                name: (): string => 'the_default_config_name',
+                config: {
+                    nombre: 5,
+                    canailleDeBoule: 12,
+                },
+            },
+            {
+                nombre: (): string => 'nombre',
+                canailleDeBoule: (): string => 'canaille',
+            }, [
+            ], {
+                nombre: MGPValidators.range(1, 99),
+                canailleDeBoule: MGPValidators.range(1, 99),
+            },
+        );
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then the app-demo-card should simply not be there
+        testUtils.expectElementNotToExist('#demoCard');
     }));
 
     it('should allow to change to another standard config', fakeAsync(async() => {

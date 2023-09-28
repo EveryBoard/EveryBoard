@@ -497,9 +497,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.rulesConfig = rulesConfig;
     }
 
+    protected getGameUrlName(): string {
+        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+    }
+
     public getStateType(): Type<GameState> {
-        const gameName: string = 'Tablut';
-        return GameInfo.ALL_GAMES().filter((game: GameInfo) => game.name === gameName)[0].rules.stateType;
+        const urlName: string = this.getGameUrlName();
+        return GameInfo.ALL_GAMES().filter((game: GameInfo) => game.urlName === urlName)[0].rules.stateType;
     }
 
     public async ngOnDestroy(): Promise<void> {

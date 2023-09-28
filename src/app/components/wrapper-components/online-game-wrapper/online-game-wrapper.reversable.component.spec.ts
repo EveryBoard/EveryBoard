@@ -7,7 +7,6 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
-import { Debug } from 'src/app/utils/utils';
 
 describe('OnlineGameWrapperComponent of Reversable Game:', () => {
 

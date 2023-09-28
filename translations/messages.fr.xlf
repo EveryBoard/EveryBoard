@@ -318,6 +318,10 @@
         <source><x id="PH" equiv-text="value"/> is too high, maximum is <x id="PH_1" equiv-text="max"/></source>
         <target><x id="PH" equiv-text="value"/> est trop haut, le maximum est <x id="PH_1" equiv-text="max"/></target>
       </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+        <target>Par défaut</target>
+      </trans-unit>
       <trans-unit id="2018922024247045709" datatype="html">
         <source>Width</source>
         <target>Largeur</target>
@@ -361,6 +365,18 @@
       <trans-unit id="3033623772164647792" datatype="html">
         <source>Height</source>
         <target>Hauteur</target>
+      </trans-unit>
+      <trans-unit id="287623417167941506" datatype="html">
+        <source>Handicap</source>
+        <target>Handicap</target>
+      </trans-unit>
+      <trans-unit id="6402320009813668873" datatype="html">
+        <source>13 x 13</source>
+        <target>13 x 13</target>
+      </trans-unit>
+      <trans-unit id="4066004856246691695" datatype="html">
+        <source>9 x 9</source>
+        <target>9 x 9</target>
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
@@ -417,6 +433,17 @@
       <trans-unit id="7644192101130519142" datatype="html">
         <source>Epaminondas</source>
         <target>Epaminondas</target>
+      </trans-unit><trans-unit id="5348930337239726346" datatype="html">
+        <source>Number of empty rows</source>
+        <target>Nombre de rangées vides</target>
+      </trans-unit>
+      <trans-unit id="7516610645583911732" datatype="html">
+        <source>Number of soldier rows</source>
+        <target>Nombre de rangées de soldats</target>
+      </trans-unit>
+      <trans-unit id="2969677193390047071" datatype="html">
+        <source>19 x 19</source>
+        <target>19 x 19</target>
       </trans-unit>
       <trans-unit id="4541467181400942955" datatype="html">
         <source>Gipf</source>
