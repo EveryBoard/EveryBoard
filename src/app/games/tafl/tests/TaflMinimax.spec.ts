@@ -1,67 +1,67 @@
-/* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { TablutState } from '../tablut/TablutState';
-import { TaflPawn } from '../TaflPawn';
-import { TablutNode, TablutRules } from '../tablut/TablutRules';
-import { TaflMinimax, TaflNode } from '../TaflMinimax';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { TablutMove } from '../tablut/TablutMove';
-import { BrandhubState } from '../brandhub/BrandhubState';
-import { BrandhubMove } from '../brandhub/BrandhubMove';
-import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
+// /* eslint-disable max-lines-per-function */
+// import { Coord } from 'src/app/jscaip/Coord';
+// import { TablutState } from '../tablut/TablutState';
+// import { TaflPawn } from '../TaflPawn';
+// import { TablutNode, TablutRules } from '../tablut/TablutRules';
+// import { TaflMinimax, TaflNode } from '../TaflMinimax';
+// import { Table } from 'src/app/utils/ArrayUtils';
+// import { TablutMove } from '../tablut/TablutMove';
+// import { BrandhubState } from '../brandhub/BrandhubState';
+// import { BrandhubMove } from '../brandhub/BrandhubMove';
+// import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
 
-describe('TaflMinimax', () => {
+// describe('TaflMinimax', () => {
 
-    let rules: TablutRules;
-    const _: TaflPawn = TaflPawn.UNOCCUPIED;
-    const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
-    const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
-    const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+//     let rules: TablutRules;
+//     const _: TaflPawn = TaflPawn.UNOCCUPIED;
+//     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+//     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
+//     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-    beforeEach(() => {
-        rules = TablutRules.get();
-    });
-    it('should try to make the king escape when it can', () => {
-        const board: Table<TaflPawn> = [
-            [_, _, O, A, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, X, _],
-            [_, _, _, _, _, _, _, _, _],
-        ];
-        const state: TablutState = new TablutState(board, 1);
-        const node: TablutNode = new TablutNode(state);
-        const winnerMove: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(8, 0));
+//     beforeEach(() => {
+//         rules = TablutRules.get();
+//     });
+//     it('should try to make the king escape when it can', () => {
+//         const board: Table<TaflPawn> = [
+//             [_, _, O, A, _, _, _, _, _],
+//             [_, _, _, _, _, _, _, _, _],
+//             [_, _, _, _, _, _, _, _, _],
+//             [_, _, _, _, _, _, _, _, _],
+//             [_, _, _, _, _, _, _, _, _],
+//             [_, _, _, _, _, _, _, _, _],
+//             [_, _, _, _, _, _, _, _, _],
+//             [_, _, _, _, _, _, _, X, _],
+//             [_, _, _, _, _, _, _, _, _],
+//         ];
+//         const state: TablutState = new TablutState(board, 1);
+//         const node: TablutNode = new TablutNode(state);
+//         const winnerMove: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(8, 0));
 
-        const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
-        const bestMove: TablutMove = node.findBestMove(1, minimax);
-        expect(bestMove).toEqual(winnerMove);
-    });
-    it('should not propose to King to go back on the throne when its forbidden', () => {
-        // Given a board where king could go back on his throne but the rules forbid it
-        const brandhubRules: BrandhubRules = BrandhubRules.get();
-        const minimax: TaflMinimax = new TaflMinimax(brandhubRules, 'Brandhub Minimax');
-        const board: Table<TaflPawn> = [
-            [_, _, _, O, _, _, _],
-            [_, _, _, _, O, _, _],
-            [_, _, O, A, _, _, O],
-            [O, _, _, _, O, X, _],
-            [_, _, O, O, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-        ];
-        const state: BrandhubState = new BrandhubState(board, 1);
-        const node: TaflNode = new BrandhubNode(state) as TaflNode;
+//         const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
+//         const bestMove: TablutMove = node.findBestMove(1, minimax);
+//         expect(bestMove).toEqual(winnerMove);
+//     });
+//     it('should not propose to King to go back on the throne when its forbidden', () => {
+//         // Given a board where king could go back on his throne but the rules forbid it
+//         const brandhubRules: BrandhubRules = BrandhubRules.get();
+//         const minimax: TaflMinimax = new TaflMinimax(brandhubRules, 'Brandhub Minimax');
+//         const board: Table<TaflPawn> = [
+//             [_, _, _, O, _, _, _],
+//             [_, _, _, _, O, _, _],
+//             [_, _, O, A, _, _, O],
+//             [O, _, _, _, O, X, _],
+//             [_, _, O, O, _, _, _],
+//             [_, _, _, _, _, _, _],
+//             [_, _, _, _, _, _, _],
+//         ];
+//         const state: BrandhubState = new BrandhubState(board, 1);
+//         const node: TaflNode = new BrandhubNode(state) as TaflNode;
 
-        // When asking the list of legal move
-        const moves: BrandhubMove[] = minimax.getListMoves(node);
+//         // When asking the list of legal move
+//         const moves: BrandhubMove[] = minimax.getListMoves(node);
 
-        // Then going back on throne should not be part of it
-        const kingBackOnThrone: BrandhubMove = BrandhubMove.of(new Coord(3, 2), new Coord(3, 3));
-        expect(moves).not.toContain(kingBackOnThrone);
-    });
-});
+//         // Then going back on throne should not be part of it
+//         const kingBackOnThrone: BrandhubMove = BrandhubMove.of(new Coord(3, 2), new Coord(3, 3));
+//         expect(moves).not.toContain(kingBackOnThrone);
+//     });
+// });

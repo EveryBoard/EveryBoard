@@ -1,29 +1,22 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMove } from '../AwaleMove';
-import { MancalaState } from '../../commons/MancalaState';
+import { MancalaState } from '../../common/MancalaState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
-import { AwaleMinimax } from '../AwaleMinimax';
-import { MancalaFailure } from '../../commons/MancalaFailure';
+import { MancalaFailure } from '../../common/MancalaFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
-import { DoMancalaRulesTests } from '../../commons/GenericMancalaRulesTest.spec';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { DoMancalaRulesTests } from '../../common/GenericMancalaRulesTest.spec';
 
 describe('AwaleRules', () => {
 
     const rules: Rules<AwaleMove, MancalaState> = AwaleRules.get();
 
-    const minimaxes: Minimax<AwaleMove, MancalaState>[] = [
-        new AwaleMinimax(),
-    ];
-
     describe('generic tests', () => {
         DoMancalaRulesTests({
             gameName: 'Awale',
-            minimaxes,
             rules,
             simpleMove: AwaleMove.of(5),
         });
@@ -120,7 +113,7 @@ describe('AwaleRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: AwaleNode = new AwaleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
     });
     describe('captures', () => {

@@ -9,8 +9,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidator, RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
-import { AbstractNode, MGPNode } from 'src/app/jscaip/MGPNode';
 import { GameState } from 'src/app/jscaip/GameState';
+import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
 
 type ConfigFormJson = {
     [member: string]: FormControl<ConfigDescriptionType>;
@@ -72,7 +72,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
             console.log('TODOELPET')
         } else {
             // eslint-disable-next-line dot-notation
-            const node: AbstractNode = new MGPNode(this.stateType['getInitialState'](config));
+            const node: AbstractNode = new GameNode(this.stateType['getInitialState'](config));
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.gameName,

@@ -7,16 +7,17 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 
-import { MancalaDistribution } from '../../commons/MancalaMove';
-import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../commons/GenericMancalaComponentTest.spec';
-import { MancalaState } from '../../commons/MancalaState';
-import { MancalaFailure } from '../../commons/MancalaFailure';
-import { MancalaComponent } from '../../commons/MancalaComponent';
+import { MancalaDistribution } from '../../common/MancalaMove';
+import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/GenericMancalaComponentTest.spec';
+import { MancalaState } from '../../common/MancalaState';
+import { MancalaFailure } from '../../common/MancalaFailure';
+import { MancalaComponent } from '../../common/MancalaComponent';
 
 import { KalahComponent } from '../kalah.component';
 import { KalahMove } from '../KalahMove';
 import { KalahRules } from '../KalahRules';
 import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { KalahMoveGenerator } from '../KalahMoveGenerator';
 
 describe('KalahComponent', () => {
 
@@ -25,6 +26,7 @@ describe('KalahComponent', () => {
     doMancalaComponentTests({
         component: KalahComponent,
         gameName: 'Kalah',
+        moveGenerator: new KalahMoveGenerator(),
 
         distribution: {
             state: MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG),
@@ -87,7 +89,7 @@ describe('KalahComponent', () => {
     describe('Kalah-Specific Tests', () => {
         beforeEach(fakeAsync(async() => {
             const testUtils: ComponentTestUtils<KalahComponent> = await ComponentTestUtils.forGame<KalahComponent>('Kalah');
-            mancalaTestUtils = new MancalaComponentTestUtils(testUtils);
+            mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new KalahMoveGenerator());
         }));
         describe('Animations', () => {
             it('should feed the Kalah during animation', fakeAsync(async() => {

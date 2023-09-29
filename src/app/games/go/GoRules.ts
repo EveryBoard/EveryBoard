@@ -1,4 +1,4 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { GoState, Phase, GoPiece } from './GoState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
@@ -23,18 +23,18 @@ export type GoConfig = GobanConfig & {
     handicap: number;
 };
 
-export const goConfig: GoConfig = {
-    width: 19,
-    height: 19,
-    handicap: 0,
-};
-
-export class GoNode extends MGPNode<GoRules, GoMove, GoState, GoConfig, GoLegalityInformation> {}
+export class GoNode extends GameNode<GoMove, GoState> {}
 
 @Debug.log
 export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformation> {
 
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
+
+    public static readonly DEFAULT_CONFIG: GoConfig = {
+        width: 19,
+        height: 19,
+        handicap: 0,
+    };
 
     public static get(): GoRules {
         if (GoRules.singleton.isAbsent()) {
@@ -43,7 +43,7 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         return GoRules.singleton.get();
     }
     private constructor() {
-        super(GoState, goConfig);
+        super(GoState, GoRules.DEFAULT_CONFIG);
     }
     public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         if (GoRules.isPass(move)) {

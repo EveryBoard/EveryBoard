@@ -6,7 +6,6 @@ import { KamisadoMove } from './KamisadoMove';
 import { KamisadoState } from './KamisadoState';
 import { KamisadoPiece } from './KamisadoPiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { KamisadoFailure } from './KamisadoFailure';
@@ -15,8 +14,9 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameNode } from 'src/app/jscaip/GameNode';
 
-export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoState> { }
+export class KamisadoNode extends GameNode<KamisadoMove, KamisadoState> {}
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
 
@@ -78,42 +78,6 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         } else {
             return dir.y > 0;
         }
-    }
-    // Returns the list of moves of a player
-    public static getListMovesFromState(state: KamisadoState): KamisadoMove[] {
-        const movablePieces: Coord[] = KamisadoRules.getMovablePieces(state);
-        if (movablePieces.length === 0) {
-            // No move, player can only pass
-            // Still these are not called after the game is ended
-            assert(state.alreadyPassed === false, 'getListMovesFromState should not be called once game is ended.');
-            return [KamisadoMove.PASS];
-        } else {
-            return KamisadoRules.getListMovesFromNonBlockedState(state, movablePieces);
-        }
-    }
-    static getListMovesFromNonBlockedState(state: KamisadoState, movablePieces: Coord[]): KamisadoMove[] {
-        // There are moves, compute them
-        const moves: KamisadoMove[] = [];
-        const player: Player = state.getCurrentPlayer();
-        // Get all the pieces that can play
-        for (const startCoord of movablePieces) {
-            // For each piece, look at all positions where it can go
-            for (const dir of KamisadoRules.playerDirections(player)) {
-                // For each direction, create a move of i in that direction
-                for (let stepSize: number = 1; stepSize < KamisadoBoard.SIZE; stepSize++) {
-                    const endCoord: Coord = startCoord.getNext(dir, stepSize);
-                    if (state.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(state.board, endCoord)) {
-                        // Check if the move can be done, and if so,
-                        // add the resulting state to the map to be returned
-                        const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);
-                        moves.push(move);
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-        return moves;
     }
     // Check if the only possible move is to pass
     public static mustPass(state: KamisadoState): boolean {

@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -9,12 +8,10 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
-import { TaflNode } from '../TaflMinimax';
-import { TaflMove } from '../TaflMove';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
 import { MyTaflMove } from './MyTaflMove.spec';
-import { MyTaflRules } from './MyTaflRules.spec';
+import { MyTaflNode, MyTaflRules } from './MyTaflRules.spec';
 import { MyTaflState } from './MyTaflState.spec';
 
 export const myTaflConfig: TaflConfig = {
@@ -33,7 +30,6 @@ export const myTaflConfig: TaflConfig = {
 describe('TaflRules', () => {
 
     let rules: MyTaflRules;
-    let minimaxes: Minimax<TaflMove, TaflState>[];
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -42,8 +38,6 @@ describe('TaflRules', () => {
 
     beforeEach(() => {
         rules = MyTaflRules.get();
-        minimaxes = [
-        ];
     });
     describe('getSurroundings', () => {
         it('should return neighborings spaces', () => {
@@ -128,9 +122,9 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const expectedState: MyTaflState = new MyTaflState(expectedBoard, 24);
-        const node: TaflNode = new TaflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: MyTaflNode = new MyTaflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should consider invader winner when all defender are immobilized', () => {
         // Given a board where the last invader is about to be slaughter on an altar dedicated to Thor
@@ -163,8 +157,8 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const expectedState: MyTaflState = new MyTaflState(expectedBoard, 25);
-        const node: TaflNode = new TaflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: MyTaflNode = new MyTaflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 });

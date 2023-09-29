@@ -1,4 +1,4 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
@@ -11,7 +11,7 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { Coord } from 'src/app/jscaip/Coord';
 
-export class TeekoNode extends MGPNode<Rules<TeekoMove, TeekoState>, TeekoMove, TeekoState> {}
+export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
 
 export class TeekoRules extends Rules<TeekoMove, TeekoState> {
 

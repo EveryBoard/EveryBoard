@@ -6,7 +6,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
 import { BrandhubTutorial } from './BrandhubTutorial';
 import { ActivatedRoute } from '@angular/router';
-import { brandhubConfig } from './brandhubConfig';
 
 @Component({
     selector: 'app-brandhub',
@@ -18,8 +17,8 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
     public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
         super(messageDisplayer, actRoute, BrandhubMove.from);
         this.rules = BrandhubRules.get();
-        this.node = this.rules.getInitialNode(brandhubConfig);
-        this.availableMinimaxes = this.createMinimaxes();
+        this.node = this.rules.getInitialNode(BrandhubRules.DEFAULT_CONFIG);
+        this.availableAIs = this.createAIs();
         this.encoder = BrandhubMove.encoder;
         this.tutorial = new BrandhubTutorial().tutorial;
     }

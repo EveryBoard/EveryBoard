@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { GoMove } from 'src/app/games/go/GoMove';
-import { GoConfig, GoLegalityInformation, GoRules, goConfig } from 'src/app/games/go/GoRules';
-import { GoMinimax } from 'src/app/games/go/GoMinimax';
+import { GoConfig, GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Debug } from 'src/app/utils/utils';
@@ -13,6 +12,10 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { GoHeuristic } from './GoHeuristic';
+import { GoMoveGenerator } from './GoMoveGenerator';
 
 @Component({
     selector: 'app-go',
@@ -40,9 +43,10 @@ export class GoComponent
         super(messageDisplayer, actRoute);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = GoRules.get();
-        this.node = this.rules.getInitialNode(goConfig);
-        this.availableMinimaxes = [
-            new GoMinimax(this.rules, 'GoMinimax'),
+        this.node = this.rules.getInitialNode(GoRules.DEFAULT_CONFIG);
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, GoRules.get(), new GoHeuristic(), new GoMoveGenerator()),
+            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
@@ -64,7 +68,7 @@ export class GoComponent
         const state: GoState = this.getState();
         this.boardHeight = state.board.length;
         this.boardWidth = state.board[0].length;
-        const move: MGPOptional<GoMove> = this.node.move;
+        const move: MGPOptional<GoMove> = this.node.previousMove;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();

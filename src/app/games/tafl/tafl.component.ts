@@ -14,8 +14,11 @@ import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { ActivatedRoute } from '@angular/router';
 import { TaflConfig } from './TaflConfig';
-import { TaflMinimax } from './TaflMinimax';
+import { TaflMoveGenerator } from './TaflMoveGenerator';
+import { AI, AIOptions } from 'src/app/jscaip/AI';
+import { MCTS } from 'src/app/jscaip/MCTS';
 import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
+import { TaflPieceMinimax } from './TaflPieceMinimax';
 import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
 
@@ -157,9 +160,9 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const coord: Coord = new Coord(x, y);
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
-        } else if (this.node.move.isPresent()) {
-            const lastStart: Coord = this.node.move.get().getStart();
-            const lastEnd: Coord = this.node.move.get().getEnd();
+        } else if (this.node.previousMove.isPresent()) {
+            const lastStart: Coord = this.node.previousMove.get().getStart();
+            const lastEnd: Coord = this.node.previousMove.get().getEnd();
             if (coord.equals(lastStart) || coord.equals(lastEnd)) {
                 classes.push('moved-fill');
             }
@@ -188,12 +191,14 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
     }
-    protected createMinimaxes(): TaflMinimax[] {
+    protected createAIs(): AI<TaflMove, S, AIOptions>[] {
+        const moveGenerator: TaflMoveGenerator<M, S> = new TaflMoveGenerator(this.rules);
         return [
-            new TaflMinimax(this.rules, 'DummyBot'),
-            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
-            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
+            new TaflPieceMinimax(this.rules),
+            new TaflPieceAndInfluenceMinimax(this.rules),
+            new TaflPieceAndControlMinimax(this.rules),
+            new TaflEscapeThenPieceThenControlMinimax(this.rules),
+            new MCTS($localize`MCTS`, moveGenerator, this.rules),
         ];
     }
 }

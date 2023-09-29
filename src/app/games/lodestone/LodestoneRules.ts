@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -16,11 +16,7 @@ import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePiec
 import { LodestoneState, LodestonePositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export class LodestoneNode extends MGPNode<LodestoneRules,
-                                           LodestoneMove,
-                                           LodestoneState,
-                                           RulesConfig,
-                                           LodestoneInfos> {}
+export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
 export type LodestoneInfos = {
     board: LodestonePiece[][]

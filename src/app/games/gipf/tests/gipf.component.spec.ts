@@ -6,12 +6,13 @@ import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
+import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 
 describe('GipfComponent', () => {
 

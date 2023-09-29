@@ -1,13 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { HiveMinimax } from '../HiveMinimax';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove, HiveCoordToCoordMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
@@ -19,7 +17,6 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 describe('HiveRules', () => {
 
     let rules: HiveRules;
-    let minimaxes: Minimax<HiveMove, HiveState>[];
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
     const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');
@@ -34,11 +31,7 @@ describe('HiveRules', () => {
 
     beforeEach(() => {
         rules = HiveRules.get();
-        minimaxes = [
-            new HiveMinimax(rules, 'HiveMinimax'),
-        ];
     });
-
     describe('dropping', () => {
         it('should allow first player to drop any piece initially', () => {
             // Given the initial state
@@ -937,7 +930,7 @@ describe('HiveRules', () => {
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
             // Then player zero wins
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should consider winning player the one who has fully surrounded the queen bee of the opponent (Player.ONE)', () => {
             // Given a board where the queen of player zero is surrounded
@@ -950,7 +943,7 @@ describe('HiveRules', () => {
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
             // Then player one wins
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
         it('should be a draw if both players have their queen bee surrounded', () => {
             // Given a board where both queens are surrounded
@@ -963,7 +956,7 @@ describe('HiveRules', () => {
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
             // Then player it is a draw
-            RulesUtils.expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node);
         });
         it('should be ongoing if no queen bee is surrounded', () => {
             // Given a board where no queen is surrounded
@@ -974,7 +967,7 @@ describe('HiveRules', () => {
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+            RulesUtils.expectToBeOngoing(rules, node);
         });
     });
 });

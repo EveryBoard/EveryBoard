@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -6,14 +7,16 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionRules } from './LinesOfActionRules';
-import { LinesOfActionMinimax } from './LinesOfActionMinimax';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
+import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-linesofaction',
@@ -37,8 +40,9 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         super(messageDisplayer, actRoute);
         this.rules = LinesOfActionRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new LinesOfActionMinimax(this.rules, 'LinesOfActionMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),
+            new MCTS($localize`MCTS`, new LinesOfActionMoveGenerator(), this.rules),
         ];
         this.encoder = LinesOfActionMove.encoder;
         this.tutorial = new LinesOfActionTutorial().tutorial;
@@ -86,7 +90,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         this.board = this.getState().board;
-        this.lastMove = this.node.move;
+        this.lastMove = this.node.previousMove;
     }
     public override async showLastMove(move: LinesOfActionMove): Promise<void> {
         if (this.getPreviousState().getPieceAt(move.getEnd()).isPlayer()) {

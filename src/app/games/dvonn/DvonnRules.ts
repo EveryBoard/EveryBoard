@@ -1,4 +1,4 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { DvonnState } from './DvonnState';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
@@ -15,7 +15,7 @@ import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
+export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}
 
 export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 

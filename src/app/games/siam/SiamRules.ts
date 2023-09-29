@@ -1,7 +1,6 @@
 import { Rules } from 'src/app/jscaip/Rules';
 import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { SiamPiece } from './SiamPiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -15,6 +14,7 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { GameNode } from 'src/app/jscaip/GameNode';
 
 export class SiamLegalityInformation {
     public constructor(public readonly resultingBoard: Table<SiamPiece>,
@@ -22,7 +22,7 @@ export class SiamLegalityInformation {
     }
 }
 
-export class SiamNode extends MGPNode<SiamRules, SiamMove, SiamState, RulesConfig, SiamLegalityInformation> {}
+export class SiamNode extends GameNode<SiamMove, SiamState> {}
 
 @Debug.log
 export class SiamRules extends Rules<SiamMove, SiamState, RulesConfig, SiamLegalityInformation> {
@@ -148,56 +148,6 @@ export class SiamRules extends Rules<SiamMove, SiamState, RulesConfig, SiamLegal
         const newTurn: number = state.turn + 1;
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;
-    }
-    public getBoardValueInfo(move: MGPOptional<SiamMove>, state: SiamState)
-    : { shortestZero: number, shortestOne: number, boardValue: number }
-    {
-        const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
-            this.getMountainsRowsAndColumns(state);
-        const mountainsRow: number[] = mountainsInfo.rows;
-        const mountainsColumn: number[] = mountainsInfo.columns;
-
-        const winner: PlayerOrNone = this.getWinner(state, move, mountainsInfo.nbMountain);
-        if (winner.isPlayer()) { // 1. victories
-            if (winner === Player.ZERO) {
-                return {
-                    shortestZero: 0,
-                    shortestOne: Number.POSITIVE_INFINITY,
-                    boardValue: Number.MIN_SAFE_INTEGER,
-                };
-            } else {
-                return {
-                    shortestZero: Number.POSITIVE_INFINITY,
-                    shortestOne: 0,
-                    boardValue: Number.MAX_SAFE_INTEGER,
-                };
-            }
-        } else {
-            const pushers: { distance: number, coord: Coord}[] =
-                this.getPushers(state, mountainsColumn, mountainsRow);
-            let zeroShortestDistance: number = Number.MAX_SAFE_INTEGER;
-            let oneShortestDistance: number = Number.MAX_SAFE_INTEGER;
-            const currentPlayer: Player = state.getCurrentPlayer();
-            for (const pusher of pushers) {
-                if (SiamState.isOnBoard(pusher.coord)) {
-                    const piece: SiamPiece = state.getPieceAt(pusher.coord);
-                    if (piece.belongTo(Player.ZERO)) {
-                        zeroShortestDistance = Math.min(zeroShortestDistance, pusher.distance);
-                    } else {
-                        oneShortestDistance = Math.min(oneShortestDistance, pusher.distance);
-                    }
-                } else {
-                    if (currentPlayer === Player.ZERO) {
-                        zeroShortestDistance = Math.min(zeroShortestDistance, pusher.distance);
-                    } else {
-                        oneShortestDistance = Math.min(oneShortestDistance, pusher.distance);
-                    }
-                }
-            }
-            const boardValue: number =
-                this.getScoreFromShortestDistances(zeroShortestDistance, oneShortestDistance, currentPlayer);
-            return { shortestZero: zeroShortestDistance, shortestOne: oneShortestDistance, boardValue };
-        }
     }
     public getScoreFromShortestDistances(zeroShortestDistance: number,
                                          oneShortestDistance: number,
@@ -494,7 +444,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, RulesConfig, SiamLegal
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
             this.getMountainsRowsAndColumns(node.gameState);
 
-        const winner: PlayerOrNone = this.getWinner(node.gameState, node.move, mountainsInfo.nbMountain);
+        const winner: PlayerOrNone = this.getWinner(node.gameState, node.previousMove, mountainsInfo.nbMountain);
         if (winner.isPlayer()) {
             return GameStatus.getVictory(winner);
         } else {

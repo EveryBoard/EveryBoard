@@ -1,24 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { TablutNode, TablutRules } from '../TablutRules';
-import { TaflMinimax } from '../../TaflMinimax';
 import { TablutMove } from '../TablutMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TablutState } from '../TablutState';
 import { TaflPawn } from '../../TaflPawn';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { TaflPieceAndInfluenceMinimax } from '../../TaflPieceAndInfluenceMinimax';
-import { TaflEscapeThenPieceThenControlMinimax } from '../../TaflEscapeThenPieceThenControlMinimax';
 import { TaflFailure } from '../../TaflFailure';
-import { TaflPieceAndControlMinimax } from '../../TaflPieceAndControlMinimax';
 
 describe('TablutRules', () => {
 
     let rules: TablutRules;
-    let minimaxes: Minimax<TablutMove, TablutState>[];
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
@@ -26,12 +20,6 @@ describe('TablutRules', () => {
 
     beforeEach(() => {
         rules = TablutRules.get();
-        minimaxes = [
-            new TaflMinimax(rules, 'DummyBot'),
-            new TaflPieceAndInfluenceMinimax(rules, 'Piece > Influence'),
-            new TaflPieceAndControlMinimax(rules, 'Piece > Control'),
-            new TaflEscapeThenPieceThenControlMinimax(rules, 'Escape > Piece > Control'),
-        ];
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
@@ -120,7 +108,7 @@ describe('TablutRules', () => {
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('Capturing king should require three invader and an edge lead to victory', () => {
         const board: Table<TaflPawn> = [
@@ -150,7 +138,7 @@ describe('TablutRules', () => {
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('Capturing king with one soldier, one throne, and one edge should not work', () => {
         const board: Table<TaflPawn> = [
@@ -181,7 +169,7 @@ describe('TablutRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('Sandwiching king against a throne should not work', () => {
         // Given a board where the king could be sandwiched against the throne
@@ -216,7 +204,7 @@ describe('TablutRules', () => {
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('Capturing king against a throne with 3 soldier should not work', () => {
         // Given a King about to be surrounded by 3 solder and a throne
@@ -251,7 +239,7 @@ describe('TablutRules', () => {
         const expectedState: TablutState = new TablutState(expectedBoard, 13);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('should allow King to come back on the throne', () => {
         // Given a board where the king is not on his throne but can go back

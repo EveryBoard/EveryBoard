@@ -1,6 +1,6 @@
 import { Encoder } from 'src/app/utils/Encoder';
 import { Utils } from 'src/app/utils/utils';
-import { MancalaDistribution, MancalaMove } from '../commons/MancalaMove';
+import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 
 export class AwaleMove extends MancalaMove {
 

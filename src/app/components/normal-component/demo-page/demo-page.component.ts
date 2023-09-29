@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/pick-game.component';
-import { AbstractNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode } from 'src/app/jscaip/GameNode';
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { GameState } from 'src/app/jscaip/GameState';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 @Component({
     selector: 'app-demo-page',
@@ -65,22 +67,21 @@ export class DemoPageComponent {
             const solution: Move | string = step.getSolution();
             if (typeof solution === 'string') {
                 return {
-                    node: new MGPNode(step.state),
+                    node: new GameNode(step.state),
                     click: MGPOptional.of(solution),
                 };
             } else {
                 const move: Move = solution;
-                const node: AbstractNode =
-                    new MGPNode(rules.applyLegalMove(move,
-                                                     step.state,
-                                                     rules.isLegal(move, step.state).get()),
-                                MGPOptional.of(new MGPNode(step.state)),
-                                MGPOptional.of(move));
+                const legalityStatus: MGPFallible<unknown> =
+                    rules.isLegal(move, step.state).get() as MGPFallible<unknown>;
+                const state: GameState = rules.applyLegalMove(move, step.state, legalityStatus);
+                const parent: MGPOptional<AbstractNode> = MGPOptional.of(new GameNode(step.state));
+                const node: AbstractNode = new GameNode(state, parent, MGPOptional.of(move));
                 return { node, click: MGPOptional.empty() };
             }
         } else {
             return {
-                node: new MGPNode(step.state),
+                node: new GameNode(step.state),
                 click: MGPOptional.empty(),
             };
         }

@@ -1,12 +1,12 @@
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
 import { KamisadoMove, KamisadoPieceMove } from 'src/app/games/kamisado/KamisadoMove';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
-import { KamisadoMinimax } from 'src/app/games/kamisado/KamisadoMinimax';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -16,7 +16,10 @@ import { KamisadoTutorial } from './KamisadoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { KamisadoHeuristic } from './KamisadoHeuristic';
+import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 
 @Component({
     selector: 'app-kamisado',
@@ -39,8 +42,9 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         this.hasAsymmetricBoard = true;
         this.rules = KamisadoRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator()),
+            new MCTS($localize`MCTS`, new KamisadoMoveGenerator(), this.rules),
         ];
         this.encoder = KamisadoMove.encoder;
         this.tutorial = new KamisadoTutorial().tutorial;

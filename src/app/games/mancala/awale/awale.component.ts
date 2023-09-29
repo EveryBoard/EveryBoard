@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { AwaleRules } from './AwaleRules';
-import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from './AwaleMove';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AwaleTutorial } from './AwaleTutorial';
-import { MancalaSingleSowComponent } from '../commons/MancalaSingleSowComponent';
 import { ActivatedRoute } from '@angular/router';
+import { MancalaSingleSowComponent } from '../common/MancalaSingleSowComponent';
+import { AwaleMoveGenerator } from './AwaleMoveGenerator';
 
 @Component({
     selector: 'app-awale-component',
-    templateUrl: './../commons/mancala.component.html',
+    templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })
 export class AwaleComponent extends MancalaSingleSowComponent<AwaleRules, AwaleMove> {
@@ -21,9 +21,7 @@ export class AwaleComponent extends MancalaSingleSowComponent<AwaleRules, AwaleM
         super(messageDisplayer, actRoute, cdr);
         this.rules = AwaleRules.get();
         this.node = this.rules.getInitialNode(AwaleRules.DEFAULT_CONFIG);
-        this.availableMinimaxes = [
-            new AwaleMinimax(),
-        ];
+        this.availableAIs = this.createAIs(new AwaleMoveGenerator());
         this.encoder = AwaleMove.encoder;
         this.tutorial = new AwaleTutorial().tutorial;
     }

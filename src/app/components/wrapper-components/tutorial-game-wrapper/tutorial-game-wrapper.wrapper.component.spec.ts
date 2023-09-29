@@ -104,10 +104,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // When starting tutorial
             await wrapper.startTutorial(tutorial);
 
-            // expect to see setted previous move but no mother to the node
-            const componentPreviousMove: QuartoMove = wrapper.gameComponent.node.move.get() as QuartoMove;
+            // expect to see previous move but no parent to the node
+            const componentPreviousMove: QuartoMove = wrapper.gameComponent.node.previousMove.get() as QuartoMove;
             expect(componentPreviousMove).toEqual(tutorialPreviousMove);
-            expect(wrapper.gameComponent.node.mother.isAbsent()).toBeTrue();
+            expect(wrapper.gameComponent.node.parent.isAbsent()).toBeTrue();
         }));
         it('should show title of the steps, the selected one in bold', fakeAsync(async() => {
             // Given a TutorialStep with 3 steps
@@ -761,7 +761,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#showSolutionButton', true, 0);
 
             // Then the first awaited move should have been done
-            expect(testUtils.getGameComponent().node.move.get()).toEqual(awaitedMove);
+            expect(testUtils.getGameComponent().node.previousMove.get()).toEqual(awaitedMove);
             expect(testUtils.getGameComponent().getTurn()).toEqual(stepInitialTurn + 1);
             // and 'solution' message to be shown
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -1066,7 +1066,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             tick(0);
 
             // Expect the step proposed move to have been done
-            expect(testUtils.getGameComponent().node.move.get()).toEqual(solutionMove);
+            expect(testUtils.getGameComponent().node.previousMove.get()).toEqual(solutionMove);
             expect(testUtils.getGameComponent().getTurn()).toEqual(1);
             // expect 'solution' message to be shown
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;

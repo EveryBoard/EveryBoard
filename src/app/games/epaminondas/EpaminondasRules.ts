@@ -1,6 +1,6 @@
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';
@@ -18,24 +18,20 @@ export type EpaminondasConfig = {
     rowOfSoldier: number;
 };
 
-export const epaminondasConfig: EpaminondasConfig = {
-    width: 14,
-    emptyHeight: 8,
-    rowOfSoldier: 2,
-};
-
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
-export class EpaminondasNode extends MGPNode<EpaminondasRules,
-                                             EpaminondasMove,
-                                             EpaminondasState,
-                                             EpaminondasConfig,
-                                             EpaminondasLegalityInformation> {}
+export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState> {}
 
 export class EpaminondasRules
     extends Rules<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
 {
     private static singleton: MGPOptional<EpaminondasRules> = MGPOptional.empty();
+
+    public static readonly DEFAULT_CONFIG: EpaminondasConfig = {
+        width: 14,
+        emptyHeight: 8,
+        rowOfSoldier: 2,
+    };
 
     public static get(): EpaminondasRules {
         if (EpaminondasRules.singleton.isAbsent()) {
@@ -44,7 +40,7 @@ export class EpaminondasRules
         return EpaminondasRules.singleton.get();
     }
     private constructor() {
-        super(EpaminondasState, epaminondasConfig);
+        super(EpaminondasState, EpaminondasRules.DEFAULT_CONFIG);
     }
     public static isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {
         const phalanxValidity: MGPValidation = this.getPhalanxValidity(state, move);

@@ -1,5 +1,5 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, SimpleChange, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
-import { AbstractNode } from 'src/app/jscaip/MGPNode';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { AbstractNode } from 'src/app/jscaip/GameNode';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameWrapper } from '../../wrapper-components/GameWrapper';

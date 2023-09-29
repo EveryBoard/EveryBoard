@@ -4,10 +4,12 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { NewGameDummyMinimax } from './NewGameDummyMinimax';
 import { NewGameTutorial } from './NewGameTutorial';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { NewGameMoveGenerator } from './NewGameMoveGenerator';
+import { NewGameMinimax } from './NewGameMinimax';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.
@@ -44,8 +46,9 @@ export class NewGameComponent extends GameComponent<NewGameRules,
         this.node = this.rules.getInitialNode();
         this.encoder = NewGameMove.encoder;
         this.tutorial = new NewGameTutorial().tutorial;
-        this.availableMinimaxes = [
-            new NewGameDummyMinimax(this.rules, 'New Game Dummy Minimax'),
+        this.availableAIs = [
+            new NewGameMinimax(),
+            new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),
         ];
     }
     /**

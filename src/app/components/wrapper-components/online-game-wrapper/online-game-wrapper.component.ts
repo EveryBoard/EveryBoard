@@ -24,12 +24,11 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { GameEventService } from 'src/app/services/GameEventService';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
 import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
-import { AbstractNode } from 'src/app/jscaip/MGPNode';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class OnlineGameWrapperMessages {
@@ -296,11 +295,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
         // Take back once, in any case
-        this.gameComponent.node = this.gameComponent.node.mother.get();
+        this.gameComponent.node = this.gameComponent.node.parent.get();
         if (this.gameComponent.getCurrentPlayer() !== player) {
             Utils.assert(this.gameComponent.getTurn() > 0, 'Should not allow player that never played to take back');
             // Take back a second time to make sure it end up on player's turn
-            this.gameComponent.node = this.gameComponent.node.mother.get();
+            this.gameComponent.node = this.gameComponent.node.parent.get();
         }
         this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
         if (this.gameComponent.getTurn() === 0) {
@@ -411,9 +410,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
             const stateAfterMove: GameState =
                 this.gameComponent.rules.applyLegalMove(move, this.gameComponent.node.gameState, legality.get());
-            const node: AbstractNode = new MGPNode(stateAfterMove,
-                                                   MGPOptional.of(this.gameComponent.node),
-                                                   MGPOptional.of(move));
+            const node: AbstractNode = new GameNode(stateAfterMove,
+                                                    MGPOptional.of(this.gameComponent.node),
+                                                    MGPOptional.of(move));
             const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
 
             // To adhere to security rules, we must add the move before updating the part
@@ -547,8 +546,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.gameService.addTurnTime(this.currentPartId, giver);
     }
     public async onCancelMove(reason?: string): Promise<void> {
-        if (this.gameComponent.node.move.isPresent()) {
-            const move: Move = this.gameComponent.node.move.get();
+        if (this.gameComponent.node.previousMove.isPresent()) {
+            const move: Move = this.gameComponent.node.previousMove.get();
             await this.gameComponent.showLastMove(move);
         }
     }

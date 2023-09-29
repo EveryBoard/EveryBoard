@@ -1,16 +1,7 @@
 import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-
-export type P4Config = {
-    width: number;
-    height: number;
-};
-
-export const p4Config: P4Config = {
-    width: 7,
-    height: 6,
-};
+import { P4Config } from './P4Rules';
 
 export class P4State extends GameStateWithTable<PlayerOrNone> {
 

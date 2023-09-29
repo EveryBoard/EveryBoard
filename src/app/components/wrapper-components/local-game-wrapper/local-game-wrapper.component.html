@@ -1,4 +1,4 @@
-<div *ngIf="configSetted === true">
+<div *ngIf="isConfigSetted()">
     <div class="tile is-ancestor">
         <div class="tile is-3 is-vertical is-parent">
             <div class="tile is-child box has-text-centered" *ngIf="gameComponent" id="info">
@@ -14,22 +14,21 @@
                                     [(ngModel)]="playerSelection[0]">
                                 <option selected
                                         value="human" i18n>Human</option>
-                                <option *ngFor="let minimax of gameComponent.availableMinimaxes"
-                                        [value]="minimax.name">{{ minimax.name }}</option>
+                                <option *ngFor="let ai of gameComponent.availableAIs"
+                                         [value]="ai.name">{{ ai.name }}</option>
                             </select>
-                        </div>
+                       </div>
                         <div class="select">
                             <select *ngIf="players[0].equalsValue('human') === false"
-                                    id="aiZeroDepthSelect"
-                                    [(ngModel)]="aiDepths[0]"
+                                    id="aiZeroLevelSelect"
+                                    [(ngModel)]="aiOptions[0]"
                                     (change)="updatePlayer(Player.ZERO)">
-                                <option selected
-                                        value="0" i18n>Pick the level</option>
-                                <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"
-                                        [value]="i" i18n>Level {{ i }}</option>
+                                <option selected value="none" i18n>Pick the options</option>
+                                <option *ngFor="let option of this.availableAIOptions(0)"
+                                        [value]="option.name" i18n>{{ option.name }}</option>
                             </select>
                         </div>
-                        <p id="scoreOne"
+                        <p id="scoreZero"
                            *ngIf="gameComponent.scores.isPresent()"
                            class="block" i18n>{{ gameComponent.scores.get()[0] }} points</p>
                     </div>
@@ -40,21 +39,21 @@
                                     [(ngModel)]="playerSelection[1]">
                                 <option selected
                                         value="human" i18n>Human</option>
-                                <option *ngFor="let minimax of gameComponent.availableMinimaxes"
-                                        [value]="minimax.name">{{ minimax.name }}</option>
+                                <option *ngFor="let ai of gameComponent.availableAIs"
+                                        [value]="ai.name">{{ ai.name }}</option>
                             </select>
                         </div>
                         <div class="select">
                             <select *ngIf="players[1].equalsValue('human') === false"
-                                    id="aiOneDepthSelect"
-                                    [(ngModel)]="aiDepths[1]"
+                                    id="aiOneLevelSelect"
+                                    [(ngModel)]="aiOptions[1]"
                                     (change)="updatePlayer(Player.ONE)">
-                                <option selected value="0" i18n>Pick the level</option>
-                                <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-                                        [value]="i" i18n>Level {{ i }}</option>
+                                <option selected value="none" i18n>Pick the options</option>
+                                <option *ngFor="let option of this.availableAIOptions(1)"
+                                        [value]="option.name" i18n>{{ option.name }}</option>
                             </select>
                         </div>
-                        <p id="scoreZero"
+                        <p id="scoreOne"
                            *ngIf="gameComponent.scores.isPresent()"
                            class="block" i18n>{{ gameComponent.scores.get()[1] }} points</p>
                     </div>
@@ -83,10 +82,10 @@
                         (click)="restartGame()"
                         i18n
                 >Start a new game</button>
-                <div *ngIf="gameComponent.node.move.isPresent() && displayAIMetrics"
-                     id="AIMetrics">
-                    <ng-container *ngFor="let minimax of gameComponent.availableMinimaxes">
-                        {{ minimax.name + ': ' + minimax.getBoardValue(gameComponent.node) }} <br/>
+                <div *ngIf="gameComponent.node.previousMove.isPresent() && displayAIInfo()"
+                     id="AIInfo">
+                    <ng-container *ngFor="let ai of gameComponent.availableAIs">
+                        {{ ai.name + ': ' + ai.getInfo(gameComponent.node) }} <br/>
                     </ng-container>
                     Created {{ getCreatedNodes() }} nodes.<br/>
                     Minimax time: {{ getMinimaxTime() }}ms.<br/>
@@ -102,7 +101,8 @@
         </div>
     </div>
 </div>
-<div *ngIf="configSetted === false"
+
+<div *ngIf="isConfigSetted() === false"
      class="box">
     <app-rules-configuration id="rulesConfigComponent"
                              [stateType]="getStateType()"
@@ -111,7 +111,7 @@
                              (updateCallback)="updateConfig($event)">
     </app-rules-configuration>
     <div class="field is-horizontal">
-        <div class="field-label is-normal"></div>
+        <div class="field-label is-normal"></div> <!-- UTILE LIGNE ?-->
         <div class="field-body">
             <div class="field">
                 <div class="control">

@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -11,7 +11,6 @@ import { SixFailure } from './SixFailure';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { SixBoardValue } from './SixMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -19,20 +18,17 @@ import { Debug } from 'src/app/utils/utils';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
-export class SixNode extends MGPNode<SixRules, SixMove, SixState, RulesConfig, SixLegalityInformation, SixBoardValue> {
+export class SixNode extends GameNode<SixMove, SixState> {
 }
+
 export interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
     index: number,
 }
 
 @Debug.log
-export class SixRules extends Rules<SixMove,
-                                    SixState,
-                                    RulesConfig,
-                                    SixLegalityInformation,
-                                    SixBoardValue>
-{
+export class SixRules extends Rules<SixMove, SixState, RulesConfig, SixLegalityInformation> {
+
     private static singleton: MGPOptional<SixRules> = MGPOptional.empty();
 
     public static get(): SixRules {
@@ -150,8 +146,8 @@ export class SixRules extends Rules<SixMove,
         const state: SixState = node.gameState;
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let shapeVictory: Coord[] = [];
-        if (node.move.isPresent()) {
-            shapeVictory = this.getShapeVictory(node.move.get(), state);
+        if (node.previousMove.isPresent()) {
+            shapeVictory = this.getShapeVictory(node.previousMove.get(), state);
         }
         if (shapeVictory.length === 6) {
             return GameStatus.getVictory(LAST_PLAYER);

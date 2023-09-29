@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -11,14 +10,17 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
-import { LascaControlAndDominationMinimax } from './LascaControlAndDomination';
-import { LascaControlMinimax } from './LascaControlMinimax';
 import { LascaFailure } from './LascaFailure';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { LascaTutorial } from './LascaTutorial';
 import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { LascaControlHeuristic } from './LascaControlHeuristic';
+import { LascaMoveGenerator } from './LascaMoveGenerator';
+import { LascaControlAndDominationHeuristic } from './LascaControlAndDominationHeuristic';
 
 interface SpaceInfo {
     squareClasses: string[];
@@ -63,25 +65,30 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private currentMoveClicks: Coord[] = [];
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
     private legalMoves: LascaMove[] = [];
+    private readonly moveGenerator: LascaMoveGenerator = new LascaMoveGenerator();
 
     public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
         super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.rules = LascaRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new LascaControlMinimax('Lasca Control Minimax'),
-            new LascaControlAndDominationMinimax(),
+        this.availableAIs = [
+            new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),
+            new Minimax($localize`Control and Domination`,
+                        this.rules,
+                        new LascaControlAndDominationHeuristic(),
+                        this.moveGenerator),
+            new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];
         this.encoder = LascaMove.encoder;
         this.tutorial = new LascaTutorial().tutorial;
         this.canPass = false;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.lastMove = this.node.move;
+        this.lastMove = this.node.previousMove;
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
-        this.legalMoves = LascaControlMinimax.getListMoves(this.node);
+        this.legalMoves = this.moveGenerator.getListMoves(this.node);
         this.createAdaptedBoardFrom(state);
         this.showPossibleMoves();
         this.rotateAdaptedBoardIfNeeded();

@@ -2,17 +2,14 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
 import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
-import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('AbaloneRules', () => {
 
@@ -21,13 +18,9 @@ describe('AbaloneRules', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     let rules: AbaloneRules;
-    let minimaxes: Minimax<AbaloneMove, AbaloneState, RulesConfig, AbaloneLegalityInformation>[];
 
     beforeEach(() => {
         rules = AbaloneRules.get();
-        minimaxes = [
-            new AbaloneDummyMinimax(rules, 'Dummy'),
-        ];
     });
     it('should start with an ongoing board status', () => {
         const state: AbaloneState = AbaloneState.getInitialState();
@@ -235,7 +228,7 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should declare player one winner when he push a 6th opponent piece out of the board', () => {
         const winningBoard: FourStatePiece[][] = [
@@ -251,7 +244,7 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should allow unblocked translation', () => {
         // Given an initial board (for simplicity)

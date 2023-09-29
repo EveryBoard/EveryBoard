@@ -190,8 +190,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
         await this.gameComponent.updateBoard(triggerAnimation);
-        if (this.gameComponent.node.move.isPresent()) {
-            const move: Move = this.gameComponent.node.move.get();
+        if (this.gameComponent.node.previousMove.isPresent()) {
+            const move: Move = this.gameComponent.node.previousMove.get();
             await this.gameComponent.showLastMove(move);
         }
     }

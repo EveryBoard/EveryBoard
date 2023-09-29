@@ -7,7 +7,6 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
@@ -16,6 +15,9 @@ import { DiamState } from './DiamState';
 import { DiamTutorial } from './DiamTutorial';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { DiamMoveGenerator } from './DiamMoveGenerator';
 
 interface ViewInfo {
     boardInfo: SpaceInfo[],
@@ -97,8 +99,9 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         super(messageDisplayer, actRoute);
         this.rules = DiamRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new DiamDummyMinimax(this.rules, 'DiamDummyMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new DiamMoveGenerator()),
+            new MCTS($localize`MCTS`, new DiamMoveGenerator(), this.rules),
         ];
         this.encoder = DiamMoveEncoder;
         this.tutorial = new DiamTutorial().tutorial;

@@ -1,16 +1,23 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { brandhubConfig } from './brandhubConfig';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { BrandhubState } from './BrandhubState';
 import { TaflRules } from '../TaflRules';
 import { BrandhubMove } from './BrandhubMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
 
-export class BrandhubNode extends MGPNode<BrandhubRules, BrandhubMove, BrandhubState, TaflConfig> {}
+export class BrandhubNode extends GameNode<BrandhubMove, BrandhubState> {}
 
 export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
 
     private static singleton: MGPOptional<BrandhubRules> = MGPOptional.empty();
+
+    public static readonly DEFAULT_CONFIG: TaflConfig = {
+        castleIsLeftForGood: true,
+        borderCanSurroundKing: false,
+        centralThroneCanSurroundKing: true,
+        kingFarFromHomeCanBeSandwiched: true,
+        invaderStarts: true,
+    };
 
     public static get(): BrandhubRules {
         if (BrandhubRules.singleton.isAbsent()) {
@@ -19,6 +26,6 @@ export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
         return BrandhubRules.singleton.get();
     }
     private constructor() {
-        super(BrandhubState, brandhubConfig, BrandhubMove.from);
+        super(BrandhubState, BrandhubRules.DEFAULT_CONFIG, BrandhubMove.from);
     }
 }

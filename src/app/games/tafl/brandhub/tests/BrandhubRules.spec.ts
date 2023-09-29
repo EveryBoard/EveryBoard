@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -9,11 +8,6 @@ import { BrandhubState } from '../BrandhubState';
 import { TaflFailure } from '../../TaflFailure';
 import { BrandhubMove } from '../BrandhubMove';
 import { TaflPawn } from '../../TaflPawn';
-import { TaflMinimax } from '../../TaflMinimax';
-import { TaflPieceAndInfluenceMinimax } from '../../TaflPieceAndInfluenceMinimax';
-import { TaflPieceAndControlMinimax } from '../../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlMinimax } from '../../TaflEscapeThenPieceThenControlMinimax';
-import { brandhubConfig } from '../brandhubConfig';
 
 describe('BrandhubRules', () => {
 
@@ -24,20 +18,12 @@ describe('BrandhubRules', () => {
 
     let rules: BrandhubRules;
 
-    let minimaxes: Minimax<BrandhubMove, BrandhubState>[];
-
     beforeEach(() => {
         rules = BrandhubRules.get();
-        minimaxes = [
-            new TaflMinimax(rules, 'DummyBot'),
-            new TaflPieceAndInfluenceMinimax(rules, 'Piece > Influence'),
-            new TaflPieceAndControlMinimax(rules, 'Piece > Control'),
-            new TaflEscapeThenPieceThenControlMinimax(rules, 'Escape > Piece > Control'),
-        ];
     });
     it('should allow first move by invader', () => {
         // Given the initial board
-        const state: BrandhubState = BrandhubState.getInitialState(brandhubConfig);
+        const state: BrandhubState = BrandhubState.getInitialState(BrandhubRules.DEFAULT_CONFIG);
 
         // When moving an invader
         const move: BrandhubMove = BrandhubMove.of(new Coord(1, 3), new Coord(1, 6));
@@ -162,7 +148,7 @@ describe('BrandhubRules', () => {
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
         const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should allow capturing the king next to his throne with 3 invader (option throne sandwich)', () => {
         // Given a board where the king is surrounded by 2 invader and his throne
@@ -193,7 +179,7 @@ describe('BrandhubRules', () => {
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
         const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should allow capturing the king next to his throne with 3 invader (option soldier sandwich)', () => {
         // Given a board where the king is surrounded by 2 invader and his throne
@@ -224,7 +210,7 @@ describe('BrandhubRules', () => {
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
         const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should allow capturing the king with only two soldier when not touching a throne', () => {
         // Given a board where the king is next to on invader
@@ -255,7 +241,7 @@ describe('BrandhubRules', () => {
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
         const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should allow capturing the king between one soldier and a corner-throne', () => {
         // Given a board where the king is next to a corner throne
@@ -286,7 +272,7 @@ describe('BrandhubRules', () => {
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
         const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should forbid soldier to land on the central throne (3, 3)', () => {
         // Given a board where a soldier could land on the throne

@@ -1,14 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { KalahMove } from '../KalahMove';
 import { KalahNode, KalahRules } from '../KalahRules';
-import { KalahScoreMinimax } from '../KalahDummyMinimax';
-import { MancalaDistribution } from '../../commons/MancalaMove';
-import { MancalaState } from '../../commons/MancalaState';
+import { MancalaDistribution } from '../../common/MancalaMove';
+import { MancalaState } from '../../common/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
-import { DoMancalaRulesTests } from '../../commons/GenericMancalaRulesTest.spec';
+import { DoMancalaRulesTests } from '../../common/GenericMancalaRulesTest.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 
@@ -16,13 +14,9 @@ describe('KalahRules', () => {
 
     const rules: Rules<KalahMove, MancalaState> = KalahRules.get();
 
-    const minimaxes: Minimax<KalahMove, MancalaState>[] = [
-        new KalahScoreMinimax(),
-    ];
     describe('generic tests', () => {
         DoMancalaRulesTests({
             gameName: 'Kalah',
-            minimaxes,
             rules,
             simpleMove: KalahMove.of(MancalaDistribution.of(5)),
         });
@@ -68,7 +62,7 @@ describe('KalahRules', () => {
             // When doing the double distribution
             const move: KalahMove = KalahMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(5)]);
 
-            // Then two distributiong must have been done and one piece dropped in the Kalah
+            // Then two distributions must have been done and one piece dropped in the Kalah
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [5, 6, 6, 1, 5, 0],
@@ -201,7 +195,7 @@ describe('KalahRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23], 4);
             const node: KalahNode = new KalahNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it(`should monsoon player after player captured opponent's last seeds`, () => {
             // Given a state where next player is able to distribute
@@ -222,7 +216,7 @@ describe('KalahRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [26, 22], 4);
             const node: KalahNode = new KalahNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should monsoon if next player will not be able to feed current player', () => {
             // Given a state where next player is unable to feed current player
@@ -243,7 +237,7 @@ describe('KalahRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23], 4);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: KalahNode = new KalahNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
     });
     describe('captures', () => {

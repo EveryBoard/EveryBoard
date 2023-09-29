@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { GoConfig, GoNode, GoRules } from '../GoRules';
-import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { GoMoveGenerator } from '../GoMoveGenerator';
 
 const config: GoConfig = { width: 5, height: 5, handicap: 0 };
 
@@ -10,9 +10,9 @@ describe('GoMove', () => {
 
     it('should have a bijective encoder', () => {
         const rules: GoRules = GoRules.get();
-        const minimax: GoMinimax = new GoMinimax(rules, 'GoMinimax');
+        const moveGenerator: GoMoveGenerator = new GoMoveGenerator();
         const node: GoNode = rules.getInitialNode(config);
-        const firstTurnMoves: GoMove[] = minimax.getListMoves(node);
+        const firstTurnMoves: GoMove[] = moveGenerator.getListMoves(node);
         firstTurnMoves.push(GoMove.PASS);
         firstTurnMoves.push(GoMove.ACCEPT);
         for (const move of firstTurnMoves) {

@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -9,13 +8,11 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MartianChessDummyMinimax } from '../MartianChessDummyMinimax';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
-import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from '../MartianChessRules';
+import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessFailure } from '../MartianChessFailure';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessRules', () => {
 
@@ -28,8 +25,6 @@ describe('MartianChessRules', () => {
     const noCapture: MartianChessCapture = MartianChessCapture.of([]);
 
     let rules: MartianChessRules;
-
-    let minimaxes: Minimax<MartianChessMove, MartianChessState, RulesConfig, MartianChessMoveResult>[];
 
     const boardWhereCaptureCanBeDone: Table<MartianChessPiece> = [
         [A, _, _, _],
@@ -54,9 +49,6 @@ describe('MartianChessRules', () => {
 
     beforeEach(() => {
         rules = MartianChessRules.get();
-        minimaxes = [
-            new MartianChessDummyMinimax(rules, 'MartianChessDummyMinimax'),
-        ];
     });
     it('should be illegal to choose a piece in the opponent territory', () => {
         // Given any board
@@ -538,7 +530,7 @@ describe('MartianChessRules', () => {
                                                                                captured);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
             });
             it('should declare winner player with biggest score when one player put its last piece in the opponent territory (Player.ZERO)', () => {
                 // Given a board with only one piece in the current player territory
@@ -581,7 +573,7 @@ describe('MartianChessRules', () => {
                                                                                captured);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
             });
             it('should declare winner last player when one player put its last piece in the opponent territory and score are equal', () => {
                 // Given a board with only one piece in the current player territory
@@ -614,7 +606,7 @@ describe('MartianChessRules', () => {
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
             });
         });
         describe('call the clock end', () => {
@@ -772,7 +764,7 @@ describe('MartianChessRules', () => {
                                                                                captured);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
             });
             it('should end the game when 7 moves passed since clock called, and declare biggest score winner (one)', () => {
                 // Given a board with clock about to time out
@@ -807,7 +799,7 @@ describe('MartianChessRules', () => {
                                                                                captured);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
             });
             it('should end the game when 7 moves passed since clock called, and declare draw if score are equal', () => {
                 // Given a board with clock about to time out
@@ -838,7 +830,7 @@ describe('MartianChessRules', () => {
                                                                                MGPOptional.of(0));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
-                RulesUtils.expectToBeDraw(rules, node, minimaxes);
+                RulesUtils.expectToBeDraw(rules, node);
             });
         });
     });

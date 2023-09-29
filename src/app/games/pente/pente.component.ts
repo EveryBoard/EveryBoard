@@ -1,7 +1,6 @@
 import { PenteRules } from './PenteRules';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { PenteTutorial } from './PenteTutorial';
@@ -11,7 +10,11 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { ActivatedRoute } from '@angular/router';
-import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { PenteMoveGenerator } from './PenteMoveGenerator';
+import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-new-game',
@@ -28,11 +31,12 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         super(messageDisplayer, actRoute);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = PenteRules.get();
-        this.node = this.rules.getInitialNode(gobanConfig);
+        this.node = this.rules.getInitialNode(PenteRules.DEFAULT_CONFIG);
         this.encoder = PenteMove.encoder;
         this.tutorial = new PenteTutorial().tutorial;
-        this.availableMinimaxes = [
-            new PenteAlignmentMinimax(this.rules, 'Alignment'),
+        this.availableAIs = [
+            new Minimax($localize`Alignment`, this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
+            new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

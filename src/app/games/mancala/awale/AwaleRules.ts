@@ -1,18 +1,20 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { MancalaState } from '../commons/MancalaState';
+import { MancalaState } from '../common/MancalaState';
 import { AwaleMove } from './AwaleMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MancalaFailure } from './../commons/MancalaFailure';
+import { MancalaFailure } from './../common/MancalaFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../commons/MancalaRules';
+import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Utils } from 'src/app/utils/utils';
-import { MancalaConfig } from '../commons/MancalaConfig';
+import { MancalaConfig } from '../common/MancalaConfig';
+import { GameNode } from 'src/app/jscaip/GameNode';
 
-export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, MancalaState> {}
+export class AwaleNode extends GameNode<AwaleMove, MancalaState> {}
 
 export class AwaleRules extends MancalaRules<AwaleMove> {
+
+    private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
     public static readonly DEFAULT_CONFIG: MancalaConfig = {
         feedOriginalHouse: false,
@@ -21,8 +23,6 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         seedByHouse: 4,
         width: 6,
     };
-
-    private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
     public static get(): AwaleRules {
         if (AwaleRules.singleton.isAbsent()) {

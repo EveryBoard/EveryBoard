@@ -1,9 +1,9 @@
+import { ActivatedRoute } from '@angular/router';
 import { TeekoRules } from './TeekoRules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TeekoMinimax } from './TeekoMinimax';
 import { TeekoTutorial } from './TeekoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -11,7 +11,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TeekoHeuristic } from './TeekoHeuristic';
+import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 
 @Component({
     selector: 'app-teeko',
@@ -35,8 +38,9 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.node = this.rules.getInitialNode();
         this.encoder = TeekoMove.encoder;
         this.tutorial = new TeekoTutorial().tutorial;
-        this.availableMinimaxes = [
-            new TeekoMinimax(),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new TeekoHeuristic(), new TeekoMoveGenerator()),
+            new MCTS($localize`MCTS`, new TeekoMoveGenerator(), this.rules),
         ];
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

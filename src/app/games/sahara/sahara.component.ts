@@ -6,7 +6,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
-import { SaharaMinimax } from 'src/app/games/sahara/SaharaMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
@@ -16,6 +15,10 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaTutorial } from './SaharaTutorial';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { SaharaHeuristic } from './SaharaHeuristic';
+import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 
 @Component({
     selector: 'app-sahara',
@@ -39,8 +42,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         super(messageDisplayer, actRoute);
         this.rules = SaharaRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new SaharaMinimax(this.rules, 'SaharaMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new SaharaHeuristic(), new SaharaMoveGenerator()),
+            new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];
         this.encoder = SaharaMove.encoder;
         this.tutorial = new SaharaTutorial().tutorial;
@@ -91,7 +95,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         return await this.chooseMove(newMove.get());
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const move: MGPOptional<SaharaMove> = this.node.move;
+        const move: MGPOptional<SaharaMove> = this.node.previousMove;
         this.lastCoord = move.map((move: SaharaMove) => move.getStart());
         this.lastMoved = move.map((move: SaharaMove) => move.getEnd());
         this.board = this.getState().board;

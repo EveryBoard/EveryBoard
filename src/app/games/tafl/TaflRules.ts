@@ -12,13 +12,12 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
 import { TaflConfig } from './TaflConfig';
 import { Type } from '@angular/core';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { tablutConfig } from './tablut/tablutConfig';
 
-class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState, TaflConfig> {}
+export class TaflNode<M extends TaflMove, S extends TaflState> extends GameNode<M, S> {}
 
 export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S, TaflConfig> {
 
@@ -27,10 +26,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                           public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
         super(stateType, config);
-        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL (' + Object.keys(tablutConfig).length +')');
+        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL');
     }
     public isLegal(move: TaflMove, state: S): MGPValidation {
-        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL (' + Object.keys(tablutConfig).length +')');
+        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL');
 
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
@@ -281,7 +280,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return state.of(board, turn + 1);
     }
-    public getGameStatus(node: TaflNode): GameStatus {
+    public getGameStatus(node: TaflNode<M, S>): GameStatus {
         const state: S = node.gameState as S;
 
         const winner: MGPOptional<Player> = this.getWinner(state);

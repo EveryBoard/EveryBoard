@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { MGPNode } from '../MGPNode';
+import { GameNode } from '../GameNode';
 import { Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -16,7 +16,7 @@ class MyAbstractState extends GameStateWithTable<number> {
     }
 }
 
-class AbstractNode extends MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState> {}
+class AbstractNode extends GameNode<P4Move, MyAbstractState> {}
 
 class AbstractRules extends Rules<P4Move, MyAbstractState> {
 
@@ -51,10 +51,9 @@ describe('Rules', () => {
         rules = AbstractRules.get();
     });
     it('should create child to already calculated node which did not include this legal child yet', () => {
-        // Given a node with sons
+        // Given a node with children but not the one that will be calculated
         const node: AbstractNode = rules.getInitialNode();
-        spyOn(node, 'hasMoves').and.returnValue(true);
-        spyOn(node, 'getSonByMove').and.returnValue(MGPOptional.empty());
+        spyOn(node, 'getChild').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
         const resultingNode: MGPOptional<AbstractNode> = rules.choose(node, P4Move.of(0));

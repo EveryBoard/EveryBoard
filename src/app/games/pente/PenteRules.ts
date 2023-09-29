@@ -1,6 +1,6 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -13,15 +13,14 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
 
-export class PenteNode extends MGPNode<Rules<PenteMove, PenteState, GobanConfig>,
-                                       PenteMove,
-                                       PenteState,
-                                       GobanConfig> {}
+export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
 export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
 
     public static readonly PENTE_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 5);
+
+    public static readonly DEFAULT_CONFIG: GobanConfig = gobanConfig;
 
     private static singleton: MGPOptional<PenteRules> = MGPOptional.empty();
 

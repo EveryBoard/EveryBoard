@@ -5,7 +5,6 @@ import { TablutRules } from './TablutRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TablutTutorial } from './TablutTutorial';
 import { TaflComponent } from '../tafl.component';
-import { tablutConfig } from './tablutConfig';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -18,8 +17,8 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
     public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
         super(messageDisplayer, actRoute, TablutMove.from);
         this.rules = TablutRules.get();
-        this.node = this.rules.getInitialNode(tablutConfig);
-        this.availableMinimaxes = this.createMinimaxes();
+        this.node = this.rules.getInitialNode(TablutRules.DEFAULT_CONFIG);
+        this.availableAIs = this.createAIs();
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;
     }

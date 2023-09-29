@@ -1,23 +1,27 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleNode, AwaleRules } from '../AwaleRules';
-import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
-import { MancalaState } from 'src/app/games/mancala/commons/MancalaState';
+import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';
+import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 
-describe('AwaleMinimax', () => {
+describe('AwaleScoreMinimax', () => {
 
     let rules: AwaleRules;
-
-    let minimax: AwaleMinimax;
+    let minimax: Minimax<AwaleMove, MancalaState>;
+    const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
+    const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
 
     beforeEach(() => {
         rules = AwaleRules.get();
-        minimax = new AwaleMinimax();
+        minimax = new MancalaScoreMinimax(rules, new AwaleMoveGenerator());
     });
     it('should not throw at first choice', () => {
         const node: AwaleNode = rules.getInitialNode(AwaleRules.DEFAULT_CONFIG);
-        const bestMove: AwaleMove = node.findBestMove(2, minimax);
+        const bestMove: AwaleMove = minimax.chooseNextMove(node, level2);
         expect(rules.isLegal(bestMove, MancalaState.getInitialState(AwaleRules.DEFAULT_CONFIG)).isSuccess()).toBeTrue();
     });
     it('should choose capture when possible (at depth 1)', () => {
@@ -29,7 +33,7 @@ describe('AwaleMinimax', () => {
         const state: MancalaState = new MancalaState(board, 1, [0, 0], 4);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
-        const bestMove: AwaleMove = node.findBestMove(1, minimax);
+        const bestMove: AwaleMove = minimax.chooseNextMove(node, level1);
         // Then the best move should be the capture
         expect(bestMove).toEqual(AwaleMove.of(2));
     });
@@ -42,23 +46,9 @@ describe('AwaleMinimax', () => {
         const state: MancalaState = new MancalaState(board, 1, [0, 0], 4);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
-        const bestMove: AwaleMove = node.findBestMove(2, minimax);
+        const bestMove: AwaleMove = minimax.chooseNextMove(node, level2);
         // Then the best move should be the capture
         expect(bestMove).toEqual(AwaleMove.of(4));
-    });
-    it('should not try to perform illegal moves', () => {
-        // Given a state with an illegal distribution due to the do-not-starve rule
-        const board: Table<number> = [
-            [1, 0, 0, 0, 0, 1],
-            [0, 0, 0, 0, 0, 0],
-        ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], 4);
-        const node: AwaleNode = new AwaleNode(state);
-        // When listing the moves
-        const moves: AwaleMove[] = minimax.getListMoves(node);
-        // Then only the legal moves should be present
-        expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(AwaleMove.of(5));
     });
     it('should prioritise moves in the same territory when no captures are possible', () => {
         // Given a state with only one move that distributes only in the player's territory
@@ -69,9 +59,8 @@ describe('AwaleMinimax', () => {
         const state: MancalaState = new MancalaState(board, 1, [0, 0], 4);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
-        const bestMove: AwaleMove = node.findBestMove(1, minimax);
+        const bestMove: AwaleMove = minimax.chooseNextMove(node, level1);
         // Then the best move should be the capture
         expect(bestMove).toEqual(AwaleMove.of(0));
     });
 });
-

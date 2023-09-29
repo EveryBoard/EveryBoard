@@ -1,7 +1,7 @@
 import { Coord } from '../../jscaip/Coord';
 import { Rules } from '../../jscaip/Rules';
-import { MGPNode } from '../../jscaip/MGPNode';
-import { P4Config, P4State, p4Config } from './P4State';
+import { P4State } from './P4State';
+import { GameNode } from '../../jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Utils, Debug } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
@@ -12,12 +12,22 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class P4Node extends MGPNode<P4Rules, P4Move, P4State, P4Config> {}
+export type P4Config = {
+    width: number;
+    height: number;
+};
+
+export class P4Node extends GameNode<P4Move, P4State> {}
 
 @Debug.log
 export class P4Rules extends Rules<P4Move, P4State, P4Config> {
 
     private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
+
+    public static readonly DEFAULT_CONFIG: P4Config = {
+        width: 7,
+        height: 6,
+    };
 
     public readonly P4_HELPER: NInARowHelper<PlayerOrNone>;
 
@@ -27,10 +37,12 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         }
         return P4Rules.singleton.get();
     }
+
     private constructor() {
-        super(P4State, p4Config);
+        super(P4State, P4Rules.DEFAULT_CONFIG);
         this.P4_HELPER = new NInARowHelper(Utils.identity, 4);
     }
+
     public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();

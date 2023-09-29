@@ -2,23 +2,24 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
+import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type GipfLegalityInformation = GipfState
 
-export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, RulesConfig, GipfLegalityInformation> {}
+export class GipfNode extends GameNode<GipfMove, GipfState> {}
 
 export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegalityInformation> {
 
@@ -30,15 +31,18 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
         }
         return GipfRules.singleton.get();
     }
+
     private constructor() {
         super(GipfState, {});
     }
+
     public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
         return new GipfState(computedState.board,
                              computedState.turn + 1,
                              computedState.sidePieces,
                              computedState.capturedPieces);
     }
+
     public static applyCaptures(captures: ReadonlyArray<GipfCapture>, state: GipfState)
     : GipfState
     {
@@ -48,6 +52,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
         });
         return computedState;
     }
+
     public static applyCapture(capture: GipfCapture, state: GipfState): GipfState {
         const player: Player = state.getCurrentPlayer();
         let newState: GipfState = state;
@@ -64,6 +69,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
         });
         return new GipfState(newState.board, state.turn, sidePieces, capturedPieces);
     }
+
     public static getPlacements(state: GipfState): GipfPlacement[] {
         const placements: GipfPlacement[] = [];
         FlatHexaOrientation.INSTANCE.getAllBorders(state).forEach((entrance: Coord) => {
@@ -79,9 +85,11 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
         });
         return placements;
     }
+
     public static isLineComplete(state: GipfState, start: Coord, dir: HexaDirection): boolean {
         return GipfRules.nextGapInLine(state, start, dir).isAbsent();
     }
+
     private static nextGapInLine(state: GipfState, start: Coord, dir: HexaDirection): MGPOptional<Coord> {
         for (let cur: Coord = start; state.isOnBoard(cur); cur = cur.getNext(dir)) {
             if (state.getPieceAt(cur) === FourStatePiece.EMPTY) {
@@ -90,6 +98,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
         }
         return MGPOptional.empty();
     }
+
     public static applyPlacement(placement: GipfPlacement, state: GipfState): GipfState {
         const player: Player = state.getCurrentPlayer();
         let newState: GipfState = state;
@@ -114,6 +123,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
         sidePieces[player.value] -= 1;
         return new GipfState(newState.board, state.turn, sidePieces, state.capturedPieces);
     }
+
     public getPiecesMoved(state: GipfState,
                           initialCaptures: ReadonlyArray<GipfCapture>,
                           placement: GipfPlacement): Coord[] {
@@ -138,6 +148,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
             return moved;
         }
     }
+
     public static getAllDirectionsForEntrance(state: GipfState, entrance: Coord): HexaDirection[] {
         if (FlatHexaOrientation.INSTANCE.isTopLeftCorner(state, entrance)) {
             return [HexaDirection.RIGHT, HexaDirection.DOWN, HexaDirection.UP_RIGHT];
@@ -167,6 +178,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
             throw new Error('not a border');
         }
     }
+
     public isLegal(move: GipfMove, state: GipfState): MGPFallible<GipfLegalityInformation> {
         const initialCapturesValidity: MGPValidation = this.capturesValidity(state, move.initialCaptures);
         if (initialCapturesValidity.isFailure()) {
@@ -203,6 +215,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
 
         return MGPFallible.success(stateAfterFinalCaptures);
     }
+
     private capturesValidity(state: GipfState, captures: ReadonlyArray<GipfCapture>)
     : MGPValidation
     {

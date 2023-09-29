@@ -1,6 +1,6 @@
 import { Rules } from 'src/app/jscaip/Rules';
 import { ConnectSixState } from './ConnectSixState';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -12,11 +12,13 @@ import { Utils } from 'src/app/utils/utils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
 
-export class ConnectSixNode extends MGPNode<ConnectSixRules, ConnectSixMove, ConnectSixState, GobanConfig> {}
+export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 
 export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, GobanConfig> {
 
     private static singleton: MGPOptional<ConnectSixRules> = MGPOptional.empty();
+
+    public static readonly DEFAULT_CONFIG: GobanConfig = gobanConfig;
 
     public static get(): ConnectSixRules {
         if (ConnectSixRules.singleton.isAbsent()) {

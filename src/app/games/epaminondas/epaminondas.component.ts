@@ -1,22 +1,25 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules, epaminondasConfig } from 'src/app/games/epaminondas/EpaminondasRules';
-import { EpaminondasMinimax } from 'src/app/games/epaminondas/EpaminondasMinimax';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
-import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
+import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
+import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
+import { EpaminondasMinimax } from './EpaminondasMinimax';
 
 @Component({
     selector: 'app-epaminondas',
@@ -52,11 +55,12 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         super(messageDisplayer, actRoute);
         this.hasAsymmetricBoard = true;
         this.rules = EpaminondasRules.get();
-        this.node = this.rules.getInitialNode(epaminondasConfig);
-        this.availableMinimaxes = [
-            new EpaminondasMinimax(this.rules, 'Normal'),
-            new PositionalEpaminondasMinimax(this.rules, 'Positional'),
-            new AttackEpaminondasMinimax(this.rules, 'Attack'),
+        this.node = this.rules.getInitialNode(EpaminondasRules.DEFAULT_CONFIG);
+        this.availableAIs = [
+            new EpaminondasMinimax(),
+            new EpaminondasPositionalMinimax(),
+            new EpaminondasAttackMinimax(),
+            new MCTS($localize`MCTS`, new EpaminondasMoveGenerator(), this.rules),
         ];
         this.encoder = EpaminondasMove.encoder;
         this.tutorial = new EpaminondasTutorial().tutorial;
@@ -74,10 +78,10 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
-        const previousNode: EpaminondasNode = this.node.mother.get();
-        const PREVIOUS_OPPONENT: Player = previousNode.gameState.getCurrentOpponent();
+        const previousNode: EpaminondasNode = this.node.parent.get();
+        const previousOpponent: Player = previousNode.gameState.getCurrentOpponent();
         while (previousNode.gameState.isOnBoard(moved) &&
-               previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT)
+               previousNode.gameState.getPieceAt(moved) === previousOpponent)
         {
             this.capturedCoords.push(moved);
             moved = moved.getNext(move.direction, 1);

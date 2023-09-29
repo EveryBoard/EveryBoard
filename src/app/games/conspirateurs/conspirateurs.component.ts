@@ -8,13 +8,15 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ConspirateursMinimax } from './ConspirateursMinimax';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { ConspirateursTutorial } from './ConspirateursTutorial';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
+import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
@@ -64,8 +66,9 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
         this.rules = ConspirateursRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new ConspirateursMinimax(this.rules, 'ConspirateursMinimax'),
+        this.availableAIs = [
+            new ConspirateursJumpMinimax(),
+            new MCTS($localize`MCTS`, new ConspirateursMoveGenerator(), this.rules),
         ];
         this.encoder = ConspirateursMove.encoder;
         this.tutorial = new ConspirateursTutorial().tutorial;

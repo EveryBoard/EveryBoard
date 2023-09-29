@@ -78,7 +78,7 @@ import { MartianChessComponent } from 'src/app/games/martian-chess/martian-chess
 
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { P4Tutorial } from 'src/app/games/p4/P4Tutorial';
-import { P4Rules } from 'src/app/games/p4/P4Rules';
+import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
 import { PentagoComponent } from 'src/app/games/pentago/pentago.component';
 import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
 import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
@@ -131,11 +131,10 @@ import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/Tutoria
 import { NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MancalaConfig } from 'src/app/games/mancala/commons/MancalaConfig';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { Utils } from 'src/app/utils/utils';
-import { P4Config } from 'src/app/games/p4/P4State';
 import { TaflConfig } from 'src/app/games/tafl/TaflConfig';
+import { MancalaConfig } from 'src/app/games/mancala/common/MancalaConfig';
 
 class GameDescription {
 

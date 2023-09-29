@@ -1,7 +1,7 @@
+import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoRules } from './TrexoRules';
-import { TrexoMinimax } from './TrexoMinimax';
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -14,7 +14,10 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';
-import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 
 interface PieceOnBoard {
 
@@ -79,8 +82,9 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         super(messageDisplayer, actRoute);
         this.rules = TrexoRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new TrexoMinimax(this.rules, 'TrexoMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
+            new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
         this.tutorial = new TrexoTutorial().tutorial;
@@ -282,8 +286,8 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
                 break;
             }
         }
-        if (this.node.move.isPresent()) {
-            const lastMove: TrexoMove = this.node.move.get();
+        if (this.node.previousMove.isPresent()) {
+            const lastMove: TrexoMove = this.node.previousMove.get();
             if (lastMove.getZero().equals(piece) || lastMove.getOne().equals(piece)) {
                 classes.push('last-move-stroke');
             }

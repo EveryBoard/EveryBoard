@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
 import { QuartoState } from './QuartoState';
 import { QuartoRules } from './QuartoRules';
-import { QuartoMinimax } from './QuartoMinimax';
 import { QuartoPiece } from './QuartoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -12,6 +11,10 @@ import { QuartoTutorial } from './QuartoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ActivatedRoute } from '@angular/router';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { QuartoHeuristic } from './QuartoHeuristic';
+import { QuartoMoveGenerator } from './QuartoMoveGenerator';
 
 @Component({
     selector: 'app-quarto',
@@ -38,8 +41,10 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         super(messageDisplayer, actRoute);
         this.rules = QuartoRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new QuartoMinimax(this.rules, 'QuartoMinimax'),
+        this.node = this.rules.getInitialNode();
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new QuartoHeuristic(), new QuartoMoveGenerator()),
+            new MCTS($localize`MCTS`, new QuartoMoveGenerator(), this.rules),
         ];
         this.encoder = QuartoMove.encoder;
         this.tutorial = new QuartoTutorial().tutorial;
@@ -47,7 +52,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
-        const move: MGPOptional<QuartoMove> = this.node.move;
+        const move: MGPOptional<QuartoMove> = this.node.previousMove;
         this.board = state.getCopiedBoard();
         this.chosen = MGPOptional.empty();
         this.pieceInHand = state.pieceInHand;
