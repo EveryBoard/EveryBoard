@@ -7,28 +7,30 @@
         <polygon id="arrow" points="30 7, 30 50, 10 50, 50 90, 90 50, 70 50, 70 7"/>
         <polygon id="mountain" points="5 95, 16 68, 24 76, 48 28, 64 60, 72 44, 95 95, 5 95"/>
     </defs>
-    <g *ngFor="let line of board; index as y">
-        <g *ngFor="let c of line; index as x">
-            <rect id="square_{{ x }}_{{ y }}"
-                  (click)="clickSquare(x, y)"
-                  [attr.x]="SPACE_SIZE * (x + 1)"
-                  [attr.y]="SPACE_SIZE * (y + 1)"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-                  [ngClass]="getSquareClasses(x, y)"
-                  class="base"/>
-            <use *ngIf="c.isPiece()"
-                 id="piece_{{ x }}_{{ y }}"
-                 class="base mid-stroke"
-                 [ngClass]="getPieceClasses(x, y, c)"
-                 (click)="clickSquare(x, y)"
-                 xlink:href="#arrow"
-                 [attr.transform]="getPieceTransform(x, y)"/>
-            <use *ngIf="isMountain(c)"
-                 xlink:href="#mountain"
-                 class="nonplayer-fill"
-                 (click)="clickSquare(x, y)"
-                 [attr.transform]="'translate(' + ((x + 1) * SPACE_SIZE) + ' ' + ((y + 1) * SPACE_SIZE) + ')'"/>
+    <g id="siamBoard">
+        <g *ngFor="let line of board; index as y">
+            <g *ngFor="let c of line; index as x">
+                <rect id="square_{{ x }}_{{ y }}"
+                      (click)="clickSquare(x, y)"
+                      [attr.x]="SPACE_SIZE * (x + 1)"
+                      [attr.y]="SPACE_SIZE * (y + 1)"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
+                      [ngClass]="getSquareClasses(x, y)"
+                      class="base"/>
+                <use *ngIf="c.isPiece()"
+                     id="piece_{{ x }}_{{ y }}"
+                     class="base mid-stroke"
+                     [ngClass]="getPieceClasses(x, y, c)"
+                     (click)="clickSquare(x, y)"
+                     xlink:href="#arrow"
+                     [attr.transform]="getPieceTransform(x, y)"/>
+                <use *ngIf="isMountain(c)"
+                     xlink:href="#mountain"
+                     class="nonplayer-fill"
+                     (click)="clickSquare(x, y)"
+                     [attr.transform]="'translate(' + ((x + 1) * SPACE_SIZE) + ' ' + ((y + 1) * SPACE_SIZE) + ')'"/>
+            </g>
         </g>
     </g>
     <g *ngFor="let coord of clickableCoords">

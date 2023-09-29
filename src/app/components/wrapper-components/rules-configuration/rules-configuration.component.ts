@@ -68,9 +68,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     private setConfigDemo(config: RulesConfig): void {
-        if (this.stateType == null) {
-            console.log('TODOELPET')
-        } else {
+        if (this.stateType != null) {
             // eslint-disable-next-line dot-notation
             const node: AbstractNode = new GameNode(this.stateType['getInitialState'](config));
             this.configDemo = {
@@ -80,6 +78,10 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
             };
             this.cdr.detectChanges();
         }
+    }
+
+    public getConfigDemo(): DemoNodeInfo {
+        return this.configDemo;
     }
 
     private generateForm(config: RulesConfig, configurable: boolean): void {

@@ -1,4 +1,3 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { PlayerOrNone } from 'src/app/jscaip/Player';

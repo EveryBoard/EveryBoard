@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { PenteMove } from '../PenteMove';
 

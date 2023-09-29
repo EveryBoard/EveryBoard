@@ -25,14 +25,6 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     @ViewChild('board', { read: ViewContainerRef })
     public override boardRef: ViewContainerRef | null = null;
 
-    public async ngOnChanges(_changes: SimpleChanges): Promise<void> {
-        if (this.gameComponent != null) {
-            this.gameComponent.node = this.demoNodeInfo.node;
-            await this.gameComponent.updateBoard(false);
-            this.cdr.detectChanges();
-        }
-    }
-
     public constructor(actRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
@@ -40,12 +32,6 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
                        private readonly cdr: ChangeDetectorRef)
     {
         super(actRoute, connectedUserService, router, messageDisplayer);
-    }
-
-    protected override getGameName(): string {
-        // Unlike all other BaseGameComponent (wrapper or game) thoses will share one page: everyboard.org/demo
-        // Hence we cannot read the name of the game via the URL
-        return this.demoNodeInfo.name;
     }
 
     public async ngAfterViewInit(): Promise<void> {
@@ -66,6 +52,21 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             }
         }, 1);
     }
+
+    public async ngOnChanges(_changes: SimpleChanges): Promise<void> {
+        if (this.gameComponent != null) {
+            this.gameComponent.node = this.demoNodeInfo.node;
+            await this.gameComponent.updateBoard(false);
+            this.cdr.detectChanges();
+        }
+    }
+
+    protected override getGameName(): string {
+        // Unlike all other BaseGameComponent (wrapper or game) thoses will share one page: everyboard.org/demo
+        // Hence we cannot read the name of the game via the URL
+        return this.demoNodeInfo.name;
+    }
+
     public async onLegalUserMove(move: Move, scores?: [number, number] | undefined): Promise<void> {
         return;
     }
