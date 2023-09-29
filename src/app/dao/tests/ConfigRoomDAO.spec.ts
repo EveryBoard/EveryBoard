@@ -23,7 +23,7 @@ type CreatedPart = {
     creator: MinimalUser,
 }
 
-xdescribe('ConfigRoomDAO', () => {
+describe('ConfigRoomDAO', () => {
 
     let partDAO: PartDAO;
     let configRoomDAO: ConfigRoomDAO;
