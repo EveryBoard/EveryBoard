@@ -3,7 +3,6 @@ import { Rules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
@@ -12,8 +11,8 @@ import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { GameNode } from 'src/app/jscaip/GameNode';
+import { AI, AIOptions } from 'src/app/jscaip/AI';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -48,11 +47,10 @@ export abstract class BaseGameComponent {
     styleUrls: ['./game-component.scss'],
 })
 @Debug.log
-export abstract class GameComponent<R extends Rules<M, S, L, B>,
+export abstract class GameComponent<R extends Rules<M, S, L>,
                                     M extends Move,
                                     S extends GameState,
-                                    L = void,
-                                    B extends BoardValue = BoardValue>
+                                    L = void>
     extends BaseGameComponent
 {
     public encoder: Encoder<M>;
@@ -67,9 +65,9 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public rules: R;
 
-    public node: MGPNode<R, M, S, L, B>;
+    public node: GameNode<M, S>;
 
-    public availableMinimaxes: Minimax<M, S, L>[];
+    public availableAIs: AI<M, S, AIOptions>[];
 
     public canPass: boolean = false;
 
@@ -119,8 +117,8 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
-        if (this.node.move.isPresent()) {
-            await this.showLastMove(this.node.move.get());
+        if (this.node.previousMove.isPresent()) {
+            await this.showLastMove(this.node.previousMove.get());
         }
         if (reason == null) {
             return MGPValidation.SUCCESS;
@@ -152,7 +150,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
         return this.node.gameState;
     }
     public getPreviousState(): S {
-        return this.node.mother.get().gameState;
+        return this.node.parent.get().gameState;
     }
     public async showLastMove(move: M): Promise<void> {
         // Not needed by default

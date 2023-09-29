@@ -67,13 +67,6 @@ export class Player implements ComparableObject {
     public getPreVictory(): number {
         return this.getVictoryValue() - this.getScoreModifier();
     }
-    public getDefeatValue(): number {
-        if (this === Player.ZERO) {
-            return Number.MAX_SAFE_INTEGER;
-        } else {
-            return Number.MIN_SAFE_INTEGER;
-        }
-    }
     public getVictoryValue(): number {
         if (this === Player.ZERO) {
             return Number.MIN_SAFE_INTEGER;

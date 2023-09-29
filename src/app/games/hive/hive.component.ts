@@ -5,6 +5,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -16,8 +18,9 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveFailure } from './HiveFailure';
-import { HiveMinimax } from './HiveMinimax';
+import { HiveHeuristic } from './HiveHeuristic';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
+import { HiveMoveGenerator } from './HiveMoveGenerator';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
@@ -116,8 +119,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         super(messageDisplayer);
         this.rules = HiveRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new HiveMinimax(this.rules, 'HiveMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator()),
+            new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),
         ];
         this.encoder = HiveMove.encoder;
         this.tutorial = new HiveTutorial().tutorial;

@@ -1,11 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { LascaControlAndDominationMinimax } from '../LascaControlAndDomination';
-import { LascaControlMinimax } from '../LascaControlMinimax';
 import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaFailure } from '../LascaFailure';
@@ -28,14 +25,9 @@ describe('LascaRules', () => {
     const ___: LascaStack = LascaStack.EMPTY;
 
     let rules: LascaRules;
-    let minimaxes: Minimax<LascaMove, LascaState>[];
 
     beforeEach(() => {
         rules = LascaRules.get();
-        minimaxes = [
-            new LascaControlMinimax('Lasca Control Minimax'),
-            new LascaControlAndDominationMinimax(),
-        ];
     });
     describe('Move', () => {
         it('should forbid move when first coord is empty', () => {
@@ -445,7 +437,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
             ], 1);
             const node: LascaNode = new LascaNode(expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it(`should declare current player winner when blocking all opponent's pieces`, () => {
             // Given a board where the last commander(s) of Player.ZERO are stucked
@@ -461,7 +453,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
             ], 2);
             const node: LascaNode = new LascaNode(expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });
 });

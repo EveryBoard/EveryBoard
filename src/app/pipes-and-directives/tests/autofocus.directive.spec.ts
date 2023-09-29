@@ -7,7 +7,7 @@ import { AutofocusDirective } from '../autofocus.directive';
 @Component({
     template: `<input type="text" autofocus />`,
 })
-class AutofocusTestComponent { }
+class AutofocusTestComponent {}
 
 describe('AutofocusDirective', () => {
     let testUtils: SimpleComponentTestUtils<AutofocusTestComponent>;

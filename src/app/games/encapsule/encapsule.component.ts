@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
-import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
 import { EncapsuleState, EncapsuleSpace } from 'src/app/games/encapsule/EncapsuleState';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
@@ -15,6 +14,9 @@ import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
 
 @Component({
     selector: 'app-encapsule',
@@ -41,8 +43,9 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         super(messageDisplayer);
         this.rules = EncapsuleRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new EncapsuleMinimax(this.rules, 'EncapsuleMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new EncapsuleMoveGenerator()),
+            new MCTS($localize`MCTS`, new EncapsuleMoveGenerator(), this.rules),
         ];
         this.encoder = EncapsuleMove.encoder;
         this.tutorial = new EncapsuleTutorial().tutorial;
@@ -50,7 +53,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
-        const move: MGPOptional<EncapsuleMove> = this.node.move;
+        const move: MGPOptional<EncapsuleMove> = this.node.previousMove;
         this.calculateLeftPieceCoords();
 
         if (move.isPresent()) {

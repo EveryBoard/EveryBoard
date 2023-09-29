@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -12,7 +12,7 @@ import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
-export class LascaNode extends MGPNode<Rules<LascaMove, LascaState>, LascaMove, LascaState> {}
+export class LascaNode extends GameNode<LascaMove, LascaState> {}
 
 export class LascaRules extends Rules<LascaMove, LascaState> {
 

@@ -12,7 +12,7 @@ import { MGPValidation } from '../MGPValidation';
 import { AppModule, FirebaseProviders } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
-import { MGPNode } from '../../jscaip/MGPNode';
+import { GameNode } from '../../jscaip/GameNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { OnlineGameWrapperComponent }
@@ -330,10 +330,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                             previousMove?: Move)
     : Promise<void>
     {
-        this.gameComponent.node = new MGPNode(
+        this.gameComponent.node = new GameNode(
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
-                new MGPNode(previousState)),
+                new GameNode(previousState)),
             MGPOptional.ofNullable(previousMove),
         );
         await this.gameComponent.updateBoard(false);
@@ -461,7 +461,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         await this.whenStable();
     }
     public async choosingAILevel(player: Player): Promise<void> {
-        const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroDepthSelect' : '#aiOneDepthSelect';
+        const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroLevelSelect' : '#aiOneLevelSelect';
         const selectDepth: HTMLSelectElement = this.findElement(aiDepthSelect).nativeElement;
         selectDepth.value = selectDepth.options[1].value;
         selectDepth.dispatchEvent(new Event('change'));

@@ -17,7 +17,7 @@ export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflM
         super(messageDisplayer, HnefataflMove.from);
         this.rules = HnefataflRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = this.createMinimaxes();
+        this.availableAIs = this.createAIs();
         this.encoder = HnefataflMove.encoder;
         this.tutorial = new HnefataflTutorial().tutorial;
     }

@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { SiamNode, SiamRules } from '../SiamRules';
-import { SiamMinimax } from '../SiamMinimax';
+import { SiamNode } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -9,6 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { SiamMoveGenerator } from '../SiamMoveGenerator';
 
 describe('SiamMove', () => {
 
@@ -28,9 +28,8 @@ describe('SiamMove', () => {
         const move: SiamMove = SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP).get();
         const state: SiamState = new SiamState(board, 0);
         const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        const rules: SiamRules = SiamRules.get();
-        const minimax: SiamMinimax = new SiamMinimax(rules, 'SiamMinimax');
-        const moves: SiamMove[] = minimax.getListMoves(node);
+        const moveGenerator: SiamMoveGenerator = new SiamMoveGenerator();
+        const moves: SiamMove[] = moveGenerator.getListMoves(node);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(SiamMove.encoder, move);
         }

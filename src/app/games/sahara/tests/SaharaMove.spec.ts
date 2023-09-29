@@ -1,26 +1,20 @@
 /* eslint-disable max-lines-per-function */
-import { SaharaNode, SaharaRules } from '../SaharaRules';
-import { SaharaMinimax } from '../SaharaMinimax';
+import { SaharaRules } from '../SaharaRules';
 import { SaharaMove } from '../SaharaMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { SaharaFailure } from '../SaharaFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
 
 describe('SaharaMoves', () => {
 
     it('should have a bijective encoder', () => {
         const rules: SaharaRules = SaharaRules.get();
-        const minimax: SaharaMinimax = new SaharaMinimax(rules, 'SaharaMinimax');
-        const node: SaharaNode = rules.getInitialNode();
-        expect(rules).toBeTruthy();
-        const moves: SaharaMove[] = minimax.getListMoves(node);
-        expect(moves.length).toEqual(12);
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(SaharaMove.encoder, move);
-        }
+        const moveGenerator: SaharaMoveGenerator = new SaharaMoveGenerator();
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, SaharaMove.encoder);
     });
     it('should throw error when starting coord is outside the board', () => {
         const start: Coord = new Coord(-1, 0);
