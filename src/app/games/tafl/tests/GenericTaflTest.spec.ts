@@ -13,7 +13,6 @@ import { TaflMove } from '../TaflMove';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 
 export class TaflTestEntries<C extends TaflComponent<R, M, S>,

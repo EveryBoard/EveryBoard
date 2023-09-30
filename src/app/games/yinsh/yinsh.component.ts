@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
@@ -241,7 +240,7 @@ export class YinshComponent
         }
     }
     private coordsBetween(start: Coord, end: Coord): Coord[] {
-        return MoveCoordToCoord.getMovedCoords(start, end);
+        return MoveCoordToCoord.getAllCoordsToward(start, end);
     }
     private showLastMoveCapture(capture: YinshCapture, alsoShowPiece: boolean): void {
         for (const coord of capture.capturedSpaces) {

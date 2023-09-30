@@ -6,7 +6,7 @@ import { MoveWithTwoCoords } from './MoveWithTwoCoords';
 
 export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
 
-    public static getMovedCoords(start: Coord, end: Coord): Coord[] {
+    public static getAllCoordsToward(start: Coord, end: Coord): Coord[] {
         return start.getCoordsToward(end).concat(start).concat(end);
     }
     public constructor(start: Coord, end: Coord) {
@@ -32,6 +32,6 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
     }
 
     public getMovedCoords(): Coord[] {
-        return MoveCoordToCoord.getMovedCoords(this.getStart(), this.getEnd());
+        return MoveCoordToCoord.getAllCoordsToward(this.getStart(), this.getEnd());
     }
 }
