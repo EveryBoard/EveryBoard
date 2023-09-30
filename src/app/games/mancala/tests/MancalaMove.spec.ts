@@ -1,19 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleNode, AwaleRules } from '../awale/AwaleRules';
-import { AwaleMinimax } from '../awale/AwaleMinimax';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { AwaleRules } from '../awale/AwaleRules';
 import { AwaleMove } from '../awale/AwaleMove';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { AwaleMoveGenerator } from '../awale/AwaleMoveGenerator';
 
 describe('AwaleMove', () => {
 
     it('should have a bijective encoder', () => {
         const rules: AwaleRules = AwaleRules.get();
-        const minimax: AwaleMinimax = new AwaleMinimax();
-        const node: AwaleNode = rules.getInitialNode();
-        const firstTurnMoves: AwaleMove[] = minimax.getListMoves(node);
-        for (const move of firstTurnMoves) {
-            EncoderTestUtils.expectToBeBijective(AwaleMove.encoder, move);
-        }
+        const moveGenerator: AwaleMoveGenerator = new AwaleMoveGenerator();
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, AwaleMove.encoder);
     });
     it('should override equals correctly', () => {
         const move: AwaleMove = AwaleMove.ZERO;

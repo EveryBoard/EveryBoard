@@ -65,7 +65,7 @@ import { MartianChessComponent } from './games/martian-chess/martian-chess.compo
 import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
 import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
 import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
-import { NumberedCircleComponent } from './games/mancala/commons/numbered-circle.component';
+import { NumberedCircleComponent } from './games/mancala/common/numbered-circle.component';
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
 import { PenteComponent } from './games/pente/pente.component';
@@ -254,4 +254,4 @@ export class FirebaseProviders {
     ],
     bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

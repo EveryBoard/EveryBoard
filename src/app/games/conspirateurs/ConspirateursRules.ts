@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -11,7 +11,7 @@ import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
 
-export class ConspirateursNode extends MGPNode<ConspirateursRules, ConspirateursMove, ConspirateursState> { }
+export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
 export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursState> {
 

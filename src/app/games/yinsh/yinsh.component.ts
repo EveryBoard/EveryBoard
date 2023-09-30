@@ -9,7 +9,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
-import { YinshMinimax } from './YinshMinimax';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
@@ -18,6 +17,10 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { YinshScoreHeuristic } from './YinshScoreHeuristic';
+import { YinshMoveGenerator } from './YinshMoveGenerator';
 
 interface SpaceInfo {
     coord: Coord,
@@ -98,8 +101,9 @@ export class YinshComponent
         this.scores = MGPOptional.of([0, 0]);
         this.rules = YinshRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new YinshMinimax(this.rules, 'YinshMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Score`, this.rules, new YinshScoreHeuristic(), new YinshMoveGenerator()),
+            new MCTS($localize`MCTS`, new YinshMoveGenerator(), this.rules),
         ];
         this.encoder = YinshMove.encoder;
         this.tutorial = new YinshTutorial().tutorial;

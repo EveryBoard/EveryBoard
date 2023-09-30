@@ -13,8 +13,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { P4State } from 'src/app/games/p4/P4State';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { P4Minimax } from 'src/app/games/p4/P4Minimax';
-import { P4Rules } from 'src/app/games/p4/P4Rules';
 
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
@@ -28,6 +26,11 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
+import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
+import { P4Rules } from 'src/app/games/p4/P4Rules';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -79,6 +82,12 @@ describe('LocalGameWrapperComponent', () => {
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
         // Then the turn should be incremented
         expect(testUtils.getGameComponent().getTurn()).toBe(1);
+    }));
+    it('should be interactive by default', fakeAsync(async() => {
+        // Given a game
+        // When displaying it
+        // Then it is interactive
+        expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
     }));
     it('should show draw', fakeAsync(async() => {
         const board: PlayerOrNone[][] = [
@@ -187,9 +196,26 @@ describe('LocalGameWrapperComponent', () => {
         }));
     });
     describe('Using AI', () => {
+        it('should disable interactivity when AI is selected without level', async() => {
+            // Given a game which is initially interactive, with a background showing it
+            expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
+            testUtils.expectElementToExist('.tile .player0-bg');
+
+            // When selecting only the AI without the depth for the current player
+            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
+            selectAI.value = selectAI.options[1].value;
+            selectAI.dispatchEvent(new Event('change'));
+            testUtils.detectChanges();
+            await testUtils.whenStable();
+
+            // Then the game should not be interactive anymore
+            expect(testUtils.getGameComponent()['isInteractive']).toBeFalse();
+            // nor should it show the current player background
+            testUtils.expectElementNotToExist('.tile .player0-bg');
+        });
         it('should show level when non-human player is selected', async() => {
             // Given a board where human are playing human
-            testUtils.expectElementNotToExist('#aiZeroDepthSelect');
+            testUtils.expectElementNotToExist('#aiZeroLevelSelect');
 
             // When selecting an AI for player ZERO
             const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
@@ -200,8 +226,8 @@ describe('LocalGameWrapperComponent', () => {
 
             // Then AI name should be diplayed and the level selectable
             const aiName: string = selectAI.options[selectAI.selectedIndex].label;
-            expect(aiName).toBe('P4Minimax');
-            testUtils.expectElementToExist('#aiZeroDepthSelect');
+            expect(aiName).toBe('Minimax');
+            testUtils.expectElementToExist('#aiZeroLevelSelect');
         });
         it('should show level when non-human player is selected, and propose AI to play', fakeAsync(async() => {
             // Given any board
@@ -242,8 +268,8 @@ describe('LocalGameWrapperComponent', () => {
         });
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            wrapper.players[0] = MGPOptional.of('P4Minimax');
-            wrapper.aiDepths[0] = '1';
+            wrapper.players[0] = MGPOptional.of('Minimax');
+            wrapper.aiOptions[0] = 'Level 1';
 
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
 
@@ -264,7 +290,7 @@ describe('LocalGameWrapperComponent', () => {
             selectAI.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
             await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneDepthSelect').nativeElement;
+            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneLevelSelect').nativeElement;
             const proposeAIToPlay: jasmine.Spy =
                 spyOn(testUtils.getWrapper() as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
             selectDepth.value = selectDepth.options[1].value;
@@ -278,22 +304,24 @@ describe('LocalGameWrapperComponent', () => {
         }));
         it('Minimax proposing illegal move should log error and show it to the user', fakeAsync(async() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            // Given a board on which some illegal move are possible from the AI
+            // Given a board and a buggy AI (that performs an illegal move)
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPOptional.empty());
-            spyOn(testUtils.getGameComponent().node, 'findBestMove').and.returnValue(P4Move.ZERO);
+            const minimax: Minimax<P4Move, P4State> =
+                new Minimax('Minimax', P4Rules.get(), new P4Heuristic(), new P4MoveGenerator());
+            spyOn(minimax, 'chooseNextMove').and.returnValue(P4Move.ZERO);
 
-            // When it is the turn of the bugged AI (that performs an illegal move)
-            const minimax: P4Minimax = new P4Minimax(P4Rules.get(), 'P4');
+            // When it is the turn of the bugged AI
+            const aiOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
             const message: string = 'The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!';
             const result: MGPValidation = await testUtils.expectToDisplayCriticalMessage(message, async() => {
-                return localGameWrapper.doAIMove(minimax);
+                return localGameWrapper.doAIMove(minimax, aiOptions);
             });
 
             // Then it should fail and an error should be logged
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
-            const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
+            const errorData: JSONValue = { game: 'P4', name: 'Minimax', move: 'P4Move(0)' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
@@ -309,7 +337,7 @@ describe('LocalGameWrapperComponent', () => {
             selectAI.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
             await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiZeroDepthSelect').nativeElement;
+            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiZeroLevelSelect').nativeElement;
             selectDepth.value = selectDepth.options[1].value;
             selectDepth.dispatchEvent(new Event('change'));
             testUtils.detectChanges();
@@ -321,8 +349,8 @@ describe('LocalGameWrapperComponent', () => {
         it('should reject human move if it tries to play when it is not its turn', fakeAsync(async() => {
             // Given a game against an AI
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            wrapper.players[0] = MGPOptional.of('P4Minimax');
-            wrapper.aiDepths[0] = '1';
+            wrapper.players[0] = MGPOptional.of('Minimax');
+            wrapper.aiOptions[0] = 'Level 1';
 
             // When trying to click
             // Then it should fail
@@ -407,7 +435,7 @@ describe('LocalGameWrapperComponent', () => {
 
             // Then 'AI (Player 0) won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
-            expect(winnerTag).toBe('P4Minimax (Player 2) won');
+            expect(winnerTag).toBe('Minimax (Player 2) won');
         }));
     });
     describe('onCancelMove', () => {
@@ -435,16 +463,17 @@ describe('LocalGameWrapperComponent', () => {
             expect(component.showLastMove).not.toHaveBeenCalled();
         }));
     });
-    it('should display AI metrics when parameter is set to true', fakeAsync(async() => {
+    it('should display AI info when parameter is set to true', fakeAsync(async() => {
         // Given a component where we want to show the AI metrics in the middle of a part
-        (testUtils.getWrapper() as LocalGameWrapperComponent).displayAIMetrics = true;
+        localStorage.setItem('displayAIInfo', 'true');
         await testUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
         // When displaying it
         testUtils.detectChanges();
 
         // Then the AI metrics are shown
-        testUtils.expectElementToExist('#AIMetrics');
+        testUtils.expectElementToExist('#AIInfo');
+        localStorage.clear();
     }));
     describe('Take Back', () => {
         it('should take back one turn when human move has been made', fakeAsync(async() => {

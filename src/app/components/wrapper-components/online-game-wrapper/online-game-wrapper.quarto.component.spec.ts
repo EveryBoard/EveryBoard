@@ -646,7 +646,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1000);
 
             // Then the game should be a victory
-            expect(wrapper.gameComponent.node.move.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node.previousMove.get()).toEqual(FIRST_MOVE);
             expect(partDAOCalled).toBeTrue(); // Ensure the check on update has passed and succeed
             testUtils.detectChanges();
             testUtils.expectElementToExist('#youWonIndicator');
@@ -674,7 +674,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1000);
 
             // Then the game should be a victory
-            expect(wrapper.gameComponent.node.move.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node.previousMove.get()).toEqual(FIRST_MOVE);
             expect(partDAOCalled).toBeTrue(); // Ensure the check on update has passed and succeed
             testUtils.detectChanges();
             testUtils.expectElementToExist('#youLostIndicator');
@@ -718,7 +718,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // Then the game should be a draw
-            expect(wrapper.gameComponent.node.move.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node.previousMove.get()).toEqual(FIRST_MOVE);
             expect(partDAOCalled).toBeTrue(); // Ensure the check on update has passed and succeed
             testUtils.expectElementToExist('#hardDrawIndicator');
             expectGameToBeOver();
@@ -1784,6 +1784,46 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+    });
+    describe('interactivity', () => {
+        it('should be interactive at first turn for current player', fakeAsync(async() => {
+            // Given a component at the beginning of the game, where we are Player.ZERO
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            // When displaying it
+            // Then it should be interactive
+            expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it('should not be interactive when at the turn of the opponent', fakeAsync(async() => {
+            // Given a game that has been started
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+
+            // When it is not the current player's turn
+            await doMove(FIRST_MOVE, true);
+            testUtils.detectChanges();
+
+            // Then it should not be interactive
+            expect(testUtils.getGameComponent()['isInteractive']).toBeFalse();
+            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        }));
+        it('should not be interactive when the game is finished', fakeAsync(async() => {
+            // Given a board at the opponent's turn
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await doMove(FIRST_MOVE, true);
+
+            // When the game ends (e.g., they lose or resign)
+            await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
+            await receivePartDAOUpdate({
+                winner: UserMocks.CREATOR_MINIMAL_USER,
+                loser: UserMocks.OPPONENT_MINIMAL_USER,
+                result: MGPResult.RESIGN.value,
+            });
+            await receiveAction(Player.ONE, 'EndGame');
+
+            // Then it should not be interactive
+            expect(testUtils.getGameComponent()['isInteractive']).toBeFalse();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });

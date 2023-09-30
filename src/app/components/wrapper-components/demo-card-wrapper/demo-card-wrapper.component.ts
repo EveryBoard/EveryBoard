@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, ViewChild, ViewContainerRef } from '@angular/core';
-import { AbstractNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode } from 'src/app/jscaip/GameNode';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameWrapper } from '../../wrapper-components/GameWrapper';
@@ -42,6 +42,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         window.setTimeout(async() => {
             await this.afterViewInit();
             this.gameComponent.node = this.demoNodeInfo.node;
+            // The component needs to be interactive in order to show all possible stylistic elements
+            this.gameComponent.setInteractive(true);
             // The board needs to be updated to render the changed node, setRole will do it
             await this.setRole(this.gameComponent.getCurrentPlayer());
             // Need to detect changes before potentially clicking,

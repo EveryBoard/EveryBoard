@@ -12,13 +12,16 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
+import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -51,8 +54,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         super(messageDisplayer);
         this.rules = AbaloneRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new AbaloneDummyMinimax(this.rules, 'Dummy'),
+        this.availableAIs = [
+            new Minimax($localize`Score`, this.rules, new AbaloneScoreHeuristic(), new AbaloneMoveGenerator()),
+            new MCTS($localize`MCTS`, new AbaloneMoveGenerator(), this.rules),
         ];
         this.encoder = AbaloneMove.encoder;
         this.tutorial = new AbaloneTutorial().tutorial;
@@ -250,8 +254,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private async tryExtension(clicked: Coord, firstPiece: Coord, lastPiece: Coord): Promise<MGPValidation> {
         const alignement: MGPFallible<Direction> = Direction.factory.fromMove(firstPiece, clicked);
         if (alignement.isSuccess()) {
-            const secondAlignement: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
-            if (alignement.equals(secondAlignement)) {
+            const secondAlignment: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
+            if (alignement.equals(secondAlignment)) {
                 // Then it's an extension of the line
                 const firstDistance: number = firstPiece.getDistance(clicked);
                 const secondDistance: number = lastPiece.getDistance(clicked);

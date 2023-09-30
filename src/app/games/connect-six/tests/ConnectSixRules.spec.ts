@@ -5,9 +5,7 @@ import { ConnectSixState } from '../ConnectSixState';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ConnectSixMinimax } from '../ConnectSixMinimax';
 
 describe('ConnectSixRules', () => {
     /**
@@ -23,16 +21,11 @@ describe('ConnectSixRules', () => {
 
     let rules: ConnectSixRules;
 
-    let minimaxes: Minimax<ConnectSixMove, ConnectSixState>[];
-
     beforeEach(() => {
         rules = ConnectSixRules.get();
-        minimaxes = [
-            new ConnectSixMinimax(rules, 'minimax'),
-        ];
     });
     describe('first turn', () => {
-        it('shoud allow the first player play only one piece', () => {
+        it('should allow the first player play only one piece', () => {
             // Given the initial state
             const state: ConnectSixState = ConnectSixState.getInitialState();
 
@@ -245,7 +238,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const node: ConnectSixNode = new ConnectSixNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
         it('should draw when no one can play anymore', () => {
             // Given the wildly unlikely case in which in 180 turn no one win
@@ -298,7 +291,7 @@ describe('ConnectSixRules', () => {
             // Then the board should be a draw
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: ConnectSixNode = new ConnectSixNode(expectedState);
-            RulesUtils.expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node);
         });
     });
 });

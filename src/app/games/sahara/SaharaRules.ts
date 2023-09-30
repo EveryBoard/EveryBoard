@@ -1,5 +1,5 @@
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
@@ -16,7 +16,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
-export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaState> {}
+export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
 @Debug.log
 export class SaharaRules extends Rules<SaharaMove, SaharaState> {

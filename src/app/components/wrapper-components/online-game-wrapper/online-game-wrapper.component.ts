@@ -24,12 +24,11 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { GameEventService } from 'src/app/services/GameEventService';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
 import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
-import { AbstractNode } from 'src/app/jscaip/MGPNode';
 
 export class OnlineGameWrapperMessages {
 
@@ -68,7 +67,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private gameEventsSubscription: Subscription = new Subscription();
     private currentGameSubscription: Subscription = new Subscription();
 
-    public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
+    public readonly OFFLINE_FONT_COLOR: { [key: string]: string } = { color: 'lightgrey' };
 
     public readonly globalTimeMessage: string = $localize`5 minutes`;
     public readonly turnTimeMessage: string = $localize`30 seconds`;
@@ -264,6 +263,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async onGameEnd(): Promise<void> {
         await this.currentGameService.removeCurrentGame();
+        this.gameComponent.setInteractive(false);
         this.endGame = true;
     }
     private async onReceivedMove(moveEvent: GameEventMove, isLastMoveOfBatch: boolean): Promise<void> {
@@ -285,9 +285,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value;
             await this.updateBoardAndShowLastMove(triggerAnimation && isLastMoveOfBatch);
         }
-        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
+        this.setCurrentPlayerAccordingToCurrentTurn();
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
+    }
+    private setCurrentPlayerAccordingToCurrentTurn(): void {
+        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
+        this.gameComponent.setInteractive(this.currentPlayer.name === this.getPlayer().name);
     }
     private beforeEventsBatch(): void {
         this.timeManager.beforeEventsBatch(this.endGame);
@@ -299,18 +303,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
         // Take back once, in any case
-        this.gameComponent.node = this.gameComponent.node.mother.get();
+        this.gameComponent.node = this.gameComponent.node.parent.get();
         if (this.gameComponent.getCurrentPlayer() !== player) {
             Utils.assert(this.gameComponent.getTurn() > 0, 'Should not allow player that never played to take back');
             // Take back a second time to make sure it end up on player's turn
-            this.gameComponent.node = this.gameComponent.node.mother.get();
+            this.gameComponent.node = this.gameComponent.node.parent.get();
         }
-        this.currentPlayer = this.players[this.gameComponent.getTurn() % 2].get();
-        if (this.gameComponent.getTurn() === 0) {
-            await this.updateBoardAndShowLastMove(false);
-        } else {
-            await this.updateBoardAndShowLastMove(true);
-        }
+        this.setCurrentPlayerAccordingToCurrentTurn();
+        const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
+        await this.updateBoardAndShowLastMove(triggerAnimation);
     }
     public canResign(): boolean {
         Utils.assert(this.isPlaying(), 'Non playing should not call canResign');
@@ -375,7 +376,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             MGPOptional.ofNullable(part.data.playerOne),
         ];
         Utils.assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
-        this.currentPlayer = this.players[part.data.turn % 2].get();
+        this.setCurrentPlayerAccordingToCurrentTurn();
         const opponent: MGPOptional<MinimalUser> = await this.setRealObserverRole();
         if (opponent.isPresent()) {
             const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>) => {
@@ -414,8 +415,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
             const stateAfterMove: GameState =
                 this.gameComponent.rules.applyLegalMove(move, this.gameComponent.node.gameState, legality.get());
-            const node: MGPNode<Rules<Move, GameState, unknown>, Move, GameState, unknown> =
-                new MGPNode(stateAfterMove, MGPOptional.of(this.gameComponent.node), MGPOptional.of(move));
+            const node: AbstractNode =
+                new GameNode(stateAfterMove, MGPOptional.of(this.gameComponent.node), MGPOptional.of(move));
             const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
 
             // To adhere to security rules, we must add the move before updating the part
@@ -549,8 +550,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.gameService.addTurnTime(this.currentPartId, giver);
     }
     public async onCancelMove(reason?: string): Promise<void> {
-        if (this.gameComponent.node.move.isPresent()) {
-            const move: Move = this.gameComponent.node.move.get();
+        if (this.gameComponent.node.previousMove.isPresent()) {
+            const move: Move = this.gameComponent.node.previousMove.get();
             await this.gameComponent.showLastMove(move);
         }
     }

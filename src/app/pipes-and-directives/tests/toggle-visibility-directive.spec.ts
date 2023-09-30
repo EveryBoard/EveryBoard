@@ -10,7 +10,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 </span>
 `,
 })
-class ToggleVisibilityTestComponent { }
+class ToggleVisibilityTestComponent {}
 
 describe('ToggleVisibilityDirective', () => {
     /**

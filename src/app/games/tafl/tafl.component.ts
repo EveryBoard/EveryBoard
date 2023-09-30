@@ -12,8 +12,11 @@ import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
-import { TaflMinimax } from './TaflMinimax';
+import { TaflMoveGenerator } from './TaflMoveGenerator';
+import { AI, AIOptions } from 'src/app/jscaip/AI';
+import { MCTS } from 'src/app/jscaip/MCTS';
 import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
+import { TaflPieceMinimax } from './TaflPieceMinimax';
 import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
 
@@ -61,7 +64,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
                 }
             }
         }
-        this.passedByCoords = this.node.move.get().getMovedCoords();
+        this.passedByCoords = this.node.previousMove.get().getMovedCoords();
     }
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
@@ -156,7 +159,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const coord: Coord = new Coord(x, y);
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
-        } else if (this.node.move.isPresent()) {
+        } else if (this.node.previousMove.isPresent()) {
             if (this.passedByCoords.some((c: Coord) => c.equals(coord))) {
                 classes.push('moved-fill');
             }
@@ -177,7 +180,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     private isClickable(coord: Coord): boolean {
         // Show if the piece can be clicked
-        return this.pieceBelongToCurrentPlayer(coord);
+        return this.isInteractive && this.pieceBelongToCurrentPlayer(coord);
     }
     public isInvader(x: number, y: number): boolean {
         return this.board[y][x] === TaflPawn.INVADERS;
@@ -185,12 +188,14 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
     }
-    protected createMinimaxes(): TaflMinimax[] {
+    protected createAIs(): AI<TaflMove, S, AIOptions>[] {
+        const moveGenerator: TaflMoveGenerator<M, S> = new TaflMoveGenerator(this.rules);
         return [
-            new TaflMinimax(this.rules, 'DummyBot'),
-            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
-            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
+            new TaflPieceMinimax(this.rules),
+            new TaflPieceAndInfluenceMinimax(this.rules),
+            new TaflPieceAndControlMinimax(this.rules),
+            new TaflEscapeThenPieceThenControlMinimax(this.rules),
+            new MCTS($localize`MCTS`, moveGenerator, this.rules),
         ];
     }
 }

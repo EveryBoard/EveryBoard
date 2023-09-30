@@ -1,5 +1,5 @@
 import { Encoder } from 'src/app/utils/Encoder';
-import { MancalaDistribution, MancalaMove } from '../commons/MancalaMove';
+import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class KalahMove extends MancalaMove {

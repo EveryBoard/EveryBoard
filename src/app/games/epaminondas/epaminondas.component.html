@@ -7,8 +7,8 @@
         <g *ngFor="let c of line; index as x">
             <rect id="click_{{ x }}_{{ y }}"
                   (click)="onClick(x, y)"
-                  [attr.x] = "(SPACE_SIZE * x) + STROKE_WIDTH"
-                  [attr.y] = "(SPACE_SIZE * y) + STROKE_WIDTH"
+                  [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
+                  [attr.y]="(SPACE_SIZE * y) + STROKE_WIDTH"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
                   [ngClass]="getRectClasses(x, y)"

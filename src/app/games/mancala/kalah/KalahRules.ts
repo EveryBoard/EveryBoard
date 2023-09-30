@@ -1,17 +1,17 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { KalahMove } from './KalahMove';
-import { MancalaState } from './../commons/MancalaState';
+import { MancalaState } from './../common/MancalaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MancalaDistribution } from '../commons/MancalaMove';
-import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../commons/MancalaRules';
+import { MancalaDistribution } from '../common/MancalaMove';
+import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MancalaFailure } from '../commons/MancalaFailure';
+import { MancalaFailure } from '../common/MancalaFailure';
 import { Utils } from 'src/app/utils/utils';
+import { GameNode } from 'src/app/jscaip/GameNode';
 
-export class KalahNode extends MGPNode<KalahRules, KalahMove, MancalaState> {}
+export class KalahNode extends GameNode<KalahMove, MancalaState> {}
 
 export class KalahRules extends MancalaRules<KalahMove> {
 
