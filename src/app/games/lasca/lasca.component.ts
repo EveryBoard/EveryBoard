@@ -22,6 +22,8 @@ import { LascaMoveGenerator } from './LascaMoveGenerator';
 import { LascaControlAndDominationHeuristic } from './LascaControlAndDominationHeuristic';
 
 interface SpaceInfo {
+    x: number;
+    y: number;
     squareClasses: string[];
     pieceInfos: LascaPieceInfo[];
 }
@@ -134,6 +136,8 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
         return {
             pieceInfos,
+            x,
+            y,
             squareClasses: [],
         };
     }
@@ -156,14 +160,16 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
     private showPossibleMoves(): void {
-        for (const validMove of this.legalMoves) {
-            const startingCoord: Coord = validMove.getStartingCoord();
-            this.getSpaceInfoAt(startingCoord).squareClasses.push('selectable-fill');
+        if (this.isInteractive) {
+            for (const validMove of this.legalMoves) {
+                const startingCoord: Coord = validMove.getStartingCoord();
+                this.getSpaceInfoAt(startingCoord).squareClasses.push('selectable-fill');
+            }
         }
     }
     private getSpaceInfoAt(unadapedCoord: Coord): SpaceInfo {
         // Adapt the coord if needed so we don't affect the "centrally symmetrical" coord to this one
-        if (this.role === Player.ONE && this.adaptedBoard.isAlreadySwitched) {
+        if (this.getPointOfView() === Player.ONE && this.adaptedBoard.isAlreadySwitched) {
             const max: number = LascaState.SIZE - 1;
             const adaptedCoord: Coord = new Coord(max - unadapedCoord.x, max - unadapedCoord.y);
             return this.adaptedBoard.spaceInfo[adaptedCoord.y][adaptedCoord.x];
@@ -172,7 +178,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
     private rotateAdaptedBoardIfNeeded(): void {
-        if (this.role === Player.ONE) {
+        if (this.getPointOfView() === Player.ONE) {
             const rotatedAdaptedBoard: SpaceInfo[][] = [];
             for (let y: number = 0; y < LascaState.SIZE; y++) {
                 rotatedAdaptedBoard[(LascaState.SIZE - 1) - y] = [];
@@ -193,10 +199,6 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.rotateAdaptedBoardIfNeeded();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        if (this.role === Player.ONE) {
-            x = (LascaState.SIZE - 1) - x;
-            y = (LascaState.SIZE - 1) - y;
-        }
         const clickValidity: MGPValidation = await this.canUserPlay('#coord_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());

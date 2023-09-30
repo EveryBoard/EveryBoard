@@ -393,6 +393,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         return [];
     }
     public getHighlightedCoords(): Coord[] {
+        if (this.isInteractive === false) {
+            return [];
+        }
         if (this.firstPiece.isPresent()) {
             return this.phalanxValidLandings.concat(this.validExtensions);
         } else {

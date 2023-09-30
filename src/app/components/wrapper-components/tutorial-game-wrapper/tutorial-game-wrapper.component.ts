@@ -93,6 +93,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                                                currentStep.previousMove);
         // Set role will update view with updateBoardAndShowLastMove
         await this.setRole(this.gameComponent.getCurrentPlayer());
+        // All steps but informational ones are interactive
+        this.gameComponent.setInteractive(currentStep.isInformation() === false);
         this.cdr.detectChanges();
     }
     public async onLegalUserMove(move: Move): Promise<void> {

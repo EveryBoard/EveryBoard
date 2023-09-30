@@ -41,6 +41,10 @@ export abstract class GameWrapper<P extends Comparable> {
 
     public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
+    /**
+     * The role of the player, i.e., ZERO if we are the first player, ONE if we are the second player,
+     * and NONE if we are observing
+     */
     public role: PlayerOrNone = PlayerOrNone.NONE;
 
     public endGame: boolean = false;
@@ -103,9 +107,10 @@ export abstract class GameWrapper<P extends Comparable> {
     }
     public async setRole(role: PlayerOrNone): Promise<void> {
         this.role = role;
-        this.gameComponent.role = this.role;
-        if (this.gameComponent.hasAsymmetricBoard) {
-            this.gameComponent.rotation = 'rotate(' + (this.role.value * 180) + ')';
+        if (role === PlayerOrNone.NONE) {
+            this.gameComponent.setPointOfView(Player.ZERO);
+        } else {
+            this.gameComponent.setPointOfView(role as Player);
         }
         await this.updateBoardAndShowLastMove(false); // Trigger redrawing of the board (might need to be rotated 180°)
     }
