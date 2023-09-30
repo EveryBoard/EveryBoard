@@ -6,7 +6,7 @@ import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/test
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { MGPValidators, RulesConfigDescription, defaultRCDC } from '../../normal-component/pick-game/pick-game.component';
+import { MGPValidators, RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Utils } from 'src/app/utils/utils';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
@@ -38,7 +38,7 @@ describe('RulesConfigurationComponent', () => {
 
     it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
         // Given a rules config component provided with an empty configuration
-        component.rulesConfigDescription = defaultRCDC;
+        component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
         spyOn(component.updateCallback, 'emit').and.callThrough();
 
         // When initialising

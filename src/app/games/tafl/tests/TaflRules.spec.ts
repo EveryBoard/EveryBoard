@@ -6,26 +6,12 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflNode, MyTaflRules } from './MyTaflRules.spec';
 import { MyTaflState } from './MyTaflState.spec';
-
-export const myTaflConfig: TaflConfig = {
-
-    castleIsLeftForGood: true,
-
-    invaderStarts: true,
-
-    kingFarFromHomeCanBeSandwiched: true,
-
-    centralThroneCanSurroundKing: true,
-
-    borderCanSurroundKing: true,
-};
 
 describe('TaflRules', () => {
 
@@ -39,14 +25,18 @@ describe('TaflRules', () => {
     beforeEach(() => {
         rules = MyTaflRules.get();
     });
+
     describe('getSurroundings', () => {
+
         it('should return neighborings spaces', () => {
-            const startingState: TaflState = rules.getInitialNode(myTaflConfig).gameState;
+            const startingState: TaflState = rules.getInitialNode(MyTaflRules.DEFAULT).gameState;
             const { backCoord } =
                 rules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingState);
             expect(backCoord).toEqual(new Coord(4, 1));
         });
+
     });
+
     it('should be illegal to move an empty square', () => {
         // Given the initial board
         const state: MyTaflState = MyTaflState.getInitialState();
@@ -58,6 +48,7 @@ describe('TaflRules', () => {
         const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+
     it('should be illegal to move an opponent pawn', () => {
         // Given the initial board
         const state: MyTaflState = MyTaflState.getInitialState();
@@ -69,6 +60,7 @@ describe('TaflRules', () => {
         const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+
     it('should be illegal to land on a pawn', () => {
         // Given the initial board
         const state: MyTaflState = MyTaflState.getInitialState();
@@ -80,6 +72,7 @@ describe('TaflRules', () => {
         const reason: string = TaflFailure.LANDING_ON_OCCUPIED_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+
     it('should be illegal to pass through a pawn', () => {
         // Given the initial board
         const state: MyTaflState = MyTaflState.getInitialState();
@@ -91,6 +84,7 @@ describe('TaflRules', () => {
         const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+
     it('should consider defender winner when all invaders are dead', () => {
         // Given a board where the last invader is about to be slaughter on an altar dedicated to Thor
         const board: Table<TaflPawn> = [
@@ -126,6 +120,7 @@ describe('TaflRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
+
     it('should consider invader winner when all defender are immobilized', () => {
         // Given a board where the last invader is about to be slaughter on an altar dedicated to Thor
         const board: Table<TaflPawn> = [
@@ -161,4 +156,39 @@ describe('TaflRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
+
+    describe('getInvader', () => {
+
+        it('should return Player.ZERO when invader start', () => {
+            // Given a rules instance configurated with a starting invader
+            const rules: MyTaflRules = MyTaflRules.get();
+            rules.config = {
+                ...MyTaflRules.DEFAULT,
+                invaderStarts: true,
+            };
+
+            // When calling getInvader
+            const invader: Player = rules.getInvader();
+
+            // Then the response should be Player.ZERO
+            expect(invader).toEqual(Player.ZERO);
+        });
+
+        it(`should return Player.ONE when invader don't start`, () => {
+            // Given a rules instance configurated with a starting defender
+            const rules: MyTaflRules = MyTaflRules.get();
+            rules.config = {
+                ...MyTaflRules.DEFAULT,
+                invaderStarts: false,
+            };
+
+            // When calling getInvader
+            const invader: Player = rules.getInvader();
+
+            // Then the response should be Player.ONE
+            expect(invader).toEqual(Player.ONE);
+        });
+
+    });
+
 });

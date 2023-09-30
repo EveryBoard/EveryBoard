@@ -232,6 +232,14 @@ export class MGPValidators {
 
 export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
 
+    public static readonly DEFAULT: RulesConfigDescription = new RulesConfigDescription(
+        {
+            name: (): string => $localize`Default`,
+            config: {},
+        },
+        {},
+    );
+
     public standardConfigs: NamedRulesConfig<R>[];
 
     constructor(defaultConfig: NamedRulesConfig<R>,
@@ -270,15 +278,6 @@ export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
         return this.standardConfigs.filter((v: NamedRulesConfig) => v.name() === configName)[0].config;
     }
 }
-
-export const defaultRCDC: RulesConfigDescription =
-    new RulesConfigDescription(
-        {
-            name: () => $localize`Default`,
-            config: {},
-        },
-        {},
-    );
 
 export class RulesConfigDescriptions {
 
@@ -534,7 +533,7 @@ export class GameInfo {
                        public readonly rules: AbstractRules,
                        public readonly creationDate: Date,
                        public readonly description: string,
-                       public readonly rulesConfigDescription: RulesConfigDescription = defaultRCDC,
+                       public readonly rulesConfigDescription: RulesConfigDescription = RulesConfigDescription.DEFAULT,
                        public readonly display: boolean = true)
     {
     }

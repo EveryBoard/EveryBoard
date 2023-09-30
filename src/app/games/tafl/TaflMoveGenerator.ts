@@ -21,7 +21,7 @@ export class TaflMoveGenerator<M extends TaflMove, S extends TaflState> extends 
     }
     public orderMoves(state: S, listMoves: M[]): M[] {
         const king: Coord = this.rules.getKingCoord(state).get();
-        const invader: Player = this.rules.config.invaderStarts ? Player.ZERO : Player.ONE;
+        const invader: Player = this.rules.getInvader();
         if (state.getCurrentPlayer() === invader) { // Invader
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
                 return - move.getEnd().getOrthogonalDistance(king);

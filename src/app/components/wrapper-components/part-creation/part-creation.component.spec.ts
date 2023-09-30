@@ -35,7 +35,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { defaultRCDC } from '../../normal-component/pick-game/pick-game.component';
+import { RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
 
 describe('PartCreationComponent', () => {
 
@@ -113,7 +113,7 @@ describe('PartCreationComponent', () => {
         currentGameService = TestBed.inject(CurrentGameService);
         component = testUtils.getComponent();
         component.partId = 'configRoomId';
-        component.rulesConfigDescription = defaultRCDC;
+        component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
         await chatDAO.set('configRoomId', { messages: [], status: 'dummy status' });
         await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);

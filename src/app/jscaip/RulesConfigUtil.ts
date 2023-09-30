@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-spaces */
-import { RulesConfigDescription, defaultRCDC, rulesConfigDescriptionMap } from '../components/normal-component/pick-game/pick-game.component';
+import { RulesConfigDescription, rulesConfigDescriptionMap } from '../components/normal-component/pick-game/pick-game.component';
 import { Localized } from '../utils/LocaleUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPValidation } from '../utils/MGPValidation';
@@ -41,12 +41,7 @@ export class RulesConfigUtils {
         const rulesConfigDescriptionOpt: MGPOptional<RulesConfigDescription> =
             rulesConfigDescriptionMap.get(gameName);
         const rulesConfigDescription: RulesConfigDescription =
-            rulesConfigDescriptionOpt.getOrElse(defaultRCDC);
-        // const rulesConfig: RulesConfig = {};
-        // for (const configParameter of rulesConfigDescription.getDefaultConfig()) {
-        //     rulesConfig[configParameter.name] = configParameter.defaultValue;
-        // }
-        // return rulesConfig;
+            rulesConfigDescriptionOpt.getOrElse(RulesConfigDescription.DEFAULT);
         return rulesConfigDescription.getDefaultConfig().config;
     }
 

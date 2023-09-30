@@ -3,11 +3,19 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflNode, TaflRules } from '../TaflRules';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflState } from './MyTaflState.spec';
-import { myTaflConfig } from './TaflRules.spec';
+import { TaflConfig } from '../TaflConfig';
 
 export class MyTaflNode extends TaflNode<MyTaflMove, MyTaflState> {}
 
 export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
+
+    public static readonly DEFAULT: TaflConfig = {
+        castleIsLeftForGood: true,
+        invaderStarts: true,
+        kingFarFromHomeCanBeSandwiched: true,
+        centralThroneCanSurroundKing: true,
+        borderCanSurroundKing: true,
+    };
 
     private static singleton: MGPOptional<MyTaflRules> = MGPOptional.empty();
 
@@ -18,6 +26,6 @@ export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
         return MyTaflRules.singleton.get();
     }
     private constructor() {
-        super(MyTaflState, myTaflConfig, MyTaflMove.from);
+        super(MyTaflState, MyTaflRules.DEFAULT, MyTaflMove.from);
     }
 }

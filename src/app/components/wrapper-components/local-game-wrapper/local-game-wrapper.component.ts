@@ -257,17 +257,19 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public override async getConfig(): Promise<RulesConfig> {
         // Linter seem to think that the unscubscription line can be reached before the subscription
         // yet this is false, so this explain the weird instanciation
-        let subcription: Subscription = { unsubscribe: () => {} } as Subscription;
+        let subcription: MGPOptional<Subscription> = MGPOptional.empty();
         const rulesConfigPromise: Promise<RulesConfig> =
             new Promise((resolve: (value: RulesConfig) => void) => {
-                subcription = this.configObs.subscribe((response: MGPOptional<RulesConfig>) => {
-                    if (response.isPresent()) {
-                        resolve(response.get());
-                    }
-                });
+                subcription = MGPOptional.of(
+                    this.configObs.subscribe((response: MGPOptional<RulesConfig>) => {
+                        if (response.isPresent()) {
+                            resolve(response.get());
+                        }
+                    }),
+                );
             });
         const rulesConfig: RulesConfig = await rulesConfigPromise;
-        subcription.unsubscribe();
+        subcription.get().unsubscribe();
         return rulesConfig;
     }
 
