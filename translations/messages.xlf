@@ -1087,8 +1087,8 @@
       <trans-unit id="351600669711653781" datatype="html">
         <source>Blocking the opponent</source>
       </trans-unit>
-      <trans-unit id="3821489988269011964" datatype="html">
-        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each row, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
+      <trans-unit id="6254470264310005605" datatype="html">
+        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each column, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
       </trans-unit>
       <trans-unit id="3460005588993308010" datatype="html">
         <source>You do not have any pieces of this type anymore.</source>

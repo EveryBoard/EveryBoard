@@ -1572,8 +1572,8 @@
         <source>Blocking the opponent</source>
         <target>Bloquer l'adversaire</target>
       </trans-unit>
-      <trans-unit id="3821489988269011964" datatype="html">
-        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each row, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
+      <trans-unit id="6254470264310005605" datatype="html">
+        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each column, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
         <target>Il y a une règle spéciale contre l'anti-jeu. Si un joueur forme une ligne contiguë, avec une pièce dans chaque colonne, il empêche l'adversaire d'atteindre sa ligne de victoire. Si l'adversaire est en contact avec trois pièces dans un tel cas, cette personne gagne immédiatement la partie.&lt;br/&gt;&lt;br/&gt;Ici, en jouant Clair, votre opposant vous bloque et est déjà en contact avec deux de vos pièces. Si vous pouvez le toucher avec une troisième pièce, vous gagnez. Faites-le !</target>
       </trans-unit>
       <trans-unit id="514608014907395319" datatype="html">

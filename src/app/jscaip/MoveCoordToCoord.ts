@@ -16,14 +16,6 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
     public getDirection(): MGPFallible<Direction> {
         return Direction.factory.fromMove(this.getStart(), this.getEnd());
     }
-    public isOrthogonal(): boolean {
-        const direction: MGPFallible<Direction> = this.getDirection();
-        if (direction.isSuccess()) {
-            return direction.get().isOrthogonal();
-        } else {
-            return false;
-        }
-    }
     public getStart(): Coord {
         return this.getFirst();
     }

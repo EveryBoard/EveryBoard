@@ -21,7 +21,7 @@ export class DiaballikTutorial extends Tutorial {
             $localize`Translations`,
             $localize`During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step from any piece that does not hold the ball.<br/><br/>Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.`,
             DiaballikState.getInitialState(),
-            [new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(1, 6)).get(),
+            [new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                                MGPOptional.empty(),
                                MGPOptional.empty())],
             $localize`Congratulations!`,
@@ -47,7 +47,7 @@ export class DiaballikTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Blocking the opponent`,
-            $localize`There is a special anti-game rule. If a player forms a contiguous line, with one piece in each row, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.<br/><br/>Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!`,
+            $localize`There is a special anti-game rule. If a player forms a contiguous line, with one piece in each column, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.<br/><br/>Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!`,
             new DiaballikState([
                 [X, X, X, _, _, _, _],
                 [X, _, _, _, _, _, Ẋ],
@@ -56,7 +56,7 @@ export class DiaballikTutorial extends Tutorial {
                 [O, X, _, _, _, _, _],
                 [_, O, _, X, _, _, _],
                 [_, _, O, Ȯ, O, O, O],
-            ], 0),
+            ], 1),
             [new DiaballikMove(DiaballikTranslation.from(new Coord(0, 1), new Coord(0, 2)).get(),
                                MGPOptional.of(DiaballikTranslation.from(new Coord(0, 2), new Coord(0, 3)).get()),
                                MGPOptional.empty())],
