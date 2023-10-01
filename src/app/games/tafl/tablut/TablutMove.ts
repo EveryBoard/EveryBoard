@@ -6,9 +6,9 @@ import { TaflMove } from '../TaflMove';
 
 export class TablutMove extends TaflMove {
 
-    public static override encoder: Encoder<TablutMove> = MoveWithTwoCoords.getFallibleEncoder<TablutMove>(TablutMove.from);
+    public static encoder: Encoder<TablutMove> = MoveWithTwoCoords.getFallibleEncoder<TablutMove>(TablutMove.from);
 
-    public static override of(start: Coord, end: Coord): TablutMove {
+    public static of(start: Coord, end: Coord): TablutMove {
         return new TablutMove(start, end);
     }
     public static from(start: Coord, end: Coord): MGPFallible<TablutMove> {

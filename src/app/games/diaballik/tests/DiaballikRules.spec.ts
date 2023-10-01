@@ -1,13 +1,14 @@
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { DiaballikMove, DiaballikPass, DiaballikTranslation } from '../DiaballikMove';
-import { DiaballikFailure, DiaballikNode, DiaballikRules } from '../DiaballikRules';
+import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
+import { DiaballikFailure } from '../DiaballikFailure';
 
-describe('DiaballikRules', () => {
+fdescribe('DiaballikRules', () => {
 
     let rules: DiaballikRules;
 
@@ -213,6 +214,45 @@ describe('DiaballikRules', () => {
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     });
+    it('should forbid passing from a piece of the opponent', () => {
+        // Given a state
+        const state: DiaballikState = DiaballikState.getInitialState();
+
+        // When trying to pass from a piece of the opponent
+        const move: DiaballikMove =
+            new DiaballikMove(DiaballikPass.from(new Coord(3, 0), new Coord(4, 0)).get(),
+                               MGPOptional.empty(),
+                               MGPOptional.empty());
+
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+    });
+    it('should forbid passing from a piece that does not hold the ball', () => {
+        // Given a state
+        const state: DiaballikState = DiaballikState.getInitialState();
+
+        // When trying to pass from a piece that does not hold the ball
+        const move: DiaballikMove =
+            new DiaballikMove(DiaballikPass.from(new Coord(2, 6), new Coord(1, 6)).get(),
+                               MGPOptional.empty(),
+                               MGPOptional.empty());
+
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, 'Cannot pass without the ball');
+    });
+    it('should forbid passing to something else than a player piece', () => {
+        // Given a state
+        const state: DiaballikState = DiaballikState.getInitialState();
+
+        // When trying to pass from a piece to an empty space for example
+        const move: DiaballikMove =
+            new DiaballikMove(DiaballikPass.from(new Coord(3, 6), new Coord(3, 3)).get(),
+                               MGPOptional.empty(),
+                               MGPOptional.empty());
+
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+    });
     it('should forbid moving to an occupied space', () => {
         // Given a state
         const state: DiaballikState = DiaballikState.getInitialState();
@@ -292,5 +332,52 @@ describe('DiaballikRules', () => {
         // When checking for victory
         // Then it should detect the victory
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+    });
+    it('should detect non victories as ongoing', () => {
+        // Given a state without victory
+        const state: DiaballikState = DiaballikState.getInitialState();
+        const node: DiaballikNode = new DiaballikNode(state);
+        // When checking its status
+        // Then it should be ongoing
+        RulesUtils.expectToBeOngoing(rules, node);
+    });
+    describe('victory and blocker coords', () => {
+        it('should not detect anything on initial state', () => {
+            // Given a state without victory
+            const state: DiaballikState = DiaballikState.getInitialState();
+            // When computing victory/defeat coords
+            // Then it should have none
+            expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
+        });
+        it('should not detect blockers when there is a discontinuous line', () => {
+            // Given a state where pieces don't always touch
+            const state: DiaballikState = new DiaballikState([
+                [X, X, X, _, _, X, X],
+                [_, _, _, _, Ẋ, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, _, _, Ȯ, _, _],
+                [_, _, _, X, _, _, _],
+                [_, _, _, _, _, _, _],
+                [O, O, O, _, _, O, O],
+            ], 0);
+            // When computing victory/defeat coords
+            // Then it should not return anything
+            expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
+        });
+        it('should not detect blockers when there are no pieces in a row', () => {
+            // Given a state where a row doesn't have any piece of a player
+            const state: DiaballikState = new DiaballikState([
+                [X, X, X, _, X, X, X],
+                [_, _, _, _, Ẋ, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, _, _, Ȯ, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [O, O, O, _, _, O, O],
+            ], 0);
+            // When computing victory/defeat coords
+            // Then it should not return anything
+            expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
+        });
     });
 });

@@ -30,9 +30,9 @@ class KamisadoPassMove extends Move {
 
 export class KamisadoPieceMove extends MoveCoordToCoord {
 
-    public static override readonly encoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.of);
+    public static readonly encoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.of);
 
-    public static override of(start: Coord, end: Coord): KamisadoPieceMove {
+    public static of(start: Coord, end: Coord): KamisadoPieceMove {
         Utils.assert(KamisadoState.isOnBoard(start),
                      'Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
         Utils.assert(KamisadoState.isOnBoard(end),

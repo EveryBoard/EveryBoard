@@ -12,7 +12,7 @@ import { Utils } from 'src/app/utils/utils';
 
 export class SaharaMove extends MoveCoordToCoord {
 
-    public static override encoder: Encoder<SaharaMove> = MoveWithTwoCoords.getFallibleEncoder(SaharaMove.from);
+    public static encoder: Encoder<SaharaMove> = MoveWithTwoCoords.getFallibleEncoder(SaharaMove.from);
 
     public static checkDistanceAndLocation(start: Coord, end: Coord): MGPValidation {
         const distance: number = start.getOrthogonalDistance(end);

@@ -28,6 +28,9 @@ import { CoerceoTutorial } from 'src/app/games/coerceo/CoerceoTutorial';
 import { CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
 import { ConspirateursComponent } from 'src/app/games/conspirateurs/conspirateurs.component';
 
+import { DiaballikComponent } from 'src/app/games/diaballik/diaballik.component';
+import { DiaballikTutorial } from 'src/app/games/diaballik/DiaballikTutorial';
+import { DiaballikRules } from 'src/app/games/diaballik/DiaballikRules';
 import { DiamComponent } from 'src/app/games/diam/diam.component';
 import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
@@ -127,9 +130,6 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { DiaballikComponent } from 'src/app/games/diaballik/diaballik.component';
-import { DiaballikTutorial } from 'src/app/games/diaballik/DiaballikTutorial';
-import { DiaballikRules } from 'src/app/games/diaballik/DiaballikRules';
 
 class GameDescription {
 
@@ -147,9 +147,9 @@ class GameDescription {
 
     public static readonly CONSPIRATEURS: Localized = () => $localize`Hide all of your pieces before your opponent does, or risk to be discovered!`;
 
-    public static readonly DIAM: Localized = () => $localize`Drop your pieces and move them around to align two pieces of the same color across the board to win!`;
-
     public static readonly DIABALLIK: Localized = () => $localize`Pass the ball up to the side of the opponent to win the game!`;
+
+    public static readonly DIAM: Localized = () => $localize`Drop your pieces and move them around to align two pieces of the same color across the board to win!`;
 
     public static readonly DVONN: Localized = () => $localize`Stack your pieces and control as many stacks as you can to win!`;
 

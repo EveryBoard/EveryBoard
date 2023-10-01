@@ -5,10 +5,10 @@ import { DiaballikMove, DiaballikPass, DiaballikTranslation } from '../Diaballik
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
-import { DiaballikFailure } from '../DiaballikRules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { DiaballikFailure } from '../DiaballikFailure';
 
-describe('DiaballikComponent', () => {
+fdescribe('DiaballikComponent', () => {
 
     let testUtils: ComponentTestUtils<DiaballikComponent>;
 
@@ -24,17 +24,29 @@ describe('DiaballikComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
-    it('should finish the move when clicking on the done button', fakeAsync(async() => {
+    it('should finish the move when clicking on the done button after one sub move', fakeAsync(async() => {
         // Given a state
-        // When doing some translation and then clicking on 'done'
-        console.log('click 1')
+        // When doing some submove and then clicking on 'done'
         await testUtils.expectClickSuccess('#click_0_6');
-        console.log('click 2')
         await testUtils.expectClickSuccess('#click_0_5');
         console.log(testUtils.getGameComponent().showDoneButton())
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.empty(),
+                              MGPOptional.empty());
+        // Then it should succeed
+        await testUtils.expectMoveSuccess('#done', move);
+    }));
+    it('should finish the move when clicking on the done button after two sub moves', fakeAsync(async() => {
+        // Given a state
+        // When doing two submoves and then clicking on 'done'
+        await testUtils.expectClickSuccess('#click_0_6');
+        await testUtils.expectClickSuccess('#click_0_5');
+        await testUtils.expectClickSuccess('#click_1_6');
+        await testUtils.expectClickSuccess('#click_1_5');
+        const move: DiaballikMove =
+            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+                              MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.empty());
         // Then it should succeed
         await testUtils.expectMoveSuccess('#done', move);
@@ -53,6 +65,15 @@ describe('DiaballikComponent', () => {
                               MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
         // Then it should succeed
         await testUtils.expectMoveSuccess('#click_4_6', move);
+    }));
+    it('should deselect current piece when clicking on it a second time', fakeAsync(async() => {
+        // Given a state where a piece has been selected
+        await testUtils.expectClickSuccess('#click_0_6');
+        // When clicking on it a second time
+        testUtils.expectElementToHaveClass('#piece_0_6', 'selected-stroke');
+        await testUtils.expectClickSuccess('#click_0_6');
+        // Then it should not be selected anymore
+        testUtils.expectElementNotToHaveClass('#piece_0_6', 'selected-stroke');
     }));
     it('should show possible targets when selecting a piece without ball', fakeAsync(async() => {
         // Given a state
@@ -107,12 +128,33 @@ describe('DiaballikComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_1_5', DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
     }));
+    it('should forbid passing not in a straight line', fakeAsync(async() => {
+        // Given a state where a strange pass is possible (but illegal)
+        await testUtils.expectClickSuccess('#click_4_6');
+        await testUtils.expectClickSuccess('#click_4_5');
+        await testUtils.expectClickSuccess('#click_4_5');
+        await testUtils.expectClickSuccess('#click_4_4');
+        // When passing along a diagonal
+        await testUtils.expectClickSuccess('#click_3_6');
+        // Then it should fail
+        await testUtils.expectClickFailure('#click_4_4', DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
+    }));
     it('should forbid moving more than one space at a time', fakeAsync(async() => {
         // Given a state
         // When moving a piece by multiple spaces
         await testUtils.expectClickSuccess('#click_0_6');
         // Then it should fail
         await testUtils.expectClickFailure('#click_0_3', DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
+    }));
+    it('should forbid selecting a piece for a third translation', fakeAsync(async() => {
+        // Given a state where two translations have already been done
+        await testUtils.expectClickSuccess('#click_0_6');
+        await testUtils.expectClickSuccess('#click_0_5');
+        await testUtils.expectClickSuccess('#click_1_6');
+        await testUtils.expectClickSuccess('#click_1_5');
+        // When selecting a third piece for a translation
+        // Then it should fail
+        await testUtils.expectClickFailure('#click_2_6', DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
     }));
     it('should show the last move', fakeAsync(async() => {
         // Given a state with a last move

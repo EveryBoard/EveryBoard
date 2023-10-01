@@ -38,7 +38,7 @@ export class ConspirateursMoveDrop extends MoveCoord {
 
 export class ConspirateursMoveSimple extends MoveCoordToCoord {
 
-    public static override encoder: Encoder<ConspirateursMoveSimple> =
+    public static encoder: Encoder<ConspirateursMoveSimple> =
         MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {

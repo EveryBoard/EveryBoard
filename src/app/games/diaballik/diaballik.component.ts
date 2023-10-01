@@ -1,5 +1,4 @@
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { DefeatCoords, DiaballikFailure, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
+import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
 import { DiaballikMove, DiaballikPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { Component } from '@angular/core';
@@ -13,6 +12,9 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { DiaballikMinimax } from './DiaballikMinimax';
 import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { Utils } from 'src/app/utils/utils';
+import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { DiaballikFailure } from './DiaballikFailure';
 
 @Component({
     selector: 'app-diaballik',
@@ -20,7 +22,9 @@ import { MCTS } from 'src/app/jscaip/MCTS';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 
-export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikMove, DiaballikState, DiaballikState> {
+export class DiaballikComponent
+    extends RectangularGameComponent<DiaballikRules, DiaballikMove, DiaballikState, DiaballikPiece, DiaballikState>
+{
 
     public stateInConstruction: DiaballikState;
 
@@ -35,6 +39,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
 
     private currentSelection: MGPOptional<Coord> = MGPOptional.empty();
     private hasMadePass: boolean = false;
+    private translationsMade: number = 0;
     private subMoves: DiaballikSubMove[] = [];
 
     private lastMovedBallCoords: Coord[] = [];
@@ -47,8 +52,8 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         this.hasAsymmetricBoard = true;
         this.rules = DiaballikRules.get();
         this.node = this.rules.getInitialNode();
-        this.WIDTH = this.getState().board.length;
-        this.HEIGHT = this.getState().board[0].length;
+        this.WIDTH = this.getState().getWidth()
+        this.HEIGHT = this.getState().getHeight();
         this.encoder = DiaballikMove.encoder;
         this.tutorial = new DiaballikTutorial().tutorial;
         this.availableAIs = [
@@ -59,6 +64,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: DiaballikState = this.node.gameState;
+        this.board = state.board; // Needed by RectangularGameComponent
         this.stateInConstruction = state;
         const possibleVictory: MGPOptional<VictoryOrDefeatCoords> = this.rules.getVictoryOrDefeatCoords(state);
         if (possibleVictory.isPresent()) {
@@ -77,7 +83,8 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         for (const subMove of move.getSubMoves()) {
             if (subMove instanceof DiaballikTranslation) {
               this.lastMovedPiecesCoords.push(subMove.getStart(), subMove.getEnd());
-            } else if (subMove instanceof DiaballikPass) {
+            } else {
+                Utils.assert(subMove instanceof DiaballikPass, 'DiaballikMove can only be a translation or a pass');
                 this.lastMovedBallCoords.push(subMove.getStart(), subMove.getEnd());
             }
         }
@@ -87,6 +94,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
         this.stateInConstruction = this.getState();
         this.currentSelection = MGPOptional.empty();
         this.hasMadePass = false;
+        this.translationsMade = 0;
         this.subMoves = [];
         this.indicators = [];
     }
@@ -174,11 +182,13 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
                 if (this.hasMadePass && clickedPiece.holdsBall) {
                     // Only one pass is allowed, so we don't allow to select the piece holding the ball anymore
                     return this.cancelMove(DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
+                } else if (this.translationsMade === 2 && clickedPiece.holdsBall === false) {
+                    // At most two translations are allowed
+                    return this.cancelMove(DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
                 } else {
                     this.currentSelection = MGPOptional.of(clickedCoord);
                     if (clickedPiece.holdsBall) {
                         this.indicators = this.moveGenerator.getPassEnds(this.stateInConstruction, clickedCoord);
-                        console.log(this.indicators.length)
                     } else {
                         this.indicators = this.moveGenerator.getTranslationEnds(this.stateInConstruction, clickedCoord);
                     }
@@ -212,6 +222,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
             const translationLegality: MGPFallible<DiaballikState> =
                 this.rules.isLegalTranslation(this.stateInConstruction, translation.get());
             if (translationLegality.isSuccess()) {
+                this.translationsMade++;
                 return this.addSubMove(translation.get(), translationLegality.get());
             } else {
                 return this.cancelMove(translationLegality.getReason());

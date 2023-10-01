@@ -6,10 +6,10 @@ import { TaflMove } from '../TaflMove';
 
 export class HnefataflMove extends TaflMove {
 
-    public static override encoder: Encoder<HnefataflMove> =
+    public static encoder: Encoder<HnefataflMove> =
         MoveWithTwoCoords.getFallibleEncoder<HnefataflMove>(HnefataflMove.from);
 
-    public static override of(start: Coord, end: Coord): HnefataflMove {
+    public static of(start: Coord, end: Coord): HnefataflMove {
         return new HnefataflMove(start, end);
     }
     public static from(start: Coord, end: Coord): MGPFallible<HnefataflMove> {

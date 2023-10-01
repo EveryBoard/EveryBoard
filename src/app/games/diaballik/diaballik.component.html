@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     viewBox="-5 -5 710 710"
-     [attr.viewBox]="'-5 -5 ' + ((WIDTH + 1) * SPACE_SIZE + 10) + ' ' + (HEIGHT * SPACE_SIZE + 10)"
+     [attr.viewBox]="getViewBoxWithExtraSpace(0, SPACE_SIZE, 0, 0)"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of stateInConstruction.board; index as y">
         <g *ngFor="let square of line; index as x"
@@ -34,19 +33,19 @@
         </g>
     </g>
     <rect *ngIf="victoryCoord.isPresent()"
-       id="victory_{{ victoryCoord.get().x }}_{{ victoryCoord.get().y }}"
-       class="base no-fill victory-stroke"
-       [attr.x]="SPACE_SIZE * victoryCoord.get().x"
-       [attr.y]="SPACE_SIZE * victoryCoord.get().y"
-       [attr.width]="SPACE_SIZE"
-       [attr.height]="SPACE_SIZE" />
+          id="victory_{{ victoryCoord.get().x }}_{{ victoryCoord.get().y }}"
+          class="base no-fill victory-stroke"
+          [attr.x]="SPACE_SIZE * victoryCoord.get().x"
+          [attr.y]="SPACE_SIZE * victoryCoord.get().y"
+          [attr.width]="SPACE_SIZE"
+          [attr.height]="SPACE_SIZE" />
     <rect *ngFor="let coord of defeatCoords"
-       id="defeat_{{ coord.x }}_{{ coord.y }}"
-       class="base no-fill defeat-stroke"
-        [attr.x]="SPACE_SIZE * coord.x"
-        [attr.y]="SPACE_SIZE * coord.y"
-        [attr.width]="SPACE_SIZE"
-        [attr.height]="SPACE_SIZE" />
+          id="defeat_{{ coord.x }}_{{ coord.y }}"
+          class="base no-fill defeat-stroke"
+          [attr.x]="SPACE_SIZE * coord.x"
+          [attr.y]="SPACE_SIZE * coord.y"
+          [attr.width]="SPACE_SIZE"
+          [attr.height]="SPACE_SIZE" />
 
     <rect *ngFor="let coord of indicators"
           id="indicator_{{ coord.x }}_{{ coord.y }}"

@@ -8,7 +8,7 @@ import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class LinesOfActionMove extends MoveCoordToCoord {
 
-    public static override encoder: Encoder<LinesOfActionMove> =
+    public static encoder: Encoder<LinesOfActionMove> =
         MoveWithTwoCoords.getFallibleEncoder<LinesOfActionMove>(LinesOfActionMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {

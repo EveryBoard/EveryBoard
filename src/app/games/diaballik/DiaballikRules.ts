@@ -4,28 +4,13 @@ import { DiaballikMove, DiaballikPass, DiaballikSubMove, DiaballikTranslation } 
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameNode } from 'src/app/jscaip/GameNode';
-
-export class DiaballikFailure {
-
-    public static CANNOT_MOVE_WITH_BALL: Localized = () => $localize`You cannot move the piece holding the ball.`;
-
-    public static MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE: Localized = () => $localize`You must move by exactly one orthogonal space.`;
-
-    public static PASS_MUST_BE_STRAIGHT: Localized = () => $localize`A pass must be done in a straight line, orthogonally or vertically.`;
-
-    public static PASS_PATH_OBSTRUCTED: Localized = () => $localize`The path of this pass is obstructed.`;
-
-    public static PASS_MUST_BE_IN_STRAIGHT_LINE: Localized = () => $localize`A pass must be done in a straight line, orthogonally or diagonally.`;
-
-    public static CAN_ONLY_DO_ONE_PASS: Localized = () => $localize`You can only perform one pass per turn.`;
-}
+import { DiaballikFailure } from './DiaballikFailure';
 
 export class VictoryOrDefeatCoords {
     public static victory(winner: Player, coord: Coord): VictoryOrDefeatCoords {
@@ -96,7 +81,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
 
         // The destination must be empty
         const end: Coord = translation.getEnd();
-        if (state.getPieceAt(end).owner !== PlayerOrNone.NONE) {
+        if (state.getPieceAt(end).owner.isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
 
@@ -125,12 +110,9 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
 
         // The straight-line path between origin and destination contains no other piece
-        const direction: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
-        if (direction.isFailure()) {
-            return MGPFallible.failure(DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
-        }
-        const afterStart: Coord = start.getNext(direction.get());
-        for (let coord: Coord = afterStart; coord.equals(end) === false; coord = coord.getNext(direction.get())) {
+        const direction: Direction = Direction.factory.fromMove(start, end).get();
+        const afterStart: Coord = start.getNext(direction);
+        for (let coord: Coord = afterStart; coord.equals(end) === false; coord = coord.getNext(direction)) {
             if (state.getPieceAt(coord) !== DiaballikPiece.NONE) {
                 return MGPFallible.failure(DiaballikFailure.PASS_PATH_OBSTRUCTED());
             }
@@ -164,7 +146,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         if (ballCoordZero.isPresent()) {
             return MGPOptional.of(VictoryOrDefeatCoords.victory(Player.ZERO, ballCoordZero.get()));
         }
-        const ballCoordOne: MGPOptional<Coord> = this.getBallCoordInRow(state, DiaballikState.SIZE-1, Player.ONE);
+        const ballCoordOne: MGPOptional<Coord> = this.getBallCoordInRow(state, state.getHeight() - 1, Player.ONE);
         if (ballCoordOne.isPresent()) {
             return MGPOptional.of(VictoryOrDefeatCoords.victory(Player.ONE, ballCoordOne.get()));
         }
@@ -178,7 +160,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return MGPOptional.empty();
     }
     private getBallCoordInRow(state: DiaballikState, y: number, player: Player): MGPOptional<Coord> {
-        for (let x: number = 0; x < DiaballikState.SIZE; x++) {
+        for (let x: number = 0; x < state.board.length; x++) {
             const piece: DiaballikPiece = state.getPieceAtXY(x, y);
             if (piece.holdsBall === true && piece.owner === player) {
                 return MGPOptional.of(new Coord(x, y));
@@ -208,7 +190,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         //   - at least 3 opponent's pieces are connected
         const opponentsConnected: MGPSet<Coord> = new MGPSet(); // Needs to be a set to avoid double counting
         const blockerCoords: Coord[] = [];
-        for (let x: number = 0; x < DiaballikState.SIZE; x++) {
+        for (let x: number = 0; x < state.board.length; x++) {
             const coord: MGPOptional<Coord> = this.getConnectedPieceCoord(x, opponentsConnected, state, player);
             if (coord.isPresent()) {
                 blockerCoords.push(coord.get());
@@ -229,7 +211,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
                                    player: Player)
     : MGPOptional<Coord>
     {
-        for (let y: number = 0; y < DiaballikState.SIZE; y++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
             const coord: Coord = new Coord(x, y);
             if (state.getPieceAt(coord).owner === player) {
                 // This is a player piece, it needs to be either in column 0

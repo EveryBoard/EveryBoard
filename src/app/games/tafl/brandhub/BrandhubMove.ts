@@ -6,10 +6,10 @@ import { TaflMove } from '../TaflMove';
 
 export class BrandhubMove extends TaflMove {
 
-    public static override encoder: Encoder<BrandhubMove> =
+    public static encoder: Encoder<BrandhubMove> =
         MoveWithTwoCoords.getFallibleEncoder<BrandhubMove>(BrandhubMove.from);
 
-    public static override of(start: Coord, end: Coord): BrandhubMove {
+    public static of(start: Coord, end: Coord): BrandhubMove {
         return new BrandhubMove(start, end);
     }
     public static from(start: Coord, end: Coord): MGPFallible<BrandhubMove> {

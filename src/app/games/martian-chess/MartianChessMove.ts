@@ -22,7 +22,7 @@ export class MartianChessMoveFailure {
 
 export class MartianChessMove extends MoveCoordToCoord {
 
-    public static override encoder: Encoder<MartianChessMove> = Encoder.tuple(
+    public static encoder: Encoder<MartianChessMove> = Encoder.tuple(
         [Coord.encoder, Coord.encoder, Encoder.identity<boolean>()],
         (move: MartianChessMove): [Coord, Coord, boolean] => [move.getStart(), move.getEnd(), move.calledTheClock],
         (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),

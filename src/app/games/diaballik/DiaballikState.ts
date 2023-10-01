@@ -18,11 +18,12 @@ export class DiaballikPiece {
 
 export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
 
-    public static readonly SIZE: number = 7;
+    private static readonly SIZE: number = 7;
 
     public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(DiaballikState.SIZE, DiaballikState.SIZE);
     }
+
     public static getInitialState(): DiaballikState {
         const O: DiaballikPiece = DiaballikPiece.ZERO;
         const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
@@ -39,5 +40,13 @@ export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
             [O, O, O, Ȯ, O, O, O],
         ];
         return new DiaballikState(board, 0);
+    }
+
+    public getHeight(): number {
+        return this.board.length;
+    }
+
+    public getWidth(): number {
+        return this.board[0].length;
     }
 }

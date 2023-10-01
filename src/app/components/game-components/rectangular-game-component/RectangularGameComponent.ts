@@ -24,4 +24,11 @@ export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
             (this.board.length * this.SPACE_SIZE + this.STROKE_WIDTH) + ' ' +
             (this.board[0].length * this.SPACE_SIZE + this.STROKE_WIDTH);
     }
+    public getViewBoxWithExtraSpace(bonusLeft: number = 0, bonusRight: number = 0,
+                                    bonusUp: number = 0, bonusDown: number = 0): string {
+        return (-0.5 * this.STROKE_WIDTH - bonusLeft) + ' ' +
+            (-0.5 * this.STROKE_WIDTH - bonusUp) + ' ' +
+            (this.board.length * this.SPACE_SIZE + this.STROKE_WIDTH + bonusRight) + ' ' +
+            (this.board[0].length * this.SPACE_SIZE + this.STROKE_WIDTH + bonusDown);
+    }
 }
