@@ -88,7 +88,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const squareInfo: SquareInfo = {
                     coord,
                     squareClasses: [],
-                    shelterClasses: [],
+                    shelterClasses: ['no-fill'],
                     pieceClasses: [this.getPlayerClass(piece)],
                     hasPiece: piece.isPlayer(),
                     isShelter: false,
@@ -108,6 +108,8 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             squareInfo.isShelter = true;
             if (squareInfo.hasPiece) {
                 squareInfo.shelterClasses.push('selectable-stroke');
+                squareInfo.pieceClasses.push('victory-stroke');
+                squareInfo.squareClasses.push('victory-fill');
             }
         }
     }
@@ -136,7 +138,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         if (gameStatus.isEndGame === true) {
             for (const shelter of ConspirateursState.ALL_SHELTERS) {
                 if (state.getPieceAt(shelter) === gameStatus.winner) {
-                    this.viewInfo.boardInfo[shelter.y][shelter.x].squareClasses.push('victory-fill');
+                    // this.viewInfo.boardInfo[shelter.y][shelter.x].squareClasses.push('victory-fill');
                 }
             }
         }
