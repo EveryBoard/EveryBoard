@@ -4,7 +4,7 @@ import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Player } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 
-fdescribe('DiaballikDistanceHeuristic', () => {
+describe('DiaballikDistanceHeuristic', () => {
 
     let heuristic: DiaballikDistanceHeuristic;
 

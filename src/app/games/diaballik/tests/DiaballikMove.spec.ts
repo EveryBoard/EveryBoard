@@ -6,7 +6,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { DiaballikFailure } from '../DiaballikFailure';
 
-fdescribe('DiaballikMove', () => {
+describe('DiaballikMove', () => {
     it('should reject out of board moves', () => {
         const invalidCoord: Coord = new Coord(-1, 0);
         const validCoord: Coord = new Coord(0, 0);

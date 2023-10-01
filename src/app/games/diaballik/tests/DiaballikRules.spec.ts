@@ -8,7 +8,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFailure } from '../DiaballikFailure';
 
-fdescribe('DiaballikRules', () => {
+describe('DiaballikRules', () => {
 
     let rules: DiaballikRules;
 

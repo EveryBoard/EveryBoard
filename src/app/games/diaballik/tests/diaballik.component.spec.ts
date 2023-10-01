@@ -8,7 +8,7 @@ import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { DiaballikFailure } from '../DiaballikFailure';
 
-fdescribe('DiaballikComponent', () => {
+describe('DiaballikComponent', () => {
 
     let testUtils: ComponentTestUtils<DiaballikComponent>;
 

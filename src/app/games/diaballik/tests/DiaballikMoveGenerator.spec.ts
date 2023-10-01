@@ -3,7 +3,7 @@ import { DiaballikMoveGenerator } from '../DiaballikMoveGenerator';
 import { DiaballikNode } from '../DiaballikRules';
 import { DiaballikState } from '../DiaballikState';
 
-fdescribe('DiaballikMoveGenerator', () => {
+describe('DiaballikMoveGenerator', () => {
 
     let moveGenerator: DiaballikMoveGenerator;
 

@@ -190,6 +190,10 @@
         <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
         <target>Cachez toutes vos pièces avant votre adversaire, ou risquez d'être découvert !</target>
       </trans-unit>
+      <trans-unit id="4487850967365387707" datatype="html">
+        <source>Pass the ball up to the side of the opponent to win the game!</source>
+        <target>Passez votre balle jusqu'au côté de votre adversaire pour gagner !</target>
+      </trans-unit>
       <trans-unit id="1337301714912876574" datatype="html">
         <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
         <target>Déposez vos pièces et déplacez les afin d'aligner deux pièces de la même couleur au travers du plateau pour gagner !</target>
@@ -429,6 +433,10 @@
       <trans-unit id="4321462166273172721" datatype="html">
         <source>Kalah</source>
         <target>Kalah</target>
+      </trans-unit>
+      <trans-unit id="809030787784855848" datatype="html">
+        <source>Diaballik</source>
+        <target>Diaballik</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -1515,6 +1523,58 @@
       <trans-unit id="7444294966169001535" datatype="html">
         <source>You have not performed a jump. Try again!</source>
         <target>Vous n'avez pas effectué un saut. Essayez à nouveau !</target>
+      </trans-unit>
+      <trans-unit id="2724052802065983013" datatype="html">
+        <source>You cannot move the piece holding the ball.</source>
+        <target>Vous ne pouvez pas déplacer la pièce qui tient la balle.</target>
+      </trans-unit>
+      <trans-unit id="5364606037550605842" datatype="html">
+        <source>You must move by exactly one orthogonal space.</source>
+        <target>Vous devez déplacer la pièce d'exactement une case orthogonalement.</target>
+      </trans-unit>
+      <trans-unit id="2737840191812588251" datatype="html">
+        <source>The path of this pass is obstructed.</source>
+        <target>Le chemin de cette passe est obstrué.</target>
+      </trans-unit>
+      <trans-unit id="6962674839842537174" datatype="html">
+        <source>A pass must be done in a straight line, orthogonally or diagonally.</source>
+        <target>Une passe doit être faite le long d'une ligne droite, orthogonalement ou verticalement.</target>
+      </trans-unit>
+      <trans-unit id="7841459528155785625" datatype="html">
+        <source>You can only perform one pass per turn.</source>
+        <target>Vous ne pouvez faire qu'une seule passe par tour.</target>
+      </trans-unit>
+      <trans-unit id="898651979160418937" datatype="html">
+        <source>You can only perform two translations per turn, not three.</source>
+        <target>Vous ne pouvez faire que deux translations par tour, pas trois.</target>
+      </trans-unit>
+      <trans-unit id="6313782238959628837" datatype="html">
+        <source>The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by two circles, into the home line of the opponent.</source>
+        <target>Le but à Diaballik est d'amener votre balle, initialement tenue par votre pièce centrale tel que représenté par le double cercle, du côté adverse.</target>
+      </trans-unit>
+      <trans-unit id="488799603315113699" datatype="html">
+        <source>Translations</source>
+        <target>Translations</target>
+      </trans-unit>
+      <trans-unit id="6723437388577428437" datatype="html">
+        <source>During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step from any piece that does not hold the ball.&lt;br/&gt;&lt;br/&gt;Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.</source>
+        <target>Durant un tour, vous êtes autorisés à faire jusque trois actions, qui incluent au plus deux translations. Une translations est un déplacement orthogonal d'une case d'une pièce qui ne tient pas la barre.&lt;br/&gt;&lt;br/&gt;Déplacez votre pièce la plus à gauche d'une case. Une fois que vous avez fait cela, cliquez sur le bouton vert qui apparaîtra en bas à drote du plateau, afin d'indiquer que vous avez fini votre tour.</target>
+      </trans-unit>
+      <trans-unit id="4552397654536129176" datatype="html">
+        <source>Pass</source>
+        <target>Passer</target>
+      </trans-unit>
+      <trans-unit id="6010383497630089959" datatype="html">
+        <source>Another action that you are allowed to do at most once per turn is a pass. You can pass the ball by clicking on the piece that holds the ball, then on another one of your piece that can receive it. A pass must be made in a straight line along an unobstructed path.&lt;br/&gt;&lt;br/&gt;Here, you can make two moves and a pass to win the game, do it!</source>
+        <target>Une autre action que vous pouvez faire, pas plus d'une fois par tour, est une passe. Vous pouvez passer la balle en cliquant sur la pièce qui tient balle, ensuite sur une autre de vos pièce qui peut la recevoir. Une passe doit être faite le long d'une ligne droite non obstruée.&lt;br/&gt;&lt;br/&gt;Ici, vous pouvez faire deux translations et une passe afin de gagner la partie, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="351600669711653781" datatype="html">
+        <source>Blocking the opponent</source>
+        <target>Bloquer l'adversaire</target>
+      </trans-unit>
+      <trans-unit id="3821489988269011964" datatype="html">
+        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each row, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
+        <target>Il y a une règle spéciale contre l'anti-jeu. Si un joueur forme une ligne contiguë, avec une pièce dans chaque colonne, il empêche l'adversaire d'atteindre sa ligne de victoire. Si l'adversaire est en contact avec trois pièces dans un tel cas, cette personne gagne immédiatement la partie.&lt;br/&gt;&lt;br/&gt;Ici, en jouant Clair, votre opposant vous bloque et est déjà en contact avec deux de vos pièces. Si vous pouvez le toucher avec une troisième pièce, vous gagnez. Faites-le !</target>
       </trans-unit>
       <trans-unit id="514608014907395319" datatype="html">
         <source>Chaining jumps in a single move</source>

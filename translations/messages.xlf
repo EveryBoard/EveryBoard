@@ -170,6 +170,9 @@
       <trans-unit id="1528017893097093154" datatype="html">
         <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
       </trans-unit>
+      <trans-unit id="4487850967365387707" datatype="html">
+        <source>Pass the ball up to the side of the opponent to win the game!</source>
+      </trans-unit>
       <trans-unit id="1337301714912876574" datatype="html">
         <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
       </trans-unit>
@@ -358,6 +361,9 @@
       </trans-unit>
       <trans-unit id="4321462166273172721" datatype="html">
         <source>Kalah</source>
+      </trans-unit>
+      <trans-unit id="809030787784855848" datatype="html">
+        <source>Diaballik</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1042,6 +1048,48 @@
       <trans-unit id="5361555826660205972" datatype="html">
         <source>You have not performed a triple jump. Try again!</source>
       </trans-unit>
+      <trans-unit id="2724052802065983013" datatype="html">
+        <source>You cannot move the piece holding the ball.</source>
+      </trans-unit>
+      <trans-unit id="5364606037550605842" datatype="html">
+        <source>You must move by exactly one orthogonal space.</source>
+      </trans-unit>
+      <trans-unit id="2737840191812588251" datatype="html">
+        <source>The path of this pass is obstructed.</source>
+      </trans-unit>
+      <trans-unit id="6962674839842537174" datatype="html">
+        <source>A pass must be done in a straight line, orthogonally or diagonally.</source>
+      </trans-unit>
+      <trans-unit id="7841459528155785625" datatype="html">
+        <source>You can only perform one pass per turn.</source>
+      </trans-unit>
+      <trans-unit id="898651979160418937" datatype="html">
+        <source>You can only perform two translations per turn, not three.</source>
+      </trans-unit>
+      <trans-unit id="5626639193339311369" datatype="html">
+        <source>Goal of the game</source>
+      </trans-unit>
+      <trans-unit id="6313782238959628837" datatype="html">
+        <source>The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by two circles, into the home line of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="488799603315113699" datatype="html">
+        <source>Translations</source>
+      </trans-unit>
+      <trans-unit id="6723437388577428437" datatype="html">
+        <source>During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step from any piece that does not hold the ball.&lt;br/&gt;&lt;br/&gt;Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.</source>
+      </trans-unit>
+      <trans-unit id="4552397654536129176" datatype="html">
+        <source>Pass</source>
+      </trans-unit>
+      <trans-unit id="6010383497630089959" datatype="html">
+        <source>Another action that you are allowed to do at most once per turn is a pass. You can pass the ball by clicking on the piece that holds the ball, then on another one of your piece that can receive it. A pass must be made in a straight line along an unobstructed path.&lt;br/&gt;&lt;br/&gt;Here, you can make two moves and a pass to win the game, do it!</source>
+      </trans-unit>
+      <trans-unit id="351600669711653781" datatype="html">
+        <source>Blocking the opponent</source>
+      </trans-unit>
+      <trans-unit id="3821489988269011964" datatype="html">
+        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each row, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
+      </trans-unit>
       <trans-unit id="3460005588993308010" datatype="html">
         <source>You do not have any pieces of this type anymore.</source>
       </trans-unit>
@@ -1062,9 +1110,6 @@
       </trans-unit>
       <trans-unit id="8818359317795688141" datatype="html">
         <source>Diam&apos;s board is a circular board made of 8 spaces. Each player has 8 pieces: 4 of one color, and 4 of another color. Initially, the board is empty. All the remaining pieces are displayed next to the board: Dark&apos;s pieces are on the left, Light&apos;s pieces are on the right.</source>
-      </trans-unit>
-      <trans-unit id="5626639193339311369" datatype="html">
-        <source>Goal of the game</source>
       </trans-unit>
       <trans-unit id="6692453785979358274" datatype="html">
         <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space in which you want to drop your piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win the game!</source>
@@ -3031,8 +3076,14 @@
       <trans-unit id="7542102025019708759" datatype="html">
         <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
       </trans-unit>
+      <trans-unit id="6986218395331151516" datatype="html">
+        <source>You must pick one of your pieces.</source>
+      </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="5966391152315784819" datatype="html">
+        <source>You have selected an empty space, you must select one of your own pieces.</source>
       </trans-unit>
       <trans-unit id="7236012742212037533" datatype="html">
         <source>You must click on an empty space.</source>
@@ -3046,9 +3097,6 @@
       <trans-unit id="1137390440747939689" datatype="html">
         <source>You cannot capture your own pieces.</source>
       </trans-unit>
-      <trans-unit id="6986218395331151516" datatype="html">
-        <source>You must pick one of your pieces.</source>
-      </trans-unit>
       <trans-unit id="2056314675813734949" datatype="html">
         <source>You cannot pass your turn.</source>
       </trans-unit>
@@ -3057,9 +3105,6 @@
       </trans-unit>
       <trans-unit id="5019447873100403310" datatype="html">
         <source>You must pass your turn.</source>
-      </trans-unit>
-      <trans-unit id="5966391152315784819" datatype="html">
-        <source>You have selected an empty space, you must select one of your own pieces.</source>
       </trans-unit>
       <trans-unit id="1153768241274180865" datatype="html">
         <source>You must choose different starting and ending coordinates.</source>
