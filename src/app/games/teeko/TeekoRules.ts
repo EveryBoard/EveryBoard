@@ -27,7 +27,10 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
         return TeekoRules.singleton.get();
     }
     private constructor() {
-        super(TeekoState);
+        super();
+    }
+    public getInitialState(): TeekoState {
+        return TeekoState.getInitialState();
     }
     public isLegal(move: TeekoMove, state: TeekoState): MGPValidation {
         if (state.isInDropPhase()) {

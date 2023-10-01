@@ -135,9 +135,15 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         return QuartoRules.singleton.get();
     }
+
     private constructor() {
-        super(QuartoState);
+        super();
     }
+
+    public getInitialState(): QuartoState {
+        return QuartoState.getInitialState();
+    }
+
     public static readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals
         new QuartoLine(new Coord(0, 0), Direction.DOWN),

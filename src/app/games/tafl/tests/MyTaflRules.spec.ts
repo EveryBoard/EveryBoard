@@ -17,7 +17,13 @@ export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
         }
         return MyTaflRules.singleton.get();
     }
+
     private constructor() {
-        super(MyTaflState, myTaflConfig, MyTaflMove.from);
+        super(myTaflConfig, MyTaflMove.from);
     }
+
+    public getInitialState(): MyTaflState {
+        return MyTaflState.getInitialState();
+    }
+
 }

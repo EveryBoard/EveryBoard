@@ -38,21 +38,13 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return y - 1;
     }
-    public static getListMoves(node: P4Node): P4Move[] {
-        // should be called only if the game is not over
-        const originalState: P4State = node.gameState;
-        const moves: P4Move[] = [];
 
-        for (let x: number = 0; x < P4State.WIDTH; x++) {
-            if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
-                const move: P4Move = P4Move.of(x);
-                moves.push(move);
-            }
-        }
-        return moves;
-    }
     private constructor() {
-        super(P4State);
+        super();
+    }
+
+    public getInitialState(): P4State {
+        return P4State.getInitialState();
     }
     public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
         const x: number = move.x;

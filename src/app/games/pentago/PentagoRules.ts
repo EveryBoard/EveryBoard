@@ -23,9 +23,15 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return PentagoRules.singleton.get();
     }
+
     private constructor() {
-        super(PentagoState);
+        super();
     }
+
+    public getInitialState(): PentagoState {
+        return PentagoState.getInitialState();
+    }
+
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
         // [ firstCoordToTest, directionToTest, shouldLookTheSpaceBeforeAsWellAsSpaceAfter]
         [new Coord(1, 0), new Vector(1, 1), false], // 4 short diagonals

@@ -28,9 +28,15 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         }
         return KamisadoRules.singleton.get();
     }
+
     private constructor() {
-        super(KamisadoState);
+        super();
     }
+
+    public getInitialState(): KamisadoState {
+        return KamisadoState.getInitialState();
+    }
+
     public static getColorMatchingPiece(state: KamisadoState): Array<Coord> {
         if (state.coordToPlay.isPresent()) {
             // Only one piece can move, and its coord is stored in state.coordToPlay

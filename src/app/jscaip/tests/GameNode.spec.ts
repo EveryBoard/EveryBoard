@@ -30,6 +30,10 @@ class MockNode extends GameNode<MoveMock, GameStateMock> {}
 
 class RulesMock extends Rules<MoveMock, GameStateMock> {
 
+    public getInitialState(): GameStateMock {
+        return GameStateMock.getInitialState();
+    }
+
     public applyLegalMove(move: MoveMock, state: GameStateMock, info: void): GameStateMock {
         throw new Error('RulesMock.applyLegalMove method not implemented.');
     }
@@ -54,7 +58,7 @@ describe('GameNode', () => {
 
         beforeEach(() => {
             GameNode.ID = 0;
-            rules = new RulesMock(GameStateMock);
+            rules = new RulesMock();
 
             const move: MoveMock = new MoveMock(1);
             const optionalMove: MGPOptional<MoveMock> = MGPOptional.of(move);

@@ -36,9 +36,15 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         }
         return ReversiRules.singleton.get();
     }
+
     private constructor() {
-        super(ReversiState);
+        super();
     }
+
+    public getInitialState(): ReversiState {
+        return ReversiState.getInitialState();
+    }
+
     public static getGameStatus(node: ReversiNode): GameStatus {
         const state: ReversiState = node.gameState;
         const gameIsEnded: boolean = ReversiRules.isGameEnded(state);

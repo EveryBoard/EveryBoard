@@ -27,8 +27,13 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
         }
         return PenteRules.singleton.get();
     }
+
     private constructor() {
-        super(PenteState);
+        super();
+    }
+
+    public getInitialState(): PenteState {
+        return PenteState.getInitialState();
     }
 
     public isLegal(move: PenteMove, state: PenteState): MGPValidation {

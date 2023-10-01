@@ -29,9 +29,15 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return SaharaRules.singleton.get();
     }
+
     private constructor() {
-        super(SaharaState);
+        super();
     }
+
+    public getInitialState(): SaharaState {
+        return SaharaState.getInitialState();
+    }
+
     public static getStartingCoords(board: Table<FourStatePiece>, player: Player): Coord[] {
         const startingCoords: Coord[] = [];
         for (let y: number = 0; y < SaharaState.HEIGHT; y++) {

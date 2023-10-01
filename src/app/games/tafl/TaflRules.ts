@@ -11,7 +11,6 @@ import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
 import { TaflConfig } from './TaflConfig';
-import { Type } from '@angular/core';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -21,11 +20,10 @@ export class TaflNode<M extends TaflMove, S extends TaflState> extends GameNode<
 
 export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S> {
 
-    protected constructor(stateType: Type<S>,
-                          public readonly config: TaflConfig,
+    protected constructor(public readonly config: TaflConfig,
                           public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(stateType);
+        super();
     }
     public isLegal(move: TaflMove, state: S): MGPValidation {
         const player: Player = state.getCurrentPlayer();

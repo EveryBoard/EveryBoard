@@ -30,9 +30,15 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         }
         return GoRules.singleton.get();
     }
+
     private constructor() {
-        super(GoState);
+        super();
     }
+
+    public getInitialState(): GoState {
+        return GoState.getInitialState();
+    }
+
     public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         if (GoRules.isPass(move)) {
             const playing: boolean = state.phase === Phase.PLAYING;

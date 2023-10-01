@@ -17,7 +17,12 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
         }
         return TablutRules.singleton.get();
     }
+
     private constructor() {
-        super(TablutState, tablutConfig, TablutMove.from);
+        super(tablutConfig, TablutMove.from);
+    }
+
+    public getInitialState(): TablutState {
+        return TablutState.getInitialState();
     }
 }

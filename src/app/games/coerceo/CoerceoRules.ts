@@ -24,9 +24,15 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         }
         return CoerceoRules.singleton.get();
     }
+
     private constructor() {
-        super(CoerceoState);
+        super();
     }
+
+    public getInitialState(): CoerceoState {
+        return CoerceoState.getInitialState();
+    }
+
     public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState {
         if (CoerceoMove.isTileExchange(move)) {
             return this.applyLegalTileExchange(move, state);

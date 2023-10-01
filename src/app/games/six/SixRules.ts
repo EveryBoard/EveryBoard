@@ -29,6 +29,8 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
 
     private static singleton: MGPOptional<SixRules> = MGPOptional.empty();
 
+    private currentVictorySource: SixVictorySource;
+
     public static get(): SixRules {
         if (SixRules.singleton.isAbsent()) {
             SixRules.singleton = MGPOptional.of(new SixRules());
@@ -36,10 +38,12 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         return SixRules.singleton.get();
     }
     private constructor() {
-        super(SixState);
+        super();
     }
 
-    private currentVictorySource: SixVictorySource;
+    public getInitialState(): SixState {
+        return SixState.getInitialState();
+    }
 
     public applyLegalMove(move: SixMove, state: SixState, kept: SixLegalityInformation): SixState {
         if (state.turn < 40) {

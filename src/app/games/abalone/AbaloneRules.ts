@@ -27,9 +27,15 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         }
         return AbaloneRules.singleton.get();
     }
+
     private constructor() {
-        super(AbaloneState);
+        super();
     }
+
+    public getInitialState(): AbaloneState {
+        return AbaloneState.getInitialState();
+    }
+
     private static isLegalRealPush(firstOpponent: Coord,
                                    move: AbaloneMove,
                                    state: AbaloneState,

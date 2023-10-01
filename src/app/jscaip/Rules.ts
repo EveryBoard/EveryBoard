@@ -1,6 +1,5 @@
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Move } from './Move';
-import { Type } from '@angular/core';
 import { Debug, Utils } from '../utils/utils';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -9,7 +8,7 @@ import { GameStatus } from './GameStatus';
 
 export abstract class Rules<M extends Move, S extends GameState, L = void> {
 
-    public constructor(public readonly stateType: Type<S>) {
+    public constructor() {
     }
     /* The data that represent the status of the game at the current moment, including:
      * the board
@@ -50,9 +49,10 @@ export abstract class Rules<M extends Move, S extends GameState, L = void> {
      */
     public abstract isLegal(move: M, state: S): MGPFallible<L>;
 
+    public abstract getInitialState(): S
+
     public getInitialNode(): GameNode<M, S> {
-        // eslint-disable-next-line dot-notation
-        const initialState: S = this.stateType['getInitialState']();
+        const initialState: S = this.getInitialState();
         return new GameNode(initialState);
     }
     public abstract getGameStatus(node: GameNode<M, S>): GameStatus;

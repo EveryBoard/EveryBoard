@@ -30,9 +30,15 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
         return GipfRules.singleton.get();
     }
+
     private constructor() {
-        super(GipfState);
+        super();
     }
+
+    public getInitialState(): GipfState {
+        return GipfState.getInitialState();
+    }
+
     public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
         return new GipfState(computedState.board,
                              computedState.turn + 1,

@@ -30,7 +30,10 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return YinshRules.singleton.get();
     }
     private constructor() {
-        super(YinshState);
+        super();
+    }
+    public getInitialState(): YinshState {
+        return YinshState.getInitialState();
     }
     public applyLegalMove(_move: YinshMove, _state: YinshState, info: YinshState): YinshState {
         const stateWithoutTurn: YinshState = info;

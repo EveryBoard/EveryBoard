@@ -30,7 +30,10 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         new NInARowHelper(TrexoState.isOnBoard, TrexoRules.getOwner, 5);
 
     private constructor() {
-        super(TrexoState);
+        super();
+    }
+    public getInitialState(): TrexoState {
+        return TrexoState.getInitialState();
     }
     public applyLegalMove(move: TrexoMove, state: TrexoState, _info: void): TrexoState {
         return state

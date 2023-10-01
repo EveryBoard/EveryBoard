@@ -26,9 +26,15 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         }
         return EpaminondasRules.singleton.get();
     }
+
     private constructor() {
-        super(EpaminondasState);
+        super();
     }
+
+    public getInitialState(): EpaminondasState {
+        return EpaminondasState.getInitialState();
+    }
+
     public static isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {
         const phalanxValidity: MGPValidation = this.getPhalanxValidity(state, move);
         if (phalanxValidity.isFailure()) {

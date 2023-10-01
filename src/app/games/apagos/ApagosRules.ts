@@ -24,8 +24,13 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         }
         return ApagosRules.singleton.get();
     }
+
     private constructor() {
-        super(ApagosState);
+        super();
+    }
+
+    public getInitialState(): ApagosState {
+        return ApagosState.getInitialState();
     }
 
     public applyLegalMove(move: ApagosMove, state: ApagosState, _info: void): ApagosState {

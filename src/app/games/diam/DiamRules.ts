@@ -25,9 +25,15 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         }
         return DiamRules.singleton.get();
     }
+
     private constructor() {
-        super(DiamState);
+        super();
     }
+
+    public getInitialState(): DiamState {
+        return DiamState.getInitialState();
+    }
+
     public applyLegalMove(move: DiamMove, state: DiamState, _info: void): DiamState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);

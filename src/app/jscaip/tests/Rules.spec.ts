@@ -28,9 +28,15 @@ class AbstractRules extends Rules<P4Move, MyAbstractState> {
         }
         return AbstractRules.singleton.get();
     }
+
     private constructor() {
-        super(MyAbstractState);
+        super();
     }
+
+    public getInitialState(): MyAbstractState {
+        return MyAbstractState.getInitialState();
+    }
+
     public applyLegalMove(move: P4Move, state: MyAbstractState, _legality: void): MyAbstractState {
         const board: readonly number[] = state.board[0];
         return new MyAbstractState([board.concat([move.x])], state.turn + 1);

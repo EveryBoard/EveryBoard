@@ -25,9 +25,15 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return PylosRules.singleton.get();
     }
+
     private constructor() {
-        super(PylosState);
+        super();
     }
+
+    public getInitialState(): PylosState {
+        return PylosState.getInitialState();
+    }
+
     public static getStateInfo(state: PylosState): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
         const freeToMove: PylosCoord[] = [];
         const landable: PylosCoord[] = [];

@@ -23,15 +23,22 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
         }
         return ConnectSixRules.singleton.get();
     }
+
     public static readonly CONNECT_SIX_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(ConnectSixState.isOnBoard, Utils.identity, 6);
 
     public static getVictoriousCoords(state: ConnectSixState): Coord[] {
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
+
     private constructor() {
-        super(ConnectSixState);
+        super();
     }
+
+    public getInitialState(): ConnectSixState {
+        return ConnectSixState.getInitialState();
+    }
+
     public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _info: void): ConnectSixState {
         if (move instanceof ConnectSixDrops) {
             return this.applyLegalDrops(move, state);
