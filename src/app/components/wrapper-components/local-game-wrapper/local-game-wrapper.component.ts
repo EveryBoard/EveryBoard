@@ -24,7 +24,7 @@ import { AbstractAI, AIOptions, AIStats } from 'src/app/jscaip/AI';
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static readonly AI_TIMEOUT: number = 1000;
+    public static readonly AI_TIMEOUT: number = 1;
 
     public aiOptions: [string, string] = ['none', 'none'];
 

@@ -237,11 +237,47 @@ describe('ConspirateursComponent', () => {
             [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [O, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, O],
         ], 60);
+
         // When the state is displayed
         await testUtils.setupState(state);
+
         // The its pieces are highlighted
         testUtils.expectElementToHaveClass('#click_0_0', 'victory-fill');
+        // And the opponent should not be
+        testUtils.expectElementNotToHaveClass('#click_16_16', 'victory-fill');
     }));
+
+    it('should highlight shelters of everybody before victory', fakeAsync(async() => {
+        // Given a state where player 0 and 1 have pieces in shelters
+        const state: ConspirateursState = new ConspirateursState([
+            [X, X, _, X, _, X, _, X, X, X, _, X, _, X, _, X, X],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, O],
+        ], 60);
+
+        // When the state is displayed
+        await testUtils.setupState(state);
+
+        // The player zero pieces are highlighted
+        testUtils.expectElementToHaveClass('#click_0_0', 'victory-fill');
+        // And player one too
+        testUtils.expectElementToHaveClass('#click_16_16', 'victory-fill');
+    }));
+
 });
