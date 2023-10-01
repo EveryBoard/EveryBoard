@@ -222,7 +222,7 @@ export class DiaballikComponent extends GameComponent<DiaballikRules, DiaballikM
     }
 
     public showDoneButton(): boolean {
-        return this.subMoves.length >= 1; // TODO atfer merging design-enhancements: && this.isInteractive
+        return this.isInteractive && this.subMoves.length >= 1;
     }
 
     public async done(): Promise<MGPValidation> {

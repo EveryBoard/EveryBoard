@@ -83,6 +83,12 @@ describe('LocalGameWrapperComponent', () => {
         // Then the turn should be incremented
         expect(testUtils.getGameComponent().getTurn()).toBe(1);
     }));
+    it('should be interactive by default', fakeAsync(async() => {
+        // Given a game
+        // When displaying it
+        // Then it is interactive
+        expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
+    }));
     it('should show draw', fakeAsync(async() => {
         const board: PlayerOrNone[][] = [
             [O, O, O, _, O, O, O],
@@ -190,6 +196,23 @@ describe('LocalGameWrapperComponent', () => {
         }));
     });
     describe('Using AI', () => {
+        it('should disable interactivity when AI is selected without level', async() => {
+            // Given a game which is initially interactive, with a background showing it
+            expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
+            testUtils.expectElementToExist('.tile .player0-bg');
+
+            // When selecting only the AI without the depth for the current player
+            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
+            selectAI.value = selectAI.options[1].value;
+            selectAI.dispatchEvent(new Event('change'));
+            testUtils.detectChanges();
+            await testUtils.whenStable();
+
+            // Then the game should not be interactive anymore
+            expect(testUtils.getGameComponent()['isInteractive']).toBeFalse();
+            // nor should it show the current player background
+            testUtils.expectElementNotToExist('.tile .player0-bg');
+        });
         it('should show level when non-human player is selected', async() => {
             // Given a board where human are playing human
             testUtils.expectElementNotToExist('#aiZeroLevelSelect');

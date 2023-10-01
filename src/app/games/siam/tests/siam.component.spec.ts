@@ -12,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SiamFailure } from '../SiamFailure';
+import { DebugElement } from '@angular/core';
 
 describe('SiamComponent', () => {
 
@@ -270,5 +271,51 @@ describe('SiamComponent', () => {
         // Then the corresponding move should be done directly
         const move: SiamMove = SiamMove.from(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
         await testUtils.expectMoveSuccess('#indicator_4_4_LEFT', move);
+    }));
+
+    function expectTranslationYToBe(elementSelector: string, y: number): void {
+        const element: DebugElement = testUtils.findElement(elementSelector);
+        const transform: SVGTransform = element.nativeElement.transform.baseVal.getItem(0);
+        expect(transform.type).toBe(SVGTransform.SVG_TRANSFORM_TRANSLATE);
+        // In a SVG transform, f is the y coordinate
+        expect(transform.matrix.f).toBe(y);
+    }
+    it('should display current player pieces on the bottom (Player.ONE)', fakeAsync(async() => {
+        // Given a state
+        const board: Table<SiamPiece> = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [_, _, _, _, U],
+        ];
+        const state: SiamState = new SiamState(board, 1);
+
+        // When the game is displayed from the point of view of Player.ONE
+        await testUtils.setupState(state);
+        testUtils.getGameComponent().setPointOfView(Player.ONE);
+
+        // Then Player.ONE's pieces should be on the bottom
+        expectTranslationYToBe('#remainingPieces_0_0', -100);
+        expectTranslationYToBe('#remainingPieces_1_0', 700);
+    }));
+    it('should display player zero pieces on the bottom (observer)', fakeAsync(async() => {
+        // Given a state
+        const board: Table<SiamPiece> = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [_, _, _, _, U],
+        ];
+        const state: SiamState = new SiamState(board, 0);
+
+        // When the game is displayed for an observer
+        await testUtils.setupState(state);
+        await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
+
+        // Then player 0's pieces should be on the bottom
+        expectTranslationYToBe('#remainingPieces_0_0', 700);
+        expectTranslationYToBe('#remainingPieces_1_0', -100);
     }));
 });
