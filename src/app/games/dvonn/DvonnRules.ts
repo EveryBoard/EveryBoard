@@ -4,7 +4,7 @@ import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DvonnFailure } from './DvonnFailure';
@@ -124,7 +124,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     }
     private removeDisconnectedPieces(state: DvonnState): DvonnState {
         // This will contain true for each piece connected to a source
-        const markBoard: boolean[][] = ArrayUtils.createTable(DvonnState.WIDTH, DvonnState.HEIGHT, false);
+        const markBoard: boolean[][] = TableUtils.create(DvonnState.WIDTH, DvonnState.HEIGHT, false);
         this.sourceCoords(state).forEach((c: Coord) => {
             markBoard[c.y][c.x] = true; // marks the source as true in the markBoard
             this.markPiecesConnectedTo(state, c, markBoard);

@@ -4,7 +4,7 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
@@ -29,7 +29,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         super(LinesOfActionState);
     }
     public static getNumberOfGroups(state: LinesOfActionState): [number, number] {
-        const groups: number[][] = ArrayUtils.createTable(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);
+        const groups: number[][] = TableUtils.create(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);
         const numGroups: [number, number] = [0, 0];
         let highestGroup: number = 0;
         for (const coordAndContent of state.getCoordsAndContents()) {
