@@ -1,6 +1,6 @@
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { DiaballikMove, DiaballikPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -91,7 +91,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         const stateAfterTranslation: DiaballikState = new DiaballikState(updatedBoard, state.turn);
         return MGPFallible.success(stateAfterTranslation);
     }
-    public isLegalPass(state: DiaballikState, pass: DiaballikPass): MGPFallible<DiaballikState> {
+    public isLegalPass(state: DiaballikState, pass: DiaballikBallPass): MGPFallible<DiaballikState> {
         // The origin must be a piece of the player that holds the ball
         const start: Coord = pass.getStart();
         const startPiece: DiaballikPiece = state.getPieceAt(start);
@@ -126,7 +126,11 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         updatedBoard[end.y][end.x] = withBall;
         return MGPFallible.success(new DiaballikState(updatedBoard, state.turn));
     }
-    public applyLegalMove(_move: DiaballikMove, state: DiaballikState, stateAfterSubMoves: DiaballikState): DiaballikState {
+    public applyLegalMove(_move: DiaballikMove,
+                          state: DiaballikState,
+                          stateAfterSubMoves: DiaballikState)
+    : DiaballikState
+    {
         // All submoves have already been applied and are stored in stateAfterSubMoves
         // We only have to update the turn
         return new DiaballikState(stateAfterSubMoves.board, state.turn + 1);
@@ -190,7 +194,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         //   - at least 3 opponent's pieces are connected
         const opponentsConnected: MGPSet<Coord> = new MGPSet(); // Needs to be a set to avoid double counting
         const blockerCoords: Coord[] = [];
-        for (let x: number = 0; x < state.board.length; x++) {
+        for (let x: number = 0; x < state.getWidth(); x++) {
             const coord: MGPOptional<Coord> = this.getConnectedPieceCoord(x, opponentsConnected, state, player);
             if (coord.isPresent()) {
                 blockerCoords.push(coord.get());

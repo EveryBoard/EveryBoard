@@ -1,7 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DiaballikComponent } from '../diaballik.component';
-import { DiaballikMove, DiaballikPass, DiaballikTranslation } from '../DiaballikMove';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
@@ -25,20 +25,22 @@ describe('DiaballikComponent', () => {
         testUtils.expectToBeCreated();
     });
     it('should finish the move when clicking on the done button after one sub move', fakeAsync(async() => {
-        // Given a state
-        // When doing some submove and then clicking on 'done'
+        // Given a state with a submove already done
         await testUtils.expectClickSuccess('#click_0_6');
         await testUtils.expectClickSuccess('#click_0_5');
-        console.log(testUtils.getGameComponent().showDoneButton())
+
+        // When clicking on the 'done' button
+
+        // Then it should succeed
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.empty(),
                               MGPOptional.empty());
-        // Then it should succeed
         await testUtils.expectMoveSuccess('#done', move);
     }));
     it('should finish the move when clicking on the done button after two sub moves', fakeAsync(async() => {
         // Given a state
+
         // When doing two submoves and then clicking on 'done'
         await testUtils.expectClickSuccess('#click_0_6');
         await testUtils.expectClickSuccess('#click_0_5');
@@ -48,11 +50,13 @@ describe('DiaballikComponent', () => {
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.empty());
+
         // Then it should succeed
         await testUtils.expectMoveSuccess('#done', move);
     }));
     it('should finish the move upon selection of the third sub move', fakeAsync(async() => {
         // Given a state
+
         // When doing two translations and then one pass
         await testUtils.expectClickSuccess('#click_0_6');
         await testUtils.expectClickSuccess('#click_0_5');
@@ -62,23 +66,28 @@ describe('DiaballikComponent', () => {
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
-                              MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
+                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
+
         // Then it should succeed
         await testUtils.expectMoveSuccess('#click_4_6', move);
     }));
     it('should deselect current piece when clicking on it a second time', fakeAsync(async() => {
         // Given a state where a piece has been selected
         await testUtils.expectClickSuccess('#click_0_6');
+
         // When clicking on it a second time
         testUtils.expectElementToHaveClass('#piece_0_6', 'selected-stroke');
         await testUtils.expectClickSuccess('#click_0_6');
+
         // Then it should not be selected anymore
         testUtils.expectElementNotToHaveClass('#piece_0_6', 'selected-stroke');
     }));
     it('should show possible targets when selecting a piece without ball', fakeAsync(async() => {
         // Given a state
+
         // When selecting a piece without ball
         await testUtils.expectClickSuccess('#click_0_6');
+
         // Then it should show indicators on its possible targets
         testUtils.expectElementToExist('#indicator_0_5');
         testUtils.expectElementNotToExist('#indicator_1_5'); // diagonal is not a target
@@ -86,8 +95,10 @@ describe('DiaballikComponent', () => {
     }));
     it('should show possible targets when selecting the piece with the ball', fakeAsync(async() => {
         // Given a state
+
         // When selecting the piece with the ball
         await testUtils.expectClickSuccess('#click_3_6');
+
         // Then it should show indicators on its possible targets
         testUtils.expectElementToExist('#indicator_2_6');
         testUtils.expectElementToExist('#indicator_4_6');
@@ -97,34 +108,44 @@ describe('DiaballikComponent', () => {
         // Given a state where a pass has already been done for the current move
         await testUtils.expectClickSuccess('#click_3_6');
         await testUtils.expectClickSuccess('#click_2_6');
+
         // When selecting the piece with the ball
+
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_6', DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
     }));
     it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
         // Given a state
+
         // When clicking on a piece of the opponent
+
         // Then it should fail
         await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('should forbid passing the ball to an opponent', fakeAsync(async() => {
         // Given a state where the piece with the ball has been selected
         await testUtils.expectClickSuccess('#click_3_6');
+
         // When passing the ball to the opponent
+
         // Then it should fail
         await testUtils.expectClickFailure('#click_3_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('should forbid moving on another piece', fakeAsync(async() => {
         // Given a state
+
         // When trying to move on another piece
         await testUtils.expectClickSuccess('#click_0_6');
+
         // Then it should fail
         await testUtils.expectClickFailure('#click_1_6', RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
     }));
     it('should forbid moving diagonally', fakeAsync(async() => {
         // Given a state
+
         // When moving a piece diagonally
         await testUtils.expectClickSuccess('#click_0_6');
+
         // Then it should fail
         await testUtils.expectClickFailure('#click_1_5', DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
     }));
@@ -134,15 +155,18 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_4');
+
         // When passing along a diagonal
-        await testUtils.expectClickSuccess('#click_3_6');
         // Then it should fail
+        await testUtils.expectClickSuccess('#click_3_6');
         await testUtils.expectClickFailure('#click_4_4', DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
     }));
     it('should forbid moving more than one space at a time', fakeAsync(async() => {
         // Given a state
+
         // When moving a piece by multiple spaces
         await testUtils.expectClickSuccess('#click_0_6');
+
         // Then it should fail
         await testUtils.expectClickFailure('#click_0_3', DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
     }));
@@ -152,12 +176,15 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_0_5');
         await testUtils.expectClickSuccess('#click_1_6');
         await testUtils.expectClickSuccess('#click_1_5');
+
         // When selecting a third piece for a translation
+
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_6', DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
     }));
     it('should show the last move', fakeAsync(async() => {
         // Given a state with a last move
+
         // When displaying it
         await testUtils.expectClickSuccess('#click_0_6');
         await testUtils.expectClickSuccess('#click_0_5');
@@ -167,8 +194,9 @@ describe('DiaballikComponent', () => {
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
-                              MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
+                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
         await testUtils.expectMoveSuccess('#click_4_6', move);
+
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#space_0_6', 'moved-fill');
         testUtils.expectElementToHaveClass('#space_0_5', 'moved-fill');
@@ -195,8 +223,10 @@ describe('DiaballikComponent', () => {
             [_, _, _, _, _, _, _],
             [O, O, O, _, _, O, O],
         ], 0);
+
         // When displaying it
         await testUtils.setupState(state);
+
         // Then it should show the victory
         testUtils.expectElementToHaveClass('#victory_4_0', 'victory-stroke');
     }));
@@ -211,15 +241,17 @@ describe('DiaballikComponent', () => {
             [_, O, _, X, _, _, _],
             [_, _, O, Ȯ, O, O, O],
         ], 0);
+
         // When displaying it
         await testUtils.setupState(state);
+
         // Then it should show the defeat
-        testUtils.expectElementToHaveClass('#defeat_0_4', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#defeat_1_5', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#defeat_2_6', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#defeat_3_6', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#defeat_4_6', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#defeat_5_6', 'defeat-stroke');
-        testUtils.expectElementToHaveClass('#defeat_6_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_0_4', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_1_5', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_2_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_3_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_4_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_5_6', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_6_6', 'defeat-stroke');
     }));
 });

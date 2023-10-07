@@ -1,5 +1,5 @@
 import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
-import { DiaballikMove, DiaballikPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -52,7 +52,7 @@ export class DiaballikComponent
         this.hasAsymmetricBoard = true;
         this.rules = DiaballikRules.get();
         this.node = this.rules.getInitialNode();
-        this.WIDTH = this.getState().getWidth()
+        this.WIDTH = this.getState().getWidth();
         this.HEIGHT = this.getState().getHeight();
         this.encoder = DiaballikMove.encoder;
         this.tutorial = new DiaballikTutorial().tutorial;
@@ -82,9 +82,9 @@ export class DiaballikComponent
         this.lastMovedBallCoords = [];
         for (const subMove of move.getSubMoves()) {
             if (subMove instanceof DiaballikTranslation) {
-              this.lastMovedPiecesCoords.push(subMove.getStart(), subMove.getEnd());
+                this.lastMovedPiecesCoords.push(subMove.getStart(), subMove.getEnd());
             } else {
-                Utils.assert(subMove instanceof DiaballikPass, 'DiaballikMove can only be a translation or a pass');
+                Utils.assert(subMove instanceof DiaballikBallPass, 'DiaballikMove can only be a translation or a pass');
                 this.lastMovedBallCoords.push(subMove.getStart(), subMove.getEnd());
             }
         }
@@ -111,9 +111,6 @@ export class DiaballikComponent
         if (this.victoryCoord.equalsValue(coord)) {
             classes.push('victory-stroke');
         }
-        if (this.defeatCoords.some((c: Coord) => c.equals(coord))) {
-            classes.push('defeat-stroke');
-        }
         return classes;
     }
 
@@ -121,10 +118,13 @@ export class DiaballikComponent
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(piece.owner)];
         if (this.lastMovedPiecesCoords.some((c: Coord) => c.equals(coord))) {
-            classes.push('last-move-stroke')
+            classes.push('last-move-stroke');
         }
         if (piece.holdsBall === false && this.currentSelection.equalsValue(new Coord(x, y))) {
             classes.push('selected-stroke');
+        }
+        if (this.defeatCoords.some((c: Coord) => c.equals(coord))) {
+            classes.push('defeat-stroke');
         }
         return classes;
     }
@@ -133,7 +133,7 @@ export class DiaballikComponent
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(piece.owner)];
         if (this.lastMovedBallCoords.some((c: Coord) => c.equals(coord))) {
-            classes.push('last-move-stroke')
+            classes.push('last-move-stroke');
         }
         if (this.currentSelection.equalsValue(new Coord(x, y))) {
             classes.push('selected-stroke');
@@ -201,7 +201,7 @@ export class DiaballikComponent
     }
 
     private performPass(start: Coord, end: Coord): Promise<MGPValidation> {
-        const pass: MGPFallible<DiaballikPass> = DiaballikPass.from(start, end);
+        const pass: MGPFallible<DiaballikBallPass> = DiaballikBallPass.from(start, end);
         if (pass.isSuccess()) {
             const passLegality: MGPFallible<DiaballikState> =
                 this.rules.isLegalPass(this.stateInConstruction, pass.get());

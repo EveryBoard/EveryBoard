@@ -1,6 +1,6 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { DiaballikMove, DiaballikPass, DiaballikTranslation } from './DiaballikMove';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './DiaballikMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -14,7 +14,7 @@ export class DiaballikTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
-            $localize`The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by two circles, into the home line of the opponent.`,
+            $localize`The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by the small circle, into the home line of the opponent.`,
             DiaballikState.getInitialState(),
         ),
         TutorialStep.fromMove(
@@ -41,7 +41,7 @@ export class DiaballikTutorial extends Tutorial {
             ], 0),
             [new DiaballikMove(DiaballikTranslation.from(new Coord(3, 1), new Coord(4, 1)).get(),
                                MGPOptional.of(DiaballikTranslation.from(new Coord(4, 1), new Coord(4, 0)).get()),
-                               MGPOptional.of(DiaballikPass.from(new Coord(0, 4), new Coord(4, 0)).get()))],
+                               MGPOptional.of(DiaballikBallPass.from(new Coord(0, 4), new Coord(4, 0)).get()))],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
         ),

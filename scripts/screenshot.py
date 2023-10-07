@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 options = Options()
-options.headless = True
+options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 
 games = []

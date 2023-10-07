@@ -41,12 +41,4 @@ export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
         ];
         return new DiaballikState(board, 0);
     }
-
-    public getHeight(): number {
-        return this.board.length;
-    }
-
-    public getWidth(): number {
-        return this.board[0].length;
-    }
 }

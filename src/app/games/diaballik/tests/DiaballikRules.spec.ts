@@ -1,5 +1,5 @@
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { DiaballikMove, DiaballikPass, DiaballikTranslation } from '../DiaballikMove';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -18,6 +18,13 @@ describe('DiaballikRules', () => {
     const Ẋ: DiaballikPiece = DiaballikPiece.ONE_WITH_BALL;
     const _: DiaballikPiece = DiaballikPiece.NONE;
 
+    function translation(from: Coord, to: Coord): DiaballikMove {
+        return new DiaballikMove(DiaballikTranslation.from(from, to).get(), MGPOptional.empty(), MGPOptional.empty());
+    }
+    function pass(from: Coord, to: Coord): DiaballikMove {
+        return new DiaballikMove(DiaballikBallPass.from(from, to).get(), MGPOptional.empty(), MGPOptional.empty());
+    }
+
     beforeEach(() => {
         rules = DiaballikRules.get();
     });
@@ -29,7 +36,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 5), new Coord(1, 4)).get()),
-                              MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(1, 4)).get()));
+                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(1, 4)).get()));
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -51,7 +58,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get()),
-                              MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(2, 6)).get()));
+                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()));
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -72,7 +79,7 @@ describe('DiaballikRules', () => {
         // When doing a move containing one translation and one pass
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
-                              MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(2, 6)).get()),
+                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()),
                               MGPOptional.empty());
 
         // Then it should succeed
@@ -93,7 +100,7 @@ describe('DiaballikRules', () => {
 
         // When doing a move containing zero translations and one pass
         const move: DiaballikMove =
-            new DiaballikMove(DiaballikPass.from(new Coord(3, 6), new Coord(2, 6)).get(),
+            new DiaballikMove(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get(),
                               MGPOptional.empty(),
                               MGPOptional.empty());
 
@@ -136,10 +143,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikState.getInitialState();
 
         // When doing a move containing one translation and no pass
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
-                              MGPOptional.empty(),
-                              MGPOptional.empty());
+        const move: DiaballikMove = translation(new Coord(1, 6), new Coord(1, 5));
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -152,7 +156,7 @@ describe('DiaballikRules', () => {
             [O, _, O, Ȯ, O, O, O],
         ], 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-    })
+    });
     it('should allow passing between moves', () => {
         // Given a state
         const state: DiaballikState = DiaballikState.getInitialState();
@@ -160,7 +164,7 @@ describe('DiaballikRules', () => {
         // When doing a move containing one translation, one pass, and then another translation
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(2, 6), new Coord(2, 5)).get(),
-                              MGPOptional.of(DiaballikPass.from(new Coord(3, 6), new Coord(2, 5)).get()),
+                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 5)).get()),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(3, 6), new Coord(3, 5)).get()));
 
         // Then it should succeed
@@ -180,10 +184,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikState.getInitialState();
 
         // When trying to move with the ball
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(3, 6), new Coord(3, 5)).get(),
-                              MGPOptional.empty(),
-                              MGPOptional.empty());
+        const move: DiaballikMove = translation(new Coord(3, 6), new Coord(3, 5));
 
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, DiaballikFailure.CANNOT_MOVE_WITH_BALL());
@@ -193,10 +194,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikState.getInitialState();
 
         // When trying to move from an empty space
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(3, 3), new Coord(3, 4)).get(),
-                               MGPOptional.empty(),
-                               MGPOptional.empty());
+        const move: DiaballikMove = translation(new Coord(3, 3), new Coord(3, 4));
 
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -206,10 +204,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikState.getInitialState();
 
         // When trying to move a piece of the opponent
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 0), new Coord(0, 1)).get(),
-                               MGPOptional.empty(),
-                               MGPOptional.empty());
+        const move: DiaballikMove = translation(new Coord(0, 0), new Coord(0, 1));
 
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -219,10 +214,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikState.getInitialState();
 
         // When trying to pass from a piece of the opponent
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikPass.from(new Coord(3, 0), new Coord(4, 0)).get(),
-                               MGPOptional.empty(),
-                               MGPOptional.empty());
+        const move: DiaballikMove = pass(new Coord(3, 0), new Coord(4, 0));
 
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -232,10 +224,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikState.getInitialState();
 
         // When trying to pass from a piece that does not hold the ball
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikPass.from(new Coord(2, 6), new Coord(1, 6)).get(),
-                               MGPOptional.empty(),
-                               MGPOptional.empty());
+        const move: DiaballikMove = pass(new Coord(2, 6), new Coord(1, 6));
 
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, 'Cannot pass without the ball');
@@ -245,10 +234,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikState.getInitialState();
 
         // When trying to pass from a piece to an empty space for example
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikPass.from(new Coord(3, 6), new Coord(3, 3)).get(),
-                               MGPOptional.empty(),
-                               MGPOptional.empty());
+        const move: DiaballikMove = pass(new Coord(3, 6), new Coord(3, 3));
 
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -258,10 +244,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikState.getInitialState();
 
         // When trying to move to an occupied space
-        const move: DiaballikMove =
-            new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(2, 6)).get(),
-                              MGPOptional.empty(),
-                              MGPOptional.empty());
+        const move: DiaballikMove = translation(new Coord(1, 6), new Coord(2, 6));
 
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
@@ -279,8 +262,7 @@ describe('DiaballikRules', () => {
         ], 0);
 
         // When trying to pass on an obstructed path
-        const pass: DiaballikPass = DiaballikPass.from(new Coord(3, 6), new Coord(3, 2)).get();
-        const move: DiaballikMove = new DiaballikMove(pass, MGPOptional.empty(), MGPOptional.empty());
+        const move: DiaballikMove = pass(new Coord(3, 6), new Coord(3, 2));
 
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, DiaballikFailure.PASS_PATH_OBSTRUCTED());
@@ -349,7 +331,7 @@ describe('DiaballikRules', () => {
             // Then it should have none
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });
-        it('should not detect blockers when there is a discontinuous line', () => {
+        it('should not detect blockers when there is a discontinuous line making the goal line accessible', () => {
             // Given a state where pieces don't always touch
             const state: DiaballikState = new DiaballikState([
                 [X, X, X, _, _, X, X],
@@ -364,7 +346,7 @@ describe('DiaballikRules', () => {
             // Then it should not return anything
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });
-        it('should not detect blockers when there are no pieces in a row', () => {
+        it('should not detect blockers when there are no pieces in a row making the goal line accessible', () => {
             // Given a state where a row doesn't have any piece of a player
             const state: DiaballikState = new DiaballikState([
                 [X, X, X, _, X, X, X],

@@ -1066,11 +1066,14 @@
       <trans-unit id="898651979160418937" datatype="html">
         <source>You can only perform two translations per turn, not three.</source>
       </trans-unit>
+      <trans-unit id="1779552786277618671" datatype="html">
+        <source>Distance</source>
+      </trans-unit>
       <trans-unit id="5626639193339311369" datatype="html">
         <source>Goal of the game</source>
       </trans-unit>
-      <trans-unit id="6313782238959628837" datatype="html">
-        <source>The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by two circles, into the home line of the opponent.</source>
+      <trans-unit id="3137410140518293408" datatype="html">
+        <source>The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by the small circle, into the home line of the opponent.</source>
       </trans-unit>
       <trans-unit id="488799603315113699" datatype="html">
         <source>Translations</source>

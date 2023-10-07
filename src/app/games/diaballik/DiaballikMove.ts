@@ -11,17 +11,18 @@ import { Vector } from 'src/app/jscaip/Vector';
 import { DiaballikFailure } from './DiaballikFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
-export class DiaballikPass extends MoveCoordToCoord {
+export class DiaballikBallPass extends MoveCoordToCoord {
 
-    public static encoder: Encoder<DiaballikPass> = MoveWithTwoCoords.getFallibleEncoder(DiaballikPass.from);
+    public static encoder: Encoder<DiaballikBallPass> =
+        MoveWithTwoCoords.getFallibleEncoder(DiaballikBallPass.from);
 
-    public static from(start: Coord, end: Coord): MGPFallible<DiaballikPass> {
+    public static from(start: Coord, end: Coord): MGPFallible<DiaballikBallPass> {
         Utils.assert(DiaballikState.isOnBoard(start) && DiaballikState.isOnBoard(end), 'DiaballikMove not on board');
         const direction: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
         if (direction.isFailure()) {
             return MGPFallible.failure(DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
         }
-        return MGPFallible.success(new DiaballikPass(start, end));
+        return MGPFallible.success(new DiaballikBallPass(start, end));
     }
 
     private constructor(start: Coord, end: Coord) {
@@ -31,7 +32,8 @@ export class DiaballikPass extends MoveCoordToCoord {
 
 export class DiaballikTranslation extends MoveCoordToCoord {
 
-    public static encoder: Encoder<DiaballikTranslation> = MoveWithTwoCoords.getFallibleEncoder(DiaballikTranslation.from);
+    public static encoder: Encoder<DiaballikTranslation> =
+        MoveWithTwoCoords.getFallibleEncoder(DiaballikTranslation.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<DiaballikTranslation> {
         Utils.assert(DiaballikState.isOnBoard(start) && DiaballikState.isOnBoard(end), 'DiaballikMove not on board');
@@ -48,14 +50,26 @@ export class DiaballikTranslation extends MoveCoordToCoord {
     }
 }
 
-export type DiaballikSubMove = DiaballikPass | DiaballikTranslation
+export type DiaballikSubMove = DiaballikBallPass | DiaballikTranslation
+
+function isTranslation(subMove: DiaballikSubMove): subMove is DiaballikTranslation {
+    return subMove instanceof DiaballikTranslation;
+}
+
+function isBallPass(subMove: DiaballikSubMove): subMove is DiaballikBallPass {
+    return subMove instanceof DiaballikBallPass;
+}
+
+type PassesAndTranslations = {
+    passes: number,
+    translations: number,
+};
 
 export class DiaballikMove extends Move {
 
     private static subMoveEncoder: Encoder<DiaballikSubMove> = Encoder.disjunction(
-        [(subMove: DiaballikSubMove): subMove is DiaballikTranslation => subMove instanceof DiaballikTranslation,
-         (subMove: DiaballikSubMove): subMove is DiaballikPass => subMove instanceof DiaballikPass],
-        [DiaballikTranslation.encoder, DiaballikPass.encoder]);
+        [isTranslation, isBallPass],
+        [DiaballikTranslation.encoder, DiaballikBallPass.encoder]);
 
     private static subMoveOptionalEncoder: Encoder<MGPOptional<DiaballikSubMove>> =
         MGPOptional.getEncoder(DiaballikMove.subMoveEncoder);
@@ -65,8 +79,18 @@ export class DiaballikMove extends Move {
         (move: DiaballikMove) => [move.first, move.second, move.third],
         (fields: [MoveCoordToCoord, MGPOptional<MoveCoordToCoord>, MGPOptional<MoveCoordToCoord>]) => {
             return new DiaballikMove(fields[0], fields[1], fields[2]);
-        }
+        },
     );
+
+    private static countPassesAndTranslations(subMove: DiaballikSubMove, passesAndTranslations: PassesAndTranslations)
+    : void
+    {
+        if (subMove instanceof DiaballikBallPass) {
+            passesAndTranslations.passes++;
+        } else {
+            passesAndTranslations.translations++;
+        }
+    }
 
     public constructor(public readonly first: DiaballikSubMove,
                        public readonly second: MGPOptional<DiaballikSubMove>,
@@ -77,29 +101,19 @@ export class DiaballikMove extends Move {
             Utils.assert(second.isPresent(), 'DiaballikMove should have two first actions to have a third one');
         }
 
-        let passes: number = 0;
-        let translations: number = 0;
-        if (first instanceof DiaballikPass) {
-            passes++;
-        } else {
-            translations++;
-        }
+        const passesAndTranslations: PassesAndTranslations = {
+            passes: 0,
+            translations: 0,
+        };
+        DiaballikMove.countPassesAndTranslations(first, passesAndTranslations);
         if (second.isPresent()) {
-            if (second.get() instanceof DiaballikPass) {
-                passes++;
-            } else {
-                translations++;
-            }
+            DiaballikMove.countPassesAndTranslations(second.get(), passesAndTranslations);
         }
         if (third.isPresent()) {
-            if (third.get() instanceof DiaballikPass) {
-                passes++;
-            } else {
-                translations++;
-            }
+            DiaballikMove.countPassesAndTranslations(third.get(), passesAndTranslations);
         }
-        Utils.assert(passes <= 1, 'DiaballikMove should have at most one pass');
-        Utils.assert(translations <= 2, 'DiaballikMove should have at most two translations');
+        Utils.assert(passesAndTranslations.passes <= 1, 'DiaballikMove should have at most one pass');
+        Utils.assert(passesAndTranslations.translations <= 2, 'DiaballikMove should have at most two translations');
     }
 
     public override toString(): string {

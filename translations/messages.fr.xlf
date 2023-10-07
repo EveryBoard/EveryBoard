@@ -192,7 +192,7 @@
       </trans-unit>
       <trans-unit id="4487850967365387707" datatype="html">
         <source>Pass the ball up to the side of the opponent to win the game!</source>
-        <target>Passez votre balle jusqu'au côté de votre adversaire pour gagner !</target>
+        <target>Passez votre balle jusqu'à l'autre bout du plateau pour remporter la partie !</target>
       </trans-unit>
       <trans-unit id="1337301714912876574" datatype="html">
         <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
@@ -1548,9 +1548,13 @@
         <source>You can only perform two translations per turn, not three.</source>
         <target>Vous ne pouvez faire que deux translations par tour, pas trois.</target>
       </trans-unit>
-      <trans-unit id="6313782238959628837" datatype="html">
-        <source>The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by two circles, into the home line of the opponent.</source>
-        <target>Le but à Diaballik est d'amener votre balle, initialement tenue par votre pièce centrale tel que représenté par le double cercle, du côté adverse.</target>
+      <trans-unit id="1779552786277618671" datatype="html">
+        <source>Distance</source>
+        <target>Distance</target>
+      </trans-unit>
+      <trans-unit id="3137410140518293408" datatype="html">
+        <source>The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by the small circle, into the home line of the opponent.</source>
+        <target>Le but à Diaballik est d'amener votre balle, initialement tenue par votre pièce centrale tel que représenté par le petit cercle, du côté adverse.</target>
       </trans-unit>
       <trans-unit id="488799603315113699" datatype="html">
         <source>Translations</source>
@@ -1558,7 +1562,7 @@
       </trans-unit>
       <trans-unit id="6723437388577428437" datatype="html">
         <source>During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step from any piece that does not hold the ball.&lt;br/&gt;&lt;br/&gt;Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.</source>
-        <target>Durant un tour, vous êtes autorisés à faire jusque trois actions, qui incluent au plus deux translations. Une translations est un déplacement orthogonal d'une case d'une pièce qui ne tient pas la barre.&lt;br/&gt;&lt;br/&gt;Déplacez votre pièce la plus à gauche d'une case. Une fois que vous avez fait cela, cliquez sur le bouton vert qui apparaîtra en bas à drote du plateau, afin d'indiquer que vous avez fini votre tour.</target>
+        <target>Durant un tour, vous êtes autorisés à faire jusque trois actions, qui incluent au plus deux translations. Une translations est un déplacement orthogonal d'une case d'une pièce qui ne tient pas la balle.&lt;br/&gt;&lt;br/&gt;Déplacez votre pièce la plus à gauche d'une case. Une fois que vous avez fait cela, cliquez sur le bouton vert qui apparaîtra en bas à drote du plateau, afin d'indiquer que vous avez fini votre tour.</target>
       </trans-unit>
       <trans-unit id="4552397654536129176" datatype="html">
         <source>Pass</source>

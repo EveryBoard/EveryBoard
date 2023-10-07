@@ -28,6 +28,6 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
         return this.getEnd().equals(other.getEnd());
     }
     public toString(): string {
-        return `${this.getStart().toString()} -> ${this.getEnd().toString()}`
+        return `${this.getStart().toString()} -> ${this.getEnd().toString()}`;
     }
 }

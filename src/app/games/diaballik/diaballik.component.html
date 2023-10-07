@@ -39,13 +39,6 @@
           [attr.y]="SPACE_SIZE * victoryCoord.get().y"
           [attr.width]="SPACE_SIZE"
           [attr.height]="SPACE_SIZE" />
-    <rect *ngFor="let coord of defeatCoords"
-          id="defeat_{{ coord.x }}_{{ coord.y }}"
-          class="base no-fill defeat-stroke"
-          [attr.x]="SPACE_SIZE * coord.x"
-          [attr.y]="SPACE_SIZE * coord.y"
-          [attr.width]="SPACE_SIZE"
-          [attr.height]="SPACE_SIZE" />
 
     <rect *ngFor="let coord of indicators"
           id="indicator_{{ coord.x }}_{{ coord.y }}"
