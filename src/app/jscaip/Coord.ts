@@ -114,6 +114,12 @@ export class Coord extends Vector {
         if (dx*dy === 0) return true;
         return false;
     }
+
+    public isNeighborWith(coord: Coord): boolean {
+        if (this.isAlignedWith(coord) === false) return false;
+        return this.getDistance(coord) === 1;
+    }
+
     public getVectorToward(c: Coord): Vector {
         const dx: number = c.x - this.x;
         const dy: number = c.y - this.y;
