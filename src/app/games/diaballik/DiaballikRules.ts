@@ -32,6 +32,11 @@ export class DefeatCoords extends VictoryOrDefeatCoords {
     }
 }
 
+export type DiaballikPlayerAndCoords = {
+    player: Player,
+    coords: Coord[],
+};
+
 export class DiaballikNode extends GameNode<DiaballikMove, DiaballikState> {}
 
 export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, DiaballikState> {
@@ -175,16 +180,25 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     private getBlockerAndCoords(state: DiaballikState): MGPOptional<{ player: Player, coords: Coord[] }> {
         // The anti-game rule states that if a player forms a line that blocks the opponent,
         // and that if three opponent's pieces are touching the line, then the blocker loses
-        // We check this one player at a time
+        // We check this one player at a time.
+        // In case both players form a line, the one that just moved wins.
+        const blocking: [MGPOptional<DiaballikPlayerAndCoords>, MGPOptional<DiaballikPlayerAndCoords>] =
+            [MGPOptional.empty(), MGPOptional.empty()];
         for (const player of Player.PLAYERS) {
             // Note: it is impossible for both players to be blockers at the same time
             // (there needs to be a first blocker, and all pieces - 1 should be touching with the opponent,
             // which would imply that the first blocker has already lost)
             const coords: MGPOptional<Coord[]> = this.getBlockerCoords(state, player);
             if (coords.isPresent()) {
-                return MGPOptional.of({ player, coords: coords.get() });
+                blocking[player.value] = MGPOptional.of({ player, coords: coords.get() });
             }
         }
+        if (blocking[0].isPresent() && blocking[1].isPresent()) {
+            // Both players form a line, so the current player loses
+            return blocking[state.getCurrentPlayer().value];
+        }
+        if (blocking[0].isPresent()) return blocking[0];
+        if (blocking[1].isPresent()) return blocking[1];
         return MGPOptional.empty();
     }
     private getBlockerCoords(state: DiaballikState, player: Player): MGPOptional<Coord[]> {
