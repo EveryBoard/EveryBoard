@@ -1,7 +1,7 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
@@ -16,7 +16,7 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
     }
     public static getInitialState(): EncapsuleState {
         const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-        const startingBoard: EncapsuleSpace[][] = ArrayUtils.createTable(3, 3, _);
+        const startingBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
         const initialPieces: EncapsulePiece[] = [
             EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
             EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,
@@ -26,7 +26,7 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
         return new EncapsuleState(startingBoard, 0, initialPieces);
     }
     public getRemainingPieces(): EncapsulePiece[] {
-        return ArrayUtils.copyImmutableArray(this.remainingPieces);
+        return ArrayUtils.copy(this.remainingPieces);
     }
     public getRemainingPiecesOfPlayer(player: Player): EncapsulePiece[] {
         return this.getRemainingPieces().filter((piece: EncapsulePiece) => piece.getPlayer() === player);

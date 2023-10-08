@@ -1,4 +1,4 @@
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { KamisadoBoard } from './KamisadoBoard';
@@ -27,6 +27,6 @@ export class KamisadoState extends GameStateWithTable<KamisadoPiece> {
                        public readonly alreadyPassed: boolean,
                        board: Table<KamisadoPiece>)
     {
-        super(ArrayUtils.copyBiArray(board), turn);
+        super(TableUtils.copy(board), turn);
     }
 }

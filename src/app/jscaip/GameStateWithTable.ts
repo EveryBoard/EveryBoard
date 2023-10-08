@@ -1,4 +1,4 @@
-import { ArrayUtils, Table } from '../utils/ArrayUtils';
+import { Table, TableUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
@@ -49,7 +49,7 @@ export abstract class GameStateWithTable<P> extends GameState {
         return coordsAndContents;
     }
     public getCopiedBoard(): P[][] {
-        return ArrayUtils.copyBiArray(this.board);
+        return TableUtils.copy(this.board);
     }
     public toMap(): {key: Coord, value: P}[] {
         const elements: {key: Coord, value: P}[] = [];

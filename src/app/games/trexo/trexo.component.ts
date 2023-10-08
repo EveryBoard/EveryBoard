@@ -9,7 +9,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TrexoTutorial } from './TrexoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { Table3DUtils, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -146,7 +146,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
     private get3DBoard(): PieceOnBoard[][][] {
         const moveByCoord: PieceOnBoard[][][] =
-            ArrayUtils.create3DTable(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
+            Table3DUtils.create(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
         let maxZ: number = 1;
         for (let z: number = 0; z <= maxZ; z++) {
             for (const stack of this.getState().toMap()) {
@@ -185,9 +185,9 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
     private addMoveToArray(height: number, move: TrexoMove, moveByCoord: PieceOnBoard[][][]): void {
         while (moveByCoord.length <= height) {
-            moveByCoord.push(ArrayUtils.createTable(TrexoState.SIZE,
-                                                    TrexoState.SIZE,
-                                                    TrexoComponent.INITIAL_PIECE_ON_BOARD));
+            moveByCoord.push(TableUtils.create(TrexoState.SIZE,
+                                               TrexoState.SIZE,
+                                               TrexoComponent.INITIAL_PIECE_ON_BOARD));
         }
         moveByCoord[height][move.getZero().y][move.getZero().x] = {
             isDroppedPiece: false,
@@ -237,9 +237,9 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         if (this.possibleMoves.some((move: TrexoMove) => move.getZero().equals(clicked))) {
             const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
             if (pieceHeight >= this.pieceOnBoard.length) {
-                this.pieceOnBoard.push(ArrayUtils.createTable(TrexoState.SIZE,
-                                                              TrexoState.SIZE,
-                                                              TrexoComponent.INITIAL_PIECE_ON_BOARD));
+                this.pieceOnBoard.push(TableUtils.create(TrexoState.SIZE,
+                                                         TrexoState.SIZE,
+                                                         TrexoComponent.INITIAL_PIECE_ON_BOARD));
             }
             this.showDroppedPieceAndIndicators(clicked, pieceHeight);
             return MGPValidation.SUCCESS;
