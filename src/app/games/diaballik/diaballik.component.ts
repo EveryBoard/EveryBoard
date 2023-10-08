@@ -253,4 +253,13 @@ export class DiaballikComponent
         return this.chooseMove(move);
     }
 
+    public getBoardRotation(): string {
+        const rotation: number = this.getPointOfView().value * 180;
+        const boardWidth: number = this.getState().getWidth() * this.SPACE_SIZE + this.STROKE_WIDTH;
+        const boardHeight: number = this.getState().getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH;
+        const centerX: number = boardWidth / 2;
+        const centerY: number = boardHeight / 2;
+        console.log({centerX, centerY, rotation})
+        return `rotate(${rotation} ${centerX} ${centerY})`;
+    }
 }

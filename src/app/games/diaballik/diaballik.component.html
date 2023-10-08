@@ -1,58 +1,59 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="getViewBoxWithExtraSpace(0, SPACE_SIZE, 0, 0)"
+     [attr.viewBox]="getViewBoxWithExtraSpace(0, 0, 0, SPACE_SIZE)"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of stateInConstruction.board; index as y">
-        <g *ngFor="let square of line; index as x"
-           id="click_{{ x }}_{{ y }}"
-           (click)="onClick(x, y)">
-            <rect id="space_{{ x }}_{{ y }}"
-                  class="base"
-                  [ngClass]="getSpaceClasses(x, y)"
-                  [attr.x]="SPACE_SIZE * x"
-                  [attr.y]="SPACE_SIZE * y"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-            />
-            <circle *ngIf="square.owner.isPlayer()"
-                    id="piece_{{ x }}_{{ y }}"
-                    class="base"
-                    [ngClass]="getPieceClasses(x, y, square)"
-                    [attr.r]="42"
-                    [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                    [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
-            />
-            <circle *ngIf="square.holdsBall"
-                    id="ball_{{ x }}_{{ y }}"
-                    class="base"
-                    [ngClass]="getBallClasses(x, y, square)"
-                    [attr.r]="22"
-                    [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                    [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
-            />
+    <g [attr.transform]="getBoardRotation()">
+        <g *ngFor="let line of stateInConstruction.board; index as y">
+            <g *ngFor="let square of line; index as x"
+               id="click_{{ x }}_{{ y }}"
+               (click)="onClick(x, y)">
+                <rect id="space_{{ x }}_{{ y }}"
+                      class="base"
+                      [ngClass]="getSpaceClasses(x, y)"
+                      [attr.x]="SPACE_SIZE * x"
+                      [attr.y]="SPACE_SIZE * y"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
+                />
+                <circle *ngIf="square.owner.isPlayer()"
+                        id="piece_{{ x }}_{{ y }}"
+                        class="base"
+                        [ngClass]="getPieceClasses(x, y, square)"
+                        [attr.r]="42"
+                        [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                        [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+                />
+                <circle *ngIf="square.holdsBall"
+                        id="ball_{{ x }}_{{ y }}"
+                        class="base"
+                        [ngClass]="getBallClasses(x, y, square)"
+                        [attr.r]="22"
+                        [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                        [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+                />
+            </g>
         </g>
+        <rect *ngIf="victoryCoord.isPresent()"
+              id="victory_{{ victoryCoord.get().x }}_{{ victoryCoord.get().y }}"
+              class="base no-fill victory-stroke"
+              [attr.x]="SPACE_SIZE * victoryCoord.get().x"
+              [attr.y]="SPACE_SIZE * victoryCoord.get().y"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE" />
+
+        <rect *ngFor="let coord of indicators"
+              id="indicator_{{ coord.x }}_{{ coord.y }}"
+              [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+              [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+              [attr.width]="INDICATOR_SIZE"
+              [attr.height]="INDICATOR_SIZE"
+              (click)="onClick(coord.x, coord.y)"
+              class="indicator"/>
     </g>
-    <rect *ngIf="victoryCoord.isPresent()"
-          id="victory_{{ victoryCoord.get().x }}_{{ victoryCoord.get().y }}"
-          class="base no-fill victory-stroke"
-          [attr.x]="SPACE_SIZE * victoryCoord.get().x"
-          [attr.y]="SPACE_SIZE * victoryCoord.get().y"
-          [attr.width]="SPACE_SIZE"
-          [attr.height]="SPACE_SIZE" />
-
-    <rect *ngFor="let coord of indicators"
-          id="indicator_{{ coord.x }}_{{ coord.y }}"
-          [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-          [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-          [attr.width]="INDICATOR_SIZE"
-          [attr.height]="INDICATOR_SIZE"
-          (click)="onClick(coord.x, coord.y)"
-          class="indicator"/>
-
     <g *ngIf="showDoneButton()"
        id="done"
        (click)="done()"
-       [attr.transform]="'translate(' + ((WIDTH + 0.5) * SPACE_SIZE) + ' ' + ((HEIGHT - 0.5) * SPACE_SIZE) + ')'">
+       [attr.transform]="'translate(' + (WIDTH / 2 * SPACE_SIZE) + ' ' + ((HEIGHT + 0.5) * SPACE_SIZE) + ')'">
         <circle [attr.cx]="STROKE_WIDTH / 2"
                 [attr.cy]="STROKE_WIDTH / 2"
                 [attr.r]="SPACE_SIZE / 2.5"
