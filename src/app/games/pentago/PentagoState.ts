@@ -3,7 +3,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Vector } from 'src/app/jscaip/Vector';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
 import { PentagoMove } from './PentagoMove';
 
 export class PentagoState extends GameStateWithTable<PlayerOrNone> {
@@ -21,9 +21,9 @@ export class PentagoState extends GameStateWithTable<PlayerOrNone> {
         [new Coord(-1, 0), new Coord(0, -1)],
     ];
     public static getInitialState(): PentagoState {
-        const initialBoard: Table<PlayerOrNone> = ArrayUtils.createTable(PentagoState.SIZE,
-                                                                         PentagoState.SIZE,
-                                                                         PlayerOrNone.NONE);
+        const initialBoard: Table<PlayerOrNone> = TableUtils.create(PentagoState.SIZE,
+                                                                    PentagoState.SIZE,
+                                                                    PlayerOrNone.NONE);
         return new PentagoState(initialBoard, 0);
     }
     public static isOnBoard(coord: Coord): boolean {

@@ -71,7 +71,7 @@ export class ConspirateursMoveJump extends Move {
 
     public static encoder: Encoder<ConspirateursMoveJump> = Encoder.tuple(
         [Encoder.list<Coord>(Coord.encoder)],
-        (move: ConspirateursMoveJump): [Coord[]] => [ArrayUtils.copyImmutableArray(move.coords)],
+        (move: ConspirateursMoveJump): [Coord[]] => [ArrayUtils.copy(move.coords)],
         (fields: [Coord[]]): ConspirateursMoveJump => ConspirateursMoveJump.from(fields[0]).get(),
     );
     public static from(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
@@ -104,7 +104,7 @@ export class ConspirateursMoveJump extends Move {
         super();
     }
     public addJump(target: Coord): MGPFallible<ConspirateursMoveJump> {
-        const coords: Coord[] = ArrayUtils.copyImmutableArray(this.coords);
+        const coords: Coord[] = ArrayUtils.copy(this.coords);
         coords.push(target);
         return ConspirateursMoveJump.from(coords);
     }
