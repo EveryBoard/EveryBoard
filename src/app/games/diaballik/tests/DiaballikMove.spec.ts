@@ -33,8 +33,6 @@ describe('DiaballikMove', () => {
         const third: DiaballikTranslation = DiaballikTranslation.from(new Coord(1, 1), new Coord(2, 1)).get();
         RulesUtils.expectToThrowAndLog(() => new DiaballikMove(first, MGPOptional.of(second), MGPOptional.of(third)),
                                        'DiaballikMove should have at most two translations');
-
-
     });
     it('should reject move that translate by more than one orthogonal space', () => {
         const invalidTranslation: MGPFallible<DiaballikTranslation> =

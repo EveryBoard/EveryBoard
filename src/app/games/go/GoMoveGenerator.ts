@@ -31,8 +31,8 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         const choices: GoMove[] = [];
         let newMove: GoMove;
 
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 newMove = new GoMove(x, y);
                 if (state.getPieceAt(newMove.coord) === GoPiece.EMPTY) {
                     const legality: MGPFallible<GoLegalityInformation> = GoRules.isLegal(newMove, state);

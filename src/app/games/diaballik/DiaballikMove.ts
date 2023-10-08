@@ -50,7 +50,7 @@ export class DiaballikTranslation extends MoveCoordToCoord {
     }
 }
 
-export type DiaballikSubMove = DiaballikBallPass | DiaballikTranslation
+export type DiaballikSubMove = DiaballikBallPass | DiaballikTranslation;
 
 function isTranslation(subMove: DiaballikSubMove): subMove is DiaballikTranslation {
     return subMove instanceof DiaballikTranslation;

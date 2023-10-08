@@ -16,8 +16,8 @@ export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
     }
     public getDeadStones(state: GoState): number[] {
         const killed: number[] = [0, 0];
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 const piece: GoPiece = state.getPieceAtXY(x, y);
                 if (piece.type === 'dead') {
                     killed[piece.player.value] = killed[piece.player.value] + 1;
