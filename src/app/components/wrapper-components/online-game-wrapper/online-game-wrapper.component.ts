@@ -76,7 +76,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public readonly requestInfos: Record<RequestType, RequestInfo> = OGWCRequestManagerService.requestInfos;
     public readonly allRequests: RequestType[] = ['TakeBack', 'Draw', 'Rematch'];
 
-    public constructor(actRoute: ActivatedRoute,
+    public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
                        messageDisplayer: MessageDisplayer,
@@ -87,10 +87,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        private readonly timeManager: OGWCTimeManagerService,
                        private readonly requestManager: OGWCRequestManagerService)
     {
-        super(actRoute, connectedUserService, router, messageDisplayer);
+        super(activatedRoute, connectedUserService, router, messageDisplayer);
     }
     private extractPartIdFromURL(): string {
-        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
+        return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('id'));
     }
     public isPlaying(): boolean {
         return this.role.isPlayer();
@@ -171,7 +171,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.gameStarted = true;
         window.setTimeout(async() => {
             // the small waiting is there to make sure that the chronos are charged by view
-            const createdSuccessfully: boolean = await this.afterViewInit();
+            const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             this.timeManager.setClocks([this.chronoZeroTurn, this.chronoOneTurn],
                                        [this.chronoZeroGlobal, this.chronoOneGlobal]);
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');

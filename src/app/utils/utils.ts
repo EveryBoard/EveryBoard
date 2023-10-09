@@ -84,9 +84,12 @@ export class Debug {
      * but this would restrict the decorator to only be applied to classes with public constructors.
      */
     public static log<T>(constructor: T): void {
+        // eslint-disable-next-line dot-notation
         const className: string = constructor['name'];
+        // eslint-disable-next-line dot-notation
         for (const propertyName of Object.getOwnPropertyNames(constructor['prototype'])) {
             const nullableDescriptor: PropertyDescriptor | undefined = Object.getOwnPropertyDescriptor(
+                // eslint-disable-next-line dot-notation
                 constructor['prototype'],
                 propertyName);
             const descriptor: PropertyDescriptor = Utils.getNonNullable(nullableDescriptor);

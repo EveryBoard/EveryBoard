@@ -73,17 +73,16 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         return upLeft + ' ' + upRight + ' ' + middleMiddleRight + ' ' + middleExtremeRight + ' ' +
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = ApagosRules.get();
-        this.node = this.rules.getInitialNode();
-        this.hasAsymmetricBoard = true;
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Apagos');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new ApagosHeuristic(), new ApagosMoveGenerator()),
             new MCTS($localize`MCTS`, new ApagosMoveGenerator(), this.rules),
         ];
         this.encoder = ApagosMove.encoder;
-        this.tutorial = new ApagosTutorial().tutorial;
+        this.hasAsymmetricBoard = true;
+
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
     }
     public override cancelMoveAttempt(): void {

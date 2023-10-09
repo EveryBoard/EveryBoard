@@ -37,18 +37,16 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public chosenAutomatically: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.hasAsymmetricBoard = true;
-        this.rules = KamisadoRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Kamisado');
         this.availableAIs = [
             new Minimax($localize`Minimax`, KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator()),
             new MCTS($localize`MCTS`, new KamisadoMoveGenerator(), this.rules),
         ];
         this.encoder = KamisadoMove.encoder;
-        this.tutorial = new KamisadoTutorial().tutorial;
         this.canPass = false;
+        this.hasAsymmetricBoard = true;
     }
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;

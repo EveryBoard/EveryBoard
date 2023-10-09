@@ -53,16 +53,14 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     private insertingPiece: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = SiamRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Siam');
         this.availableAIs = [
             new SiamMinimax(),
             new MCTS($localize`MCTS`, new SiamMoveGenerator(), this.rules),
         ];
         this.encoder = SiamMove.encoder;
-        this.tutorial = new SiamTutorial().tutorial;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: SiamState = this.getState();

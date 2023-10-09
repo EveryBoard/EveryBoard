@@ -32,16 +32,14 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     public moved: Coord[] = [];
     public victory: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = TeekoRules.get();
-        this.node = this.rules.getInitialNode();
-        this.encoder = TeekoMove.encoder;
-        this.tutorial = new TeekoTutorial().tutorial;
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Teeko');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new TeekoHeuristic(), new TeekoMoveGenerator()),
             new MCTS($localize`MCTS`, new TeekoMoveGenerator(), this.rules),
         ];
+        this.encoder = TeekoMove.encoder;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.node.gameState.board;

@@ -47,10 +47,10 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     private opponentMoveIsBeingAnimated: boolean = false;
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       actRoute: ActivatedRoute,
+                       activatedRoute: ActivatedRoute,
                        public readonly cdr: ChangeDetectorRef)
     {
-        super(messageDisplayer, actRoute);
+        super(messageDisplayer, activatedRoute);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
     }

@@ -17,15 +17,13 @@ import { KalahMoveGenerator } from './KalahMoveGenerator';
 export class KalahComponent extends MancalaMultipleSowComponent<KalahRules, KalahMove> {
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       actRoute: ActivatedRoute,
+                       activatedRoute: ActivatedRoute,
                        cdr: ChangeDetectorRef)
     {
-        super(messageDisplayer, actRoute, cdr);
-        this.rules = KalahRules.get();
-        this.node = this.rules.getInitialNode(KalahRules.DEFAULT_CONFIG);
+        super(messageDisplayer, activatedRoute, cdr);
+        this.setRuleAndNode('Kalah');
         this.availableAIs = this.createAIs(new KalahMoveGenerator());
         this.encoder = KalahMove.encoder;
-        this.tutorial = new KalahTutorial().tutorial;
     }
     public generateMove(x: number): KalahMove {
         return KalahMove.of(MancalaDistribution.of(x));

@@ -4,7 +4,9 @@ import { MathUtils } from '../utils/MathUtils';
 export class Vector implements ComparableObject {
 
     public constructor(public readonly x: number,
-        public readonly y: number) {}
+                       public readonly y: number)
+    {
+    }
 
     public equals(other: Vector): boolean {
         return this.x === other.x && this.y === other.y;

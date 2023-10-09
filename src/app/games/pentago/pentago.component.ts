@@ -49,16 +49,14 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public ARROWS: ArrowInfo[];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = PentagoRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Pentago');
         this.availableAIs = [
             new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new PentagoMoveGenerator()),
             new MCTS($localize`MCTS`, new PentagoMoveGenerator(), this.rules),
         ];
         this.encoder = PentagoMove.encoder;
-        this.tutorial = new PentagoTutorial().tutorial;
         this.BLOCK_WIDTH = (3 * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
         this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.SPACE_SIZE;

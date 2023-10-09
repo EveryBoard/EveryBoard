@@ -50,16 +50,14 @@ export class SixComponent
 
     private nextClickShouldSelectGroup: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = SixRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Six');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new SixHeuristic(), new SixFilteredMoveGenerator()),
             new MCTS($localize`MCTS`, new SixMoveGenerator(), this.rules),
         ];
         this.encoder = SixMove.encoder;
-        this.tutorial = new SixTutorial().tutorial;
         this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(this.SPACE_SIZE * 2, 0),

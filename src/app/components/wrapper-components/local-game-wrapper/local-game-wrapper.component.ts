@@ -40,20 +40,20 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public displayAIMetrics: boolean = false;
 
-    private configSetted: boolean = false;
+    private configIsSet: boolean = false;
 
     public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
     private readonly configBS: BehaviorSubject<MGPOptional<RulesConfig>> = new BehaviorSubject(MGPOptional.empty());
     private readonly configObs: Observable<MGPOptional<RulesConfig>> = this.configBS.asObservable();
 
-    public constructor(actRoute: ActivatedRoute,
+    public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
                        messageDisplayer: MessageDisplayer,
                        private readonly cdr: ChangeDetectorRef)
     {
-        super(actRoute, connectedUserService, router, messageDisplayer);
+        super(activatedRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
         this.setDefaultRulesConfig();
@@ -86,7 +86,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     private async createRulesConfigAndStartComponent(): Promise<boolean> {
-        return this.afterViewInit();
+        return this.createMatchingGameComponent();
     }
 
     public async updatePlayer(player: Player): Promise<void> {
@@ -172,13 +172,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }));
     }
 
-    public getStateType(): Type<GameState> | null {
+    public getStateType(): MGPOptional<Type<GameState>> {
         const gameName: string = this.getGameName();
-        const gameInfos: GameInfo[] = GameInfo.ALL_GAMES().filter((game: GameInfo) => game.urlName === gameName);
+        const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
         if (gameInfos.length > 0) {
-            return gameInfos[0].rules.stateType;
+            return MGPOptional.of(gameInfos[0].rules.stateType);
         } else {
-            return null;
+            return MGPOptional.empty();
         }
     }
 
@@ -255,7 +255,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public override async getConfig(): Promise<RulesConfig> {
-        // Linter seem to think that the unscubscription line can be reached before the subscription
+        // Linter seem to think that the unsubscription line can be reached before the subscription
         // yet this is false, so this explain the weird instanciation
         let subcription: MGPOptional<Subscription> = MGPOptional.empty();
         const rulesConfigPromise: Promise<RulesConfig> =
@@ -280,12 +280,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    public isConfigSetted(): boolean {
-        return this.configSetted;
+    public isConfigSet(): boolean {
+        return this.configIsSet;
     }
 
     public markConfigAsFilled(): void {
-        this.configSetted = true;
+        this.configIsSet = true;
         this.cdr.detectChanges();
         this.configBS.next(this.rulesConfig);
     }

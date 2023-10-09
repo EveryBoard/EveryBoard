@@ -35,20 +35,19 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public disconnecteds: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = DvonnRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Dvonn');
         this.availableAIs = [
             new Minimax($localize`Stacks`, this.rules, new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator()),
             new Minimax($localize`Score`, this.rules, new DvonnScoreHeuristic(), new DvonnOrderedMoveGenerator()),
             new MCTS($localize`MCTS`, new DvonnMoveGenerator(), this.rules),
         ];
         this.encoder = DvonnMove.encoder;
-        this.tutorial = new DvonnTutorial().tutorial;
-        this.SPACE_SIZE = 30;
         this.canPass = false;
         this.scores = MGPOptional.of(DvonnRules.getScores(this.getState()));
+
+        this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(-this.SPACE_SIZE, this.SPACE_SIZE * 2),
                                          PointyHexaOrientation.INSTANCE);

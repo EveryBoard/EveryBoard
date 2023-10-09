@@ -51,11 +51,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.hasAsymmetricBoard = true;
-        this.rules = EpaminondasRules.get();
-        this.node = this.rules.getInitialNode(EpaminondasRules.DEFAULT_CONFIG);
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Epaminondas');
         this.availableAIs = [
             new EpaminondasMinimax(),
             new EpaminondasPositionalMinimax(),
@@ -63,7 +61,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             new MCTS($localize`MCTS`, new EpaminondasMoveGenerator(), this.rules),
         ];
         this.encoder = EpaminondasMove.encoder;
-        this.tutorial = new EpaminondasTutorial().tutorial;
+        this.hasAsymmetricBoard = true;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.firstPiece = MGPOptional.empty();

@@ -12,8 +12,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class HivePieceComponent extends BaseGameComponent implements AfterContentChecked {
 
-    public constructor(actRoute: ActivatedRoute) {
-        super(actRoute);
+    public constructor(activatedRoute: ActivatedRoute) {
+        super(activatedRoute);
     }
 
     @Input() piece: HivePiece;
@@ -46,4 +46,5 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
         this.isoPointsStroke = isoPointsSVG[2];
         this.layerTransform = `translate(0 -${(this.layer+1) * this.pieceHeight})`;
     }
+
 }

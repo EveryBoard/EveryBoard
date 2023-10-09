@@ -37,16 +37,14 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = QuixoRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Quixo');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new QuixoHeuristic(), new QuixoMoveGenerator()),
             new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),
         ];
         this.encoder = QuixoMove.encoder;
-        this.tutorial = new QuixoTutorial().tutorial;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();

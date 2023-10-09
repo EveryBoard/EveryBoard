@@ -1,22 +1,21 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Type } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+
 import { ConfigDescriptionType, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { BaseGameComponent } from '../../game-components/game-component/GameComponent';
-import { ActivatedRoute } from '@angular/router';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidator, RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
+import { RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
-type ConfigFormJson = {
+type ConfigFormJSON = {
     [member: string]: FormControl<ConfigDescriptionType>;
 }
-
-type CustomValidator = (c: AbstractControl) => { invalidTruc: boolean } | null;
 
 @Component({
     selector: 'app-rules-configuration',
@@ -24,7 +23,7 @@ type CustomValidator = (c: AbstractControl) => { invalidTruc: boolean } | null;
 })
 export class RulesConfigurationComponent extends BaseGameComponent implements OnInit {
 
-    @Input() stateType: Type<GameState> | null;
+    @Input() stateType: MGPOptional<Type<GameState>>;
 
     @Input() rulesConfigDescription: RulesConfigDescription;
 
@@ -46,10 +45,10 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
 
     private chosenConfig: string = '';
 
-    public constructor(actRoute: ActivatedRoute,
+    public constructor(activatedRoute: ActivatedRoute,
                        private readonly cdr: ChangeDetectorRef)
     {
-        super(actRoute);
+        super(activatedRoute);
     }
 
     public getChosenConfig(): string {
@@ -61,16 +60,21 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         this.gameName = this.getGameName();
         const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
         this.setChosenConfig(this.rulesConfigDescription.getDefaultConfig().name(), false);
-        this.setConfigDemo(config);
+        if (this.userIsCreator) {
+            this.setConfigDemo(config);
+        } else {
+            const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
+            this.setConfigDemo(configToDisplay);
+        }
         if (Object.keys(config).length === 0) {
             return this.updateCallback.emit(MGPOptional.of({}));
         }
     }
 
     private setConfigDemo(config: RulesConfig): void {
-        if (this.stateType != null) {
+        if (this.stateType.isPresent()) {
             // eslint-disable-next-line dot-notation
-            const node: AbstractNode = new GameNode(this.stateType['getInitialState'](config));
+            const node: AbstractNode = new GameNode(this.stateType.get()['getInitialState'](config));
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.gameName,
@@ -85,14 +89,14 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     private generateForm(config: RulesConfig, configurable: boolean): void {
-        const group: ConfigFormJson = {};
+        const group: ConfigFormJSON = {};
 
         Object.keys(config).forEach((parameterName: string) => {
             const value: ConfigDescriptionType =
                 this.getRulesConfigDescriptionValue(parameterName,
                                                     config[parameterName]);
 
-            group[parameterName] = this.getFormControl(parameterName, value, configurable);
+            group[parameterName] = this.getFormControl(value, configurable);
         });
         this.rulesConfigForm = new FormGroup(group);
     }
@@ -107,22 +111,14 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     private getRulesConfigDescriptionValue(name: string, defaultValue: ConfigDescriptionType): ConfigDescriptionType {
         if (this.userIsCreator === false) {
             const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
-            defaultValue = configuration[name];
+            return configuration[name];
+        } else {
+            return defaultValue;
         }
-        return defaultValue;
     }
 
-    private getFormControl(parameterName: string, value: ConfigDescriptionType, configurable: boolean): FormControl {
-        let formControl: FormControl;
-        if (typeof value === 'number') {
-            const mgpValidators: MGPValidator = this.rulesConfigDescription.validator[parameterName];
-            const validator: CustomValidator = this.getNumberValidator(mgpValidators);
-            formControl = new FormControl(value, validator) as FormControl<number>;
-            formControl = new FormControl(value) as FormControl<number>;
-        } else {
-            Utils.expectToBe(typeof value, 'boolean');
-            formControl = new FormControl(value) as FormControl<boolean>;
-        }
+    private getFormControl(value: ConfigDescriptionType, configurable: boolean): FormControl {
+        const formControl: FormControl = new FormControl(value);
         if (configurable === false) {
             formControl.disable();
         }
@@ -130,12 +126,6 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
             this.onUpdate();
         });
         return formControl;
-    }
-
-    private getNumberValidator(mgpValidator: MGPValidator): CustomValidator {
-        return (control: AbstractControl) => {
-            return { invalidTruc: mgpValidator(control.value).isFailure() };
-        };
     }
 
     public onUpdate(): void {
@@ -148,12 +138,13 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
             const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
             const parameterNames: string[] = Object.keys(config);
             for (const parameterName of parameterNames) {
-                if (this.isInvalid(parameterName)) {
-                    // This inform the parent component that an invalid update has been done
+                if (this.isValid(parameterName)) {
+                    rulesConfig[parameterName] = this.rulesConfigForm.controls[parameterName].value;
+                } else {
+                    // This informs the parent component that an invalid update has been done
                     this.updateCallback.emit(MGPOptional.empty());
                     return; // In order not to send update when form is invalid
                 }
-                rulesConfig[parameterName] = this.rulesConfigForm.controls[parameterName].value;
             }
             this.setConfigDemo(rulesConfig);
             this.updateCallback.emit(MGPOptional.of(rulesConfig));
@@ -172,17 +163,17 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         return typeof value === 'boolean';
     }
 
-    public isInvalid(field: string): boolean {
+    public isValid(field: string): boolean {
         const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
         const value: ConfigDescriptionType = config[field];
         if (typeof value === 'number') {
             const fieldValue: number = this.rulesConfigForm.controls[field].value;
             const validity: MGPValidation = this.rulesConfigDescription.validator[field](fieldValue);
-            return validity.isFailure();
+            return validity.isSuccess();
         } else {
             Utils.expectToBe(typeof value, 'boolean');
-            // Angular make thoses controls invalid when they are boolean, not sure why
-            return false; // So we return false cause they cannot be invalid, checked or not, its always valid
+            // Angular make those controls invalid when they are boolean, not sure why
+            return true; // So we return false cause they cannot be invalid, checked or not, its always valid
         }
     }
 

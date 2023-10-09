@@ -129,7 +129,6 @@ import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { Utils } from 'src/app/utils/utils';
@@ -242,10 +241,10 @@ export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
 
     public standardConfigs: NamedRulesConfig<R>[];
 
-    constructor(defaultConfig: NamedRulesConfig<R>,
-                public readonly translations: Record<string, Localized>,
-                otherStandardConfigs: NamedRulesConfig<R>[] = [],
-                public readonly validator: Record<string, MGPValidator> = {})
+    public constructor(defaultConfig: NamedRulesConfig<R>,
+                       public readonly translations: Record<string, Localized>,
+                       otherStandardConfigs: NamedRulesConfig<R>[] = [],
+                       public readonly validator: Record<string, MGPValidator> = {})
     {
         this.standardConfigs = [defaultConfig].concat(otherStandardConfigs);
         const defaultKey: MGPSet<string> = new MGPSet(Object.keys(defaultConfig.config));
@@ -466,66 +465,58 @@ export class RulesConfigDescriptions {
     ];
 }
 
-export const rulesConfigDescriptionMap: MGPMap<string, RulesConfigDescription> = new MGPMap([
-    { key: 'Awale',       value: RulesConfigDescriptions.AWALE },
-    { key: 'Brandhub',    value: RulesConfigDescriptions.BRANDHUB },
-    { key: 'ConnectSix',  value: RulesConfigDescriptions.GOBAN },
-    { key: 'Epaminondas', value: RulesConfigDescriptions.EPAMINONDAS },
-    { key: 'Go',          value: RulesConfigDescriptions.GO },
-    { key: 'Hnefatafl',   value: RulesConfigDescriptions.HNEFATAFL },
-    { key: 'Kalah',       value: RulesConfigDescriptions.KALAH },
-    { key: 'P4',          value: RulesConfigDescriptions.P4 },
-    { key: 'Pente',       value: RulesConfigDescriptions.GOBAN },
-    { key: 'Tablut',      value: RulesConfigDescriptions.TABLUT },
-]);
-
 export class GameInfo {
     // Games sorted by creation date
-    public static ALL_GAMES: () => GameInfo[] = () => [
-        new GameInfo($localize`Four in a Row`,   'P4',            P4Component,            new P4Tutorial(),            P4Rules.get(),            new Date('2018-08-28'), GameDescription.P4(),             RulesConfigDescriptions.P4         ),
-        new GameInfo($localize`Awalé`,           'Awale',         AwaleComponent,         new AwaleTutorial(),         AwaleRules.get(),         new Date('2018-11-29'), GameDescription.AWALE(),          RulesConfigDescriptions.AWALE      ), // 93 days after P4
-        new GameInfo($localize`Quarto`,          'Quarto',        QuartoComponent,        new QuartoTutorial(),        QuartoRules.get(),        new Date('2018-12-09'), GameDescription.QUARTO()                                             ), // 10 days after Awale
-        new GameInfo($localize`Tablut`,          'Tablut',        TablutComponent,        new TablutTutorial(),        TablutRules.get(),        new Date('2018-12-27'), GameDescription.TABLUT(),         RulesConfigDescriptions.TABLUT     ), // 26 days after Quarto
+    public static ALL_GAMES(): GameInfo[] {
+        return [
+            new GameInfo($localize`Four in a Row`,   'P4',            P4Component,            new P4Tutorial(),            P4Rules.get(),            new Date('2018-08-28'), GameDescription.P4(),             RulesConfigDescriptions.P4         ),
+            new GameInfo($localize`Awalé`,           'Awale',         AwaleComponent,         new AwaleTutorial(),         AwaleRules.get(),         new Date('2018-11-29'), GameDescription.AWALE(),          RulesConfigDescriptions.AWALE      ), // 93 days after P4
+            new GameInfo($localize`Quarto`,          'Quarto',        QuartoComponent,        new QuartoTutorial(),        QuartoRules.get(),        new Date('2018-12-09'), GameDescription.QUARTO()                                             ), // 10 days after Awale
+            new GameInfo($localize`Tablut`,          'Tablut',        TablutComponent,        new TablutTutorial(),        TablutRules.get(),        new Date('2018-12-27'), GameDescription.TABLUT(),         RulesConfigDescriptions.TABLUT     ), // 26 days after Quarto
 
-        new GameInfo($localize`Reversi`,         'Reversi',       ReversiComponent,       new ReversiTutorial(),       ReversiRules.get(),       new Date('2019-01-16'), GameDescription.REVERSI()                                            ), // 20 days after Tablut
-        new GameInfo($localize`Go`,              'Go',            GoComponent,            new GoTutorial(),            GoRules.get(),            new Date('2019-12-21'), GameDescription.GO(),             RulesConfigDescriptions.GO         ), // 11 months after Reversi
-        new GameInfo($localize`Encapsule`,       'Encapsule',     EncapsuleComponent,     new EncapsuleTutorial(),     EncapsuleRules.get(),     new Date('2019-12-30'), GameDescription.ENCAPSULE()                                          ), // 9 days after Go
+            new GameInfo($localize`Reversi`,         'Reversi',       ReversiComponent,       new ReversiTutorial(),       ReversiRules.get(),       new Date('2019-01-16'), GameDescription.REVERSI()                                            ), // 20 days after Tablut
+            new GameInfo($localize`Go`,              'Go',            GoComponent,            new GoTutorial(),            GoRules.get(),            new Date('2019-12-21'), GameDescription.GO(),             RulesConfigDescriptions.GO         ), // 11 months after Reversi
+            new GameInfo($localize`Encapsule`,       'Encapsule',     EncapsuleComponent,     new EncapsuleTutorial(),     EncapsuleRules.get(),     new Date('2019-12-30'), GameDescription.ENCAPSULE()                                          ), // 9 days after Go
 
-        new GameInfo($localize`Siam`,            'Siam',          SiamComponent,          new SiamTutorial(),          SiamRules.get(),          new Date('2020-01-11'), GameDescription.SIAM()                                               ), // 12 days after Encapsule
-        new GameInfo($localize`Sahara`,          'Sahara',        SaharaComponent,        new SaharaTutorial(),        SaharaRules.get(),        new Date('2020-02-29'), GameDescription.SAHARA()                                             ), // 49 days after Siam
-        new GameInfo($localize`Pylos`,           'Pylos',         PylosComponent,         new PylosTutorial(),         PylosRules.get(),         new Date('2020-10-02'), GameDescription.PYLOS()                                              ), // 7 months after Sahara
-        new GameInfo($localize`Kamisado`,        'Kamisado',      KamisadoComponent,      new KamisadoTutorial(),      KamisadoRules.get(),      new Date('2020-10-03'), GameDescription.KAMISADO()                                           ), // 26 days after joining       *Quentin
-        new GameInfo($localize`Quixo`,           'Quixo',         QuixoComponent,         new QuixoTutorial(),         QuixoRules.get(),         new Date('2020-10-15'), GameDescription.QUIXO()                                              ), // 13 days after Pylos
-        new GameInfo($localize`Dvonn`,           'Dvonn',         DvonnComponent,         new DvonnTutorial(),         DvonnRules.get(),         new Date('2020-10-21'), GameDescription.DVONN()                                              ), // 18 days after Kamisado      *Quentin
+            new GameInfo($localize`Siam`,            'Siam',          SiamComponent,          new SiamTutorial(),          SiamRules.get(),          new Date('2020-01-11'), GameDescription.SIAM()                                               ), // 12 days after Encapsule
+            new GameInfo($localize`Sahara`,          'Sahara',        SaharaComponent,        new SaharaTutorial(),        SaharaRules.get(),        new Date('2020-02-29'), GameDescription.SAHARA()                                             ), // 49 days after Siam
+            new GameInfo($localize`Pylos`,           'Pylos',         PylosComponent,         new PylosTutorial(),         PylosRules.get(),         new Date('2020-10-02'), GameDescription.PYLOS()                                              ), // 7 months after Sahara
+            new GameInfo($localize`Kamisado`,        'Kamisado',      KamisadoComponent,      new KamisadoTutorial(),      KamisadoRules.get(),      new Date('2020-10-03'), GameDescription.KAMISADO()                                           ), // 26 days after joining       *Quentin
+            new GameInfo($localize`Quixo`,           'Quixo',         QuixoComponent,         new QuixoTutorial(),         QuixoRules.get(),         new Date('2020-10-15'), GameDescription.QUIXO()                                              ), // 13 days after Pylos
+            new GameInfo($localize`Dvonn`,           'Dvonn',         DvonnComponent,         new DvonnTutorial(),         DvonnRules.get(),         new Date('2020-10-21'), GameDescription.DVONN()                                              ), // 18 days after Kamisado      *Quentin
 
-        new GameInfo($localize`Epaminondas`,     'Epaminondas',   EpaminondasComponent,   new EpaminondasTutorial(),   EpaminondasRules.get(),   new Date('2021-01-16'), GameDescription.EPAMINONDAS(),    RulesConfigDescriptions.EPAMINONDAS), // 22 days after Quixo
-        new GameInfo($localize`Gipf`,            'Gipf',          GipfComponent,          new GipfTutorial(),          GipfRules.get(),          new Date('2021-02-22'), GameDescription.GIPF()                                               ), // 4 months after Dvonn        *Quentin
-        new GameInfo($localize`Coerceo`,         'Coerceo',       CoerceoComponent,       new CoerceoTutorial(),       CoerceoRules.get(),       new Date('2021-03-21'), GameDescription.COERCEO()                                            ), // 76 days after Epaminondas
-        new GameInfo($localize`Six`,             'Six',           SixComponent,           new SixTutorial(),           SixRules.get(),           new Date('2021-04-08'), GameDescription.SIX()                                                ), // 18 days after Coerceo
-        new GameInfo($localize`Lines of Action`, 'LinesOfAction', LinesOfActionComponent, new LinesOfActionTutorial(), LinesOfActionRules.get(), new Date('2021-04-28'), GameDescription.LINES_OF_ACTION()                                    ), // 65 days after Gipf          * Quentin
-        new GameInfo($localize`Pentago`,         'Pentago',       PentagoComponent,       new PentagoTutorial(),       PentagoRules.get(),       new Date('2021-05-23'), GameDescription.PENTAGO()                                            ), // 25 days after Six
-        new GameInfo($localize`Abalone`,         'Abalone',       AbaloneComponent,       new AbaloneTutorial(),       AbaloneRules.get(),       new Date('2021-07-13'), GameDescription.ABALONE()                                            ), // 71 days after Pentago
-        new GameInfo($localize`Yinsh`,           'Yinsh',         YinshComponent,         new YinshTutorial(),         YinshRules.get(),         new Date('2021-07-31'), GameDescription.YINSH()                                              ), // 94 days after LinesOfAction * Quentin
-        new GameInfo($localize`Apagos`,          'Apagos',        ApagosComponent,        new ApagosTutorial(),        ApagosRules.get(),        new Date('2021-11-04'), GameDescription.APAGOS()                                             ), // 4 month after Abalone
-        new GameInfo($localize`Diam`,            'Diam',          DiamComponent,          new DiamTutorial(),          DiamRules.get(),          new Date('2021-11-30'), GameDescription.DIAM()                                               ), // 4 months after Yinsh        * Quentin
-        new GameInfo($localize`Brandhub`,        'Brandhub',      BrandhubComponent,      new BrandhubTutorial(),      BrandhubRules.get(),      new Date('2021-12-07'), GameDescription.BRANDHUB(),       RulesConfigDescriptions.BRANDHUB   ), // 33 days after Apagos
-        new GameInfo($localize`Conspirateurs`,   'Conspirateurs', ConspirateursComponent, new ConspirateursTutorial(), ConspirateursRules.get(), new Date('2021-12-30'), GameDescription.CONSPIRATEURS()                                      ), // 30 days after Diam          * Quentin
+            new GameInfo($localize`Epaminondas`,     'Epaminondas',   EpaminondasComponent,   new EpaminondasTutorial(),   EpaminondasRules.get(),   new Date('2021-01-16'), GameDescription.EPAMINONDAS(),    RulesConfigDescriptions.EPAMINONDAS), // 22 days after Quixo
+            new GameInfo($localize`Gipf`,            'Gipf',          GipfComponent,          new GipfTutorial(),          GipfRules.get(),          new Date('2021-02-22'), GameDescription.GIPF()                                               ), // 4 months after Dvonn        *Quentin
+            new GameInfo($localize`Coerceo`,         'Coerceo',       CoerceoComponent,       new CoerceoTutorial(),       CoerceoRules.get(),       new Date('2021-03-21'), GameDescription.COERCEO()                                            ), // 76 days after Epaminondas
+            new GameInfo($localize`Six`,             'Six',           SixComponent,           new SixTutorial(),           SixRules.get(),           new Date('2021-04-08'), GameDescription.SIX()                                                ), // 18 days after Coerceo
+            new GameInfo($localize`Lines of Action`, 'LinesOfAction', LinesOfActionComponent, new LinesOfActionTutorial(), LinesOfActionRules.get(), new Date('2021-04-28'), GameDescription.LINES_OF_ACTION()                                    ), // 65 days after Gipf          * Quentin
+            new GameInfo($localize`Pentago`,         'Pentago',       PentagoComponent,       new PentagoTutorial(),       PentagoRules.get(),       new Date('2021-05-23'), GameDescription.PENTAGO()                                            ), // 25 days after Six
+            new GameInfo($localize`Abalone`,         'Abalone',       AbaloneComponent,       new AbaloneTutorial(),       AbaloneRules.get(),       new Date('2021-07-13'), GameDescription.ABALONE()                                            ), // 71 days after Pentago
+            new GameInfo($localize`Yinsh`,           'Yinsh',         YinshComponent,         new YinshTutorial(),         YinshRules.get(),         new Date('2021-07-31'), GameDescription.YINSH()                                              ), // 94 days after LinesOfAction * Quentin
+            new GameInfo($localize`Apagos`,          'Apagos',        ApagosComponent,        new ApagosTutorial(),        ApagosRules.get(),        new Date('2021-11-04'), GameDescription.APAGOS()                                             ), // 4 month after Abalone
+            new GameInfo($localize`Diam`,            'Diam',          DiamComponent,          new DiamTutorial(),          DiamRules.get(),          new Date('2021-11-30'), GameDescription.DIAM()                                               ), // 4 months after Yinsh        * Quentin
+            new GameInfo($localize`Brandhub`,        'Brandhub',      BrandhubComponent,      new BrandhubTutorial(),      BrandhubRules.get(),      new Date('2021-12-07'), GameDescription.BRANDHUB(),       RulesConfigDescriptions.BRANDHUB   ), // 33 days after Apagos
+            new GameInfo($localize`Conspirateurs`,   'Conspirateurs', ConspirateursComponent, new ConspirateursTutorial(), ConspirateursRules.get(), new Date('2021-12-30'), GameDescription.CONSPIRATEURS()                                      ), // 30 days after Diam          * Quentin
 
-        new GameInfo($localize`Lodestone`,       'Lodestone',     LodestoneComponent,     new LodestoneTutorial(),     LodestoneRules.get(),     new Date('2022-06-24'), GameDescription.LODESTONE()                                          ), //                             * Quentin
-        new GameInfo($localize`Martian Chess`,   'MartianChess',  MartianChessComponent,  new MartianChessTutorial(),  MartianChessRules.get(),  new Date('2022-07-01'), GameDescription.MARTIAN_CHESS()                                      ),
-        new GameInfo($localize`Hnefatafl`,       'Hnefatafl',     HnefataflComponent,     new HnefataflTutorial(),     HnefataflRules.get(),     new Date('2022-09-21'), GameDescription.HNEFATAFL(),      RulesConfigDescriptions.HNEFATAFL  ),
+            new GameInfo($localize`Lodestone`,       'Lodestone',     LodestoneComponent,     new LodestoneTutorial(),     LodestoneRules.get(),     new Date('2022-06-24'), GameDescription.LODESTONE()                                          ), //                             * Quentin
+            new GameInfo($localize`Martian Chess`,   'MartianChess',  MartianChessComponent,  new MartianChessTutorial(),  MartianChessRules.get(),  new Date('2022-07-01'), GameDescription.MARTIAN_CHESS()                                      ),
+            new GameInfo($localize`Hnefatafl`,       'Hnefatafl',     HnefataflComponent,     new HnefataflTutorial(),     HnefataflRules.get(),     new Date('2022-09-21'), GameDescription.HNEFATAFL(),      RulesConfigDescriptions.HNEFATAFL  ),
 
-        new GameInfo($localize`Hive`,            'Hive',          HiveComponent,          new HiveTutorial(),          HiveRules.get(),          new Date('2023-04-02'), GameDescription.HIVE()                                               ), //                             * Quentin
-        new GameInfo($localize`Trexo`,           'Trexo',         TrexoComponent,         new TrexoTutorial(),         TrexoRules.get(),         new Date('2023-04-23'), GameDescription.TREXO()                                              ),
-        new GameInfo($localize`Lasca`,           'Lasca',         LascaComponent,         new LascaTutorial(),         LascaRules.get(),         new Date('2023-05-11'), GameDescription.LASCA()                                              ),
-        new GameInfo($localize`Connect Six`,     'ConnectSix',    ConnectSixComponent,    new ConnectSixTutorial(),    ConnectSixRules.get(),    new Date('2023-05-13'), GameDescription.CONNECT_SIX(),    RulesConfigDescriptions.GOBAN      ),
-        new GameInfo($localize`Pente`,           'Pente',         PenteComponent,         new PenteTutorial(),         PenteRules.get(),         new Date('2023-05-20'), GameDescription.PENTE(),          RulesConfigDescriptions.GOBAN      ), //                             * Quentin
-        new GameInfo($localize`Teeko`,           'Teeko',         TeekoComponent,         new TeekoTutorial(),         TeekoRules.get(),         new Date('2023-07-30'), GameDescription.TEEKO()                                              ),
-        new GameInfo($localize`Kalah`,           'Kalah',         KalahComponent,         new KalahTutorial(),         KalahRules.get(),         new Date('2023-09-07'), GameDescription.KALAH(),          RulesConfigDescriptions.KALAH      ),
-    ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
-    // After Apagos: median = 26d; average = 53d
-    // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
+            new GameInfo($localize`Hive`,            'Hive',          HiveComponent,          new HiveTutorial(),          HiveRules.get(),          new Date('2023-04-02'), GameDescription.HIVE()                                               ), //                             * Quentin
+            new GameInfo($localize`Trexo`,           'Trexo',         TrexoComponent,         new TrexoTutorial(),         TrexoRules.get(),         new Date('2023-04-23'), GameDescription.TREXO()                                              ),
+            new GameInfo($localize`Lasca`,           'Lasca',         LascaComponent,         new LascaTutorial(),         LascaRules.get(),         new Date('2023-05-11'), GameDescription.LASCA()                                              ),
+            new GameInfo($localize`Connect Six`,     'ConnectSix',    ConnectSixComponent,    new ConnectSixTutorial(),    ConnectSixRules.get(),    new Date('2023-05-13'), GameDescription.CONNECT_SIX(),    RulesConfigDescriptions.GOBAN      ),
+            new GameInfo($localize`Pente`,           'Pente',         PenteComponent,         new PenteTutorial(),         PenteRules.get(),         new Date('2023-05-20'), GameDescription.PENTE(),          RulesConfigDescriptions.GOBAN      ), //                             * Quentin
+            new GameInfo($localize`Teeko`,           'Teeko',         TeekoComponent,         new TeekoTutorial(),         TeekoRules.get(),         new Date('2023-07-30'), GameDescription.TEEKO()                                              ),
+            new GameInfo($localize`Kalah`,           'Kalah',         KalahComponent,         new KalahTutorial(),         KalahRules.get(),         new Date('2023-09-07'), GameDescription.KALAH(),          RulesConfigDescriptions.KALAH      ),
+        ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
+        // After Apagos: median = 26d; average = 53d
+        // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
+    }
 
+    public static getByUrlName(urlName: string): GameInfo[] {
+        return GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === urlName);
+    }
     public constructor(public readonly name: string,
                        public readonly urlName: string,
                        public readonly component: Type<AbstractGameComponent>,

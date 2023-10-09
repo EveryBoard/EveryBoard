@@ -33,16 +33,14 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
 
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = ConnectSixRules.get();
-        this.node = this.rules.getInitialNode(ConnectSixRules.DEFAULT_CONFIG);
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('ConnectSix');
         this.availableAIs = [
             new ConnectSixAlignmentMinimax(),
             new MCTS($localize`MCTS`, new ConnectSixMoveGenerator(), this.rules),
         ];
         this.encoder = ConnectSixMove.encoder;
-        this.tutorial = new ConnectSixTutorial().tutorial;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.getState();

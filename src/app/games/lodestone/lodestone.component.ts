@@ -129,16 +129,16 @@ export class LodestoneComponent
     private selectedLodestone: MGPOptional<LodestonePieceLodestone> = MGPOptional.empty();
     private captures: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 };
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = LodestoneRules.get();
-        this.node = this.rules.getInitialNode();
-        this.tutorial = new LodestoneTutorial().tutorial;
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Lodestone');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
             new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         const radius80: number = this.PIECE_RADIUS * 0.8;
         const radius30: number = this.PIECE_RADIUS * 0.3;
@@ -146,7 +146,6 @@ export class LodestoneComponent
         this.TRIANGLE_OUT = `${radius80},0 ${radius30},${radius20} ${radius30},-${radius20}`;
         this.TRIANGLE_IN = `${radius30},0 ${radius80},${radius30} ${radius80},-${radius30}`;
         this.displayedState = this.getState();
-        this.scores = MGPOptional.of([0, 0]);
     }
     public async selectCoord(coord: Coord): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#square_' + coord.x + '_' + coord.y);

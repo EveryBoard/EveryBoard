@@ -27,17 +27,15 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
     public victoryCoords: Coord[] = [];
     public captured: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.scores = MGPOptional.of([0, 0]);
-        this.rules = PenteRules.get();
-        this.node = this.rules.getInitialNode(PenteRules.DEFAULT_CONFIG);
-        this.encoder = PenteMove.encoder;
-        this.tutorial = new PenteTutorial().tutorial;
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Pente');
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
             new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
+        this.encoder = PenteMove.encoder;
+        this.scores = MGPOptional.of([0, 0]);
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: PenteState = this.getState();

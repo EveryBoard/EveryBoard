@@ -39,18 +39,17 @@ export class GoComponent
     public boardHeight: number;
     public boardWidth: number;
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.scores = MGPOptional.of([0, 0]);
-        this.rules = GoRules.get();
-        this.node = this.rules.getInitialNode(GoRules.DEFAULT_CONFIG);
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Go');
         this.availableAIs = [
             new Minimax($localize`Minimax`, GoRules.get(), new GoHeuristic(), new GoMoveGenerator()),
             new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
-        this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.boardHeight = this.getState().board.length;
         this.boardWidth = this.getState().board[0].length;
     }

@@ -35,10 +35,10 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       actRoute: ActivatedRoute,
+                       activatedRoute: ActivatedRoute,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(messageDisplayer, actRoute);
+        super(messageDisplayer, activatedRoute);
     }
     public override getViewBox(): string {
         const begin: number = - this.STROKE_WIDTH;

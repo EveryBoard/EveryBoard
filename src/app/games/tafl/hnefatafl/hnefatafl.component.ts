@@ -15,12 +15,10 @@ import { HnefataflTutorial } from './HnefataflTutorial';
 })
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove, HnefataflState> {
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute, HnefataflMove.from);
-        this.rules = HnefataflRules.get();
-        this.node = this.rules.getInitialNode(HnefataflRules.DEFAULT_CONFIG);
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute, HnefataflMove.from);
+        this.setRuleAndNode('Hnefatafl');
         this.availableAIs = this.createAIs();
         this.encoder = HnefataflMove.encoder;
-        this.tutorial = new HnefataflTutorial().tutorial;
     }
 }

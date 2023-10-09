@@ -37,17 +37,14 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public pieceToGive: MGPOptional<QuartoPiece> = MGPOptional.empty();
     public victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = QuartoRules.get();
-        this.node = this.rules.getInitialNode();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Quarto');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new QuartoHeuristic(), new QuartoMoveGenerator()),
             new MCTS($localize`MCTS`, new QuartoMoveGenerator(), this.rules),
         ];
         this.encoder = QuartoMove.encoder;
-        this.tutorial = new QuartoTutorial().tutorial;
         this.pieceInHand = this.getState().pieceInHand;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

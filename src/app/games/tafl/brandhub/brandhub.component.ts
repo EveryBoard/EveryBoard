@@ -14,12 +14,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove, BrandhubState> {
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute, BrandhubMove.from);
-        this.rules = BrandhubRules.get();
-        this.node = this.rules.getInitialNode(BrandhubRules.DEFAULT_CONFIG);
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute, BrandhubMove.from);
+        this.setRuleAndNode('Brandhub');
         this.availableAIs = this.createAIs();
         this.encoder = BrandhubMove.encoder;
-        this.tutorial = new BrandhubTutorial().tutorial;
     }
 }

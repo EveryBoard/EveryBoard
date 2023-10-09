@@ -25,16 +25,14 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public last: MGPOptional<Coord>;
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = P4Rules.get();
-        this.node = this.rules.getInitialNode(P4Rules.DEFAULT_CONFIG);
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('P4');
         this.availableAIs = [
             new P4Minimax(),
             new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
         ];
         this.encoder = P4Move.encoder;
-        this.tutorial = new P4Tutorial().tutorial;
     }
     public async onClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);

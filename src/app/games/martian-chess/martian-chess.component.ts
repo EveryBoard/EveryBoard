@@ -156,22 +156,21 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public static getRadius(circle: number): number {
         return this.SPACE_SIZE * circle / 10;
     }
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.hasAsymmetricBoard = true;
-        this.rules = MartianChessRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('MartianChess');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new MartianChessScoreHeuristic(), new MartianChessMoveGenerator()),
             new MCTS($localize`MCTS`, new MartianChessMoveGenerator(), this.rules),
         ];
+        this.encoder = MartianChessMove.encoder;
+        this.hasAsymmetricBoard = true;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();
         this.configViewTranslation = this.getConfigViewTranslation();
         this.clockNeedlesPoints = this.getClockNeedlesPoints();
-        this.encoder = MartianChessMove.encoder;
-        this.tutorial = new MartianChessTutorial().tutorial;
-        this.scores = MGPOptional.of([0, 0]);
     }
     public getConfigViewTranslation(): string {
         const padding: number = 0;

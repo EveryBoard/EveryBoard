@@ -35,13 +35,13 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public stepFinished: boolean[] = [];
     public tutorialOver: boolean = false;
 
-    constructor(actRoute: ActivatedRoute,
-                router: Router,
-                messageDisplayer: MessageDisplayer,
-                public cdr: ChangeDetectorRef,
-                connectedUserService: ConnectedUserService)
+    public constructor(activatedRoute: ActivatedRoute,
+                       router: Router,
+                       messageDisplayer: MessageDisplayer,
+                       public cdr: ChangeDetectorRef,
+                       connectedUserService: ConnectedUserService)
     {
-        super(actRoute, connectedUserService, router, messageDisplayer);
+        super(activatedRoute, connectedUserService, router, messageDisplayer);
     }
     public getNumberOfSteps(): number {
         return this.steps.length;
@@ -54,7 +54,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
     }
     public async ngAfterViewInit(): Promise<void> {
-        const createdSuccessfully: boolean = await this.afterViewInit();
+        const createdSuccessfully: boolean = await this.createMatchingGameComponent();
         if (createdSuccessfully) {
             await this.start();
         }
@@ -211,15 +211,14 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.cdr.detectChanges();
     }
     public async playLocally(): Promise<void> {
-        const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+        const game: string = this.getGameName();
         await this.router.navigate(['/local', game]);
     }
     public async createGame(): Promise<void> {
-        const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+        const game: string = this.getGameName();;
         await this.router.navigate(['/play', game]);
     }
     public override getPlayer(): TutorialPlayer {
-        // TODO FOR REVIEW: ticketter l'obligation de override ou plutôt l'autre ?
         return 'tutorial-player';
     }
 }

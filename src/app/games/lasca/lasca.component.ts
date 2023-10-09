@@ -61,17 +61,14 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         isAlreadySwitched: false,
         spaceInfo: [],
     };
-    private lastMove: MGPOptional<LascaMove> = MGPOptional.empty();
     private currentMoveClicks: Coord[] = [];
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
     private legalMoves: LascaMove[] = [];
     private readonly moveGenerator: LascaMoveGenerator = new LascaMoveGenerator();
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.hasAsymmetricBoard = true;
-        this.rules = LascaRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Lasca');
         this.availableAIs = [
             new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),
             new Minimax($localize`Control and Domination`,
@@ -81,11 +78,10 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];
         this.encoder = LascaMove.encoder;
-        this.tutorial = new LascaTutorial().tutorial;
         this.canPass = false;
+        this.hasAsymmetricBoard = true;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.lastMove = this.node.previousMove;
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
         this.legalMoves = this.moveGenerator.getListMoves(this.node);

@@ -49,17 +49,15 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.hasAsymmetricBoard = true;
-        this.rules = PylosRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Pylos');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new PylosHeuristic(), new PylosOrderedMoveGenerator()),
             new MCTS($localize`MCTS`, new PylosMoveGenerator(), this.rules),
         ];
         this.encoder = PylosMove.encoder;
-        this.tutorial = new PylosTutorial().tutorial;
+        this.hasAsymmetricBoard = true;
     }
     public getPiecesCyForPlayer(player: Player): number {
         if (player === Player.ONE) {

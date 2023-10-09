@@ -15,6 +15,7 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -23,7 +24,7 @@ import { AI, AIOptions } from 'src/app/jscaip/AI';
  */
 export abstract class BaseGameComponent {
 
-    public constructor(public readonly actRoute: ActivatedRoute) {}
+    public constructor(public readonly activatedRoute: ActivatedRoute) {}
 
     // Make ArrayUtils available in game components
     public ArrayUtils: typeof ArrayUtils = ArrayUtils;
@@ -42,7 +43,7 @@ export abstract class BaseGameComponent {
     }
 
     protected getGameName(): string {
-        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+        return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
 }
 
@@ -101,13 +102,14 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
 
     public role: PlayerOrNone;
 
-    public constructor(public readonly messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(actRoute);
+    public constructor(public readonly messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(activatedRoute);
     }
 
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
     }
+
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
@@ -121,9 +123,11 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
             return MGPValidation.failure(reason);
         }
     }
+
     public cancelMoveAttempt(): void {
         // Override if need be
     }
+
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {
@@ -131,28 +135,44 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
         const error: string = `pass() called on a game that does not redefine it`;
         return ErrorLoggerService.logError('GameComponent', error, { gameName });
     }
+
     public getTurn(): number {
         return this.node.gameState.turn;
     }
+
     public getCurrentPlayer(): Player {
         return this.node.gameState.getCurrentPlayer();
     }
+
     public getCurrentOpponent(): Player {
         return this.node.gameState.getCurrentOpponent();
     }
+
     public getState(): S {
         return this.node.gameState;
     }
+
     public getPreviousState(): S {
         return this.node.parent.get().gameState;
     }
+
     public async showLastMove(move: M): Promise<void> {
         // Not needed by default
         return;
     }
+
     public hideLastMove(): void {
         // Not needed by default
         return;
+    }
+
+    protected setRuleAndNode(urlName: string): void {
+        const gameInfo: GameInfo = GameInfo.getByUrlName(urlName)[0];
+        const defaultConfig: RulesConfig = gameInfo.rulesConfigDescription.getDefaultConfig().config;
+
+        this.rules = gameInfo.rules as R;
+        this.node = this.rules.getInitialNode(defaultConfig as C);
+        this.tutorial = gameInfo.tutorial.tutorial;
     }
 
 }

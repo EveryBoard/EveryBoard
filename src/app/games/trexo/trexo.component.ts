@@ -78,16 +78,14 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public currentOpponentClass: string = 'player1';
     public currentPlayerClass: string = 'player0';
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = TrexoRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Trexo');
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
             new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
-        this.tutorial = new TrexoTutorial().tutorial;
         TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
     }

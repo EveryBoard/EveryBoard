@@ -48,6 +48,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await ComponentTestUtils.forGameWithWrapper<QuartoComponent, Comparable>('Quarto', TutorialGameWrapperComponent);
         wrapper = testUtils.getWrapper() as TutorialGameWrapperComponent;
     }));
+
     describe('Common behavior', () => {
         // ///////////////////////// Before ///////////////////////////////////////
         it('should create', () => {
@@ -535,6 +536,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expectValidRouting(router, ['/play', 'Quarto'], OnlineGameCreationComponent);
         }));
     });
+
     describe('TutorialStep awaiting specific moves', () => {
         it('should show highlight of first click on multiclick game component', fakeAsync(async() => {
             // Given a TutorialStep with several moves
@@ -772,6 +774,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledWith(true);
         }));
     });
+
     describe('TutorialStep awaiting any move', () => {
         it('should consider any move legal when step is anyMove', fakeAsync(async() => {
             // Given tutorial step fo type "anyMove"
@@ -798,6 +801,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
         }));
     });
+
     describe('TutorialStep awaiting a click', () => {
         it('should show success message after step success (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
@@ -935,7 +939,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
         }));
     });
+
     describe('Informational TutorialStep', () => {
+
         it('should forbid clicking on the board', fakeAsync(async() => {
             // Given a TutorialStep on which nothing is awaited
             const tutorial: TutorialStep[] = [
@@ -955,6 +961,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         it('should mark step as finished when skipped', fakeAsync(async() => {
             // Given a TutorialStep with no action to do
             const tutorial: TutorialStep[] = [
@@ -983,8 +990,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
             expect(wrapper.stepFinished[0]).toBeTrue();
         }));
+
     });
+
     describe('TutorialStep awaiting a predicate', () => {
+
         it('should display MGPValidation.reason when predicate return a failure', fakeAsync(async() => {
             // Given a TutorialStep that always fail
             const tutorial: TutorialStep[] = [
@@ -1012,6 +1022,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(expectedReason);
         }));
+
         it('should display successMessage when predicate return MGPValidation.SUCCESS', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
@@ -1039,8 +1050,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
     });
+
     describe('showSolution', () => {
+
         it('should work with Tutorial step other than "list of moves"', fakeAsync(async() => {
             // Given a TutorialStep on which we failed to success
             const solutionMove: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAB);
@@ -1074,18 +1088,23 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // expect step not to be considered a success
             expect(wrapper.stepFinished[wrapper.stepIndex]).toBeFalse();
         }));
+
     });
+
     describe('getConfig', () => {
+
         it('should provide initial default config to game component', fakeAsync(async() => {
-            // Given any tutorial
+            // Given any tutorial for a game that has a specific default config
             const defaultRulesConfig: RulesConfig = { mais_quelles_belles_chaussettes: 42 };
+            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
 
             // When calling getConfig
-            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
             const actualDefaultRulesConfig: RulesConfig = await testUtils.getComponent().getConfig();
 
             // Then the return should be the default game config
             expect(actualDefaultRulesConfig).toBe(defaultRulesConfig);
         }));
+
     });
+
 });

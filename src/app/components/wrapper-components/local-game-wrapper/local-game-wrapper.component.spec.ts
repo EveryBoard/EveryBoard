@@ -37,6 +37,7 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
+
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
         const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game', true);
@@ -52,6 +53,7 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
         // Then it goes to /notFound with the expected error message and displays a toast
         expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
     }));
+
 });
 
 describe('LocalGameWrapperComponent (game without config)', () => {
@@ -64,7 +66,7 @@ describe('LocalGameWrapperComponent (game without config)', () => {
         TestBed.inject(ErrorLoggerService);
     }));
 
-    it('should start game immediately when no configuration are needed', fakeAsync(async() => {
+    it('should start game immediately when no configuration is needed', fakeAsync(async() => {
         // Given any game needing no config, like Quarto
         // When displaying them
         // Then game component should be created

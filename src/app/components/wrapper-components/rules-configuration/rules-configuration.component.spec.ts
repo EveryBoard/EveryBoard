@@ -26,28 +26,15 @@ describe('RulesConfigurationComponent', () => {
     }
 
     beforeEach(async() => {
-        const actRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
-        testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, actRoute);
+        const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
+        testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
         component = testUtils.getComponent();
-        component.stateType = KamisadoState; // A game needing no config
+        component.stateType = MGPOptional.of(KamisadoState); // A game needing no config
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-
-    it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
-        // Given a rules config component provided with an empty configuration
-        component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
-        spyOn(component.updateCallback, 'emit').and.callThrough();
-
-        // When initialising
-        testUtils.detectChanges();
-
-        // Then the callback should have emit {}
-        const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({});
-        expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
-    }));
 
     it('should display default config', fakeAsync(async() => {
         // Given any component from creator point of view
@@ -79,7 +66,7 @@ describe('RulesConfigurationComponent', () => {
 
     it('should not throw when stateType is missing due to unexisting game', fakeAsync(async() => {
         // Given any component from creator point of view
-        component.stateType = null;
+        component.stateType = MGPOptional.empty();
         component.userIsCreator = true;
         component.rulesConfigDescription = new RulesConfigDescription(
             {
@@ -168,6 +155,19 @@ describe('RulesConfigurationComponent', () => {
                 // Then it should throw
                 const error: string = 'Only Customifiable config should be modified!';
                 expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('RulesConfiguration', error);
+            }));
+
+            it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
+                // Given a rules config component provided with an empty configuration
+                component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
+                spyOn(component.updateCallback, 'emit').and.callThrough();
+
+                // When initializing
+                testUtils.detectChanges();
+
+                // Then the callback should have emit {}
+                const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({});
+                expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
             }));
 
             beforeEach(() => {
@@ -348,6 +348,21 @@ describe('RulesConfigurationComponent', () => {
                 component.userIsCreator = false;
             });
 
+            it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
+                // Given a rules config component provided with an empty configuration
+                component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
+                // But a config to display is mandatory for non-creator
+                component.rulesConfigToDisplay = {}; // Mandatory even if it's a configless game
+                spyOn(component.updateCallback, 'emit').and.callThrough();
+
+                // When initializing
+                testUtils.detectChanges();
+
+                // Then the callback should have emit {}
+                const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({});
+                expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
+            }));
+
             it('should throw at creation if rulesConfigToDisplay is missing', fakeAsync(async() => {
                 // Given a component intended for passive user with no config to display
                 RulesUtils.expectToThrowAndLog(() => {
@@ -418,19 +433,19 @@ describe('RulesConfigurationComponent', () => {
                         truth: true,
                     };
                     component.rulesConfigDescription =
-                    new RulesConfigDescription(
-                        {
-                            name: (): string => 'config name',
-                            config: {
-                                booleen: true,
-                                truth: false,
+                        new RulesConfigDescription(
+                            {
+                                name: (): string => 'config name',
+                                config: {
+                                    booleen: true,
+                                    truth: false,
+                                },
                             },
-                        },
-                        {
-                            booleen: (): string => 'booleen',
-                            truth: (): string => 'veritasserum',
-                        },
-                    );
+                            {
+                                booleen: (): string => 'booleen',
+                                truth: (): string => 'veritasserum',
+                            },
+                        );
                 });
 
                 it('should display value of the rulesConfigToDisplay, not of the default config', fakeAsync(async() => {

@@ -42,16 +42,14 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private chosenPieceIndex: MGPOptional<number>;
     public remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = EncapsuleRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Encapsule');
         this.availableAIs = [
             new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new EncapsuleMoveGenerator()),
             new MCTS($localize`MCTS`, new EncapsuleMoveGenerator(), this.rules),
         ];
         this.encoder = EncapsuleMove.encoder;
-        this.tutorial = new EncapsuleTutorial().tutorial;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: EncapsuleState = this.getState();

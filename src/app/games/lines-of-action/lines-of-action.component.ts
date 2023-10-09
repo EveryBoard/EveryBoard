@@ -36,16 +36,14 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private lastMove: MGPOptional<LinesOfActionMove> = MGPOptional.empty();
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = LinesOfActionRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('LinesOfAction');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),
             new MCTS($localize`MCTS`, new LinesOfActionMoveGenerator(), this.rules),
         ];
         this.encoder = LinesOfActionMove.encoder;
-        this.tutorial = new LinesOfActionTutorial().tutorial;
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);

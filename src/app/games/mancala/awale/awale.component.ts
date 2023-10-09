@@ -15,15 +15,13 @@ import { AwaleMoveGenerator } from './AwaleMoveGenerator';
 export class AwaleComponent extends MancalaSingleSowComponent<AwaleRules, AwaleMove> {
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       actRoute: ActivatedRoute,
+                       activatedRoute: ActivatedRoute,
                        cdr: ChangeDetectorRef)
     {
-        super(messageDisplayer, actRoute, cdr);
-        this.rules = AwaleRules.get();
-        this.node = this.rules.getInitialNode(AwaleRules.DEFAULT_CONFIG);
+        super(messageDisplayer, activatedRoute, cdr);
+        this.setRuleAndNode('Awale');
         this.availableAIs = this.createAIs(new AwaleMoveGenerator());
         this.encoder = AwaleMove.encoder;
-        this.tutorial = new AwaleTutorial().tutorial;
     }
     public generateMove(x: number): AwaleMove {
         return AwaleMove.of(x);

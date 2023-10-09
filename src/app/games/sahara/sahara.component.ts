@@ -38,16 +38,14 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     public possibleLandings: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = SaharaRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Sahara');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new SaharaHeuristic(), new SaharaMoveGenerator()),
             new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];
         this.encoder = SaharaMove.encoder;
-        this.tutorial = new SaharaTutorial().tutorial;
     }
     public override cancelMoveAttempt(): void {
         this.possibleLandings = [];

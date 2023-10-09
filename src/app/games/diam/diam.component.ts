@@ -95,16 +95,14 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             { key: Player.ONE, value: [] },
         ]),
     };
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = DiamRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Diam');
         this.availableAIs = [
             new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new DiamMoveGenerator()),
             new MCTS($localize`MCTS`, new DiamMoveGenerator(), this.rules),
         ];
         this.encoder = DiamMoveEncoder;
-        this.tutorial = new DiamTutorial().tutorial;
     }
     public async onSpaceClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);

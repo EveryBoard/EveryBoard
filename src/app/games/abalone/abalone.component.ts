@@ -52,18 +52,16 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public selecteds: Coord[] = [];
 
-
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = AbaloneRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Abalone');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new AbaloneScoreHeuristic(), new AbaloneMoveGenerator()),
             new MCTS($localize`MCTS`, new AbaloneMoveGenerator(), this.rules),
         ];
         this.encoder = AbaloneMove.encoder;
-        this.tutorial = new AbaloneTutorial().tutorial;
         this.scores = MGPOptional.of([0, 0]);
+
         this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
                                          new Coord(- 8 * this.SPACE_SIZE, 2 * this.SPACE_SIZE),

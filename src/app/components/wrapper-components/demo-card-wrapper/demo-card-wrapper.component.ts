@@ -25,18 +25,18 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     @ViewChild('board', { read: ViewContainerRef })
     public override boardRef: ViewContainerRef | null = null;
 
-    public constructor(actRoute: ActivatedRoute,
+    public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
                        messageDisplayer: MessageDisplayer,
                        private readonly cdr: ChangeDetectorRef)
     {
-        super(actRoute, connectedUserService, router, messageDisplayer);
+        super(activatedRoute, connectedUserService, router, messageDisplayer);
     }
 
     public async ngAfterViewInit(): Promise<void> {
         window.setTimeout(async() => {
-            await this.afterViewInit();
+            await this.createMatchingGameComponent();
             this.gameComponent.node = this.demoNodeInfo.node;
             // The board needs to be updated to render the changed node, setRole will do it
             await this.setRole(this.gameComponent.getCurrentPlayer());
@@ -54,7 +54,10 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     public async ngOnChanges(_changes: SimpleChanges): Promise<void> {
+        // This function is triggered when the parent component modify the @Input of this one
+        // And also it is called on creation, then, this.gameComponent is not setted yet
         if (this.gameComponent != null) {
+            // When it is, we want to manually update the board with the new infos and display them
             this.gameComponent.node = this.demoNodeInfo.node;
             await this.gameComponent.updateBoard(false);
             this.cdr.detectChanges();
@@ -62,7 +65,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     protected override getGameName(): string {
-        // Unlike all other BaseGameComponent (wrapper or game) thoses will share one page: everyboard.org/demo
+        // Unlike all other BaseGameComponent (wrapper or game) those will share one page: everyboard.org/demo
         // Hence we cannot read the name of the game via the URL
         return this.demoNodeInfo.name;
     }

@@ -65,18 +65,17 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of([0, 0]);
-        this.rules = GipfRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Gipf');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new GipfScoreHeuristic(), new GipfMoveGenerator()),
             new MCTS($localize`MCTS`, new GipfMoveGenerator(), this.rules),
         ];
         this.encoder = GipfMove.encoder;
-        this.tutorial = new GipfTutorial().tutorial;
+        this.hasAsymmetricBoard = true;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.SPACE_SIZE = 40;
         this.constructedState = this.getState();
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,

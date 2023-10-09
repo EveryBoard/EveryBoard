@@ -115,22 +115,20 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.rules = HiveRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Hive');
         this.availableAIs = [
             new Minimax($localize`Minimax`, HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator()),
             new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),
         ];
         this.encoder = HiveMove.encoder;
-        this.tutorial = new HiveTutorial().tutorial;
+        this.canPass = false;
         this.SPACE_SIZE = 30;
         this.PIECE_HEIGHT = this.SPACE_SIZE / 3;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.5,
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.canPass = false;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.layers = [];

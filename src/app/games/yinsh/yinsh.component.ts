@@ -102,17 +102,16 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         sideRings: [5, 5],
         sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.scores = MGPOptional.of([0, 0]);
-        this.rules = YinshRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Yinsh');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new YinshScoreHeuristic(), new YinshMoveGenerator()),
             new MCTS($localize`MCTS`, new YinshMoveGenerator(), this.rules),
         ];
         this.encoder = YinshMove.encoder;
-        this.tutorial = new YinshTutorial().tutorial;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);

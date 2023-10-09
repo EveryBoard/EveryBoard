@@ -34,18 +34,16 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.scores = MGPOptional.of([2, 2]);
-        this.rules = ReversiRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Reversi');
         this.availableAIs = [
             new ReversiMinimax(),
             new MCTS($localize`MCTS`, new ReversiMoveGenerator(), this.rules),
         ];
         this.encoder = ReversiMove.encoder;
-        this.tutorial = new ReversiTutorial().tutorial;
         this.canPass = false;
+        this.scores = MGPOptional.of([2, 2]);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);

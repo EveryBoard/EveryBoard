@@ -47,12 +47,12 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
 
     public Player: typeof Player = Player;
 
-    public constructor(actRoute: ActivatedRoute,
+    public constructor(activatedRoute: ActivatedRoute,
                        protected readonly connectedUserService: ConnectedUserService,
                        protected readonly router: Router,
                        protected readonly messageDisplayer: MessageDisplayer)
     {
-        super(actRoute);
+        super(activatedRoute);
     }
 
     private getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
@@ -61,7 +61,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
 
-    protected async afterViewInit(): Promise<boolean> {
+    protected async createMatchingGameComponent(): Promise<boolean> {
+        // Method to be called only after view init
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
@@ -202,7 +203,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
     }
 
     public getRulesConfigDescriptionByName(gameName: string): RulesConfigDescription {
-        const game: GameInfo[] = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === gameName);
+        const game: GameInfo[] = GameInfo.getByUrlName(gameName);
         if (game.length === 0) {
             return RulesConfigDescription.DEFAULT;
         } else {

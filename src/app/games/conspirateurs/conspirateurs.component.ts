@@ -61,17 +61,15 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
-        this.rules = ConspirateursRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Conspirateurs');
         this.availableAIs = [
             new ConspirateursJumpMinimax(),
             new MCTS($localize`MCTS`, new ConspirateursMoveGenerator(), this.rules),
         ];
         this.encoder = ConspirateursMove.encoder;
-        this.tutorial = new ConspirateursTutorial().tutorial;
+        this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();

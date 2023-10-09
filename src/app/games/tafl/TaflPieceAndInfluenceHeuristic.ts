@@ -18,14 +18,15 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
 
     protected width: number;
 
-    private maxInfluence: number;
+    private readonly maxInfluence: number;
 
-    private scoreByThreatenedPiece: number;
+    private readonly scoreByThreatenedPiece: number;
 
-    private scoreBySafePiece: number;
+    private readonly scoreBySafePiece: number;
 
     public constructor(rules: TaflRules<M, S>) {
         super(rules);
+        // eslint-disable-next-line dot-notation
         const initialState: S = rules.stateType['getInitialState'](rules.config);
         this.width = initialState.board.length;
         this.maxInfluence = 16 * ((this.width * 2) - 2);

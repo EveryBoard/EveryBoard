@@ -105,7 +105,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
 {
     const rulesConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(game);
     const testUtils: ComponentTestUtils<T, MinimalUser> = await ComponentTestUtils.basic(game);
-    await prepareMockDBContent(ConfigRoomMocks.INITIAL(rulesConfig));
+    await prepareMockDBContent(ConfigRoomMocks.getInitial(rulesConfig));
     ConnectedUserServiceMock.setUser(user);
     testUtils.prepareFixture(OnlineGameWrapperComponent);
     if (preparationOptions.runClocks === false) {
@@ -120,7 +120,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
     testUtils.detectChanges();
     const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
-    await configRoomDAO.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT(rulesConfig));
+    await configRoomDAO.update('configRoomId', ConfigRoomMocks.withChosenOpponent(rulesConfig));
     testUtils.detectChanges();
     let role: PlayerOrNone = PlayerOrNone.NONE;
     if (user.id === UserMocks.CREATOR_AUTH_USER.id) {
@@ -128,7 +128,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     } else if (user.id === UserMocks.OPPONENT_AUTH_USER.id) {
         role = Player.ONE;
     }
-    let configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG(rulesConfig);
+    let configRoom: ConfigRoom = ConfigRoomMocks.withProposedConfig(rulesConfig);
     await configRoomDAO.update('configRoomId', configRoom);
     testUtils.detectChanges();
     if (preparationOptions.shorterGlobalClock === true) {

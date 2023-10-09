@@ -36,20 +36,24 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * It must set up the `rules`, `node`, `encoder`, `encoder`, and `availableMinimaxes` fields.
      * The minimax list can remain empty.
      */
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
         // If the board you draw must be rotated of 180° when you play the second player, enable the following:
-        // this.hasAsymmetricBoard = true;
-        // If your game has scores in-game, enable the following:
-        // this.scores = MGPOptional.of([0, 0]);
         this.rules = NewGameRules.get();
         this.node = this.rules.getInitialNode();
-        this.encoder = NewGameMove.encoder;
+        // TODO setRuleAndNode
         this.tutorial = new NewGameTutorial().tutorial;
         this.availableAIs = [
             new NewGameMinimax(),
             new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),
         ];
+        this.encoder = NewGameMove.encoder;
+
+        // If the board you draw must be rotated of 180° when you play the second player, enable the following:
+        // this.hasAsymmetricBoard = true;
+
+        // If your game has scores in-game, enable the following:
+        // this.scores = MGPOptional.of([0, 0]);
     }
     /**
      * This method updates the displayed board.

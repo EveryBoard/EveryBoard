@@ -48,11 +48,9 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public width: number = this.SPACE_SIZE * 8;
     public height: number = 10 * (this.SPACE_SIZE + this.STROKE_WIDTH);
 
-    public constructor(messageDisplayer: MessageDisplayer, actRoute: ActivatedRoute) {
-        super(messageDisplayer, actRoute);
-        this.scores = MGPOptional.of([0, 0]);
-        this.rules = CoerceoRules.get();
-        this.node = this.rules.getInitialNode();
+    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
+        super(messageDisplayer, activatedRoute);
+        this.setRuleAndNode('Coerceo');
         this.availableAIs = [
             new Minimax($localize`Pieces > Threats > Tiles`,
                         this.rules,
@@ -62,7 +60,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             new MCTS($localize`MCTS`, new CoerceoMoveGenerator(), this.rules),
         ];
         this.encoder = CoerceoMove.encoder;
-        this.tutorial = new CoerceoTutorial().tutorial;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.SPACE_SIZE = 70;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

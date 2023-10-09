@@ -114,7 +114,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty(); // Provided by RulesConfigurationComponent
 
     public constructor(public readonly router: Router,
-                       public readonly actRoute: ActivatedRoute,
+                       public readonly activatedRoute: ActivatedRoute,
                        public readonly connectedUserService: ConnectedUserService,
                        public readonly currentGameService: CurrentGameService,
                        public readonly gameService: GameService,
@@ -158,7 +158,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const currentGame: CurrentGame = {
             id: this.partId,
             opponent: this.getOpponent(),
-            typeGame: Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo')),
+            typeGame: this.getGameUrlName(),
             role,
         };
         return this.currentGameService.updateCurrentGame(currentGame);
@@ -498,12 +498,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
 
     protected getGameUrlName(): string {
-        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
+        return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
 
-    public getStateType(): Type<GameState> {
+    public getStateType(): MGPOptional<Type<GameState>> {
         const urlName: string = this.getGameUrlName();
-        return GameInfo.ALL_GAMES().filter((game: GameInfo) => game.urlName === urlName)[0].rules.stateType;
+        return MGPOptional.of(GameInfo.getByUrlName(urlName)[0].rules.stateType);
     }
 
     public async ngOnDestroy(): Promise<void> {

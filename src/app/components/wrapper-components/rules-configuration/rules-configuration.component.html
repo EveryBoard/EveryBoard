@@ -38,7 +38,7 @@
                                 <i class="fas fa-exclamation-triangle"></i>
                             </span>
                         </div>
-                        <div *ngIf="isInvalid(configParameter)"
+                        <div *ngIf="isValid(configParameter) === false"
                               class="message is-danger"
                               role="alert">
                             <div id="{{ configParameter }}_number_config_error"
@@ -64,7 +64,7 @@
     </form>
 
     <app-demo-card id="demoCard"
-                   *ngIf="stateType !== null"
+                   *ngIf="stateType.isPresent()"
                    [demoNodeInfo]="getConfigDemo()"></app-demo-card>
 
 </div>
