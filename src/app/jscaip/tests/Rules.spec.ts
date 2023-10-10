@@ -8,6 +8,7 @@ import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from '../GameStatus';
 import { JSONValue } from 'src/app/utils/utils';
 import { RulesUtils } from './RulesUtils.spec';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 class MyAbstractState extends GameStateWithTable<number> {
 
@@ -62,10 +63,10 @@ describe('Rules', () => {
         spyOn(node, 'getChild').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
-        const resultingNode: MGPOptional<AbstractNode> = rules.choose(node, P4Move.ZERO);
+        const resultingNode: MGPFallible<AbstractNode> = rules.choose(node, P4Move.ZERO);
 
-        // he should be created and chosen
-        expect(resultingNode.isPresent()).toBeTrue();
+        // Then the node should be created and chosen
+        expect(resultingNode.isSuccess()).toBeTrue();
         expect(resultingNode.get().gameState.turn).toBe(1);
     });
     it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
@@ -89,12 +90,13 @@ describe('Rules', () => {
             // Given a node and a move that will be deemed illegal
             const node: AbstractNode = rules.getInitialNode();
             const illegalMove: P4Move = P4Move.FIVE;
-            spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure(''));
+            spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure('some reason'));
 
             // When checking if the move is legal
-            const legality: MGPOptional<AbstractNode> = rules.choose(node, illegalMove);
-            // Then it should be an empty optional
-            expect(legality).toEqual(MGPOptional.empty());
+            const legality: MGPFallible<AbstractNode> = rules.choose(node, illegalMove);
+            // Then it should be a failure with the expected reason
+            expect(legality.isFailure()).toBeTrue();
+            expect(legality.getReason()).toEqual('some reason');
         });
     });
 });

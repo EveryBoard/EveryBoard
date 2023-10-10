@@ -1,6 +1,6 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { SiamPiece } from './SiamPiece';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 
 export class SiamState extends GameStateWithTable<SiamPiece> {
@@ -8,7 +8,7 @@ export class SiamState extends GameStateWithTable<SiamPiece> {
     public static readonly SIZE: number = 5;
 
     public static getInitialState(): SiamState {
-        const board: SiamPiece[][] = ArrayUtils.createTable(SiamState.SIZE, SiamState.SIZE, SiamPiece.EMPTY);
+        const board: SiamPiece[][] = TableUtils.create(SiamState.SIZE, SiamState.SIZE, SiamPiece.EMPTY);
 
         board[2][1] = SiamPiece.MOUNTAIN;
         board[2][2] = SiamPiece.MOUNTAIN;

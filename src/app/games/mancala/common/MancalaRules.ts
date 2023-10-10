@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaState } from './MancalaState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Move } from 'src/app/jscaip/Move';
 import { Rules } from 'src/app/jscaip/Rules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -211,7 +211,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         const resultingBoard: number[][] = state.getCopiedBoard();
         const captured: [number, number] = state.getScoresCopy();
         let capturedSum: number = 0;
-        const captureMap: number[][] = ArrayUtils.copyBiArray(postCaptureResult.captureMap);
+        const captureMap: number[][] = TableUtils.copy(postCaptureResult.captureMap);
         let x: number = 0;
         const mansoonedY: number = mansooningPlayer.getOpponent().value;
         while (x < MancalaState.WIDTH) {

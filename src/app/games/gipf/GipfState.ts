@@ -1,5 +1,5 @@
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
@@ -35,7 +35,7 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
         if (this.sidePieces[1] !== other.sidePieces[1]) return false;
         if (this.capturedPieces[0] !== other.capturedPieces[0]) return false;
         if (this.capturedPieces[1] !== other.capturedPieces[1]) return false;
-        return ArrayUtils.compareTable(this.board, other.board);
+        return TableUtils.compare(this.board, other.board);
     }
     public getNumberOfPiecesToPlace(player: Player): number {
         return this.sidePieces[player.value];
@@ -44,7 +44,7 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
         return this.capturedPieces[player.value];
     }
     public setAtUnsafe(coord: Coord, v: FourStatePiece): this {
-        const newBoard: FourStatePiece[][] = ArrayUtils.copyBiArray(this.board);
+        const newBoard: FourStatePiece[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = v;
         return new GipfState(newBoard, this.turn, this.sidePieces, this.capturedPieces) as this;
     }
