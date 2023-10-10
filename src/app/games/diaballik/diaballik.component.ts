@@ -15,6 +15,8 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { Utils } from 'src/app/utils/utils';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DiaballikFailure } from './DiaballikFailure';
+import { Line } from 'src/app/jscaip/Line';
+import { Player } from 'src/app/jscaip/Player';
 
 @Component({
     selector: 'app-diaballik',
@@ -33,7 +35,8 @@ export class DiaballikComponent
     public INDICATOR_SIZE: number = 20;
 
     public victoryCoord: MGPOptional<Coord> = MGPOptional.empty();
-    public defeatCoords: Coord[] = [];
+    public loserCoords: Coord[] = [];
+    public blockedLines: Line[] = [];
 
     public indicators: Coord[] = [];
 
@@ -45,7 +48,7 @@ export class DiaballikComponent
     private lastMovedBallCoords: Coord[] = [];
     private lastMovedPiecesCoords: Coord[] = [];
 
-    private moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator();
+    private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator();
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -67,12 +70,24 @@ export class DiaballikComponent
         this.board = state.board; // Needed by RectangularGameComponent
         this.stateInConstruction = state;
         const possibleVictory: MGPOptional<VictoryOrDefeatCoords> = this.rules.getVictoryOrDefeatCoords(state);
+        this.victoryCoord = MGPOptional.empty();
+        this.loserCoords = [];
+        this.blockedLines = [];
         if (possibleVictory.isPresent()) {
             const victory: VictoryOrDefeatCoords = possibleVictory.get();
             if (victory instanceof VictoryCoord) {
                 this.victoryCoord = MGPOptional.of(victory.coord);
             } else if (victory instanceof DefeatCoords) {
-                this.defeatCoords = victory.coords;
+                this.loserCoords = victory.allLoserPieces;
+                // If Player.ZERO won, the line will be placed in front of their piece directly.
+                // If Player.ONE won, we need to shift them by one space size so that they appear in front of the piece
+                const shift: number = victory.winner === Player.ZERO ? 0 : this.SPACE_SIZE;
+                for (const blockedPiece of victory.opponentPiecesInContact) {
+                    const x: number = blockedPiece.x * this.SPACE_SIZE;
+                    const y: number = blockedPiece.y * this.SPACE_SIZE + shift;
+                    const line: Line = new Line(x, y, x + this.SPACE_SIZE, y);
+                    this.blockedLines.push(line);
+                }
             }
         }
     }
@@ -108,9 +123,6 @@ export class DiaballikComponent
         if (this.lastMovedBallCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('moved-fill');
         }
-        if (this.victoryCoord.equalsValue(coord)) {
-            classes.push('victory-stroke');
-        }
         return classes;
     }
 
@@ -123,7 +135,10 @@ export class DiaballikComponent
         if (piece.holdsBall === false && this.currentSelection.equalsValue(new Coord(x, y))) {
             classes.push('selected-stroke');
         }
-        if (this.defeatCoords.some((c: Coord) => c.equals(coord))) {
+        if (this.victoryCoord.equalsValue(coord)) {
+            classes.push('victory-stroke');
+        }
+        if (this.loserCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('defeat-stroke');
         }
         return classes;
@@ -259,7 +274,6 @@ export class DiaballikComponent
         const boardHeight: number = this.getState().getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const centerX: number = boardWidth / 2;
         const centerY: number = boardHeight / 2;
-        console.log({centerX, centerY, rotation})
         return `rotate(${rotation} ${centerX} ${centerY})`;
     }
 }

@@ -13,12 +13,6 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
 
 export class VictoryOrDefeatCoords {
-    public static victory(winner: Player, coord: Coord): VictoryOrDefeatCoords {
-        return new VictoryCoord(winner, coord);
-    }
-    public static defeat(loser: Player, coords: Coord[]): VictoryOrDefeatCoords {
-        return new DefeatCoords(loser, coords);
-    }
     protected constructor(public readonly winner: Player) {}
 }
 export class VictoryCoord extends VictoryOrDefeatCoords {
@@ -27,14 +21,17 @@ export class VictoryCoord extends VictoryOrDefeatCoords {
     }
 }
 export class DefeatCoords extends VictoryOrDefeatCoords {
-    public constructor(loser: Player, public readonly coords: Coord[]) {
+    public constructor(loser: Player,
+                       public readonly allLoserPieces: Coord[],
+                       public readonly opponentPiecesInContact: Coord[]) {
         super(loser.getOpponent());
     }
 }
 
-export type DiaballikPlayerAndCoords = {
+export type DefeatCoordsIncomplete = {
     player: Player,
-    coords: Coord[],
+    allPieces: Coord[],
+    piecesInContact: Coord[],
 };
 
 export class DiaballikNode extends GameNode<DiaballikMove, DiaballikState> {}
@@ -153,20 +150,16 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         // A player wins when their ball is in the opponent's row
         const ballCoordZero: MGPOptional<Coord> = this.getBallCoordInRow(state, 0, Player.ZERO);
         if (ballCoordZero.isPresent()) {
-            return MGPOptional.of(VictoryOrDefeatCoords.victory(Player.ZERO, ballCoordZero.get()));
+            return MGPOptional.of(new VictoryCoord(Player.ZERO, ballCoordZero.get()));
         }
         const ballCoordOne: MGPOptional<Coord> = this.getBallCoordInRow(state, state.getHeight() - 1, Player.ONE);
         if (ballCoordOne.isPresent()) {
-            return MGPOptional.of(VictoryOrDefeatCoords.victory(Player.ONE, ballCoordOne.get()));
+            return MGPOptional.of(new VictoryCoord(Player.ONE, ballCoordOne.get()));
         }
         // The anti-game rule states that if one player blocks the other and there are three pieces in contact,
         // the blocking player loses
-        const blockerAndCoords: MGPOptional<{ player: Player, coords: Coord[] }> = this.getBlockerAndCoords(state);
-        if (blockerAndCoords.isPresent()) {
-            return MGPOptional.of(VictoryOrDefeatCoords.defeat(blockerAndCoords.get().player,
-                                                               blockerAndCoords.get().coords));
-        }
-        return MGPOptional.empty();
+        const defeatCoords: MGPOptional<DefeatCoords> = this.getBlockerAndCoords(state);
+        return defeatCoords;
     }
     private getBallCoordInRow(state: DiaballikState, y: number, player: Player): MGPOptional<Coord> {
         for (let x: number = 0; x < state.board.length; x++) {
@@ -177,22 +170,15 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
         return MGPOptional.empty();
     }
-    private getBlockerAndCoords(state: DiaballikState): MGPOptional<{ player: Player, coords: Coord[] }> {
+    private getBlockerAndCoords(state: DiaballikState): MGPOptional<DefeatCoords> {
         // The anti-game rule states that if a player forms a line that blocks the opponent,
         // and that if three opponent's pieces are touching the line, then the blocker loses
         // We check this one player at a time.
         // In case both players form a line, the one that just moved wins.
-        const blocking: [MGPOptional<DiaballikPlayerAndCoords>, MGPOptional<DiaballikPlayerAndCoords>] =
-            [MGPOptional.empty(), MGPOptional.empty()];
-        for (const player of Player.PLAYERS) {
-            // Note: it is impossible for both players to be blockers at the same time
-            // (there needs to be a first blocker, and all pieces - 1 should be touching with the opponent,
-            // which would imply that the first blocker has already lost)
-            const coords: MGPOptional<Coord[]> = this.getBlockerCoords(state, player);
-            if (coords.isPresent()) {
-                blocking[player.value] = MGPOptional.of({ player, coords: coords.get() });
-            }
-        }
+        const blocking: [MGPOptional<DefeatCoords>, MGPOptional<DefeatCoords>] = [
+            this.getBlockerCoords(state, Player.ZERO),
+            this.getBlockerCoords(state, Player.ONE),
+        ];
         if (blocking[0].isPresent() && blocking[1].isPresent()) {
             // Both players form a line, so the current player loses
             return blocking[state.getCurrentPlayer().value];
@@ -201,7 +187,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         if (blocking[1].isPresent()) return blocking[1];
         return MGPOptional.empty();
     }
-    private getBlockerCoords(state: DiaballikState, player: Player): MGPOptional<Coord[]> {
+    private getBlockerCoords(state: DiaballikState, player: Player): MGPOptional<DefeatCoords> {
         // We check if:
         //   - there is one player piece in each column
         //   - they are all connected
@@ -218,7 +204,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             }
         }
         if (opponentsConnected.size() >= 3) {
-            return MGPOptional.of(blockerCoords);
+            return MGPOptional.of(new DefeatCoords(player, blockerCoords, opponentsConnected.toList()));
         } else {
             return MGPOptional.empty();
         }

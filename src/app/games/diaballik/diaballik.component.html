@@ -6,12 +6,13 @@
         <g *ngFor="let line of stateInConstruction.board; index as y">
             <g *ngFor="let square of line; index as x"
                id="click_{{ x }}_{{ y }}"
-               (click)="onClick(x, y)">
+               (click)="onClick(x, y)"
+               [attr.transform]="getTranslationXY(x, y)">
                 <rect id="space_{{ x }}_{{ y }}"
                       class="base"
                       [ngClass]="getSpaceClasses(x, y)"
-                      [attr.x]="SPACE_SIZE * x"
-                      [attr.y]="SPACE_SIZE * y"
+                      [attr.x]="0"
+                      [attr.y]="0"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
                 />
@@ -20,31 +21,30 @@
                         class="base"
                         [ngClass]="getPieceClasses(x, y, square)"
                         [attr.r]="42"
-                        [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                        [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+                        [attr.cx]="SPACE_SIZE / 2"
+                        [attr.cy]="SPACE_SIZE / 2"
                 />
                 <circle *ngIf="square.holdsBall"
                         id="ball_{{ x }}_{{ y }}"
                         class="base"
                         [ngClass]="getBallClasses(x, y, square)"
                         [attr.r]="22"
-                        [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                        [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+                        [attr.cx]="SPACE_SIZE / 2"
+                        [attr.cy]="SPACE_SIZE / 2"
                 />
             </g>
         </g>
-        <rect *ngIf="victoryCoord.isPresent()"
-              id="victory_{{ victoryCoord.get().x }}_{{ victoryCoord.get().y }}"
-              class="base no-fill victory-stroke"
-              [attr.x]="SPACE_SIZE * victoryCoord.get().x"
-              [attr.y]="SPACE_SIZE * victoryCoord.get().y"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE" />
-
+        <line *ngFor="let line of blockedLines"
+              [attr.x1]="line.x1"
+              [attr.y1]="line.y1"
+              [attr.x2]="line.x2"
+              [attr.y2]="line.y2"
+              class="defeat-stroke normal-stroke" />
         <rect *ngFor="let coord of indicators"
+              [attr.transform]="getTranslation(coord)"
               id="indicator_{{ coord.x }}_{{ coord.y }}"
-              [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-              [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+              [attr.x]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
+              [attr.y]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
               [attr.width]="INDICATOR_SIZE"
               [attr.height]="INDICATOR_SIZE"
               (click)="onClick(coord.x, coord.y)"
@@ -53,7 +53,7 @@
     <g *ngIf="showDoneButton()"
        id="done"
        (click)="done()"
-       [attr.transform]="'translate(' + (WIDTH / 2 * SPACE_SIZE) + ' ' + ((HEIGHT + 0.5) * SPACE_SIZE) + ')'">
+       [attr.transform]="getTranslationXY(WIDTH / 2, HEIGHT+0.5)">
         <circle [attr.cx]="STROKE_WIDTH / 2"
                 [attr.cy]="STROKE_WIDTH / 2"
                 [attr.r]="SPACE_SIZE / 2.5"

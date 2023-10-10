@@ -33,7 +33,7 @@ describe('DiaballikFilteredMoveGenerator', () => {
         // Then it should have all interesting move options, which is 368 moves
         expect(moves.length).toBe(368);
         // It should not contain A -> B, B -> A moves
-        function expectNoBackAndForth(move: DiaballikMove) {
+        function expectNoBackAndForth(move: DiaballikMove): void {
             const translations: DiaballikSubMove[] =
                 move.getSubMoves().filter((subMove: DiaballikSubMove) => subMove instanceof DiaballikTranslation);
             const startIsEnd: boolean = translations[0].getStart() === translations[1].getEnd();
@@ -42,7 +42,7 @@ describe('DiaballikFilteredMoveGenerator', () => {
         }
         moves.forEach(expectNoBackAndForth);
         // It should only have translation after passes when the translated piece is the one that had the ball
-        function expectTranslatedPieceAfterPass(move: DiaballikMove) {
+        function expectTranslatedPieceAfterPass(move: DiaballikMove): void {
             const subMoves: DiaballikSubMove[] = move.getSubMoves();
             if (subMoves[1] instanceof DiaballikBallPass) {
                 const pass: DiaballikBallPass = subMoves[1];

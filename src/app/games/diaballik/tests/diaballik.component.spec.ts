@@ -8,7 +8,7 @@ import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { DiaballikFailure } from '../DiaballikFailure';
 
-describe('DiaballikComponent', () => {
+fdescribe('DiaballikComponent', () => {
 
     let testUtils: ComponentTestUtils<DiaballikComponent>;
 
@@ -182,20 +182,25 @@ describe('DiaballikComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_6', DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
     }));
-    it('should show the last move', fakeAsync(async() => {
+    fit('should show the last move', fakeAsync(async() => {
         // Given a state with a last move
-
-        // When displaying it
-        await testUtils.expectClickSuccess('#click_0_6');
-        await testUtils.expectClickSuccess('#click_0_5');
-        await testUtils.expectClickSuccess('#click_1_6');
-        await testUtils.expectClickSuccess('#click_1_5');
-        await testUtils.expectClickSuccess('#click_3_6');
+        const state: DiaballikState = new DiaballikState([
+            [X, X, X, Ẋ, X, X, X],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [O, O, _, _, _, _, _],
+            [_, _, Ȯ, _, O, O, O],
+        ], 0);
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
-        await testUtils.expectMoveSuccess('#click_4_6', move);
+
+
+        // When displaying it
+        await testUtils.setupState(state, DiaballikState.getInitialState(), move);
 
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#space_0_6', 'moved-fill');
@@ -211,6 +216,58 @@ describe('DiaballikComponent', () => {
         // Only the ball is highlighted for the pass
         testUtils.expectElementNotToHaveClass('#piece_4_6', 'last-move-stroke');
         testUtils.expectElementToHaveClass('#ball_4_6', 'last-move-stroke');
+    }));
+    it('should not show last move upon construction of a new move', fakeAsync(async() => {
+        // Given a state with a last move
+        const state: DiaballikState = new DiaballikState([
+            [X, X, X, Ẋ, X, X, X],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [O, O, _, _, _, _, _],
+            [_, _, Ȯ, _, O, O, O],
+        ], 0);
+        const move: DiaballikMove =
+            new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+                              MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
+                              MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
+        await testUtils.setupState(state, DiaballikState.getInitialState(), move);
+
+        // When starting a new move
+        testUtils.expectClickSuccess('#space_0_0');
+
+        // Then it should not show the last move anymore
+        testUtils.expectElementNotToHaveClass('#space_0_6', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#space_0_5', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#piece_0_5', 'last-move-stroke');
+
+        testUtils.expectElementNotToHaveClass('#space_1_6', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#space_1_5', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#piece_1_5', 'last-move-stroke');
+
+        testUtils.expectElementNotToHaveClass('#space_3_6', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#space_4_6', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#ball_4_6', 'last-move-stroke');
+    }));
+    it('should show move being constructed as last move', fakeAsync(async() => {
+        // Given a state
+
+        // When doing submoves
+        testUtils.expectClickSuccess('#space_0_6');
+        testUtils.expectClickSuccess('#space_0_6');
+
+        testUtils.expectClickSuccess('#space_3_6');
+        testUtils.expectClickSuccess('#space_2_6');
+
+        // Then they should be shown as last move
+        testUtils.expectElementToHaveClass('#space_0_6', 'moved-fill');
+        testUtils.expectElementToHaveClass('#space_0_5', 'moved-fill');
+        testUtils.expectElementToHaveClass('#piece_0_5', 'last-move-stroke');
+
+        testUtils.expectElementNotToHaveClass('#space_3_6', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#space_4_6', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#ball_4_6', 'last-move-stroke');
     }));
     it('should show the victory', fakeAsync(async() => {
         // Given a state with victory

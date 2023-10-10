@@ -34,7 +34,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
 
     public NONE: FourStatePiece = FourStatePiece.UNREACHABLE;
-    public INDICATOR_SIZE: number = 15;
+    public INDICATOR_SIZE: number = 10;
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     public lastStart: MGPOptional<Coord> = MGPOptional.empty();
@@ -44,8 +44,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public left: number = - 2 * this.STROKE_WIDTH;
     public up: number = (- this.SPACE_SIZE / 2) - (2 * this.STROKE_WIDTH);
-    public width: number = this.SPACE_SIZE * 8;
-    public height: number = 10 * (this.SPACE_SIZE + this.STROKE_WIDTH);
+    public width: number = this.SPACE_SIZE * 6;
+    public height: number = 8 * (this.SPACE_SIZE + this.STROKE_WIDTH);
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

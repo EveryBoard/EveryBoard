@@ -13,6 +13,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
+import { Coord } from 'src/app/jscaip/Coord';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -159,6 +160,16 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public hideLastMove(): void {
         // Not needed by default
         return;
+    }
+
+    /**
+     * Gives the translation transform for coordinate x, y, based on SPACE_SIZE
+     */
+    public getTranslation(coord: Coord): string {
+        return this.getTranslationXY(coord.x, coord.y);
+    }
+    public getTranslationXY(x: number, y: number): string {
+        return `translate(${x * this.SPACE_SIZE} ${y * this.SPACE_SIZE})`;
     }
 }
 
