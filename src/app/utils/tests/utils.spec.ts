@@ -100,7 +100,16 @@ describe('Debug', () => {
             Debug.enableLog([false, false], 'Class', 'method');
             // When calling Debug.display
             Debug.display('Class', 'method', 'message');
-            // Then it should have logged the message
+            // Then it should not have logged the message
+            expect(console.log).not.toHaveBeenCalled();
+        });
+        it('should not log when verbose is set to something invalid', () => {
+            // Given a verbose-disabled method and class
+            spyOn(console, 'log').and.returnValue();
+            localStorage.setItem('verbosity', 'lolilol');
+            // When calling Debug.display
+            Debug.display('Class', 'method', 'message');
+            // Then it should not have logged the message
             expect(console.log).not.toHaveBeenCalled();
         });
         it('should not log when verbose is unset', () => {

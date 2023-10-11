@@ -24,7 +24,7 @@ describe('KalahRules', () => {
     describe('distribution', () => {
         it('should allow simple move', () => {
             // Given any board
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing a simple move
             const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
@@ -57,7 +57,7 @@ describe('KalahRules', () => {
         });
         it('should allow to distribute twice when first landing end up in the Kalah', () => {
             // Given a move with the first sub-move landing in the Kalah
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing the double distribution
             const move: KalahMove = KalahMove.of(MancalaDistribution.THREE, [MancalaDistribution.FIVE]);
@@ -72,7 +72,7 @@ describe('KalahRules', () => {
         });
         it('should throw when distributing twice when first landing did not end in the Kalah', () => {
             // Given a double distribution with the first one not landing in the Kalah
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing the double distribution
             const move: KalahMove = KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.TWO]);
@@ -85,7 +85,7 @@ describe('KalahRules', () => {
         });
         it('should drop a piece in your Kalah when passing by', () => {
             // Given any move going further than your last house
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing it
             const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
@@ -120,7 +120,7 @@ describe('KalahRules', () => {
         });
         it('should forbid to stop distributing after landing in your Kalah', () => {
             // Given a simple distribution ending in the Kalah
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing the move
             const move: KalahMove = KalahMove.of(MancalaDistribution.THREE);

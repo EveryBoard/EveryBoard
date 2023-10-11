@@ -9,6 +9,7 @@ import { HiveFailure } from '../HiveFailure';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveState } from '../HiveState';
+import { HiveRules } from '../HiveRules';
 
 describe('HiveComponent', () => {
 
@@ -36,7 +37,7 @@ describe('HiveComponent', () => {
         describe('selection', () => {
             it('should select one of your pieces by clicking on it', fakeAsync(async() => {
                 // Given a state with remaining pieces
-                const state: HiveState = HiveState.getInitialState();
+                const state: HiveState = HiveRules.get().getInitialState();
                 await testUtils.setupState(state);
 
                 // When clicking on a remaining piece
@@ -47,7 +48,7 @@ describe('HiveComponent', () => {
             }));
             it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
                 // Given a state with remaining pieces
-                const state: HiveState = HiveState.getInitialState();
+                const state: HiveState = HiveRules.get().getInitialState();
                 await testUtils.setupState(state);
 
                 // When clicking on a remaining piece of the opponent
@@ -57,7 +58,7 @@ describe('HiveComponent', () => {
             }));
             it('should show valid landings after selection', fakeAsync(async() => {
                 // Given a state with remaining pieces
-                const state: HiveState = HiveState.getInitialState();
+                const state: HiveState = HiveRules.get().getInitialState();
                 await testUtils.setupState(state);
 
                 // When clicking on a remaining piece
@@ -82,7 +83,7 @@ describe('HiveComponent', () => {
         describe('dropping', () => {
             it('should drop the piece on the selected space', fakeAsync(async() => {
                 // Given a state with a selected remaining piece
-                const state: HiveState = HiveState.getInitialState();
+                const state: HiveState = HiveRules.get().getInitialState();
                 await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
 
@@ -108,7 +109,7 @@ describe('HiveComponent', () => {
             }));
             it('should show one less remaining piece after dropping', fakeAsync(async() => {
                 // Given a state
-                const state: HiveState = HiveState.getInitialState();
+                const state: HiveState = HiveRules.get().getInitialState();
                 await testUtils.setupState(state);
 
                 // When performing a drop move
@@ -121,7 +122,7 @@ describe('HiveComponent', () => {
             }));
             it('should show the last move after dropping', fakeAsync(async() => {
                 // Given a state
-                const state: HiveState = HiveState.getInitialState();
+                const state: HiveState = HiveRules.get().getInitialState();
                 await testUtils.setupState(state);
 
                 // When performing a drop move
@@ -135,7 +136,7 @@ describe('HiveComponent', () => {
         });
         it('should deselect the piece at second click on it', fakeAsync(async() => {
             // Given a state with remaining pieces and a selected one
-            const state: HiveState = HiveState.getInitialState();
+            const state: HiveState = HiveRules.get().getInitialState();
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
 

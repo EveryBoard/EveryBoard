@@ -1,16 +1,16 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
-import { BrandhubState } from '../brandhub/BrandhubState';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
+import { TaflState } from '../TaflState';
 
 describe('TaflPieceAndControlHeuristic', () => {
 
-    let heuristic: TaflPieceAndControlHeuristic<BrandhubMove, BrandhubState>;
+    let heuristic: TaflPieceAndControlHeuristic<BrandhubMove, TaflState>;
 
     let rules: BrandhubRules;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
@@ -34,7 +34,7 @@ describe('TaflPieceAndControlHeuristic', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const weakState: BrandhubState = new BrandhubState(weakBoard, 1);
+        const weakState: TaflState = new TaflState(weakBoard, 1);
 
         // And a board where what threatens you is a threatened piece
         // (and each player has 1 threat)
@@ -47,7 +47,7 @@ describe('TaflPieceAndControlHeuristic', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
+        const strongState: TaflState = new TaflState(strongBoard, 1);
 
         // Then the strong board should be preferred
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

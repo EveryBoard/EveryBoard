@@ -52,10 +52,15 @@ export class Debug {
         /* eslint-disable dot-notation */
         const verbosityJSON: string | null = localStorage.getItem('verbosity');
         if (verbosityJSON == null) return [false, false];
-        const verbosity: object = JSON.parse(verbosityJSON);
-        if (verbosity[name] == null) return [false, false];
-        Utils.assert(Array.isArray(verbosity[name]), `malformed verbosity levels: ${verbosity[name]}`);
-        return verbosity[name] as [boolean, boolean];
+        try {
+            const verbosity: object = JSON.parse(verbosityJSON);
+            if (verbosity[name] == null) return [false, false];
+            Utils.assert(Array.isArray(verbosity[name]), `malformed verbosity levels: ${verbosity[name]}`);
+            return verbosity[name] as [boolean, boolean];
+        } catch (e) {
+            // If verbosity is not proper JSON, we consider it not verbose
+            return [false, false];
+        }
         /* eslint-enable dot-notation */
     }
     private static isMethodVerboseEntry(className: string, methodName: string): boolean {

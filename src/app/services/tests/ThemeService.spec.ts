@@ -47,7 +47,8 @@ describe('ThemeService', () => {
     });
     it('should use the stored theme if there is one', fakeAsync(async() => {
         // Given that the dark theme is the stored setting
-        spyOn(localStorage, 'getItem').and.returnValue('dark');
+        localStorage.setItem('theme', 'dark');
+        spyOn(localStorage, 'getItem').and.callThrough();
         // When the page is loaded
         await prepare();
         testUtils.detectChanges();
@@ -56,7 +57,8 @@ describe('ThemeService', () => {
     }));
     it('should fall back to default if the stored theme is invalid', fakeAsync(async() => {
         const realMatchMedia: (query: string) => MediaQueryList = window.matchMedia;
-        spyOn(localStorage, 'getItem').and.returnValue('invalid-theme');
+        localStorage.setItem('theme', 'invalid-theme');
+        spyOn(localStorage, 'getItem').and.callThrough();
         // Given that the stored theme is invalid and there is no preferred color scheme
         spyOn(window, 'matchMedia').and.callFake(function(query: string): MediaQueryList {
             const result: MediaQueryList = realMatchMedia(query);

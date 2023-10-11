@@ -51,7 +51,7 @@ describe('TaflRules', () => {
     });
     it('should be illegal to move an empty square', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState();
+        const state: MyTaflState = MyTaflRules.get().getInitialState();
 
         // When trying to move an empty square
         const move: MyTaflMove = MyTaflMove.from(new Coord(0, 1), new Coord(1, 1)).get();
@@ -62,7 +62,7 @@ describe('TaflRules', () => {
     });
     it('should be illegal to move an opponent pawn', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState();
+        const state: MyTaflState = MyTaflRules.get().getInitialState();
 
         // When trying to move an opponent pawn
         const move: MyTaflMove = MyTaflMove.from(new Coord(4, 2), new Coord(4, 3)).get();
@@ -73,7 +73,7 @@ describe('TaflRules', () => {
     });
     it('should be illegal to land on a pawn', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState();
+        const state: MyTaflState = MyTaflRules.get().getInitialState();
 
         // When doing a move landing on the opponent
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 3)).get();
@@ -84,7 +84,7 @@ describe('TaflRules', () => {
     });
     it('should be illegal to pass through a pawn', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState();
+        const state: MyTaflState = MyTaflRules.get().getInitialState();
 
         // When doing a move passing through a piece
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 4)).get();

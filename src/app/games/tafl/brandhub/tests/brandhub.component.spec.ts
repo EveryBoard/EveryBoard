@@ -2,16 +2,16 @@
 import { BrandhubComponent } from '../brandhub.component';
 import { BrandhubRules } from '../BrandhubRules';
 import { BrandhubMove } from '../BrandhubMove';
-import { BrandhubState } from '../BrandhubState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TaflPawn } from '../../TaflPawn';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
+import { TaflState } from '../../TaflState';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.INVADERS;
 const i: TaflPawn = TaflPawn.DEFENDERS;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-const stateReadyForCapture: BrandhubState = new BrandhubState([
+const stateReadyForCapture: TaflState = new TaflState([
     [_, A, _, _, _, _, _],
     [_, x, x, _, _, _, _],
     [_, _, i, _, _, _, _],
@@ -21,7 +21,7 @@ const stateReadyForCapture: BrandhubState = new BrandhubState([
     [_, _, _, _, _, _, _],
 ], 1);
 
-const brandhubEntries: TaflTestEntries<BrandhubComponent, BrandhubRules, BrandhubMove, BrandhubState> = {
+const brandhubEntries: TaflTestEntries<BrandhubComponent, BrandhubRules, BrandhubMove, TaflState> = {
     gameName: 'Brandhub',
     component: BrandhubComponent,
     secondPlayerPiece: new Coord(3, 2),

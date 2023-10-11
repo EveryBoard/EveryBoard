@@ -2,16 +2,16 @@
 import { HnefataflComponent } from '../hnefatafl.component';
 import { HnefataflRules } from '../HnefataflRules';
 import { HnefataflMove } from '../HnefataflMove';
-import { HnefataflState } from '../HnefataflState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TaflPawn } from '../../TaflPawn';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
+import { TaflState } from '../../TaflState';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.INVADERS;
 const i: TaflPawn = TaflPawn.DEFENDERS;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-const stateReadyForCapture: HnefataflState = new HnefataflState([
+const stateReadyForCapture: TaflState = new TaflState([
     [_, A, _, _, _, _, _, _, _, _, _],
     [_, x, x, _, _, _, _, _, _, _, _],
     [_, _, i, _, _, _, _, _, _, _, _],
@@ -25,7 +25,7 @@ const stateReadyForCapture: HnefataflState = new HnefataflState([
     [_, _, _, _, _, _, _, _, _, _, _],
 ], 1);
 
-const hnefataflEntries: TaflTestEntries<HnefataflComponent, HnefataflRules, HnefataflMove, HnefataflState> = {
+const hnefataflEntries: TaflTestEntries<HnefataflComponent, HnefataflRules, HnefataflMove, TaflState> = {
     gameName: 'Hnefatafl',
     component: HnefataflComponent,
     secondPlayerPiece: new Coord(5, 3),

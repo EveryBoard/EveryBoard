@@ -10,6 +10,7 @@ import { LinesOfActionState } from '../LinesOfActionState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
+import { LinesOfActionRules } from '../LinesOfActionRules';
 
 describe('LinesOfActionComponent', () => {
 
@@ -130,7 +131,7 @@ describe('LinesOfActionComponent', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
-        await testUtils.setupState(state, LinesOfActionState.getInitialState(), move);
+        await testUtils.setupState(state, LinesOfActionRules.get().getInitialState(), move);
 
         // When taking it back
         await testUtils.expectInterfaceClickSuccess('#takeBack');

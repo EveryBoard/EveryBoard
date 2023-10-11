@@ -35,7 +35,7 @@ describe('TrexoRules', () => {
     });
     it('should accept to drop piece on the floor', () => {
         // Given any board where two spaces on the floor are free
-        const state: TrexoState = TrexoState.getInitialState();
+        const state: TrexoState = TrexoRules.get().getInitialState();
 
         // When dropping the piece
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(4, 3)).get();

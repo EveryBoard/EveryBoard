@@ -11,6 +11,6 @@ export class P4OrderedMoveGenerator extends P4MoveGenerator {
             const distanceFromCenterRight: number = Math.abs(right.x - halfWidth);
             return distanceFromCenterLeft - distanceFromCenterRight;
         }
-        return super.getListMoves(node).sort(closestToCenterFirst)
+        return super.getListMoves(node).sort(closestToCenterFirst);
     }
 }

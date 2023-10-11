@@ -52,7 +52,7 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to choose a piece in the opponent territory', () => {
         // Given any board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When choosing a piece in the opponent's territory
         const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
@@ -63,7 +63,7 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to choose an empty square', () => {
         // Given any board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When choosing an empty square
         const move: MartianChessMove = MartianChessMove.from(new Coord(0, 4), new Coord(0, 3)).get();
@@ -74,7 +74,7 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to move a pawn not on one of the 4 diagonal neighbors', () => {
         // Given any board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When moving one of your pawn vertically
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(1, 4)).get();
@@ -85,7 +85,7 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to land a drone more than two orthogonal step', () => {
         // Given any board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When moving a drone three orthogonal step
         const move: MartianChessMove = MartianChessMove.from(new Coord(3, 5), new Coord(3, 2)).get();
@@ -96,7 +96,7 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to jump over another piece with a queen (aligned move)', () => {
         // Given any board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When moving a queen over another piece
         const move: MartianChessMove = MartianChessMove.from(new Coord(3, 7), new Coord(3, 2)).get();
@@ -107,7 +107,7 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to land on your own pieces', () => {
         // Given any board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When landing your piece on one of your piece, when no promotion are possible
         const move: MartianChessMove = MartianChessMove.from(new Coord(2, 6), new Coord(1, 5)).get();
@@ -118,7 +118,7 @@ describe('MartianChessRules', () => {
     });
     it('should be illegal to move a pawn like a bishop for further than one step', () => {
         // Given the initial board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When moving diagonally of two step one pawn
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(3, 3)).get();
@@ -129,7 +129,7 @@ describe('MartianChessRules', () => {
     });
     it('should be legal to move a pawn on one of the 4 diagonal neighbors', () => {
         // Given the initial board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When moving diagonally of one step one pawn
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
@@ -150,7 +150,7 @@ describe('MartianChessRules', () => {
     });
     it('should be legal to move a drone of one orthogonal steps', () => {
         // Given the initial board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When moving horizontally of one step one drone
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(0, 7)).get();
@@ -233,7 +233,7 @@ describe('MartianChessRules', () => {
     });
     it('should be legal to move a drone of two diagonal steps', () => {
         // Given any board
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
 
         // When moving a drone of two diagonal steps
         const move: MartianChessMove = MartianChessMove.from(new Coord(3, 5), new Coord(1, 3)).get();
@@ -329,7 +329,7 @@ describe('MartianChessRules', () => {
     describe('Undo last move', () => {
         it('should remember last move in state', () => {
             // Given a board
-            const state: MartianChessState = MartianChessState.getInitialState();
+            const state: MartianChessState = MartianChessRules.get().getInitialState();
 
             // When moving a piece
             const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
@@ -353,7 +353,7 @@ describe('MartianChessRules', () => {
             const a: Coord = new Coord(3, 3);
             const b: Coord = new Coord(3, 5);
             const lastMove: MartianChessMove = MartianChessMove.from(a, b).get();
-            const board: Table<MartianChessPiece> = MartianChessState.getInitialState().board;
+            const board: Table<MartianChessPiece> = MartianChessRules.get().getInitialState().board;
             const state: MartianChessState = new MartianChessState(board, 0, MGPOptional.of(lastMove));
 
             // When trying to move B -> A
@@ -368,7 +368,7 @@ describe('MartianChessRules', () => {
             const a: Coord = new Coord(3, 3);
             const b: Coord = new Coord(3, 5);
             const lastMove: MartianChessMove = MartianChessMove.from(a, b).get();
-            const board: Table<MartianChessPiece> = MartianChessState.getInitialState().board;
+            const board: Table<MartianChessPiece> = MartianChessRules.get().getInitialState().board;
             const state: MartianChessState = new MartianChessState(board, 0, MGPOptional.of(lastMove));
 
             // When trying to move B -> A, call the clock
@@ -612,7 +612,7 @@ describe('MartianChessRules', () => {
         describe('call the clock end', () => {
             it('should be legal to "call the clock" during your turn', () => {
                 // Given the initial board
-                const state: MartianChessState = MartianChessState.getInitialState();
+                const state: MartianChessState = MartianChessRules.get().getInitialState();
 
                 // When calling the clock
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(0, 7), true).get();
@@ -636,7 +636,7 @@ describe('MartianChessRules', () => {
             });
             it('should be "asked to dev" not to call it again on a clock-started state', () => {
                 // Given a board with clock called
-                const board: Table<MartianChessPiece> = MartianChessState.getInitialState().getCopiedBoard();
+                const board: Table<MartianChessPiece> = MartianChessRules.get().getInitialState().getCopiedBoard();
                 const state: MartianChessState = new MartianChessState(board,
                                                                        0,
                                                                        MGPOptional.empty(),
@@ -665,7 +665,7 @@ describe('MartianChessRules', () => {
             });
             it('should decrease clock-count-down each captureless-turn when clock was called', () => {
                 // Given a board with clock called
-                const board: Table<MartianChessPiece> = MartianChessState.getInitialState().getCopiedBoard();
+                const board: Table<MartianChessPiece> = MartianChessRules.get().getInitialState().getCopiedBoard();
                 const state: MartianChessState = new MartianChessState(board,
                                                                        1,
                                                                        MGPOptional.empty(),
@@ -733,7 +733,7 @@ describe('MartianChessRules', () => {
             });
             it('should end the game when 7 moves passed since clock called, and declare biggest score winner (zero)', () => {
                 // Given a board with clock about to time out
-                const initialState: MartianChessState = MartianChessState.getInitialState();
+                const initialState: MartianChessState = MartianChessRules.get().getInitialState();
                 const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
                 const captured: MGPMap<Player, MartianChessCapture> = initialState.captured.getCopy();
                 captured.replace(Player.ZERO, capturedPawn);
@@ -768,7 +768,7 @@ describe('MartianChessRules', () => {
             });
             it('should end the game when 7 moves passed since clock called, and declare biggest score winner (one)', () => {
                 // Given a board with clock about to time out
-                const initialState: MartianChessState = MartianChessState.getInitialState();
+                const initialState: MartianChessState = MartianChessRules.get().getInitialState();
                 const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
                 const captured: MGPMap<Player, MartianChessCapture> = initialState.captured.getCopy();
                 captured.replace(Player.ONE, capturedPawn);
@@ -803,7 +803,7 @@ describe('MartianChessRules', () => {
             });
             it('should end the game when 7 moves passed since clock called, and declare draw if score are equal', () => {
                 // Given a board with clock about to time out
-                const initialState: MartianChessState = MartianChessState.getInitialState();
+                const initialState: MartianChessState = MartianChessRules.get().getInitialState();
                 const board: Table<MartianChessPiece> = initialState.getCopiedBoard();
                 const state: MartianChessState = new MartianChessState(board,
                                                                        1,

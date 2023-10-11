@@ -1,9 +1,10 @@
+import { KalahRules } from '../kalah/KalahRules';
 import { MancalaState } from './MancalaState';
 
 describe('MancalaState', () => {
     it('should compare correctly', () => {
         // Given an initial state
-        const state: MancalaState = MancalaState.getInitialState();
+        const state: MancalaState = KalahRules.get().getInitialState();
         // and state with different board
         const differentBoard: MancalaState = new MancalaState([
             [1, 2, 3, 4, 5, 6],

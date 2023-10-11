@@ -36,7 +36,8 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
     }
 
     public getInitialState(): GoState {
-        return GoState.getInitialState();
+        const board: Table<GoPiece> = GoState.getStartingBoard();
+        return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
     }
 
     public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {

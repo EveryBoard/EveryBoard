@@ -30,6 +30,10 @@ class MockNode extends GameNode<MoveMock, GameStateMock> {}
 
 class RulesMock extends Rules<MoveMock, GameStateMock> {
 
+    public constructor() {
+        super();
+    }
+
     public getInitialState(): GameStateMock {
         return GameStateMock.getInitialState();
     }
@@ -37,9 +41,11 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
     public applyLegalMove(move: MoveMock, state: GameStateMock, info: void): GameStateMock {
         throw new Error('RulesMock.applyLegalMove method not implemented.');
     }
+
     public isLegal(move: MoveMock, state: GameStateMock): MGPValidation {
         throw new Error('RulesMock.isLegal method not implemented.');
     }
+
     public getGameStatus(node: MockNode): GameStatus {
         throw new Error('RulesMock.getGameStatus method not implemented.');
     }

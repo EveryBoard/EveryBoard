@@ -18,6 +18,6 @@ describe('P4OrderedMoveGenerator', () => {
         // When generating the moves
         const moves: P4Move[] = moveGenerator.getListMoves(node);
         // Then it should have the center as the first move
-        expect(moves[0]).toEqual(P4Move.FOUR);
+        expect(moves[0]).toEqual(P4Move.THREE);
     });
 });

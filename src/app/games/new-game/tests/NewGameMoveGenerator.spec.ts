@@ -1,6 +1,6 @@
 import { NewGameMove } from '../NewGameMove';
 import { NewGameMoveGenerator } from '../NewGameMoveGenerator';
-import { NewGameNode } from '../NewGameRules';
+import { NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
 
 /**
@@ -17,7 +17,7 @@ describe('NewGameMoveGenerator', () => {
     });
     it('should have all move options', () => {
         // Given an initial node
-        const initialState: NewGameState = NewGameState.getInitialState();
+        const initialState: NewGameState = NewGameRules.get().getInitialState();
         const node: NewGameNode = new NewGameNode(initialState);
 
         // When computing the list of moves

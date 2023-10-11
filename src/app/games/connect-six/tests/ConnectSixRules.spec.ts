@@ -27,7 +27,7 @@ describe('ConnectSixRules', () => {
     describe('first turn', () => {
         it('should allow the first player play only one piece', () => {
             // Given the initial state
-            const state: ConnectSixState = ConnectSixState.getInitialState();
+            const state: ConnectSixState = ConnectSixRules.get().getInitialState();
 
             // When dropping one piece
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
@@ -58,7 +58,7 @@ describe('ConnectSixRules', () => {
         });
         it('should refuse move that drop two pieces on first turn', () => {
             // Given the first turn
-            const state: ConnectSixState = ConnectSixState.getInitialState();
+            const state: ConnectSixState = ConnectSixRules.get().getInitialState();
             // When dropping two pieces
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(11, 11), new Coord(10, 10));
             // Then the attempt would have throw

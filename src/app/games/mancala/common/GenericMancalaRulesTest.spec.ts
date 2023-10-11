@@ -7,6 +7,7 @@ import { MancalaMove } from './MancalaMove';
 import { MancalaFailure } from './MancalaFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
+import { KalahRules } from '../kalah/KalahRules';
 
 export class MancalaRulesTestEntries<M extends MancalaMove> {
     gameName: string; // 'Awale', 'Kalah', etc
@@ -18,7 +19,7 @@ export function DoMancalaRulesTests<M extends MancalaMove>(entries: MancalaRules
     describe(entries.gameName + ' component generic tests', () => {
         it('should allow simple move', () => {
             // Given any board
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
             // When doing a simple move
             // Then the seed should be distributed
             const expectedBoard: Table<number> = [

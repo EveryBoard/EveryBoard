@@ -1,15 +1,15 @@
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { tablutConfig } from './tablutConfig';
 import { TablutMove } from './TablutMove';
-import { TablutState } from './TablutState';
 import { TaflRules } from '../TaflRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflPawn } from '../TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { TaflState } from '../TaflState';
 
-export class TablutNode extends GameNode<TablutMove, TablutState> {}
+export class TablutNode extends GameNode<TablutMove, TaflState> {}
 
-export class TablutRules extends TaflRules<TablutMove, TablutState> {
+export class TablutRules extends TaflRules<TablutMove, TaflState> {
 
     private static singleton: MGPOptional<TablutRules> = MGPOptional.empty();
 
@@ -24,7 +24,7 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
         super(tablutConfig, TablutMove.from);
     }
 
-    public getInitialState(): TablutState {
+    public getInitialState(): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         const O: TaflPawn = TaflPawn.INVADERS;
         const X: TaflPawn = TaflPawn.DEFENDERS;
@@ -41,6 +41,6 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
             [_, _, _, O, O, O, _, _, _],
         ];
 
-        return new TablutState(board, 0);
+        return new TaflState(board, 0);
     }
 }

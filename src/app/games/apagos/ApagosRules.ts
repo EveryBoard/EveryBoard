@@ -16,7 +16,7 @@ export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
 export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 
-    private static PIECES_PER_PLAYER: number = 10;
+    public static PIECES_PER_PLAYER: number = 10;
 
     private static singleton: MGPOptional<ApagosRules> = MGPOptional.empty();
 

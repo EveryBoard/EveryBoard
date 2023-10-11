@@ -1,13 +1,11 @@
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { Table } from 'src/app/utils/ArrayUtils';
 
-export abstract class TaflState extends GameStateWithTable<TaflPawn> {
-
-    public abstract of(board: Table<TaflPawn>, turn: number): this;
+export class TaflState extends GameStateWithTable<TaflPawn> {
 
     public isCentralThrone(coord: Coord): boolean {
         return coord.equals(this.getCentralThrone());
@@ -34,5 +32,9 @@ export abstract class TaflState extends GameStateWithTable<TaflPawn> {
     public getAbsoluteOwner(coord: Coord): PlayerOrNone {
         const pawn: TaflPawn = this.getPieceAt(coord);
         return pawn.getOwner();
+    }
+
+    public of(board: Table<TaflPawn>, turn: number): this {
+        return new TaflState(board, turn) as this;
     }
 }

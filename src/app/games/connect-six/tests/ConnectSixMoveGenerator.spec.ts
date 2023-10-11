@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
-import { ConnectSixNode } from '../ConnectSixRules';
+import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -21,7 +21,7 @@ describe('ConnectSixMoveGenerator', () => {
         // Given the initial node
         const width: number = ConnectSixState.WIDTH;
         const height: number = ConnectSixState.HEIGHT;
-        const state: ConnectSixState = ConnectSixState.getInitialState();
+        const state: ConnectSixState = ConnectSixRules.get().getInitialState();
         const node: ConnectSixNode = new ConnectSixNode(state);
 
         // When asking it the list of move at the first turn

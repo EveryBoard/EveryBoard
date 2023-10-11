@@ -28,7 +28,7 @@ describe('ReversiRules', () => {
     });
     it('First move should be legal and change score', () => {
         // Given the initial state
-        const state: ReversiState = ReversiState.getInitialState();
+        const state: ReversiState = ReversiRules.get().getInitialState();
 
         // When doing a legal move
         const move: ReversiMove = new ReversiMove(2, 4);
@@ -51,7 +51,7 @@ describe('ReversiRules', () => {
     });
     it('Passing at first turn should be illegal', () => {
         // Given the initial state
-        const state: ReversiState = ReversiState.getInitialState();
+        const state: ReversiState = ReversiRules.get().getInitialState();
 
         // When passing
         const move: ReversiMove = ReversiMove.PASS;
@@ -62,7 +62,7 @@ describe('ReversiRules', () => {
     });
     it('should forbid non capturing move', () => {
         // Given the initial state
-        const state: ReversiState = ReversiState.getInitialState();
+        const state: ReversiState = ReversiRules.get().getInitialState();
 
         // When doing a non capturing move
         const move: ReversiMove = new ReversiMove(0, 0);
@@ -73,7 +73,7 @@ describe('ReversiRules', () => {
     });
     it('should forbid choosing occupied space', () => {
         // Given the initial state
-        const state: ReversiState = ReversiState.getInitialState();
+        const state: ReversiState = ReversiRules.get().getInitialState();
 
         // When playing on an occupied square
         const move: ReversiMove = new ReversiMove(3, 3);

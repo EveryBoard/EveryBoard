@@ -23,13 +23,13 @@ describe('AbaloneRules', () => {
         rules = AbaloneRules.get();
     });
     it('should start with an ongoing board status', () => {
-        const state: AbaloneState = AbaloneState.getInitialState();
+        const state: AbaloneState = AbaloneRules.get().getInitialState();
         const node: AbaloneNode = new AbaloneNode(state);
         expect(rules.getGameStatus(node)).toBe(GameStatus.ONGOING);
     });
     it('should move simple piece in provided direction', () => {
         // Given an initial board (for simplicity)
-        const state: AbaloneState = AbaloneState.getInitialState();
+        const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving one piece
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.UP).get();
@@ -51,7 +51,7 @@ describe('AbaloneRules', () => {
     });
     it('should refuse move starting by opponent piece', () => {
         // Given an initial board (for simplicity)
-        const state: AbaloneState = AbaloneState.getInitialState();
+        const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving one opponent piece
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(8, 1), HexaDirection.DOWN).get();
@@ -62,7 +62,7 @@ describe('AbaloneRules', () => {
     });
     it('should refuse move starting by empty space', () => {
         // Given an initial board (for simplicity)
-        const state: AbaloneState = AbaloneState.getInitialState();
+        const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving one empty space
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.DOWN).get();
@@ -73,7 +73,7 @@ describe('AbaloneRules', () => {
     });
     it('should move group of piece in provided direction', () => {
         // Given an initial board (for simplicity)
-        const state: AbaloneState = AbaloneState.getInitialState();
+        const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving one piece
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 8), HexaDirection.UP).get();
@@ -248,7 +248,7 @@ describe('AbaloneRules', () => {
     });
     it('should allow unblocked translation', () => {
         // Given an initial board (for simplicity)
-        const state: AbaloneState = AbaloneState.getInitialState();
+        const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving a 3 pieces column sideways
         const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(2, 6), new Coord(4, 6), HexaDirection.UP).get();
@@ -318,7 +318,7 @@ describe('AbaloneRules', () => {
     });
     it('should push on UNREACHABLE the same way as outside the array board', () => {
         // Given the initial state
-        const state: AbaloneState = AbaloneState.getInitialState();
+        const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving a piece in one of the coord in the array but out of the board
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 8), HexaDirection.RIGHT).get();

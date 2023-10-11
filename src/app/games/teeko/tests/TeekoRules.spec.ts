@@ -29,7 +29,7 @@ describe('TeekoRules', () => {
     describe('dropping phase', () => {
         it('should fail if receiving translation in the 8 first turns', () => {
             // Given a board on the first phase
-            const state: TeekoState = TeekoState.getInitialState();
+            const state: TeekoState = TeekoRules.get().getInitialState();
 
             // When doing a translation
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(1, 1));
@@ -60,7 +60,7 @@ describe('TeekoRules', () => {
         });
         it('should allow simple drop', () => {
             // Given a board on the first phase
-            const state: TeekoState = TeekoState.getInitialState();
+            const state: TeekoState = TeekoRules.get().getInitialState();
 
             // When dropping a piece
             const move: TeekoMove = drop(new Coord(2, 2));

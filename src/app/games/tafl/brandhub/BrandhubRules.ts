@@ -1,15 +1,15 @@
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { brandhubConfig } from './brandhubConfig';
-import { BrandhubState } from './BrandhubState';
 import { TaflRules } from '../TaflRules';
 import { BrandhubMove } from './BrandhubMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflPawn } from '../TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { TaflState } from '../TaflState';
 
-export class BrandhubNode extends GameNode<BrandhubMove, BrandhubState> {}
+export class BrandhubNode extends GameNode<BrandhubMove, TaflState> {}
 
-export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
+export class BrandhubRules extends TaflRules<BrandhubMove, TaflState> {
 
     private static singleton: MGPOptional<BrandhubRules> = MGPOptional.empty();
 
@@ -24,7 +24,7 @@ export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
         super(brandhubConfig, BrandhubMove.from);
     }
 
-    public getInitialState(): BrandhubState {
+    public getInitialState(): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         const x: TaflPawn = TaflPawn.INVADERS;
         const i: TaflPawn = TaflPawn.DEFENDERS;
@@ -38,6 +38,6 @@ export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
             [_, _, _, x, _, _, _],
             [_, _, _, x, _, _, _],
         ];
-        return new BrandhubState(board, 0);
+        return new TaflState(board, 0);
     }
 }

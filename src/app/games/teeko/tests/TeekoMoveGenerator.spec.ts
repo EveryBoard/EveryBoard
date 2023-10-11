@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TeekoMove } from '../TeekoMove';
-import { TeekoNode } from '../TeekoRules';
+import { TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TeekoMoveGenerator } from '../TeekoMoveGenerator';
@@ -19,7 +19,7 @@ describe('TeekoMoveGenerator', () => {
     });
     it('should have all move options in drop phase', () => {
         // Given an initial node
-        const initialState: TeekoState = TeekoState.getInitialState();
+        const initialState: TeekoState = TeekoRules.get().getInitialState();
         const node: TeekoNode = new TeekoNode(initialState);
 
         // When computing the list of moves
