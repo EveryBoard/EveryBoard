@@ -116,8 +116,11 @@ export class Coord extends Vector {
     }
 
     public isNeighborWith(coord: Coord): boolean {
-        if (this.isAlignedWith(coord) === false) return false;
-        return this.getDistance(coord) === 1;
+        if (this.isAlignedWith(coord) === false) {
+            return false;
+        } else {
+            return this.getDistance(coord) === 1;
+        }
     }
 
     public getVectorToward(c: Coord): Vector {

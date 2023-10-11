@@ -4058,7 +4058,7 @@
       </trans-unit>
       <trans-unit id="6991053095147622953" datatype="html">
         <source>In this board, you can win by creating a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
-        <target>Sur ce plateau, vous pouvez gagner en un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
+        <target>Sur ce plateau, vous pouvez gagner en formant un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
       </trans-unit>
       <trans-unit id="4133557660322432859" datatype="html">
         <source>Congratulations, you won! Remember that you can also win by creating a line.</source>

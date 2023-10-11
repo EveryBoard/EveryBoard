@@ -331,112 +331,67 @@ describe('TeekoRules', () => {
             TeekoRules.CAN_TELEPORT = false;
         });
         it('should notice horizontal victory', () => {
-            // Given a board about to have 4 O in a line
+            // Given a board with 4 O in a line
             const board: Table<PlayerOrNone> = [
-                [_, _, _, _, _],
-                [_, _, O, _, X],
-                [_, _, O, O, O],
-                [_, _, X, X, X],
-                [_, _, _, X, O],
-            ];
-            const state: TeekoState = new TeekoState(board, 8);
-
-            // When translating a piece to align 4
-            // TODO FOR REVIEW: faudrait pas plutôt que ces tests soient juste des appels à expectToBeVictoryFor ? Ce sont des tests qui font plusieurs choses sinon (move + victory), c'qui est unclean.
-            const move: TeekoMove = translate(new Coord(2, 1), new Coord(1, 2));
-
-            // Then it should be legal and marked as victory
-            const expectedBoard: Table<PlayerOrNone> = [
                 [_, _, _, _, _],
                 [_, _, _, _, X],
                 [_, O, O, O, O],
                 [_, _, X, X, X],
                 [_, _, _, X, O],
             ];
-            const expectedState: TeekoState = new TeekoState(expectedBoard, 9);
-            const node: TeekoNode = new TeekoNode(expectedState);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const state: TeekoState = new TeekoState(board, 9);
+            const node: TeekoNode = new TeekoNode(state);
+
+            // When checking game status
+            // Then it should be a victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should notice diagonal victory', () => {
-            // Given a board about to have 4 O in a line
+            // Given a board with 4 O in a line
             const board: Table<PlayerOrNone> = [
-                [O, _, _, _, X],
-                [X, O, _, _, _],
-                [_, X, O, _, _],
-                [_, _, X, _, _],
-                [_, _, _, O, _],
-            ];
-            const state: TeekoState = new TeekoState(board, 8);
-
-            // When translating a piece to align 4
-            const move: TeekoMove = translate(new Coord(3, 4), new Coord(3, 3));
-
-            // Then it should be legal and marked as victory
-            const expectedBoard: Table<PlayerOrNone> = [
                 [O, _, _, _, X],
                 [X, O, _, _, _],
                 [_, X, O, _, _],
                 [_, _, X, O, _],
                 [_, _, _, _, _],
             ];
-            const expectedState: TeekoState = new TeekoState(expectedBoard, 9);
-            const node: TeekoNode = new TeekoNode(expectedState);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const state: TeekoState = new TeekoState(board, 9);
+            const node: TeekoNode = new TeekoNode(state);
+
+            // When checking game status
+            // Then it should be a victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should notice vertical victory', () => {
-            // Given a board about to have 4 O in a line
+            // Given a board with 4 O in a line
             const board: Table<PlayerOrNone> = [
-                [O, X, _, _, _],
-                [O, X, _, _, _],
-                [O, X, _, _, _],
-                [_, O, X, _, _],
-                [_, _, _, _, _],
-            ];
-            const state: TeekoState = new TeekoState(board, 8);
-
-            // When translating a piece victoriously
-            const move: TeekoMove = translate(new Coord(1, 3), new Coord(0, 3));
-
-            // Then it should be legal and marked as victory
-            const expectedBoard: Table<PlayerOrNone> = [
                 [O, X, _, _, _],
                 [O, X, _, _, _],
                 [O, X, _, _, _],
                 [O, _, X, _, _],
                 [_, _, _, _, _],
             ];
-            const expectedState: TeekoState = new TeekoState(expectedBoard, 9);
-            const node: TeekoNode = new TeekoNode(expectedState);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const state: TeekoState = new TeekoState(board, 9);
+            const node: TeekoNode = new TeekoNode(state);
+
+            // When checking game status
+            // Then it should be a victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should notice square victory', () => {
-            // Given a board about to have 4 O in a square
+            // Given a board with 4 O in a square
             const board: Table<PlayerOrNone> = [
-                [_, _, X, _, _],
-                [_, _, _, X, O],
-                [_, _, X, X, _],
-                [_, _, O, O, O],
-                [_, _, _, O, X],
-            ];
-            const state: TeekoState = new TeekoState(board, 9);
-
-            // When dropping the fourth O forming a square with the 3 others
-            const move: TeekoMove = translate(new Coord(2, 0), new Coord(2, 1));
-
-            // Then it should be legal and marked as victory
-            const expectedBoard: Table<PlayerOrNone> = [
                 [_, _, _, _, _],
                 [_, _, X, X, O],
                 [_, _, X, X, _],
                 [_, _, O, O, O],
                 [_, _, _, O, X],
             ];
-            const expectedState: TeekoState = new TeekoState(expectedBoard, 10);
-            const node: TeekoNode = new TeekoNode(expectedState, undefined, MGPOptional.of(move));
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const state: TeekoState = new TeekoState(board, 10);
+            const node: TeekoNode = new TeekoNode(state);
+
+            // When checking game status
+            // Then it should be a victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });

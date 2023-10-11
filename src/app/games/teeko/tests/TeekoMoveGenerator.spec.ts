@@ -18,7 +18,7 @@ describe('TeekoMoveGenerator', () => {
         moveGenerator = new TeekoMoveGenerator();
     });
     it('should have all move options in drop phase', () => {
-        // Given an initial node
+        // Given an initial state
         const initialState: TeekoState = TeekoState.getInitialState();
         const node: TeekoNode = new TeekoNode(initialState);
 
@@ -29,7 +29,7 @@ describe('TeekoMoveGenerator', () => {
         expect(moves.length).toBe(TeekoState.WIDTH * TeekoState.WIDTH);
     });
     it('should have all move options in translation phase', () => {
-        // Given an node in translation phase
+        // Given a state in translation phase
         const board: Table<PlayerOrNone> = [
             [O, X, _, _, _],
             [O, O, _, _, _],
@@ -47,7 +47,7 @@ describe('TeekoMoveGenerator', () => {
         expect(moves.length).toBe(8);
     });
     it('should have all move options in translation phase with teleportation', () => {
-        // Given an node in translation phase
+        // Given a state in translation phase, with teleportation turned on
         const board: Table<PlayerOrNone> = [
             [O, X, _, _, _],
             [O, O, _, _, _],
