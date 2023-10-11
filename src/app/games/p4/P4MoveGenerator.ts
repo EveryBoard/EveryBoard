@@ -12,16 +12,12 @@ export class P4MoveGenerator extends MoveGenerator<P4Move, P4State> {
         const originalState: P4State = node.gameState;
         const moves: P4Move[] = [];
 
-        for (let x: number = 0; x < P4State.WIDTH; x++) {
+        for (let x: number = 0; x < originalState.getWidth(); x++) {
             if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
                 const move: P4Move = P4Move.of(x);
                 moves.push(move);
             }
         }
-        return moves.sort((left: P4Move, right: P4Move) => {
-            const distanceFromCenterLeft: number = Math.abs(left.x - 3);
-            const distanceFromCenterRight: number = Math.abs(right.x - 3);
-            return distanceFromCenterLeft - distanceFromCenterRight;
-        });
+        return moves;
     }
 }

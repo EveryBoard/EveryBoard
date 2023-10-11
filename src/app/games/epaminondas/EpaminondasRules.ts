@@ -32,7 +32,24 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
     }
 
     public getInitialState(): EpaminondasState {
-        return EpaminondasState.getInitialState();
+        const _: PlayerOrNone = PlayerOrNone.NONE;
+        const O: PlayerOrNone = PlayerOrNone.ZERO;
+        const X: PlayerOrNone = PlayerOrNone.ONE;
+        const board: Table<PlayerOrNone> = [
+            [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
+            [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
+            [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
+        ];
+        return new EpaminondasState(board, 0);
     }
 
     public static isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {

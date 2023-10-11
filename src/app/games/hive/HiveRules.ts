@@ -13,6 +13,7 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 
@@ -27,12 +28,9 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return HiveRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
     public getInitialState(): HiveState {
-        return HiveState.getInitialState();
+        const board: Table<HivePiece[]> = [];
+        return HiveState.fromRepresentation(board, 0);
     }
 
     public applyLegalMove(move: HiveMove, state: HiveState, _info: void): HiveState {

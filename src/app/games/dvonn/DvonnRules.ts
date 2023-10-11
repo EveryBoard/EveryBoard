@@ -28,12 +28,8 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return DvonnRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
     public getInitialState(): DvonnState {
-        return DvonnState.getInitialState();
+        return new DvonnState(DvonnState.balancedBoard(), 0, false);
     }
 
     public static getGameStatus(node: DvonnNode): GameStatus {

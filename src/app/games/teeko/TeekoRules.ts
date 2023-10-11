@@ -10,6 +10,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { Coord } from 'src/app/jscaip/Coord';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
 
@@ -26,12 +27,12 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
         }
         return TeekoRules.singleton.get();
     }
-    private constructor() {
-        super();
-    }
+
     public getInitialState(): TeekoState {
-        return TeekoState.getInitialState();
+        const board: Table<PlayerOrNone> = TableUtils.create(TeekoState.WIDTH, TeekoState.WIDTH, PlayerOrNone.NONE);
+        return new TeekoState(board, 0);
     }
+
     public isLegal(move: TeekoMove, state: TeekoState): MGPValidation {
         if (state.isInDropPhase()) {
             return this.isLegalDrop(move, state);

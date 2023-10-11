@@ -11,13 +11,7 @@ export class KamisadoState extends GameStateWithTable<KamisadoPiece> {
     public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE);
     }
-    public static getInitialState(): KamisadoState {
-        return new KamisadoState(0,
-                                 KamisadoColor.ANY,
-                                 MGPOptional.empty(),
-                                 false,
-                                 KamisadoBoard.INITIAL);
-    }
+
     public constructor(turn: number,
                        // The color that needs to be played next
                        public readonly colorToPlay: KamisadoColor,

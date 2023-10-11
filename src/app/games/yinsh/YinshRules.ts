@@ -29,12 +29,26 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         }
         return YinshRules.singleton.get();
     }
-    private constructor() {
-        super();
-    }
+
     public getInitialState(): YinshState {
-        return YinshState.getInitialState();
+        const _: YinshPiece = YinshPiece.EMPTY;
+        const N: YinshPiece = YinshPiece.UNREACHABLE;
+        const board: Table<YinshPiece> = [
+            [N, N, N, N, N, N, _, _, _, _, N],
+            [N, N, N, N, _, _, _, _, _, _, _],
+            [N, N, N, _, _, _, _, _, _, _, _],
+            [N, N, _, _, _, _, _, _, _, _, _],
+            [N, _, _, _, _, _, _, _, _, _, _],
+            [N, _, _, _, _, _, _, _, _, _, N],
+            [_, _, _, _, _, _, _, _, _, _, N],
+            [_, _, _, _, _, _, _, _, _, N, N],
+            [_, _, _, _, _, _, _, _, N, N, N],
+            [_, _, _, _, _, _, _, N, N, N, N],
+            [N, _, _, _, _, N, N, N, N, N, N],
+        ];
+        return new YinshState(board, [5, 5], 0);
     }
+
     public applyLegalMove(_move: YinshMove, _state: YinshState, info: YinshState): YinshState {
         const stateWithoutTurn: YinshState = info;
         return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn + 1);

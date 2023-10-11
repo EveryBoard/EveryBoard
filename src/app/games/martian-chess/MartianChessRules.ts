@@ -12,6 +12,7 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessFailure } from './MartianChessFailure';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export interface MartianChessMoveResult {
 
@@ -40,7 +41,21 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
     }
 
     public getInitialState(): MartianChessState {
-        return MartianChessState.getInitialState();
+        const _: MartianChessPiece = MartianChessPiece.EMPTY;
+        const A: MartianChessPiece = MartianChessPiece.PAWN;
+        const B: MartianChessPiece = MartianChessPiece.DRONE;
+        const C: MartianChessPiece = MartianChessPiece.QUEEN;
+        const board: Table<MartianChessPiece> = [
+            [C, C, B, _],
+            [C, B, A, _],
+            [B, A, A, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, A, A, B],
+            [_, A, B, C],
+            [_, B, C, C],
+        ];
+        return new MartianChessState(board, 0, MGPOptional.empty());
     }
 
     public applyLegalMove(move: MartianChessMove,

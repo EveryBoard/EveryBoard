@@ -54,7 +54,8 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     }
 
     public getInitialState(): MancalaState {
-        return MancalaState.getInitialState();
+        const board: number[][] = TableUtils.create(MancalaState.WIDTH, 2, 4);
+        return new MancalaState(board, 0, [0, 0]);
     }
 
     public abstract override isLegal(move: M, state: MancalaState): MGPFallible<void>;

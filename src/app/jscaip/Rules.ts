@@ -8,8 +8,8 @@ import { GameStatus } from './GameStatus';
 
 export abstract class Rules<M extends Move, S extends GameState, L = void> {
 
-    public constructor() {
-    }
+    protected constructor() {}
+
     /* The data that represent the status of the game at the current moment, including:
      * the board
      * the turn

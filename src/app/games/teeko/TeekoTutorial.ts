@@ -3,6 +3,7 @@ import { TeekoState } from './TeekoState';
 import { TeekoDropMove, TeekoTranslationMove } from './TeekoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { TeekoRules } from './TeekoRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -14,12 +15,12 @@ export class TeekoTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`The goal of the game is to align your 4 pieces, or to form a square with them.`,
-            TeekoState.getInitialState(),
+            TeekoRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Dropping a piece`,
             $localize`During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.<br/><br/>You're playing Dark, put a piece on the board.`,
-            TeekoState.getInitialState(),
+            TeekoRules.get().getInitialState(),
             TeekoDropMove.from(new Coord(2, 2)).get(),
             $localize`Congratulations!`,
         ),

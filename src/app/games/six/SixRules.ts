@@ -14,6 +14,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Debug } from 'src/app/utils/utils';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
@@ -37,12 +38,10 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         }
         return SixRules.singleton.get();
     }
-    private constructor() {
-        super();
-    }
 
     public getInitialState(): SixState {
-        return SixState.getInitialState();
+        const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
+        return SixState.ofRepresentation(board, 0);
     }
 
     public applyLegalMove(move: SixMove, state: SixState, kept: SixLegalityInformation): SixState {

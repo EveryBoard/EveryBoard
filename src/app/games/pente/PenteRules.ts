@@ -11,6 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
@@ -28,12 +29,10 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
         return PenteRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
     public getInitialState(): PenteState {
-        return PenteState.getInitialState();
+        const board: PlayerOrNone[][] = TableUtils.create(PenteState.SIZE, PenteState.SIZE, PlayerOrNone.NONE);
+        board[9][9] = PlayerOrNone.ONE;
+        return new PenteState(board, [0, 0], 0);
     }
 
     public isLegal(move: PenteMove, state: PenteState): MGPValidation {

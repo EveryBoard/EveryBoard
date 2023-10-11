@@ -12,6 +12,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPFallible } from '../../utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
@@ -26,12 +27,13 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return PylosRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
     public getInitialState(): PylosState {
-        return PylosState.getInitialState();
+        const board0: PlayerOrNone[][] = TableUtils.create(4, 4, PlayerOrNone.NONE);
+        const board1: PlayerOrNone[][] = TableUtils.create(3, 3, PlayerOrNone.NONE);
+        const board2: PlayerOrNone[][] = TableUtils.create(2, 2, PlayerOrNone.NONE);
+        const board3: PlayerOrNone[][] = [[PlayerOrNone.NONE]];
+        const turn: number = 0;
+        return new PylosState([board0, board1, board2, board3], turn);
     }
 
     public static getStateInfo(state: PylosState): { freeToMove: PylosCoord[], landable: PylosCoord[] } {

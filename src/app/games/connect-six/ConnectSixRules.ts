@@ -10,6 +10,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 
@@ -31,12 +32,11 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState> {
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
 
-    private constructor() {
-        super();
-    }
-
     public getInitialState(): ConnectSixState {
-        return ConnectSixState.getInitialState();
+        const board: Table<PlayerOrNone> = TableUtils.create(ConnectSixState.WIDTH,
+                                                             ConnectSixState.HEIGHT,
+                                                             PlayerOrNone.NONE);
+        return new ConnectSixState(board, 0);
     }
 
     public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _info: void): ConnectSixState {

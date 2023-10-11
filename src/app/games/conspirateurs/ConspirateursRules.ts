@@ -10,6 +10,7 @@ import { MGPValidation } from '../../utils/MGPValidation';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
@@ -29,8 +30,12 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
     }
 
     public getInitialState(): ConspirateursState {
-        return ConspirateursState.getInitialState();
+        const board: PlayerOrNone[][] = TableUtils.create(ConspirateursState.WIDTH,
+                                                          ConspirateursState.HEIGHT,
+                                                          PlayerOrNone.NONE);
+        return new ConspirateursState(board, 0);
     }
+
 
     public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _info: void): ConspirateursState {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();

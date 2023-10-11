@@ -45,17 +45,19 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
         }
         return NewGameRules.singleton.get();
     }
+
     /**
      * The constructor is made private to avoid creating other instances of this class.
      */
     private constructor() {
         super();
     }
+
     /**
      * This method returns the initial state of a game
      */
     public getInitialState(): NewGameState {
-        return NewGameState.getInitialState();
+        return new NewGameState(0);
     }
 
     /**

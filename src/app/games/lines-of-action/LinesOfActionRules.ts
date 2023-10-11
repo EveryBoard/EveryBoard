@@ -26,12 +26,21 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return LinesOfActionRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
     public getInitialState(): LinesOfActionState {
-        return LinesOfActionState.getInitialState();
+        const _: PlayerOrNone = PlayerOrNone.NONE;
+        const O: PlayerOrNone = PlayerOrNone.ZERO;
+        const X: PlayerOrNone = PlayerOrNone.ONE;
+        const board: PlayerOrNone[][] = [
+            [_, O, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
+        ];
+        return new LinesOfActionState(board, 0);
     }
 
     public static getNumberOfGroups(state: LinesOfActionState): [number, number] {

@@ -12,6 +12,7 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
@@ -26,12 +27,9 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         return QuixoRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
     public getInitialState(): QuixoState {
-        return QuixoState.getInitialState();
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(QuixoState.SIZE, QuixoState.SIZE, PlayerOrNone.NONE);
+        return new QuixoState(initialBoard, 0);
     }
 
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =

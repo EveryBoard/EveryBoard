@@ -9,16 +9,6 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
 
     public static HEIGHT: number = 4;
 
-    public static getInitialState(): DiamState {
-        const _: DiamPiece = DiamPiece.EMPTY;
-        const board: Table<DiamPiece> = [
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-        ];
-        return new DiamState(board, [4, 4, 4, 4], 0);
-    }
     public static ofRepresentation(representation: DiamPiece[][], turn: number): DiamState {
         const board: Table<DiamPiece> = representation.reverse();
         const pieces: [number, number, number, number] = [4, 4, 4, 4];

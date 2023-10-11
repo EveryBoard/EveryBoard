@@ -10,6 +10,7 @@ import { MGPValidation } from '../../utils/MGPValidation';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 
@@ -29,12 +30,11 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
         new NInARowHelper(TrexoState.isOnBoard, TrexoRules.getOwner, 5);
 
-    private constructor() {
-        super();
-    }
     public getInitialState(): TrexoState {
-        return TrexoState.getInitialState();
+        const board: TrexoPieceStack[][] = TableUtils.create(TrexoState.SIZE, TrexoState.SIZE, TrexoPieceStack.EMPTY);
+        return new TrexoState(board, 0);
     }
+
     public applyLegalMove(move: TrexoMove, state: TrexoState, _info: void): TrexoState {
         return state
             .drop(move.getZero(), Player.ZERO)
