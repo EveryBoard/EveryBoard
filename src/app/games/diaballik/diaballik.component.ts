@@ -93,16 +93,24 @@ export class DiaballikComponent
     }
 
     public override async showLastMove(move: DiaballikMove): Promise<void> {
+        this.hideLastMove();
+        for (const subMove of move.getSubMoves()) {
+            this.showSubMove(subMove);
+        }
+    }
+
+    private showSubMove(subMove: DiaballikSubMove): void {
+        if (subMove instanceof DiaballikTranslation) {
+            this.lastMovedPiecesCoords.push(subMove.getStart(), subMove.getEnd());
+        } else {
+            Utils.assert(subMove instanceof DiaballikBallPass, 'DiaballikMove can only be a translation or a pass');
+            this.lastMovedBallCoords.push(subMove.getStart(), subMove.getEnd());
+        }
+    }
+
+    public override hideLastMove(): void {
         this.lastMovedPiecesCoords = [];
         this.lastMovedBallCoords = [];
-        for (const subMove of move.getSubMoves()) {
-            if (subMove instanceof DiaballikTranslation) {
-                this.lastMovedPiecesCoords.push(subMove.getStart(), subMove.getEnd());
-            } else {
-                Utils.assert(subMove instanceof DiaballikBallPass, 'DiaballikMove can only be a translation or a pass');
-                this.lastMovedBallCoords.push(subMove.getStart(), subMove.getEnd());
-            }
-        }
     }
 
     public override cancelMoveAttempt(): void {
@@ -166,6 +174,7 @@ export class DiaballikComponent
                 new DiaballikMove(this.subMoves[0], MGPOptional.of(this.subMoves[1]), MGPOptional.of(this.subMoves[2]));
             return this.chooseMove(move);
         } else {
+            this.showSubMove(subMove);
             return MGPValidation.SUCCESS;
         }
     }
@@ -178,12 +187,19 @@ export class DiaballikComponent
 
         const clickedCoord: Coord = new Coord(x, y);
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
+        if (this.subMoves.length === 0) {
+            this.hideLastMove();
+        }
         if (this.currentSelection.isPresent()) {
             const selection: Coord = this.currentSelection.get();
             if (selection.equals(clickedCoord)) {
                 // Just deselects
                 this.currentSelection = MGPOptional.empty();
                 this.indicators = [];
+                if (this.subMoves.length === 0) {
+                    // No sub moves constructed at all, cancel the move to show the last one
+                    return this.cancelMove();
+                }
                 return MGPValidation.SUCCESS;
             }
             if (this.stateInConstruction.getPieceAt(selection).holdsBall) {

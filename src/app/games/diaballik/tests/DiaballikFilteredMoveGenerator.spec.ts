@@ -31,7 +31,7 @@ describe('DiaballikFilteredMoveGenerator', () => {
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
 
         // Then it should have all interesting move options, which is 368 moves
-        expect(moves.length).toBe(368);
+        expect(moves.length).toBe(136);
         // It should not contain A -> B, B -> A moves
         function expectNoBackAndForth(move: DiaballikMove): void {
             const translations: DiaballikSubMove[] =

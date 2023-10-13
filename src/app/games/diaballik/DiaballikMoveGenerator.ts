@@ -125,9 +125,9 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                     // If there was a pass, we ignore other pieces than the one that has made the pass
                     // The reasoning is that any other translation could have been done before the pass,
                     // hence they are not interesting to generate.
-                    const hasPassAndIsPieceThatPassed: boolean =
-                        moveInConstruction.hasPass && moveInConstruction.getPassEnd().equalsValue(coord);
-                    if (hasLessThanTwoTranslations || hasPassAndIsPieceThatPassed) {
+                    const ifHasPassThenIsPieceThatPassed: boolean =
+                        moveInConstruction.hasPass === false || moveInConstruction.getPassEnd().equalsValue(coord);
+                    if (hasLessThanTwoTranslations && ifHasPassThenIsPieceThatPassed) {
                         let forbiddenEnd: MGPOptional<Coord> = MGPOptional.empty();
                         if (moveInConstruction.translations > 0) {
                             const previousTranslation: DiaballikTranslation =
