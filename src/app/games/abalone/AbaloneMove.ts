@@ -17,11 +17,10 @@ export class AbaloneMove extends MoveCoord {
         (fields: AbaloneMoveFields): AbaloneMove => new AbaloneMove(fields[0], fields[1], fields[2]));
 
     public static fromSingleCoord(coord: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
-        try {
-            return MGPFallible.success(new AbaloneMove(coord, dir, MGPOptional.empty()));
-        } catch (e) {
-            return MGPFallible.failure(e.message);
+        if (coord.isNotInRange(9, 9)) {
+            return MGPFallible.failure('Coord ' + coord.toString() + ' out of range, invalid move!');
         }
+        return MGPFallible.success(new AbaloneMove(coord, dir, MGPOptional.empty()));
     }
     public static fromDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
         const coords: Coord[] = [first, second];
@@ -52,9 +51,6 @@ export class AbaloneMove extends MoveCoord {
                         public lastPiece: MGPOptional<Coord>)
     {
         super(coord.x, coord.y);
-        if (coord.isNotInRange(9, 9)) {
-            throw new Error('Coord ' + coord.toString() + ' out of range, invalid move!');
-        }
     }
     public toString(): string {
         if (this.isSingleCoord()) {

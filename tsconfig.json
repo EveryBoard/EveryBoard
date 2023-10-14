@@ -25,7 +25,7 @@
         "strictPropertyInitialization": false,
         "strictBindCallApply": false,
         "strictFunctionTypes": false,
-        "useUnknownInCatchVariables": false,
+        "useUnknownInCatchVariables": true,
 
         "module": "es2020",
         "moduleResolution": "node",
