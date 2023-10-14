@@ -10,8 +10,11 @@ import random
 import string
 import time
 
-HEADLESS = True # Set to False to see the script happening in real time. Useful for debugging
-MOBILE = False # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
+# Set to False to see the script happening in real time. Useful for debugging
+HEADLESS = True
+# Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
+# It seems to be the case when we are in headless mode, so let's just inherit the value of HEADLESS
+MOBILE = HEADLESS
 USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms
 
 def fill_field(driver, selector, content):
