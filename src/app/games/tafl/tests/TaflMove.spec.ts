@@ -9,24 +9,30 @@ describe('TaflMove', () => {
 
     it('TaflMove creation, as a MoveCoordToCoord, should throw when created static', () => {
         const error: string = RulesFailure.MOVE_CANNOT_BE_STATIC();
+        // TODO: c'est quelque chose qu'on veut pas, un from qui throw! Ce test teste du code de test mal implémenté, est-il réellement utile ?!
         expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(0, 0)))
             .toThrowError(error);
     });
-    it('should throw when given out of range coords', () => {
-        const outOfRange: Coord = new Coord(-1, -1);
-        const inRange: Coord = new Coord(0, 0);
-        expect(() => MyTaflMove.from(outOfRange, inRange))
-            .toThrowError('Starting coord of TaflMove must be on the board, not at (-1, -1).');
-        expect(() => MyTaflMove.from(inRange, outOfRange))
-            .toThrowError('Landing coord of TaflMove must be on the board, not at (-1, -1).');
-    });
-    it('TaflMove must throw move instruction message when diagonal', () => {
-        const error: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
-        expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(1, 1))).toThrowError(error);
-    });
-    it('TaflMove must throw move instruction message when non linear', () => {
-        const error: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
-        expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(2, 5))).toThrowError(error);
+
+    describe('isValidStandAndEnd', () => {
+        it('should report when given out of range coords', () => {
+            const outOfRange: Coord = new Coord(-1, -1);
+            const inRange: Coord = new Coord(0, 0);
+            expect(TaflMove.isValidStartAndEnd(outOfRange, inRange, 7).getReason())
+                .toBe('Starting coord of TaflMove must be on the board, not at (-1, -1).');
+            expect(TaflMove.isValidStartAndEnd(inRange, outOfRange, 7).getReason())
+                .toBe('Landing coord of TaflMove must be on the board, not at (-1, -1).');
+        });
+        it('should report diagonal moves', () => {
+            const reason: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
+            expect(TaflMove.isValidStartAndEnd(new Coord(0, 0), new Coord(1, 1), 7).getReason())
+                .toBe(reason);
+        });
+        it('should report non-straight moves', () => {
+            const reason: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
+            expect(TaflMove.isValidStartAndEnd(new Coord(0, 0), new Coord(2, 5), 7).getReason())
+                .toBe(reason);
+        });
     });
     it('should override equals and toString correctly', () => {
         const a: Coord = new Coord(0, 0);

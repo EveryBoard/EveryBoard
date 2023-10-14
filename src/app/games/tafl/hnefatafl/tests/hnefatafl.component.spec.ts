@@ -30,14 +30,14 @@ const hnefataflEntries: TaflTestEntries<HnefataflComponent, HnefataflRules, Hnef
     component: HnefataflComponent,
     secondPlayerPiece: new Coord(5, 3),
     validFirstCoord: new Coord(3, 0),
-    moveProvider: HnefataflMove.of,
+    moveProvider: HnefataflMove.from,
     validSecondCoord: new Coord(2, 0),
     diagonalSecondCoord: new Coord(2, 1),
     stateReadyForCapture,
-    capture: HnefataflMove.of(new Coord(1, 0), new Coord(2, 0)),
+    capture: HnefataflMove.from(new Coord(1, 0), new Coord(2, 0)).get(),
     firstCaptured: new Coord(2, 1),
     otherPlayerPiece: new Coord(7, 0),
     stateReadyForJumpOver: stateReadyForCapture,
-    jumpOver: HnefataflMove.of(new Coord(1, 0), new Coord(1, 4)),
+    jumpOver: HnefataflMove.from(new Coord(1, 0), new Coord(1, 4)).get(),
 };
 DoTaflTests(hnefataflEntries);

@@ -29,7 +29,7 @@ describe('TaflPieceMinimax', () => {
         ];
         const state: TablutState = new TablutState(board, 1);
         const node: TablutNode = new TablutNode(state);
-        const winnerMove: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(8, 0));
+        const winnerMove: TablutMove = TablutMove.from(new Coord(3, 0), new Coord(8, 0)).get();
 
         const minimax: Minimax<TablutMove, TablutState> = new TaflPieceMinimax(TablutRules.get());
         const bestMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 });
