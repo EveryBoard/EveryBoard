@@ -288,7 +288,8 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
 def launch_scenarios():
     """Launches all the scenarios, stop at the first one that fails"""
     options = Options()
-    options.headless = HEADLESS
+    if HEADLESS:
+        options.add_argument('-headless')
     driver = webdriver.Chrome(options=options)
     #driver.get("http://localhost:4200")
 
