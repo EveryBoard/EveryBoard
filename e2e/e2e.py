@@ -10,7 +10,8 @@ import random
 import string
 import time
 
-HEADLESS = True # Set to false off to see the script happening in real time. Useful for debugging
+HEADLESS = True # Set to False to see the script happening in real time. Useful for debugging
+MOBILE = False # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms
 
 def fill_field(driver, selector, content):
@@ -37,7 +38,7 @@ def click_button(driver, selector):
 
 def click_menu_button(driver, hover_selector, button_selector):
     try:
-        if HEADLESS:
+        if MOBILE:
             click_button(driver, '.navbar-burger')
         else:
             wait = WebDriverWait(driver, 10) # wait up to 10s to find the element
@@ -72,7 +73,7 @@ def register(driver, email, username, password):
     """Registers the user by filling in the registration form"""
     driver.get("http://localhost:4200")
     # Access registration page
-    if HEADLESS:
+    if MOBILE:
         click_button(driver, '.navbar-burger')
     click_button(driver, "#register")
 
@@ -106,7 +107,7 @@ def logout(driver):
 
 def login(driver, email, password):
     # Go to the login page
-    if HEADLESS:
+    if MOBILE:
         click_button(driver, '.navbar-burger')
     click_button(driver, "#login")
 
@@ -294,6 +295,7 @@ def launch_scenarios():
     for simple_scenario in scenarios["simple"]:
         # Always go back home for a new scenario
         driver.get("http://localhost:4200")
+        print("Running scenario: " + simple_scenario.__name__)
         simple_scenario(driver)
 
     # Now we need a registered account
@@ -304,6 +306,7 @@ def launch_scenarios():
     register(driver, email, username, password)
     for registered_scenario in scenarios["registered"]:
         driver.get("http://localhost:4200")
+        print("Running scenario: " + registered_scenario.__name__)
         registered_scenario(driver, username, email, password)
 
     # Now we need another driver
@@ -312,10 +315,11 @@ def launch_scenarios():
     email2 = username2 + '@everyboard.org'
     password2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
     register(driver2, email2, username2, password2)
-    for two_drivers_scenarios in scenarios["two_drivers"]:
+    for two_drivers_scenario in scenarios["two_drivers"]:
         driver.get("http://localhost:4200")
         driver2.get("http://localhost:4200")
-        two_drivers_scenarios(driver, username, driver2, username2)
+        print("Running scenario: " + two_drivers_scenario.__name__)
+        two_drivers_scenario(driver, username, driver2, username2)
 
     driver.close()
     driver2.close()
