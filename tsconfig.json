@@ -18,14 +18,14 @@
         "noImplicitOverride": true,
         "strict": true,
         "noImplicitThis": true,
-        // The following options still need to be set to true (they are false by default, but we list them explicitly)
-        "noUncheckedIndexedAccess": false, // Include 'undefined' in index signature results, e.g., a[0] could be undefined
-        "noImplicitAny": false, // some fixes to do before enabling this one
-        "strictFunctionTypes": false, // requires improving genericity
-        "strictPropertyInitialization": false,
-        "strictBindCallApply": false,
-        "strictFunctionTypes": false,
         "useUnknownInCatchVariables": true,
+        "strictBindCallApply": true,
+        // The following options still need to be set to true (they are false by default, but we list them explicitly)
+        "strictFunctionTypes": false, // requires improving genericity (quite a lot)
+        "strictPropertyInitialization": false, // would be nice to have, but requires solving the error for @Input parameters
+        // The following may not be desired at all, as they will complexify the code quite a lot
+        "noUncheckedIndexedAccess": false, // Include 'undefined' in index signature results, e.g., a[0] could be undefined
+        "noImplicitAny": false, // cannot be enabled if we want to access object fields with their name in a weakly-typed setting
 
         "module": "es2020",
         "moduleResolution": "node",
