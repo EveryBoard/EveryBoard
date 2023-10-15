@@ -14,6 +14,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 type TutorialPlayer = 'tutorial-player';
 @Component({
@@ -99,8 +100,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
     public async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        const node: MGPOptional<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
-        Utils.assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
+        const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
+        Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
         this.gameComponent.node = node.get();
         await this.updateBoardAndShowLastMove(false);
         this.moveAttemptMade = true;

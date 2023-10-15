@@ -23,7 +23,7 @@ export class GipfCapture {
     public constructor(captured: ReadonlyArray<Coord>) {
         Utils.assert(captured.length >= 4, 'Cannot create a GipfCapture with less than 4 captured pieces');
         Utils.assert(HexaLine.areOnSameLine(captured), 'Cannot create a GipfCapture with pieces that are not on the same line');
-        this.capturedSpaces = ArrayUtils.copyImmutableArray(captured).sort((coord1: Coord, coord2: Coord) => {
+        this.capturedSpaces = ArrayUtils.copy(captured).sort((coord1: Coord, coord2: Coord) => {
             if (coord1.x === coord2.x) {
                 Utils.assert(coord1.y !== coord2.y, 'Cannot create a GipfCapture with duplicate coords');
                 return coord1.y > coord2.y ? 1 : -1;
@@ -119,16 +119,16 @@ export class GipfProjectHelper {
                     });
                     if (combinationIntersectsWithIndex === true) {
                         // Don't add it if there is an intersection
-                        newCombinations.push(ArrayUtils.copyImmutableArray(combination));
+                        newCombinations.push(ArrayUtils.copy(combination));
                     } else if (intersectsWithFutureIndex) {
                         // duplicate before adding index to a combination where there is no intersection
-                        newCombinations.push(ArrayUtils.copyImmutableArray(combination));
+                        newCombinations.push(ArrayUtils.copy(combination));
                         combination.push(index);
-                        newCombinations.push(ArrayUtils.copyImmutableArray(combination));
+                        newCombinations.push(ArrayUtils.copy(combination));
                     } else {
                         // No intersection whatsoever, add the capture
                         combination.push(index);
-                        newCombinations.push(ArrayUtils.copyImmutableArray(combination));
+                        newCombinations.push(ArrayUtils.copy(combination));
                     }
                 }
                 captureCombinations = newCombinations;

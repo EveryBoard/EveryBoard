@@ -100,8 +100,8 @@ describe('TrexoRules', () => {
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(5, 4)).get();
 
         // Then it should succeed
-        LEFT = ArrayUtils.copyImmutableArray(LEFT);
-        RIGHT = ArrayUtils.copyImmutableArray(RIGHT);
+        LEFT = ArrayUtils.copy(LEFT);
+        RIGHT = ArrayUtils.copy(RIGHT);
         LEFT.push(new TrexoPiece(Player.ZERO, 2));
         RIGHT.push(new TrexoPiece(Player.ONE, 2));
         const LEFT_1: TrexoPieceStack = TrexoPieceStack.of(LEFT);

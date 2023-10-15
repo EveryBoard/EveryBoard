@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
@@ -112,7 +112,7 @@ export class GoState extends GameStateWithTable<GoPiece> {
         return [this.captured[0], this.captured[1]];
     }
     public static getStartingBoard(): Table<GoPiece> {
-        return ArrayUtils.createTable(GoState.WIDTH, GoState.HEIGHT, GoPiece.EMPTY);
+        return TableUtils.create(GoState.WIDTH, GoState.HEIGHT, GoPiece.EMPTY);
     }
     public copy(): GoState {
         return new GoState(this.getCopiedBoard(),
