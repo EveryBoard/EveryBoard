@@ -13,7 +13,9 @@
     "test": "bash ./scripts/test.sh",
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./ --quiet",
-    "e2e": "bash ./e2e/e2e.sh"
+    "e2e": "bash ./e2e/e2e.sh",
+    "protoc": "npx protoc -I=src/backend/protos/ --ts_out=dist/backend/ src/backend/protos/everyboard.proto",
+    "start:backend": "npx ts-node ./src/backend/server"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +43,7 @@
     "firebase-tools": "^11.16.1",
     "jquery": "^3.6.1",
     "popper.js": "^1.16.1",
+    "protoc-gen-ts": "^0.8.7",
     "rxfire": "^6.0.3",
     "rxjs": "^7.5.7",
     "zone.js": "^0.12.0"

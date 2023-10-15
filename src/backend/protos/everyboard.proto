@@ -3,12 +3,12 @@ import "google/protobuf/struct.proto";
 
 service Everyboard {
     rpc initializeGame (GameIdAndType) returns (SuccessOrFailure);
-    rpc deleteGame (GameId) returns (SuccessOrFailure);
-    rpc startGame (GameId) returns (SuccessOrFailure);
-    rpc addMove (GameIdAndMove) returns (SuccessOrFailure);
-    rpc addRequest (GameIdAndRequest) returns (SuccessOrFailure);
-    rpc addReply (GameIdAndReplyToRequest) returns (SuccessOrFailure);
-    rpc addAction (GameIdAndAction) returns (SuccessOrFailure);
+    //rpc deleteGame (GameId) returns (SuccessOrFailure);
+    //rpc startGame (GameId) returns (SuccessOrFailure);
+    //rpc addMove (GameIdAndMove) returns (SuccessOrFailure);
+    //rpc addRequest (GameIdAndRequest) returns (SuccessOrFailure);
+    //rpc addReply (GameIdAndReplyToRequest) returns (SuccessOrFailure);
+    //rpc addAction (GameIdAndAction) returns (SuccessOrFailure);
 }
 
 message GameId {
