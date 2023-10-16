@@ -1,6 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
 
-import { GameIdAndType, GameIdOrFailure, SuccessOrFailure, UnimplementedEveryboardService } from '../../dist/backend/everyboard';
+import { GameIdAndType, GameIdOrFailure, SuccessOrFailure, UnimplementedEveryboardService } from './protos/everyboard';
 
 
 type Call<X, Y> = grpc.ServerUnaryCall<X, Y>;
