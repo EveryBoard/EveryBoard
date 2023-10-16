@@ -43,9 +43,11 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     {
         super(activatedRoute, connectedUserService, router, messageDisplayer);
     }
+
     public getNumberOfSteps(): number {
         return this.steps.length;
     }
+
     public getCurrentStepTitle(): string {
         if (this.steps.length > 0) {
             return this.steps[this.stepIndex].title;
@@ -53,16 +55,19 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             return '';
         }
     }
+
     public async ngAfterViewInit(): Promise<void> {
         const createdSuccessfully: boolean = await this.createMatchingGameComponent();
         if (createdSuccessfully) {
             await this.start();
         }
     }
+
     public async start(): Promise<void> {
         const tutorial: TutorialStep[] = this.gameComponent.tutorial;
         await this.startTutorial(tutorial);
     }
+
     public async startTutorial(tutorial: TutorialStep[]): Promise<void> {
         this.steps = tutorial;
         this.tutorialOver = false;
@@ -70,15 +75,18 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.successfulSteps = 0;
         await this.showStep(0);
     }
+
     private getCompletionArray(): boolean[] {
         return this.steps.map(() => {
             return false;
         });
     }
+
     public async changeStep(event: Event): Promise<void> {
         const target: HTMLSelectElement = event.target as HTMLSelectElement;
         await this.showStep(Number.parseInt(target.value, 10));
     }
+
     private async showStep(stepIndex: number): Promise<void> {
         this.moveAttemptMade = false;
         this.stepFinished[stepIndex] = false;
@@ -94,6 +102,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         await this.setRole(this.gameComponent.getCurrentPlayer());
         this.cdr.detectChanges();
     }
+
     public async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         const node: MGPOptional<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
@@ -130,10 +139,12 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         // We don't cover the click case here, it is covered in canUserPlay
         this.cdr.detectChanges();
     }
+
     public async retry(): Promise<void> {
         this.moveAttemptMade = false;
         await this.showStep(this.stepIndex);
     }
+
     public override async canUserPlay(elementName: string): Promise<MGPValidation> {
         this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
@@ -155,17 +166,20 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
         }
     }
+
     public async onCancelMove(reason?: string): Promise<void> {
         if (reason !== undefined) {
             this.currentReason = MGPOptional.of(reason);
         }
         this.cdr.detectChanges();
     }
+
     private showStepSuccess(successMessage: string): void {
         this.currentMessage = successMessage;
         this.stepFinished[this.stepIndex] = true;
         this.updateSuccessCount();
     }
+
     private updateSuccessCount(): void {
         let count: number = 0;
         for (const stepSuccess of this.stepFinished) {
@@ -175,6 +189,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
         this.successfulSteps = count;
     }
+
     public async next(): Promise<void> {
         if (this.steps[this.stepIndex].isInformation()) {
             this.stepFinished[this.stepIndex] = true;
@@ -191,6 +206,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             await this.showStep(indexUndone);
         }
     }
+
     public async showSolution(): Promise<void> {
         const step: TutorialStep = this.steps[this.stepIndex];
         Utils.assert(step.hasSolution(), 'step must have solution');
@@ -210,15 +226,19 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.moveAttemptMade = true;
         this.cdr.detectChanges();
     }
+
     public async playLocally(): Promise<void> {
         const game: string = this.getGameName();
         await this.router.navigate(['/local', game]);
     }
+
     public async createGame(): Promise<void> {
-        const game: string = this.getGameName();;
+        const game: string = this.getGameName();
         await this.router.navigate(['/play', game]);
     }
+
     public override getPlayer(): TutorialPlayer {
         return 'tutorial-player';
     }
+
 }

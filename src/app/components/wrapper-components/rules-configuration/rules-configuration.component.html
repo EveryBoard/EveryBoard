@@ -3,15 +3,19 @@
 
     <div class="select is-primary is-fullwidth">
         <select id="ruleSelect"
+                [disabled]="userIsCreator === false"
                 (change)="onChange($event)">
-            <option [value]="rulesConfigDescription.getDefaultConfig().name()" selected>
+            <option [value]="rulesConfigDescription.getDefaultConfig().name()"
+                    selected>
                 {{ rulesConfigDescription.getDefaultConfig().name() }}
             </option>
             <option *ngFor="let standardConfig of rulesConfigDescription.getNonDefaultConfigs()"
                     [value]="standardConfig.name()">
                 {{ standardConfig.name() }}
             </option>
-            <option value="Custom" i18n>Custom</option>
+            <option *ngIf="isCustomisable()"
+                    value="Custom"
+                    i18n>Custom</option>
         </select>
     </div>
 

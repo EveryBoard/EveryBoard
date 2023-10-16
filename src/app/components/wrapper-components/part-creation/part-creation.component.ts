@@ -24,8 +24,9 @@ import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-import { GameInfo, RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameState } from 'src/app/jscaip/GameState';
+import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;

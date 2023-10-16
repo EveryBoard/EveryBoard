@@ -3,7 +3,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameLegalityInfo, NewGameNode } from '../NewGameRules';
 import { NewGameMinimax } from '../NewGameMinimax';
-import { NewRulesConfig } from '../NewRulesConfig';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * These are the tests for the minimax.
@@ -11,7 +11,7 @@ import { NewRulesConfig } from '../NewRulesConfig';
  */
 describe('NewGameMinimax', () => {
 
-    let minimax: Minimax<NewGameMove, NewGameState, NewRulesConfig, NewGameLegalityInfo>;
+    let minimax: Minimax<NewGameMove, NewGameState, RulesConfig, NewGameLegalityInfo>;
 
     beforeEach(() => {
         minimax = new NewGameMinimax();

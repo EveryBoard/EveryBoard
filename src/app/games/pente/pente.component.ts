@@ -3,7 +3,6 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { PenteTutorial } from './PenteTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';

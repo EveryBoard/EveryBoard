@@ -27,7 +27,7 @@ describe('KalahMoveGenerator', () => {
         const state: MancalaState = new MancalaState([
             [5, 2, 3, 2, 1, 2],
             [1, 0, 0, 0, 0, 0],
-        ], 24, [13, 20], 4);
+        ], 24, [13, 20], KalahRules.DEFAULT_CONFIG);
         const node: KalahNode = new KalahNode(state);
 
         // When calculating the list of possible moves

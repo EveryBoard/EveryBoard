@@ -12,7 +12,6 @@ import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMo
 import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
-import { DiamTutorial } from './DiamTutorial';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';

@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { AwaleRules } from './AwaleRules';
 import { AwaleMove } from './AwaleMove';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { AwaleTutorial } from './AwaleTutorial';
 import { ActivatedRoute } from '@angular/router';
 import { MancalaSingleSowComponent } from '../common/MancalaSingleSowComponent';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';

@@ -22,7 +22,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         feedOriginalHouse: true,
         mustFeed: false,
         passByPlayerStore: true,
-        seedByHouse: 4,
+        seedsByHouse: 4,
         width: 6,
     };
 
@@ -63,35 +63,34 @@ export class KalahRules extends MancalaRules<KalahMove> {
         const distributionResult: MancalaDistributionResult = this.distributeHouse(distributions.x, playerY, state);
         const isStarving: boolean = MancalaRules.isStarving(distributionResult.resultingState.getCurrentPlayer(),
                                                             distributionResult.resultingState.board);
-        return MGPFallible.success(distributionResult.endsUpInKalah && isStarving === false);
+        return MGPFallible.success(distributionResult.endsUpInStore && isStarving === false);
     }
     public distributeMove(move: KalahMove, state: MancalaState): MancalaDistributionResult {
         const playerValue: number = state.getCurrentPlayer().value;
         const playerY: number = state.getCurrentPlayerY();
         const filledCoords: Coord[] = [];
-        let passedByKalahNTimes: number = 0;
-        let endUpInKalah: boolean = false;
+        let passedByStoreNTimes: number = 0;
+        let endsUpInStore: boolean = false;
         let postDistributionState: MancalaState = state;
         for (const distributions of move) {
             const distributionResult: MancalaDistributionResult =
                 this.distributeHouse(distributions.x, playerY, postDistributionState);
             const captures: [number, number] = postDistributionState.getScoresCopy();
-            captures[playerValue] += distributionResult.passedByKalahNTimes;
+            captures[playerValue] += distributionResult.passedByStoreNTimes;
             postDistributionState = distributionResult.resultingState;
             filledCoords.push(...distributionResult.filledCoords);
-            passedByKalahNTimes += distributionResult.passedByKalahNTimes;
-            endUpInKalah = distributionResult.endsUpInKalah;
+            passedByStoreNTimes += distributionResult.passedByStoreNTimes;
+            endsUpInStore = distributionResult.endsUpInStore;
         }
         const captured: [number, number] = postDistributionState.getScoresCopy();
-        captured[playerValue] += passedByKalahNTimes;
         const distributedState: MancalaState = new MancalaState(postDistributionState.getCopiedBoard(),
                                                                 postDistributionState.turn,
                                                                 captured,
-                                                                postDistributionState.seedByHouse);
+                                                                postDistributionState.config);
         return {
-            endsUpInKalah: endUpInKalah,
-            filledCoords: filledCoords,
-            passedByKalahNTimes,
+            endsUpInStore,
+            filledCoords,
+            passedByStoreNTimes,
             resultingState: distributedState,
         };
     }
@@ -105,7 +104,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
             ],
             resultingState: distributedState,
         };
-        if (distributionResult.endsUpInKalah) {
+        if (distributionResult.endsUpInStore) {
             return capturelessResult;
         } else {
             const landingSpace: Coord = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
@@ -127,7 +126,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
                 const postCaptureState: MancalaState = new MancalaState(board,
                                                                         distributedState.turn,
                                                                         captured,
-                                                                        distributedState.seedByHouse);
+                                                                        distributedState.config);
                 return {
                     capturedSum, captureMap, resultingState: postCaptureState,
                 };

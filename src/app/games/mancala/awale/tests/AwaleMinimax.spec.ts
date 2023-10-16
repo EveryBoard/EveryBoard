@@ -30,7 +30,7 @@ describe('AwaleScoreMinimax', () => {
             [4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 1],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], 4);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0], AwaleRules.DEFAULT_CONFIG);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = minimax.chooseNextMove(node, level1);
@@ -43,20 +43,20 @@ describe('AwaleScoreMinimax', () => {
             [0, 0, 0, 0, 3, 1],
             [0, 0, 0, 0, 1, 0],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], 4);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0], AwaleRules.DEFAULT_CONFIG);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = minimax.chooseNextMove(node, level2);
         // Then the best move should be the capture
         expect(bestMove).toEqual(AwaleMove.of(4));
     });
-    it('should prioritise moves in the same territory when no captures are possible', () => {
+    it('should prioritize moves in the same territory when no captures are possible', () => {
         // Given a state with only one move that distributes only in the player's territory
         const board: Table<number> = [
             [1, 0, 0, 0, 0, 7],
             [0, 1, 0, 0, 0, 0],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], 4);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0], AwaleRules.DEFAULT_CONFIG);
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = minimax.chooseNextMove(node, level1);

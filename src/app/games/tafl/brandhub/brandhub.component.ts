@@ -4,7 +4,6 @@ import { BrandhubState } from './BrandhubState';
 import { BrandhubRules } from './BrandhubRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { BrandhubTutorial } from './BrandhubTutorial';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

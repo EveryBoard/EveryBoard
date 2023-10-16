@@ -1,8 +1,9 @@
-import { RulesConfigDescription } from 'src/app/components/normal-component/pick-game/pick-game.component';
+import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 // Note: RulesConfigDescriptions object are right now centralised in RulesConfigDescriptions
-export const newRulesConfigDescription: RulesConfigDescription =
+// It is FULLY mandatory, if you don't want to make your game configurable just yet, ignore this!
+export const newGameRulesConfigDescription: RulesConfigDescription =
     new RulesConfigDescription({
         name: () => 'the internationalisable name of that standard config',
         config: {
@@ -23,11 +24,9 @@ export const newRulesConfigDescription: RulesConfigDescription =
         },
     });
 
-newRulesConfigDescription.getDefaultConfig().name(); // For code coverage
-newRulesConfigDescription.translations.the_name_you_will_use_in_your_rules_and_states(); // For coverage
-newRulesConfigDescription.validator.the_name_you_will_use_in_your_rules_and_states(null); // For coverage
-newRulesConfigDescription.validator.the_name_you_will_use_in_your_rules_and_states(1); // For coverage
-
-export type NewRulesConfig = {
-    the_name_you_will_use_in_your_rules_and_states: number;
-};
+newGameRulesConfigDescription.getDefaultConfig().name(); // For code coverage
+newGameRulesConfigDescription.translations.the_name_you_will_use_in_your_rules_and_states(); // For coverage
+if (newGameRulesConfigDescription.validator.the_name_you_will_use_in_your_rules_and_states) {
+    newGameRulesConfigDescription.validator.the_name_you_will_use_in_your_rules_and_states(null); // For coverage
+    newGameRulesConfigDescription.validator.the_name_you_will_use_in_your_rules_and_states(1); // For coverage
+}

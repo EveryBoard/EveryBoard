@@ -35,7 +35,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
+import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
 describe('PartCreationComponent', () => {
 

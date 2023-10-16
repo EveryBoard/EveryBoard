@@ -2,7 +2,7 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from '../../common/MancalaState';
 import { AwaleMove } from '../AwaleMove';
-import { AwaleNode } from '../AwaleRules';
+import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleOrderedMoveGenerator } from '../AwaleOrderedMoveGenerator';
 
 describe('AwaleOrderedMoveGenerator', () => {
@@ -18,7 +18,7 @@ describe('AwaleOrderedMoveGenerator', () => {
             [0, 0, 0, 0, 1, 1],
             [0, 0, 0, 0, 0, 2],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], 4);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0], AwaleRules.DEFAULT_CONFIG);
         const node: AwaleNode = new AwaleNode(state);
         // When listing the moves
         const moves: AwaleMove[] = moveGenerator.getListMoves(node);

@@ -7,7 +7,6 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { P4Tutorial } from './P4Tutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';

@@ -4,7 +4,6 @@ import { MancalaDistribution } from '../common/MancalaMove';
 import { MancalaMultipleSowComponent } from '../common/MancalaMultipleSowComponent';
 import { KalahRules } from './KalahRules';
 import { KalahMove } from './KalahMove';
-import { KalahTutorial } from './KalahTutorial';
 import { ActivatedRoute } from '@angular/router';
 import { KalahMoveGenerator } from './KalahMoveGenerator';
 

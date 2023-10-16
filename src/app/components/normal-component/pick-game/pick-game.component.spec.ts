@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { PickGameComponent, RulesConfigDescription, RulesConfigDescriptions } from './pick-game.component';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PickGameComponent } from './pick-game.component';
 
 describe('PickGameComponent', () => {
 
@@ -25,26 +24,5 @@ describe('PickGameComponent', () => {
 
         expect(testUtils.getComponent().pickGame.emit).toHaveBeenCalledWith(gameSelection.options[2].innerText);
     }));
-
-});
-
-describe('RulesConfigDescriptions', () => {
-
-    it('should have a i18nName for each description', () => {
-        for (const description of RulesConfigDescriptions.ALL) {
-            const fields: RulesConfig = description.getDefaultConfig().config;
-            for (const field of Object.keys(fields)) {
-                expect(description.translations[field]().length).toBeGreaterThan(0);
-            }
-        }
-    });
-
-    it('should have a internationalised name for each standard config', () => {
-        for (const description of RulesConfigDescriptions.ALL.concat(RulesConfigDescription.DEFAULT)) {
-            for (const standardConfig of description.standardConfigs) {
-                expect(standardConfig.name().length).toBeGreaterThan(0);
-            }
-        }
-    });
 
 });

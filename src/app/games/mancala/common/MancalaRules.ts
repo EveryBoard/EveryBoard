@@ -24,11 +24,11 @@ export type MancalaDistributionResult = {
 
     filledCoords: Coord[];
 
-    passedByKalahNTimes: number;
+    passedByStoreNTimes: number;
 
     resultingState: MancalaState;
 
-    endsUpInKalah: boolean;
+    endsUpInStore: boolean;
 }
 
 export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState, MancalaConfig> {
@@ -38,6 +38,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         { key: Player.ZERO, value: new Coord(-1, -1) },
         { key: Player.ONE, value: new Coord(+2, +2) },
     ]);
+
     public static isStarving(player: Player, board: Table<number>): boolean {
         let i: number = 0;
         const playerY: number = player.getOpponent().value; // For player 0 has row 1
@@ -48,6 +49,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         }
         return true;
     }
+
     protected constructor(config: MancalaConfig) {
         super(MancalaState, config);
     }
@@ -56,7 +58,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
 
     /**
      * Apply the distribution part of the move M
-     * Apply the capture that happend due to distribution (by example the passage in the Kalah)
+     * Apply the capture that happend due to distribution (by example the passage in the store)
      * Should NOT increment the turn of the state
      */
     public abstract distributeMove(move: M, state: MancalaState): MancalaDistributionResult;
@@ -71,7 +73,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         const postCaptureBoard: Table<number> = postCaptureState.getCopiedBoard();
         const opponent: Player = postCaptureState.getCurrentOpponent();
         const player: Player = postCaptureState.getCurrentPlayer();
-        if (this.config.mustFeed) {
+        if (postCaptureState.config.mustFeed) {
             if (MancalaRules.isStarving(player, postCaptureBoard) &&
                 this.canDistribute(opponent, postCaptureBoard) === false)
             {
@@ -87,11 +89,12 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         }
         return PlayerOrNone.NONE;
     }
+
     public getGameStatus(node: GameNode<M, MancalaState>): GameStatus {
         const state: MancalaState = node.gameState;
-        const width: number = node.gameState.board[0].length;
-        const seedByHouse: number = node.gameState.seedByHouse;
-        const halfOfTotalSeeds: number = width * seedByHouse;
+        const width: number = node.gameState.getWidth();
+        const seedsByHouse: number = node.gameState.config.seedsByHouse;
+        const halfOfTotalSeeds: number = width * seedsByHouse;
         if (state.scores[0] > halfOfTotalSeeds) {
             return GameStatus.ZERO_WON;
         }
@@ -103,6 +106,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         }
         return GameStatus.ONGOING;
     }
+
     public applyLegalMove(move: M, state: MancalaState, _: void): MancalaState {
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state);
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult);
@@ -116,8 +120,9 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         return new MancalaState(resultingState.board,
                                 resultingState.turn + 1,
                                 resultingState.scores,
-                                resultingState.seedByHouse);
+                                resultingState.config);
     }
+
     /**
      * Simply distribute then group of stone in (x, y)
      * Does not make the capture nor verify the legality of the move
@@ -132,23 +137,23 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         let seedsInHand: number = resultingBoard[y][x];
         const filledCoords: Coord[] = [];
         resultingBoard[y][x] = 0;
-        let passedByKalahNTimes: number = 0;
-        let previousDropWasKalah: boolean = false;
-        let endUpInKalah: boolean = false;
+        let passedByStoreNTimes: number = 0;
+        let previousDropWasStore: boolean = false;
+        let endsUpInStore: boolean = false;
         while (seedsInHand > 0) {
-            previousDropWasKalah = endUpInKalah;
-            endUpInKalah = false;
+            previousDropWasStore = endsUpInStore;
+            endsUpInStore = false;
             // get next space
-            const nextCoord: MGPOptional<Coord> = this.getNextCoord(coord, player, previousDropWasKalah, state);
-            endUpInKalah = nextCoord.isAbsent();
+            const nextCoord: MGPOptional<Coord> = this.getNextCoord(coord, player, previousDropWasStore, state);
+            endsUpInStore = nextCoord.isAbsent();
 
-            if (endUpInKalah) {
-                passedByKalahNTimes++;
+            if (endsUpInStore) {
+                passedByStoreNTimes++;
                 seedsInHand--;
                 filledCoords.push(MancalaRules.FAKE_STORE_COORD.get(player).get());
             } else {
                 coord = nextCoord.get();
-                if (initial.equals(coord) === false || this.config.feedOriginalHouse) {
+                if (initial.equals(coord) === false || state.config.feedOriginalHouse) {
                     // not to distribute on our starting space
                     resultingBoard[coord.y][coord.x] += 1;
                     filledCoords.push(coord);
@@ -156,44 +161,49 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
                 }
             }
         }
+        const score: [number, number] = state.getScoresCopy();
+        score[player.value] += passedByStoreNTimes;
         return {
             filledCoords: filledCoords,
-            passedByKalahNTimes,
-            endsUpInKalah: endUpInKalah,
-            resultingState: new MancalaState(resultingBoard, state.turn, state.getScoresCopy(), state.seedByHouse),
+            passedByStoreNTimes,
+            endsUpInStore,
+            resultingState: new MancalaState(resultingBoard, state.turn, score, state.config),
         };
     }
-    public getNextCoord(coord: Coord, player: Player, previousDropWasKalah: boolean, state: MancalaState)
+
+    public getNextCoord(coord: Coord, player: Player, previousDropWasStore: boolean, state: MancalaState)
     : MGPOptional<Coord>
     {
         if (coord.y === 0) {
             if (coord.x === (state.board[0].length - 1)) {
-                if (this.config.passByPlayerStore && player === Player.ONE && previousDropWasKalah === false) {
-                    return MGPOptional.empty(); // This seed is dropped in the Kalah
+                if (state.config.passByPlayerStore && player === Player.ONE && previousDropWasStore === false) {
+                    return MGPOptional.empty(); // This seed is dropped in the store
                 } else {
                     return MGPOptional.of(new Coord(coord.x, 1)); // go from the bottom row to the top row
                 }
             } else {
-                return MGPOptional.of(new Coord(coord.x + 1, coord.y)); // clockwise order on the top = left to right
+                return MGPOptional.of(new Coord(coord.x + 1, 0)); // clockwise order on the top = left to right
             }
         } else {
             if (coord.x === 0) {
-                if (this.config.passByPlayerStore && player === Player.ZERO && previousDropWasKalah === false) {
-                    return MGPOptional.empty(); // This seed is dropped in the Kalah
+                if (state.config.passByPlayerStore && player === Player.ZERO && previousDropWasStore === false) {
+                    return MGPOptional.empty(); // This seed is dropped in the store
                 } else {
-                    return MGPOptional.of(new Coord(coord.x, 0)); // go from the bottom row to the top
+                    return MGPOptional.of(new Coord(0, 0)); // go from the bottom row to the top
                 }
             } else {
-                return MGPOptional.of(new Coord(coord.x - 1, coord.y)); // clockwise order on the bottom = right to left
+                return MGPOptional.of(new Coord(coord.x - 1, 1)); // clockwise order on the bottom = right to left
             }
         }
     }
+
     public doesDistribute(x: number, y: number, board: Table<number>): boolean {
         if (y === 0) { // distribution from left to right
             return board[y][x] > ((board[0].length - 1) - x);
         }
         return board[y][x] > x; // distribution from right to left
     }
+
     public canDistribute(player: Player, board: Table<number>): boolean {
         for (let x: number = 0; x < board[0].length; x++) {
             if (this.doesDistribute(x, player.getOpponent().value, board)) {
@@ -202,6 +212,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         }
         return false;
     }
+
     /**
       * Captures all the seeds of the mansooning player.
       * Returns the sum of all captured seeds.
@@ -225,7 +236,8 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         return {
             capturedSum,
             captureMap,
-            resultingState: new MancalaState(resultingBoard, state.turn, captured, state.seedByHouse),
+            resultingState: new MancalaState(resultingBoard, state.turn, captured, state.config),
         };
     }
+
 }

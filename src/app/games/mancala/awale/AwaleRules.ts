@@ -20,7 +20,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         feedOriginalHouse: false,
         mustFeed: true,
         passByPlayerStore: false,
-        seedByHouse: 4,
+        seedsByHouse: 4,
         width: 6,
     };
 
@@ -89,7 +89,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
              * so one ending condition of the loop is reaching index MancalaState.WIDTH
              */
             direction = +1;
-            limit = state.board[0].length;
+            limit = state.getWidth();
         }
 
         do {
@@ -104,7 +104,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         return {
             capturedSum,
             captureMap,
-            resultingState: new MancalaState(resultingBoard, state.turn, captured, state.seedByHouse),
+            resultingState: new MancalaState(resultingBoard, state.turn, captured, state.config),
         };
     }
     public captureIfLegal(x: number, y: number, state: MancalaState): MancalaCaptureResult {

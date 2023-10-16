@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
-import { GameInfo, RulesConfigDescription } from '../components/normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
+import { RulesConfigDescription } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Localized } from '../utils/LocaleUtils';
 import { MGPValidation } from '../utils/MGPValidation';
 

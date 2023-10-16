@@ -5,13 +5,13 @@ import { MancalaConfig } from './MancalaConfig';
 export class MancalaState extends GameStateWithTable<number> {
 
     public static getInitialState(config: MancalaConfig): MancalaState {
-        const board: number[][] = ArrayUtils.createTable(config.width, 2, config.seedByHouse);
-        return new MancalaState(board, 0, [0, 0], config.seedByHouse);
+        const board: number[][] = ArrayUtils.createTable(config.width, 2, config.seedsByHouse);
+        return new MancalaState(board, 0, [0, 0], config);
     }
     public constructor(b: Table<number>,
                        turn: number,
                        public readonly scores: readonly [number, number],
-                       public readonly seedByHouse: number)
+                       public readonly config: MancalaConfig)
     {
         super(b, turn);
     }

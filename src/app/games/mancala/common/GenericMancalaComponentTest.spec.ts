@@ -229,7 +229,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                 [0, 4, 4, 4, 4, 4],
                 [4, 4, 4, 4, 4, 4],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0], 4);
+            const state: MancalaState = new MancalaState(board, 1, [0, 0], defaultConfig);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When clicking on the empty house
@@ -243,7 +243,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                 [4, 4, 4, 4, 4, 4],
                 [4, 4, 4, 4, 4, 4],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [0, 0], 4);
+            const state: MancalaState = new MancalaState(board, 0, [0, 0], defaultConfig);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When clicking on a house of the opponent

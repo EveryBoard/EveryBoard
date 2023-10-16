@@ -15,7 +15,6 @@ import { ApagosMoveGenerator } from './ApagosMoveGenerator';
 import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { ApagosTutorial } from './ApagosTutorial';
 import { ActivatedRoute } from '@angular/router';
 
 interface PieceLocation {

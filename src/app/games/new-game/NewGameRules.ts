@@ -5,8 +5,7 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { NewRulesConfig, newRulesConfigDescription } from './NewRulesConfig';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * This class is optional.
@@ -31,13 +30,19 @@ export class NewGameNode extends GameNode<NewGameMove, NewGameState> {}
  * It should be a singleton class.
  * It is used by the wrappers to check the legality of a move, and to apply the move on a state.
  */
-export class NewGameRules extends Rules<NewGameMove, NewGameState, NewRulesConfig, NewGameLegalityInfo> {
+export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, NewGameLegalityInfo> {
 
     /**
      * This is the singleton instance. You should keep this as is, except for adapting the class name.
      */
     private static singleton: MGPOptional<NewGameRules> = MGPOptional.empty();
 
+    /**
+     * If you want your game to be configurable (different board sizes by example)
+     * Here should be the default config
+     * You have the option to create a type NewRulesConfig for more type safety
+     */
+    private static readonly DEFAULT_CONFIG: RulesConfig = {};
     /**
      * This gets the singleton instance. Similarly, keep this as is.
      */
@@ -51,7 +56,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewRulesConfi
      * The constructor is made private to avoid creating other instances of this class.
      */
     private constructor() {
-        const config: NewRulesConfig = RulesConfigUtils.getDefaultConfig(newRulesConfigDescription) as NewRulesConfig;
+        const config: RulesConfig = NewGameRules.DEFAULT_CONFIG;
         super(NewGameState, config);
     }
 

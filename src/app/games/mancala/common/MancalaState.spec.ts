@@ -5,7 +5,7 @@ const myMancalaConfig: MancalaConfig = {
     feedOriginalHouse: true,
     mustFeed: true,
     passByPlayerStore: true,
-    seedByHouse: 4,
+    seedsByHouse: 4,
     width: 6,
 };
 
@@ -17,11 +17,13 @@ describe('MancalaState', () => {
         const differentBoard: MancalaState = new MancalaState([
             [1, 2, 3, 4, 5, 6],
             [1, 2, 3, 4, 5, 6],
-        ], state.turn, state.scores, 4);
+        ], state.turn, state.scores, myMancalaConfig);
         // and a state with different scores
-        const differentScore: MancalaState = new MancalaState(state.board, state.turn, [28, 52], 4);
+        const differentScore: MancalaState =
+            new MancalaState(state.board, state.turn, [28, 52], myMancalaConfig);
         // and a state with a different turn
-        const differentTurn: MancalaState = new MancalaState(state.board, state.turn + 1, state.scores, 4);
+        const differentTurn: MancalaState =
+            new MancalaState(state.board, state.turn + 1, state.scores, myMancalaConfig);
 
         // When comparing the three to the original one
         // Then it should all be false, as they are different

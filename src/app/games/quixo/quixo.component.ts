@@ -10,7 +10,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { QuixoTutorial } from './QuixoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';
@@ -46,15 +45,18 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         ];
         this.encoder = QuixoMove.encoder;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
         this.lastMoveCoord = this.node.previousMove.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
+
     public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
     }
+
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const player: PlayerOrNone = this.board[y][x];
@@ -66,13 +68,15 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) classes.push('victory-stroke');
         return classes;
     }
+
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: Coord = new Coord(x, y);
-        const coordLegality: MGPValidation = QuixoMove.isValidCoord(clickedCoord);
+        const state: QuixoState = this.getState();
+        const coordLegality: MGPValidation = this.rules.isValidCoord(state, clickedCoord);
         if (coordLegality.isFailure()) {
             return this.cancelMove(coordLegality.getReason());
         }
@@ -87,15 +91,18 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
             return MGPValidation.SUCCESS;
         }
     }
+
     public getPossiblesDirections(): Orthogonal[] {
         const directions: Orthogonal[] = [];
         const chosenCoord: Coord = this.chosenCoord.get();
-        if (chosenCoord.x !== QuixoState.SIZE - 1) directions.push(Orthogonal.RIGHT);
+        const state: QuixoState = this.getState();
+        if (chosenCoord.x !== state.getWidth() - 1) directions.push(Orthogonal.RIGHT);
         if (chosenCoord.x !== 0) directions.push(Orthogonal.LEFT);
-        if (chosenCoord.y !== QuixoState.SIZE) directions.push(Orthogonal.DOWN);
+        if (chosenCoord.y !== state.getHeight()) directions.push(Orthogonal.DOWN);
         if (chosenCoord.y !== 0) directions.push(Orthogonal.UP);
         return directions;
     }
+
     public async chooseDirection(direction: Orthogonal): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#chooseDirection_' + direction.toString());
         if (clickValidity.isFailure()) {
@@ -104,6 +111,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         this.chosenDirection = direction;
         return await this.tryMove();
     }
+
     public async tryMove(): Promise<MGPValidation> {
         const chosenCoord: Coord = this.chosenCoord.get();
         const move: QuixoMove = new QuixoMove(chosenCoord.x,
@@ -111,9 +119,12 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
                                               this.chosenDirection);
         return this.chooseMove(move);
     }
+
     public getArrowTransform(orientation: Orthogonal): string {
-        return GameComponentUtils.getArrowTransform(QuixoState.SIZE * this.SPACE_SIZE,
+        const state: QuixoState = this.getState();
+        return GameComponentUtils.getArrowTransform(state.getWidth() * this.SPACE_SIZE,
                                                     new Coord(0, 0),
                                                     orientation);
     }
+
 }

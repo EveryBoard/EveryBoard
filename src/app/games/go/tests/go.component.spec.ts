@@ -133,10 +133,10 @@ describe('GoComponent', () => {
             await testUtils.setupState(state);
 
             // Then it should not have a tengen
-            testUtils.expectElementNotToExist('#hoshi_4_4'); // middle middle
-            testUtils.expectElementNotToExist('#hoshi_4_5'); // middle middle
-            testUtils.expectElementNotToExist('#hoshi_5_5'); // middle middle
-            testUtils.expectElementNotToExist('#hoshi_5_4'); // middle middle
+            testUtils.expectElementNotToExist('#hoshi_4_4'); // upper left potential tengen
+            testUtils.expectElementNotToExist('#hoshi_4_5'); // down left potential tengen
+            testUtils.expectElementNotToExist('#hoshi_5_5'); // down right potential tengen
+            testUtils.expectElementNotToExist('#hoshi_5_4'); // upper right potentiel tengen
         }));
 
     });

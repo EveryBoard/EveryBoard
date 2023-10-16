@@ -25,7 +25,8 @@ type NodeAndPath<M extends Move, S extends GameState> = {
 export class MCTS<M extends Move,
                   S extends GameState,
                   C extends RulesConfig = RulesConfig,
-                  L = void> implements AI<M, S, AITimeLimitOptions> {
+                  L = void> implements AI<M, S, AITimeLimitOptions>
+{
     // The exploration parameter influences the MCTS results.
     // It is chosen "empirically" (this is the "generally recommended value" from Wikipedia)
     public explorationParameter: number = Math.sqrt(2);

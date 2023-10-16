@@ -145,16 +145,20 @@ export class Direction extends BaseDirection {
             return fromString.get();
         },
     );
+
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);
     }
+
     public isDiagonal(): boolean {
         return (this.x !== 0) && (this.y !== 0);
     }
+
     public getOpposite(): Direction {
         const opposite: MGPFallible<Direction> = Direction.factory.from(-this.x, -this.y);
         return opposite.get();
     }
+
 }
 
 export class Orthogonal extends BaseDirection {

@@ -4,7 +4,7 @@ export type MancalaConfig = RulesConfig & {
 
     readonly width: number;
 
-    readonly seedByHouse: number;
+    readonly seedsByHouse: number;
 
     readonly passByPlayerStore: boolean;
 

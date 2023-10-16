@@ -5,24 +5,24 @@ import { Direction } from './Direction';
 
 export class BoardDatas {
 
-    private constructor(readonly groupIndexes: NumberTable,
+    private constructor(readonly groupIndices: NumberTable,
                         readonly groups: ReadonlyArray<GroupInfos>)
     {
     }
 
     public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDatasFactory<T>): BoardDatas {
-        const groupIndexes: number[][] = ArrayUtils.createTable<number>(board[0].length, board.length, -1);
+        const groupIndices: number[][] = ArrayUtils.createTable<number>(board[0].length, board.length, -1);
         const groupsDatas: GroupDatas<T>[] = [];
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
-                if (groupIndexes[y][x] === -1) {
+                if (groupIndices[y][x] === -1) {
                     const newGroupEntryPoint: Coord = new Coord(x, y);
                     const newGroupDatas: GroupDatas<T> =
                         groupDatasFactory.getGroupDatas(newGroupEntryPoint, board);
                     const groupCoords: Coord[] = newGroupDatas.getCoords();
                     const newGroupIndex: number = groupsDatas.length;
                     for (const coord of groupCoords) {
-                        groupIndexes[coord.y][coord.x] = newGroupIndex;
+                        groupIndices[coord.y][coord.x] = newGroupIndex;
                     }
                     groupsDatas.push(newGroupDatas);
                 }
@@ -35,7 +35,7 @@ export class BoardDatas {
             const groupInfos: GroupInfos = new GroupInfos(coords, neighborsEntryPoints);
             groupsInfos.push(groupInfos);
         }
-        return new BoardDatas(groupIndexes, groupsInfos);
+        return new BoardDatas(groupIndices, groupsInfos);
     }
 }
 

@@ -25,7 +25,6 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
-import { HiveTutorial } from './HiveTutorial';
 import { ActivatedRoute } from '@angular/router';
 
 interface GroundInfo {

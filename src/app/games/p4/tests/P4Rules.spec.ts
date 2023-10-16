@@ -134,7 +134,28 @@ describe('P4Rules', () => {
             RulesUtils.expectToBeDraw(rules, node);
         });
 
-        it('should be a draw once the board is full (smaller boards config)', () => {
+        it('should be a draw once the board is full (smaller board config)', () => {
+            // Given a board without victory, whose turn is equal to width * height - 1
+            const width: number = 5;
+            const height: number = 5;
+            const board: Table<PlayerOrNone> = ArrayUtils.createTable(width, height, PlayerOrNone.NONE);
+            const turn: number = width * height - 1; // The logic is based on the turn, it does not check the board
+            const state: P4State = new P4State(board, turn);
+
+            // When doing the last move
+            const move: P4Move = P4Move.of(3);
+
+            // Then the game should be a hard draw
+            const expectedBoard: PlayerOrNone[][] = ArrayUtils.createTable(width, height, PlayerOrNone.NONE);
+            expectedBoard[height - 1][move.x] = Player.ofTurn(turn);
+            const finalTurn: number = width * height;
+            const expectedState: P4State = new P4State(expectedBoard, finalTurn);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const node: P4Node = new P4Node(expectedState);
+            RulesUtils.expectToBeDraw(rules, node);
+        });
+
+        it('should be a draw once the board is full (bigger board config)', () => {
             // Given a board without victory, whose turn is equal to width * height - 1
             const width: number = 75;
             const height: number = 33;
@@ -176,6 +197,7 @@ describe('P4Rules', () => {
         const reason: string = P4Failure.COLUMN_IS_FULL();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+
     it('should know where the lowest space is', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, X, _, _, _],
@@ -189,4 +211,5 @@ describe('P4Rules', () => {
         expect(P4Rules.get().getLowestUnoccupiedSpace(board, 2)).toBe(0);
         expect(P4Rules.get().getLowestUnoccupiedSpace(board, 3)).toBe(-1);
     });
+
 });

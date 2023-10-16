@@ -6,7 +6,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
-import { gobanConfig } from 'src/app/jscaip/GobanConfig';
+import { defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
 
 describe('PenteRules', () => {
 
@@ -21,7 +21,7 @@ describe('PenteRules', () => {
     });
     it('should allow a drop on an empty space', () => {
         // Given a state
-        const state: PenteState = PenteState.getInitialState(gobanConfig);
+        const state: PenteState = PenteState.getInitialState(defaultGobanConfig);
 
         // When doing a drop on an empty space
         const move: PenteMove = PenteMove.of(new Coord(9, 8));
@@ -53,7 +53,7 @@ describe('PenteRules', () => {
 
     it('should refuse move going out of the board', () => {
         // Given any board
-        const state: PenteState = PenteState.getInitialState(gobanConfig);
+        const state: PenteState = PenteState.getInitialState(defaultGobanConfig);
 
         // When doing drop outside the board
         const move: PenteMove = PenteMove.of(new Coord(-1, 0));
@@ -65,7 +65,7 @@ describe('PenteRules', () => {
 
     it('should forbid a drop on an occupied space', () => {
         // Given a state
-        const state: PenteState = PenteState.getInitialState(gobanConfig);
+        const state: PenteState = PenteState.getInitialState(defaultGobanConfig);
 
         // When doing a drop on an occupied space
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
@@ -178,7 +178,7 @@ describe('PenteRules', () => {
     });
     it('should be ongoing if there are still available spaces and no victory', () => {
         // Given a state with available spaces and no victory
-        const state: PenteState = PenteState.getInitialState(gobanConfig);
+        const state: PenteState = PenteState.getInitialState(defaultGobanConfig);
         const node: PenteNode = new PenteNode(state);
         // Then it should be ongoing
         RulesUtils.expectToBeOngoing(rules, node);

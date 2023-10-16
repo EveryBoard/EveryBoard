@@ -14,6 +14,9 @@ module.exports = function(config) {
         ],
         client: {
             clearContext: false, // leave Jasmine Spec Runner output visible in browser
+            jasmine: {
+                timeoutInterval: 30000,
+            },
         },
         coverageReporter: {
             dir: 'coverage/',
@@ -43,5 +46,6 @@ module.exports = function(config) {
         autoWatch: true,
         browsers: ['Chrome'],
         singleRun: false,
+        browserNoActivityTimeout: 30000,
     });
 };

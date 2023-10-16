@@ -3,7 +3,7 @@ export type GobanConfig = {
     height: number;
 };
 
-export const gobanConfig: GobanConfig = {
+export const defaultGobanConfig: GobanConfig = {
     width: 19,
     height: 19,
 };

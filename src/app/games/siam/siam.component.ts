@@ -4,7 +4,6 @@ import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamState } from 'src/app/games/siam/SiamState';
 import { SiamLegalityInformation, SiamRules } from 'src/app/games/siam/SiamRules';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
-import { SiamTutorial } from './SiamTutorial';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

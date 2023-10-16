@@ -6,7 +6,7 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../Connect
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { gobanConfig } from 'src/app/jscaip/GobanConfig';
+import { defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
 
 describe('ConnectSixRules', () => {
     /**
@@ -29,7 +29,7 @@ describe('ConnectSixRules', () => {
 
         it('should not create move when coord is out of board', () => {
             // Given the initial state
-            const state: ConnectSixState = ConnectSixState.getInitialState(gobanConfig);
+            const state: ConnectSixState = ConnectSixState.getInitialState(defaultGobanConfig);
 
             // When dropping out of the board
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(-1, -1)) as ConnectSixMove;
@@ -41,7 +41,7 @@ describe('ConnectSixRules', () => {
 
         it('should allow the first player play only one piece', () => {
             // Given the initial state
-            const state: ConnectSixState = ConnectSixState.getInitialState(gobanConfig);
+            const state: ConnectSixState = ConnectSixState.getInitialState(defaultGobanConfig);
 
             // When dropping one piece
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
@@ -71,7 +71,7 @@ describe('ConnectSixRules', () => {
         });
         it('should refuse move that drop two pieces on first turn', () => {
             // Given the first turn
-            const state: ConnectSixState = ConnectSixState.getInitialState(gobanConfig);
+            const state: ConnectSixState = ConnectSixState.getInitialState(defaultGobanConfig);
             // When dropping two pieces
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(11, 11), new Coord(10, 10));
             // Then the attempt would have throw

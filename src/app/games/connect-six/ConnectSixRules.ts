@@ -10,7 +10,7 @@ import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 
@@ -18,7 +18,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
 
     private static singleton: MGPOptional<ConnectSixRules> = MGPOptional.empty();
 
-    public static readonly DEFAULT_CONFIG: GobanConfig = gobanConfig;
+    public static readonly DEFAULT_CONFIG: GobanConfig = defaultGobanConfig;
 
     public static get(): ConnectSixRules {
         if (ConnectSixRules.singleton.isAbsent()) {
@@ -33,7 +33,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
     private constructor() {
-        super(ConnectSixState, gobanConfig);
+        super(ConnectSixState, defaultGobanConfig);
     }
     public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _info: void): ConnectSixState {
         if (move instanceof ConnectSixDrops) {

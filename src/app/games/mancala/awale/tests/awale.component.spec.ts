@@ -26,7 +26,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 4, 4, 4, 4, 4],
-            ], 1, [0, 0], 4),
+            ], 1, [0, 0], AwaleRules.DEFAULT_CONFIG),
             move: AwaleMove.of(1),
             result: [
                 { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -40,7 +40,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 0, 0, 4],
-            ], 121, [0, 0], 4),
+            ], 121, [0, 0], AwaleRules.DEFAULT_CONFIG),
             move: AwaleMove.of(5),
             result: [{ x: 5, y: 1, content: { mainContent: ' -5 ' } }],
         },
@@ -48,7 +48,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [4, 1, 4, 4, 4, 4],
                 [2, 4, 4, 4, 4, 4],
-            ], 0, [0, 0], 4),
+            ], 0, [0, 0], AwaleRules.DEFAULT_CONFIG),
             move: AwaleMove.of(0),
             result: [{ x: 1, y: 0, content: { mainContent: ' -2 ' } }],
         },
@@ -56,7 +56,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [11, 4, 4, 4, 4, 0],
                 [17, 4, 4, 4, 4, 4],
-            ], 0, [0, 0], 4),
+            ], 0, [0, 0], AwaleRules.DEFAULT_CONFIG),
             move: AwaleMove.of(0),
             result: [{ x: 5, y: 0, content: { mainContent: ' -2 ' } }],
         },

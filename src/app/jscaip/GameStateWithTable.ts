@@ -8,6 +8,7 @@ export abstract class GameStateWithTable<P> extends GameState {
     public constructor(public readonly board: Table<P>, turn: number) {
         super(turn);
     }
+
     public getPieceAt(coord: Coord): P {
         if (this.isOnBoard(coord)) {
             return this.board[coord.y][coord.x];
@@ -15,6 +16,7 @@ export abstract class GameStateWithTable<P> extends GameState {
             throw new Error('Accessing coord not on board ' + coord + '.');
         }
     }
+
     public tryToGetPieceAt(coord: Coord): MGPOptional<P> {
         if (this.isOnBoard(coord)) {
             return MGPOptional.of(this.board[coord.y][coord.x]);
@@ -22,19 +24,23 @@ export abstract class GameStateWithTable<P> extends GameState {
             return MGPOptional.empty();
         }
     }
+
     public isOnBoard(coord: Coord): boolean {
         const width: number = this.board[0].length;
         const height: number = this.board.length;
         return coord.isInRange(width, height);
     }
+
     public getPieceAtXY(x: number, y: number): P {
         return this.getPieceAt(new Coord(x, y));
     }
+
     public forEachCoord(callback: (coord: Coord, content: P) => void): void {
         for (const { coord, content } of this.getCoordsAndContents()) {
             callback(coord, content);
         }
     }
+
     public getCoordsAndContents(): {coord: Coord, content: P}[] {
         const coordsAndContents: {coord: Coord, content: P}[] = [];
         for (let y: number = 0; y < this.board.length; y++) {
@@ -50,9 +56,11 @@ export abstract class GameStateWithTable<P> extends GameState {
         }
         return coordsAndContents;
     }
+
     public getCopiedBoard(): P[][] {
         return ArrayUtils.copyBiArray(this.board);
     }
+
     public toMap(): {key: Coord, value: P}[] {
         const elements: {key: Coord, value: P}[] = [];
         for (let y: number = 0; y < this.board.length; y++) {
@@ -66,6 +74,15 @@ export abstract class GameStateWithTable<P> extends GameState {
         }
         return elements;
     }
+
+    public getWidth(): number {
+        return this.board[0].length;
+    }
+
+    public getHeight(): number {
+        return this.board.length;
+    }
+
     [Symbol.iterator](): IterableIterator<P> {
         const linedUpElements: P[] = [];
         for (const lines of this.board) {

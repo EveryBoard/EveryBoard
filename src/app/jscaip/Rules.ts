@@ -61,10 +61,11 @@ export abstract class Rules<M extends Move,
     public abstract isLegal(move: M, state: S): MGPFallible<L>;
 
     public getInitialNode(config?: C): GameNode<M, S> {
-        if (config != null && Object.keys(config).length > 0) {
+        if (config != null) {
             this.config = config;
         }
         // eslint-disable-next-line dot-notation
+        console.log('getInitialNode > getInitialState', config)
         const initialState: S = this.stateType['getInitialState'](config);
         return new GameNode(initialState);
     }

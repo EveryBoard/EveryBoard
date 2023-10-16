@@ -3,7 +3,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { QuixoState } from './QuixoState';
+import { QuixoConfig, QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -12,6 +12,7 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { QuixoFailure } from './QuixoFailure';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
@@ -19,52 +20,64 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
 
     private static singleton: MGPOptional<QuixoRules> = MGPOptional.empty();
 
+    public static readonly DEFAULT_CONFIG: QuixoConfig = {
+        width: 5,
+        height: 5,
+    };
+
     public static get(): QuixoRules {
         if (QuixoRules.singleton.isAbsent()) {
             QuixoRules.singleton = MGPOptional.of(new QuixoRules());
         }
         return QuixoRules.singleton.get();
     }
+
     private constructor() {
-        super(QuixoState, {});
+        super(QuixoState, QuixoRules.DEFAULT_CONFIG);
     }
+
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(Utils.identity, QuixoState.SIZE);
+        new NInARowHelper(Utils.identity, 5); // TODO, not 5, Sorry CT-5555, fallen hero of the Clones
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();
         const verticalCoords: Coord[] = [];
-        for (let y: number = 0; y < QuixoState.SIZE; y++) {
-            if (node.gameState.getPieceAtXY(0, y) !== currentOpponent) {
+        const state: QuixoState = node.gameState;
+        for (let y: number = 0; y < state.getHeight(); y++) {
+            if (state.getPieceAtXY(0, y) !== currentOpponent) {
                 verticalCoords.push(new Coord(0, y));
             }
-            if (node.gameState.getPieceAtXY(QuixoState.SIZE - 1, y) !== currentOpponent) {
-                verticalCoords.push(new Coord(QuixoState.SIZE - 1, y));
+            if (state.getPieceAtXY(state.getWidth() - 1, y) !== currentOpponent) {
+                verticalCoords.push(new Coord(state.getWidth() - 1, y));
             }
         }
         return verticalCoords;
     }
+
     public static getHorizontalCenterCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();
         const horizontalCenterCoords: Coord[] = [];
-        for (let x: number = 1; x < QuixoState.SIZE - 1; x++) {
-            if (node.gameState.getPieceAtXY(x, 0) !== currentOpponent) {
+        const state: QuixoState = node.gameState;
+        for (let x: number = 1; x < state.getWidth() - 1; x++) {
+            if (state.getPieceAtXY(x, 0) !== currentOpponent) {
                 horizontalCenterCoords.push(new Coord(x, 0));
             }
-            if (node.gameState.getPieceAtXY(x, QuixoState.SIZE - 1) !== currentOpponent) {
-                horizontalCenterCoords.push(new Coord(x, QuixoState.SIZE - 1));
+            if (state.getPieceAtXY(x, state.getHeight() - 1) !== currentOpponent) {
+                horizontalCenterCoords.push(new Coord(x, state.getHeight() - 1));
             }
         }
         return horizontalCenterCoords;
     }
-    public static getPossibleDirections(coord: Coord): Orthogonal[] {
+
+    public getPossibleDirections(state: QuixoState, coord: Coord): Orthogonal[] {
         const possibleDirections: Orthogonal[] = [];
         if (coord.x !== 0) possibleDirections.push(Orthogonal.LEFT);
         if (coord.y !== 0) possibleDirections.push(Orthogonal.UP);
-        if (coord.x !== (QuixoState.SIZE - 1)) possibleDirections.push(Orthogonal.RIGHT);
-        if (coord.y !== (QuixoState.SIZE - 1)) possibleDirections.push(Orthogonal.DOWN);
+        if (coord.x !== (state.getWidth() - 1)) possibleDirections.push(Orthogonal.RIGHT);
+        if (coord.y !== (state.getHeight() - 1)) possibleDirections.push(Orthogonal.DOWN);
         return possibleDirections;
     }
+
     public static getLinesSums(state: QuixoState): {[player: number]: {[lineType: string]: number[]}} {
         const sums: {[player: number]: {[lineType: string]: number[]}} = {};
         sums[Player.ZERO.value] = {
@@ -86,30 +99,68 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
                 sums[c].columns[x] = sums[c].columns[x] + 1;
                 sums[c].rows[y] = sums[c].rows[y] + 1;
                 if (x === y) sums[c].diagonals[0] = sums[c].diagonals[0] + 1;
-                if (x + y === (QuixoState.SIZE - 1)) sums[c].diagonals[1] = sums[c].diagonals[1] + 1;
+                if (x + y === (state.getWidth() - 1)) sums[c].diagonals[1] = sums[c].diagonals[1] + 1;
+                // TODO: check that diagonal are still correctly identified in rectangular board
             }
         }
         return sums;
     }
+
     public static getVictoriousCoords(state: QuixoState): Coord[] {
         return QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
     }
+
     public static getFullestLine(playersLinesInfo: {[lineType: string]: number[]}): number {
         const linesScores: number[] = playersLinesInfo.columns.concat(
             playersLinesInfo.rows.concat(
                 playersLinesInfo.diagonals));
         return Math.max(...linesScores);
     }
+
+    public isValidCoord(state: QuixoState, coord: Coord): MGPValidation {
+        Utils.assert(state.isOnBoard(coord),
+                     'Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.');
+        if (coord.x !== 0 &&
+            coord.x !== (state.getWidth() - 1) &&
+            coord.y !== 0 &&
+            coord.y !== (state.getHeight() - 1))
+        {
+            return MGPValidation.failure(QuixoFailure.NO_INSIDE_CLICK());
+        }
+        return MGPValidation.SUCCESS;
+    }
+
+    private assertDirectionValidity(move: QuixoMove, state: QuixoState): void {
+        const x: number = move.coord.x;
+        const y: number = move.coord.y;
+        const direction: Orthogonal = move.direction;
+        Utils.assert(x !== (state.getWidth() - 1) || direction !== Orthogonal.RIGHT,
+                     `Invalid direction: pawn on the right side can't be moved to the right.`);
+        Utils.assert(y !== (state.getHeight() - 1) || direction !== Orthogonal.DOWN,
+                     `Invalid direction: pawn on the bottom side can't be moved down.`);
+        Utils.assert(x !== 0 || direction !== Orthogonal.LEFT,
+                     `Invalid direction: pawn on the left side can't be moved to the left.`);
+        Utils.assert(y !== 0 || direction !== Orthogonal.UP,
+                     `Invalid direction: pawn on the top side can't be moved up.`);
+    }
+
     public applyLegalMove(move: QuixoMove, state: QuixoState, _info: void): QuixoState {
         return state.applyLegalMove(move);
     }
+
     public isLegal(move: QuixoMove, state: QuixoState): MGPValidation {
+        const coordValidity: MGPValidation = this.isValidCoord(state, move.coord);
+        if (coordValidity.isFailure()) {
+            return coordValidity;
+        }
+        this.assertDirectionValidity(move, state);
         if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
             return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         } else {
             return MGPValidation.SUCCESS;
         }
     }
+
     public getGameStatus(node: QuixoNode): GameStatus {
         const state: QuixoState = node.gameState;
         const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
@@ -123,4 +174,5 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
             return GameStatus.getVictory(state.getCurrentPlayer());
         }
     }
+
 }

@@ -132,7 +132,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
         const distributionResult: MancalaDistributionResult =
             await this.showSimpleDistribution(MancalaDistribution.of(x));
-        if (distributionResult.endsUpInKalah) {
+        if (distributionResult.endsUpInStore) {
             const player: Player = this.constructedState.getCurrentPlayer();
             if (MancalaRules.isStarving(player, distributionResult.resultingState.board)) {
                 // Player has no more seed to distribute
@@ -164,7 +164,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         const scores: [number, number] = state.getScoresCopy();
         resultingBoard[coord.y][coord.x] = 0;
         // Changing immediately the chosen house
-        this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores, state.seedByHouse));
+        this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores, state.config));
         await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
         while (seedsInHand > 0) {
             const nextCoord: MGPOptional<Coord> = this.rules.getNextCoord(coord, player, currentDropIsStore, state);
@@ -183,7 +183,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
                     seedsInHand--; // drop in this space a piece we have in hand
                 }
             }
-            this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores, state.seedByHouse));
+            this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores, state.config));
             await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
         }
     }

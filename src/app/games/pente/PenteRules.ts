@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { GobanConfig, gobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
@@ -20,7 +20,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
     public static readonly PENTE_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 5);
 
-    public static readonly DEFAULT_CONFIG: GobanConfig = gobanConfig;
+    public static readonly DEFAULT_CONFIG: GobanConfig = defaultGobanConfig;
 
     private static singleton: MGPOptional<PenteRules> = MGPOptional.empty();
 
@@ -31,7 +31,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         return PenteRules.singleton.get();
     }
     private constructor() {
-        super(PenteState, gobanConfig);
+        super(PenteState, defaultGobanConfig);
     }
 
     public isLegal(move: PenteMove, state: PenteState): MGPValidation {

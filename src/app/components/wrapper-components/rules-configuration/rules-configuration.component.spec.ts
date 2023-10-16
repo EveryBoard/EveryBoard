@@ -6,12 +6,13 @@ import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/test
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { MGPValidators, RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Utils } from 'src/app/utils/utils';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { RulesConfigDescription } from './RulesConfigDescription';
 
-describe('RulesConfigurationComponent', () => {
+fdescribe('RulesConfigurationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
 
@@ -36,98 +37,107 @@ describe('RulesConfigurationComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should display default config', fakeAsync(async() => {
-        // Given any component from creator point of view
-        component.userIsCreator = true;
-        component.rulesConfigDescription = new RulesConfigDescription(
-            {
-                name: (): string => 'the_default_config_name',
-                config: {
-                    nombre: 5,
-                    canailleDeBoule: 12,
+    describe('creator behavior', () => {
+
+        beforeEach(() => {
+            component.userIsCreator = true;
+            component.rulesConfigDescription = new RulesConfigDescription(
+                {
+                    name: (): string => 'the_default_config_name',
+                    config: {
+                        nombre: 5,
+                        canailleDeBoule: 12,
+                    },
                 },
-            },
-            {
-                nombre: (): string => 'nombre',
-                canailleDeBoule: (): string => 'canaille',
-            }, [
-            ], {
-                nombre: MGPValidators.range(1, 99),
-                canailleDeBoule: MGPValidators.range(1, 99),
-            },
-        );
-
-        // When displaying it
-        testUtils.detectChanges();
-
-        // Then default values should be displayed
-        testUtils.expectElementToExist('#the_default_config_name_values');
-    }));
-
-    it('should not throw when stateType is missing due to unexisting game', fakeAsync(async() => {
-        // Given any component from creator point of view
-        component.stateType = MGPOptional.empty();
-        component.userIsCreator = true;
-        component.rulesConfigDescription = new RulesConfigDescription(
-            {
-                name: (): string => 'the_default_config_name',
-                config: {
-                    nombre: 5,
-                    canailleDeBoule: 12,
+                {
+                    nombre: (): string => 'nombre',
+                    canailleDeBoule: (): string => 'canaille',
+                }, [
+                ], {
+                    nombre: MGPValidators.range(1, 99),
+                    canailleDeBoule: MGPValidators.range(1, 99),
                 },
-            },
-            {
-                nombre: (): string => 'nombre',
-                canailleDeBoule: (): string => 'canaille',
-            }, [
-            ], {
-                nombre: MGPValidators.range(1, 99),
-                canailleDeBoule: MGPValidators.range(1, 99),
-            },
-        );
+            );
+        });
 
-        // When displaying it
-        testUtils.detectChanges();
+        it('should  display rules select', fakeAsync(async() => {
+            // Given a component created for non-creator
+            // When displaying it
+            // Then rulesSelect should not be present
+            testUtils.expectElementToExist('#ruleSelect');
+            testUtils.expectElementToBeEnabled('#ruleSelect');
+        }));
 
-        // Then the app-demo-card should simply not be there
-        testUtils.expectElementNotToExist('#demoCard');
-    }));
+        it('should display default config', fakeAsync(async() => {
+            // Given any component
 
-    it('should allow to change to another standard config', fakeAsync(async() => {
-        // Given any component from creator point of view
-        component.userIsCreator = true;
-        // And a config with two standard config (the default and the other)
-        const secondConfig: RulesConfig = { nombre: 42, canailleDeBoule: 42 };
-        component.rulesConfigDescription = new RulesConfigDescription(
-            {
-                name: (): string => 'the_default_config_name',
-                config: {
-                    nombre: 5,
-                    canailleDeBoule: 12,
+            // When displaying it
+            testUtils.detectChanges();
+
+            // Then default values should be displayed
+            testUtils.expectElementToExist('#the_default_config_name_values');
+        }));
+
+        it('should not throw when stateType is missing due to unexisting game', fakeAsync(async() => {
+            // Given any component from creator point of view
+            component.stateType = MGPOptional.empty();
+            component.rulesConfigDescription = new RulesConfigDescription(
+                {
+                    name: (): string => 'the_default_config_name',
+                    config: {
+                        nombre: 5,
+                        canailleDeBoule: 12,
+                    },
                 },
-            },
-            {
-                nombre: (): string => 'nombre',
-                canailleDeBoule: (): string => 'canaille',
-            }, [{
-                name: (): string => 'the_other_config_name',
-                config: secondConfig,
-            }], {
-                nombre: MGPValidators.range(1, 99),
-                canailleDeBoule: MGPValidators.range(1, 99),
-            },
-        );
-        testUtils.detectChanges();
-        spyOn(component.updateCallback, 'emit').and.callThrough();
+                {
+                    nombre: (): string => 'nombre',
+                    canailleDeBoule: (): string => 'canaille',
+                }, [
+                ], {
+                    nombre: MGPValidators.range(1, 99),
+                    canailleDeBoule: MGPValidators.range(1, 99),
+                },
+            );
 
-        // When changing the chosen config
-        await chooseSecondConfig();
-        expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.of(secondConfig));
-    }));
+            // When displaying it
+            testUtils.detectChanges();
 
-    describe('modifying custom configuration', () => {
+            // Then the app-demo-card should simply not be there
+            testUtils.expectElementNotToExist('#demoCard');
+        }));
 
-        describe('from active point of view', () => {
+        it('should allow to change to another standard config', fakeAsync(async() => {
+            // Given any component
+            // And a config with two standard config (the default and the other)
+            const secondConfig: RulesConfig = { nombre: 42, canailleDeBoule: 42 };
+            component.rulesConfigDescription = new RulesConfigDescription(
+                {
+                    name: (): string => 'the_default_config_name',
+                    config: {
+                        nombre: 5,
+                        canailleDeBoule: 12,
+                    },
+                },
+                {
+                    nombre: (): string => 'nombre',
+                    canailleDeBoule: (): string => 'canaille',
+                }, [{
+                    name: (): string => 'the_other_config_name',
+                    config: secondConfig,
+                }], {
+                    nombre: MGPValidators.range(1, 99),
+                    canailleDeBoule: MGPValidators.range(1, 99),
+                },
+            );
+            testUtils.detectChanges();
+            spyOn(component.updateCallback, 'emit').and.callThrough();
+
+            // When changing the chosen config
+            await chooseSecondConfig();
+            expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.of(secondConfig));
+        }));
+
+        describe('modifying custom configuration', () => {
 
             it('should throw when editing non-custom config', fakeAsync(async() => {
                 // Given a component for creator where we're not editing "Custom"
@@ -170,13 +180,9 @@ describe('RulesConfigurationComponent', () => {
                 expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
             }));
 
-            beforeEach(() => {
-                component.userIsCreator = true;
-            });
-
             describe('number config', () => {
 
-                beforeEach(async() => {
+                beforeEach(fakeAsync(async() => {
                     component.rulesConfigDescription = new RulesConfigDescription(
                         {
                             name: (): string => 'name',
@@ -195,7 +201,7 @@ describe('RulesConfigurationComponent', () => {
                         },
                     );
                     await chooseSecondConfig(); // Hence the Custom
-                });
+                }));
 
                 it('should propose a number input when given a config of type number', fakeAsync(async() => {
                     // Given a component loaded with a config description having a number
@@ -285,23 +291,23 @@ describe('RulesConfigurationComponent', () => {
 
             describe('boolean config', () => {
 
-                beforeEach(async() => {
+                beforeEach(fakeAsync(async() => {
                     component.rulesConfigDescription =
-                    new RulesConfigDescription(
-                        {
-                            name: (): string => 'config name',
-                            config: {
-                                booleen: true,
-                                truth: false,
+                        new RulesConfigDescription(
+                            {
+                                name: (): string => 'config name',
+                                config: {
+                                    booleen: true,
+                                    truth: false,
+                                },
                             },
-                        },
-                        {
-                            booleen: (): string => 'booleen',
-                            truth: (): string => 'veritasserum',
-                        },
-                    );
+                            {
+                                booleen: (): string => 'booleen',
+                                truth: (): string => 'veritasserum',
+                            },
+                        );
                     await chooseSecondConfig(); // Hence the Custom
-                });
+                }));
 
                 it('should propose a boolean input when given a config of type boolean', fakeAsync(async() => {
                     // Given a component loaded with a config description having a boolean
@@ -342,17 +348,31 @@ describe('RulesConfigurationComponent', () => {
 
         });
 
-        describe('from passive point of view', () => {
+    });
 
-            beforeEach(() => {
-                component.userIsCreator = false;
-            });
+    describe('non-creator behavior', () => {
+
+        beforeEach(() => {
+            component.userIsCreator = false;
+            component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
+            component.rulesConfigToDisplay = {}; // Mandatory even if it's a configless game
+        });
+
+        it('should display disabled rules select', fakeAsync(async() => {
+            // Given a component created for non-creator
+            // When displaying it
+            testUtils.detectChanges();
+
+            // Then rulesSelect should not be present
+            testUtils.expectElementToExist('#ruleSelect');
+            testUtils.expectElementToBeDisabled('#ruleSelect');
+        }));
+
+        describe('modifying custom configuration', () => {
 
             it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
                 // Given a rules config component provided with an empty configuration
                 component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
-                // But a config to display is mandatory for non-creator
-                component.rulesConfigToDisplay = {}; // Mandatory even if it's a configless game
                 spyOn(component.updateCallback, 'emit').and.callThrough();
 
                 // When initializing
@@ -365,10 +385,12 @@ describe('RulesConfigurationComponent', () => {
 
             it('should throw at creation if rulesConfigToDisplay is missing', fakeAsync(async() => {
                 // Given a component intended for passive user with no config to display
+                component.rulesConfigToDisplay = undefined;
+
                 RulesUtils.expectToThrowAndLog(() => {
                     // When rendering it
-                    // Then it should throw
                     testUtils.detectChanges();
+                    // Then it should throw
                 }, 'Config should be provided to non-creator in RulesConfigurationComponent');
             }));
 

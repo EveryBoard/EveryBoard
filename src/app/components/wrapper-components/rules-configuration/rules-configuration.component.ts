@@ -6,12 +6,12 @@ import { ConfigDescriptionType, RulesConfig } from 'src/app/jscaip/RulesConfigUt
 import { Utils } from 'src/app/utils/utils';
 import { BaseGameComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfigDescription } from '../../normal-component/pick-game/pick-game.component';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { RulesConfigDescription } from './RulesConfigDescription';
 
 type ConfigFormJSON = {
     [member: string]: FormControl<ConfigDescriptionType>;
@@ -66,7 +66,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
             const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
             this.setConfigDemo(configToDisplay);
         }
-        if (Object.keys(config).length === 0) {
+        if (this.isCustomisable() === false) {
             return this.updateCallback.emit(MGPOptional.of({}));
         }
     }
@@ -168,7 +168,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         const value: ConfigDescriptionType = config[field];
         if (typeof value === 'number') {
             const fieldValue: number = this.rulesConfigForm.controls[field].value;
-            const validity: MGPValidation = this.rulesConfigDescription.validator[field](fieldValue);
+            const validity: MGPValidation = this.rulesConfigDescription.getValidator(field)(fieldValue);
             return validity.isSuccess();
         } else {
             Utils.expectToBe(typeof value, 'boolean');
@@ -179,7 +179,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
 
     public getErrorMessage(field: string): string {
         const fieldValue: number | null = this.rulesConfigForm.controls[field].value;
-        const validity: MGPValidation = this.rulesConfigDescription.validator[field](fieldValue);
+        const validity: MGPValidation = this.rulesConfigDescription.getValidator(field)(fieldValue);
         return validity.getReason();
     }
 
@@ -207,6 +207,11 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
             }
         }
         this.setConfigDemo(config);
+    }
+
+    public isCustomisable(): boolean {
+        const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
+        return Object.keys(config).length > 0;
     }
 
 }

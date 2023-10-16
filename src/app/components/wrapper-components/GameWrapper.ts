@@ -4,7 +4,7 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
-import { GameInfo, RulesConfigDescription } from '../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent, BaseGameComponent } from '../game-components/game-component/GameComponent';
@@ -13,6 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Comparable } from 'src/app/utils/Comparable';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
 
 export class GameWrapperMessages {
 

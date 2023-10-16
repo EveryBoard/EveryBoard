@@ -39,7 +39,7 @@ export class ReversiTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Capture (2/2)`,
             $localize`A move can also capture a bigger line, and more than one line at a time<br/><br/>
-        You're playing light here. Play on the bottom left to see a capture.`,
+        You're playing Light here. Play on the bottom left to see a capture.`,
             new ReversiState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],

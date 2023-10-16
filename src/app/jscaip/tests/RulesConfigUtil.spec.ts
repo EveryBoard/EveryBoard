@@ -2,7 +2,8 @@
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { RulesUtils } from './RulesUtils.spec';
-import { MGPValidator, MGPValidators, RulesConfigDescription } from 'src/app/components/normal-component/pick-game/pick-game.component';
+import { MGPValidator, MGPValidators } from 'src/app/utils/MGPValidator';
+import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 describe('RulesConfigUtil', () => {
 
@@ -17,7 +18,7 @@ describe('RulesConfigUtil', () => {
             name: () => 'default',
         };
 
-        const translations: Record<string, Localized> = {
+        const translations: { [name in keyof MaConfig]: Localized } = { // This is the expected type of translations
             helaRosee: () => 'yéssoui idizwitenne!',
         };
 
@@ -25,7 +26,7 @@ describe('RulesConfigUtil', () => {
             helaRosee: MGPValidators.range(1, 99),
         };
 
-        it('should have at leat one default standard RulesConfig', () => {
+        it('should have at least one default standard RulesConfig', () => {
             // Given any RulesConfigDescriptionClass
             const rcdc: RulesConfigDescription<MaConfig> =
                 new RulesConfigDescription(defaultConfig, translations, [], validators);
@@ -37,7 +38,7 @@ describe('RulesConfigUtil', () => {
             expect(anakin).toEqual(defaultConfig);
         });
 
-        it('should be possible to have other standards RulesConfig', () => {
+        it('should be possible to have other standard RulesConfig', () => {
             // Given any RulesConfigDescriptionClass
             const secondaryConfig: NamedRulesConfig<MaConfig> = {
                 config: { helaRosee: 7 },
@@ -53,7 +54,7 @@ describe('RulesConfigUtil', () => {
             expect(anakin).toEqual(defaultConfig);
         });
 
-        it('should throw when standard config are of different type', () => {
+        it('should throw when standard configs are of different type', () => {
             // Given any RulesConfigDescriptionClass
             interface MaConfigInterface extends RulesConfig {
                 helaRosee: number;
@@ -102,9 +103,12 @@ describe('RulesConfigUtil', () => {
             // Given any RulesConfigDescriptionClass
             // When trying to create the element
             // Then it should throw and log
+            const missingTranslation: { [name in keyof MaConfig]: Localized } =
+                {} as { [name in keyof MaConfig]: Localized };
+            // The casting allow to avoid the compilation error, but it is still broken
             RulesUtils.expectToThrowAndLog(() => {
-                new RulesConfigDescription(defaultConfig, {}, [], validators);
-            }, 'Field missing in translation!');
+                new RulesConfigDescription(defaultConfig, missingTranslation, [], validators);
+            }, `Field 'helaRosee' missing in translation!`);
         });
 
     });

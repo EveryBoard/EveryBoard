@@ -5,7 +5,7 @@ describe('MancalaDistribution', () => {
 
     describe('of', () => {
 
-        it('should throw when creating negative x indexes', () => {
+        it('should throw when creating negative x indices', () => {
             RulesUtils.expectToThrowAndLog(() => MancalaDistribution.of(-1),
                                            'MancalaDistribution should be a positive integer!');
         });
