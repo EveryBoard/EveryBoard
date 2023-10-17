@@ -16,6 +16,7 @@
     "e2e": "bash ./e2e/e2e.sh",
     "backend:protoc": "mkdir -p dist/out-tsc/backend && npx protoc -I=src/backend/protos/ --ts_out=src/backend/protos/ --ts_opt=unary_rpc_promise=true src/backend/protos/everyboard.proto",
     "backend:start": "npx ts-node ./src/backend/server",
+    "backend:dev-start": "npx nodemon --exec npx ts-node ./src/backend/server.ts",
     "backend:build": "tsc",
     "backend:test": "npm run backend:build && npx mocha -n es-module-specifier-resolution=node dist/out-tsc/backend/tests",
     "backend:ci": "npm run backend:protoc && npm run backend:test"
@@ -85,6 +86,7 @@
     "karma-jasmine-html-reporter": "^2.0.0",
     "mocha": "^10.2.0",
     "netlify-plugin-chromium": "^1.1.4",
+    "nodemon": "^3.0.1",
     "protractor": "^7.0.0",
     "sass": "^1.56.1",
     "typescript": "^4.8.4"
