@@ -46,3 +46,5 @@ Thumbs.db
 
 # Local Netlify folder
 .netlify
+/src/backend/protos/everyboard.ts
+/src/backend/protos/google/

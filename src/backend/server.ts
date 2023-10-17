@@ -49,7 +49,7 @@ var server = new grpc.Server();
 server.addService(EveryboardService.definition, new EveryboardService());
 
 console.log('STARTING')
-server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+server.bindAsync('0.0.0.0:8081', grpc.ServerCredentials.createInsecure(), () => {
     console.log('STARTING 2')
   server.start();
 });

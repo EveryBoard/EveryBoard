@@ -17,7 +17,7 @@
     "backend:protoc": "mkdir -p dist/out-tsc/backend && npx protoc -I=src/backend/protos/ --ts_out=src/backend/protos/ --ts_opt=unary_rpc_promise=true src/backend/protos/everyboard.proto",
     "backend:start": "npx ts-node ./src/backend/server",
     "backend:build": "tsc",
-      "backend:test": "npm run backend:build && npx mocha dist/out-tsc/backend/tests/server.spec.js",
+    "backend:test": "npm run backend:build && npx mocha -n es-module-specifier-resolution=node dist/out-tsc/backend/tests",
     "backend:ci": "npm run backend:protoc && npm run backend:test"
   },
   "private": true,
