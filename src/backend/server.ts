@@ -1,5 +1,4 @@
 import * as grpc from '@grpc/grpc-js';
-
 import { GameIdAndType, GameIdOrFailure, SuccessOrFailure, UnimplementedEveryboardService } from './protos/everyboard';
 
 
@@ -29,7 +28,7 @@ async function tryOrFail<X extends SuccessOrFailureBasedReply>(idToken: string, 
     return action().catch(catchError);
 }
 
-class EveryboardService extends UnimplementedEveryboardService {
+export class EveryboardService extends UnimplementedEveryboardService {
 
     public initializeGame(call: Call<GameIdAndType, SuccessOrFailure>,
                           callback: Reply<SuccessOrFailure>)
@@ -45,11 +44,3 @@ class EveryboardService extends UnimplementedEveryboardService {
 }
 
 
-var server = new grpc.Server();
-server.addService(EveryboardService.definition, new EveryboardService());
-
-console.log('STARTING')
-server.bindAsync('0.0.0.0:8081', grpc.ServerCredentials.createInsecure(), () => {
-    console.log('STARTING 2')
-  server.start();
-});
