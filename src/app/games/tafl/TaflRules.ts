@@ -26,10 +26,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                           public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
         super(stateType, config);
-        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL');
+        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL');// TODO FOR REVIEW: on kill ça ?
     }
     public isLegal(move: TaflMove, state: S): MGPValidation {
-        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL');
+        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL');// TODO FOR REVIEW: on kill ça ?
 
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
@@ -52,7 +52,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         if (this.isThrone(state, move.getEnd())) {
             if (state.getPieceAt(move.getStart()).isKing()) {
-                if (state.isCentralThrone(move.getEnd()) && this.config.castleIsLeftForGood) {
+                if (state.isCentralThrone(move.getEnd()) && state.config.castleIsLeftForGood) {
                     return MGPValidation.failure(TaflFailure.THRONE_IS_LEFT_FOR_GOOD());
                 }
             } else {
@@ -164,7 +164,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     {
         let nbInvaders: number = (left === RelativePlayer.PLAYER ? 1 : 0);
         nbInvaders += (right === RelativePlayer.PLAYER ? 1 : 0);
-        if (nbInvaders === 2 && this.config.borderCanSurroundKing) { // 2
+        if (nbInvaders === 2 && this.config.edgesAreKingsEnnemy) { // 2
             // king captured by 3 invaders against 1 border
             return MGPOptional.of(kingCoord);
         }
@@ -278,7 +278,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                 board[captured.get().y][captured.get().x] = TaflPawn.UNOCCUPIED;
             }
         }
-        return state.of(board, turn + 1);
+        return state.of(board, turn + 1, state.config);
     }
     public getGameStatus(node: TaflNode<M, S>): GameStatus {
         const state: S = node.gameState as S;

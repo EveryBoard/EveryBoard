@@ -9,12 +9,12 @@ export class MyTaflNode extends TaflNode<MyTaflMove, MyTaflState> {}
 
 export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
 
-    public static readonly DEFAULT: TaflConfig = {
+    public static readonly DEFAULT_CONFIG: TaflConfig = {
         castleIsLeftForGood: true,
         invaderStarts: true,
         kingFarFromHomeCanBeSandwiched: true,
         centralThroneCanSurroundKing: true,
-        borderCanSurroundKing: true,
+        edgesAreKingsEnnemy: true,
     };
 
     private static singleton: MGPOptional<MyTaflRules> = MGPOptional.empty();
@@ -26,6 +26,6 @@ export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
         return MyTaflRules.singleton.get();
     }
     private constructor() {
-        super(MyTaflState, MyTaflRules.DEFAULT, MyTaflMove.from);
+        super(MyTaflState, MyTaflRules.DEFAULT_CONFIG, MyTaflMove.from);
     }
 }

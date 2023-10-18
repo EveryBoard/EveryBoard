@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Type
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { ConfigDescriptionType, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { ConfigDescriptionType, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { BaseGameComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -43,7 +43,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
 
     public gameName: string; // Instanciated onInit
 
-    private chosenConfig: string = '';
+    private chosenConfigName: string = '';
 
     public constructor(activatedRoute: ActivatedRoute,
                        private readonly cdr: ChangeDetectorRef)
@@ -51,17 +51,17 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         super(activatedRoute);
     }
 
-    public getChosenConfig(): string {
-        return this.chosenConfig;
+    public getChosenConfigName(): string {
+        return this.chosenConfigName;
     }
 
     public ngOnInit(): void {
         this.assertParamsAreCoherent();
         this.gameName = this.getGameName();
-        const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
-        this.setChosenConfig(this.rulesConfigDescription.getDefaultConfig().name(), false);
+        const defaultConfig: NamedRulesConfig = this.rulesConfigDescription.getDefaultConfig();
+        this.setChosenConfig(defaultConfig.name(), false);
         if (this.userIsCreator) {
-            this.setConfigDemo(config);
+            this.setConfigDemo(defaultConfig.config);
         } else {
             const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
             this.setConfigDemo(configToDisplay);
@@ -131,7 +131,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     public onUpdate(): void {
         if (this.userIsCreator === false) {
             ErrorLoggerService.logError('RulesConfiguration', 'Only creator should be able to modify rules config');
-        } else if (this.chosenConfig !== 'Custom') {
+        } else if (this.chosenConfigName !== 'Custom') {
             ErrorLoggerService.logError('RulesConfiguration', 'Only Customifiable config should be modified!');
         } else {
             const rulesConfig: RulesConfig = {};
@@ -194,13 +194,13 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     private setChosenConfig(configName: string, emit: boolean = true): void {
-        this.chosenConfig = configName;
+        this.chosenConfigName = configName;
         let config: RulesConfig;
-        if (this.chosenConfig === 'Custom') {
+        if (this.chosenConfigName === 'Custom') {
             config = this.rulesConfigDescription.getDefaultConfig().config;
             this.generateForm(config, this.userIsCreator);
         } else {
-            config = this.rulesConfigDescription.getConfig(this.chosenConfig);
+            config = this.rulesConfigDescription.getConfig(this.chosenConfigName);
             this.generateForm(config, false);
             if (emit) {
                 this.updateCallback.emit(MGPOptional.of(config)); // As standard config are always legal

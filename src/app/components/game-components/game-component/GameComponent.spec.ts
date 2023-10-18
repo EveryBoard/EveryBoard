@@ -23,6 +23,7 @@ describe('GameComponent', () => {
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(fakeAsync(async() => {
+        console.log('before each eh')
         await TestUtils.configureTestingModuleForGame(activatedRouteStub);
     }));
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {

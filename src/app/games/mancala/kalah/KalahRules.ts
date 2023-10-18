@@ -6,7 +6,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MancalaDistribution } from '../common/MancalaMove';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaFailure } from '../common/MancalaFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MancalaConfig } from '../common/MancalaConfig';
@@ -116,7 +116,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
                 // We can capture
                 const board: number[][] = distributedState.getCopiedBoard();
                 const capturedSum: number = board[0][landingSpace.x] + board[1][landingSpace.x];
-                const captureMap: number[][] = ArrayUtils.createTable(distributedState.board[0].length, 2, 0);
+                const captureMap: number[][] = TableUtils.create(distributedState.board[0].length, 2, 0);
                 captureMap[0][landingSpace.x] = board[0][landingSpace.x];
                 captureMap[1][landingSpace.x] = board[1][landingSpace.x];
                 board[0][landingSpace.x] = 0;

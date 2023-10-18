@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { DvonnPieceStack } from './DvonnPieceStack';
 
 export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
@@ -65,7 +65,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         return occupiedNeighbors.length;
     }
     public setAtUnsafe(coord: Coord, value: DvonnPieceStack): this {
-        const newBoard: DvonnPieceStack[][] = ArrayUtils.copyBiArray(this.board);
+        const newBoard: DvonnPieceStack[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = value;
         return new DvonnState(newBoard, this.turn, this.alreadyPassed) as this;
     }

@@ -3,7 +3,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { GoComponent } from '../go.component';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -55,7 +55,7 @@ describe('GoComponent', () => {
 
         it('should be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
-            const board: Table<GoPiece> = ArrayUtils.createTable(19, 19, GoPiece.EMPTY);
+            const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
@@ -74,7 +74,7 @@ describe('GoComponent', () => {
 
         it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
-            const board: Table<GoPiece> = ArrayUtils.createTable(13, 13, GoPiece.EMPTY);
+            const board: Table<GoPiece> = TableUtils.create(13, 13, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
@@ -94,7 +94,7 @@ describe('GoComponent', () => {
 
         it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
-            const board: Table<GoPiece> = ArrayUtils.createTable(9, 9, GoPiece.EMPTY);
+            const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
@@ -114,7 +114,7 @@ describe('GoComponent', () => {
 
         it('should have a tengen when board has an odd width and height', fakeAsync(async() => {
             // Given a (odd x odd) board
-            const board: Table<GoPiece> = ArrayUtils.createTable(9, 9, GoPiece.EMPTY);
+            const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
@@ -126,7 +126,7 @@ describe('GoComponent', () => {
 
         it('should not have a tengen when board has an even width and height', fakeAsync(async() => {
             // Given a (even x even) board
-            const board: Table<GoPiece> = ArrayUtils.createTable(10, 10, GoPiece.EMPTY);
+            const board: Table<GoPiece> = TableUtils.create(10, 10, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it

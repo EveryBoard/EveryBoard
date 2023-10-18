@@ -51,8 +51,7 @@ export class Debug {
     }
     private static getStringified(o: object): string {
         try {
-            const str: string = JSON.stringify(o);
-            return str;
+            return JSON.stringify(o); // TODO FOR REVIEW ANSWER: the mocks of DB I believe
         } catch (e) {
             return 'recursive and not stringifiable!';
         }
@@ -117,6 +116,7 @@ export class Debug {
 
 // This makes Debug.enableLog accessible in the console
 // To use it, one just has to do window.enableLog([true, true], 'SomeClass, 'someMethod')
+// eslint-disable-next-line dot-notation
 window['enableLog'] = Debug.enableLog;
 
 export class Utils {
@@ -129,6 +129,7 @@ export class Utils {
             throw new Error(`A default switch case did not observe the correct value, expected ${expected}, but got ${value} instead.`);
         }
     }
+
     public static expectToBeMultiple<T>(value: T, expectedValues: T[]): void {
         let found: boolean = false;
         for (const expected of expectedValues) {
@@ -141,6 +142,7 @@ export class Utils {
             throw new Error(`A default switch case did not observe the correct value, expected a value among ${expectedValues}, but got ${value} instead.`);
         }
     }
+
     public static getNonNullable<T>(value : T | null | undefined): T {
         if (value == null) {
             throw new Error(`Expected value not to be null or undefined, but it was.`);
@@ -148,6 +150,7 @@ export class Utils {
             return value;
         }
     }
+
     public static assert(condition: boolean, message: string): void {
         if (condition === false) {
             // We log the error but we also throw an exception
@@ -158,7 +161,9 @@ export class Utils {
             throw new Error(`Assertion failure: ${message}`);
         }
     }
+
     public static identity<T>(thing: T): T {
         return thing;
     }
+
 }

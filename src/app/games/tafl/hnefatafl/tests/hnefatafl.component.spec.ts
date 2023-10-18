@@ -23,7 +23,7 @@ const stateReadyForCapture: HnefataflState = new HnefataflState([
     [_, _, _, _, _, _, _, _, _, _, _],
     [_, _, _, _, _, _, _, _, _, _, _],
     [_, _, _, _, _, _, _, _, _, _, _],
-], 1);
+], 1, HnefataflRules.DEFAULT_CONFIG);
 
 const hnefataflEntries: TaflTestEntries<HnefataflComponent, HnefataflRules, HnefataflMove, HnefataflState> = {
     gameName: 'Hnefatafl',

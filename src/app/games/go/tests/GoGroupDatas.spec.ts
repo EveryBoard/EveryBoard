@@ -5,6 +5,7 @@ import { GoGroupDatas } from 'src/app/games/go/GoGroupsDatas';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('GoGroupDatas', () => {
 
@@ -21,7 +22,10 @@ describe('GoGroupDatas', () => {
                                                      [coord, coord],
                                                      [],
                                                      []);
-        expect(() => group.getWrapper()).toThrowError(`Can't call getWrapper on non-mono-wrapped group`);
+        RulesUtils.expectToThrowAndLog(
+            () => group.getWrapper(),
+            `Can't call getWrapper on non-mono-wrapped group`,
+        );
     });
     it('should throw when addPawn is called two times with the same coord', fakeAsync(() => {
         // Given any GoGroupDatas containing "coord" already

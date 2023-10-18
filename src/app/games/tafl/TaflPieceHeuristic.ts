@@ -12,11 +12,6 @@ export class TaflPieceHeuristic<M extends TaflMove, S extends TaflState> extends
 
     public getMetrics(node: TaflNode<M, S>): [number, number] {
         const state: S = node.gameState;
-        // 1. has the king escaped ?
-        // 2. is the king captured ?
-        // 3. is one player immobilized ?
-        // 4. let's just for now just count the pawns
-
         const nbPlayerZeroPawns: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
         const invader: Player = this.rules.getInvader();

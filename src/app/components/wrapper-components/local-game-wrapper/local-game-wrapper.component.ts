@@ -20,6 +20,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { AbstractAI, AIOptions, AIStats } from 'src/app/jscaip/AI';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -36,7 +37,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public playerSelection: [string, string] = ['human', 'human'];
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
-
 
     public displayAIMetrics: boolean = false;
 
@@ -92,18 +92,18 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public async updatePlayer(player: Player): Promise<void> {
         this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
         if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
+            this.gameComponent.setInteractive(false);
             await this.setRole(Player.ONE);
         } else {
+            this.gameComponent.setInteractive(true);
             await this.setRole(Player.ZERO);
         }
-        this.proposeAIToPlay();
+        await this.proposeAIToPlay();
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
-        await this.updateBoard(false);
-        this.proposeAIToPlay();
-        this.cdr.detectChanges();
+        await this.proposeAIToPlay();
     }
 
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
@@ -132,22 +132,37 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    public proposeAIToPlay(): void {
-        // check if ai's turn has come, if so, make her start after a delay
-        const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
-        if (playingAI.isPresent()) {
-            // bot's turn
-            window.setTimeout(async() => {
-                await this.doAIMove(playingAI.get().ai, playingAI.get().options);
-            }, LocalGameWrapperComponent.AI_TIMEOUT);
+    public async proposeAIToPlay(): Promise<void> {
+        if (this.hasSelectedAI()) {
+            // It is AI's turn, let it play after a small delay
+            this.gameComponent.setInteractive(false);
+            await this.updateBoard(false);
+            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
+            if (playingAI.isPresent()) {
+                window.setTimeout(async() => {
+                    await this.doAIMove(playingAI.get().ai, playingAI.get().options);
+                }, LocalGameWrapperComponent.AI_TIMEOUT);
+            }
+            // If playingAI is absent, that means the user selected an AI without selecting options yet
+            // We do nothing in this case.
+        } else {
+            this.gameComponent.setInteractive(true);
+            await this.updateBoard(false);
+            this.cdr.detectChanges();
         }
     }
 
-    private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+    private hasSelectedAI(): boolean {
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.node).isEndGame) {
             // No AI is playing when the game is finished
-            return MGPOptional.empty();
+            return false;
         }
+
+        const playerIndex: number = this.gameComponent.getTurn() % 2;
+        return this.playerSelection[playerIndex] !== 'human';
+    }
+
+    private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
         const playerIndex: number = this.gameComponent.getTurn() % 2;
         const aiOpt: MGPOptional<AbstractAI> = this.findAI(playerIndex);
         if (aiOpt.isPresent()) {
@@ -188,12 +203,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
         assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
         const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options);
-        const nextNode: MGPOptional<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
-        if (nextNode.isPresent()) {
+        const nextNode: MGPFallible<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
+        if (nextNode.isSuccess()) {
             this.gameComponent.node = nextNode.get();
             await this.updateBoard(true);
             this.cdr.detectChanges();
-            this.proposeAIToPlay();
+            await this.proposeAIToPlay();
             return MGPValidation.SUCCESS;
         } else {
             this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
@@ -201,6 +216,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 game: this.getGameName(),
                 name: playingAI.name,
                 move: aiMove.toString(),
+                reason: nextNode.getReason(),
             });
         }
     }
@@ -240,7 +256,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.gameComponent.updateBoard(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
-        this.proposeAIToPlay();
+        await this.proposeAIToPlay();
     }
 
     public override getPlayer(): string {

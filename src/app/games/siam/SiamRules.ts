@@ -10,7 +10,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { SiamFailure } from './SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -144,7 +144,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, RulesConfig, SiamLegal
         return MGPFallible.success(new SiamLegalityInformation(resultingBoard, [coord]));
     }
     public applyLegalMove(_move: SiamMove, state: SiamState, info: SiamLegalityInformation): SiamState {
-        const newBoard: Table<SiamPiece> = ArrayUtils.copyBiArray(info.resultingBoard);
+        const newBoard: Table<SiamPiece> = TableUtils.copy(info.resultingBoard);
         const newTurn: number = state.turn + 1;
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPSet } from '../MGPSet';
+import { MGPOptional } from '../MGPOptional';
 
 describe('MGPSet', () => {
 
@@ -8,23 +9,29 @@ describe('MGPSet', () => {
         const set: MGPSet<number> = new MGPSet<number>();
         expect(set.size()).toBe(0);
     });
+
     describe('equals', () => {
+
         it('should test size', () => {
             const one: MGPSet<string> = new MGPSet(['salut']);
             const two: MGPSet<string> = new MGPSet(['salut', 'kutentak']);
             expect(one.equals(two)).toBeFalse();
         });
+
         it('should not care about order', () => {
             const one: MGPSet<string> = new MGPSet(['un', 'deux']);
             const two: MGPSet<string> = new MGPSet(['deux', 'un']);
             expect(one.equals(two)).toBeTrue();
         });
+
         it('should detect inequality', () => {
             const one: MGPSet<string> = new MGPSet(['un', 'deux']);
             const two: MGPSet<string> = new MGPSet(['deux', 'trois']);
             expect(one.equals(two)).toBeFalse();
         });
+
     });
+
     describe('toString', () => {
         it('should work as expected', () => {
             const a: Coord = new Coord(0, 0);
@@ -37,6 +44,7 @@ describe('MGPSet', () => {
             expect(set.toString()).toBe('[null]');
         });
     });
+
     describe('toList', () => {
         it('should provide a copy of the set and disallow set modifications', () => {
             const originalData: Coord[] = [new Coord(0, 0), new Coord(1, 1)];
@@ -50,6 +58,7 @@ describe('MGPSet', () => {
             expect(copiedData).toEqual(originalData);
         });
     });
+
     describe('add', () => {
         it('should not add duplicate elements, and return false instead', () => {
             const set: MGPSet<Coord> = new MGPSet([new Coord(0, 0), new Coord(1, 1)]);
@@ -57,6 +66,7 @@ describe('MGPSet', () => {
             expect(set.add(new Coord(0, 0))).toBeFalse();
         });
     });
+
     describe('getAnyElement', () => {
         it('should return an element from the set', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);
@@ -68,6 +78,7 @@ describe('MGPSet', () => {
             expect(emptySet.getAnyElement().isAbsent()).toBeTrue();
         });
     });
+
     describe('isEmpty', () => {
         it('should return true for the empty set', () => {
             const set: MGPSet<number> = new MGPSet();
@@ -78,6 +89,7 @@ describe('MGPSet', () => {
             expect(set.isEmpty()).toBeFalse();
         });
     });
+
     describe('remove', () => {
         it('should remove element from the set and return true', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);
@@ -90,6 +102,7 @@ describe('MGPSet', () => {
             expect(set.equals(new MGPSet([1, 2]))).toBeTrue();
         });
     });
+
     describe('map', () => {
         it('should iterate over the elements of the set', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);
@@ -99,6 +112,7 @@ describe('MGPSet', () => {
             expect(set.map(increment).equals(new MGPSet([2, 3]))).toBeTrue();
         });
     });
+
     describe('flatMap', () => {
         it('should iterate over the elements of the set, and then flatten it again', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);
@@ -107,5 +121,33 @@ describe('MGPSet', () => {
             }
             expect(set.flatMap(makeTwo).equals(new MGPSet([1, 2, 3]))).toBeTrue();
         });
+    });
+
+    describe('getMissingElement', () => {
+
+        it('should return first element missing', () => {
+            // Given two set, one with one element, the other empty
+            const fullSet: MGPSet<number> = new MGPSet([0]);
+            const emptySet: MGPSet<number> = new MGPSet([]);
+
+            // When calling getMissingElement on the empty one
+            const missingElement: MGPOptional<number> = emptySet.getMissingElement(fullSet);
+
+            // Then it should appear than the empty set miss one element
+            expect(missingElement).toEqual(MGPOptional.of(0));
+        });
+
+        it('should return empty when nothing is missing', () => {
+            // Given two set, one with one element, the other empty
+            const fullSet: MGPSet<number> = new MGPSet([0]);
+            const emptySet: MGPSet<number> = new MGPSet([]);
+
+            // When calling getMissingElement on the full one
+            const missingElement: MGPOptional<number> = fullSet.getMissingElement(emptySet);
+
+            // Then it should appear than the full set miss nothing
+            expect(missingElement).toEqual(MGPOptional.empty());
+        });
+
     });
 });

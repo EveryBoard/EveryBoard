@@ -19,7 +19,7 @@ export class GameNodeStats {
  * As an extra, a node may contain cached values used by AIs.
  */
 @Debug.log
-export class GameNode<M extends Move, S extends GameState, C extends RulesConfig = RulesConfig> {
+export class GameNode<M extends Move, S extends GameState> {
 
     public static ID: number = 0;
 
@@ -75,7 +75,7 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public printDot<L>(rules: Rules<M, S, C, L>,
+    public printDot<L>(rules: Rules<M, S, RulesConfig, L>,
                        labelFn?: (node: GameNode<M, S>) => string,
                        max?: number,
                        level: number = 0,

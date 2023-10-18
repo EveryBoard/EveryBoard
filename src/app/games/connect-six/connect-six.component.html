@@ -3,8 +3,8 @@
      [attr.viewBox]="getViewBox()"
      preserveAspectRatio="xMidYMid meet">
     <rect x="0" y="0"
-          [attr.width]="board.length * SPACE_SIZE"
-          [attr.height]="board.length * SPACE_SIZE"
+          [attr.width]="getState().getWidth() * SPACE_SIZE"
+          [attr.height]="getState().getHeight() * SPACE_SIZE"
           class="base mid-small-stroke"
     />
     <g *ngFor="let line of board; index as y">

@@ -19,7 +19,7 @@ const stateReadyForCapture: BrandhubState = new BrandhubState([
     [_, _, _, _, _, _, _],
     [_, _, _, _, _, _, _],
     [_, _, _, _, _, _, _],
-], 1);
+], 1, BrandhubRules.DEFAULT_CONFIG);
 
 const brandhubEntries: TaflTestEntries<BrandhubComponent, BrandhubRules, BrandhubMove, BrandhubState> = {
     gameName: 'Brandhub',

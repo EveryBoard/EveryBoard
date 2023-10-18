@@ -11,7 +11,6 @@ import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 
-
 @Component({
     selector: 'app-online-game-creation',
     template: '<p i18n>Creating online game, please wait, it should not take long.</p>',

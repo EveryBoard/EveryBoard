@@ -14,7 +14,6 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-
 export type ReversiLegalityInformation = Coord[];
 
 export class ReversiMoveWithSwitched {

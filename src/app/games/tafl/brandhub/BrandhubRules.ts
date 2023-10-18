@@ -13,7 +13,7 @@ export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
 
     public static readonly DEFAULT_CONFIG: TaflConfig = {
         castleIsLeftForGood: true,
-        borderCanSurroundKing: false,
+        edgesAreKingsEnnemy: false,
         centralThroneCanSurroundKing: true,
         kingFarFromHomeCanBeSandwiched: true,
         invaderStarts: true,

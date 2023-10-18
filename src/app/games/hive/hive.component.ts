@@ -10,7 +10,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ArrayUtils, Table2DWithPossibleNegativeIndices } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, TableWithPossibleNegativeIndices } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -33,7 +33,7 @@ interface GroundInfo {
     selected: boolean;
 }
 
-class Ground extends Table2DWithPossibleNegativeIndices<GroundInfo> {
+class Ground extends TableWithPossibleNegativeIndices<GroundInfo> {
     private highlighted: Coord[] = [];
 
     public initialize(coord: Coord): void {
@@ -69,7 +69,7 @@ interface SpaceInLayerInfo {
     strokeClasses: string[];
 }
 
-class Layer extends Table2DWithPossibleNegativeIndices<SpaceInLayerInfo> {
+class Layer extends TableWithPossibleNegativeIndices<SpaceInLayerInfo> {
     private highlighted: Coord[] = [];
 
     public initialize(coord: Coord, piece: HivePiece): void {
@@ -262,7 +262,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         const shift: number = this.getRemainingPieceShift(piece);
         const x: number = this.boardViewBox.center().x + shift * this.SPACE_SIZE * 4;
         let y: number;
-        if (piece.owner === this.role) {
+        if (piece.owner === this.getPointOfView()) {
             // Current player is below
             y = this.boardViewBox.bottom() + (this.SPACE_SIZE * 3);
         } else {

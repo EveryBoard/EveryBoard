@@ -1,19 +1,17 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
 import { TablutState } from '../TablutState';
+import { TablutRules } from '../TablutRules';
 
 describe('TablutState', () => {
     describe('getInitialState', () => {
         it('should make invader Player.ZERO when invaders start', () => {
             // Given an initial state with a config where invader starts
-            const rulesConfig: TaflConfig = {
-                borderCanSurroundKing: true, // Not revelant here
-                castleIsLeftForGood: true, // Not revelant here
-                centralThroneCanSurroundKing: true, // Not revelant here
-                kingFarFromHomeCanBeSandwiched: true, // Not revelant here
+            const config: TaflConfig = {
+                ...TablutRules.DEFAULT_CONFIG,
                 invaderStarts: true,
             };
-            const state: TablutState = TablutState.getInitialState(rulesConfig);
+            const state: TablutState = TablutState.getInitialState(config);
 
             // When checking the invaders coord
             // Then they should be of Player.ZERO
@@ -22,14 +20,11 @@ describe('TablutState', () => {
         });
         it('should make invader Player.ONE when invaders start is false', () => {
             // Given an initial state with a config where invader does not starts
-            const rulesConfig: TaflConfig = {
-                borderCanSurroundKing: true, // Not revelant here
-                castleIsLeftForGood: true, // Not revelant here
-                centralThroneCanSurroundKing: true, // Not revelant here
-                kingFarFromHomeCanBeSandwiched: true, // Not revelant here
+            const config: TaflConfig = {
+                ...TablutRules.DEFAULT_CONFIG,
                 invaderStarts: false,
             };
-            const state: TablutState = TablutState.getInitialState(rulesConfig);
+            const state: TablutState = TablutState.getInitialState(config);
 
             // When checking the invaders coord
             // Then they should be of Player.ONE

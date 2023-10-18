@@ -13,6 +13,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { QuixoFailure } from './QuixoFailure';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
@@ -37,7 +38,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
 
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(Utils.identity, 5); // TODO, not 5, Sorry CT-5555, fallen hero of the Clones
+        new NInARowHelper(Utils.identity, 5);
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();
@@ -78,17 +79,19 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         return possibleDirections;
     }
 
-    public static getLinesSums(state: QuixoState): {[player: number]: {[lineType: string]: number[]}} {
-        const sums: {[player: number]: {[lineType: string]: number[]}} = {};
+    public static getLinesSums(state: QuixoState): {[player: number]: {[lineType: string]: MGPMap<number, number>}} {
+        const sums: {[player: number]: {[lineType: string]: MGPMap<number, number>}} = {};
         sums[Player.ZERO.value] = {
-            columns: [0, 0, 0, 0, 0],
-            rows: [0, 0, 0, 0, 0],
-            diagonals: [0, 0],
+            columns: new MGPMap<number, number>(),
+            rows: new MGPMap<number, number>(),
+            ascendingDiagonal: new MGPMap<number, number>(),
+            descendingDiagonal: new MGPMap<number, number>(),
         };
         sums[Player.ONE.value] = {
-            columns: [0, 0, 0, 0, 0],
-            rows: [0, 0, 0, 0, 0],
-            diagonals: [0, 0],
+            columns: new MGPMap<number, number>(),
+            rows: new MGPMap<number, number>(),
+            ascendingDiagonal: new MGPMap<number, number>(),
+            descendingDiagonal: new MGPMap<number, number>(),
         };
         for (const coordAndContent of state.getCoordsAndContents()) {
             const content: PlayerOrNone = coordAndContent.content;
@@ -96,11 +99,14 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
             const y: number = coordAndContent.coord.y;
             if (content.isPlayer()) {
                 const c: number = content.value;
-                sums[c].columns[x] = sums[c].columns[x] + 1;
-                sums[c].rows[y] = sums[c].rows[y] + 1;
-                if (x === y) sums[c].diagonals[0] = sums[c].diagonals[0] + 1;
-                if (x + y === (state.getWidth() - 1)) sums[c].diagonals[1] = sums[c].diagonals[1] + 1;
-                // TODO: check that diagonal are still correctly identified in rectangular board
+                const previousColumn: number = sums[c].columns.get(x).getOrElse(0);
+                sums[c].columns.put(x, previousColumn + 1);
+                const previousRow: number = sums[c].rows.get(y).getOrElse(0);
+                sums[c].rows.put(y, previousRow + 1);
+                const previousAscendingDiagonal: number = sums[c].ascendingDiagonal.get(x + y).getOrElse(0);
+                sums[c].ascendingDiagonal.put(x + y, previousAscendingDiagonal + 1);
+                const previousDescendingDiagonal: number = sums[c].descendingDiagonal.get(x - y).getOrElse(0);
+                sums[c].descendingDiagonal.put(x - y, previousDescendingDiagonal + 1);
             }
         }
         return sums;
@@ -110,10 +116,11 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         return QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
     }
 
-    public static getFullestLine(playersLinesInfo: {[lineType: string]: number[]}): number {
-        const linesScores: number[] = playersLinesInfo.columns.concat(
-            playersLinesInfo.rows.concat(
-                playersLinesInfo.diagonals));
+    public static getFullestLine(playerLinesInfo: {[lineType: string]: MGPMap<number, number>}): number {
+        let linesScores: number[] = playerLinesInfo.columns.listValues();
+        linesScores = linesScores.concat(playerLinesInfo.rows.listValues());
+        linesScores = linesScores.concat(playerLinesInfo.ascendingDiagonal.listValues());
+        linesScores = linesScores.concat(playerLinesInfo.descendingDiagonal.listValues());
         return Math.max(...linesScores);
     }
 

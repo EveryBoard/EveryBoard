@@ -9,7 +9,7 @@
                     selected>
                 {{ rulesConfigDescription.getDefaultConfig().name() }}
             </option>
-            <option *ngFor="let standardConfig of rulesConfigDescription.getNonDefaultConfigs()"
+            <option *ngFor="let standardConfig of rulesConfigDescription.getNonDefaultStandardConfigs()"
                     [value]="standardConfig.name()">
                 {{ standardConfig.name() }}
             </option>
@@ -20,7 +20,7 @@
     </div>
 
     <form [formGroup]="rulesConfigForm"
-          id="{{ getChosenConfig() }}_values">
+          id="{{ getChosenConfigName() }}_values">
         <fieldset>
             <div *ngFor="let configParameter of getFields()"
                  id="{{ configParameter }}_config"

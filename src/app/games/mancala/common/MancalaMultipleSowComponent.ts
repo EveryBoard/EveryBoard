@@ -3,7 +3,6 @@ import { MancalaMove } from './MancalaMove';
 import { MancalaRules } from './MancalaRules';
 import { MancalaComponent } from './MancalaComponent';
 
-
 export abstract class MancalaMultipleSowComponent<R extends MancalaRules<M>, M extends MancalaMove>
     extends MancalaComponent<R, M>
 {

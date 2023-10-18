@@ -23,7 +23,6 @@ describe('LascaPiece ', () => {
     });
 });
 
-
 describe('LascaState', () => {
     const zero: LascaPiece = LascaPiece.ZERO;
     const one: LascaPiece = LascaPiece.ONE;

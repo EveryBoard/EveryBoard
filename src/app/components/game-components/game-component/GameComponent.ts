@@ -7,7 +7,7 @@ import { Encoder } from 'src/app/utils/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
-import { Utils } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -56,6 +56,7 @@ export abstract class BaseGameComponent {
     template: '',
     styleUrls: ['./game-component.scss'],
 })
+@Debug.log
 export abstract class GameComponent<R extends Rules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
@@ -100,10 +101,29 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
-    public role: PlayerOrNone;
+    // This is where the player is seeing the board from.
+    private pointOfView: Player = Player.ZERO;
+
+    // This is true when the view is interactive, e.g., to display clickable pieces
+    protected isInteractive: boolean = false;
 
     public constructor(public readonly messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(activatedRoute);
+    }
+
+    public getPointOfView(): Player {
+        return this.pointOfView;
+    }
+
+    public setPointOfView(pointOfView: Player): void {
+        this.pointOfView = pointOfView;
+        if (this.hasAsymmetricBoard) {
+            this.rotation = 'rotate(' + (pointOfView.value * 180) + ')';
+        }
+    }
+
+    public setInteractive(interactive: boolean): void {
+        this.isInteractive = interactive;
     }
 
     public message(msg: string): void {
@@ -166,8 +186,13 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
         return;
     }
 
+    // protected getRulesConfigDescription(): RulesConfigDescription<C> {
+    //     return RulesConfigDescription.DEFAULT as RulesConfigDescription<C>;
+    // }
+
     protected setRuleAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName)[0];
+        // const defaultConfig: RulesConfig = this.getRulesConfigDescription().getDefaultConfig().config;
         const defaultConfig: RulesConfig = gameInfo.rulesConfigDescription.getDefaultConfig().config;
 
         this.rules = gameInfo.rules as R;

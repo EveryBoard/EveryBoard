@@ -5,7 +5,7 @@ import { P4State } from '../P4State';
 import { P4Move } from '../P4Move';
 import { P4Failure } from '../P4Failure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 describe('P4Rules', () => {
 
@@ -138,7 +138,7 @@ describe('P4Rules', () => {
             // Given a board without victory, whose turn is equal to width * height - 1
             const width: number = 5;
             const height: number = 5;
-            const board: Table<PlayerOrNone> = ArrayUtils.createTable(width, height, PlayerOrNone.NONE);
+            const board: Table<PlayerOrNone> = TableUtils.create(width, height, PlayerOrNone.NONE);
             const turn: number = width * height - 1; // The logic is based on the turn, it does not check the board
             const state: P4State = new P4State(board, turn);
 
@@ -146,7 +146,7 @@ describe('P4Rules', () => {
             const move: P4Move = P4Move.of(3);
 
             // Then the game should be a hard draw
-            const expectedBoard: PlayerOrNone[][] = ArrayUtils.createTable(width, height, PlayerOrNone.NONE);
+            const expectedBoard: PlayerOrNone[][] = TableUtils.create(width, height, PlayerOrNone.NONE);
             expectedBoard[height - 1][move.x] = Player.ofTurn(turn);
             const finalTurn: number = width * height;
             const expectedState: P4State = new P4State(expectedBoard, finalTurn);
@@ -159,7 +159,7 @@ describe('P4Rules', () => {
             // Given a board without victory, whose turn is equal to width * height - 1
             const width: number = 75;
             const height: number = 33;
-            const board: Table<PlayerOrNone> = ArrayUtils.createTable(width, height, PlayerOrNone.NONE);
+            const board: Table<PlayerOrNone> = TableUtils.create(width, height, PlayerOrNone.NONE);
             const turn: number = width * height - 1; // The logic is based on the turn, it does not check the board
             const state: P4State = new P4State(board, turn);
 
@@ -167,7 +167,7 @@ describe('P4Rules', () => {
             const move: P4Move = P4Move.of(3);
 
             // Then the game should be a hard draw
-            const expectedBoard: PlayerOrNone[][] = ArrayUtils.createTable(width, height, PlayerOrNone.NONE);
+            const expectedBoard: PlayerOrNone[][] = TableUtils.create(width, height, PlayerOrNone.NONE);
             expectedBoard[height - 1][move.x] = Player.ofTurn(turn);
             const finalTurn: number = width * height;
             const expectedState: P4State = new P4State(expectedBoard, finalTurn);

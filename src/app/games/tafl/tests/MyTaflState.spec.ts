@@ -3,10 +3,11 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
+import { TaflConfig } from '../TaflConfig';
 
 export class MyTaflState extends TaflState {
 
-    public static getInitialState(): MyTaflState {
+    public static getInitialState(config: TaflConfig): MyTaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
@@ -23,10 +24,10 @@ export class MyTaflState extends TaflState {
             [_, _, _, _, X, _, _, _, _],
         ];
 
-        return new MyTaflState(board, 0);
+        return new MyTaflState(board, 0, config);
     }
-    public of(board: Table<TaflPawn>, turn: number): this {
-        return new MyTaflState(board, turn) as this;
+    public of(board: Table<TaflPawn>, turn: number, config: TaflConfig): this {
+        return new MyTaflState(board, turn, config) as this;
     }
     public override isCentralThrone(coord: Coord): boolean {
         return coord.equals(new Coord(4, 3));

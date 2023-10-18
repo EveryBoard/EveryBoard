@@ -258,6 +258,27 @@ describe('QuixoRules', () => {
             expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
         });
 
+        it('should return victorious diagonal when rectangular board', () => {
+            // Given a rectangular board from a custom config
+            const board: Table<PlayerOrNone> = [
+                [_, _, O, _, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, _, _, O, _, _],
+                [_, _, _, _, _, O, _],
+                [_, _, _, _, _, _, O],
+            ];
+            const state: QuixoState = new QuixoState(board, 1);
+            const victoriousCoord: MGPSet<Coord> = new MGPSet(QuixoRules.getVictoriousCoords(state));
+            const expectedVictoriousCoord: MGPSet<Coord> = new MGPSet([
+                new Coord(2, 0),
+                new Coord(3, 1),
+                new Coord(4, 2),
+                new Coord(5, 3),
+                new Coord(6, 4),
+            ]);
+            expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
+        });
+
     });
 
 });

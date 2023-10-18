@@ -11,7 +11,6 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-
 describe('ReversiHeuristic', () => {
 
     let heuristic: ReversiHeuristic;

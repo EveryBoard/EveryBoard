@@ -134,7 +134,7 @@ describe('Debug', () => {
         });
     });
     describe('log annotation', () => {
-        it('should not bug when cyclicity stringification bug occur', () => {
+        it('should not crash when cyclicity stringification bug occur', () => {
             // Given a verbose-enabled method
             spyOn(console, 'log').and.returnValue();
             Debug.enableLog([false, true], 'MyClass', 'someCycliclyUnprintableObjectIsReturned');
@@ -142,7 +142,7 @@ describe('Debug', () => {
             const instance: MyClass = new MyClass();
             instance.someCycliclyUnprintableObjectIsReturned();
 
-            // Then it should not have throwed when trying to log recursive object
+            // Then it should not have thrown when trying to log recursive object
             expect(console.log).toHaveBeenCalledWith('< MyClass.someCycliclyUnprintableObjectIsReturned -> recursive and not stringifiable!');
         });
         it('should log entry and exit when verbose is enabled', () => {

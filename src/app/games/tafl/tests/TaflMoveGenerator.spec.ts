@@ -27,7 +27,7 @@ describe('TaflMoveGenerator', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 1);
+        const state: BrandhubState = new BrandhubState(board, 1, BrandhubRules.DEFAULT_CONFIG);
         const node: BrandhubNode = new BrandhubNode(state);
 
         // When asking the list of legal move

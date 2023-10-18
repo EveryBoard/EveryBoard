@@ -47,9 +47,9 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 3);
+        const state: HnefataflState = new HnefataflState(board, 3, HnefataflRules.DEFAULT_CONFIG);
         const move: HnefataflMove = HnefataflMove.of(new Coord(1, 0), new Coord(2, 0));
-        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 4);
+        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 4, HnefataflRules.DEFAULT_CONFIG);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('Capturing against empty throne should work', () => {
@@ -79,9 +79,9 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 3);
+        const state: HnefataflState = new HnefataflState(board, 3, HnefataflRules.DEFAULT_CONFIG);
         const move: HnefataflMove = HnefataflMove.of(new Coord(3, 0), new Coord(2, 0));
-        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 4);
+        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 4, HnefataflRules.DEFAULT_CONFIG);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('Capturing king should require four invader and lead to victory', () => {
@@ -111,9 +111,9 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 0);
+        const state: HnefataflState = new HnefataflState(board, 0, HnefataflRules.DEFAULT_CONFIG);
         const move: HnefataflMove = HnefataflMove.of(new Coord(2, 0), new Coord(3, 0));
-        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 1);
+        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 1, HnefataflRules.DEFAULT_CONFIG);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: HnefataflNode = new HnefataflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
@@ -145,9 +145,9 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 0);
+        const state: HnefataflState = new HnefataflState(board, 0, HnefataflRules.DEFAULT_CONFIG);
         const move: HnefataflMove = HnefataflMove.of(new Coord(2, 1), new Coord(3, 1));
-        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 1);
+        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 1, HnefataflRules.DEFAULT_CONFIG);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: HnefataflNode = new HnefataflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
@@ -179,9 +179,9 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 2);
+        const state: HnefataflState = new HnefataflState(board, 2, HnefataflRules.DEFAULT_CONFIG);
         const move: HnefataflMove = HnefataflMove.of(new Coord(2, 1), new Coord(1, 1));
-        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 3);
+        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 3, HnefataflRules.DEFAULT_CONFIG);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: HnefataflNode = new HnefataflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         // Then it should be considered as ongoing
@@ -202,7 +202,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 0);
+        const state: HnefataflState = new HnefataflState(board, 0, HnefataflRules.DEFAULT_CONFIG);
 
         // When trying to sandwich
         const move: HnefataflMove = HnefataflMove.of(new Coord(2, 2), new Coord(4, 2));
@@ -221,7 +221,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 1);
+        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 1, HnefataflRules.DEFAULT_CONFIG);
         const node: HnefataflNode = new HnefataflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         // Then it should be considered as ongoing
@@ -242,7 +242,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 12);
+        const state: HnefataflState = new HnefataflState(board, 12, HnefataflRules.DEFAULT_CONFIG);
 
         // When attempting to surround him
         const move: HnefataflMove = HnefataflMove.of(new Coord(2, 2), new Coord(4, 2));
@@ -261,7 +261,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 13);
+        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 13, HnefataflRules.DEFAULT_CONFIG);
         const node: HnefataflNode = new HnefataflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeOngoing(rules, node);
@@ -281,7 +281,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 1);
+        const state: HnefataflState = new HnefataflState(board, 1, HnefataflRules.DEFAULT_CONFIG);
 
         // When moving the king back to his throne
         const move: HnefataflMove = HnefataflMove.of(new Coord(4, 3), new Coord(4, 4));
@@ -300,7 +300,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 2);
+        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 2, HnefataflRules.DEFAULT_CONFIG);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should forbid soldier to land on the central throne (5, 5)', () => {
@@ -318,7 +318,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 1);
+        const state: HnefataflState = new HnefataflState(board, 1, HnefataflRules.DEFAULT_CONFIG);
 
         // When trying to sit on the king's throne
         const move: HnefataflMove = HnefataflMove.of(new Coord(0, 5), new Coord(5, 5));
@@ -342,7 +342,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HnefataflState = new HnefataflState(board, 2);
+        const state: HnefataflState = new HnefataflState(board, 2, HnefataflRules.DEFAULT_CONFIG);
 
         // When trying to sandwiching the king
         const move: HnefataflMove = HnefataflMove.of(new Coord(0, 4), new Coord(0, 6));
@@ -361,7 +361,7 @@ describe('HnefataflRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 3);
+        const expectedState: HnefataflState = new HnefataflState(expectedBoard, 3, HnefataflRules.DEFAULT_CONFIG);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
 });

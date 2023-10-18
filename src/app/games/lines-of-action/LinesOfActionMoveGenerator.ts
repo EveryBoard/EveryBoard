@@ -7,7 +7,6 @@ import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class LinesOfActionMoveGenerator extends MoveGenerator<LinesOfActionMove, LinesOfActionState> {
 
-
     public getListMoves(node: LinesOfActionNode): LinesOfActionMove[] {
         const state: LinesOfActionState = node.gameState;
         const moves: LinesOfActionMove[] = [];

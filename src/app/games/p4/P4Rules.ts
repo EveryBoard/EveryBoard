@@ -84,11 +84,11 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
     }
     public getListMoves(node: P4Node): P4Move[] {
         // should be called only if the game is not over
-        const originalState: P4State = node.gameState;
+        const state: P4State = node.gameState;
         const moves: P4Move[] = [];
 
-        for (let x: number = 0; x < this.config.width; x++) {
-            if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
+        for (let x: number = 0; x < state.getWidth(); x++) {
+            if (state.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
                 const move: P4Move = P4Move.of(x);
                 moves.push(move);
             }

@@ -1,16 +1,15 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Utils } from 'src/app/utils/utils';
 import { GoConfig } from './GoRules';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
+
 export class GoPiece implements ComparableObject {
 
     public static DARK: GoPiece = new GoPiece(Player.ZERO, 'alive');
@@ -105,6 +104,7 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.koCoord = koCoord;
         this.phase = phase;
     }
+
     public static getInitialState(config: GoConfig): GoState {
         const board: GoPiece[][] = GoState.getStartingBoard(config);
         let turn: number = 0;
@@ -114,46 +114,35 @@ export class GoState extends GameStateWithTable<GoPiece> {
         const down: number = GobanGameComponent.getVerticalDown(config.height);
         const horizontalCenter: number = GobanGameComponent.getHorizontalCenter(config.width);
         const verticalCenter: number = GobanGameComponent.getVerticalCenter(config.height);
-        if (0 < config.handicap) {
-            turn++; // Dark has handicap, so Light begins
-            board[up][left] = GoPiece.DARK;
+        const orderedHandicaps: Coord[] = [
+            new Coord(left, up),
+            new Coord(right, down),
+            new Coord(right, up),
+            new Coord(left, down),
+            new Coord(horizontalCenter, verticalCenter),
+            new Coord(horizontalCenter, up),
+            new Coord(horizontalCenter, down),
+            new Coord(left, verticalCenter),
+            new Coord(right, verticalCenter),
+        ];
+        if (config.handicap >= 1) {
+            turn = 1;
         }
-        if (1 < config.handicap) {
-            board[down][right] = GoPiece.DARK;
-        }
-        if (2 < config.handicap) {
-            board[up][right] = GoPiece.DARK;
-        }
-        if (3 < config.handicap) {
-            board[down][left] = GoPiece.DARK;
-        }
-        if (4 < config.handicap) {
-            board[verticalCenter][horizontalCenter] = GoPiece.DARK;
-        }
-        if (5 < config.handicap) {
-            board[up][horizontalCenter] = GoPiece.DARK;
-        }
-        if (6 < config.handicap) {
-            board[down][horizontalCenter] = GoPiece.DARK;
-        }
-        if (7 < config.handicap) {
-            board[verticalCenter][left] = GoPiece.DARK;
-        }
-        if (8 < config.handicap) {
-            board[verticalCenter][right] = GoPiece.DARK;
+        for (let i: number = 0; i < config.handicap; i++) {
+            const handicapToPut: Coord = orderedHandicaps[i];
+            board[handicapToPut.y][handicapToPut.x] = GoPiece.DARK;
         }
         return new GoState(board, [0, 0], turn, MGPOptional.empty(), Phase.PLAYING);
     }
+
     public getCapturedCopy(): [number, number] {
         return [this.captured[0], this.captured[1]];
     }
-    public static getStartingBoard(config: RulesConfig): GoPiece[][] {
-        // eslint-disable-next-line dot-notation
-        const width: number = Utils.getNonNullable(config['width']) as number;
-        // eslint-disable-next-line dot-notation
-        const height: number = Utils.getNonNullable(config['height']) as number;
-        return ArrayUtils.createTable(width, height, GoPiece.EMPTY);
+
+    public static getStartingBoard(config: GoConfig): GoPiece[][] {
+        return TableUtils.create(config.width, config.height, GoPiece.EMPTY);
     }
+
     public copy(): GoState {
         return new GoState(this.getCopiedBoard(),
                            this.getCapturedCopy(),
@@ -161,10 +150,13 @@ export class GoState extends GameStateWithTable<GoPiece> {
                            this.koCoord,
                            this.phase);
     }
+
     public isDead(coord: Coord): boolean {
         return this.getPieceAt(coord).isDead();
     }
+
     public isTerritory(coord: Coord): boolean {
         return this.getPieceAt(coord).isTerritory();
     }
+
 }

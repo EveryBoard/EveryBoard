@@ -12,6 +12,7 @@ describe('KalahMove', () => {
             expect(move.toString()).toBe('KalahMove([0])');
         });
     });
+
     it('should be iterable', () => {
         // Given a move with several distributions
         const move: KalahMove = KalahMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(2)]);
@@ -24,8 +25,9 @@ describe('KalahMove', () => {
 
         // Then it should give us the moves in the expected order
         const expectedDistributions: MancalaDistribution[] = [MancalaDistribution.of(1), MancalaDistribution.of(2)];
-        expect(ArrayUtils.compareArray(distributions, expectedDistributions)).toBeTrue();
+        expect(ArrayUtils.compare(distributions, expectedDistributions)).toBeTrue();
     });
+
     describe('add', () => {
         it('should return new move with one more distribution at the end', () => {
             // Given a basic move
@@ -38,6 +40,7 @@ describe('KalahMove', () => {
             expect(longerMove).toEqual(KalahMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(1)]));
         });
     });
+
     describe('equals', () => {
         it('should return true for the same move', () => {
             const move: KalahMove = KalahMove.of(MancalaDistribution.of(0));
@@ -55,6 +58,7 @@ describe('KalahMove', () => {
             expect(move.equals(other)).toBeFalse();
         });
     });
+
     describe('encoder', () => {
         it('should be bijective', () => {
             const moves: KalahMove[] = [

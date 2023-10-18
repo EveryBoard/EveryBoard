@@ -25,6 +25,6 @@ export class KalahMove extends MancalaMove {
         return 'KalahMove([' + distributions.join(', ') + '])';
     }
     public override equals(other: this): boolean {
-        return ArrayUtils.compareArray(this.distributions, other.distributions);
+        return ArrayUtils.compare(this.distributions, other.distributions);
     }
 }

@@ -39,12 +39,11 @@ export class RulesConfigUtils {
 
     public static getGameDefaultConfig(gameName: string): RulesConfig {
         const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
-        if (gameInfos.length === 0) {
-            return RulesConfigDescription.DEFAULT.getDefaultConfig().config;
-        } else {
-            const rulesConfigDescription: RulesConfigDescription = gameInfos[0].rulesConfigDescription;
-            return rulesConfigDescription.getDefaultConfig().config;
+        let rulesConfigDescription: RulesConfigDescription = RulesConfigDescription.DEFAULT;
+        if (gameInfos.length > 0) {
+            rulesConfigDescription = gameInfos[0].getRulesConfigDescription();
         }
+        return rulesConfigDescription.getDefaultConfig().config;
     }
 
 }

@@ -4,7 +4,6 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { NewGameTutorial } from './NewGameTutorial';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';
@@ -38,11 +37,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      */
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        // If the board you draw must be rotated of 180° when you play the second player, enable the following:
-        this.rules = NewGameRules.get();
-        this.node = this.rules.getInitialNode();
-        // TODO setRuleAndNode
-        this.tutorial = new NewGameTutorial().tutorial;
+        this.setRuleAndNode('NewGame');
         this.availableAIs = [
             new NewGameMinimax(),
             new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),
@@ -71,7 +66,6 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      */
     public override cancelMoveAttempt(): void {
     }
-
 
     /**
      * In the component's HTML, you will likely set onClick elements.

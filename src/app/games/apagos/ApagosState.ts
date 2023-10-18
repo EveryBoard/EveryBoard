@@ -1,6 +1,6 @@
 import { GameState } from 'src/app/jscaip/GameState';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosSquare } from './ApagosSquare';
@@ -16,7 +16,7 @@ export class ApagosState extends GameState {
             [7, 5, 3, 1],
         ], this.PIECES_PER_PLAYER, this.PIECES_PER_PLAYER);
     }
-    public static fromRepresentation(turn: number, board: NumberTable, nbZero: number, nbOne: number): ApagosState {
+    public static fromRepresentation(turn: number, board: Table<number>, nbZero: number, nbOne: number): ApagosState {
         const squares: ApagosSquare[] = [];
         for (let x: number = 0; x < 4; x++) {
             const nbZero: number = board[0][x];
@@ -60,7 +60,7 @@ export class ApagosState extends GameState {
     }
     public equals(other: ApagosState): boolean {
         return this.turn === other.turn &&
-               ArrayUtils.compareArray(other.board, this.board) &&
+               ArrayUtils.compare(other.board, this.board) &&
                this.remaining.equals(other.remaining);
     }
 }

@@ -7,15 +7,15 @@ import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export type EpaminondasConfig = {
     width: number;
-    emptyHeight: number;
-    rowOfSoldier: number;
+    emptyRows: number;
+    rowOfSoldiers: number;
 };
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
@@ -29,8 +29,8 @@ export class EpaminondasRules
 
     public static readonly DEFAULT_CONFIG: EpaminondasConfig = {
         width: 14,
-        emptyHeight: 8,
-        rowOfSoldier: 2,
+        emptyRows: 8,
+        rowOfSoldiers: 2,
     };
 
     public static get(): EpaminondasRules {
@@ -51,7 +51,7 @@ export class EpaminondasRules
         if (landingStatus.isFailure()) {
             return landingStatus;
         }
-        const newBoard: PlayerOrNone[][] = ArrayUtils.copyBiArray(landingStatus.get());
+        const newBoard: PlayerOrNone[][] = TableUtils.copy(landingStatus.get());
         const opponent: Player = state.getCurrentOpponent();
         const captureValidity: MGPFallible<EpaminondasLegalityInformation> =
             EpaminondasRules.getCaptureValidity(state, newBoard, move, opponent);

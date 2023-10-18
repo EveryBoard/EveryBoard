@@ -5,12 +5,12 @@ import { TaflConfig } from '../TaflConfig';
 
 export class TablutState extends TaflState {
 
-    public static getInitialState(rulesConfig: TaflConfig): TablutState {
+    public static getInitialState(config: TaflConfig): TablutState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
         let K: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-        if (rulesConfig.invaderStarts === false) {
+        if (config.invaderStarts === false) {
             I = TaflPawn.PLAYER_ONE_PAWN;
             D = TaflPawn.PLAYER_ZERO_PAWN;
             K = TaflPawn.PLAYER_ZERO_KING;
@@ -27,11 +27,11 @@ export class TablutState extends TaflState {
             [_, _, _, I, I, I, _, _, _],
         ];
 
-        return new TablutState(board, 0);
+        return new TablutState(board, 0, config);
     }
 
-    public of(board: Table<TaflPawn>, turn: number): this {
-        return new TablutState(board, turn) as this;
+    public of(board: Table<TaflPawn>, turn: number, config: TaflConfig): this {
+        return new TablutState(board, turn, config) as this;
     }
 
 }

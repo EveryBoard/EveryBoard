@@ -575,6 +575,7 @@ describe('YinshComponent', () => {
             await testUtils.expectClickSuccess('#click_3_2');
             await testUtils.expectClickFailure('#click_3_3', YinshFailure.SHOULD_END_MOVE_ON_EMPTY_SPACE());
         }));
+
         it('should allow moves with one final capture', fakeAsync(async() => {
             // Given a board with possibility of creating a capture
             const board: Table<YinshPiece> = [
@@ -600,13 +601,13 @@ describe('YinshComponent', () => {
                                                                    new Coord(3, 6),
                                                                    MGPOptional.of(new Coord(4, 2)))]);
 
-
             // Then it should succeed
             await testUtils.expectClickSuccess('#click_3_3'); // Select the ring
             await testUtils.expectClickSuccess('#click_3_7'); // Move it
             await testUtils.expectClickSuccess('#click_3_6'); // Select the capture
             await testUtils.expectMoveSuccess('#click_4_2', move); // Take a ring
         }));
+
         it('should allow moves with two final captures', fakeAsync(async() => {
             // Given a board with possibility of creating two captures
             const board: Table<YinshPiece> = [
@@ -667,7 +668,6 @@ describe('YinshComponent', () => {
                               [
                                   YinshCapture.of(new Coord(3, 3), new Coord(3, 7), MGPOptional.of(new Coord(4, 2))),
                               ]);
-
 
             // Then it should succeed
             await testUtils.expectClickSuccess('#click_3_3'); // Select the ring

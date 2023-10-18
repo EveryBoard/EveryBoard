@@ -12,7 +12,7 @@ import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription } from './RulesConfigDescription';
 
-fdescribe('RulesConfigurationComponent', () => {
+describe('RulesConfigurationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
 
@@ -260,7 +260,7 @@ fdescribe('RulesConfigurationComponent', () => {
                         component.rulesConfigForm.get('nombre')?.setValue(0);
 
                         // Then the resulting value should not have been emitted
-                        expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('0 is too low, minimum is 1');
+                        expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('0 is too small, the minimum is 1');
                     }));
 
                     it('should display custom validation error when making the value too big', fakeAsync(async() => {
@@ -271,7 +271,7 @@ fdescribe('RulesConfigurationComponent', () => {
                         component.rulesConfigForm.get('nombre')?.setValue(100);
 
                         // Then the resulting value should not have been emitted
-                        expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('100 is too high, maximum is 99');
+                        expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('100 is too big, the maximum is 99');
                     }));
 
                     it('should display custom validation error when erasing value', fakeAsync(async() => {
@@ -282,7 +282,7 @@ fdescribe('RulesConfigurationComponent', () => {
                         component.rulesConfigForm.get('nombre')?.setValue(null);
 
                         // Then the resulting value should not have been emitted
-                        expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('Value is mandatory');
+                        expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('This value is mandatory');
                     }));
 
                 });
@@ -476,9 +476,13 @@ fdescribe('RulesConfigurationComponent', () => {
                     // Also testing the opposite for the config 'truth()
                     const defaultConfig: RulesConfig = component.rulesConfigDescription.getDefaultConfig().config;
                     const configToDisplay: RulesConfig = Utils.getNonNullable(component.rulesConfigToDisplay);
+                    // eslint-disable-next-line dot-notation
                     expect(configToDisplay['booleen']).toBeFalse();
+                    // eslint-disable-next-line dot-notation
                     expect(defaultConfig['booleen']).toBeTrue();
+                    // eslint-disable-next-line dot-notation
                     expect(configToDisplay['truth']).toBeTrue();
+                    // eslint-disable-next-line dot-notation
                     expect(defaultConfig['truth']).toBeFalse();
 
                     // When displaying it

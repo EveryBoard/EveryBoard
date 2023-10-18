@@ -14,7 +14,7 @@ describe('RulesConfigDescriptions', () => {
 
     it('should have a internationalised name for each standard config', () => {
         for (const description of RulesConfigDescriptions.ALL.concat(RulesConfigDescription.DEFAULT)) {
-            for (const standardConfig of description.standardConfigs) {
+            for (const standardConfig of description.getStandardConfigs()) {
                 expect(standardConfig.name().length).toBeGreaterThan(0);
             }
         }

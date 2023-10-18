@@ -122,9 +122,9 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public getArrowTransform(orientation: Orthogonal): string {
         const state: QuixoState = this.getState();
-        return GameComponentUtils.getArrowTransform(state.getWidth() * this.SPACE_SIZE,
-                                                    new Coord(0, 0),
-                                                    orientation);
+        const boardWidth: number = state.getWidth() * this.SPACE_SIZE;
+        const boardHeight: number = state.getHeight() * this.SPACE_SIZE;
+        return GameComponentUtils.getArrowTransform(boardWidth, boardHeight, orientation);
     }
 
 }

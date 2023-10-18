@@ -307,15 +307,15 @@
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
       </trans-unit>
       <trans-unit id="8720126581400014790" datatype="html">
-        <source>Value is mandatory</source>
-        <target>Valeur obligatoire</target>
+        <source>This value is mandatory</source>
+        <target>Cette valeur est obligatoire</target>
       </trans-unit>
       <trans-unit id="69725534523676367" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too low, minimum is <x id="PH_1" equiv-text="min"/></source>
+        <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
         <target><x id="PH" equiv-text="value"/> est trop bas, le minimum est <x id="PH_1" equiv-text="min"/></target>
       </trans-unit>
       <trans-unit id="1461430439573127397" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too high, maximum is <x id="PH_1" equiv-text="max"/></source>
+        <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
         <target><x id="PH" equiv-text="value"/> est trop haut, le maximum est <x id="PH_1" equiv-text="max"/></target>
       </trans-unit>
       <trans-unit id="5607669932062416162" datatype="html">
@@ -344,11 +344,11 @@
       </trans-unit>
       <trans-unit id="9195784792324730674" datatype="html">
         <source>Central throne is left for good</source>
-        <target>Le thrône central est quitté définitivement</target>
+        <target>Le trône central est quitté définitivement</target>
       </trans-unit>
       <trans-unit id="6759318691734948333" datatype="html">
-        <source>Edge can surround king</source>
-        <target>L'arrête peut encercler le roi</target>
+        <source>Edges are king's ennemy</source>
+        <target>Les bords sont l'ennemi du roi</target>
       </trans-unit>
       <trans-unit id="2642196868516331796" datatype="html">
         <source>Central throne can surround king</source>

@@ -31,6 +31,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -105,6 +106,12 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
         // Then the turn should be incremented
         expect(testUtils.getGameComponent().getTurn()).toBe(1);
+    }));
+    it('should be interactive by default', fakeAsync(async() => {
+        // Given a game
+        // When displaying it
+        // Then it is interactive
+        expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
     }));
     it('should show draw', fakeAsync(async() => {
         const board: PlayerOrNone[][] = [
@@ -216,6 +223,23 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         }));
     });
     describe('Using AI', () => {
+        it('should disable interactivity when AI is selected without level', async() => {
+            // Given a game which is initially interactive, with a background showing it
+            expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
+            testUtils.expectElementToExist('.tile .player0-bg');
+
+            // When selecting only the AI without the depth for the current player
+            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
+            selectAI.value = selectAI.options[1].value;
+            selectAI.dispatchEvent(new Event('change'));
+            testUtils.detectChanges();
+            await testUtils.whenStable();
+
+            // Then the game should not be interactive anymore
+            expect(testUtils.getGameComponent()['isInteractive']).toBeFalse();
+            // nor should it show the current player background
+            testUtils.expectElementNotToExist('.tile .player0-bg');
+        });
         it('should show level when non-human player is selected', async() => {
             // Given a board where human are playing human
             testUtils.expectElementNotToExist('#aiZeroLevelSelect');
@@ -309,7 +333,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board and a buggy AI (that performs an illegal move)
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPOptional.empty());
+            spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPFallible.failure('illegal'));
             const minimax: Minimax<P4Move, P4State> =
                 new Minimax('Minimax', P4Rules.get(), new P4Heuristic(), new P4MoveGenerator());
             spyOn(minimax, 'chooseNextMove').and.returnValue(P4Move.of(0));
@@ -324,7 +348,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Then it should fail and an error should be logged
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
-            const errorData: JSONValue = { game: 'P4', name: 'Minimax', move: 'P4Move(0)' };
+            const errorData: JSONValue = { game: 'P4', name: 'Minimax', move: 'P4Move(0)', reason: 'illegal' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {

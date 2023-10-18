@@ -40,7 +40,6 @@ xdescribe('ConfigRoomDAO', () => {
     const OTHER_USER_EMAIL: string = 'other@us.er';
     const OTHER_USER_NAME: string = 'other';
 
-
     beforeEach(async() => {
         await setupEmulators();
         configRoomDAO = TestBed.inject(ConfigRoomDAO);

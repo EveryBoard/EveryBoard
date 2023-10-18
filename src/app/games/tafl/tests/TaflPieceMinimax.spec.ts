@@ -27,7 +27,7 @@ describe('TaflPieceMinimax', () => {
             [_, _, _, _, _, _, _, X, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 1);
+        const state: TablutState = new TablutState(board, 1, TablutRules.DEFAULT_CONFIG);
         const node: TablutNode = new TablutNode(state);
         const winnerMove: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(8, 0));
 

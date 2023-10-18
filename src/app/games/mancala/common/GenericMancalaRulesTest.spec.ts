@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MancalaState } from './MancalaState';
 import { MancalaMove } from './MancalaMove';
@@ -54,7 +54,7 @@ export function DoMancalaRulesTests<M extends MancalaMove>(entries: MancalaRules
                 describe(`Config with ${ config.seedsByHouse } seeds by house`, () => {
                     it(`should identify victory for player 0`, () => {
                         // Given a state with no more seeds and where player 0 has captured more seeds
-                        const board: Table<number> = ArrayUtils.createTable(config.width, 2, 0);
+                        const board: Table<number> = TableUtils.create(config.width, 2, 0);
                         const state: MancalaState =
                             new MancalaState(board, 6, [halfOfTotalSeeds + 2, halfOfTotalSeeds - 2], config);
                         const node: AbstractNode = new GameNode(state);
@@ -63,7 +63,7 @@ export function DoMancalaRulesTests<M extends MancalaMove>(entries: MancalaRules
                     });
                     it('should identify victory for player 1', () => {
                         // Given a state with no more seeds and where player 1 has captured more seeds
-                        const board: Table<number> = ArrayUtils.createTable(config.width, 2, 0);
+                        const board: Table<number> = TableUtils.create(config.width, 2, 0);
                         const state: MancalaState =
                             new MancalaState(board, 6, [halfOfTotalSeeds - 2, halfOfTotalSeeds + 2], config);
                         const node: AbstractNode = new GameNode(state);
@@ -72,7 +72,7 @@ export function DoMancalaRulesTests<M extends MancalaMove>(entries: MancalaRules
                     });
                     it('should identify draw', () => {
                         // Given a state with no more seeds and both players have captured the same number of seeds
-                        const board: Table<number> = ArrayUtils.createTable(config.width, 2, 0);
+                        const board: Table<number> = TableUtils.create(config.width, 2, 0);
                         const state: MancalaState =
                             new MancalaState(board, 6, [halfOfTotalSeeds, halfOfTotalSeeds], config);
                         const node: AbstractNode = new GameNode(state);

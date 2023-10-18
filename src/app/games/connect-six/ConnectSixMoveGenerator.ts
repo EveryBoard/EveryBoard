@@ -4,7 +4,7 @@ import { ConnectSixMove } from './ConnectSixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixFirstMove } from './ConnectSixMove';
 import { ConnectSixDrops } from './ConnectSixMove';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MoveGenerator } from 'src/app/jscaip/AI';
@@ -61,7 +61,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
     private getUsefulCoordsMap(state: ConnectSixState): boolean[][] {
         const width: number = state.board[0].length;
         const height: number = state.board.length;
-        const usefulCoord: boolean[][] = ArrayUtils.createTable(width, height, false);
+        const usefulCoord: boolean[][] = TableUtils.create(width, height, false);
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content.isPlayer()) {
                 this.addNeighboringCoord(usefulCoord, coordAndContent.coord);

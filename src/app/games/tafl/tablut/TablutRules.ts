@@ -13,7 +13,7 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
 
     public static readonly DEFAULT_CONFIG: TaflConfig = {
         castleIsLeftForGood: false,
-        borderCanSurroundKing: true,
+        edgesAreKingsEnnemy: true,
         centralThroneCanSurroundKing: false,
         kingFarFromHomeCanBeSandwiched: false,
         invaderStarts: true,

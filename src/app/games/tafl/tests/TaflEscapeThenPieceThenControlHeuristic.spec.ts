@@ -33,7 +33,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const weakState: BrandhubState = new BrandhubState(weakBoard, 0);
+        const weakState: BrandhubState = new BrandhubState(weakBoard, 0, BrandhubRules.DEFAULT_CONFIG);
         const strongBoard: Table<TaflPawn> = [
             [_, _, O, _, _, _, _],
             [_, _, O, _, _, _, _],
@@ -43,7 +43,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
+        const strongState: BrandhubState = new BrandhubState(strongBoard, 1, BrandhubRules.DEFAULT_CONFIG);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -59,7 +59,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const weakState: BrandhubState = new BrandhubState(weakBoard, 0);
+        const weakState: BrandhubState = new BrandhubState(weakBoard, 0, BrandhubRules.DEFAULT_CONFIG);
         const strongBoard: Table<TaflPawn> = [
             [_, _, O, A, _, _, _],
             [_, _, O, _, _, _, _],
@@ -69,7 +69,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
+        const strongState: BrandhubState = new BrandhubState(strongBoard, 1, BrandhubRules.DEFAULT_CONFIG);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),

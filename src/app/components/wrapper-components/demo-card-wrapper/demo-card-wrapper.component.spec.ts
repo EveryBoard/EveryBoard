@@ -7,12 +7,13 @@ import { P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { AbstractRules } from 'src/app/jscaip/Rules';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { GameNode } from 'src/app/jscaip/GameNode';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 
 describe('DemoCardComponent', () => {
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
@@ -27,7 +28,7 @@ describe('DemoCardComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(DemoCardWrapperComponent);
     }));
 
-    it('should display the game from the point of view the current player', fakeAsync(async() => {
+    it('should display the game interactively from the point of view the current player', fakeAsync(async() => {
         // Given a demo component
         const board: Table<PlayerOrNone> = P4State.getInitialState(P4Rules.DEFAULT_CONFIG).board; // dummy board
 
@@ -42,9 +43,12 @@ describe('DemoCardComponent', () => {
         // Then it should display the game
         const game: DebugElement = testUtils.findElement('app-p4');
         expect(game).withContext('game component should be displayed').toBeTruthy();
-        // from the point of view of the current player
-        expect(testUtils.getComponent().gameComponent.role).toBe(Player.ONE);
-        expect(testUtils.getComponent().gameComponent.isPlayerTurn()).toBeTrue();
+        // from the point of view of the current player, with interactivity on
+        const gameComponent: AbstractGameComponent = testUtils.getComponent().gameComponent;
+        expect(gameComponent.getPointOfView()).toBe(Player.ONE);
+        expect(gameComponent.isPlayerTurn()).toBeTrue();
+        // eslint-disable-next-line dot-notation
+        expect(gameComponent['isInteractive']).toBeTrue();
     }));
 
     it('should simulate clicks', fakeAsync(async() => {
@@ -94,7 +98,7 @@ describe('DemoCardComponent', () => {
         testUtils.expectElementNotToExist('.player0-fill');
 
         // When loading another component, which triggers ngOnChanges
-        const boardWithPiece: Table<PlayerOrNone> = ArrayUtils.createTable(7, 6, PlayerOrNone.ZERO);
+        const boardWithPiece: Table<PlayerOrNone> = TableUtils.create(7, 6, PlayerOrNone.ZERO);
         const stateWithPieces: P4State = new P4State(boardWithPiece, 42);
         loadNode({
             name: 'P4',

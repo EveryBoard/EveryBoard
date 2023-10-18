@@ -199,7 +199,7 @@ describe('AbaloneRules', () => {
         // When pushing
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.LEFT).get();
 
-        // Then the piece should be throwed out of the board
+        // Then the piece should be thrown out of the board
         const expectedBoard: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],

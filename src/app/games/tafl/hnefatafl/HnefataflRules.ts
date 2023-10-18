@@ -13,7 +13,7 @@ export class HnefataflRules extends TaflRules<HnefataflMove, HnefataflState> {
 
     public static readonly DEFAULT_CONFIG: TaflConfig = {
         castleIsLeftForGood: false,
-        borderCanSurroundKing: true,
+        edgesAreKingsEnnemy: true,
         centralThroneCanSurroundKing: false,
         kingFarFromHomeCanBeSandwiched: false,
         invaderStarts: true,

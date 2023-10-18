@@ -22,5 +22,4 @@ export type User = {
     currentGame?: CurrentGame | null,
 };
 
-
 export type UserDocument = FirestoreDocument<User>;

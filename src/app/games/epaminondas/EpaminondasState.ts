@@ -1,4 +1,4 @@
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasConfig } from './EpaminondasRules';
@@ -9,9 +9,9 @@ export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
         const _: PlayerOrNone = PlayerOrNone.NONE;
         const O: PlayerOrNone = PlayerOrNone.ZERO;
         const X: PlayerOrNone = PlayerOrNone.ONE;
-        const upperBoard: PlayerOrNone[][] = ArrayUtils.createTable(config.width, config.rowOfSoldier, X);
-        const middleBoard: PlayerOrNone[][] = ArrayUtils.createTable(config.width, config.emptyHeight, _);
-        const lowerBoard: PlayerOrNone[][] = ArrayUtils.createTable(config.width, config.rowOfSoldier, O);
+        const upperBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.rowOfSoldiers, X);
+        const middleBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.emptyRows, _);
+        const lowerBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.rowOfSoldiers, O);
         const board: Table<PlayerOrNone> = upperBoard.concat(middleBoard).concat(lowerBoard);
         return new EpaminondasState(board, 0);
     }

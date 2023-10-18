@@ -31,7 +31,7 @@ describe('TaflPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 1);
+        const state: TablutState = new TablutState(board, 1, TablutRules.DEFAULT_CONFIG);
         const node: TablutNode = new TablutNode(state);
         const expectedMove: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(0, 0));
         for (let depth: number = 1; depth < 4; depth++) {

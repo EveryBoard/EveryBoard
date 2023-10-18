@@ -13,6 +13,7 @@ import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 type TutorialPlayer = 'tutorial-player';
 
@@ -100,13 +101,15 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                                                currentStep.previousMove);
         // Set role will update view with updateBoardAndShowLastMove
         await this.setRole(this.gameComponent.getCurrentPlayer());
+        // All steps but informational ones are interactive
+        this.gameComponent.setInteractive(currentStep.isInformation() === false);
         this.cdr.detectChanges();
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        const node: MGPOptional<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
-        Utils.assert(node.isPresent(), 'It should be impossible to call onLegalUserMove with an illegal move');
+        const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
+        Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
         this.gameComponent.node = node.get();
         await this.updateBoardAndShowLastMove(false);
         this.moveAttemptMade = true;
@@ -124,7 +127,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
             this.showStepSuccess(currentStep.getSuccessMessage());
         } else if (currentStep.isMove()) {
-            const currentStepMove: TutorialStepMove = currentStep as TutorialStepMove;
+            const currentStepMove: TutorialStepMove = currentStep;
             if (currentStepMove.acceptedMoves.some((m: Move) => m.equals(move))) {
                 Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
                 this.showStepSuccess(currentStepMove.getSuccessMessage());

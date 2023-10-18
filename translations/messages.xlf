@@ -255,13 +255,13 @@
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
       </trans-unit>
       <trans-unit id="8720126581400014790" datatype="html">
-        <source>Value is mandatory</source>
+        <source>This value is mandatory</source>
       </trans-unit>
       <trans-unit id="69725534523676367" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too low, minimum is <x id="PH_1" equiv-text="min"/></source>
+        <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
       </trans-unit>
       <trans-unit id="1461430439573127397" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too high, maximum is <x id="PH_1" equiv-text="max"/></source>
+        <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
       </trans-unit>
       <trans-unit id="5607669932062416162" datatype="html">
         <source>Default</source>
@@ -291,7 +291,7 @@
         <source>Central throne is left for good</source>
       </trans-unit>
       <trans-unit id="6759318691734948333" datatype="html">
-        <source>Edge can surround king</source>
+        <source>Edges are king's ennemy</source>
       </trans-unit>
       <trans-unit id="2642196868516331796" datatype="html">
         <source>Central throne can surround king</source>

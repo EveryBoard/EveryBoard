@@ -1,4 +1,4 @@
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -12,9 +12,9 @@ export type QuixoConfig = {
 export class QuixoState extends GameStateWithTable<PlayerOrNone> {
 
     public static getInitialState(config: QuixoConfig): QuixoState {
-        const initialBoard: PlayerOrNone[][] = ArrayUtils.createTable(config.width,
-                                                                      config.height,
-                                                                      PlayerOrNone.NONE);
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.width,
+                                                                 config.height,
+                                                                 PlayerOrNone.NONE);
         return new QuixoState(initialBoard, 0);
     }
 
@@ -31,4 +31,5 @@ export class QuixoState extends GameStateWithTable<PlayerOrNone> {
         newBoard[currentCoordToFill.y][currentCoordToFill.x] = this.getCurrentPlayer();
         return new QuixoState(newBoard, newTurn);
     }
+
 }
