@@ -52,11 +52,11 @@ export class DiaballikTranslation extends MoveCoordToCoord {
 
 export type DiaballikSubMove = DiaballikBallPass | DiaballikTranslation;
 
-function isTranslation(subMove: DiaballikSubMove): subMove is DiaballikTranslation {
+export function isTranslation(subMove: DiaballikSubMove): subMove is DiaballikTranslation {
     return subMove instanceof DiaballikTranslation;
 }
 
-function isBallPass(subMove: DiaballikSubMove): subMove is DiaballikBallPass {
+export function isBallPass(subMove: DiaballikSubMove): subMove is DiaballikBallPass {
     return subMove instanceof DiaballikBallPass;
 }
 

@@ -4,6 +4,9 @@ import { DiaballikNode } from './DiaballikRules';
 
 export class DiaballikFilteredMoveGenerator extends DiaballikMoveGenerator {
 
+    /**
+     * Implemented similarly as DiaballikMoveGenerator, but only generates moves containing exactly 3 sub moves.
+     */
     public override getListMoves(node: DiaballikNode): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
@@ -16,9 +19,6 @@ export class DiaballikFilteredMoveGenerator extends DiaballikMoveGenerator {
             movesInConstruction = nextMovesInConstruction;
         }
 
-        function finalize(m: DiaballikMoveInConstruction): DiaballikMove {
-            return m.finalize();
-        }
-        return movesInConstruction.map(finalize);
+        return movesInConstruction.map(DiaballikMoveInConstruction.finalize);
     }
 }

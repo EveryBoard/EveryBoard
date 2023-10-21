@@ -93,7 +93,6 @@ export class DiaballikComponent
     }
 
     public override async showLastMove(move: DiaballikMove): Promise<void> {
-        this.hideLastMove();
         for (const subMove of move.getSubMoves()) {
             this.showSubMove(subMove);
         }

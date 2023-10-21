@@ -46,6 +46,6 @@ module.exports = function(config) {
         autoWatch: true,
         browsers: ['Chrome'],
         singleRun: false,
-        browserNoActivityTimeout: 15000, // Timeout set to 10s because the tests often time out with 2s
+        browserNoActivityTimeout: 15000, // Timeout set to 15s because the tests often time out with 2s
     });
 };

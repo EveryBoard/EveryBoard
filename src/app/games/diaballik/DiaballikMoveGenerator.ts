@@ -14,9 +14,14 @@ export class DiaballikMoveInConstruction {
     public readonly hasPass: boolean;
     public readonly translations: number;
 
+    public static finalize(m: DiaballikMoveInConstruction): DiaballikMove {
+        return m.finalize();
+    }
+
     public constructor(public readonly subMoves: DiaballikSubMove[],
                        public readonly stateBefore: DiaballikState,
-                       public readonly stateAfterSubMoves: DiaballikState) {
+                       public readonly stateAfterSubMoves: DiaballikState)
+    {
         Utils.assert(this.subMoves.length <= 3, 'DiaballikMoveInConstruction can have at most 3 submoves');
         let hasPass: boolean = false;
         let translations: number = 0;
@@ -61,7 +66,7 @@ export class DiaballikMoveInConstruction {
         return MGPOptional.empty();
     }
 
-    public finalize(): DiaballikMove {
+    private finalize(): DiaballikMove {
         Utils.assert(this.subMoves.length > 0, 'DiaballikMoveInConstruction can only be finalized if it contains something');
         const first: DiaballikSubMove = this.subMoves[0];
         let second: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
@@ -83,9 +88,6 @@ export class DiaballikMoveInConstruction {
 export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, DiaballikState> {
 
     public getListMoves(node: DiaballikNode): DiaballikMove[] {
-        function finalize(m: DiaballikMoveInConstruction): DiaballikMove {
-            return m.finalize();
-        }
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
@@ -94,14 +96,12 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
             let nextMovesInConstruction: DiaballikMoveInConstruction[] = [];
             for (const move of movesInConstruction) {
                 const newMovesInConstruction: DiaballikMoveInConstruction[] = this.addAllPossibleSubMoves(move);
-                moves = moves.concat(newMovesInConstruction.map(finalize));
+                moves = moves.concat(newMovesInConstruction.map(DiaballikMoveInConstruction.finalize));
                 nextMovesInConstruction = nextMovesInConstruction.concat(newMovesInConstruction);
             }
             movesInConstruction = nextMovesInConstruction;
         }
-
         return moves;
-
     }
 
     protected addAllPossibleSubMoves(moveInConstruction: DiaballikMoveInConstruction): DiaballikMoveInConstruction[] {

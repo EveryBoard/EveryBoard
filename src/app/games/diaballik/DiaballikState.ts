@@ -12,7 +12,8 @@ export class DiaballikPiece {
     public static readonly ONE_WITH_BALL: DiaballikPiece = new DiaballikPiece(Player.ONE, true);
 
     private constructor(public readonly owner: PlayerOrNone,
-                        public readonly holdsBall: boolean) {
+                        public readonly holdsBall: boolean)
+    {
     }
 }
 

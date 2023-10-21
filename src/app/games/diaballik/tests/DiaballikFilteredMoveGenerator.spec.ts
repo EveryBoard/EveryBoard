@@ -1,7 +1,24 @@
-import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
+import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
 import { DiaballikNode } from '../DiaballikRules';
 import { DiaballikState } from '../DiaballikState';
+
+function expectNoBackAndForth(move: DiaballikMove): void {
+    const subMoves: DiaballikSubMove[] = move.getSubMoves();
+    const translations: DiaballikSubMove[] = subMoves.filter(isTranslation);
+    const startIsEnd: boolean = translations[0].getStart() === translations[1].getEnd();
+    const endIsStart: boolean = translations[0].getEnd() === translations[1].getStart();
+    expect(startIsEnd && endIsStart).toBeFalse();
+}
+
+function expectFinalMoveToBePasserTranslation(move: DiaballikMove): void {
+    const subMoves: DiaballikSubMove[] = move.getSubMoves();
+    if (subMoves[1] instanceof DiaballikBallPass) {
+        const pass: DiaballikBallPass = subMoves[1];
+        const translation: DiaballikTranslation = subMoves[2] as DiaballikTranslation;
+        expect(translation.getStart()).toEqual(pass.getStart());
+    }
+}
 
 describe('DiaballikFilteredMoveGenerator', () => {
 
@@ -30,26 +47,11 @@ describe('DiaballikFilteredMoveGenerator', () => {
         // When computing the list of moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
 
-        // Then it should have all interesting move options, which is 368 moves
+        // Then it should have all interesting move options, which is 136 moves
         expect(moves.length).toBe(136);
         // It should not contain A -> B, B -> A moves
-        function expectNoBackAndForth(move: DiaballikMove): void {
-            const translations: DiaballikSubMove[] =
-                move.getSubMoves().filter((subMove: DiaballikSubMove) => subMove instanceof DiaballikTranslation);
-            const startIsEnd: boolean = translations[0].getStart() === translations[1].getEnd();
-            const endIsStart: boolean = translations[0].getEnd() === translations[1].getStart();
-            expect(startIsEnd && endIsStart).toBeFalse();
-        }
         moves.forEach(expectNoBackAndForth);
         // It should only have translation after passes when the translated piece is the one that had the ball
-        function expectTranslatedPieceAfterPass(move: DiaballikMove): void {
-            const subMoves: DiaballikSubMove[] = move.getSubMoves();
-            if (subMoves[1] instanceof DiaballikBallPass) {
-                const pass: DiaballikBallPass = subMoves[1];
-                const translation: DiaballikTranslation = subMoves[2] as DiaballikTranslation;
-                expect(translation.getStart()).toEqual(pass.getStart());
-            }
-        }
-        moves.forEach(expectTranslatedPieceAfterPass);
+        moves.forEach(expectFinalMoveToBePasserTranslation);
     });
 });

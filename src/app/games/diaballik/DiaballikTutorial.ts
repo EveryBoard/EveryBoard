@@ -14,7 +14,7 @@ export class DiaballikTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
-            $localize`The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by the small circle, into the home line of the opponent.`,
+            $localize`The goal of Diaballik is to bring your ball, represented by the small circle, into the home line of the opponent (i.e, its starting position). The ball is currently being held by your center piece.`,
             DiaballikState.getInitialState(),
         ),
         TutorialStep.fromMove(
@@ -47,7 +47,7 @@ export class DiaballikTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Blocking the opponent`,
-            $localize`There is a special anti-game rule. If a player forms a contiguous line, with one piece in each column, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.<br/><br/>Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!`,
+            $localize`There is a special anti-game rule. If a player forms a contiguous line, with one piece in each column, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.<br/><br/>Here, playing Light, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!`,
             new DiaballikState([
                 [X, X, X, _, _, _, _],
                 [X, _, _, _, _, _, Ẋ],

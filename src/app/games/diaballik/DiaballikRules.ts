@@ -11,6 +11,7 @@ import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
+import { Utils } from 'src/app/utils/utils';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -23,7 +24,8 @@ export class VictoryCoord extends VictoryOrDefeatCoords {
 export class DefeatCoords extends VictoryOrDefeatCoords {
     public constructor(loser: Player,
                        public readonly allLoserPieces: Coord[],
-                       public readonly opponentPiecesInContact: Coord[]) {
+                       public readonly opponentPiecesInContact: Coord[])
+    {
         super(loser.getOpponent());
     }
 }
@@ -62,6 +64,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
         return MGPFallible.success(currentState);
     }
+
     public isLegalSubMove(state: DiaballikState, subMove: DiaballikSubMove): MGPFallible<DiaballikState> {
         if (subMove instanceof DiaballikTranslation) {
             return this.isLegalTranslation(state, subMove);
@@ -69,6 +72,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             return this.isLegalPass(state, subMove);
         }
     }
+
     public isLegalTranslation(state: DiaballikState, translation: DiaballikTranslation): MGPFallible<DiaballikState> {
         // The origin must be a piece owned by the player
         const start: Coord = translation.getStart();
@@ -93,6 +97,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         const stateAfterTranslation: DiaballikState = new DiaballikState(updatedBoard, state.turn);
         return MGPFallible.success(stateAfterTranslation);
     }
+
     public isLegalPass(state: DiaballikState, pass: DiaballikBallPass): MGPFallible<DiaballikState> {
         // The origin must be a piece of the player that holds the ball
         const start: Coord = pass.getStart();
@@ -100,9 +105,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         if (startPiece.owner !== state.getCurrentPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        if (startPiece.holdsBall === false) {
-            return MGPFallible.failure('Cannot pass without the ball');
-        }
+        Utils.assert(startPiece.holdsBall, 'DiaballikRules: cannot pass without the ball');
 
         // The destination must be a piece of the player
         const end: Coord = pass.getEnd();
@@ -128,6 +131,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         updatedBoard[end.y][end.x] = withBall;
         return MGPFallible.success(new DiaballikState(updatedBoard, state.turn));
     }
+
     public applyLegalMove(_move: DiaballikMove,
                           state: DiaballikState,
                           stateAfterSubMoves: DiaballikState)
@@ -137,6 +141,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         // We only have to update the turn
         return new DiaballikState(stateAfterSubMoves.board, state.turn + 1);
     }
+
     public getGameStatus(node: DiaballikNode): GameStatus {
         const state: DiaballikState = node.gameState;
         const victoryOrDefeat: MGPOptional<VictoryOrDefeatCoords> = this.getVictoryOrDefeatCoords(state);
@@ -146,6 +151,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             return GameStatus.ONGOING;
         }
     }
+
     public getVictoryOrDefeatCoords(state: DiaballikState): MGPOptional<VictoryOrDefeatCoords> {
         // A player wins when their ball is in the opponent's row
         const ballCoordZero: MGPOptional<Coord> = this.getBallCoordInRow(state, 0, Player.ZERO);
@@ -161,6 +167,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         const defeatCoords: MGPOptional<DefeatCoords> = this.getBlockerAndCoords(state);
         return defeatCoords;
     }
+
     private getBallCoordInRow(state: DiaballikState, y: number, player: Player): MGPOptional<Coord> {
         for (let x: number = 0; x < state.board.length; x++) {
             const piece: DiaballikPiece = state.getPieceAtXY(x, y);
@@ -170,6 +177,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
         return MGPOptional.empty();
     }
+
     private getBlockerAndCoords(state: DiaballikState): MGPOptional<DefeatCoords> {
         // The anti-game rule states that if a player forms a line that blocks the opponent,
         // and that if three opponent's pieces are touching the line, then the blocker loses
@@ -187,6 +195,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         if (blocking[1].isPresent()) return blocking[1];
         return MGPOptional.empty();
     }
+
     private getBlockerCoords(state: DiaballikState, player: Player): MGPOptional<DefeatCoords> {
         // We check if:
         //   - there is one player piece in each column
@@ -209,6 +218,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             return MGPOptional.empty();
         }
     }
+
     private getConnectedPieceCoord(x: number,
                                    opponentsConnected: MGPSet<Coord>,
                                    state: DiaballikState,
@@ -232,6 +242,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
         return MGPOptional.empty(); // No piece found in this column
     }
+
     private isConnectedOnTheLeft(coord: Coord, state: DiaballikState, player: Player): boolean {
         if (coord.x === 0) {
             // A piece in the first column is considered connected
@@ -248,6 +259,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
         return false;
     }
+
     private addConnectedOpponents(coord: Coord,
                                   opponentsConnected: MGPSet<Coord>,
                                   state: DiaballikState,

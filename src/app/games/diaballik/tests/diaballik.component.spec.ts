@@ -55,20 +55,20 @@ describe('DiaballikComponent', () => {
         await testUtils.expectMoveSuccess('#done', move);
     }));
     it('should finish the move upon selection of the third sub move', fakeAsync(async() => {
-        // Given a state
-
-        // When doing two translations and then one pass
+        // Given a state where we two submoves and almost entirely the third one
         await testUtils.expectClickSuccess('#click_0_6');
         await testUtils.expectClickSuccess('#click_0_5');
         await testUtils.expectClickSuccess('#click_1_6');
         await testUtils.expectClickSuccess('#click_1_5');
         await testUtils.expectClickSuccess('#click_3_6');
+
+        // When clicking on the last target for the move
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
 
-        // Then it should succeed
+        // Then it should do the move
         await testUtils.expectMoveSuccess('#click_4_6', move);
     }));
     it('should deselect current piece when clicking on it a second time', fakeAsync(async() => {
@@ -150,13 +150,13 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickFailure('#click_1_5', DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
     }));
     it('should forbid passing not in a straight line', fakeAsync(async() => {
-        // Given a state where a strange pass is possible (but illegal)
+        // Given a state in construction where a strange pass is possible (but illegal)
         await testUtils.expectClickSuccess('#click_4_6');
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_4');
 
-        // When passing along a diagonal
+        // When trying to pass along a non-straight line
         // Then it should fail
         await testUtils.expectClickSuccess('#click_3_6');
         await testUtils.expectClickFailure('#click_4_4', DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());

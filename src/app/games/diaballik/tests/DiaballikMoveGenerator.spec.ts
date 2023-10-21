@@ -48,7 +48,8 @@ describe('DiaballikMoveGenerator', () => {
         // Then it should have all move options containing 1-step moves (8 exactly, 6 translations and 2 passes),
         // 2-steps, and 3-steps move
         expect(moves.filter(numberOfSubMovesIs(1)).length).toBe(8);
-        expect(moves.filter(numberOfSubMovesIs(2)).length).toBeGreaterThan(0);
-        expect(moves.filter(numberOfSubMovesIs(3)).length).toBeGreaterThan(0);
+        expect(moves.filter(numberOfSubMovesIs(2)).length).toBe(68);
+        expect(moves.filter(numberOfSubMovesIs(3)).length).toBe(136);
+        expect(moves.length).toBe(8 + 68 + 136);
     });
 });

@@ -1,5 +1,5 @@
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation, DiaballikSubMove } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -18,11 +18,16 @@ describe('DiaballikRules', () => {
     const Ẋ: DiaballikPiece = DiaballikPiece.ONE_WITH_BALL;
     const _: DiaballikPiece = DiaballikPiece.NONE;
 
+    const empty: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
+
     function translation(from: Coord, to: Coord): DiaballikMove {
-        return new DiaballikMove(DiaballikTranslation.from(from, to).get(), MGPOptional.empty(), MGPOptional.empty());
+        const translation: DiaballikSubMove = DiaballikTranslation.from(from, to).get();
+        return new DiaballikMove(translation, empty, empty);
     }
+
     function pass(from: Coord, to: Coord): DiaballikMove {
-        return new DiaballikMove(DiaballikBallPass.from(from, to).get(), MGPOptional.empty(), MGPOptional.empty());
+        const pass: DiaballikSubMove = DiaballikBallPass.from(from, to).get();
+        return new DiaballikMove(pass, empty, empty);
     }
 
     beforeEach(() => {
@@ -219,15 +224,15 @@ describe('DiaballikRules', () => {
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     });
-    it('should forbid passing from a piece that does not hold the ball', () => {
+    it('should throw when passing from a piece that does not hold the ball', () => {
         // Given a state
         const state: DiaballikState = DiaballikState.getInitialState();
 
         // When trying to pass from a piece that does not hold the ball
         const move: DiaballikMove = pass(new Coord(2, 6), new Coord(1, 6));
 
-        // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, 'Cannot pass without the ball');
+        // Then it should throw, the component should not allow it at all
+        RulesUtils.expectToThrowAndLog(() => rules.isLegal(move, state), 'DiaballikRules: cannot pass without the ball');
     });
     it('should forbid passing to something else than a player piece', () => {
         // Given a state
@@ -331,7 +336,7 @@ describe('DiaballikRules', () => {
             // Then it should have none
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });
-        it('should not detect blockers when there is a discontinuous line making the goal line accessible', () => {
+        it('should not detect blockers when the goal line is accessible (discontinuous line)', () => {
             // Given a state where pieces don't always touch
             const state: DiaballikState = new DiaballikState([
                 [X, X, X, _, _, X, X],
@@ -346,7 +351,7 @@ describe('DiaballikRules', () => {
             // Then it should not return anything
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });
-        it('should not detect blockers when there are no pieces in a row making the goal line accessible', () => {
+        it('should not detect blockers when the goal line accessible (empty column)', () => {
             // Given a state where a row doesn't have any piece of a player
             const state: DiaballikState = new DiaballikState([
                 [X, X, X, _, X, X, X],

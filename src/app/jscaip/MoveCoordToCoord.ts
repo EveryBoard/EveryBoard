@@ -28,6 +28,8 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
         return this.getEnd().equals(other.getEnd());
     }
     public toString(): string {
-        return `${this.getStart().toString()} -> ${this.getEnd().toString()}`;
+        const start: string = this.getStart().toString();
+        const end: string = this.getEnd().toString();
+        return `${start} -> ${end}`;
     }
 }
