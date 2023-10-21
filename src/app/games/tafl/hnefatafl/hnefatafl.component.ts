@@ -4,7 +4,6 @@ import { HnefataflRules } from './HnefataflRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
 import { HnefataflTutorial } from './HnefataflTutorial';
-import { TaflState } from '../TaflState';
 
 @Component({
     selector: 'app-hnefatafl',

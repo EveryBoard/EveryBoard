@@ -89,7 +89,9 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         ]);
         return map;
     }
-    public getThreatMap(state: TaflState, pieces: MGPMap<Player, MGPSet<Coord>>): MGPMap<Coord, MGPSet<SandwichThreat>> {
+    public getThreatMap(state: TaflState, pieces: MGPMap<Player, MGPSet<Coord>>)
+    : MGPMap<Coord, MGPSet<SandwichThreat>>
+    {
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
         for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
