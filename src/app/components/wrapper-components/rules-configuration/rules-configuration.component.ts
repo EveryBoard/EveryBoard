@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -23,10 +23,11 @@ type ConfigFormJSON = {
 })
 export class RulesConfigurationComponent extends BaseGameComponent implements OnInit {
 
-    @Input() stateType: MGPOptional<Type<GameState>>;
+    @Input() stateProvider: MGPOptional<(config: RulesConfig) => GameState>;
 
     @Input() rulesConfigDescription: RulesConfigDescription;
 
+    // Only needed for the non-creator
     @Input() rulesConfigToDisplay?: RulesConfig;
 
     @Input() userIsCreator: boolean;
@@ -34,14 +35,16 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     /**
      * notify that the config has been update
      * if the optional is empty, the last update was invalid
+     * we do want to emit something when the current config is invalid,
+     * so that the parent component knows that the situation is not ok
      */
     @Output() updateCallback: EventEmitter<MGPOptional<RulesConfig>> = new EventEmitter<MGPOptional<RulesConfig>>();
 
-    public configDemo: DemoNodeInfo;
+    public configDemo: DemoNodeInfo; // setted onInit
 
     public rulesConfigForm: FormGroup = new FormGroup({});
 
-    public gameName: string; // Instanciated onInit
+    public gameName: string; // setted onInit
 
     private chosenConfigName: string = '';
 
@@ -58,23 +61,25 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     public ngOnInit(): void {
         this.assertParamsAreCoherent();
         this.gameName = this.getGameName();
-        const defaultConfig: NamedRulesConfig = this.rulesConfigDescription.getDefaultConfig();
-        this.setChosenConfig(defaultConfig.name(), false);
-        if (this.userIsCreator) {
-            this.setConfigDemo(defaultConfig.config);
+        if (this.isCustomisable()) {
+            const defaultConfig: NamedRulesConfig = this.rulesConfigDescription.getDefaultConfig();
+            this.setChosenConfig(defaultConfig.name());
+            if (this.userIsCreator) {
+                this.setConfigDemo(defaultConfig.config);
+            } else {
+                const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
+                this.setConfigDemo(configToDisplay);
+            }
         } else {
-            const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
-            this.setConfigDemo(configToDisplay);
-        }
-        if (this.isCustomisable() === false) {
             return this.updateCallback.emit(MGPOptional.of({}));
         }
     }
 
     private setConfigDemo(config: RulesConfig): void {
-        if (this.stateType.isPresent()) {
+        if (this.stateProvider.isPresent()) {
             // eslint-disable-next-line dot-notation
-            const node: AbstractNode = new GameNode(this.stateType.get()['getInitialState'](config));
+            const stateProvider: (config: RulesConfig) => GameState = this.stateProvider.get();
+            const node: AbstractNode = new GameNode(stateProvider(config));
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.gameName,
@@ -193,7 +198,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         this.setChosenConfig(select.value);
     }
 
-    private setChosenConfig(configName: string, emit: boolean = true): void {
+    private setChosenConfig(configName: string): void {
         this.chosenConfigName = configName;
         let config: RulesConfig;
         if (this.chosenConfigName === 'Custom') {
@@ -202,9 +207,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         } else {
             config = this.rulesConfigDescription.getConfig(this.chosenConfigName);
             this.generateForm(config, false);
-            if (emit) {
-                this.updateCallback.emit(MGPOptional.of(config)); // As standard config are always legal
-            }
+            this.updateCallback.emit(MGPOptional.of(config)); // As standard config are always legal
         }
         this.setConfigDemo(config);
     }

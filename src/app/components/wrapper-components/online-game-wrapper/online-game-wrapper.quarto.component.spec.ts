@@ -331,6 +331,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.detectChanges();
         tick(0);
     }
+    function setPartDAOUpdateBackup(what: string): void {
+
+    }
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
         expect(Utils.getNonNullable(wrapper.currentPlayer).name).toEqual('creator');

@@ -12,6 +12,7 @@ import { AwaleMove } from 'src/app/games/mancala/awale/AwaleMove';
 import { AwaleMoveGenerator } from 'src/app/games/mancala/awale/AwaleMoveGenerator';
 import { AwaleNode, AwaleRules } from 'src/app/games/mancala/awale/AwaleRules';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
+import { MancalaConfig } from 'src/app/games/mancala/common/MancalaConfig';
 
 describe('MCTS', () => {
 
@@ -65,7 +66,8 @@ describe('MCTS', () => {
         otherMcts.maxGameLength = 10; // Limit it heavily to ensure we will exhaust the limit (for coverage)
         // When searching for the best move
         const beforeSearch: number = Date.now();
-        const node: AwaleNode = AwaleRules.get().getInitialNode(AwaleRules.DEFAULT_CONFIG);
+        const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;;
+        const node: AwaleNode = AwaleRules.get().getInitialNode(config);
         const move: AwaleMove = otherMcts.chooseNextMove(node, mctsOptions);
         // Then it should find one and not get stuck infinitely
         expect(move).toBeTruthy();

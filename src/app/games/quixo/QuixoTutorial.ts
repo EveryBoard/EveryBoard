@@ -1,4 +1,4 @@
-import { QuixoState } from 'src/app/games/quixo/QuixoState';
+import { QuixoConfig, QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -9,6 +9,8 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
+const config: QuixoConfig = QuixoRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+
 export class QuixoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
@@ -18,7 +20,7 @@ export class QuixoTutorial extends Tutorial {
         The first player plays with dark pieces, the second with light pieces.
         The board is made of 25 spaces spread over a 5x5 square.
         Every piece has a neutral side, a light side, and a dark side.`,
-            QuixoState.getInitialState(QuixoRules.DEFAULT_CONFIG),
+            QuixoState.getInitialState(config),
         ),
         TutorialStep.fromMove(
             $localize`What a move looks like (without animation)`,

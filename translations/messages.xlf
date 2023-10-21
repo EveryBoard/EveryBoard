@@ -254,83 +254,11 @@
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
       </trans-unit>
-      <trans-unit id="8720126581400014790" datatype="html">
-        <source>This value is mandatory</source>
-      </trans-unit>
-      <trans-unit id="69725534523676367" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
-      </trans-unit>
-      <trans-unit id="1461430439573127397" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
-      </trans-unit>
-      <trans-unit id="5607669932062416162" datatype="html">
-        <source>Default</source>
+      <trans-unit id="718535138834335364" datatype="html">
+        <source>Four in a Row</source>
       </trans-unit>
       <trans-unit id="1525715186822490677" datatype="html">
         <source>Awalé</source>
-      </trans-unit>
-      <trans-unit id="2018922024247045709" datatype="html">
-        <source>Width</source>
-      </trans-unit>
-      <trans-unit id="1139009493669322983" datatype="html">
-        <source>Seed by house</source>
-      </trans-unit>
-      <trans-unit id="1086558575410854374" datatype="html">
-        <source>Feed original house</source>
-      </trans-unit>
-      <trans-unit id="1571603835358328677" datatype="html">
-        <source>Must feed</source>
-      </trans-unit>
-      <trans-unit id="7654623560547531779" datatype="html">
-        <source>Pass by player store</source>
-      </trans-unit>
-      <trans-unit id="947579386294731197" datatype="html">
-        <source>Brandhub</source>
-      </trans-unit>
-      <trans-unit id="9195784792324730674" datatype="html">
-        <source>Central throne is left for good</source>
-      </trans-unit>
-      <trans-unit id="6759318691734948333" datatype="html">
-        <source>Edges are king's ennemy</source>
-      </trans-unit>
-      <trans-unit id="2642196868516331796" datatype="html">
-        <source>Central throne can surround king</source>
-      </trans-unit>
-      <trans-unit id="3540730147473795195" datatype="html">
-        <source>King far from home can be sandwiched</source>
-      </trans-unit>
-      <trans-unit id="843632127033881976" datatype="html">
-        <source>Invader Starts</source>
-      </trans-unit>
-      <trans-unit id="7644192101130519142" datatype="html">
-        <source>Epaminondas</source>
-      </trans-unit>
-      <trans-unit id="5348930337239726346" datatype="html">
-        <source>Number of empty rows</source>
-      </trans-unit>
-      <trans-unit id="7516610645583911732" datatype="html">
-        <source>Number of soldier rows</source>
-      </trans-unit>
-      <trans-unit id="2969677193390047071" datatype="html">
-        <source>19 x 19</source>
-      </trans-unit>
-      <trans-unit id="3033623772164647792" datatype="html">
-        <source>Height</source>
-      </trans-unit>
-      <trans-unit id="287623417167941506" datatype="html">
-        <source>Handicap</source>
-      </trans-unit>
-      <trans-unit id="6402320009813668873" datatype="html">
-        <source>13 x 13</source>
-      </trans-unit>
-      <trans-unit id="4066004856246691695" datatype="html">
-        <source>9 x 9</source>
-      </trans-unit>
-      <trans-unit id="4321462166273172721" datatype="html">
-        <source>Kalah</source>
-      </trans-unit>
-      <trans-unit id="718535138834335364" datatype="html">
-        <source>Four in a Row</source>
       </trans-unit>
       <trans-unit id="8844589419403065948" datatype="html">
         <source>Quarto</source>
@@ -365,6 +293,9 @@
       <trans-unit id="8191425615273627117" datatype="html">
         <source>Dvonn</source>
       </trans-unit>
+      <trans-unit id="7644192101130519142" datatype="html">
+        <source>Epaminondas</source>
+      </trans-unit>
       <trans-unit id="4541467181400942955" datatype="html">
         <source>Gipf</source>
       </trans-unit>
@@ -391,6 +322,9 @@
       </trans-unit>
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
+      </trans-unit>
+      <trans-unit id="947579386294731197" datatype="html">
+        <source>Brandhub</source>
       </trans-unit>
       <trans-unit id="4214831981215024999" datatype="html">
         <source>Conspirateurs</source>
@@ -421,6 +355,9 @@
       </trans-unit>
       <trans-unit id="6202245590217996824" datatype="html">
         <source>Teeko</source>
+      </trans-unit>
+      <trans-unit id="4321462166273172721" datatype="html">
+        <source>Kalah</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -787,6 +724,15 @@
       </trans-unit>
       <trans-unit id="3852843717175527075" datatype="html">
         <source>The game has been canceled!</source>
+      </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+      </trans-unit>
+      <trans-unit id="2018922024247045709" datatype="html">
+        <source>Width</source>
+      </trans-unit>
+      <trans-unit id="3033623772164647792" datatype="html">
+        <source>Height</source>
       </trans-unit>
       <trans-unit id="7694289842795780023" datatype="html">
         <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> part</source>
@@ -1338,6 +1284,12 @@
       <trans-unit id="4563771339790181195" datatype="html">
         <source>Positional</source>
       </trans-unit>
+      <trans-unit id="5348930337239726346" datatype="html">
+        <source>Number of empty rows</source>
+      </trans-unit>
+      <trans-unit id="7516610645583911732" datatype="html">
+        <source>Number of soldier rows</source>
+      </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
       </trans-unit>
@@ -1532,6 +1484,18 @@
       </trans-unit>
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
+      </trans-unit>
+      <trans-unit id="2969677193390047071" datatype="html">
+        <source>19 x 19</source>
+      </trans-unit>
+      <trans-unit id="287623417167941506" datatype="html">
+        <source>Handicap</source>
+      </trans-unit>
+      <trans-unit id="6402320009813668873" datatype="html">
+        <source>13 x 13</source>
+      </trans-unit>
+      <trans-unit id="4066004856246691695" datatype="html">
+        <source>9 x 9</source>
       </trans-unit>
       <trans-unit id="1472088308118018916" datatype="html">
         <source>Preliminary information</source>
@@ -2068,6 +2032,21 @@
       <trans-unit id="1645842992024065193" datatype="html">
         <source>This is not the winning move. Try again.</source>
       </trans-unit>
+      <trans-unit id="1139009493669322983" datatype="html">
+        <source>Seed by house</source>
+      </trans-unit>
+      <trans-unit id="1086558575410854374" datatype="html">
+        <source>Feed original house</source>
+      </trans-unit>
+      <trans-unit id="1571603835358328677" datatype="html">
+        <source>Must feed</source>
+      </trans-unit>
+      <trans-unit id="7654623560547531779" datatype="html">
+        <source>Pass by player store</source>
+      </trans-unit>
+      <trans-unit id="4475848272710836308" datatype="html">
+        <source>Continue distribution after last seed ends in store</source>
+      </trans-unit>
       <trans-unit id="387119594039428962" datatype="html">
         <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>
       </trans-unit>
@@ -2363,11 +2342,8 @@
       <trans-unit id="821589059503120913" datatype="html">
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
       </trans-unit>
-      <trans-unit id="7705561938199496212" datatype="html">
-        <source>At their turn, players put a piece on the board and possibly rotate one quadrant.
-        As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
-        To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing dark, do a simple move.</source>
+      <trans-unit id="6056279063431893237" datatype="html">
+        <source>At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark, do a simple move.</source>
       </trans-unit>
       <trans-unit id="1640662905904405955" datatype="html">
         <source>You have made a move with a rotation. This tutorial step is about moves without rotations!</source>
@@ -2596,9 +2572,8 @@
       <trans-unit id="6014794960681933717" datatype="html">
         <source>Capture (2/2)</source>
       </trans-unit>
-      <trans-unit id="4872428604450835795" datatype="html">
-        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing light here. Play on the bottom left to see a capture.</source>
+      <trans-unit id="5534919927538147018" datatype="html">
+        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt; You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
       </trans-unit>
       <trans-unit id="863291659187903950" datatype="html">
         <source>Lower and more to the left, please.</source>
@@ -2895,6 +2870,21 @@
       </trans-unit>
       <trans-unit id="3372037160964274985" datatype="html">
         <source>Pieces</source>
+      </trans-unit>
+      <trans-unit id="9195784792324730674" datatype="html">
+        <source>Central throne is left for good</source>
+      </trans-unit>
+      <trans-unit id="2524296888634788857" datatype="html">
+        <source>Edges are king&apos;s ennemy</source>
+      </trans-unit>
+      <trans-unit id="2642196868516331796" datatype="html">
+        <source>Central throne can surround king</source>
+      </trans-unit>
+      <trans-unit id="3540730147473795195" datatype="html">
+        <source>King far from home can be sandwiched</source>
+      </trans-unit>
+      <trans-unit id="843632127033881976" datatype="html">
+        <source>Invader Starts</source>
       </trans-unit>
       <trans-unit id="3469374446011769111" datatype="html">
         <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
@@ -3219,6 +3209,15 @@
       </trans-unit>
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
+      </trans-unit>
+      <trans-unit id="3012694567108651369" datatype="html">
+        <source>This value is mandatory</source>
+      </trans-unit>
+      <trans-unit id="4408456168772857996" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
+      </trans-unit>
+      <trans-unit id="701935636628882602" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
       </trans-unit>
     </body>
   </file>

@@ -5,7 +5,7 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
  *     - surrounding: means capturing with 4 enemies (being border, opponent, or throne)
  *     - sandwiching: means capturing with 2 enemies (being border, opponent, or throne)
  */
-export interface TaflConfig extends RulesConfig {
+export interface TaflConfig extends RulesConfig { // TODO: test d'en faire un type
 
     // once the king leave the castle he cannot re-station there
     readonly castleIsLeftForGood: boolean;

@@ -30,11 +30,11 @@ const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove, T
         [_, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _],
-    ], 1, TablutRules.DEFAULT_CONFIG),
+    ], 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE),
     capture: TablutMove.of(new Coord(1, 0), new Coord(2, 0)),
     firstCaptured: new Coord(2, 1),
     otherPlayerPiece: new Coord(5, 0),
-    stateReadyForJumpOver: TablutState.getInitialState(TablutRules.DEFAULT_CONFIG),
+    stateReadyForJumpOver: TablutState.getInitialState(TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE),
     jumpOver: TablutMove.of(new Coord(5, 0), new Coord(5, 5)),
 };
 DoTaflTests(tablutEntries);

@@ -3,6 +3,9 @@ import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { AwaleRules } from './AwaleRules';
 import { MancalaTutorial } from '../common/MancalaTutorial';
+import { MancalaConfig } from '../common/MancalaConfig';
+
+const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
 export class AwaleTutorial extends Tutorial {
 
@@ -12,14 +15,14 @@ export class AwaleTutorial extends Tutorial {
         TutorialStep.informational(
             this.gameName,
             $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.`,
-            MancalaState.getInitialState(AwaleRules.DEFAULT_CONFIG),
+            MancalaState.getInitialState(config),
         ),
         TutorialStep.informational(
             $localize`Awalé`,
             $localize`Bonus fact: Awalé is the most common of all Mancalas.`,
-            MancalaState.getInitialState(AwaleRules.DEFAULT_CONFIG),
+            MancalaState.getInitialState(config),
         ),
-        MancalaTutorial.SOWING(AwaleMove.of(5), AwaleRules.DEFAULT_CONFIG),
+        MancalaTutorial.SOWING(AwaleMove.of(5), config),
 
         TutorialStep.anyMove(
             $localize`Big sowing`,
@@ -29,7 +32,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 12, 0, 0, 0, 0],
-            ], 0, [0, 0], AwaleRules.DEFAULT_CONFIG),
+            ], 0, [0, 0], config),
             AwaleMove.of(1),
             $localize`See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).`,
         ),
@@ -39,7 +42,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [0, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],
-            ], 0, [0, 0], AwaleRules.DEFAULT_CONFIG),
+            ], 0, [0, 0], config),
             [AwaleMove.of(0)],
             $localize`Well done! This was a simple capture, now let us see how to make multiple captures.`,
             $localize`Failed. Try again and sow from the leftmost house.`,
@@ -50,7 +53,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [2, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],
-            ], 0, [0, 0], AwaleRules.DEFAULT_CONFIG),
+            ], 0, [0, 0], config),
             [AwaleMove.of(0)],
             $localize`Nice, you win 3 points from the first house, and 2 from the second!`,
             $localize`Failed. Try again.`,
@@ -61,7 +64,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [1, 0, 1, 0, 0, 1],
                 [3, 0, 0, 0, 1, 0],
-            ], 0, [0, 0], AwaleRules.DEFAULT_CONFIG),
+            ], 0, [0, 0], config),
             [AwaleMove.of(0)],
             $localize`Notice that because the second house was not capturable, the capture was interrupted and you have not captured the first house.`,
             $localize`Failed. Try again.`,
@@ -72,7 +75,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [2, 2, 0, 0, 1, 0],
                 [1, 3, 0, 0, 0, 0],
-            ], 0, [0, 0], AwaleRules.DEFAULT_CONFIG),
+            ], 0, [0, 0], config),
             [AwaleMove.of(1)],
             $localize`Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!`,
             $localize`You have only captured one house, try again!`,
@@ -83,7 +86,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [1, 1, 1, 1, 1, 0],
                 [5, 0, 0, 1, 0, 0],
-            ], 0, [0, 0], AwaleRules.DEFAULT_CONFIG),
+            ], 0, [0, 0], config),
             [AwaleMove.of(0)],
             $localize`Sadly, you cannot capture here, otherwise the opponent could not play after you.
         When this happens, the move can be made, but no capture takes place!`,
@@ -95,7 +98,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 1, 2, 4, 4, 5],
-            ], 0, [0, 0], AwaleRules.DEFAULT_CONFIG),
+            ], 0, [0, 0], config),
             AwaleMove.of(3),
             $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
         It is often a good way to have easy captures!`,
@@ -106,7 +109,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [4, 4, 3, 2, 1, 0],
                 [1, 0, 0, 0, 0, 0],
-            ], 0, [23, 10], AwaleRules.DEFAULT_CONFIG),
+            ], 0, [23, 10], config),
             AwaleMove.of(0),
             $localize`Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player's turn, and the second player has taken all the remaining seeds.`,
         ),

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, Type, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -27,8 +27,9 @@ import { RulesConfigurationComponent } from '../rules-configuration/rules-config
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameState } from 'src/app/jscaip/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
+import { AbstractRules } from 'src/app/jscaip/Rules';
 
-interface PartCreationViewInfo {
+type PartCreationViewInfo = {
     userIsCreator: boolean;
     showCustomTime?: boolean;
     canEditConfig?: boolean;
@@ -502,9 +503,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
 
-    public getStateType(): MGPOptional<Type<GameState>> {
+    public getStateProvider(): MGPOptional<(config: RulesConfig) => GameState> {
         const urlName: string = this.getGameUrlName();
-        return MGPOptional.of(GameInfo.getByUrlName(urlName)[0].rules.stateType);
+        const rules: AbstractRules = GameInfo.getByUrlName(urlName)[0].rules;
+        const stateProvider: (config: RulesConfig) => GameState = (config: RulesConfig) => {
+            // eslint-disable-next-line dot-notation
+            return rules.stateType['getInitialState'](config);
+        };
+        return MGPOptional.of(stateProvider);
     }
 
     public async ngOnDestroy(): Promise<void> {

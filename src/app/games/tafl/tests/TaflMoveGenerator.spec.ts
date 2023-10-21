@@ -6,6 +6,7 @@ import { BrandhubState } from '../brandhub/BrandhubState';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflConfig } from '../TaflConfig';
 
 describe('TaflMoveGenerator', () => {
 
@@ -27,7 +28,8 @@ describe('TaflMoveGenerator', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 1, BrandhubRules.DEFAULT_CONFIG);
+        const config: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+        const state: BrandhubState = new BrandhubState(board, 1, config);
         const node: BrandhubNode = new BrandhubNode(state);
 
         // When asking the list of legal move

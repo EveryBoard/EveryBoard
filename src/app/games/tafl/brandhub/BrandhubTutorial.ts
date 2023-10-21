@@ -4,23 +4,26 @@ import { BrandhubState } from 'src/app/games/tafl/brandhub/BrandhubState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { BrandhubRules } from './BrandhubRules';
+import { TaflConfig } from '../TaflConfig';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
+const config: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+
 export class BrandhubTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
-            BrandhubState.getInitialState(BrandhubRules.DEFAULT_CONFIG),
+            BrandhubState.getInitialState(config),
         ),
         TutorialStep.anyMove(
             $localize`Moving`,
             $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move: <ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a corner throne.</li><li>Once the king left his central throne, no piece can land on it, but all can pass over it.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
-            BrandhubState.getInitialState(BrandhubRules.DEFAULT_CONFIG),
+            BrandhubState.getInitialState(config),
             BrandhubMove.of(new Coord(3, 1), new Coord(1, 1)),
             $localize`Congratulations!`,
         ),
@@ -35,7 +38,7 @@ export class BrandhubTutorial extends Tutorial {
                 [_, _, O, _, _, _, _],
                 [_, _, _, X, _, O, _],
                 [_, _, _, O, _, _, _],
-            ], 1, BrandhubRules.DEFAULT_CONFIG),
+            ], 1, config),
             [
                 BrandhubMove.of(new Coord(3, 5), new Coord(2, 5)),
             ],
@@ -53,7 +56,7 @@ export class BrandhubTutorial extends Tutorial {
                 [_, X, _, _, _, _, _],
                 [_, O, _, A, _, O, _],
                 [_, _, _, O, _, _, _],
-            ], 12, BrandhubRules.DEFAULT_CONFIG),
+            ], 12, config),
             [
                 BrandhubMove.of(new Coord(2, 1), new Coord(3, 1)),
                 BrandhubMove.of(new Coord(3, 0), new Coord(3, 1)),
@@ -72,7 +75,7 @@ export class BrandhubTutorial extends Tutorial {
                 [_, _, _, O, _, _, _],
                 [_, X, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
-            ], 72, BrandhubRules.DEFAULT_CONFIG),
+            ], 72, config),
             [BrandhubMove.of(new Coord(1, 3), new Coord(2, 3))],
             $localize`Congratulations, you won!`,
             $localize`Failed, you let the king run away.`,
@@ -88,7 +91,7 @@ export class BrandhubTutorial extends Tutorial {
                 [_, _, _, O, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
-            ], 72, BrandhubRules.DEFAULT_CONFIG),
+            ], 72, config),
             [BrandhubMove.of(new Coord(2, 0), new Coord(2, 2))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
             $localize`Failed. Try again.`,
@@ -104,7 +107,7 @@ export class BrandhubTutorial extends Tutorial {
                 [_, _, _, X, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, A, _, O, _, _, _],
-            ], 72, BrandhubRules.DEFAULT_CONFIG),
+            ], 72, config),
             [BrandhubMove.of(new Coord(3, 6), new Coord(2, 6))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
             $localize`Failed. Try again.`,

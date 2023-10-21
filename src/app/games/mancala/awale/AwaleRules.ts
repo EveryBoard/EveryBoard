@@ -9,6 +9,8 @@ import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '.
 import { Utils } from 'src/app/utils/utils';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { GameNode } from 'src/app/jscaip/GameNode';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export class AwaleNode extends GameNode<AwaleMove, MancalaState> {}
 
@@ -16,13 +18,30 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
 
     private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
-    public static readonly DEFAULT_CONFIG: MancalaConfig = {
-        feedOriginalHouse: false,
-        mustFeed: true,
-        passByPlayerStore: false,
-        seedsByHouse: 4,
-        width: 6,
-    };
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<MancalaConfig> =
+        new RulesConfigDescription(
+            {
+                name: (): string => $localize`Awalé`,
+                config: {
+                    feedOriginalHouse: false,
+                    mustFeed: true,
+                    passByPlayerStore: false,
+                    continueDistributionAfterStore: false,
+                    seedsByHouse: 4,
+                    width: 6,
+                },
+            }, {
+                width: (): string => $localize`Width`,
+                seedsByHouse: (): string => $localize`Seed by house`,
+                feedOriginalHouse: (): string => $localize`Feed original house`,
+                mustFeed: (): string => $localize`Must feed`,
+                passByPlayerStore: (): string => $localize`Pass by player store`,
+                continueDistributionAfterStore: (): string => $localize`Continue distribution after last seed ends in store`,
+            }, [
+            ], {
+                width: MGPValidators.range(1, 99),
+                seedsByHouse: MGPValidators.range(1, 99),
+            });
 
     public static get(): AwaleRules {
         if (AwaleRules.singleton.isAbsent()) {
@@ -32,19 +51,25 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
     }
 
     private constructor() {
-        super(AwaleRules.DEFAULT_CONFIG);
+        super(AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
+    }
+
+    public override getRulesConfigDescription(): RulesConfigDescription<MancalaConfig> {
+        return AwaleRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public distributeMove(move: AwaleMove, state: MancalaState): MancalaDistributionResult {
         const playerY: number = state.getCurrentPlayerY();
         return this.distributeHouse(move.x, playerY, state);
     }
+
     public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {
         const filledCoords: Coord[] = distributionResult.filledCoords;
         const landingCoord: Coord = filledCoords[filledCoords.length - 1];
         const resultingState: MancalaState = distributionResult.resultingState;
         return this.captureIfLegal(landingCoord.x, landingCoord.y, resultingState);
     }
+
     public isLegal(move: AwaleMove, state: MancalaState): MGPValidation {
         const opponent: Player = state.getCurrentOpponent();
         const playerY: number = state.getCurrentPlayerY();
@@ -60,6 +85,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         }
         return MGPValidation.SUCCESS;
     }
+
     /**
      * Only called if y and player are not equal.
      * If the condition to make a capture into the opponent's side are met
@@ -107,6 +133,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
             resultingState: new MancalaState(resultingBoard, state.turn, captured, state.config),
         };
     }
+
     public captureIfLegal(x: number, y: number, state: MancalaState): MancalaCaptureResult {
         const player: Player = state.getCurrentPlayer();
         const captureLessResult: MancalaCaptureResult = {
@@ -117,9 +144,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
                 [0, 0, 0, 0, 0, 0],
             ],
         };
-        if (y === player.getOpponent().value) {
-            return captureLessResult;
-        } else {
+        if (y === player.value) {
             const captureResult: MancalaCaptureResult = this.capture(x, y, state);
             const isStarving: boolean = MancalaRules.isStarving(player.getOpponent(),
                                                                 captureResult.resultingState.board);
@@ -131,6 +156,9 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
             } else {
                 return captureResult;
             }
+        } else {
+            return captureLessResult;
         }
     }
+
 }

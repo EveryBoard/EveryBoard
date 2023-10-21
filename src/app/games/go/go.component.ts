@@ -25,6 +25,7 @@ import { GoMoveGenerator } from './GoMoveGenerator';
 export class GoComponent
     extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GoConfig, GoLegalityInformation>
 {
+
     public boardInfo: GroupDatas<GoPiece>;
 
     public ko: MGPOptional<Coord> = MGPOptional.empty();

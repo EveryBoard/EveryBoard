@@ -79,6 +79,8 @@ describe('PartCreationComponent', () => {
         tick(0);
     }
     async function clickElement(elementName: string): Promise<void> { // Ticketted Refactor (2022.124)
+        // TODO FOR REVIEW: [W] [medium] PartCreationComponent & TestUtils refactor
+        // Le ticket est là mais le marqueur reste utile à garder
         testUtils.detectChanges();
         await testUtils.clickElement(elementName, false);
     }
@@ -422,7 +424,7 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
 
-            it('should not transfer rules config when modifying field', fakeAsync(async() => {
+            it('should not emit rules config when modifying field', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 awaitComponentInitialization();
                 await mockCandidateArrival();
@@ -440,7 +442,7 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
 
-            it('should transfer rules config when proposing config', fakeAsync(async() => {
+            it('should emit rules config when proposing config', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 awaitComponentInitialization();
                 await mockCandidateArrival();

@@ -12,10 +12,12 @@ import { TaflState } from '../TaflState';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflNode, MyTaflRules } from './MyTaflRules.spec';
 import { MyTaflState } from './MyTaflState.spec';
+import { TaflConfig } from '../TaflConfig';
 
 describe('TaflRules', () => {
 
     let rules: MyTaflRules;
+    const config: TaflConfig = MyTaflRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -29,7 +31,7 @@ describe('TaflRules', () => {
     describe('getSurroundings', () => {
 
         it('should return neighborings spaces', () => {
-            const startingState: TaflState = rules.getInitialNode(MyTaflRules.DEFAULT_CONFIG).gameState;
+            const startingState: TaflState = rules.getInitialNode(config).gameState;
             const { backCoord } =
                 rules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingState);
             expect(backCoord).toEqual(new Coord(4, 1));
@@ -39,7 +41,7 @@ describe('TaflRules', () => {
 
     it('should be illegal to move an empty square', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState(MyTaflRules.DEFAULT_CONFIG);
+        const state: MyTaflState = MyTaflState.getInitialState(config);
 
         // When trying to move an empty square
         const move: MyTaflMove = MyTaflMove.from(new Coord(0, 1), new Coord(1, 1)).get();
@@ -51,7 +53,7 @@ describe('TaflRules', () => {
 
     it('should be illegal to move an opponent pawn', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState(MyTaflRules.DEFAULT_CONFIG);
+        const state: MyTaflState = MyTaflState.getInitialState(config);
 
         // When trying to move an opponent pawn
         const move: MyTaflMove = MyTaflMove.from(new Coord(4, 2), new Coord(4, 3)).get();
@@ -63,7 +65,7 @@ describe('TaflRules', () => {
 
     it('should be illegal to land on a pawn', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState(MyTaflRules.DEFAULT_CONFIG);
+        const state: MyTaflState = MyTaflState.getInitialState(config);
 
         // When doing a move landing on the opponent
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 3)).get();
@@ -75,7 +77,7 @@ describe('TaflRules', () => {
 
     it('should be illegal to pass through a pawn', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState(MyTaflRules.DEFAULT_CONFIG);
+        const state: MyTaflState = MyTaflState.getInitialState(config);
 
         // When doing a move passing through a piece
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 4)).get();
@@ -98,7 +100,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: MyTaflState = new MyTaflState(board, 23, MyTaflRules.DEFAULT_CONFIG);
+        const state: MyTaflState = new MyTaflState(board, 23, config);
 
         // When sacrificing him
         const move: MyTaflMove = MyTaflMove.from(new Coord(3, 0), new Coord(2, 0)).get();
@@ -115,7 +117,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: MyTaflState = new MyTaflState(expectedBoard, 24, MyTaflRules.DEFAULT_CONFIG);
+        const expectedState: MyTaflState = new MyTaflState(expectedBoard, 24, config);
         const node: MyTaflNode = new MyTaflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
@@ -134,7 +136,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: MyTaflState = new MyTaflState(board, 24, MyTaflRules.DEFAULT_CONFIG);
+        const state: MyTaflState = new MyTaflState(board, 24, config);
 
         // When sacrificing him
         const move: MyTaflMove = MyTaflMove.from(new Coord(8, 4), new Coord(1, 4)).get();
@@ -151,7 +153,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: MyTaflState = new MyTaflState(expectedBoard, 25, MyTaflRules.DEFAULT_CONFIG);
+        const expectedState: MyTaflState = new MyTaflState(expectedBoard, 25, config);
         const node: MyTaflNode = new MyTaflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
@@ -163,7 +165,7 @@ describe('TaflRules', () => {
             // Given a rules instance configured with a starting invader
             const rules: MyTaflRules = MyTaflRules.get();
             rules.config = {
-                ...MyTaflRules.DEFAULT_CONFIG,
+                ...config,
                 invaderStarts: true,
             };
 
@@ -178,7 +180,7 @@ describe('TaflRules', () => {
             // Given a rules instance configured with a starting defender
             const rules: MyTaflRules = MyTaflRules.get();
             rules.config = {
-                ...MyTaflRules.DEFAULT_CONFIG,
+                ...config,
                 invaderStarts: false,
             };
 

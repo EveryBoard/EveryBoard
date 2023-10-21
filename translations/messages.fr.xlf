@@ -306,15 +306,15 @@
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
       </trans-unit>
-      <trans-unit id="8720126581400014790" datatype="html">
+      <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
         <target>Cette valeur est obligatoire</target>
       </trans-unit>
-      <trans-unit id="69725534523676367" datatype="html">
+      <trans-unit id="4408456168772857996" datatype="html">
         <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
         <target><x id="PH" equiv-text="value"/> est trop bas, le minimum est <x id="PH_1" equiv-text="min"/></target>
       </trans-unit>
-      <trans-unit id="1461430439573127397" datatype="html">
+      <trans-unit id="701935636628882602" datatype="html">
         <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
         <target><x id="PH" equiv-text="value"/> est trop haut, le maximum est <x id="PH_1" equiv-text="max"/></target>
       </trans-unit>
@@ -346,7 +346,7 @@
         <source>Central throne is left for good</source>
         <target>Le trône central est quitté définitivement</target>
       </trans-unit>
-      <trans-unit id="6759318691734948333" datatype="html">
+      <trans-unit id="2524296888634788857" datatype="html">
         <source>Edges are king's ennemy</source>
         <target>Les bords sont l'ennemi du roi</target>
       </trans-unit>
@@ -3238,15 +3238,9 @@
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
         <target>Le but du Pentago est d&apos;aligner 5 de vos pièces. Dans le plateau ci-dessous, Foncé gagne.</target>
       </trans-unit>
-      <trans-unit id="7705561938199496212" datatype="html">
-        <source>At their turn, players put a piece on the board and possibly rotate one quadrant.
-        As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
-        To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing dark, do a simple move.</source>
-        <target>Chacun à son tour, les joueurs posent une pièce sur le plateau, et effectuent éventuellement une rotation d&apos;un quadrant.
-        Tant qu&apos;il existe des quadrants neutres, c&apos;est à dire des quadrants qui ne changeraient pas après avoir été tournés, l&apos;option de ne pas effectuer de rotation est acceptée.
-        Pour ce faire il faut cliquer sur le rond barré qui apparaît au centre du plateau quand c&apos;est possible.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, faites un mouvement simple.</target>
+      <trans-unit id="6056279063431893237" datatype="html">
+        <source>At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark, do a simple move.</source>
+        <target>Chacun à son tour, les joueurs posent une pièce sur le plateau, et effectuent éventuellement une rotation d&apos;un quadrant. Tant qu&apos;il existe des quadrants neutres, c&apos;est à dire des quadrants qui ne changeraient pas après avoir été tournés, l&apos;option de ne pas effectuer de rotation est acceptée. Pour ce faire il faut cliquer sur le rond barré qui apparaît au centre du plateau quand c&apos;est possible.&lt;br/&gt;&lt;br/&gt; Vous jouez Foncé, faites un mouvement simple.</target>
       </trans-unit>
       <trans-unit id="1640662905904405955" datatype="html">
         <source>You have made a move with a rotation. This tutorial step is about moves without rotations!</source>
@@ -3601,11 +3595,9 @@
         <source>Capture (2/2)</source>
         <target>Capture (2/2)</target>
       </trans-unit>
-      <trans-unit id="4872428604450835795" datatype="html">
-        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing light here. Play on the bottom left to see a capture.</source>
-        <target>Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Clair. Joueez en bas à gauche pour voir un exemple de capture.</target>
+      <trans-unit id="5534919927538147018" datatype="html">
+        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt; You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
+        <target>Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.&lt;br/&gt;&lt;br/&gt; Vous jouez Clair. Joueez en bas à gauche pour voir un exemple de capture.</target>
       </trans-unit>
       <trans-unit id="863291659187903950" datatype="html">
         <source>Lower and more to the left, please.</source>

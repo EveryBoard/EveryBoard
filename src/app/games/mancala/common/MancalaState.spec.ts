@@ -5,6 +5,7 @@ const myMancalaConfig: MancalaConfig = {
     feedOriginalHouse: true,
     mustFeed: true,
     passByPlayerStore: true,
+    continueDistributionAfterStore: true,
     seedsByHouse: 4,
     width: 6,
 };

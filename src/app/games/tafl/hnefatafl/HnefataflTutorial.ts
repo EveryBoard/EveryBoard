@@ -4,23 +4,26 @@ import { HnefataflState } from 'src/app/games/tafl/hnefatafl/HnefataflState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { HnefataflRules } from './HnefataflRules';
+import { TaflConfig } from '../TaflConfig';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
+const config: TaflConfig = HnefataflRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+
 export class HnefataflTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`Hnefatafl is a strategy game that was played by the vikings, it's part of a larger family of games called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
-            HnefataflState.getInitialState(HnefataflRules.DEFAULT_CONFIG),
+            HnefataflState.getInitialState(config),
         ),
         TutorialStep.anyMove(
             $localize`Moving`,
             $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move:<ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a throne.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
-            HnefataflState.getInitialState(HnefataflRules.DEFAULT_CONFIG),
+            HnefataflState.getInitialState(config),
             HnefataflMove.of(new Coord(5, 1), new Coord(1, 1)),
             $localize`Congratulations!`,
         ),
@@ -39,7 +42,7 @@ export class HnefataflTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, O, _, _, _, _, _],
                 [_, _, _, O, O, O, O, O, _, _, _],
-            ], 1, HnefataflRules.DEFAULT_CONFIG),
+            ], 1, config),
             [HnefataflMove.of(new Coord(5, 3), new Coord(3, 3))],
             $localize`Congratulations, that will teach him a lesson!`,
             $localize`Failed, you missed an opportunity to capture a piece of the opponent.`,
@@ -59,7 +62,7 @@ export class HnefataflTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _],
                 [_, O, _, _, _, _, _, _, _, _, _],
                 [_, _, _, O, O, O, O, _, O, _, _],
-            ], 12, HnefataflRules.DEFAULT_CONFIG),
+            ], 12, config),
             [
                 HnefataflMove.of(new Coord(3, 0), new Coord(3, 5)),
                 HnefataflMove.of(new Coord(3, 10), new Coord(3, 5)),
@@ -82,7 +85,7 @@ export class HnefataflTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _],
-            ], 72, HnefataflRules.DEFAULT_CONFIG),
+            ], 72, config),
             [HnefataflMove.of(new Coord(3, 4), new Coord(2, 4))],
             $localize`Congratulations, you won!`,
             $localize`Failed, you let the king run away.`,
@@ -102,7 +105,7 @@ export class HnefataflTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _],
-            ], 72, HnefataflRules.DEFAULT_CONFIG),
+            ], 72, config),
             [HnefataflMove.of(new Coord(3, 3), new Coord(3, 1))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
             $localize`Failed. Try again.`,

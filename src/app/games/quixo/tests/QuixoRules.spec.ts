@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { QuixoState } from '../QuixoState';
+import { QuixoConfig, QuixoState } from '../QuixoState';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -15,6 +15,7 @@ import { QuixoFailure } from '../QuixoFailure';
 describe('QuixoRules', () => {
 
     let rules: QuixoRules;
+    const config: QuixoConfig = QuixoRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -39,7 +40,7 @@ describe('QuixoRules', () => {
 
     it('should forbid move creation from coord not on the side', () => {
         // Given a normal config board
-        const state: QuixoState = QuixoState.getInitialState(QuixoRules.DEFAULT_CONFIG);
+        const state: QuixoState = QuixoState.getInitialState(config);
 
         // When doing a move inside the board
         const move: QuixoMove = new QuixoMove(1, 1, Orthogonal.UP);
@@ -51,7 +52,7 @@ describe('QuixoRules', () => {
 
     it('should throw when suggesting move for out of range', () => {
         // Given an normal config board
-        const state: QuixoState = QuixoState.getInitialState(QuixoRules.DEFAULT_CONFIG);
+        const state: QuixoState = QuixoState.getInitialState(config);
 
         // When doing a move out of range
         const move: QuixoMove = new QuixoMove(-1, 0, Orthogonal.DOWN);
@@ -76,7 +77,7 @@ describe('QuixoRules', () => {
     for (let i: number = 0; i < 4; i++) {
         it(`should throw when suggesting move with coord whose side is the same as the direction (${ i })`, () => {
             // Given any normal config board
-            const state: QuixoState = QuixoState.getInitialState(QuixoRules.DEFAULT_CONFIG);
+            const state: QuixoState = QuixoState.getInitialState(config);
 
             // When providing a move where a piece try to leave the board
             const move: QuixoMove = moveByDirection[i];

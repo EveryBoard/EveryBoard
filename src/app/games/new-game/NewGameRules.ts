@@ -6,6 +6,8 @@ import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 /**
  * This class is optional.
@@ -41,8 +43,29 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
      * If you want your game to be configurable (different board sizes by example)
      * Here should be the default config
      * You have the option to create a type NewRulesConfig for more type safety
+     * It is FULLY mandatory, if you don't want to make your game configurable just yet, ignore this!
      */
-    private static readonly DEFAULT_CONFIG: RulesConfig = {};
+    private static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription =
+        new RulesConfigDescription({
+            name: (): string => 'the internationalisable name of that standard config',
+            config: {
+                the_name_you_will_use_in_your_rules_and_states: 5,
+            },
+        }, {
+            the_name_you_will_use_in_your_rules_and_states: (): string => `the translatable and writable name of this parameter`,
+        }, [
+            // Here, if you have other "standard" configuration, add a list
+            // There are of the same type as the default one in first parameter !
+        ], {
+            the_name_you_will_use_in_your_rules_and_states: (value: number | null): MGPValidation => {
+                if (value == null) {
+                    return MGPValidation.failure('Return a localizable message for the user saying why this config choice is unacceptable');
+                } else {
+                    return MGPValidation.SUCCESS;
+                }
+            },
+        });
+
     /**
      * This gets the singleton instance. Similarly, keep this as is.
      */
@@ -52,12 +75,20 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
         }
         return NewGameRules.singleton.get();
     }
+
     /**
      * The constructor is made private to avoid creating other instances of this class.
      */
     private constructor() {
-        const config: RulesConfig = NewGameRules.DEFAULT_CONFIG;
+        const config: RulesConfig = NewGameRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
         super(NewGameState, config);
+    }
+
+    /**
+     * If you do create a configuration for the game, you must have this function, otherwise remove it
+     */
+    public override getRulesConfigDescription(): RulesConfigDescription {
+        return NewGameRules.RULES_CONFIG_DESCRIPTION;
     }
 
     /**
@@ -70,6 +101,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
     public isLegal(move: NewGameMove, state: NewGameState): MGPFallible<NewGameLegalityInfo> {
         return MGPFallible.success(new NewGameLegalityInfo());
     }
+
     /**
      * This is the methods that applies the move to a state.
      * We know the move is legal because it has been checked with `isLegal`.
@@ -81,6 +113,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
     public applyLegalMove(move: NewGameMove, state: NewGameState, info: NewGameLegalityInfo): NewGameState {
         return new NewGameState(state.turn + 1);
     }
+
     /**
      * This method checks whether the game is in progress or finished.
      * @param node the node for which we check the game status
@@ -93,4 +126,5 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
             return GameStatus.DRAW;
         }
     }
+
 }

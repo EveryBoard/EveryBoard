@@ -75,10 +75,13 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public async onLegalUserMove(move: Move, scores?: [number, number] | undefined): Promise<void> {
         return;
     }
+
     public override getPlayer(): string {
         return 'no-player';
     }
+
     public async onCancelMove(_reason?: string | undefined): Promise<void> {
         return;
     }
+
 }

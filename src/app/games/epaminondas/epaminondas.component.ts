@@ -32,6 +32,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                                    EpaminondasConfig,
                                                                    EpaminondasLegalityInformation>
 {
+
     public NONE: PlayerOrNone = PlayerOrNone.NONE;
 
     public firstPiece: MGPOptional<Coord> = MGPOptional.empty();

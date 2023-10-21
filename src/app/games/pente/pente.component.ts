@@ -9,7 +9,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { ActivatedRoute } from '@angular/router';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
 import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
@@ -20,7 +19,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, PenteState, PlayerOrNone, GobanConfig> {
+export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, PenteState, PlayerOrNone> {
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];

@@ -3,7 +3,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -14,13 +14,14 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
 
     let rules: EpaminondasRules;
     let moveGenerator: EpaminondasPhalanxSizeAndFilterMoveGenerator;
+    const config: EpaminondasConfig = EpaminondasRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     beforeEach(() => {
         rules = EpaminondasRules.get();
         moveGenerator = new EpaminondasPhalanxSizeAndFilterMoveGenerator();
     });
     it('should filter number of choices', () => {
-        const node: EpaminondasNode = rules.getInitialNode(EpaminondasRules.DEFAULT_CONFIG);
+        const node: EpaminondasNode = rules.getInitialNode(config);
         expect(moveGenerator.getListMoves(node).length).toBeLessThan(114);
     });
     it('should not filter number of choices if it is below 40', () => {

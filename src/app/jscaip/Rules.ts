@@ -7,6 +7,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
 import { GameStatus } from './GameStatus';
 import { RulesConfig } from './RulesConfigUtil';
+import { RulesConfigDescription } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export abstract class Rules<M extends Move,
                             S extends GameState,
@@ -69,8 +70,11 @@ export abstract class Rules<M extends Move,
         return new GameNode(initialState);
     }
 
-    public abstract getGameStatus(node: GameNode<M, S>): GameStatus;
+    public getRulesConfigDescription(): RulesConfigDescription<C> {
+        return RulesConfigDescription.DEFAULT as RulesConfigDescription<C>;
+    }
 
+    public abstract getGameStatus(node: GameNode<M, S>): GameStatus;
 }
 
 export abstract class AbstractRules extends Rules<Move, GameState, RulesConfig, unknown> {

@@ -132,7 +132,9 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
         const distributionResult: MancalaDistributionResult =
             await this.showSimpleDistribution(MancalaDistribution.of(x));
-        if (distributionResult.endsUpInStore) {
+        if (distributionResult.endsUpInStore &&
+            this.constructedState.config.continueDistributionAfterStore)
+        {
             const player: Player = this.constructedState.getCurrentPlayer();
             if (MancalaRules.isStarving(player, distributionResult.resultingState.board)) {
                 // Player has no more seed to distribute

@@ -3,17 +3,19 @@ import { KalahMove } from '../KalahMove';
 import { KalahNode, KalahRules } from '../KalahRules';
 import { MancalaState } from '../../common/MancalaState';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
+import { MancalaConfig } from '../../common/MancalaConfig';
 
 describe('KalahMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
+    const config: MancalaConfig = KalahRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     beforeEach(() => {
         moveGenerator = new KalahMoveGenerator();
     });
     it('should have all move options', () => {
         // Given an initial node
-        const initialState: MancalaState = MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG);
+        const initialState: MancalaState = MancalaState.getInitialState(config);
         const node: KalahNode = new KalahNode(initialState);
 
         // When computing the list of moves
@@ -27,7 +29,7 @@ describe('KalahMoveGenerator', () => {
         const state: MancalaState = new MancalaState([
             [5, 2, 3, 2, 1, 2],
             [1, 0, 0, 0, 0, 0],
-        ], 24, [13, 20], KalahRules.DEFAULT_CONFIG);
+        ], 24, [13, 20], config);
         const node: KalahNode = new KalahNode(state);
 
         // When calculating the list of possible moves

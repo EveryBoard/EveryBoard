@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
-import { MancalaMove } from '../common/MancalaMove';
-import { MancalaScoreHeuristic } from '../common/MancalaScoreHeurisic';
-import { MancalaState } from '../common/MancalaState';
+import { MancalaMove } from './MancalaMove';
+import { MancalaScoreHeuristic } from './MancalaScoreHeurisic';
+import { MancalaState } from './MancalaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { MancalaConfig } from '../common/MancalaConfig';
+import { MancalaConfig } from './MancalaConfig';
 
 describe('MancalaScoreHeuristic', () => {
 
@@ -15,6 +15,7 @@ describe('MancalaScoreHeuristic', () => {
         feedOriginalHouse: true,
         mustFeed: true,
         passByPlayerStore: true,
+        continueDistributionAfterStore: true,
         seedsByHouse: 4,
         width: 6,
     };

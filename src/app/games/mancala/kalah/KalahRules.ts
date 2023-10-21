@@ -11,6 +11,8 @@ import { MancalaFailure } from '../common/MancalaFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { GameNode } from 'src/app/jscaip/GameNode';
+import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class KalahNode extends GameNode<KalahMove, MancalaState> {}
 
@@ -18,13 +20,29 @@ export class KalahRules extends MancalaRules<KalahMove> {
 
     private static singleton: MGPOptional<KalahRules> = MGPOptional.empty();
 
-    public static readonly DEFAULT_CONFIG: MancalaConfig = {
-        feedOriginalHouse: true,
-        mustFeed: false,
-        passByPlayerStore: true,
-        seedsByHouse: 4,
-        width: 6,
-    };
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<MancalaConfig> = new RulesConfigDescription(
+        {
+            name: (): string => $localize`Kalah`,
+            config: {
+                feedOriginalHouse: true,
+                mustFeed: false,
+                passByPlayerStore: true,
+                continueDistributionAfterStore: true,
+                seedsByHouse: 4,
+                width: 6,
+            },
+        }, {
+            width: (): string => $localize`Width`,
+            seedsByHouse: (): string => $localize`Seed by house`,
+            feedOriginalHouse: (): string => $localize`Feed original house`,
+            mustFeed: (): string => $localize`Must feed`,
+            passByPlayerStore: (): string => $localize`Pass by player store`,
+            continueDistributionAfterStore: (): string => $localize`Continue distribution after last seed ends in store`,
+        }, [
+        ], {
+            width: MGPValidators.range(1, 99),
+            seedsByHouse: MGPValidators.range(1, 99),
+        });
 
     public static get(): KalahRules {
         if (KalahRules.singleton.isAbsent()) {
@@ -32,9 +50,15 @@ export class KalahRules extends MancalaRules<KalahMove> {
         }
         return KalahRules.singleton.get();
     }
+
     private constructor() {
-        super(KalahRules.DEFAULT_CONFIG);
+        super(KalahRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
     }
+
+    public override getRulesConfigDescription(): RulesConfigDescription<MancalaConfig> {
+        return KalahRules.RULES_CONFIG_DESCRIPTION;
+    }
+
     public isLegal(move: KalahMove, state: MancalaState): MGPValidation {
         const playerY: number = state.getCurrentPlayerY();
         let canStillPlay: boolean = true;
@@ -51,6 +75,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         Utils.assert(canStillPlay === false, 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE');
         return MGPValidation.SUCCESS;
     }
+
     /**
       * @param distributions the distributions to try
       * @return: MGPFallible.failure(reason) if it is illegal, MGPFallible.success(userCanStillPlay)
@@ -65,6 +90,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
                                                             distributionResult.resultingState.board);
         return MGPFallible.success(distributionResult.endsUpInStore && isStarving === false);
     }
+
     public distributeMove(move: KalahMove, state: MancalaState): MancalaDistributionResult {
         const playerValue: number = state.getCurrentPlayer().value;
         const playerY: number = state.getCurrentPlayerY();
@@ -94,6 +120,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
             resultingState: distributedState,
         };
     }
+
     public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {
         const distributedState: MancalaState = distributionResult.resultingState;
         const capturelessResult: MancalaCaptureResult = {
@@ -135,4 +162,5 @@ export class KalahRules extends MancalaRules<KalahMove> {
             }
         }
     }
+
 }

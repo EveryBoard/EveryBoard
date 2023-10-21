@@ -3,7 +3,7 @@ import { DebugElement, SimpleChanges } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { LodestoneNode } from 'src/app/games/lodestone/LodestoneRules';
 import { LodestoneState } from 'src/app/games/lodestone/LodestoneState';
-import { P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
+import { P4Config, P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { AbstractRules } from 'src/app/jscaip/Rules';
@@ -16,7 +16,10 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 
 describe('DemoCardComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
+
+    const config: P4Config = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     function loadNode(nodeInfo: DemoNodeInfo): void {
         testUtils.getComponent().demoNodeInfo = nodeInfo;
@@ -30,7 +33,7 @@ describe('DemoCardComponent', () => {
 
     it('should display the game interactively from the point of view the current player', fakeAsync(async() => {
         // Given a demo component
-        const board: Table<PlayerOrNone> = P4State.getInitialState(P4Rules.DEFAULT_CONFIG).board; // dummy board
+        const board: Table<PlayerOrNone> = P4State.getInitialState(config).board; // dummy board
 
         // When displaying it for a given game
         loadNode({
@@ -67,7 +70,7 @@ describe('DemoCardComponent', () => {
         // Given a demo component displayed for a game
         loadNode({
             name: 'P4',
-            node: new P4Node(P4State.getInitialState(P4Rules.DEFAULT_CONFIG)),
+            node: new P4Node(P4State.getInitialState(config)),
             click: MGPOptional.empty(),
         });
         const rules: AbstractRules = testUtils.getComponent().gameComponent.rules;
@@ -92,7 +95,7 @@ describe('DemoCardComponent', () => {
         // Given a component already initialised with one given set of infos
         loadNode({
             name: 'P4',
-            node: new GameNode(P4State.getInitialState(P4Rules.DEFAULT_CONFIG)),
+            node: new GameNode(P4State.getInitialState(config)),
             click: MGPOptional.empty(),
         });
         testUtils.expectElementNotToExist('.player0-fill');
@@ -118,7 +121,7 @@ describe('DemoCardComponent', () => {
             const defaultRulesConfig: RulesConfig = { mais_quelles_belles_chaussettes: 42 };
             loadNode({
                 name: 'P4',
-                node: new P4Node(P4State.getInitialState(P4Rules.DEFAULT_CONFIG)),
+                node: new P4Node(P4State.getInitialState(config)),
                 click: MGPOptional.empty(),
             });
 

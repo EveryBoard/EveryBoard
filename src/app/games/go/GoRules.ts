@@ -15,6 +15,8 @@ import { GoFailure } from './GoFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export type GoLegalityInformation = Coord[];
 
@@ -30,11 +32,38 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
 
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
 
-    public static readonly DEFAULT_CONFIG: GoConfig = {
-        width: 19,
-        height: 19,
-        handicap: 0,
-    };
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<GoConfig> =
+        new RulesConfigDescription(
+            {
+                name: (): string => $localize`19 x 19`,
+                config: {
+                    width: 19,
+                    height: 19,
+                    handicap: 0,
+                },
+            }, {
+                width: (): string => $localize`Width`,
+                height: (): string => $localize`Height`,
+                handicap: (): string => $localize`Handicap`,
+            }, [{
+                name: (): string => $localize`13 x 13`,
+                config: {
+                    width: 13,
+                    height: 13,
+                    handicap: 0,
+                },
+            }, {
+                name: (): string => $localize`9 x 9`,
+                config: {
+                    width: 9,
+                    height: 9,
+                    handicap: 0,
+                },
+            }], {
+                width: MGPValidators.range(1, 99),
+                height: MGPValidators.range(1, 99),
+                handicap: MGPValidators.range(0, 9),
+            });
 
     public static get(): GoRules {
         if (GoRules.singleton.isAbsent()) {
@@ -42,9 +71,15 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         }
         return GoRules.singleton.get();
     }
+
     private constructor() {
-        super(GoState, GoRules.DEFAULT_CONFIG);
+        super(GoState, GoRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
     }
+
+    public override getRulesConfigDescription(): RulesConfigDescription<GoConfig> {
+        return GoRules.RULES_CONFIG_DESCRIPTION;
+    }
+
     public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         if (GoRules.isPass(move)) {
             const playing: boolean = state.phase === Phase.PLAYING;

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -187,11 +187,15 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }));
     }
 
-    public getStateType(): MGPOptional<Type<GameState>> {
+    public getStateProvider(): MGPOptional<(config: RulesConfig) => GameState> {
         const gameName: string = this.getGameName();
         const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
         if (gameInfos.length > 0) {
-            return MGPOptional.of(gameInfos[0].rules.stateType);
+            const stateProvider: (config: RulesConfig) => GameState = (config: RulesConfig) => {
+                // eslint-disable-next-line dot-notation
+                return gameInfos[0].rules.stateType['getInitialState'](config);
+            };
+            return MGPOptional.of(stateProvider);
         } else {
             return MGPOptional.empty();
         }

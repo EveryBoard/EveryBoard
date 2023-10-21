@@ -186,14 +186,9 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
         return;
     }
 
-    // protected getRulesConfigDescription(): RulesConfigDescription<C> {
-    //     return RulesConfigDescription.DEFAULT as RulesConfigDescription<C>;
-    // }
-
     protected setRuleAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName)[0];
-        // const defaultConfig: RulesConfig = this.getRulesConfigDescription().getDefaultConfig().config;
-        const defaultConfig: RulesConfig = gameInfo.rulesConfigDescription.getDefaultConfig().config;
+        const defaultConfig: RulesConfig = gameInfo.getRulesConfigDescription().getDefaultConfig().config;
 
         this.rules = gameInfo.rules as R;
         this.node = this.rules.getInitialNode(defaultConfig as C);

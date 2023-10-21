@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { P4State } from './P4State';
-import { P4Config, P4Rules } from './P4Rules';
+import { P4Rules } from './P4Rules';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
@@ -12,8 +12,6 @@ import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { P4MoveGenerator } from './P4MoveGenerator';
 import { P4Minimax } from './P4Minimax';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 @Component({
     selector: 'app-p4',
@@ -21,21 +19,6 @@ import { RulesConfigDescription } from 'src/app/components/wrapper-components/ru
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone> {
-
-    // public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<P4Config> =
-    //     new RulesConfigDescription(
-    //         {
-    //             name: (): string => $localize`Default`,
-    //             config: P4Rules.DEFAULT_CONFIG,
-    //         }, {
-    //             width: (): string => $localize`Width`,
-    //             height: (): string => $localize`Height`,
-    //         }, [
-    //         ], {
-    //             width: MGPValidators.range(1, 99),
-    //             height: MGPValidators.range(1, 99),
-    //         },
-    //     );
 
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public last: MGPOptional<Coord>;
@@ -50,10 +33,6 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         ];
         this.encoder = P4Move.encoder;
     }
-
-    // public override getRulesConfigDescription(): RulesConfigDescription<P4Config> {
-    //     return P4Component.RULES_CONFIG_DESCRIPTION
-    // }
 
     public async onClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);

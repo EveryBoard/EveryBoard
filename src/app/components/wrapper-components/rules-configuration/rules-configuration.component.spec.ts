@@ -30,7 +30,10 @@ describe('RulesConfigurationComponent', () => {
         const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
         component = testUtils.getComponent();
-        component.stateType = MGPOptional.of(KamisadoState); // A game needing no config
+        const stateProvider: (_: RulesConfig) => KamisadoState = (_: RulesConfig) => {
+            return KamisadoState.getInitialState();
+        };
+        component.stateProvider = MGPOptional.of(stateProvider); // A game needing no config
     });
 
     it('should create', () => {
@@ -60,7 +63,7 @@ describe('RulesConfigurationComponent', () => {
             );
         });
 
-        it('should  display rules select', fakeAsync(async() => {
+        it('should  display enabled rules select', fakeAsync(async() => {
             // Given a component created for non-creator
             // When displaying it
             // Then rulesSelect should not be present
@@ -78,26 +81,9 @@ describe('RulesConfigurationComponent', () => {
             testUtils.expectElementToExist('#the_default_config_name_values');
         }));
 
-        it('should not throw when stateType is missing due to unexisting game', fakeAsync(async() => {
+        it('should not throw when stateProvider is missing due to unexisting game', fakeAsync(async() => {
             // Given any component from creator point of view
-            component.stateType = MGPOptional.empty();
-            component.rulesConfigDescription = new RulesConfigDescription(
-                {
-                    name: (): string => 'the_default_config_name',
-                    config: {
-                        nombre: 5,
-                        canailleDeBoule: 12,
-                    },
-                },
-                {
-                    nombre: (): string => 'nombre',
-                    canailleDeBoule: (): string => 'canaille',
-                }, [
-                ], {
-                    nombre: MGPValidators.range(1, 99),
-                    canailleDeBoule: MGPValidators.range(1, 99),
-                },
-            );
+            component.stateProvider = MGPOptional.empty();
 
             // When displaying it
             testUtils.detectChanges();
@@ -137,25 +123,38 @@ describe('RulesConfigurationComponent', () => {
             expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.of(secondConfig));
         }));
 
+        it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
+            // Given a rules config component provided with an empty configuration
+            component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
+            spyOn(component.updateCallback, 'emit').and.callThrough();
+
+            // When initializing
+            testUtils.detectChanges();
+
+            // Then the callback should have emit {}
+            const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({});
+            expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
+        }));
+
+        it('should immediately emit on initialisation because default config is valid', fakeAsync(async() => {
+            // Given a rules config component provided with an empty configuration
+            spyOn(component.updateCallback, 'emit').and.callThrough();
+
+            // When initializing
+            testUtils.detectChanges();
+
+            // Then the callback should have been emitted
+            const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ // The default config
+                nombre: 5,
+                canailleDeBoule: 12,
+            });
+            expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
+        }));
+
         describe('modifying custom configuration', () => {
 
             it('should throw when editing non-custom config', fakeAsync(async() => {
                 // Given a component for creator where we're not editing "Custom"
-                component.userIsCreator = true;
-                component.rulesConfigDescription = new RulesConfigDescription(
-                    {
-                        name: (): string => 'name',
-                        config: {
-                            nombre: 5,
-                        },
-                    },
-                    {
-                        nombre: (): string => 'nombre',
-                    }, [
-                    ], {
-                        nombre: MGPValidators.range(1, 99),
-                    },
-                );
                 spyOn(ErrorLoggerService, 'logError').and.resolveTo();
                 testUtils.detectChanges();
 
@@ -165,19 +164,6 @@ describe('RulesConfigurationComponent', () => {
                 // Then it should throw
                 const error: string = 'Only Customifiable config should be modified!';
                 expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('RulesConfiguration', error);
-            }));
-
-            it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
-                // Given a rules config component provided with an empty configuration
-                component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
-                spyOn(component.updateCallback, 'emit').and.callThrough();
-
-                // When initializing
-                testUtils.detectChanges();
-
-                // Then the callback should have emit {}
-                const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({});
-                expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
             }));
 
             describe('number config', () => {
@@ -292,20 +278,19 @@ describe('RulesConfigurationComponent', () => {
             describe('boolean config', () => {
 
                 beforeEach(fakeAsync(async() => {
-                    component.rulesConfigDescription =
-                        new RulesConfigDescription(
-                            {
-                                name: (): string => 'config name',
-                                config: {
-                                    booleen: true,
-                                    truth: false,
-                                },
+                    component.rulesConfigDescription = new RulesConfigDescription(
+                        {
+                            name: (): string => 'config name',
+                            config: {
+                                booleen: true,
+                                truth: false,
                             },
-                            {
-                                booleen: (): string => 'booleen',
-                                truth: (): string => 'veritasserum',
-                            },
-                        );
+                        },
+                        {
+                            booleen: (): string => 'booleen',
+                            truth: (): string => 'veritasserum',
+                        },
+                    );
                     await chooseSecondConfig(); // Hence the Custom
                 }));
 
@@ -368,20 +353,19 @@ describe('RulesConfigurationComponent', () => {
             testUtils.expectElementToBeDisabled('#ruleSelect');
         }));
 
+        it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
+            // Given a rules config component provided with an empty configuration
+            spyOn(component.updateCallback, 'emit').and.callThrough();
+
+            // When initializing
+            testUtils.detectChanges();
+
+            // Then the callback should have emit {}
+            const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({});
+            expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
+        }));
+
         describe('modifying custom configuration', () => {
-
-            it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
-                // Given a rules config component provided with an empty configuration
-                component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
-                spyOn(component.updateCallback, 'emit').and.callThrough();
-
-                // When initializing
-                testUtils.detectChanges();
-
-                // Then the callback should have emit {}
-                const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({});
-                expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
-            }));
 
             it('should throw at creation if rulesConfigToDisplay is missing', fakeAsync(async() => {
                 // Given a component intended for passive user with no config to display
@@ -451,23 +435,22 @@ describe('RulesConfigurationComponent', () => {
 
                 beforeEach(() => {
                     component.rulesConfigToDisplay = {
-                        booleen: false,
+                        booleen: true,
                         truth: true,
                     };
-                    component.rulesConfigDescription =
-                        new RulesConfigDescription(
-                            {
-                                name: (): string => 'config name',
-                                config: {
-                                    booleen: true,
-                                    truth: false,
-                                },
+                    component.rulesConfigDescription = new RulesConfigDescription(
+                        {
+                            name: (): string => 'config name',
+                            config: {
+                                booleen: false,
+                                truth: false,
                             },
-                            {
-                                booleen: (): string => 'booleen',
-                                truth: (): string => 'veritasserum',
-                            },
-                        );
+                        },
+                        {
+                            booleen: (): string => 'booleen',
+                            truth: (): string => 'veritasserum',
+                        },
+                    );
                 });
 
                 it('should display value of the rulesConfigToDisplay, not of the default config', fakeAsync(async() => {
@@ -477,11 +460,11 @@ describe('RulesConfigurationComponent', () => {
                     const defaultConfig: RulesConfig = component.rulesConfigDescription.getDefaultConfig().config;
                     const configToDisplay: RulesConfig = Utils.getNonNullable(component.rulesConfigToDisplay);
                     // eslint-disable-next-line dot-notation
-                    expect(configToDisplay['booleen']).toBeFalse();
-                    // eslint-disable-next-line dot-notation
-                    expect(defaultConfig['booleen']).toBeTrue();
+                    expect(configToDisplay['booleen']).toBeTrue();
                     // eslint-disable-next-line dot-notation
                     expect(configToDisplay['truth']).toBeTrue();
+                    // eslint-disable-next-line dot-notation
+                    expect(defaultConfig['booleen']).toBeFalse();
                     // eslint-disable-next-line dot-notation
                     expect(defaultConfig['truth']).toBeFalse();
 
@@ -490,7 +473,7 @@ describe('RulesConfigurationComponent', () => {
 
                     // Then the field should be checked if and only if rulesConfigToDisplay is true
                     const elementBooleen: DebugElement = testUtils.findElement('#booleen_boolean_config_input');
-                    expect(elementBooleen.nativeElement.checked).toBeFalsy();
+                    expect(elementBooleen.nativeElement.checked).toBeTrue();
                     const elementTruth: DebugElement = testUtils.findElement('#truth_boolean_config_input');
                     expect(elementTruth.nativeElement.checked).toBeTrue();
                 }));

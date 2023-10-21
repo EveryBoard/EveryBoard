@@ -49,6 +49,7 @@ describe('OnlineGameWrapper for non-existing game', () => {
 
         discardPeriodicTasks();
     }));
+
 });
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {

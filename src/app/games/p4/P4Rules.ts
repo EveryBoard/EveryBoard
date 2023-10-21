@@ -11,6 +11,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type P4Config = {
     width: number;
@@ -24,12 +26,23 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
 
     private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
 
-    public static readonly DEFAULT_CONFIG: P4Config = {
-        width: 7,
-        height: 6,
-    };
-
-    public readonly P4_HELPER: NInARowHelper<PlayerOrNone>;
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<P4Config> =
+        new RulesConfigDescription(
+            {
+                name: (): string => $localize`Default`,
+                config: {
+                    width: 7,
+                    height: 6,
+                },
+            }, {
+                width: (): string => $localize`Width`,
+                height: (): string => $localize`Height`,
+            }, [
+            ], {
+                width: MGPValidators.range(1, 99),
+                height: MGPValidators.range(1, 99),
+            },
+        );
 
     public static get(): P4Rules {
         if (P4Rules.singleton.isAbsent()) {
@@ -38,9 +51,15 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         return P4Rules.singleton.get();
     }
 
+    public readonly P4_HELPER: NInARowHelper<PlayerOrNone>;
+
     private constructor() {
-        super(P4State, P4Rules.DEFAULT_CONFIG);
+        super(P4State, P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
         this.P4_HELPER = new NInARowHelper(Utils.identity, 4);
+    }
+
+    public override getRulesConfigDescription(): RulesConfigDescription<P4Config> {
+        return P4Rules.RULES_CONFIG_DESCRIPTION;
     }
 
     public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {

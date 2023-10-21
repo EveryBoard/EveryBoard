@@ -147,7 +147,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
 
     public async getConfig(): Promise<RulesConfig> {
         const gameName: string = this.getGameName();
-        console.log(gameName, 'has', RulesConfigUtils.getGameDefaultConfig(gameName))
         return RulesConfigUtils.getGameDefaultConfig(gameName);
     }
 
@@ -214,8 +213,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
         if (game.length === 0) {
             return RulesConfigDescription.DEFAULT;
         } else {
-            return game[0].rulesConfigDescription;
-            // return game[0].getRulesConfigDescription();
+            return game[0].getRulesConfigDescription();
         }
     }
 }

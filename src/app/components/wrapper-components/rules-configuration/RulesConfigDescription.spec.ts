@@ -1,23 +1,26 @@
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { RulesConfigDescription, RulesConfigDescriptions } from './RulesConfigDescription';
+import { RulesConfigDescription } from './RulesConfigDescription';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
-describe('RulesConfigDescriptions', () => {
+for (const gameInfo of GameInfo.ALL_GAMES()) {
 
-    it('should have a i18nName for each description', () => {
-        for (const description of RulesConfigDescriptions.ALL) {
-            const fields: RulesConfig = description.getDefaultConfig().config;
+    describe(`RulesConfigDescriptions of ${ gameInfo.urlName }`, () => {
+
+        const rulesConfigDescription: RulesConfigDescription = gameInfo.rules.getRulesConfigDescription();
+
+        it(`should have internationalised fields`, () => {
+            const fields: RulesConfig = rulesConfigDescription.getDefaultConfig().config;
             for (const field of Object.keys(fields)) {
-                expect(description.translations[field]().length).toBeGreaterThan(0);
+                expect(rulesConfigDescription.translations[field]().length).toBeGreaterThan(0);
             }
-        }
-    });
+        });
 
-    it('should have a internationalised name for each standard config', () => {
-        for (const description of RulesConfigDescriptions.ALL.concat(RulesConfigDescription.DEFAULT)) {
-            for (const standardConfig of description.getStandardConfigs()) {
+        it(`should have a internationalised name for each standard config`, () => {
+            for (const standardConfig of rulesConfigDescription.getStandardConfigs()) {
                 expect(standardConfig.name().length).toBeGreaterThan(0);
             }
-        }
+        });
+
     });
 
-});
+}

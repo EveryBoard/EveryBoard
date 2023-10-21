@@ -11,6 +11,7 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 
@@ -18,7 +19,8 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
 
     private static singleton: MGPOptional<ConnectSixRules> = MGPOptional.empty();
 
-    public static readonly DEFAULT_CONFIG: GobanConfig = defaultGobanConfig;
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<GobanConfig> =
+        RulesConfigDescriptions.GOBAN;
 
     public static get(): ConnectSixRules {
         if (ConnectSixRules.singleton.isAbsent()) {
@@ -26,15 +28,22 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         }
         return ConnectSixRules.singleton.get();
     }
+
     public static readonly CONNECT_SIX_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 6);
 
     public static getVictoriousCoords(state: ConnectSixState): Coord[] {
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
+
     private constructor() {
         super(ConnectSixState, defaultGobanConfig);
     }
+
+    public override getRulesConfigDescription(): RulesConfigDescription<GobanConfig> {
+        return ConnectSixRules.RULES_CONFIG_DESCRIPTION;
+    }
+
     public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _info: void): ConnectSixState {
         if (move instanceof ConnectSixDrops) {
             return this.applyLegalDrops(move, state);
@@ -42,6 +51,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
             return this.applyLegalFirstMove(move, state);
         }
     }
+
     private applyLegalDrops(move: ConnectSixDrops, state: ConnectSixState): ConnectSixState {
         const player: Player = state.getCurrentPlayer();
         const first: Coord = move.getFirst();
@@ -51,12 +61,14 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         newBoard[second.y][second.x] = player;
         return new ConnectSixState(newBoard, state.turn + 1);
     }
+
     private applyLegalFirstMove(move: ConnectSixFirstMove, state: ConnectSixState): ConnectSixState {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = player;
         return new ConnectSixState(newBoard, state.turn + 1);
     }
+
     public isLegal(move: ConnectSixMove, state: ConnectSixState): MGPValidation {
         if (state.turn === 0) {
             Utils.assert(move instanceof ConnectSixFirstMove, 'First move should be instance of ConnectSixFirstMove');
@@ -77,6 +89,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
             }
         }
     }
+
     public isLegalDrops(move: ConnectSixDrops, state: ConnectSixState): MGPValidation {
         if (state.getPieceAt(move.getFirst()).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
@@ -86,6 +99,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
             return MGPValidation.SUCCESS;
         }
     }
+
     public getGameStatus(node: ConnectSixNode): GameStatus {
         const state: ConnectSixState = node.gameState;
         const victoriousCoord: Coord[] = ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
@@ -94,4 +108,5 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         }
         return state.turn === 181 ? GameStatus.DRAW : GameStatus.ONGOING;
     }
+
 }

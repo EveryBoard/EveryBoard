@@ -1,11 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { P4Node, P4Rules } from '../P4Rules';
+import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4State } from '../P4State';
 import { P4Move } from '../P4Move';
 import { P4Failure } from '../P4Failure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+
+const config: P4Config = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
 describe('P4Rules', () => {
 
@@ -24,7 +26,7 @@ describe('P4Rules', () => {
 
     it('should drop piece on the lowest space of the column', () => {
         // Given the initial board
-        const state: P4State = P4State.getInitialState(P4Rules.DEFAULT_CONFIG);
+        const state: P4State = P4State.getInitialState(config);
 
         // When playing in column 3
         const move: P4Move = P4Move.of(3);

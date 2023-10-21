@@ -4,7 +4,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -17,6 +17,7 @@ describe('EpaminondasRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
+    const config: EpaminondasConfig = EpaminondasRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     beforeEach(() => {
         rules = EpaminondasRules.get();
@@ -122,7 +123,7 @@ describe('EpaminondasRules', () => {
 
     it('should forbid out of range move', () => {
         // Given any state
-        const state: EpaminondasState = EpaminondasState.getInitialState(EpaminondasRules.DEFAULT_CONFIG);
+        const state: EpaminondasState = EpaminondasState.getInitialState(config);
 
         // When doing a move starting out of range
         const move: EpaminondasMove = new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT);

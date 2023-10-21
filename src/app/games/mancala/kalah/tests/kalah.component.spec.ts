@@ -6,22 +6,24 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 import { MancalaDistribution } from '../../common/MancalaMove';
 import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/GenericMancalaComponentTest.spec';
 import { MancalaState } from '../../common/MancalaState';
 import { MancalaFailure } from '../../common/MancalaFailure';
 import { MancalaComponent } from '../../common/MancalaComponent';
+import { MancalaConfig } from '../../common/MancalaConfig';
 
 import { KalahComponent } from '../kalah.component';
 import { KalahMove } from '../KalahMove';
 import { KalahRules } from '../KalahRules';
-import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
 
 describe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules, KalahMove>;
+    const config: MancalaConfig = KalahRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     doMancalaComponentTests({
         component: KalahComponent,
@@ -29,7 +31,7 @@ describe('KalahComponent', () => {
         moveGenerator: new KalahMoveGenerator(),
 
         distribution: {
-            state: MancalaState.getInitialState(KalahRules.DEFAULT_CONFIG),
+            state: MancalaState.getInitialState(config),
             move: KalahMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
@@ -41,7 +43,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [5, 5, 5, 4, 4, 4],
                 [0, 4, 4, 4, 4, 4],
-            ], 1, [1, 0], KalahRules.DEFAULT_CONFIG),
+            ], 1, [1, 0], config),
             move: KalahMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -55,7 +57,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 2, 0],
                 [1, 0, 0, 0, 0, 1],
-            ], 100, [0, 0], KalahRules.DEFAULT_CONFIG),
+            ], 100, [0, 0], config),
             move: KalahMove.of(MancalaDistribution.of(5)),
             result: [
                 { x: 4, y: 0, content: { mainContent: ' -2 ' } },
@@ -67,7 +69,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 6, 6, 5, 5, 5],
                 [6, 0, 5, 0, 4, 4],
-            ], 2, [0, 0], KalahRules.DEFAULT_CONFIG),
+            ], 2, [0, 0], config),
             move: KalahMove.of(MancalaDistribution.of(5)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' -6 ' } },
@@ -78,7 +80,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [8, 0, 0, 0, 0, 0],
-            ], 0, [0, 0], KalahRules.DEFAULT_CONFIG),
+            ], 0, [0, 0], config),
             move: KalahMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 5, y: 0, content: { mainContent: ' -1 ' } },
@@ -148,7 +150,7 @@ describe('KalahComponent', () => {
                 const state: MancalaState = new MancalaState([
                     [0, 1, 0, 0, 0, 0],
                     [0, 0, 13, 0, 0, 0],
-                ], 0, [0, 0], KalahRules.DEFAULT_CONFIG);
+                ], 0, [0, 0], config);
                 await mancalaTestUtils.testUtils.setupState(state);
 
                 // When distributing the house
@@ -225,7 +227,7 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [6, 1, 7, 6, 1, 7],
                 [2, 1, 6, 2, 2, 5],
-            ], 3, [4, 2], KalahRules.DEFAULT_CONFIG);
+            ], 3, [4, 2], config);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the complex move
@@ -242,7 +244,7 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [5, 0, 6, 6, 0, 6],
                 [0, 5, 5, 1, 5, 5],
-            ], 2, [2, 2], KalahRules.DEFAULT_CONFIG);
+            ], 2, [2, 2], config);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the complex move
@@ -260,12 +262,12 @@ describe('KalahComponent', () => {
                 [4, 4, 4, 4, 4, 4],
                 [0, 0, 0, 2, 0, 0],
             ];
-            const previousState: MancalaState = new MancalaState(previousBoard, 4, [0, 0], KalahRules.DEFAULT_CONFIG);
+            const previousState: MancalaState = new MancalaState(previousBoard, 4, [0, 0], config);
             const board: Table<number> = [
                 [4, 0, 4, 4, 4, 4],
                 [0, 0, 1, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 5, [5, 0], KalahRules.DEFAULT_CONFIG);
+            const state: MancalaState = new MancalaState(board, 5, [5, 0], config);
             const move: KalahMove = KalahMove.of(MancalaDistribution.of(3));
             await mancalaTestUtils.testUtils.setupState(state, previousState, move);
 
@@ -292,7 +294,7 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 1, 0, 0],
                 [0, 4, 0, 0, 0, 0],
-            ], 0, [0, 0], KalahRules.DEFAULT_CONFIG);
+            ], 0, [0, 0], config);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When giving turn to AI to play and waiting for move
@@ -308,7 +310,7 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
-            ], 10, [13, 9], KalahRules.DEFAULT_CONFIG);
+            ], 10, [13, 9], config);
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the only move possible for the remaining sub-move

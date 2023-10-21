@@ -10,7 +10,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { ActivatedRoute } from '@angular/router';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
 import { ConnectSixAlignmentMinimax } from './ConnectSixAlignmentMinimax';
@@ -23,9 +22,9 @@ import { ConnectSixAlignmentMinimax } from './ConnectSixAlignmentMinimax';
 export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                                                             ConnectSixMove,
                                                             ConnectSixState,
-                                                            PlayerOrNone,
-                                                            GobanConfig>
+                                                            PlayerOrNone>
 {
+
     public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public lastMoved: Coord[] = [];

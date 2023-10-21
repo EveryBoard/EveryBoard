@@ -68,7 +68,7 @@
     </form>
 
     <app-demo-card id="demoCard"
-                   *ngIf="stateType.isPresent()"
+                   *ngIf="getConfigDemo() !== undefined"
                    [demoNodeInfo]="getConfigDemo()"></app-demo-card>
 
 </div>

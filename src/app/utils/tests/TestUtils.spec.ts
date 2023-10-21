@@ -517,8 +517,6 @@ export class TestUtils {
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
-        }).overrideComponent(LocalGameWrapperComponent, {
-            set: { changeDetection: ChangeDetectionStrategy.Default },
         }).compileComponents();
     }
     public static async configureTestingModule(componentType: object,

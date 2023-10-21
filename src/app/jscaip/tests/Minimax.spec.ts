@@ -2,13 +2,15 @@
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
-import { P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
+import { P4Config, P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
 import { P4State } from 'src/app/games/p4/P4State';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { AIDepthLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';
 import { DummyHeuristic, Minimax } from '../Minimax';
+
+const config: P4Config = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
 describe('Minimax', () => {
 
@@ -28,7 +30,7 @@ describe('Minimax', () => {
 
         // Given the number of moves of a minimax without alpha-beta pruning
         minimax.prune = false;
-        let node: P4Node = P4Rules.get().getInitialNode(P4Rules.DEFAULT_CONFIG);
+        let node: P4Node = P4Rules.get().getInitialNode(config);
         minimax.chooseNextMove(node, minimaxOptions);
         const callsToGetBoardValueWithoutPruning: number = getBoardValueSpy.calls.count();
         getBoardValueSpy.calls.reset();
@@ -37,7 +39,7 @@ describe('Minimax', () => {
 
         // When computing the same information with alpha-beta pruning enabled
         minimax.prune = true;
-        node = new P4Node(P4State.getInitialState(P4Rules.DEFAULT_CONFIG));
+        node = new P4Node(P4State.getInitialState(config));
         minimax.chooseNextMove(node, minimaxOptions);
         const callsToGetBoardValueWithPruning: number = getBoardValueSpy.calls.count();
         const callsToGetListMovesWithPruning: number = getListMovesSpy.calls.count();
@@ -49,7 +51,7 @@ describe('Minimax', () => {
     it('should compute the score of an already created node that has no score', () => {
         // Given a node that already has a child (but for which we haven't computed the board value)
         // This can happen when another AI has already created the node
-        const node: P4Node = P4Rules.get().getInitialNode(P4Rules.DEFAULT_CONFIG);
+        const node: P4Node = P4Rules.get().getInitialNode(config);
         const mcts: MCTS<P4Move, P4State> = new MCTS('MCTS', moveGenerator, P4Rules.get());
         mcts.chooseNextMove(node, { name: '100ms', maxSeconds: 0.1 });
         // When performing a minimax search
@@ -60,7 +62,7 @@ describe('Minimax', () => {
     it('should select randomly among best children when asked to do so', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
-        const node: P4Node = P4Rules.get().getInitialNode(P4Rules.DEFAULT_CONFIG);
+        const node: P4Node = P4Rules.get().getInitialNode(config);
         minimax.random = true;
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions);
@@ -70,7 +72,7 @@ describe('Minimax', () => {
     it('should not select randomly among best children when not asked to do so', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
-        const node: P4Node = P4Rules.get().getInitialNode(P4Rules.DEFAULT_CONFIG);
+        const node: P4Node = P4Rules.get().getInitialNode(config);
         minimax.random = false;
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions);
@@ -83,7 +85,7 @@ describe('DummyHeuristic', () => {
     it('should assign a board value of 0', () => {
         // Given the dummy heuristic and a game node
         const heuristic: DummyHeuristic<P4Move, P4State> = new DummyHeuristic();
-        const node: P4Node = P4Rules.get().getInitialNode(P4Rules.DEFAULT_CONFIG);
+        const node: P4Node = P4Rules.get().getInitialNode(config);
 
         // When computing the node's value
         const boardValue: BoardValue = heuristic.getBoardValue(node);

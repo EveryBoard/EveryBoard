@@ -4,13 +4,16 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasRules } from './EpaminondasRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
+const config: EpaminondasConfig = EpaminondasRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+
 export class EpaminondasTutorial extends Tutorial {
+
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
@@ -18,7 +21,7 @@ export class EpaminondasTutorial extends Tutorial {
             $localize`This is the initial board of Epaminondas.
         The top line is the starting line of Light.
         The bottom line is the starting line of Dark.`,
-            EpaminondasState.getInitialState(EpaminondasRules.DEFAULT_CONFIG),
+            EpaminondasState.getInitialState(config),
         ),
         TutorialStep.informational(
             $localize`Goal of the game (1/2)`,
@@ -67,7 +70,7 @@ export class EpaminondasTutorial extends Tutorial {
             <li>Click on a piece.</li>
             <li>Click on a empty neighboring square.</li>
         </ol><br/>You're playing Dark, move a piece.`,
-            EpaminondasState.getInitialState(EpaminondasRules.DEFAULT_CONFIG),
+            EpaminondasState.getInitialState(config),
             new EpaminondasMove(0, 10, 1, 1, Direction.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.movedPieces === 1) {
@@ -87,7 +90,7 @@ export class EpaminondasTutorial extends Tutorial {
             <li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li>
         </ol><br/>
         You're playing Dark, Move a phalanx!`,
-            EpaminondasState.getInitialState(EpaminondasRules.DEFAULT_CONFIG),
+            EpaminondasState.getInitialState(config),
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.movedPieces > 1) {

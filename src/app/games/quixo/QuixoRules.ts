@@ -14,6 +14,8 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { QuixoFailure } from './QuixoFailure';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
@@ -21,10 +23,22 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
 
     private static singleton: MGPOptional<QuixoRules> = MGPOptional.empty();
 
-    public static readonly DEFAULT_CONFIG: QuixoConfig = {
-        width: 5,
-        height: 5,
-    };
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<QuixoConfig> =
+        new RulesConfigDescription(
+            {
+                name: (): string => $localize`Quixo`,
+                config: {
+                    width: 5,
+                    height: 5,
+                },
+            }, {
+                width: (): string => $localize`Width`, // TODO FOR REVIEW: put width and height in common everyEffingWhere ?
+                height: (): string => $localize`Height`,
+            }, [
+            ], {
+                width: MGPValidators.range(1, 99),
+                height: MGPValidators.range(1, 99),
+            });
 
     public static get(): QuixoRules {
         if (QuixoRules.singleton.isAbsent()) {
@@ -34,7 +48,11 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
 
     private constructor() {
-        super(QuixoState, QuixoRules.DEFAULT_CONFIG);
+        super(QuixoState, QuixoRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
+    }
+
+    public override getRulesConfigDescription(): RulesConfigDescription<QuixoConfig> {
+        return QuixoRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
