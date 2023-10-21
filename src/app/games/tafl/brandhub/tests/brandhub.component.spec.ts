@@ -21,7 +21,7 @@ const stateReadyForCapture: TaflState = new TaflState([
     [_, _, _, _, _, _, _],
 ], 1);
 
-const brandhubEntries: TaflTestEntries<BrandhubComponent, BrandhubRules, BrandhubMove, TaflState> = {
+const brandhubEntries: TaflTestEntries<BrandhubComponent, BrandhubRules, BrandhubMove> = {
     gameName: 'Brandhub',
     component: BrandhubComponent,
     secondPlayerPiece: new Coord(3, 2),

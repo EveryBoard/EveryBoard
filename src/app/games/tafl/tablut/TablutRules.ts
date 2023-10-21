@@ -9,7 +9,7 @@ import { TaflState } from '../TaflState';
 
 export class TablutNode extends GameNode<TablutMove, TaflState> {}
 
-export class TablutRules extends TaflRules<TablutMove, TaflState> {
+export class TablutRules extends TaflRules<TablutMove> {
 
     private static singleton: MGPOptional<TablutRules> = MGPOptional.empty();
 

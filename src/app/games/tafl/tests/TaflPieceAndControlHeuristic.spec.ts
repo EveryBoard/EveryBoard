@@ -10,7 +10,7 @@ import { TaflState } from '../TaflState';
 
 describe('TaflPieceAndControlHeuristic', () => {
 
-    let heuristic: TaflPieceAndControlHeuristic<BrandhubMove, TaflState>;
+    let heuristic: TaflPieceAndControlHeuristic<BrandhubMove>;
 
     let rules: BrandhubRules;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;

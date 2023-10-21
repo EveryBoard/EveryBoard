@@ -9,7 +9,7 @@ import { TaflState } from '../TaflState';
 
 export class HnefataflNode extends GameNode<HnefataflMove, TaflState> {}
 
-export class HnefataflRules extends TaflRules<HnefataflMove, TaflState> {
+export class HnefataflRules extends TaflRules<HnefataflMove> {
 
     private static singleton: MGPOptional<HnefataflRules> = MGPOptional.empty();
 

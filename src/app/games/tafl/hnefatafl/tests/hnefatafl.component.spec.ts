@@ -25,7 +25,7 @@ const stateReadyForCapture: TaflState = new TaflState([
     [_, _, _, _, _, _, _, _, _, _, _],
 ], 1);
 
-const hnefataflEntries: TaflTestEntries<HnefataflComponent, HnefataflRules, HnefataflMove, TaflState> = {
+const hnefataflEntries: TaflTestEntries<HnefataflComponent, HnefataflRules, HnefataflMove> = {
     gameName: 'Hnefatafl',
     component: HnefataflComponent,
     secondPlayerPiece: new Coord(5, 3),

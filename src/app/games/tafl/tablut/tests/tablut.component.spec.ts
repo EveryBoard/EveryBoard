@@ -12,7 +12,7 @@ const x: TaflPawn = TaflPawn.INVADERS;
 const i: TaflPawn = TaflPawn.DEFENDERS;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove, TaflState> = {
+const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove> = {
     component: TablutComponent,
     gameName: 'Tablut',
     secondPlayerPiece: new Coord(4, 4),

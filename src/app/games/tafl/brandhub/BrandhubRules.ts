@@ -9,7 +9,7 @@ import { TaflState } from '../TaflState';
 
 export class BrandhubNode extends GameNode<BrandhubMove, TaflState> {}
 
-export class BrandhubRules extends TaflRules<BrandhubMove, TaflState> {
+export class BrandhubRules extends TaflRules<BrandhubMove> {
 
     private static singleton: MGPOptional<BrandhubRules> = MGPOptional.empty();
 

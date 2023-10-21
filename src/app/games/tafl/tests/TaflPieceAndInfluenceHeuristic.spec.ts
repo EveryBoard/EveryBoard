@@ -16,7 +16,7 @@ import { TaflState } from '../TaflState';
 
 describe('TablutPieceAndInfluenceHeuristic', () => {
 
-    let heuristic: TaflPieceAndInfluenceHeuristic<TablutMove, TaflState>;
+    let heuristic: TaflPieceAndInfluenceHeuristic<TablutMove>;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;
     const X: TaflPawn = TaflPawn.DEFENDERS;

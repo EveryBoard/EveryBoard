@@ -14,7 +14,7 @@ import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TaflPieceHeuristic } from './TaflPieceHeuristic';
 
-export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflState> extends TaflPieceHeuristic<M, S> {
+export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPieceHeuristic<M> {
 
     protected width: number;
 
@@ -24,19 +24,19 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
 
     private scoreBySafePiece: number;
 
-    public constructor(rules: TaflRules<M, S>) {
+    public constructor(rules: TaflRules<M>) {
         super(rules);
         this.width = this.rules.config.WIDTH;
         this.maxInfluence = 16 * ((this.width * 2) - 2);
         this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
         this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
     }
-    public override getBoardValue(node: TaflNode<M, S>): BoardValue {
+    public override getBoardValue(node: TaflNode<M>): BoardValue {
         const gameStatus: GameStatus = this.rules.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
-        const state: S = node.gameState;
+        const state: TaflState = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let score: number = 0;
@@ -65,7 +65,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
         }
         return new BoardValue(score);
     }
-    public getPiecesMap(state: S): MGPMap<Player, MGPSet<Coord>> {
+    public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
@@ -89,7 +89,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
         ]);
         return map;
     }
-    public getThreatMap(state: S, pieces: MGPMap<Player, MGPSet<Coord>>): MGPMap<Coord, MGPSet<SandwichThreat>> {
+    public getThreatMap(state: TaflState, pieces: MGPMap<Player, MGPSet<Coord>>): MGPMap<Coord, MGPSet<SandwichThreat>> {
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
         for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
@@ -101,7 +101,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
         }
         return threatMap;
     }
-    private getThreats(coord: Coord, state: S): SandwichThreat[] {
+    private getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
         const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
         assert(owner.isPlayer(), 'TaflPieceAndInfluenceMinimax.getThreats should be called with an occupied coordinate');
         const threatenerPlayer: Player = (owner as Player).getOpponent();
@@ -132,7 +132,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
         }
         return threats;
     }
-    protected isAThreat(coord: Coord, state: S, opponent: Player): boolean {
+    protected isAThreat(coord: Coord, state: TaflState, opponent: Player): boolean {
         if (coord.isNotInRange(this.width, this.width)) {
             return false;
         }
@@ -148,7 +148,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
         }
         return false;
     }
-    protected isThreatReal(coord: Coord, state: S, threats: SandwichThreat[]): boolean {
+    protected isThreatReal(coord: Coord, state: TaflState, threats: SandwichThreat[]): boolean {
         if (threats.length === 0) {
             return false;
         }
@@ -163,7 +163,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
             return false;
         }
     }
-    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: S)
+    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: TaflState)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();

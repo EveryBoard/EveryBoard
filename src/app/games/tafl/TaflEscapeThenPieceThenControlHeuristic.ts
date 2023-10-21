@@ -10,12 +10,10 @@ import { Utils } from 'src/app/utils/utils';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlHeuristicMetrics } from './TaflPieceAndControlHeuristic';
 import { TaflNode } from './TaflRules';
 
-export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove, S extends TaflState>
-    extends TaflPieceAndControlHeuristic<M, S>
-{
+export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends TaflPieceAndControlHeuristic<M> {
 
-    public override getBoardValue(node: TaflNode<M, S>): BoardValue {
-        const state: S = node.gameState;
+    public override getBoardValue(node: TaflNode<M>): BoardValue {
+        const state: TaflState = node.gameState;
         const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(state);
         const defender: Player = state.getPieceAt(this.rules.getKingCoord(state).get()).getOwner() as Player;
         const stepForEscape: number = this.getStepForEscape(state) * defender.getScoreModifier();
@@ -31,11 +29,11 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove, S exten
                               (metrics.threatenedScore * (maxControl + 1)) +
                               metrics.controlScore);
     }
-    private getStepForEscape(state: S): number {
+    private getStepForEscape(state: TaflState): number {
         const king: Coord = this.rules.getKingCoord(state).get();
         return this._getStepForEscape(state, 1, [king], []).getOrElse(-1);
     }
-    private _getStepForEscape(state: S,
+    private _getStepForEscape(state: TaflState,
                               step: number,
                               previousGen: Coord[],
                               handledCoords: Coord[])

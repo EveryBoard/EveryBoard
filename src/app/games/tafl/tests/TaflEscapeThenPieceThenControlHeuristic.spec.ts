@@ -11,7 +11,7 @@ import { TaflState } from '../TaflState';
 
 describe('TaflEscapeThenPieceThenControlMinimax', () => {
 
-    let heuristic: TaflEscapeThenPieceThenControlHeuristic<BrandhubMove, TaflState>;
+    let heuristic: TaflEscapeThenPieceThenControlHeuristic<BrandhubMove>;
 
     let rules: BrandhubRules;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;

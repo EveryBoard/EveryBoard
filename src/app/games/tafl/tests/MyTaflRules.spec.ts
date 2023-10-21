@@ -2,14 +2,14 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflNode, TaflRules } from '../TaflRules';
 import { MyTaflMove } from './MyTaflMove.spec';
-import { MyTaflState } from './MyTaflState.spec';
 import { myTaflConfig } from './TaflRules.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
+import { TaflState } from '../TaflState';
 
-export class MyTaflNode extends TaflNode<MyTaflMove, MyTaflState> {}
+export class MyTaflNode extends TaflNode<MyTaflMove> {}
 
-export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
+export class MyTaflRules extends TaflRules<MyTaflMove> {
 
     private static singleton: MGPOptional<MyTaflRules> = MGPOptional.empty();
 
@@ -24,7 +24,7 @@ export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
         super(myTaflConfig, MyTaflMove.from);
     }
 
-    public getInitialState(): MyTaflState {
+    public getInitialState(): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         const O: TaflPawn = TaflPawn.INVADERS;
         const X: TaflPawn = TaflPawn.DEFENDERS;
@@ -41,7 +41,7 @@ export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
             [_, _, _, _, X, _, _, _, _],
         ];
 
-        return new MyTaflState(board, 0);
+        return new TaflState(board, 0);
     }
 
 }

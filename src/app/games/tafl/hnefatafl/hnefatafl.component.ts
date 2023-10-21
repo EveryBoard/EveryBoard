@@ -11,7 +11,7 @@ import { TaflState } from '../TaflState';
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })
-export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove, TaflState> {
+export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove> {
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer, HnefataflMove.from);
