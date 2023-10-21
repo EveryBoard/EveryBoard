@@ -27,7 +27,7 @@ Run `git clone https://github.com/EveryBoard/EveryBoard`
 Run `npm ci`
 
 ## Local server
-Make sure firebase emulators are installed by running `firebase init emulators`.
+Ensure you are logged in to firebase (check with `npx firebase login list`). If not you'll need to run `npx firebase login` to authenticate. Next, make sure firebase emulators are installed by running `npx firebase init emulators`.
 Then, run `npm run start:emulator` and navigate to `http://localhost:4200`
 
 ## Running unit tests
