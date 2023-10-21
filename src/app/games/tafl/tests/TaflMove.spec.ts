@@ -4,6 +4,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from '../TaflFailure';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 describe('TaflMove', () => {
 
@@ -14,24 +15,32 @@ describe('TaflMove', () => {
             .toThrowError(error);
     });
 
-    describe('isValidStandAndEnd', () => {
-        it('should report when given out of range coords', () => {
-            const outOfRange: Coord = new Coord(-1, -1);
-            const inRange: Coord = new Coord(0, 0);
-            expect(TaflMove.isValidStartAndEnd(outOfRange, inRange, 7).getReason())
-                .toBe('Starting coord of TaflMove must be on the board, not at (-1, -1).');
-            expect(TaflMove.isValidStartAndEnd(inRange, outOfRange, 7).getReason())
-                .toBe('Landing coord of TaflMove must be on the board, not at (-1, -1).');
+    describe('isValidStartAndEnd', () => {
+        const outOfRange: Coord = new Coord(-1, -1);
+        const inRange: Coord = new Coord(0, 0);
+        it('should report when given out of range start coord', () => {
+            const reason: string = 'Starting coord of TaflMove must be on the board, not at (-1, -1).';
+            const validity: MGPValidation = TaflMove.isValidStartAndEnd(outOfRange, inRange, 7);
+            expect(validity.isFailure()).toBeTrue();
+            expect(validity.getReason()).toBe(reason);
+        });
+        it('should report when given out of range end coord', () => {
+            const reason: string = 'Landing coord of TaflMove must be on the board, not at (-1, -1).';
+            const validity: MGPValidation = TaflMove.isValidStartAndEnd(inRange, outOfRange, 7);
+            expect(validity.isFailure()).toBeTrue();
+            expect(validity.getReason()).toBe(reason);
         });
         it('should report diagonal moves', () => {
             const reason: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
-            expect(TaflMove.isValidStartAndEnd(new Coord(0, 0), new Coord(1, 1), 7).getReason())
-                .toBe(reason);
+            const validity: MGPValidation = TaflMove.isValidStartAndEnd(new Coord(0, 0), new Coord(1, 1), 7);
+            expect(validity.isFailure()).toBeTrue();
+            expect(validity.getReason()).toBe(reason);
         });
         it('should report non-straight moves', () => {
             const reason: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
-            expect(TaflMove.isValidStartAndEnd(new Coord(0, 0), new Coord(2, 5), 7).getReason())
-                .toBe(reason);
+            const validity: MGPValidation = TaflMove.isValidStartAndEnd(new Coord(0, 0), new Coord(2, 5), 7);
+            expect(validity.isFailure()).toBeTrue();
+            expect(validity.getReason()).toBe(reason);
         });
     });
     it('should override equals and toString correctly', () => {
