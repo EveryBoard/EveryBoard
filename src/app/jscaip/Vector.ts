@@ -8,8 +8,9 @@ export class Vector implements ComparableObject {
     public equals(other: Vector): boolean {
         return this.x === other.x && this.y === other.y;
     }
-    public isUnitary(): boolean {
-        return Math.abs(this.x) + Math.abs(this.y) === 1;
+    public isSingleOrthogonalStep(): boolean {
+        const isUnitary: boolean = Math.abs(this.x) + Math.abs(this.y) === 1;
+        return this.isOrthogonal() && isUnitary;
     }
     public isOrthogonal(): boolean {
         return this.x === 0 || this.y === 0;
