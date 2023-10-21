@@ -19,6 +19,7 @@ import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
 import { TaflPieceMinimax } from './TaflPieceMinimax';
 import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
     extends RectangularGameComponent<R, M, S, TaflPawn>
@@ -37,10 +38,10 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     {
         super(messageDisplayer);
     }
-    public override getViewBox(): string {
+    public override getViewBox(): ViewBox {
         const begin: number = - this.STROKE_WIDTH;
         const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
-        return begin + ' ' + begin + ' ' + width + ' ' + width;
+        return ViewBox.fromLimits(begin, begin, width, width);
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();

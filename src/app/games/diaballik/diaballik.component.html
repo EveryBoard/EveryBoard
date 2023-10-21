@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="getViewBoxWithExtraSpace(0, 0, 0, SPACE_SIZE)"
+     [attr.viewBox]="getViewBox().expand(0, 0, 0, SPACE_SIZE).toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     <g [attr.transform]="getBoardRotation()">
         <g *ngFor="let line of stateInConstruction.board; index as y">

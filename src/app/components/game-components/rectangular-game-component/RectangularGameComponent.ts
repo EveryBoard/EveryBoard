@@ -27,24 +27,12 @@ export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
         return this.board.length;
     }
 
-    public getViewBox(): string {
+    public getViewBox(): ViewBox {
         const left: number = -0.5 * this.STROKE_WIDTH;
         const up: number = -0.5 * this.STROKE_WIDTH;
         const right: number = this.getWidth() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const down: number = this.getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH;
-        return ViewBox.fromLimits(left, right, up, down).toSVGString();
+        return ViewBox.fromLimits(left, right, up, down);
     }
 
-    public getViewBoxWithExtraSpace(bonusLeft: number,
-                                    bonusRight: number,
-                                    bonusUp: number,
-                                    bonusDown: number)
-    : string
-    {
-        const left: number = -0.5 * this.STROKE_WIDTH - bonusLeft;
-        const up: number = -0.5 * this.STROKE_WIDTH - bonusUp;
-        const right: number = (this.getWidth() * this.SPACE_SIZE + this.STROKE_WIDTH + bonusRight);
-        const down: number = (this.getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH + bonusDown);
-        return ViewBox.fromLimits(left, right, up, down).toSVGString();
-    }
 }

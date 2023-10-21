@@ -38,7 +38,7 @@ export class DiaballikTranslation extends MoveCoordToCoord {
     public static from(start: Coord, end: Coord): MGPFallible<DiaballikTranslation> {
         Utils.assert(DiaballikState.isOnBoard(start) && DiaballikState.isOnBoard(end), 'DiaballikMove not on board');
         const vector: Vector = start.getVectorToward(end);
-        if (vector.isUnitary() && vector.isOrthogonal()) {
+        if (vector.isSingleOrthogonalStep()) {
             return MGPFallible.success(new DiaballikTranslation(start, end));
         } else {
             return MGPFallible.failure(DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
