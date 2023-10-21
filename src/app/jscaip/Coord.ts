@@ -116,10 +116,10 @@ export class Coord extends Vector {
     }
 
     public isNeighborWith(coord: Coord): boolean {
-        if (this.isAlignedWith(coord) === false) {
-            return false;
-        } else {
+        if (this.isAlignedWith(coord)) {
             return this.getDistance(coord) === 1;
+        } else {
+            return false;
         }
     }
 
