@@ -70,7 +70,7 @@ describe('ThemeService', () => {
         // Then the (default) dark theme has been loaded
         expect(getThemeElement().href).toMatch('/dark.css$');
     }));
-    it('should use the preferred color scheme if there is one and no theme has been chosen', fakeAsync(async() => {
+    it('should use the preferred color scheme if there is one and no theme has been chosen (dark)', fakeAsync(async() => {
         const realMatchMedia: (query: string) => MediaQueryList = window.matchMedia;
         // Given that the preferred color scheme is dark
         spyOn(window, 'matchMedia').and.callFake(function(query: string): MediaQueryList {
@@ -83,6 +83,20 @@ describe('ThemeService', () => {
         testUtils.detectChanges();
         // Then the dark theme has been loaded
         expect(getThemeElement().href).toMatch('/dark.css$');
+    }));
+    it('should use the preferred color scheme if there is one and no theme has been chosen (light)', fakeAsync(async() => {
+        const realMatchMedia: (query: string) => MediaQueryList = window.matchMedia;
+        // Given that the preferred color scheme is dark
+        spyOn(window, 'matchMedia').and.callFake(function(query: string): MediaQueryList {
+            const result: MediaQueryList = realMatchMedia(query);
+            return { ...result, matches: query === '(prefers-color-scheme: light)' };
+
+        });
+        // When the page is loaded
+        await prepare();
+        testUtils.detectChanges();
+        // Then the dark theme has been loaded
+        expect(getThemeElement().href).toMatch('/light.css$');
     }));
     it('should use the dark theme if there is no other preference', fakeAsync(async() => {
         const realMatchMedia: (query: string) => MediaQueryList = window.matchMedia;
