@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from '../../common/MancalaState';
-import { AwaleNode, AwaleRules } from '../AwaleRules';
+import { AwaleRules } from '../AwaleRules';
 import { AwaleOrderedMoveGenerator } from '../AwaleOrderedMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';
-import { KalahMove } from '../../kalah/KalahMove';
-import { MancalaDistribution } from '../../common/MancalaMove';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MancalaNode } from '../../common/MancalaRules';
 
 describe('AwaleOrderedMoveGenerator', () => {
 
@@ -22,11 +22,11 @@ describe('AwaleOrderedMoveGenerator', () => {
             [0, 0, 0, 0, 0, 2],
         ];
         const state: MancalaState = new MancalaState(board, 1, [0, 0], config);
-        const node: AwaleNode = new AwaleNode(state);
+        const node: MancalaNode = new MancalaNode(state);
         // When listing the moves
-        const moves: KalahMove[] = moveGenerator.getListMoves(node);
+        const moves: MancalaMove[] = moveGenerator.getListMoves(node);
         // Then the first move should be the capture
         expect(moves.length).toBe(2);
-        expect(moves[0]).toEqual(KalahMove.of(MancalaDistribution.of(5)));
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5)));
     });
 });

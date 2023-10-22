@@ -5,9 +5,9 @@ import { MancalaRules } from './MancalaRules';
 import { MancalaScoreHeuristic } from './MancalaScoreHeurisic';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 
-export class MancalaScoreMinimax<M extends MancalaMove> extends Minimax<M, MancalaState> {
+export class MancalaScoreMinimax extends Minimax<MancalaMove, MancalaState> {
 
-    public constructor(rules: MancalaRules<M>, moveGenerator: MoveGenerator<M, MancalaState>) {
+    public constructor(rules: MancalaRules, moveGenerator: MoveGenerator<MancalaMove, MancalaState>) {
         super($localize`Score`, rules, new MancalaScoreHeuristic(), moveGenerator);
     }
 }

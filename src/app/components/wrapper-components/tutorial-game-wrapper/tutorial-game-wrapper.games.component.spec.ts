@@ -45,7 +45,7 @@ import { HiveMove } from 'src/app/games/hive/HiveMove';
 
 import { KalahRules } from 'src/app/games/mancala/kalah/KalahRules';
 import { KalahTutorial } from 'src/app/games/mancala/kalah/KalahTutorial';
-import { KalahMove } from 'src/app/games/mancala/kalah/KalahMove';
+import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
 
 import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
 import { LinesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
@@ -189,12 +189,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     KalahRules.get(),
                     kalahTutorial[4],
-                    KalahMove.of(MancalaDistribution.of(0)),
+                    MancalaMove.of(MancalaDistribution.of(0)),
                     MGPValidation.failure('This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!'),
                 ], [
                     KalahRules.get(),
                     kalahTutorial[5],
-                    KalahMove.of(MancalaDistribution.of(4)),
+                    MancalaMove.of(MancalaDistribution.of(4)),
                     MGPValidation.failure('You did not capture, try again!'),
                 ], [
                     LinesOfActionRules.get(),

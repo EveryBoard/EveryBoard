@@ -3,13 +3,13 @@ import { MancalaConfig } from './MancalaConfig';
 import { MancalaState } from './MancalaState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { Move } from 'src/app/jscaip/Move';
 import { Rules } from 'src/app/jscaip/Rules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { GameNode } from 'src/app/jscaip/GameNode';
+import { MancalaMove } from './MancalaMove';
 
 export interface MancalaCaptureResult {
 
@@ -31,7 +31,9 @@ export type MancalaDistributionResult = {
     endsUpInStore: boolean;
 }
 
-export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState, MancalaConfig> {
+export class MancalaNode extends GameNode<MancalaMove, MancalaState> {}
+
+export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, MancalaConfig> {
 
     // These are the coordinates of the store. These are fake coordinates since the stores are not on the board
     public static FAKE_STORE_COORD: ReversibleMap<Player, Coord> = new ReversibleMap([
@@ -54,14 +56,42 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         super(MancalaState, config);
     }
 
-    public abstract override isLegal(move: M, state: MancalaState): MGPFallible<void>;
+    public abstract override isLegal(move: MancalaMove, state: MancalaState): MGPFallible<void>;
 
     /**
-     * Apply the distribution part of the move M
+     * Apply the distribution part of the move MancalaMove
      * Apply the capture that happend due to distribution (by example the passage in the store)
      * Should NOT increment the turn of the state
      */
-    public abstract distributeMove(move: M, state: MancalaState): MancalaDistributionResult;
+    public distributeMove(move: MancalaMove, state: MancalaState): MancalaDistributionResult {
+        const playerValue: number = state.getCurrentPlayer().value;
+        const playerY: number = state.getCurrentPlayerY();
+        const filledCoords: Coord[] = [];
+        let passedByStoreNTimes: number = 0;
+        let endsUpInStore: boolean = false;
+        let postDistributionState: MancalaState = state;
+        for (const distributions of move) {
+            const distributionResult: MancalaDistributionResult =
+                this.distributeHouse(distributions.x, playerY, postDistributionState);
+            const captures: [number, number] = postDistributionState.getScoresCopy();
+            captures[playerValue] += distributionResult.passedByStoreNTimes;
+            postDistributionState = distributionResult.resultingState;
+            filledCoords.push(...distributionResult.filledCoords);
+            passedByStoreNTimes += distributionResult.passedByStoreNTimes;
+            endsUpInStore = distributionResult.endsUpInStore;
+        }
+        const captured: [number, number] = postDistributionState.getScoresCopy();
+        const distributedState: MancalaState = new MancalaState(postDistributionState.getCopiedBoard(),
+                                                                postDistributionState.turn,
+                                                                captured,
+                                                                postDistributionState.config);
+        return {
+            endsUpInStore,
+            filledCoords,
+            passedByStoreNTimes,
+            resultingState: distributedState,
+        };
+    }
 
     /**
      * Should capture if there is context for it, and not capture otherwise
@@ -90,7 +120,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         return PlayerOrNone.NONE;
     }
 
-    public getGameStatus(node: GameNode<M, MancalaState>): GameStatus {
+    public getGameStatus(node: GameNode<MancalaMove, MancalaState>): GameStatus {
         const state: MancalaState = node.gameState;
         const width: number = node.gameState.getWidth();
         const seedsByHouse: number = node.gameState.config.seedsByHouse;
@@ -107,7 +137,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         return GameStatus.ONGOING;
     }
 
-    public applyLegalMove(move: M, state: MancalaState, _: void): MancalaState {
+    public applyLegalMove(move: MancalaMove, state: MancalaState, _: void): MancalaState {
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state);
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult);
         let resultingState: MancalaState = captureResult.resultingState;

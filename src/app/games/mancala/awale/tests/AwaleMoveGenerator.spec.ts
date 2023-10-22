@@ -1,10 +1,10 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from '../../common/MancalaState';
-import { KalahMove } from '../../kalah/KalahMove';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
-import { AwaleNode, AwaleRules } from '../AwaleRules';
+import { AwaleRules } from '../AwaleRules';
 import { MancalaConfig } from '../../common/MancalaConfig';
-import { MancalaDistribution } from '../../common/MancalaMove';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MancalaNode } from '../../common/MancalaRules';
 
 describe('AwaleMoveGenerator', () => {
 
@@ -21,11 +21,11 @@ describe('AwaleMoveGenerator', () => {
             [0, 0, 0, 0, 0, 0],
         ];
         const state: MancalaState = new MancalaState(board, 1, [0, 0], config);
-        const node: AwaleNode = new AwaleNode(state);
+        const node: MancalaNode = new MancalaNode(state);
         // When listing the moves
-        const moves: KalahMove[] = moveGenerator.getListMoves(node);
+        const moves: MancalaMove[] = moveGenerator.getListMoves(node);
         // Then only the legal moves should be present
         expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(KalahMove.of(MancalaDistribution.of(5)));
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5)));
     });
 });

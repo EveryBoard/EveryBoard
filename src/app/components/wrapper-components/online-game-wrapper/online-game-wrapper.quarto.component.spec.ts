@@ -2,7 +2,9 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
+import * as Firestore from '@angular/fire/firestore';
 import { Timestamp } from 'firebase/firestore';
+
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
@@ -331,9 +333,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.detectChanges();
         tick(0);
     }
-    function setPartDAOUpdateBackup(what: string): void {
 
+    type daoFunction<T> = (id: string, update: Firestore.UpdateData<T>) => Promise<void>;
+
+    function setPartDAOUpdateBackup(daoFunction: daoFunction<Part>): void {
+        // eslint-disable-next-line dot-notation
+        partDAO['updateBackup'] = daoFunction;
     }
+
+    function getPartDAOUpdateBackup(): daoFunction<Part> {
+        // eslint-disable-next-line dot-notation
+        return partDAO['updateBackup'];
+    }
+
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
         expect(Utils.getNonNullable(wrapper.currentPlayer).name).toEqual('creator');
@@ -638,7 +650,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When doing winning move
             let partDAOCalled: boolean = false;
-            partDAO['updateBackup'] = partDAO.update;
+            setPartDAOUpdateBackup(partDAO.update);
             spyOn(partDAO, 'update').and.callFake(async(id: string, update: Part) => {
                 expect(update.winner).toBe(UserMocks.CREATOR_MINIMAL_USER);
                 expect(update.loser).toBe(UserMocks.OPPONENT_MINIMAL_USER);
@@ -666,7 +678,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When doing losing move
             let partDAOCalled: boolean = false;
-            partDAO['updateBackup'] = partDAO.update;
+            setPartDAOUpdateBackup(partDAO.update);
             spyOn(partDAO, 'update').and.callFake(async(id: string, update: Part) => {
                 expect(update.winner).toBe(UserMocks.OPPONENT_MINIMAL_USER);
                 expect(update.loser).toBe(UserMocks.CREATOR_MINIMAL_USER);
@@ -713,7 +725,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When doing drawing move
             let partDAOCalled: boolean = false;
-            partDAO['updateBackup'] = partDAO.update;
+            setPartDAOUpdateBackup(partDAO.update);
             spyOn(partDAO, 'update').and.callFake(async(id: string, update: Part) => {
                 expect(update.result).toBe(MGPResult.HARD_DRAW.value);
                 partDAOCalled = true;

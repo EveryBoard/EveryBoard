@@ -19,8 +19,8 @@ import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { MCTS } from 'src/app/jscaip/MCTS';
 
-export abstract class MancalaComponent<R extends MancalaRules<M>, M extends MancalaMove>
-    extends RectangularGameComponent<R, M, MancalaState, number, MancalaConfig>
+export abstract class MancalaComponent<R extends MancalaRules>
+    extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig>
 {
     public static readonly TIMEOUT_BETWEEN_SEED: number = 200;
 
@@ -30,7 +30,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
 
     public lastDistributedHouses: Coord[] = [];
 
-    public currentMove: MGPOptional<M> = MGPOptional.empty();
+    public currentMove: MGPOptional<MancalaMove> = MGPOptional.empty();
 
     private clickOngoing: boolean = false;
 
@@ -64,7 +64,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     public getWidth(): number {
         return 60 + ((2 + this.board[0].length) * this.SPACE_SIZE);
     }
-    public override async showLastMove(move: M): Promise<void> {
+    public override async showLastMove(move: MancalaMove): Promise<void> {
         this.droppedInStore = [0, 0];
         const previousState: MancalaState = this.getPreviousState();
         const distributionResult: MancalaDistributionResult =
@@ -88,7 +88,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             Utils.assert(this.node.parent.isPresent(), 'triggerAnimation in store should be false at first turn');
             this.changeVisibleState(this.node.parent.get().gameState);
             let indexDistribution: number = 0;
-            const move: M = this.node.previousMove.get();
+            const move: MancalaMove = this.node.previousMove.get();
             for (const distributions of move) {
                 await this.showSimpleDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
@@ -298,7 +298,9 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.cdr.detectChanges();
     }
 
-    protected createAIs(moveGenerator: MoveGenerator<M, MancalaState>): AI<M, MancalaState, AIOptions>[] {
+    protected createAIs(moveGenerator: MoveGenerator<MancalaMove, MancalaState>)
+    : AI<MancalaMove, MancalaState, AIOptions>[]
+    {
         return [
             new MancalaScoreMinimax(this.rules, moveGenerator),
             new MCTS($localize`MCTS`, moveGenerator, this.rules),
@@ -311,7 +313,22 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
      * for multiple sow it will sometime be the second sub-distribution of the move
      * @param x the X value of the distribution that has been done
      */
-    protected abstract updateOrCreateCurrentMove(x: number): void;
+    protected updateOrCreateCurrentMove(x: number): void {
+        if (this.currentMove.isAbsent()) {
+            this.hideLastMove();
+            this.currentMove = MGPOptional.of(this.generateMove(x));
+        } else {
+            const newMove: MancalaMove = this.addToMove(x);
+            this.currentMove = MGPOptional.of(newMove);
+        }
+    }
 
-    public abstract generateMove(x: number): M;
+    public generateMove(x: number): MancalaMove {
+        return MancalaMove.of(MancalaDistribution.of(x));
+    }
+
+    protected addToMove(x: number): MancalaMove {
+        return this.currentMove.get().add(MancalaDistribution.of(x));
+    }
+
 }

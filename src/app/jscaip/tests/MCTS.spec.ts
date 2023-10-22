@@ -8,11 +8,12 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { AITimeLimitOptions } from '../AI';
 import { Coord } from '../Coord';
 import { MCTS } from '../MCTS';
-import { KalahMove } from 'src/app/games/mancala/kalah/KalahMove';
+import { MancalaNode } from 'src/app/games/mancala/common/MancalaRules';
 import { AwaleMoveGenerator } from 'src/app/games/mancala/awale/AwaleMoveGenerator';
-import { AwaleNode, AwaleRules } from 'src/app/games/mancala/awale/AwaleRules';
+import { AwaleRules } from 'src/app/games/mancala/awale/AwaleRules';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { MancalaConfig } from 'src/app/games/mancala/common/MancalaConfig';
+import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
 
 describe('MCTS', () => {
 
@@ -62,13 +63,13 @@ describe('MCTS', () => {
     });
     it('should not fail on games that are too long', () => {
         // Given a MCTS for a game that has a tendency to give long random games
-        const otherMcts: MCTS<KalahMove, MancalaState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
+        const otherMcts: MCTS<MancalaMove, MancalaState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
         otherMcts.maxGameLength = 10; // Limit it heavily to ensure we will exhaust the limit (for coverage)
         // When searching for the best move
         const beforeSearch: number = Date.now();
         const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
-        const node: AwaleNode = AwaleRules.get().getInitialNode(config);
-        const move: KalahMove = otherMcts.chooseNextMove(node, mctsOptions);
+        const node: MancalaNode = AwaleRules.get().getInitialNode(config);
+        const move: MancalaMove = otherMcts.chooseNextMove(node, mctsOptions);
         // Then it should find one and not get stuck infinitely
         expect(move).toBeTruthy();
         // Add 10% to allow for iterations to finish

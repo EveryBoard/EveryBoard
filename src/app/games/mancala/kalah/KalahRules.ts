@@ -1,22 +1,18 @@
-import { KalahMove } from './KalahMove';
 import { MancalaState } from './../common/MancalaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MancalaDistribution } from '../common/MancalaMove';
+import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaFailure } from '../common/MancalaFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
-export class KalahNode extends GameNode<KalahMove, MancalaState> {}
-
-export class KalahRules extends MancalaRules<KalahMove> {
+export class KalahRules extends MancalaRules {
 
     private static singleton: MGPOptional<KalahRules> = MGPOptional.empty();
 
@@ -59,7 +55,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         return KalahRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public isLegal(move: KalahMove, state: MancalaState): MGPValidation {
+    public isLegal(move: MancalaMove, state: MancalaState): MGPValidation {
         const playerY: number = state.getCurrentPlayerY();
         let canStillPlay: boolean = true;
         for (const distribution of move) {
@@ -91,36 +87,6 @@ export class KalahRules extends MancalaRules<KalahMove> {
         const isStarving: boolean = MancalaRules.isStarving(distributionResult.resultingState.getCurrentPlayer(),
                                                             distributionResult.resultingState.board);
         return MGPFallible.success(distributionResult.endsUpInStore && isStarving === false);
-    }
-
-    public distributeMove(move: KalahMove, state: MancalaState): MancalaDistributionResult {
-        const playerValue: number = state.getCurrentPlayer().value;
-        const playerY: number = state.getCurrentPlayerY();
-        const filledCoords: Coord[] = [];
-        let passedByStoreNTimes: number = 0;
-        let endsUpInStore: boolean = false;
-        let postDistributionState: MancalaState = state;
-        for (const distributions of move) {
-            const distributionResult: MancalaDistributionResult =
-                this.distributeHouse(distributions.x, playerY, postDistributionState);
-            const captures: [number, number] = postDistributionState.getScoresCopy();
-            captures[playerValue] += distributionResult.passedByStoreNTimes;
-            postDistributionState = distributionResult.resultingState;
-            filledCoords.push(...distributionResult.filledCoords);
-            passedByStoreNTimes += distributionResult.passedByStoreNTimes;
-            endsUpInStore = distributionResult.endsUpInStore;
-        }
-        const captured: [number, number] = postDistributionState.getScoresCopy();
-        const distributedState: MancalaState = new MancalaState(postDistributionState.getCopiedBoard(),
-                                                                postDistributionState.turn,
-                                                                captured,
-                                                                postDistributionState.config);
-        return {
-            endsUpInStore,
-            filledCoords,
-            passedByStoreNTimes,
-            resultingState: distributedState,
-        };
     }
 
     public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {

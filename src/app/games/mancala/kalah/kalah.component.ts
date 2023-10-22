@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MancalaDistribution } from '../common/MancalaMove';
-import { MancalaMultipleSowComponent } from '../common/MancalaMultipleSowComponent';
+import { MancalaMove } from '../common/MancalaMove';
 import { KalahRules } from './KalahRules';
-import { KalahMove } from './KalahMove';
 import { ActivatedRoute } from '@angular/router';
 import { KalahMoveGenerator } from './KalahMoveGenerator';
+import { MancalaComponent } from '../common/MancalaComponent';
 
 @Component({
     selector: 'app-kalah-component',
@@ -13,7 +12,7 @@ import { KalahMoveGenerator } from './KalahMoveGenerator';
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KalahComponent extends MancalaMultipleSowComponent<KalahRules, KalahMove> {
+export class KalahComponent extends MancalaComponent<KalahRules> {
 
     public constructor(messageDisplayer: MessageDisplayer,
                        activatedRoute: ActivatedRoute,
@@ -22,15 +21,7 @@ export class KalahComponent extends MancalaMultipleSowComponent<KalahRules, Kala
         super(messageDisplayer, activatedRoute, cdr);
         this.setRuleAndNode('Kalah');
         this.availableAIs = this.createAIs(new KalahMoveGenerator());
-        this.encoder = KalahMove.encoder;
-    }
-
-    public generateMove(x: number): KalahMove {
-        return KalahMove.of(MancalaDistribution.of(x));
-    }
-
-    protected override addToMove(x: number): KalahMove {
-        return this.currentMove.get().add(MancalaDistribution.of(x));
+        this.encoder = MancalaMove.encoder;
     }
 
 }

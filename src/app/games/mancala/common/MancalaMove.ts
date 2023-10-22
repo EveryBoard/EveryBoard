@@ -1,4 +1,5 @@
 import { Move } from 'src/app/jscaip/Move';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Encoder } from 'src/app/utils/Encoder';
 import { Utils } from 'src/app/utils/utils';
 
@@ -22,11 +23,40 @@ export class MancalaDistribution {
     }
 }
 
-export abstract class MancalaMove extends Move {
+export class MancalaMove extends Move {
+
+    public static encoder: Encoder<MancalaMove> = Encoder.tuple(
+        [Encoder.list(MancalaDistribution.encoder)],
+        (move: MancalaMove) => [move.distributions],
+        (value: [MancalaDistribution[]]) => MancalaMove.of(value[0][0], value[0].slice(1)),
+    );
+
+    public static of(mandatoryDistribution: MancalaDistribution, bonusDistributions: MancalaDistribution[] = [])
+    : MancalaMove
+    {
+        const distributions: MancalaDistribution[] = [mandatoryDistribution];
+        distributions.push(...bonusDistributions);
+        return new MancalaMove(distributions);
+    }
 
     protected constructor(public readonly distributions: MancalaDistribution[]) {
         super();
     }
+
+    public add(move: MancalaDistribution): MancalaMove {
+        return MancalaMove.of(this.distributions[0],
+                              this.distributions.slice(1).concat(move));
+    }
+
+    public override toString(): string {
+        const distributions: number[] = this.distributions.map((move: MancalaDistribution) => move.x);
+        return 'MancalaMove([' + distributions.join(', ') + '])';
+    }
+
+    public override equals(other: this): boolean {
+        return ArrayUtils.compare(this.distributions, other.distributions);
+    }
+
     [Symbol.iterator](): IterableIterator<MancalaDistribution> {
         return this.distributions.values();
     }

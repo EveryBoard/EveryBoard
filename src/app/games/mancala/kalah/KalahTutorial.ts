@@ -1,7 +1,6 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { MancalaState } from '../common/MancalaState';
-import { KalahMove } from './KalahMove';
-import { MancalaDistribution } from '../common/MancalaMove';
+import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { KalahRules } from './KalahRules';
 import { MancalaTutorial } from '../common/MancalaTutorial';
@@ -24,7 +23,7 @@ export class KalahTutorial extends Tutorial {
             $localize`Bonus fact: Kalah has been created in the U.S.A in 1940 by William Julius Champion Jr.`,
             MancalaState.getInitialState(config),
         ),
-        MancalaTutorial.SOWING(KalahMove.of(MancalaDistribution.of(5)), config),
+        MancalaTutorial.SOWING(MancalaMove.of(MancalaDistribution.of(5)), config),
 
         TutorialStep.forClick(
             $localize`The Kalah (1/2)`,
@@ -42,8 +41,8 @@ export class KalahTutorial extends Tutorial {
             $localize`The Kalah (2/2)`,
             $localize`When ending in the Kalah, you must distribute again.<br/><br/>You're playing Dark, play the house that ends up in the Kalah then do a second distribution!`,
             MancalaState.getInitialState(config),
-            KalahMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(1)]),
-            (move: KalahMove, _previous: MancalaState, _result: MancalaState) => {
+            MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(1)]),
+            (move: MancalaMove, _previous: MancalaState, _result: MancalaState) => {
                 if (move.distributions.length === 1) {
                     return MGPValidation.failure($localize`This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!`);
                 } else {
@@ -59,8 +58,8 @@ export class KalahTutorial extends Tutorial {
                 [0, 4, 4, 4, 4, 4],
                 [0, 2, 0, 2, 4, 0],
             ], 4, [0, 0], config),
-            KalahMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(0), MancalaDistribution.of(3)]),
-            (_move: KalahMove, _state: MancalaState, resultingState: MancalaState) => {
+            MancalaMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(0), MancalaDistribution.of(3)]),
+            (_move: MancalaMove, _state: MancalaState, resultingState: MancalaState) => {
                 if (resultingState.getPieceAtXY(1, 0) === 0) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -77,7 +76,7 @@ export class KalahTutorial extends Tutorial {
                 [2, 0, 0, 0, 0, 1],
             ], 0, [19, 24], config),
             [
-                KalahMove.of(MancalaDistribution.of(5)),
+                MancalaMove.of(MancalaDistribution.of(5)),
             ],
             $localize`Since there is no longer seeds in the opponent houses, all your seeds have been captured by you. Congratulations, you won!`,
             $localize`Failed, you gave the opponent a seed! Try again.`,
