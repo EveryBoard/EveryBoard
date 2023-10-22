@@ -23,6 +23,7 @@ describe('KalahRules', () => {
             simpleMove: KalahMove.of(MancalaDistribution.of(5)),
         });
     });
+
     describe('distribution', () => {
         it('should allow simple move', () => {
             // Given any board
@@ -177,6 +178,7 @@ describe('KalahRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
     });
+
     describe('starvation and monsoon', () => {
         it('should monsoon even if next player will be able to feed current player', () => {
             // Given a state where next player is able to distribute
@@ -242,6 +244,7 @@ describe('KalahRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
     });
+
     describe('captures', () => {
         it(`should capture opposite house when landing in your own territory on an empty house`, () => {
             // Given a board with an opponent's house full of seeds and your paralel house being empty
@@ -326,4 +329,29 @@ describe('KalahRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
     });
+
+    describe('Cross Config', () => {
+
+        it('should not require additionnal distribution when not allowed by config (continueDistributionAfterStore)', () => {
+            // Given a mancala state with a config with continueDistributionAfterStore set to false
+            const customConfig: MancalaConfig = {
+                ...config,
+                continueDistributionAfterStore: false,
+            };
+            const state: MancalaState = MancalaState.getInitialState(customConfig);
+
+            // When doing simple distribution ending in store
+            const move: KalahMove = KalahMove.of(MancalaDistribution.of(3));
+
+            // Then the move should be legal and the store should contain one (so, the score)
+            const expectedBoard: Table<number> = [
+                [4, 4, 4, 4, 4, 4],
+                [5, 5, 5, 0, 4, 4],
+            ];
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [1, 0], customConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        });
+
+    });
+
 });

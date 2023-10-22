@@ -63,7 +63,7 @@ export abstract class Rules<M extends Move,
 
     public getInitialNode(config?: C): GameNode<M, S> {
         if (config != null) {
-            this.config = config;
+            this.config = config; // TODO FOR REVIEW: j'advocadise la présente de config dans les state, vu que les rules sont singletonisée alors que la règles peut varier d'avantage, essentiellement dans les tests
         }
         // eslint-disable-next-line dot-notation
         const initialState: S = this.stateType['getInitialState'](config);

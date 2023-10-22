@@ -63,7 +63,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         const playerY: number = state.getCurrentPlayerY();
         let canStillPlay: boolean = true;
         for (const distribution of move) {
-            Utils.assert(canStillPlay === true, 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE');
+            Utils.assert(canStillPlay, 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE');
             const distributionResult: MGPFallible<boolean> = this.isLegalDistribution(distribution, state);
             if (distributionResult.isFailure()) {
                 return MGPValidation.ofFallible(distributionResult);
@@ -72,7 +72,9 @@ export class KalahRules extends MancalaRules<KalahMove> {
                 canStillPlay = distributionResult.get();
             }
         }
-        Utils.assert(canStillPlay === false, 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE');
+        if (state.config.continueDistributionAfterStore) {
+            Utils.assert(canStillPlay === false, 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE');
+        }
         return MGPValidation.SUCCESS;
     }
 

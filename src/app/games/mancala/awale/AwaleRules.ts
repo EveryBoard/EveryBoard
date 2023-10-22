@@ -1,5 +1,5 @@
 import { MancalaState } from '../common/MancalaState';
-import { AwaleMove } from './AwaleMove';
+import { KalahMove } from '../kalah/KalahMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MancalaFailure } from './../common/MancalaFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -12,9 +12,9 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
-export class AwaleNode extends GameNode<AwaleMove, MancalaState> {}
+export class AwaleNode extends GameNode<KalahMove, MancalaState> {} // TODO: Unify
 
-export class AwaleRules extends MancalaRules<AwaleMove> {
+export class AwaleRules extends MancalaRules<KalahMove> {
 
     private static singleton: MGPOptional<AwaleRules> = MGPOptional.empty();
 
@@ -58,9 +58,34 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         return AwaleRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public distributeMove(move: AwaleMove, state: MancalaState): MancalaDistributionResult {
+    public distributeMove(move: KalahMove, state: MancalaState): MancalaDistributionResult {
+        const playerValue: number = state.getCurrentPlayer().value;
         const playerY: number = state.getCurrentPlayerY();
-        return this.distributeHouse(move.x, playerY, state);
+        const filledCoords: Coord[] = [];
+        let passedByStoreNTimes: number = 0;
+        let endsUpInStore: boolean = false;
+        let postDistributionState: MancalaState = state;
+        for (const distributions of move) {
+            const distributionResult: MancalaDistributionResult =
+                this.distributeHouse(distributions.x, playerY, postDistributionState);
+            const captures: [number, number] = postDistributionState.getScoresCopy();
+            captures[playerValue] += distributionResult.passedByStoreNTimes;
+            postDistributionState = distributionResult.resultingState;
+            filledCoords.push(...distributionResult.filledCoords);
+            passedByStoreNTimes += distributionResult.passedByStoreNTimes;
+            endsUpInStore = distributionResult.endsUpInStore;
+        }
+        const captured: [number, number] = postDistributionState.getScoresCopy();
+        const distributedState: MancalaState = new MancalaState(postDistributionState.getCopiedBoard(),
+                                                                postDistributionState.turn,
+                                                                captured,
+                                                                postDistributionState.config);
+        return {
+            endsUpInStore,
+            filledCoords,
+            passedByStoreNTimes,
+            resultingState: distributedState,
+        };
     }
 
     public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {
@@ -70,11 +95,11 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
         return this.captureIfLegal(landingCoord.x, landingCoord.y, resultingState);
     }
 
-    public isLegal(move: AwaleMove, state: MancalaState): MGPValidation {
+    public isLegal(move: KalahMove, state: MancalaState): MGPValidation {
         const opponent: Player = state.getCurrentOpponent();
         const playerY: number = state.getCurrentPlayerY();
 
-        const x: number = move.x;
+        const x: number = move.distributions[0].x;
         if (state.getPieceAtXY(x, playerY) === 0) {
             return MGPValidation.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }

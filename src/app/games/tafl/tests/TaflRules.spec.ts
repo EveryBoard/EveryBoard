@@ -163,29 +163,29 @@ describe('TaflRules', () => {
 
         it('should return Player.ZERO when invader starts', () => {
             // Given a rules instance configured with a starting invader
-            const rules: MyTaflRules = MyTaflRules.get();
-            rules.config = {
+            const customConfig: TaflConfig = {
                 ...config,
                 invaderStarts: true,
             };
+            const state: MyTaflState = MyTaflState.getInitialState(customConfig);
 
             // When calling getInvader
-            const invader: Player = rules.getInvader();
+            const invader: Player = rules.getInvader(state);
 
             // Then the response should be Player.ZERO
             expect(invader).toEqual(Player.ZERO);
         });
 
         it(`should return Player.ONE when invader don't start`, () => {
-            // Given a rules instance configured with a starting defender
-            const rules: MyTaflRules = MyTaflRules.get();
-            rules.config = {
+            // Given a state instance configured with a starting defender
+            const customConfig: TaflConfig = {
                 ...config,
                 invaderStarts: false,
             };
+            const state: MyTaflState = MyTaflState.getInitialState(customConfig);
 
             // When calling getInvader
-            const invader: Player = rules.getInvader();
+            const invader: Player = rules.getInvader(state);
 
             // Then the response should be Player.ONE
             expect(invader).toEqual(Player.ONE);

@@ -14,7 +14,7 @@ export class TaflPieceHeuristic<M extends TaflMove, S extends TaflState> extends
         const state: S = node.gameState;
         const nbPlayerZeroPawns: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
-        const invader: Player = this.rules.getInvader();
+        const invader: Player = this.rules.getInvader(state);
         const zeroMult: number = [1, 2][invader.value]; // invaders pawn are twice as numerous
         const oneMult: number = [2, 1][invader.value]; // so they're twice less valuable
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;

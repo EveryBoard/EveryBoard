@@ -342,6 +342,10 @@
         <source>Pass by player store</source>
         <target>Passer par le magasin</target>
       </trans-unit>
+      <trans-unit id="4475848272710836308" datatype="html">
+        <source>Continue distribution after last seed ends in store</source>
+        <target>Continuer la distribution après que la dernière graine soit tombée dans le magasin</target>
+      </trans-unit>
       <trans-unit id="9195784792324730674" datatype="html">
         <source>Central throne is left for good</source>
         <target>Le trône central est quitté définitivement</target>

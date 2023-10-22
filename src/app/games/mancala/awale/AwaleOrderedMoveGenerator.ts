@@ -1,4 +1,4 @@
-import { AwaleMove } from './AwaleMove';
+import { KalahMove } from '../kalah/KalahMove';
 import { AwaleNode, AwaleRules } from './AwaleRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -8,18 +8,18 @@ import { MancalaDistributionResult } from '../common/MancalaRules';
 
 export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
 
-    public override getListMoves(node: AwaleNode): AwaleMove[] {
-        const moves: AwaleMove[] = super.getListMoves(node);
+    public override getListMoves(node: AwaleNode): KalahMove[] {
+        const moves: KalahMove[] = super.getListMoves(node);
         return this.orderMoves(node, moves);
     }
-    private orderMoves(node: AwaleNode, moves: AwaleMove[]): AwaleMove[] {
+    private orderMoves(node: AwaleNode, moves: KalahMove[]): KalahMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const playerY: number = node.gameState.getOpponentY();
         const opponentY: number = player.value;
         // sort by captured houses
-        ArrayUtils.sortByDescending(moves, (move: AwaleMove): number => {
+        ArrayUtils.sortByDescending(moves, (move: KalahMove): number => {
             const board: number[][] = node.gameState.getCopiedBoard();
-            const toDistribute: number = board[playerY][move.x];
+            const toDistribute: number = board[playerY][move.distributions[0].x];
             const mancalaDistributionResult: MancalaDistributionResult =
                 AwaleRules.get().distributeMove(move, node.gameState);
             const filledCoords: Coord[] = mancalaDistributionResult.filledCoords;

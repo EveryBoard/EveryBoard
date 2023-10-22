@@ -1,17 +1,19 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { AwaleRules } from './AwaleRules';
-import { AwaleMove } from './AwaleMove';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ActivatedRoute } from '@angular/router';
-import { MancalaSingleSowComponent } from '../common/MancalaSingleSowComponent';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';
+import { KalahMove } from '../kalah/KalahMove';
+import { MancalaDistribution } from '../common/MancalaMove';
+import { MancalaMultipleSowComponent } from '../common/MancalaMultipleSowComponent';
 
 @Component({
     selector: 'app-awale-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })
-export class AwaleComponent extends MancalaSingleSowComponent<AwaleRules, AwaleMove> {
+export class AwaleComponent extends MancalaMultipleSowComponent<AwaleRules, KalahMove> {
 
     public constructor(messageDisplayer: MessageDisplayer,
                        activatedRoute: ActivatedRoute,
@@ -20,9 +22,15 @@ export class AwaleComponent extends MancalaSingleSowComponent<AwaleRules, AwaleM
         super(messageDisplayer, activatedRoute, cdr);
         this.setRuleAndNode('Awale');
         this.availableAIs = this.createAIs(new AwaleMoveGenerator());
-        this.encoder = AwaleMove.encoder;
+        this.encoder = KalahMove.encoder;
     }
-    public generateMove(x: number): AwaleMove {
-        return AwaleMove.of(x);
+
+    public generateMove(x: number): KalahMove {
+        return KalahMove.of(MancalaDistribution.of(x));
     }
+
+    protected override addToMove(x: number): KalahMove {
+        return this.currentMove.get().add(MancalaDistribution.of(x));
+    }
+
 }

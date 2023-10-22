@@ -29,7 +29,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL');// TODO FOR REVIEW: on kill ça ?
     }
     public isLegal(move: TaflMove, state: S): MGPValidation {
-        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL');// TODO FOR REVIEW: on kill ça ?
+        Utils.assert(Object.keys(state.config).length > 0, 'CONFIG CANNOT BE NULL');// TODO FOR REVIEW: on kill ça ?
 
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
@@ -118,7 +118,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         } = this.getSurroundings(kingCoord, d, player, state);
 
         if (backInRange === false) {
-            return this.captureKingAgainstTheWall(left, right, kingCoord);
+            return this.captureKingAgainstTheWall(left, right, kingCoord, state);
         }
         if (back === RelativePlayer.NONE && this.isThrone(state, backCoord)) {
             return this.captureKingAgainstThrone(state, backCoord, kingCoord, left, right);
@@ -159,12 +159,13 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     }
     private captureKingAgainstTheWall(left: RelativePlayer,
                                       right: RelativePlayer,
-                                      kingCoord: Coord)
+                                      kingCoord: Coord,
+                                      state: TaflState)
     : MGPOptional<Coord>
     {
         let nbInvaders: number = (left === RelativePlayer.PLAYER ? 1 : 0);
         nbInvaders += (right === RelativePlayer.PLAYER ? 1 : 0);
-        if (nbInvaders === 2 && this.config.edgesAreKingsEnnemy) { // 2
+        if (nbInvaders === 2 && state.config.edgesAreKingsEnnemy) { // 2
             // king captured by 3 invaders against 1 border
             return MGPOptional.of(kingCoord);
         }
@@ -179,14 +180,14 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     : MGPOptional<Coord>
     {
         if (this.isExternalThrone(state, backCoord)) {
-            if (this.config.kingFarFromHomeCanBeSandwiched) {
+            if (state.config.kingFarFromHomeCanBeSandwiched) {
                 return MGPOptional.of(kingCoord);
             }
         } else { // Central throne
             const kingHasOpponentOnItsLeft: boolean = left === RelativePlayer.PLAYER;
             const kingHasOpponentOnItsRight: boolean = right === RelativePlayer.PLAYER;
             const kingHasThreeOpponentAround: boolean = kingHasOpponentOnItsLeft || kingHasOpponentOnItsRight;
-            if (this.config.centralThroneCanSurroundKing && kingHasThreeOpponentAround) {
+            if (state.config.centralThroneCanSurroundKing && kingHasThreeOpponentAround) {
                 return MGPOptional.of(kingCoord);
             }
         }
@@ -245,11 +246,11 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     : MGPOptional<Coord>
     {
         if (this.kingTouchCentralThrone(state, kingCoord) === false &&
-            this.config.kingFarFromHomeCanBeSandwiched)
+            state.config.kingFarFromHomeCanBeSandwiched)
         {
             return MGPOptional.of(kingCoord);
         }
-        const throneCanSurrond: boolean = this.config.centralThroneCanSurroundKing;
+        const throneCanSurrond: boolean = state.config.centralThroneCanSurroundKing;
         const leftIsThrone: boolean = this.isThrone(state, leftCoord);
         const leftCanSurround: boolean = left === RelativePlayer.PLAYER || (leftIsThrone && throneCanSurrond);
         const rightIsThrone: boolean = this.isThrone(state, rightCoord);
@@ -294,13 +295,13 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         if (optionalKingCoord.isAbsent()) {
             Debug.display('TaflRules', 'getWinner', 'The king is dead, victory to invader');
             // the king is dead, long live the king
-            return MGPOptional.of(this.getInvader());
+            return MGPOptional.of(this.getInvader(state));
         }
         const kingCoord: Coord = optionalKingCoord.get();
         if (this.isExternalThrone(state, kingCoord)) {
             Debug.display('TaflRules', 'getWinner', 'The king escape, victory to defender');
             // king reached one corner!
-            return MGPOptional.of(this.getDefender());
+            return MGPOptional.of(this.getDefender(state));
         }
         if (this.isPlayerImmobilized(Player.ZERO, state)) {
             Debug.display('TaflRules', 'getWinner', 'Zero has no move, victory to one');
@@ -324,11 +325,11 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
-    public getInvader(): Player {
-        return this.config.invaderStarts ? Player.ZERO : Player.ONE;
+    public getInvader(state: TaflState): Player {
+        return state.config.invaderStarts ? Player.ZERO : Player.ONE;
     }
-    public getDefender(): Player {
-        return this.getInvader().getOpponent();
+    public getDefender(state: TaflState): Player {
+        return this.getInvader(state).getOpponent();
     }
     public isPlayerImmobilized(player: Player, state: S): boolean {
         return this.getPlayerListMoves(player, state).length === 0;
@@ -378,7 +379,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                         }
                     } else if (state.isCentralThrone(foundDestination)) {
                         if (state.getPieceAt(start).isKing() &&
-                            this.config.castleIsLeftForGood === false)
+                            state.config.castleIsLeftForGood === false)
                         {
                             destinations.push(foundDestination);
                         }

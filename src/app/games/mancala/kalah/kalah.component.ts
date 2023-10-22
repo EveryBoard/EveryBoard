@@ -24,10 +24,13 @@ export class KalahComponent extends MancalaMultipleSowComponent<KalahRules, Kala
         this.availableAIs = this.createAIs(new KalahMoveGenerator());
         this.encoder = KalahMove.encoder;
     }
+
     public generateMove(x: number): KalahMove {
         return KalahMove.of(MancalaDistribution.of(x));
     }
+
     protected override addToMove(x: number): KalahMove {
         return this.currentMove.get().add(MancalaDistribution.of(x));
     }
+
 }
