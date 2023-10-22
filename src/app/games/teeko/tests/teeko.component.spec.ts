@@ -92,7 +92,7 @@ describe('TeekoComponent', () => {
 
                 // When clicking on opponent piece
                 // Then it should fail
-                const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+                const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
                 await testUtils.expectClickFailure('#click_0_3', reason);
             }));
             it('should mark as selected the player clicked piece', fakeAsync(async() => {

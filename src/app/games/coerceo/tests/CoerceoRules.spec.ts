@@ -81,7 +81,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.RIGHT);
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid to move empty pieces', () => {

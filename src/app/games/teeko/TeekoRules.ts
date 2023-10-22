@@ -49,7 +49,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
         const translation: TeekoTranslationMove = move as TeekoTranslationMove;
         const currentOpponent: Player = state.getCurrentOpponent();
         if (state.getPieceAt(translation.getStart()) === currentOpponent) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else if (state.getPieceAt(translation.getStart()) === PlayerOrNone.NONE) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }

@@ -111,7 +111,7 @@ describe('ConspirateursComponent', () => {
         it('should not allow selecting an empty space', fakeAsync(async() => {
             // When clicking on an empty space
             // Then the click should be rejected
-            await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
         it('should allow performing a simple move by clicking on a piece and then on its destination', fakeAsync(async() => {
             // Given a player piece that is selected

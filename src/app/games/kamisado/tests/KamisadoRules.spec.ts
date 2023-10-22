@@ -327,7 +327,7 @@ describe('KamisadoRules', () => {
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
 
             // Then move should be illegal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });

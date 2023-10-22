@@ -202,7 +202,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = translation(new Coord(3, 3), new Coord(3, 4));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     });
     it('should forbid moving opponent pieces', () => {
         // Given a state
@@ -212,7 +212,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = translation(new Coord(0, 0), new Coord(0, 1));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     });
     it('should forbid passing from a piece of the opponent', () => {
         // Given a state
@@ -222,7 +222,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = pass(new Coord(3, 0), new Coord(4, 0));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     });
     it('should throw when passing from a piece that does not hold the ball', () => {
         // Given a state
@@ -242,7 +242,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = pass(new Coord(3, 6), new Coord(3, 3));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     });
     it('should forbid moving to an occupied space', () => {
         // Given a state

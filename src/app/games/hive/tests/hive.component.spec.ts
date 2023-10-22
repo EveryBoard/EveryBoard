@@ -52,7 +52,7 @@ describe('HiveComponent', () => {
 
                 // When clicking on a remaining piece of the opponent
                 // Then it should fail
-                const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+                const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
                 await testUtils.expectClickFailure('#remainingPiece_QueenBee_PLAYER_ONE', reason);
             }));
             it('should show valid landings after selection', fakeAsync(async() => {
@@ -170,7 +170,7 @@ describe('HiveComponent', () => {
 
                 // When clicking on a piece of the opponent
                 // Then it should fail
-                const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+                const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
                 await testUtils.expectClickFailure('#piece_1_0', reason);
             }));
             it('should show valid landings after selection', fakeAsync(async() => {
@@ -374,7 +374,7 @@ describe('HiveComponent', () => {
 
             // When clicking on the beetle
             // Then it should fail as there is no stack beneath it
-            await testUtils.expectClickFailure('#piece_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            await testUtils.expectClickFailure('#piece_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should hide the stack of the opponent when clicking a second time on it', fakeAsync(async() => {
             // Given a state with a stack of pieces displayed

@@ -120,7 +120,7 @@ describe('DiaballikComponent', () => {
         // When clicking on a piece of the opponent
 
         // Then it should fail
-        await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
     it('should forbid passing the ball to an opponent', fakeAsync(async() => {
         // Given a state where the piece with the ball has been selected
@@ -129,7 +129,7 @@ describe('DiaballikComponent', () => {
         // When passing the ball to the opponent
 
         // Then it should fail
-        await testUtils.expectClickFailure('#click_3_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#click_3_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
     it('should forbid moving on another piece', fakeAsync(async() => {
         // Given a state

@@ -53,14 +53,14 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 // When clicking on an opponent piece
                 // Then the move should be illegal
                 const opponentPiece: string = '#click_' + entries.secondPlayerPiece.x + '_' + entries.secondPlayerPiece.y;
-                const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+                const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
                 await testUtils.expectClickFailure(opponentPiece, reason);
             }));
             it('should cancel move when first click on empty space', fakeAsync( async() => {
                 // Given any state
                 // When clicking on an empty space
                 // Then it should be a failure
-                await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }));
             it('should highlight selected piece', fakeAsync(async() => {
                 // Given any state

@@ -46,7 +46,7 @@ describe('EpaminondasComponent', () => {
         // Given a board
         // When clicking on a piece of the opponent
         // Then it should fail
-        await testUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
     it('should show possible next click (after first click)', fakeAsync(async() => {
         // Given a board

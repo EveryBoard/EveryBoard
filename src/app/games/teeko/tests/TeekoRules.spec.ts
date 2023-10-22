@@ -239,7 +239,7 @@ describe('TeekoRules', () => {
             const move: TeekoMove = translate(new Coord(0, 3), new Coord(2, 2));
 
             // Then the move should be illegal
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should refuse dropping on occupied space', () => {

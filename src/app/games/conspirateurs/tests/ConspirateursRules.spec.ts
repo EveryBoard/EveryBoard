@@ -190,7 +190,7 @@ describe('ConspirateursRules', () => {
             // When moving the piece
             const move: ConspirateursMove = simpleMove(new Coord(7, 7), new Coord(7, 6));
             // Then the move should be illegal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid simple moves on an occupied destination', () => {
@@ -363,7 +363,7 @@ describe('ConspirateursRules', () => {
             // When moving the wrong piece
             const move: ConspirateursMove = jump([new Coord(7, 6), new Coord(7, 8)]);
             // Then the move should be illegal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid jumps that jump over emptiness', () => {

@@ -16,7 +16,7 @@ import { Utils } from 'src/app/utils/utils';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Line } from 'src/app/jscaip/Line';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 @Component({
     selector: 'app-diaballik',
@@ -224,8 +224,10 @@ export class DiaballikComponent
                     }
                     return MGPValidation.SUCCESS;
                 }
+            } else if (clickedPiece.owner === PlayerOrNone.NONE) {
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             } else {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             }
         }
     }

@@ -38,10 +38,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     private getMoveValidity(player: Player, move: TaflMove, state: S): MGPValidation {
         const owner: RelativePlayer = state.getRelativeOwner(player, move.getStart());
         if (owner === RelativePlayer.NONE) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (owner === RelativePlayer.OPPONENT) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const landingCoordOwner: RelativePlayer = state.getRelativeOwner(player, move.getEnd());
         if (landingCoordOwner !== RelativePlayer.NONE) {

@@ -170,6 +170,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         }
 
         const state: ConspirateursState = this.getState();
+        const piece: PlayerOrNone = state.getPieceAt(coord);
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             if (this.selected.equalsValue(coord)) {
                 await this.cancelMoveAttempt();
@@ -186,9 +187,12 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         } else if (state.isDropPhase()) {
             const move: ConspirateursMove = ConspirateursMoveDrop.of(coord);
             return this.chooseMove(move);
+        } else if (piece === PlayerOrNone.NONE) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
+
     }
     private async constructJump(nextTarget: Coord): Promise<MGPValidation> {
         const jump: ConspirateursMoveJump = this.jumpInConstruction.get();

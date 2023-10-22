@@ -4,7 +4,7 @@ import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslatio
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
@@ -77,8 +77,11 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         // The origin must be a piece owned by the player
         const start: Coord = translation.getStart();
         const startPiece: DiaballikPiece = state.getPieceAt(start);
-        if (startPiece.owner !== state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        if (startPiece.owner === PlayerOrNone.NONE) {
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (startPiece.owner === state.getCurrentOpponent()) {
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         // The moved piece must not hold the ball
         if (startPiece.holdsBall === true) {
@@ -102,16 +105,22 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         // The origin must be a piece of the player that holds the ball
         const start: Coord = pass.getStart();
         const startPiece: DiaballikPiece = state.getPieceAt(start);
-        if (startPiece.owner !== state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        if (startPiece.owner === PlayerOrNone.NONE) {
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (startPiece.owner === state.getCurrentOpponent()) {
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         Utils.assert(startPiece.holdsBall, 'DiaballikRules: cannot pass without the ball');
 
         // The destination must be a piece of the player
         const end: Coord = pass.getEnd();
         const endPiece: DiaballikPiece = state.getPieceAt(end);
-        if (endPiece.owner !== state.getCurrentPlayer()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        if (endPiece.owner === PlayerOrNone.NONE) {
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (endPiece.owner === state.getCurrentOpponent()) {
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
 
         // The straight-line path between origin and destination contains no other piece

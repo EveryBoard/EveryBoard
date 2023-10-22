@@ -67,11 +67,15 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         }
     }
     public static isLegal(move: EncapsuleMove, state: EncapsuleState): MGPFallible<EncapsuleLegalityInformation> {
-        let movingPiece: EncapsulePiece;
+        let movingPiece: EncapsulePiece
         if (move.isDropping()) {
             movingPiece = move.piece.get();
-            if (state.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            const owner: PlayerOrNone = movingPiece.getPlayer();
+            if (owner === PlayerOrNone.NONE) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            }
+            if (owner === state.getCurrentOpponent()) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             }
             if (state.isInRemainingPieces(movingPiece) === false) {
                 return MGPFallible.failure(EncapsuleFailure.PIECE_OUT_OF_STOCK());
@@ -80,8 +84,12 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
             const startingCoord: Coord = move.startingCoord.get();
             const startingSpace: EncapsuleSpace = state.getPieceAt(startingCoord);
             movingPiece = startingSpace.getBiggest();
-            if (state.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            const owner: PlayerOrNone = movingPiece.getPlayer();
+            if (owner === PlayerOrNone.NONE) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            }
+            if (owner === state.getCurrentOpponent()) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             }
         }
         const landingSpace: EncapsuleSpace = state.getPieceAt(move.landingCoord);
