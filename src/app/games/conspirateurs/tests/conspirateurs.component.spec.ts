@@ -113,6 +113,11 @@ describe('ConspirateursComponent', () => {
             // Then the click should be rejected
             await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
+        it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
+            // When clicking on a piece of the opponent
+            // Then the click should be rejected
+            await testUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+        }));
         it('should allow performing a simple move by clicking on a piece and then on its destination', fakeAsync(async() => {
             // Given a player piece that is selected
             await testUtils.expectClickSuccess('#click_5_4');

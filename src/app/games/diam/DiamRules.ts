@@ -12,6 +12,7 @@ import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Utils } from 'src/app/utils/utils';
 
 export class DiamNode extends GameNode<DiamMove, DiamState> {}
 
@@ -64,10 +65,8 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         }
     }
     private isDropLegal(drop: DiamMoveDrop, state: DiamState): MGPValidation {
-        // DiamMoveDrop can only be created on a space on the board, so we don't have to check that
-        if (drop.piece.owner === PlayerOrNone.NONE) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
-        }
+        Utils.assert(drop.target < DiamState.WIDTH, 'DiamMoveDrop out of board');
+        Utils.assert(drop.piece.owner !== PlayerOrNone.NONE, 'DiamMoveDrop cannot contain an empty piece');
         if (drop.piece.owner === state.getCurrentOpponent()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }

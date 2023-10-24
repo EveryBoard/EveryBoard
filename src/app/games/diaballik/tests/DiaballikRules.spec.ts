@@ -214,6 +214,16 @@ describe('DiaballikRules', () => {
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     });
+    it('should forbid passing from an empty piece', () => {
+        // Given a state
+        const state: DiaballikState = DiaballikState.getInitialState();
+
+        // When trying to pass from an empty space
+        const move: DiaballikMove = pass(new Coord(4, 1), new Coord(4, 0));
+
+        // Then it should fail
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+    });
     it('should forbid passing from a piece of the opponent', () => {
         // Given a state
         const state: DiaballikState = DiaballikState.getInitialState();
@@ -224,7 +234,7 @@ describe('DiaballikRules', () => {
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     });
-    it('should throw when passing from a piece that does not hold the ball', () => {
+    it('should throw when passing from a piece of the player that does not hold the ball', () => {
         // Given a state
         const state: DiaballikState = DiaballikState.getInitialState();
 
@@ -272,7 +282,7 @@ describe('DiaballikRules', () => {
         // Then it should fail
         RulesUtils.expectMoveFailure(rules, state, move, DiaballikFailure.PASS_PATH_OBSTRUCTED());
     });
-    it('should adhere to anti-game rule', () => {
+    it('should adhere to anti-game rule (Player.ZERO)', () => {
         // Given a state where a player has 3 pieces against a blocked line from its opponent
         const state: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, _, _, _],
@@ -286,6 +296,38 @@ describe('DiaballikRules', () => {
         const node: DiaballikNode = new DiaballikNode(state);
         // When checking for victory
         // Then it should detect a victory for the blocked player
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+    });
+    it('should adhere to anti-game rule (Player.ONE)', () => {
+        // Given a state where a player has 3 pieces against a blocked line from its opponent
+        const state: DiaballikState = new DiaballikState([
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, X],
+            [X, _, _, _, _, X, _],
+            [O, X, Ẋ, _, X, O, _],
+            [_, O, _, X, _, _, _],
+            [_, _, O, Ȯ, O, _, O],
+        ], 0);
+        const node: DiaballikNode = new DiaballikNode(state);
+        // When checking for victory
+        // Then it should detect a victory for the blocked player
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+    });
+    it('should detect defeat from current player when both form a blocking line', () => {
+        // Given a state where both player are blocking the opponent, with 3 touching pieces
+        const state: DiaballikState = new DiaballikState([
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, X],
+            [X, _, _, _, _, X, _],
+            [O, X, Ẋ, _, X, _, _],
+            [_, O, _, X, _, _, _],
+            [_, _, O, Ȯ, O, O, O],
+        ], 0);
+        const node: DiaballikNode = new DiaballikNode(state);
+        // When checking for victory
+        // Then it should detect a defeat for the current player (here, zero loses so one wins)
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should detect victory (Player.ZERO)', () => {

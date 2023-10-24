@@ -151,8 +151,6 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         } else if (this.selected.isPresent()) {
             // This becomes a click on the space
             return this.onSpaceClickAfterCheck(x);
-        } else if (clickedPiece.owner === PlayerOrNone.NONE) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
@@ -161,9 +159,6 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         const clickValidity: MGPValidation = await this.canUserPlay(this.getPieceId(piece, z));
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
-        }
-        if (piece.owner === PlayerOrNone.NONE) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (piece.owner === this.getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());

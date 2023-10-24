@@ -71,16 +71,27 @@ describe('DiaballikComponent', () => {
         // Then it should do the move
         await testUtils.expectMoveSuccess('#click_4_6', move);
     }));
-    it('should deselect current piece when clicking on it a second time', fakeAsync(async() => {
+    it('should cancel move when deselecting the first selected piece', fakeAsync(async() => {
         // Given a state where a piece has been selected
         await testUtils.expectClickSuccess('#click_0_6');
+        testUtils.expectElementToHaveClass('#piece_0_6', 'selected-stroke');
 
         // When clicking on it a second time
-        testUtils.expectElementToHaveClass('#piece_0_6', 'selected-stroke');
+        // Then it should cancel the move and deselect the piece
         await testUtils.expectClickFailure('#click_0_6');
-
-        // Then it should not be selected anymore
         testUtils.expectElementNotToHaveClass('#piece_0_6', 'selected-stroke');
+    }));
+    it('should deselect current piece when clicking a second time on it', fakeAsync(async() => {
+        // Given a state where a sub move has been done and a piece selected
+        await testUtils.expectClickSuccess('#click_0_6');
+        await testUtils.expectClickSuccess('#click_0_5');
+        await testUtils.expectClickSuccess('#click_1_6');
+        testUtils.expectElementToHaveClass('#piece_1_6', 'selected-stroke');
+
+        // When deselecting the selected piece
+        await testUtils.expectClickSuccess('#click_1_6');
+        // Then it should not cancel the move but just deselect the piece
+        testUtils.expectElementToHaveClass('#piece_1_6', 'selected-stroke');
     }));
     it('should show possible targets when selecting a piece without ball', fakeAsync(async() => {
         // Given a state
@@ -114,11 +125,17 @@ describe('DiaballikComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_6', DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
     }));
+    it('should forbid selecting the empty piece', fakeAsync(async() => {
+        // Given a state
+
+        // When clicking on an empty space
+        // Then it should fail
+        await testUtils.expectClickFailure('#click_2_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+    }));
     it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
         // Given a state
 
         // When clicking on a piece of the opponent
-
         // Then it should fail
         await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
@@ -321,7 +338,7 @@ describe('DiaballikComponent', () => {
         // Then it should show the victory
         testUtils.expectElementToHaveClass('#piece_4_0', 'victory-stroke');
     }));
-    it('should show the defeat upon blocking the opponent', fakeAsync(async() => {
+    it('should show the defeat upon blocking the opponent (Player.ZERO)', fakeAsync(async() => {
         // Given a state with a defeat due to blocking the opponent
         const state: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, _, _, _],
@@ -344,5 +361,29 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#piece_4_6', 'defeat-stroke');
         testUtils.expectElementToHaveClass('#piece_5_6', 'defeat-stroke');
         testUtils.expectElementToHaveClass('#piece_6_6', 'defeat-stroke');
+    }));
+    it('should show the defeat upon blocking the opponent (Player.ONE)', fakeAsync(async() => {
+        // Given a state with a defeat due to blocking the opponent
+        const state: DiaballikState = new DiaballikState([
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, X],
+            [X, _, _, _, _, X, _],
+            [O, X, Ẋ, _, X, O, _],
+            [_, O, _, X, _, _, _],
+            [_, _, O, Ȯ, O, _, O],
+        ], 0);
+
+        // When displaying it
+        await testUtils.setupState(state);
+
+        // Then it should show the defeat
+        testUtils.expectElementToHaveClass('#piece_0_3', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_1_4', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_2_4', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_3_5', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_4_4', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_5_3', 'defeat-stroke');
+        testUtils.expectElementToHaveClass('#piece_6_2', 'defeat-stroke');
     }));
 });

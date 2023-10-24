@@ -1,7 +1,7 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, TableUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
@@ -10,13 +10,13 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
 
     private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;
 
-    public constructor(board: EncapsuleSpace[][], turn: number, remainingPieces: EncapsulePiece[]) {
+    public constructor(board: Table<EncapsuleSpace>, turn: number, remainingPieces: EncapsulePiece[]) {
         super(board, turn);
         this.remainingPieces = remainingPieces;
     }
     public static getInitialState(): EncapsuleState {
         const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-        const startingBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
+        const startingBoard: Table<EncapsuleSpace> = TableUtils.create(3, 3, _);
         const initialPieces: EncapsulePiece[] = [
             EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
             EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,
