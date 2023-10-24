@@ -145,13 +145,13 @@ describe('TeekoComponent', () => {
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
                 await testUtils.setupState(state);
-                await testUtils.expectClickSuccess('#click_0_0');
+                await testUtils.expectClickSuccess('#click_1_1');
 
-                // When clicking on valid landing space
-                const move: TeekoMove = TeekoTranslationMove.from(new Coord(0, 0), new Coord(2, 2)).get();
+                // When clicking on legal landing space
+                const move: TeekoMove = TeekoTranslationMove.from(new Coord(1, 1), new Coord(2, 1)).get();
 
                 // Then it should succeed
-                await testUtils.expectMoveSuccess('#click_2_2', move);
+                await testUtils.expectMoveSuccess('#click_2_1', move);
             }));
             it('should fail when doing illegal move', fakeAsync(async() => {
                 // Given any board in translation phase with a selected piece
@@ -183,17 +183,17 @@ describe('TeekoComponent', () => {
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
                 await testUtils.setupState(state);
-                await testUtils.expectClickSuccess('#click_0_0');
+                await testUtils.expectClickSuccess('#click_1_1');
 
                 // When finishing the move legally
-                const move: TeekoMove = TeekoTranslationMove.from(new Coord(0, 0), new Coord(2, 2)).get();
-                await testUtils.expectMoveSuccess('#click_2_2', move);
+                const move: TeekoMove = TeekoTranslationMove.from(new Coord(1, 1), new Coord(2, 1)).get();
+                await testUtils.expectMoveSuccess('#click_2_1', move);
 
                 // Then it should display starting coord and landing coord as moved
-                testUtils.expectElementToHaveClasses('#space_0_0', ['base', 'moved-fill']);
-                testUtils.expectElementToHaveClasses('#space_2_2', ['base', 'moved-fill']);
+                testUtils.expectElementToHaveClasses('#space_1_1', ['base', 'moved-fill']);
+                testUtils.expectElementToHaveClasses('#space_2_1', ['base', 'moved-fill']);
                 // And display the piece as last-move
-                testUtils.expectElementToHaveClasses('#piece_2_2', ['base', 'player0-fill', 'last-move-stroke']);
+                testUtils.expectElementToHaveClasses('#piece_2_1', ['base', 'player0-fill', 'last-move-stroke']);
             }));
             it('should show victory coords when alignment', fakeAsync(async() => {
                 // Given any board in translation phase

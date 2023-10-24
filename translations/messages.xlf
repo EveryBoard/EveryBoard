@@ -2956,11 +2956,14 @@
       <trans-unit id="55131761932515685" datatype="html">
         <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
       </trans-unit>
-      <trans-unit id="322267404708379069" datatype="html">
-        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+      <trans-unit id="5528013857873835184" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to an empty neighboring space, orthogonally or diagonally. The goal remains to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
       </trans-unit>
-      <trans-unit id="366926106758793789" datatype="html">
-        <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
+      <trans-unit id="6991053095147622953" datatype="html">
+        <source>In this board, you can win by creating a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
+      </trans-unit>
+      <trans-unit id="4133557660322432859" datatype="html">
+        <source>Congratulations, you won! Remember that you can also win by creating a line.</source>
       </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>
@@ -3114,6 +3117,9 @@
       </trans-unit>
       <trans-unit id="4065705313723361978" datatype="html">
         <source>There is a piece between the piece you chose and its landing space.</source>
+      </trans-unit>
+      <trans-unit id="189691672447950321" datatype="html">
+        <source>You must move on a direct neighboring space.</source>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>

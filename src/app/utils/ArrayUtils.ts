@@ -90,6 +90,16 @@ export class ArrayUtils {
         }
         return maximums;
     }
+
+    public static count<T>(array: T[], value: T): number {
+        let total: number = 0;
+        for (const element of array) {
+            if (comparableEquals(element, value)) {
+                total++;
+            }
+        }
+        return total;
+    }
 }
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
