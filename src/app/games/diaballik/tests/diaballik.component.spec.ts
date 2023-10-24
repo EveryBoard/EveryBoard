@@ -91,7 +91,7 @@ describe('DiaballikComponent', () => {
         // When deselecting the selected piece
         await testUtils.expectClickSuccess('#click_1_6');
         // Then it should not cancel the move but just deselect the piece
-        testUtils.expectElementToHaveClass('#piece_1_6', 'selected-stroke');
+        testUtils.expectElementNotToHaveClass('#piece_1_6', 'selected-stroke');
     }));
     it('should show possible targets when selecting a piece without ball', fakeAsync(async() => {
         // Given a state

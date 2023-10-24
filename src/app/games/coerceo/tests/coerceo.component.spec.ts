@@ -194,7 +194,7 @@ describe('CoerceoComponent', () => {
             // When clicking on it again
             await testUtils.expectClickSuccess('#click_6_2');
 
-            // Then the different highlighs should be gone since the piece is deselected
+            // Then the different highlights should be gone since the piece is deselected
             const component: CoerceoComponent = testUtils.getGameComponent();
             testUtils.expectElementNotToExist('#selected_6_2');
             expect(component.possibleLandings.length).toBe(0);
