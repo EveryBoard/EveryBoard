@@ -341,15 +341,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         partDAO['updateBackup'] = daoFunction;
     }
 
-    function getPartDAOUpdateBackup(): daoFunction<Part> {
-        // eslint-disable-next-line dot-notation
-        return partDAO['updateBackup'];
-    }
-
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
         expect(Utils.getNonNullable(wrapper.currentPlayer).name).toEqual('creator');
     }));
+
     it('should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         // Given an online game being created
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
@@ -381,6 +377,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             .toBeTruthy();
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
+
     it('should allow sending and receiving moves (creator)', fakeAsync(async() => {
         // Given a started part
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -397,6 +394,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
+
     describe('Animation', () => {
         it(`should trigger animation when receiving opponent's move`, fakeAsync(async() => {
             // Given a board where it's the opponent's turn
@@ -451,6 +449,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+
     it('should allow sending and receiving moves (opponent)', fakeAsync(async() => {
         // Given a started part
         await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
@@ -467,6 +466,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
+
     describe('Late Arrival', () => {
         it('should allow user to arrive late on the game (on their turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)
@@ -491,6 +491,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+
     describe('Component initialization', () => {
         it('should mark creator as Player when arriving', fakeAsync(async() => {
             // Given a component that is not initialized yet
@@ -551,6 +552,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+
     it('should trigger part change and send the move upon second move', fakeAsync(async() => {
         // Given a part
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -566,6 +568,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(gameEventService.addMove).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, FIRST_MOVE_ENCODED);
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
+
     it('should forbid making a move when it is not the turn of the player', fakeAsync(async() => {
         // Given a game
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -580,6 +583,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
+
     it('should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         // Given a game where it is possible to pass
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -597,7 +601,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.gameComponent.pass).toHaveBeenCalledOnceWith();
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
+
     describe('CurrentGame Change', () => {
+
         it('should redirect to lobby when role and partId change', fakeAsync(async() => {
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
@@ -611,6 +617,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then a redirection to lobby should be triggered
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
+
         it('should not redirect to lobby when role stay "observer" but partId change', fakeAsync(async() => {
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
@@ -625,6 +632,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(router.navigate).not.toHaveBeenCalled();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should not do anything particular when observer leaves this part from another tab', fakeAsync(async() => {
             // Given a part where the user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
@@ -640,7 +648,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper['currentGame']).toEqual(MGPOptional.empty());
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
     });
+
     describe('Move victory', () => {
         it('should notifyVictory when active player wins', fakeAsync(async() => {
             // Given a board on which user can win
@@ -760,6 +770,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectGameToBeOver();
         }));
     });
+
     describe('Take Back', () => {
         describe('sending/receiving', () => {
             it('should send take back request when player asks to', fakeAsync(async() => {
@@ -1068,6 +1079,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+
     describe('Agreed Draw', () => {
         it('should send draw request when player asks to', fakeAsync(async() => {
             // Given any board
@@ -1199,6 +1211,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+
     describe('End Game Time Management', () => {
         it(`should stop player's global clock when turn reaches end`, fakeAsync(async() => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1266,6 +1279,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             });
         }));
     });
+
     describe('Add time feature', () => {
         describe('from creator', () => {
             async function prepareStartedGameForCreator(): Promise<void> {
@@ -1401,6 +1415,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
         });
     });
+
     describe('User "handshake"', () => {
         // Disabled because we don't have a way to check the connectivity status currently
         xit(`should make opponent's name lightgrey when he is token-outdated`, fakeAsync(async() => {
@@ -1420,6 +1435,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000 + 1);
         }));
     });
+
     describe('Resign', () => {
         it('should end game after clicking on resign button', fakeAsync(async() => {
             // Given an online game component
@@ -1493,6 +1509,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectGameToBeOver();
         }));
     });
+
     describe('rematch', () => {
         it('should show propose button only when game is ended', fakeAsync(async() => {
             // Given a game that is not finished
@@ -1604,6 +1621,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectValidRouting(router, ['/play', 'Quarto', 'nextPartId'], OnlineGameWrapperComponent, { otherRoutes: true });
         }));
     });
+
     describe('Non Player Experience', () => {
         it('should mark user as Observer when arriving', fakeAsync(async() => {
             // Given a component that is not initialized yet
@@ -1725,6 +1743,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
         });
     });
+
     describe('Visuals', () => {
         it('should highlight each player name in their respective color', fakeAsync(async() => {
             // Given a game that has been started
@@ -1777,6 +1796,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+
     describe('onCancelMove', () => {
         it('should delegate to gameComponent.showLastMove', fakeAsync(async() => {
             // Given a any component
@@ -1805,6 +1825,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+
     describe('interactivity', () => {
         it('should be interactive at first turn for current player', fakeAsync(async() => {
             // Given a component at the beginning of the game, where we are Player.ZERO
@@ -1845,4 +1866,5 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+
 });

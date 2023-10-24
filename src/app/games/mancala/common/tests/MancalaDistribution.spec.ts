@@ -1,5 +1,5 @@
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MancalaDistribution } from './MancalaMove';
+import { MancalaDistribution } from '../MancalaMove';
 
 describe('MancalaDistribution', () => {
 

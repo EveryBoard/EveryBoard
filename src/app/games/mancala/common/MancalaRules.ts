@@ -9,7 +9,10 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { MancalaMove } from './MancalaMove';
+import { MancalaDistribution, MancalaMove } from './MancalaMove';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Utils } from 'src/app/utils/utils';
+import { MancalaFailure } from './MancalaFailure';
 
 export interface MancalaCaptureResult {
 
@@ -56,7 +59,47 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         super(MancalaState, config);
     }
 
-    public abstract override isLegal(move: MancalaMove, state: MancalaState): MGPFallible<void>;
+    public isLegal(move: MancalaMove, state: MancalaState): MGPValidation {
+        const playerY: number = state.getCurrentPlayerY();
+        let canStillPlay: boolean = true;
+        for (const distribution of move) {
+            Utils.assert(canStillPlay, 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE');
+            const distributionResult: MGPFallible<boolean> = this.isLegalDistribution(distribution, state);
+            if (distributionResult.isFailure()) {
+                return MGPValidation.ofFallible(distributionResult);
+            } else {
+                state = this.distributeHouse(distribution.x, playerY, state).resultingState;
+                canStillPlay = distributionResult.get();
+            }
+        }
+        if (state.config.mustContinueDistributionAfterStore) {
+            Utils.assert(canStillPlay === false, 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE');
+        }
+        if (state.config.mustFeed) {
+            const opponent: Player = state.getCurrentOpponent();
+            const opponentIsStarving: boolean = MancalaRules.isStarving(opponent, state.board);
+            const playerDoesEmbargo: boolean = this.canDistribute(state.getCurrentPlayer(), state);
+            if (opponentIsStarving && playerDoesEmbargo) {
+                return MGPValidation.failure(MancalaFailure.SHOULD_DISTRIBUTE());
+            }
+        }
+        return MGPValidation.SUCCESS;
+    }
+
+    /**
+      * @param distributions the distributions to try
+      * @return: MGPFallible.failure(reason) if it is illegal, MGPFallible.success(userCanStillPlay)
+      */
+    private isLegalDistribution(distributions: MancalaDistribution, state: MancalaState): MGPFallible<boolean> {
+        const playerY: number = state.getCurrentPlayerY();
+        if (state.getPieceAtXY(distributions.x, playerY) === 0) {
+            return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
+        }
+        const distributionResult: MancalaDistributionResult = this.distributeHouse(distributions.x, playerY, state);
+        const isStarving: boolean = MancalaRules.isStarving(distributionResult.resultingState.getCurrentPlayer(),
+                                                            distributionResult.resultingState.board);
+        return MGPFallible.success(distributionResult.endsUpInStore && isStarving === false);
+    }
 
     /**
      * Apply the distribution part of the move MancalaMove
@@ -105,7 +148,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         const player: Player = postCaptureState.getCurrentPlayer();
         if (postCaptureState.config.mustFeed) {
             if (MancalaRules.isStarving(player, postCaptureBoard) &&
-                this.canDistribute(opponent, postCaptureBoard) === false)
+                this.canDistribute(opponent, postCaptureState) === false)
             {
                 // Opponent takes all their last piece for themselves
                 return opponent;
@@ -120,7 +163,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         return PlayerOrNone.NONE;
     }
 
-    public getGameStatus(node: GameNode<MancalaMove, MancalaState>): GameStatus {
+    public getGameStatus(node: MancalaNode): GameStatus {
         const state: MancalaState = node.gameState;
         const width: number = node.gameState.getWidth();
         const seedsByHouse: number = node.gameState.config.seedsByHouse;
@@ -227,16 +270,22 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         }
     }
 
-    public doesDistribute(x: number, y: number, board: Table<number>): boolean {
-        if (y === 0) { // distribution from left to right
-            return board[y][x] > ((board[0].length - 1) - x);
+    public doesDistribute(x: number, y: number, state: MancalaState): boolean {
+        const board: Table<number> = state.board;
+        let pieceNeededToFeedStore: number;
+        if (y === 0) {
+            pieceNeededToFeedStore = state.getWidth() - (x + 1);
+        } else {
+            pieceNeededToFeedStore = x + 1;
         }
-        return board[y][x] > x; // distribution from right to left
+        const storeOffset: number = state.config.passByPlayerStore ? 1 : 0;
+        const pieceNeededToFeedOpponent: number = pieceNeededToFeedStore + storeOffset;
+        return board[y][x] >= pieceNeededToFeedOpponent; // distribution from right to left
     }
 
-    public canDistribute(player: Player, board: Table<number>): boolean {
-        for (let x: number = 0; x < board[0].length; x++) {
-            if (this.doesDistribute(x, player.getOpponent().value, board)) {
+    public canDistribute(player: Player, state: MancalaState): boolean {
+        for (let x: number = 0; x < state.getWidth(); x++) {
+            if (this.doesDistribute(x, player.getOpponent().value, state)) {
                 return true;
             }
         }

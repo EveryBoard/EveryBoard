@@ -2044,8 +2044,8 @@
       <trans-unit id="7654623560547531779" datatype="html">
         <source>Pass by player store</source>
       </trans-unit>
-      <trans-unit id="4475848272710836308" datatype="html">
-        <source>Continue distribution after last seed ends in store</source>
+      <trans-unit id="8576122948092687879" datatype="html">
+        <source>Must continue distribution after last seed ends in store</source>
       </trans-unit>
       <trans-unit id="387119594039428962" datatype="html">
         <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>

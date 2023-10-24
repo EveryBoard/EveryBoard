@@ -6,15 +6,14 @@ import { Player } from 'src/app/jscaip/Player';
 import { MancalaFailure } from '../../common/MancalaFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Rules } from 'src/app/jscaip/Rules';
-import { DoMancalaRulesTests } from '../../common/GenericMancalaRulesTest.spec';
+import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MancalaNode } from '../../common/MancalaRules';
+import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 
 describe('AwaleRules', () => {
 
-    const rules: Rules<MancalaMove, MancalaState> = AwaleRules.get();
+    const rules: MancalaRules = AwaleRules.get();
     const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     describe('generic tests', () => {
@@ -302,7 +301,7 @@ describe('AwaleRules', () => {
             const customConfig: MancalaConfig = {
                 ...config,
                 passByPlayerStore: true,
-                continueDistributionAfterStore: true,
+                mustContinueDistributionAfterStore: true,
             };
             const state: MancalaState = MancalaState.getInitialState(customConfig);
 

@@ -41,10 +41,10 @@ export class Debug {
         if (verbosityJSON != null) {
             verbosity = JSON.parse(verbosityJSON);
         }
-        if (methodName) {
-            verbosity[className + '.' + methodName] = entryExit;
-        } else {
+        if (methodName === undefined) {
             verbosity[className] = entryExit;
+        } else {
+            verbosity[className + '.' + methodName] = entryExit;
         }
         const stringifiedVerbosity: string = Debug.getStringified(verbosity);
         localStorage.setItem('verbosity', stringifiedVerbosity);
@@ -108,7 +108,7 @@ export class Debug {
                 }
                 return result;
             };
-
+            // eslint-disable-next-line dot-notation
             Object.defineProperty(constructor['prototype'], propertyName, descriptor);
         }
     }

@@ -9,7 +9,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/GenericMancalaComponentTest.spec';
+import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { MancalaState } from '../../common/MancalaState';
 import { MancalaFailure } from '../../common/MancalaFailure';
 import { MancalaComponent } from '../../common/MancalaComponent';

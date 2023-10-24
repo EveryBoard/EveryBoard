@@ -4,16 +4,15 @@ import { KalahRules } from '../KalahRules';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaState } from '../../common/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Rules } from 'src/app/jscaip/Rules';
-import { DoMancalaRulesTests } from '../../common/GenericMancalaRulesTest.spec';
+import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { MancalaConfig } from '../../common/MancalaConfig';
-import { MancalaNode } from '../../common/MancalaRules';
+import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 
 describe('KalahRules', () => {
 
-    const rules: Rules<MancalaMove, MancalaState> = KalahRules.get();
+    const rules: MancalaRules = KalahRules.get();
     const config: MancalaConfig = KalahRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     describe('generic tests', () => {
@@ -332,11 +331,11 @@ describe('KalahRules', () => {
 
     describe('Cross Config', () => {
 
-        it('should not require additionnal distribution when not allowed by config (continueDistributionAfterStore)', () => {
-            // Given a mancala state with a config with continueDistributionAfterStore set to false
+        it('should not require additionnal distribution when not allowed by config (mustContinueDistributionAfterStore)', () => {
+            // Given a mancala state with a config with mustContinueDistributionAfterStore set to false
             const customConfig: MancalaConfig = {
                 ...config,
-                continueDistributionAfterStore: false,
+                mustContinueDistributionAfterStore: false,
             };
             const state: MancalaState = MancalaState.getInitialState(customConfig);
 

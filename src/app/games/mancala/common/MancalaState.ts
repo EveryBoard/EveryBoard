@@ -7,6 +7,11 @@ export class MancalaState extends GameStateWithTable<number> {
     public static getInitialState(config: MancalaConfig): MancalaState {
         const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
         return new MancalaState(board, 0, [0, 0], config);
+        // const board: number[][] = [
+        //     [0, 0, 0, 0, 0, 0],
+        //     [2, 0, 0, 0, 2, 0],
+        // ];
+        // return new MancalaState(board, 0, [22, 22], config);
     }
 
     public constructor(b: Table<number>,

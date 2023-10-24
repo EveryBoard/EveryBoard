@@ -1,11 +1,11 @@
-import { MancalaConfig } from './MancalaConfig';
-import { MancalaState } from './MancalaState';
+import { MancalaConfig } from '../MancalaConfig';
+import { MancalaState } from '../MancalaState';
 
 const myMancalaConfig: MancalaConfig = {
     feedOriginalHouse: true,
     mustFeed: true,
     passByPlayerStore: true,
-    continueDistributionAfterStore: true,
+    mustContinueDistributionAfterStore: true,
     seedsByHouse: 4,
     width: 6,
 };

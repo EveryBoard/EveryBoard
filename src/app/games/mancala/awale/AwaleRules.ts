@@ -1,7 +1,5 @@
 import { MancalaState } from '../common/MancalaState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MancalaFailure } from './../common/MancalaFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
@@ -9,7 +7,6 @@ import { Utils } from 'src/app/utils/utils';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MancalaMove } from '../common/MancalaMove';
 
 export class AwaleRules extends MancalaRules {
 
@@ -23,7 +20,7 @@ export class AwaleRules extends MancalaRules {
                     feedOriginalHouse: false,
                     mustFeed: true,
                     passByPlayerStore: false,
-                    continueDistributionAfterStore: false,
+                    mustContinueDistributionAfterStore: false,
                     seedsByHouse: 4,
                     width: 6,
                 },
@@ -33,7 +30,7 @@ export class AwaleRules extends MancalaRules {
                 feedOriginalHouse: (): string => $localize`Feed original house`,
                 mustFeed: (): string => $localize`Must feed`,
                 passByPlayerStore: (): string => $localize`Pass by player store`,
-                continueDistributionAfterStore: (): string => $localize`Continue distribution after last seed ends in store`,
+                mustContinueDistributionAfterStore: (): string => $localize`Must continue distribution after last seed ends in store`,
             }, [
             ], {
                 width: MGPValidators.range(1, 99),
@@ -60,22 +57,6 @@ export class AwaleRules extends MancalaRules {
         const landingCoord: Coord = filledCoords[filledCoords.length - 1];
         const resultingState: MancalaState = distributionResult.resultingState;
         return this.captureIfLegal(landingCoord.x, landingCoord.y, resultingState);
-    }
-
-    public isLegal(move: MancalaMove, state: MancalaState): MGPValidation {
-        const opponent: Player = state.getCurrentOpponent();
-        const playerY: number = state.getCurrentPlayerY();
-
-        const x: number = move.distributions[0].x;
-        if (state.getPieceAtXY(x, playerY) === 0) {
-            return MGPValidation.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
-        }
-        const opponentIsStarving: boolean = MancalaRules.isStarving(opponent, state.board);
-        const playerDoesNotDistribute: boolean = this.doesDistribute(x, playerY, state.board) === false;
-        if (opponentIsStarving && playerDoesNotDistribute) {
-            return MGPValidation.failure(MancalaFailure.SHOULD_DISTRIBUTE());
-        }
-        return MGPValidation.SUCCESS;
     }
 
     /**

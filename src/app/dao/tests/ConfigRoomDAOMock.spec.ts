@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
 
-type ConfigRoomOS = ObservableSubject<MGPOptional<ConfigRoomDocument>>
+type ConfigRoomOS = ObservableSubject<MGPOptional<ConfigRoomDocument>>;
 
 @Debug.log
 export class ConfigRoomDAOMock extends FirestoreDAOMock<ConfigRoom> {

@@ -4,7 +4,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { AwaleComponent } from '../awale.component';
 import { AwaleRules } from '../AwaleRules';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
-import { doMancalaComponentTests as doMancalaComponentTests } from '../../common/GenericMancalaComponentTest.spec';
+import { doMancalaComponentTests as doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -97,7 +97,7 @@ describe('AwaleComponent', () => {
             const customConfig: MancalaConfig = {
                 ...config,
                 passByPlayerStore: true,
-                continueDistributionAfterStore: true,
+                mustContinueDistributionAfterStore: true,
             };
             const state: MancalaState = MancalaState.getInitialState(customConfig);
             await testUtils.setupState(state);

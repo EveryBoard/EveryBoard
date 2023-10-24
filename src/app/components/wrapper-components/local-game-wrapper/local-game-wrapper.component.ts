@@ -197,6 +197,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             };
             return MGPOptional.of(stateProvider);
         } else {
+            // TODO FOR REVIEW: je crois que ce n'est reached que quand on visite /local/jeanDelJaaaj
             return MGPOptional.empty();
         }
     }

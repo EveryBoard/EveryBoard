@@ -133,7 +133,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const distributionResult: MancalaDistributionResult =
             await this.showSimpleDistribution(MancalaDistribution.of(x));
         if (distributionResult.endsUpInStore &&
-            this.constructedState.config.continueDistributionAfterStore)
+            this.constructedState.config.mustContinueDistributionAfterStore)
         {
             const player: Player = this.constructedState.getCurrentPlayer();
             if (MancalaRules.isStarving(player, distributionResult.resultingState.board)) {

@@ -8,7 +8,7 @@ export type MancalaConfig = RulesConfig & {
 
     readonly passByPlayerStore: boolean;
 
-    readonly continueDistributionAfterStore: boolean;
+    readonly mustContinueDistributionAfterStore: boolean;
 
     readonly mustFeed: boolean;
 
