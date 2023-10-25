@@ -240,6 +240,11 @@ export class SimpleComponentTestUtils<T> {
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();
     }
+    public expectInnerTextToBe(elementName: string, expectedText: string): void {
+        const element: DebugElement = this.findElement('#chatForm');
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        expect(element.nativeElement.innerText).toEqual(expectedText)
+    }
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist in order to fill its value`).toBeTruthy();

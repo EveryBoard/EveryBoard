@@ -386,4 +386,20 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#piece_5_3', 'defeat-stroke');
         testUtils.expectElementToHaveClass('#piece_6_2', 'defeat-stroke');
     }));
+    it('should show the number of translations and passes made', fakeAsync(async() => {
+        // Given a state where no translation or pass has been made at this turn
+        testUtils.expectInnerTextToBe('#translationCount', '0');
+        testUtils.expectInnerTextToBe('#passCount', '0');
+
+        // When doing a translation and pass
+        await testUtils.expectClickSuccess('#click_0_6');
+        await testUtils.expectClickSuccess('#click_0_5');
+        await testUtils.expectClickSuccess('#click_3_6');
+        await testUtils.expectClickSuccess('#click_4_6');
+
+        // Then it should increase the shown counts
+        testUtils.expectInnerTextToBe('#translationCount', '1');
+        testUtils.expectInnerTextToBe('#passCount', '1');
+
+    }));
 });

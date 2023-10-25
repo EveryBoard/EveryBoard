@@ -41,8 +41,8 @@ export class DiaballikComponent
     public indicators: Coord[] = [];
 
     private currentSelection: MGPOptional<Coord> = MGPOptional.empty();
-    private hasMadePass: boolean = false;
-    private translationsMade: number = 0;
+    public hasMadePass: boolean = false;
+    public translationsMade: number = 0;
     private subMoves: DiaballikSubMove[] = [];
 
     private lastMovedBallCoords: Coord[] = [];
