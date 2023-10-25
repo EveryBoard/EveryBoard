@@ -25,7 +25,7 @@ export class TeekoTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Moving a piece`,
-            $localize`Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.<br/><br/>You're playing Dark, move a piece.`,
+            $localize`Once all of your four pieces are placed on the board, you must now move one of your piece to an empty neighboring space, orthogonally or diagonally. The goal remains to be the first to create a line or a square.<br/><br/>You're playing Dark, move a piece.`,
             new TeekoState([
                 [O, X, _, _, _],
                 [O, O, _, _, _],
@@ -33,24 +33,23 @@ export class TeekoTutorial extends Tutorial {
                 [X, O, _, _, _],
                 [_, _, _, _, _],
             ], 8),
-            TeekoTranslationMove.from(new Coord(1, 3), new Coord(2, 1)).get(),
+            TeekoTranslationMove.from(new Coord(1, 3), new Coord(2, 2)).get(),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromMove(
             $localize`Victory`,
-            $localize`In this board, you can win either by creating a line, or a square.<br/><br/>You are playing Dark, win.`,
+            $localize`In this board, you can win by creating a square.<br/><br/>You are playing Dark, win.`,
             new TeekoState([
                 [X, _, _, _, _],
-                [X, O, _, _, _],
+                [X, O, _, O, _],
                 [_, O, O, X, _],
-                [_, X, _, O, _],
+                [_, X, _, _, _],
                 [_, _, _, _, _],
             ], 8),
             [
-                TeekoTranslationMove.from(new Coord(1, 2), new Coord(4, 4)).get(), // Diagonal
-                TeekoTranslationMove.from(new Coord(3, 3), new Coord(2, 1)).get(), // Square
+                TeekoTranslationMove.from(new Coord(3, 1), new Coord(2, 1)).get(),
             ],
-            $localize`Congratulations, you won!`,
+            $localize`Congratulations, you won! Remember that you can also win by creating a line.`,
             $localize`Failed. Try again.`,
         ),
     ];

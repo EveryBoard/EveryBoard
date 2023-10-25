@@ -18,27 +18,27 @@ export abstract class Rules<M extends Move, S extends GameState, L = void> {
      * the remaining pawn that you can put on the board...
      */
 
-    public choose(node: GameNode<M, S>, move: M) : MGPOptional<GameNode<M, S>> {
+    public choose(node: GameNode<M, S>, move: M) : MGPFallible<GameNode<M, S>> {
         /* used by the rules to update board
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
         Debug.display('Rules', 'choose', move.toString() + ' was proposed');
         const legality: MGPFallible<L> = this.isLegal(move, node.gameState);
-        const choice: MGPOptional<GameNode<M, S>> = node.getChild(move);
         if (legality.isFailure()) {
             Debug.display('Rules', 'choose', 'Move is illegal: ' + legality.getReason());
-            return MGPOptional.empty();
+            return MGPFallible.failure(legality.getReason());
         }
-        // let's not create the node twice
+        const choice: MGPOptional<GameNode<M, S>> = node.getChild(move);
         if (choice.isPresent()) {
+            // The node is already in the tree, let's not create it twice
             Utils.assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
             Debug.display('Rules', 'choose', 'and this proposed move is found in the list, so it is legal');
-            return MGPOptional.of(choice.get());
+            return MGPFallible.success(choice.get());
         }
         const resultingState: GameState = this.applyLegalMove(move, node.gameState, legality.get());
         const child: GameNode<M, S> = new GameNode(resultingState as S, MGPOptional.of(node), MGPOptional.of(move));
-        return MGPOptional.of(child);
+        return MGPFallible.success(child);
     }
     /**
      * Applies a legal move, given the precomputed information `info`

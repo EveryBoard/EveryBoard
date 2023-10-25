@@ -5,7 +5,7 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -70,7 +70,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     public applyLegalMove(move: LodestoneMove, state: LodestoneState, infos: LodestoneInfos): LodestoneState {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
-        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(infos.board);
+        const board: LodestonePiece[][] = TableUtils.copy(infos.board);
         const lodestones: LodestonePositions = state.lodestones.getCopy();
         lodestones.put(currentPlayer, move.coord);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
@@ -163,7 +163,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     : LodestoneInfos
     {
         let result: LodestoneInfos;
-        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
+        const board: LodestonePiece[][] = TableUtils.copy(state.board);
         const previousLodestonePosition: MGPOptional<Coord> = state.lodestones.get(state.getCurrentPlayer());
         if (previousLodestonePosition.isPresent()) {
             const previousCoord: Coord = previousLodestonePosition.get();

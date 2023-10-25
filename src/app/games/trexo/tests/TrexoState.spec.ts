@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 
 describe('TrexoState', () => {
@@ -11,7 +11,7 @@ describe('TrexoState', () => {
         const error: string = 'Invalid board dimensions';
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a 11x10 board
-        const board: TrexoPieceStack[][] = ArrayUtils.createTable(11, 10, TrexoPieceStack.EMPTY);
+        const board: TrexoPieceStack[][] = TableUtils.create(11, 10, TrexoPieceStack.EMPTY);
 
         // When passing it as an argument
         // Then it should fail
@@ -22,7 +22,7 @@ describe('TrexoState', () => {
         const error: string = 'Invalid board dimensions';
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a 10x11 board
-        const board: TrexoPieceStack[][] = ArrayUtils.createTable(10, 11, TrexoPieceStack.EMPTY);
+        const board: TrexoPieceStack[][] = TableUtils.create(10, 11, TrexoPieceStack.EMPTY);
 
         // When passing it as an argument
         // Then it should fail

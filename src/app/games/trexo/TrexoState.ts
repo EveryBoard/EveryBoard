@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { Utils } from 'src/app/utils/utils';
 
 /**
@@ -77,9 +77,7 @@ export class TrexoState extends GameStateWithTable<TrexoPieceStack> {
     public static readonly SIZE: number = 10;
 
     public static getInitialState(): TrexoState {
-        const board: TrexoPieceStack[][] = ArrayUtils.createTable(TrexoState.SIZE,
-                                                                  TrexoState.SIZE,
-                                                                  TrexoPieceStack.EMPTY);
+        const board: TrexoPieceStack[][] = TableUtils.create(TrexoState.SIZE, TrexoState.SIZE, TrexoPieceStack.EMPTY);
         return new TrexoState(board, 0);
     }
     public static isOnBoard(coord: Coord): boolean {
