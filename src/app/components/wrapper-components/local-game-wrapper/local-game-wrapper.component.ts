@@ -15,6 +15,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { AbstractAI, AIOptions, AIStats } from 'src/app/jscaip/AI';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -159,8 +160,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
         assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
         const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options);
-        const nextNode: MGPOptional<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
-        if (nextNode.isPresent()) {
+        const nextNode: MGPFallible<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
+        if (nextNode.isSuccess()) {
             this.gameComponent.node = nextNode.get();
             await this.updateBoard(true);
             this.cdr.detectChanges();
@@ -172,6 +173,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 game: this.getGameName(),
                 name: playingAI.name,
                 move: aiMove.toString(),
+                reason: nextNode.getReason(),
             });
         }
     }

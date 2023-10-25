@@ -33,7 +33,7 @@ export class LodestonePressurePlate {
                 return MGPOptional.empty();
             }
         } else {
-            const newPieces: LodestonePiecePlayer[] = ArrayUtils.copyImmutableArray(this.pieces);
+            const newPieces: LodestonePiecePlayer[] = ArrayUtils.copy(this.pieces);
             for (let i: number = 0; i < quantity; i++) {
                 newPieces.push(LodestonePiecePlayer.of(player));
             }
