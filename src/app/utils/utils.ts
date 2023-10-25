@@ -79,7 +79,7 @@ export class Debug {
     }
     /**
      * Class decorator that enables logging for all methods of a class
-     * Note: we could think that T should be typed `T extends { new(...args: unknown[]): unknown }>`
+     * Note: we could think that T should be typed `T extends { new(...args: unknown[]): unknown }`
      * but this would restrict the decorator to only be applied to classes with public constructors.
      */
     public static log<T>(constructor: T): void {

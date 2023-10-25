@@ -4035,6 +4035,10 @@
         <source>There is a piece between the piece you chose and its landing space.</source>
         <target>Il y a une pièce entre la pièce que vous avez choisie et sa case d'atterissage.</target>
       </trans-unit>
+      <trans-unit id="189691672447950321" datatype="html">
+        <source>You must move on a direct neighboring space.</source>
+        <target>Vous devez vous déplacer sur une case voisine.</target>
+      </trans-unit>
       <trans-unit id="6790757046240382671" datatype="html">
         <source>Tafl moves must be orthogonal.</source>
         <target>Les mouvements aux jeux de Tafl doivent être orthogonaux.</target>
@@ -4135,13 +4139,17 @@
         <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
         <target>Le but du jeu est d'aligner vos 4 pièces, ou de les placer en carré.</target>
       </trans-unit>
-      <trans-unit id="322267404708379069" datatype="html">
-        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
-        <target>Après avoir déposé vos quatre pièces, vous devez déplacer vos pièces à un emplacement vide. Le but reste le même : être le premier à créer une ligne ou un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
+      <trans-unit id="5528013857873835184" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to an empty neighboring space, orthogonally or diagonally. The goal remains to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+        <target>Après avoir déposé vos quatre pièces, vous devez déplacer une de vos pièces à un emplacement voisin vide, orthogonalement ou diagonalement. Le but reste le même : être le premier à créer une ligne ou un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
       </trans-unit>
-      <trans-unit id="366926106758793789" datatype="html">
-        <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
-        <target>Sur ce plateau, vous pouvez gagner en créant soit une ligne, soit un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
+      <trans-unit id="6991053095147622953" datatype="html">
+        <source>In this board, you can win by creating a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
+        <target>Sur ce plateau, vous pouvez gagner en formant un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
+      </trans-unit>
+      <trans-unit id="4133557660322432859" datatype="html">
+        <source>Congratulations, you won! Remember that you can also win by creating a line.</source>
+        <target>Bravo, vous avez gagné ! Souvenez-vous que vous pouvez aussi gagner en créant une ligne.</target>
       </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>
