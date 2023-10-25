@@ -87,7 +87,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 // Then the move should be legal
                 const landingSpace: string = '#click_' + end.x + '_' + end.y;
                 await testUtils.expectMoveSuccess(landingSpace, move);
-                // And the piece on the way should be highlighted
+                // And the square on the way should be highlighted
                 const moveDirection: Direction = start.getDirectionToward(end).get();
                 let movedCoord: Coord = start.getNext(moveDirection, 1);
                 while (movedCoord.equals(end) === false) {

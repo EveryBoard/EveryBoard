@@ -6,9 +6,6 @@ import { MoveWithTwoCoords } from './MoveWithTwoCoords';
 
 export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
 
-    public static getAllCoordsToward(start: Coord, end: Coord): Coord[] {
-        return start.getCoordsToward(end).concat(start).concat(end);
-    }
     public constructor(start: Coord, end: Coord) {
         super(start, end);
         if (start.equals(end)) throw new Error(RulesFailure.MOVE_CANNOT_BE_STATIC());
@@ -32,6 +29,8 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
     }
 
     public getMovedCoords(): Coord[] {
-        return MoveCoordToCoord.getAllCoordsToward(this.getStart(), this.getEnd());
+        // TODO FOR REVEIW: si tu trouve qu'elles sont pas "moved" dit le au css :p et sinon quoi, involved coord ?
+        return this.getStart().getAllCoordsToward(this.getEnd());
     }
+
 }

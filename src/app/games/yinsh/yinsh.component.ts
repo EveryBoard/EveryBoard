@@ -16,7 +16,6 @@ import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { YinshScoreHeuristic } from './YinshScoreHeuristic';
@@ -244,7 +243,7 @@ export class YinshComponent
         }
     }
     private coordsBetween(start: Coord, end: Coord): Coord[] {
-        return MoveCoordToCoord.getAllCoordsToward(start, end);
+        return start.getAllCoordsToward(end);
     }
     private showLastMoveCapture(capture: YinshCapture, alsoShowPiece: boolean): void {
         for (const coord of capture.capturedSpaces) {
