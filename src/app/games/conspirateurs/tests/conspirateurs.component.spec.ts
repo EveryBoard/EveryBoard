@@ -249,7 +249,7 @@ describe('ConspirateursComponent', () => {
         testUtils.expectElementNotToHaveClass('#click_16_16', 'victory-fill');
     }));
 
-    it('should highlight shelters of everybody before victory', fakeAsync(async() => {
+    it('should highlight shelters of everyone before victory', fakeAsync(async() => {
         // Given a state where player 0 and 1 have pieces in shelters
         const state: ConspirateursState = new ConspirateursState([
             [X, X, _, X, _, X, _, X, X, X, _, X, _, X, _, X, X],
