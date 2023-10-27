@@ -106,7 +106,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
             for (let x: number = 0; x < LodestoneState.SIZE; x++) {
                 const piece: LodestonePiece = this.getPieceAtXY(x, y);
                 if (piece.isPlayerPiece()) {
-                    playerPieces[piece.owner.value] += 1;
+                    playerPieces[piece.owner.getValue()] += 1;
                 }
             }
         }

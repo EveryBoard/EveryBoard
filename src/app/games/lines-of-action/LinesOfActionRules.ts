@@ -37,7 +37,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 if (coordAndContent.content.isPlayer()) {
                     highestGroup += 1;
                     LinesOfActionRules.markGroupStartingAt(state, groups, coordAndContent.coord, highestGroup);
-                    numGroups[coordAndContent.content.value] += 1;
+                    numGroups[coordAndContent.content.getValue()] += 1;
                 }
             }
         }

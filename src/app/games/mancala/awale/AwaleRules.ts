@@ -93,7 +93,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
             target = resultingBoard[y][x];
         } while ((x !== limit) && ((target === 2) || (target === 3)));
         const captured: [number, number] = state.getScoresCopy();
-        captured[state.getCurrentPlayer().value] += capturedSum;
+        captured[state.getCurrentPlayer().getValue()] += capturedSum;
         return {
             capturedSum,
             captureMap,
@@ -110,7 +110,7 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
                 [0, 0, 0, 0, 0, 0],
             ],
         };
-        if (y === player.getOpponent().value) {
+        if (y === player.getOpponent().getValue()) {
             return captureLessResult;
         } else {
             const captureResult: MancalaCaptureResult = this.capture(x, y, state);

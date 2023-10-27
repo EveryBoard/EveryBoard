@@ -61,7 +61,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }, 1);
     }
     public async updatePlayer(player: Player): Promise<void> {
-        this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
+        this.players[player.getValue()] = MGPOptional.of(this.playerSelection[player.getValue()]);
         if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
             this.gameComponent.setInteractive(false);
             await this.setRole(Player.ONE);
@@ -81,10 +81,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner.isPlayer()) {
-                const winner: string = $localize`Player ${gameStatus.winner.value + 1}`;
+                const winner: string = $localize`Player ${gameStatus.winner.getValue() + 1}`;
                 const loser: Player = gameStatus.winner.getOpponent();
-                const loserValue: number = loser.value;
-                if (this.players[gameStatus.winner.value].equalsValue('human')) { // When human win
+                const loserValue: number = loser.getValue();
+                if (this.players[gameStatus.winner.getValue()].equalsValue('human')) { // When human win
                     if (this.players[loserValue].equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`${ winner } won`);
                     } else {
@@ -94,7 +94,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     if (this.players[loserValue].equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (Player ${gameStatus.winner.value + 1}) won`);
+                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.getValue()].get()} (Player ${gameStatus.winner.getValue() + 1}) won`);
                     }
                 }
             }

@@ -61,7 +61,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         return MGPFallible.success(distributionResult.endsUpInKalah && isStarving === false);
     }
     public distributeMove(move: KalahMove, state: MancalaState): MancalaDistributionResult {
-        const playerValue: number = state.getCurrentPlayer().value;
+        const playerValue: number = state.getCurrentPlayer().getValue();
         const playerY: number = state.getCurrentPlayerY();
         const filledCoords: Coord[] = [];
         let passedByKalahNTimes: number = 0;
@@ -114,7 +114,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
                 board[0][landingSpace.x] = 0;
                 board[1][landingSpace.x] = 0;
                 const captured: [number, number] = distributedState.getScoresCopy();
-                captured[distributedState.getCurrentPlayer().value] += capturedSum;
+                captured[distributedState.getCurrentPlayer().getValue()] += capturedSum;
                 const postCaptureState: MancalaState = new MancalaState(board,
                                                                         distributedState.turn,
                                                                         captured);

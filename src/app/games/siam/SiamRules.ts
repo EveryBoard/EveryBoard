@@ -207,8 +207,8 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const pusherCoord: Coord = this.getPusherCoord(state, pushingDirection, moveStarterCoord);
         const winner: PlayerOrNone = state.getPieceAt(pusherCoord).getOwner();
         Debug.display('SiamRules', 'getPusher',
-                      moveStarterCoord.toString() + ' belong to ' + state.getCurrentOpponent().value + ', ' +
-                      pusherCoord.toString() + ' belong to ' + winner.value + ', ' + winner.value + ' win');
+                      moveStarterCoord.toString() + ' belong to ' + state.getCurrentOpponent().getValue() + ', ' +
+                      pusherCoord.toString() + ' belong to ' + winner.getValue() + ', ' + winner.getValue() + ' win');
         return winner;
     }
     public getPusherCoord(state: SiamState, pushingDirection: Orthogonal, pusher: Coord): Coord {

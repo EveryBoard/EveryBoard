@@ -63,7 +63,7 @@
           [attr.height]="SPACE_SIZE"
           class="base no-fill small-stroke selected-stroke"/>
     <g *ngFor="let player of Player.PLAYERS"
-       id="remainingPieces_{{ player.value }}"
+       id="remainingPieces_{{ player.getValue() }}"
        (click)="selectPieceForInsertion(player)" >
         <use *ngFor="let x of ArrayUtils.range(playerPieces(player))"
              id="remainingPieces_{{ player.value }}_{{ x }}"

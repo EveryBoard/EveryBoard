@@ -292,7 +292,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     }
     public getPieceClass(coord: Coord): string {
         const piece: FourStatePiece = this.getPiece(coord);
-        return this.getPlayerClass(Player.of(piece.value));
+        return this.getPlayerClass(Player.of(piece.getValue()));
     }
     public getRemainingPieceCy(player: Player): number {
         const absoluteY: number = 25;

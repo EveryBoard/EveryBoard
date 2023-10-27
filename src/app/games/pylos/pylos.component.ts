@@ -285,7 +285,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return this.getPlayerClass(this.state.getPieceAt(c));
     }
     public getPlayerSidePieces(player: Player): number[] {
-        const nPieces: number = this.remainingPieces[player.value];
+        const nPieces: number = this.remainingPieces[player.getValue()];
         const pieces: number[] = [];
         for (let i: number = 0; i < nPieces; i++) {
             pieces.push(i);

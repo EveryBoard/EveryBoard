@@ -282,7 +282,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             await this.updateBoardAndShowLastMove(isLastMoveOfBatch);
         } else {
             // We only animate the move of opponent, because the users move has already been animated before sending it
-            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value;
+            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.getValue();
             await this.updateBoardAndShowLastMove(triggerAnimation && isLastMoveOfBatch);
         }
         this.setCurrentPlayerAccordingToCurrentTurn();
@@ -359,7 +359,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.endGame === true) return false;
         // Cannot do a take back request before we played
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        if (currentPart.data.turn <= this.role.value) return false;
+        if (currentPart.data.turn <= this.role.getValue()) return false;
         // Otherwise, it depends on the request manager
         return this.requestManager.canMakeRequest('TakeBack');
     }
@@ -465,7 +465,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async resign(): Promise<void> {
         const player: Player = this.role as Player;
         const resigner: MinimalUser = this.getPlayer();
-        const victoriousOpponent: MinimalUser = this.players[(this.role.value + 1) % 2].get();
+        const victoriousOpponent: MinimalUser = this.players[(this.role.getValue() + 1) % 2].get();
         await this.gameService.resign(this.currentPartId, player, victoriousOpponent, resigner);
     }
     // Called by the clocks

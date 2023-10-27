@@ -124,9 +124,9 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     public static getGameStatus(node: PylosNode): GameStatus {
         const state: PylosState = node.gameState;
         const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
-        if (ownershipMap[Player.ZERO.value] === 15) {
+        if (ownershipMap[Player.ZERO.getValue()] === 15) {
             return GameStatus.ONE_WON;
-        } else if (ownershipMap[Player.ONE.value] === 15) {
+        } else if (ownershipMap[Player.ONE.getValue()] === 15) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONGOING;

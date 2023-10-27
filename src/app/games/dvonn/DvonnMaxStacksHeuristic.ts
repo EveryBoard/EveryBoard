@@ -16,7 +16,7 @@ export class DvonnMaxStacksHeuristic extends PlayerMetricHeuristic<DvonnMove, Dv
         for (const player of Player.PLAYERS) {
             const playerStacks: number = pieces.filter((c: Coord): boolean =>
                 state.getPieceAt(c).belongsTo(player)).length;
-            scores[player.value] = scores[player.value] * playerStacks / numberOfStacks;
+            scores[player.getValue()] = scores[player.getValue()] * playerStacks / numberOfStacks;
         }
         return scores;
     }

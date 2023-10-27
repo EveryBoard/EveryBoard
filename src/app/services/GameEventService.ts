@@ -25,7 +25,7 @@ export class GameEventService {
         return this.addEvent(partId, {
             eventType: 'Move',
             time: serverTimestamp(),
-            player: player.value as 0|1,
+            player: player.getValue() as 0|1,
             move,
         });
     }
@@ -33,7 +33,7 @@ export class GameEventService {
         return this.addEvent(partId, {
             eventType: 'Request',
             time: serverTimestamp(),
-            player: player.value as 0|1,
+            player: player.getValue() as 0|1,
             requestType,
         });
     }
@@ -47,7 +47,7 @@ export class GameEventService {
         return this.addEvent(partId, {
             eventType: 'Reply',
             time: serverTimestamp(),
-            player: player.value as 0|1,
+            player: player.getValue() as 0|1,
             reply,
             requestType,
             data,
@@ -60,7 +60,7 @@ export class GameEventService {
         return this.addEvent(partId, {
             eventType: 'Action',
             time: serverTimestamp(),
-            player: player.value as 0|1,
+            player: player.getValue() as 0|1,
             action,
         });
     }

@@ -142,7 +142,7 @@ export class YinshComponent
             this.setMarkerInfo(coord, piece);
         });
         for (const player of Player.PLAYERS) {
-            this.viewInfo.sideRings[player.value] = this.constructedState.sideRings[player.value];
+            this.viewInfo.sideRings[player.getValue()] = this.constructedState.sideRings[player.getValue()];
         }
         this.showCurrentMoveCaptures();
 
@@ -198,7 +198,7 @@ export class YinshComponent
     private setRingInfo(coord: Coord, piece: YinshPiece): void {
         if (piece.isRing) {
             this.viewInfo.spaceInfo[coord.y][coord.x].isRing = true;
-            this.viewInfo.spaceInfo[coord.y][coord.x].ringClasses = ['player' + piece.player.value + '-stroke'];
+            this.viewInfo.spaceInfo[coord.y][coord.x].ringClasses = ['player' + piece.player.getValue() + '-stroke'];
         } else {
             this.viewInfo.spaceInfo[coord.y][coord.x].isRing = false;
             this.viewInfo.spaceInfo[coord.y][coord.x].ringClasses = [];
@@ -375,11 +375,11 @@ export class YinshComponent
     }
     private markRemovedMarker(coord: Coord, player: Player): void {
         this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'semi-transparent';
-        this.setMarkerInfo(coord, YinshPiece.MARKERS[player.value]);
+        this.setMarkerInfo(coord, YinshPiece.MARKERS[player.getValue()]);
     }
     private markRemovedRing(coord: Coord, player: Player): void {
         this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'semi-transparent';
-        this.setRingInfo(coord, YinshPiece.RINGS[player.value]);
+        this.setRingInfo(coord, YinshPiece.RINGS[player.getValue()]);
     }
     private async selectRing(coord: Coord): Promise<MGPValidation> {
         const validity: MGPValidation = this.rules.ringSelectionValidity(this.constructedState, coord);
@@ -452,7 +452,7 @@ export class YinshComponent
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        const currentPlayerRing: YinshPiece = YinshPiece.RINGS[this.getState().getCurrentPlayer().value];
+        const currentPlayerRing: YinshPiece = YinshPiece.RINGS[this.getState().getCurrentPlayer().getValue()];
         if (this.constructedState.getPieceAt(coord) === currentPlayerRing) {
             this.cancelMoveAttempt();
             return this.selectMoveStart(coord);

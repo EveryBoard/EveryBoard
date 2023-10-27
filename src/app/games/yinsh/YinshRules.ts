@@ -48,7 +48,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return this.takeRing(new YinshState(board, state.sideRings, state.turn), capture.ringTaken.get());
     }
     public takeRing(state: YinshState, ringTaken: Coord): YinshState {
-        const player: number = state.getCurrentPlayer().value;
+        const player: number = state.getCurrentPlayer().getValue();
         const board: Table<YinshPiece> = state.setAt(ringTaken, YinshPiece.EMPTY).board;
         const sideRings: [number, number] = [state.sideRings[0], state.sideRings[1]];
         sideRings[player] += 1;
@@ -62,7 +62,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return state.board;
     }
     public ringSelectionValidity(state: YinshState, coord: Coord): MGPValidation {
-        const player: number = state.getCurrentPlayer().value;
+        const player: number = state.getCurrentPlayer().getValue();
         if (state.getPieceAt(coord) === YinshPiece.RINGS[player]) {
             return MGPValidation.SUCCESS;
         } else {
@@ -70,7 +70,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         }
     }
     public applyRingMoveAndFlip(start: Coord, end: Coord, state: YinshState): YinshState {
-        const player: number = state.getCurrentPlayer().value;
+        const player: number = state.getCurrentPlayer().getValue();
         // Move ring from start (only the marker remains) to
         // end (only the ring can be there, as it must land on an empty space)
         let newState: YinshState = state.setAt(start, YinshPiece.MARKERS[player]);
@@ -130,13 +130,13 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         }
         const player: Player = state.getCurrentPlayer();
         const sideRings: [number, number] = [state.sideRings[0], state.sideRings[1]];
-        sideRings[player.value] -= 1;
+        sideRings[player.getValue()] -= 1;
         const newBoard: Table<YinshPiece> = state.setAt(coord, YinshPiece.of(player, true)).board;
         const newState: YinshState = new YinshState(newBoard, sideRings, state.turn);
         return MGPFallible.success(newState);
     }
     public moveStartValidity(state: YinshState, start: Coord): MGPValidation {
-        const player: number = state.getCurrentPlayer().value;
+        const player: number = state.getCurrentPlayer().getValue();
         // Start coord has to contain a ring of the current player
         if (state.getPieceAt(start) !== YinshPiece.RINGS[player]) {
             return MGPValidation.failure(YinshFailure.SHOULD_SELECT_PLAYER_RING());
@@ -190,7 +190,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return MGPValidation.SUCCESS;
     }
     public captureValidity(state: YinshState, capture: YinshCapture): MGPValidation {
-        const player: number = state.getCurrentPlayer().value;
+        const player: number = state.getCurrentPlayer().getValue();
         // There should be exactly 5 consecutive spaces, on the same line (invariants of YinshCapture)
         for (const coord of capture.capturedSpaces) {
             // The captured spaces must contain markers of the current player

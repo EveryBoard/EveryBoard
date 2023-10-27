@@ -14,7 +14,7 @@
                          class="base mid-stroke"
                 />
             </g>
-            <g *ngIf="spaceContent.value === 2">
+            <g *ngIf="spaceContent.getValue() === 2">
                 <polygon *ngIf="(x + y) % 2 === 1"
                          [attr.points]="getTrianglePoints(x, y)"
                          [attr.transform]="getTriangleTranslate(x, y)"

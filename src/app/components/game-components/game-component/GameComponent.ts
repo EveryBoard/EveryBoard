@@ -105,7 +105,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public setPointOfView(pointOfView: Player): void {
         this.pointOfView = pointOfView;
         if (this.hasAsymmetricBoard) {
-            this.rotation = 'rotate(' + (pointOfView.value * 180) + ')';
+            this.rotation = 'rotate(' + (pointOfView.getValue() * 180) + ')';
         }
     }
     public setInteractive(interactive: boolean): void {

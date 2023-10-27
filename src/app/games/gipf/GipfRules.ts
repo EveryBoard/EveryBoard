@@ -57,9 +57,9 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             const piece: FourStatePiece = state.getPieceAt(coord);
             newState = newState.setAt(coord, FourStatePiece.EMPTY);
             if (piece.is(player)) {
-                sidePieces[player.value] += 1;
+                sidePieces[player.getValue()] += 1;
             } else {
-                capturedPieces[player.value] += 1;
+                capturedPieces[player.getValue()] += 1;
             }
         });
         return new GipfState(newState.board, state.turn, sidePieces, capturedPieces);
@@ -111,7 +111,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             }
         }
         const sidePieces: [number, number] = [state.sidePieces[0], state.sidePieces[1]];
-        sidePieces[player.value] -= 1;
+        sidePieces[player.getValue()] -= 1;
         return new GipfState(newState.board, state.turn, sidePieces, state.capturedPieces);
     }
     public getPiecesMoved(state: GipfState,

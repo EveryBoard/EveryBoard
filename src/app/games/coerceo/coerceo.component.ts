@@ -200,7 +200,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                     corner0x + ', ' + corner0y;
     }
     public mustShowTilesOf(player: Player): boolean {
-        if (this.tiles[player.value] > 0) {
+        if (this.tiles[player.getValue()] > 0) {
             return true;
         } else {
             return this.lastTurnWasTilesExchange(player);
@@ -210,8 +210,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         if (this.node.parent.isAbsent()) {
             return false;
         }
-        const previousTiles: number = this.getPreviousState().tiles[player.value];
-        return previousTiles > this.tiles[player.value];
+        const previousTiles: number = this.getPreviousState().tiles[player.getValue()];
+        return previousTiles > this.tiles[player.getValue()];
     }
     public getIndicatorY(coord: Coord): number {
         const y: number = this.INDICATOR_SIZE / 2;

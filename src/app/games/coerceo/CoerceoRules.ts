@@ -39,9 +39,9 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         const captured: Coord = move.coord;
         newBoard[captured.y][captured.x] = FourStatePiece.EMPTY;
         const newCaptures: [number, number] = [state.captures[0], state.captures[1]];
-        newCaptures[state.getCurrentPlayer().value] += 1;
+        newCaptures[state.getCurrentPlayer().getValue()] += 1;
         const newTiles: [number, number] = [state.tiles[0], state.tiles[1]];
-        newTiles[state.getCurrentPlayer().value] -= 2;
+        newTiles[state.getCurrentPlayer().getValue()] -= 2;
         const afterCapture: CoerceoState = new CoerceoState(newBoard,
                                                             state.turn,
                                                             newTiles,
@@ -74,7 +74,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         }
     }
     public isLegalTileExchange(move: CoerceoTileExchangeMove, state: CoerceoState): MGPValidation {
-        if (state.tiles[state.getCurrentPlayer().value] < 2) {
+        if (state.tiles[state.getCurrentPlayer().getValue()] < 2) {
             return MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
         }
         const captured: FourStatePiece = state.getPieceAt(move.coord);

@@ -10,7 +10,7 @@ export class ApagosHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosSta
         const levelThreeDominant: PlayerOrNone = node.gameState.board[3].getDominatingPlayer();
         const metrics: [number, number] = [0, 0];
         if (levelThreeDominant.isPlayer()) {
-            metrics[levelThreeDominant.value] = 1;
+            metrics[levelThreeDominant.getValue()] = 1;
         }
         return metrics;
     }

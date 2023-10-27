@@ -50,7 +50,7 @@ export class RulesUtils {
     : void
     {
         expect(rules.getGameStatus(node))
-            .withContext('Rules should consider gameStatus a victory for player ' + player.value)
+            .withContext('Rules should consider gameStatus a victory for player ' + player.getValue())
             .toEqual(GameStatus.getVictory(player));
     }
     public static expectToBeOngoing<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(

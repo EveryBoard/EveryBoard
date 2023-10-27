@@ -352,7 +352,7 @@ describe('GameService', () => {
                 // Then PartDAO should have been called with the appropriate MGPResult
                 const result: number = [
                     MGPResult.AGREED_DRAW_BY_ZERO.value,
-                    MGPResult.AGREED_DRAW_BY_ONE.value][player.value];
+                    MGPResult.AGREED_DRAW_BY_ONE.value][player.getValue()];
                 expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
                     result,
                 });

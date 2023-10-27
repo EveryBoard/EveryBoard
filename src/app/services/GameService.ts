@@ -196,7 +196,7 @@ export class GameService {
     }
     public async acceptTakeBack(partId: string, currentTurn: number, player: Player): Promise<void> {
         let turn: number = currentTurn-1;
-        if (turn % 2 === player.value) {
+        if (turn % 2 === player.getValue()) {
             // We need to take back a second time to let the requester take back their move
             turn--;
         }

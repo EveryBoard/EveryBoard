@@ -104,7 +104,7 @@ export class LodestonePieceLodestone {
     public static of(player: Player, description: LodestoneDescription)
     : LodestonePieceLodestone
     {
-        return LodestonePieceLodestone.LODESTONES[player.value][description.direction][description.orientation];
+        return LodestonePieceLodestone.LODESTONES[player.getValue()][description.direction][description.orientation];
     }
     public isLodestone(): this is LodestonePieceLodestone {
         return true;

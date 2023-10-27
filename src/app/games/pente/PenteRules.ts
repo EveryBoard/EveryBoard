@@ -47,7 +47,7 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
             newBoard[captured.y][captured.x] = PlayerOrNone.NONE;
         }
         const captures: [number, number] = [state.captures[0], state.captures[1]];
-        captures[player.value] += capturedPieces.length;
+        captures[player.getValue()] += capturedPieces.length;
         return new PenteState(newBoard, captures, state.turn+1);
     }
     public getCaptures(coord: Coord, state: PenteState, player: Player): Coord[] {
@@ -70,7 +70,7 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
     public getGameStatus(node: PenteNode): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        if (state.captures[opponent.value] >= 10) {
+        if (state.captures[opponent.getValue()] >= 10) {
             return GameStatus.getVictory(opponent);
         }
         const victoriousCoord: Coord[] = PenteRules.PENTE_HELPER.getVictoriousCoord(state);

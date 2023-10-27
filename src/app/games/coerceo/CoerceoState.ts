@@ -109,7 +109,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
         const newCaptures: [number, number] = [this.captures[0], this.captures[1]];
         newBoard[coord.y][coord.x] = FourStatePiece.EMPTY;
-        newCaptures[this.getCurrentPlayer().value] += 1;
+        newCaptures[this.getCurrentPlayer().getValue()] += 1;
         return new CoerceoState(newBoard, this.turn, this.tiles, newCaptures);
     }
     public removeTilesIfNeeded(piece: Coord, countTiles: boolean): CoerceoState {
@@ -195,7 +195,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         const newTiles: [number, number] = [this.tiles[0], this.tiles[1]];
         if (countTiles) {
-            newTiles[this.getCurrentPlayer().value] += 1;
+            newTiles[this.getCurrentPlayer().getValue()] += 1;
         }
         return new CoerceoState(newBoard, this.turn, newTiles, this.captures);
     }
@@ -220,8 +220,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
                 if (piece.isPlayer()) {
                     const nbFreedom: number =
                         this.getEmptyNeighbors(new Coord(x, y), FourStatePiece.EMPTY).length;
-                    const oldValue: number = playersScores[piece.value][nbFreedom];
-                    playersScores[piece.value][nbFreedom] = oldValue + 1;
+                    const oldValue: number = playersScores[piece.getValue()][nbFreedom];
+                    playersScores[piece.getValue()][nbFreedom] = oldValue + 1;
                 }
             }
         }

@@ -27,7 +27,7 @@ export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, Epaminondas
                 if (player.isPlayer()) {
                     const mod: number = player.getScoreModifier();
                     total += SCORE_BY_PIECE * mod;
-                    wasPresent[player.value] = mod;
+                    wasPresent[player.getValue()] = mod;
                     row += mod;
                     for (const dir of [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT]) {
                         let neighbor: Coord = coord.getNext(dir, 1);

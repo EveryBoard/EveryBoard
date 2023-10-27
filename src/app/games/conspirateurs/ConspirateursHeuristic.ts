@@ -16,7 +16,7 @@ export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursM
                 const player: PlayerOrNone = state.getPieceAt(coord);
                 if (player.isPlayer()) {
                     if (state.isShelter(coord)) {
-                        scores[player.value] += 20;
+                        scores[player.getValue()] += 20;
                     } else {
                         let minEmptyShelterDistance: number = 100;
                         for (const shelter of ConspirateursState.ALL_SHELTERS) {
@@ -25,7 +25,7 @@ export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursM
                                 minEmptyShelterDistance = Math.min(minEmptyShelterDistance, distance);
                             }
                         }
-                        scores[player.value] -= minEmptyShelterDistance;
+                        scores[player.getValue()] -= minEmptyShelterDistance;
                     }
                 }
             }

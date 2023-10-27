@@ -90,15 +90,15 @@ export class PylosState extends GameState {
     }
     public getPiecesRepartition(): { [owner: number]: number } {
         const ownershipMap: { [owner: number]: number } = {};
-        ownershipMap[PlayerOrNone.NONE.value] = 0;
-        ownershipMap[Player.ZERO.value] = 0;
-        ownershipMap[Player.ONE.value] = 0;
+        ownershipMap[PlayerOrNone.NONE.getValue()] = 0;
+        ownershipMap[Player.ZERO.getValue()] = 0;
+        ownershipMap[Player.ONE.getValue()] = 0;
         for (let z: number = 0; z < 3; z++) {
             for (let y: number = 0; y < (4 - z); y++) {
                 for (let x: number = 0; x < (4 - z); x++) {
                     const c: PylosCoord = new PylosCoord(x, y, z);
                     const v: PlayerOrNone = this.getPieceAt(c);
-                    ownershipMap[v.value] = 1 + ownershipMap[v.value];
+                    ownershipMap[v.getValue()] = 1 + ownershipMap[v.getValue()];
                 }
             }
         }

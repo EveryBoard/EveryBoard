@@ -372,7 +372,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         }
         const newKoCoord: MGPOptional<Coord> = GoRules.getNewKo(legalMove, newBoard, capturedCoords);
         const newCaptured: number[] = state.getCapturedCopy();
-        newCaptured[currentPlayer.player.value] += capturedCoords.length;
+        newCaptured[currentPlayer.player.getValue()] += capturedCoords.length;
         return new GoState(newBoard, newCaptured, newTurn, newKoCoord, Phase.PLAYING);
     }
     public static resurrectStones(state: GoState): GoState {

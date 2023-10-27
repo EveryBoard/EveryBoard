@@ -48,7 +48,7 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
             for (let x: number = 0; x < ReversiState.BOARD_WIDTH; x++) {
                 const spaceOwner: PlayerOrNone = this.board[y][x];
                 if (spaceOwner.isPlayer()) {
-                    scores[spaceOwner.value] += 1;
+                    scores[spaceOwner.getValue()] += 1;
                 }
             }
         }

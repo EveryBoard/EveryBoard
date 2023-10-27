@@ -67,12 +67,12 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
     public static getLinesSums(state: QuixoState): {[player: number]: {[lineType: string]: number[]}} {
         const sums: {[player: number]: {[lineType: string]: number[]}} = {};
-        sums[Player.ZERO.value] = {
+        sums[Player.ZERO.getValue()] = {
             columns: [0, 0, 0, 0, 0],
             rows: [0, 0, 0, 0, 0],
             diagonals: [0, 0],
         };
-        sums[Player.ONE.value] = {
+        sums[Player.ONE.getValue()] = {
             columns: [0, 0, 0, 0, 0],
             rows: [0, 0, 0, 0, 0],
             diagonals: [0, 0],
@@ -82,7 +82,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
             const x: number = coordAndContent.coord.x;
             const y: number = coordAndContent.coord.y;
             if (content.isPlayer()) {
-                const c: number = content.value;
+                const c: number = content.getValue();
                 sums[c].columns[x] = sums[c].columns[x] + 1;
                 sums[c].rows[y] = sums[c].rows[y] + 1;
                 if (x === y) sums[c].diagonals[0] = sums[c].diagonals[0] + 1;

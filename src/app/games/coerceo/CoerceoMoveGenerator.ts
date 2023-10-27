@@ -16,7 +16,7 @@ export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoStat
     public getListExchanges(node: CoerceoNode): CoerceoMove[] {
         const exchanges: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
-        const PLAYER: number = state.getCurrentPlayer().value;
+        const PLAYER: number = state.getCurrentPlayer().getValue();
         const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
         if (state.tiles[PLAYER] < 2) {
             return exchanges;

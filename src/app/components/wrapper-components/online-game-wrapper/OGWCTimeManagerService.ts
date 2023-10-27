@@ -53,12 +53,12 @@ export class OGWCTimeManagerService {
         for (const player of Player.PLAYERS) {
             // We need to initialize the service's data
             // Otherwise if we go to another page and come back, the service stays alive and the data is off
-            this.takenGlobalTime[player.value] = 0;
-            this.extraGlobalTime[player.value] = 0;
-            this.availableTurnTime[player.value] = this.getMoveDurationInMs();
+            this.takenGlobalTime[player.getValue()] = 0;
+            this.extraGlobalTime[player.getValue()] = 0;
+            this.availableTurnTime[player.getValue()] = this.getMoveDurationInMs();
             // And we setup the clocks
-            this.globalClocks[player.value].setDuration(this.getPartDurationInMs());
-            this.turnClocks[player.value].setDuration(this.getMoveDurationInMs());
+            this.globalClocks[player.getValue()].setDuration(this.getPartDurationInMs());
+            this.turnClocks[player.getValue()].setDuration(this.getMoveDurationInMs());
         }
         // We want the clocks to be paused, as we will only activate the required ones
         for (const clock of this.allClocks) {
@@ -94,16 +94,16 @@ export class OGWCTimeManagerService {
         const moveTimestamp: Timestamp = move.time as Timestamp;
         const takenMoveTime: number = this.getMillisecondsElapsedSinceLastMoveStart(moveTimestamp);
         this.lastMoveStartTimestamp = MGPOptional.of(moveTimestamp);
-        this.takenGlobalTime[player.value] += takenMoveTime;
+        this.takenGlobalTime[player.getValue()] += takenMoveTime;
 
-        this.availableTurnTime[player.value] -= takenMoveTime;
+        this.availableTurnTime[player.getValue()] -= takenMoveTime;
 
         // Now is the time to update the other player's clock
         // They may get updated through later action such as time additions
         const nextPlayer: Player = player.getOpponent();
-        this.availableTurnTime[nextPlayer.value] = this.getMoveDurationInMs();
-        const nextPlayerAdaptedGlobalTime: number = this.getPartDurationInMs() - this.takenGlobalTime[nextPlayer.value];
-        this.globalClocks[nextPlayer.value].changeDuration(nextPlayerAdaptedGlobalTime);
+        this.availableTurnTime[nextPlayer.getValue()] = this.getMoveDurationInMs();
+        const nextPlayerAdaptedGlobalTime: number = this.getPartDurationInMs() - this.takenGlobalTime[nextPlayer.getValue()];
+        this.globalClocks[nextPlayer.getValue()].changeDuration(nextPlayerAdaptedGlobalTime);
     }
     private getMillisecondsElapsedSinceLastMoveStart(timestamp: Timestamp): number {
         return getMillisecondsElapsed(this.lastMoveStartTimestamp.get(), timestamp);
@@ -132,33 +132,33 @@ export class OGWCTimeManagerService {
             // It can be only a few ms, or a much longer time in case we join mid-game
             const drift: number = this.getMillisecondsElapsedSinceLastMoveStart(currentTime);
             // We need to subtract the time to take the drift into account
-            this.turnClocks[player.value].subtract(drift);
-            this.globalClocks[player.value].subtract(drift);
+            this.turnClocks[player.getValue()].subtract(drift);
+            this.globalClocks[player.getValue()].subtract(drift);
             this.resumeClocks(player);
         }
     }
     // Resumes the clocks of player. Public for testing purposes only.
     public resumeClocks(player: Player): void {
-        this.turnClocks[player.value].resume();
-        this.globalClocks[player.value].resume();
+        this.turnClocks[player.getValue()].resume();
+        this.globalClocks[player.getValue()].resume();
     }
     // Add turn time to the opponent of a player
     private addTurnTime(player: Player): void {
         const secondsToAdd: number = 30;
-        this.availableTurnTime[player.getOpponent().value] += secondsToAdd * 1000;
+        this.availableTurnTime[player.getOpponent().getValue()] += secondsToAdd * 1000;
     }
     // Add time to the global clock of the opponent of a player
     private addGlobalTime(player: Player): void {
         const secondsToAdd: number = 5 * 60;
-        this.extraGlobalTime[player.getOpponent().value] += secondsToAdd * 1000;
+        this.extraGlobalTime[player.getOpponent().getValue()] += secondsToAdd * 1000;
     }
     // Update clocks with the available time
     private updateClocks(): void {
         for (const player of Player.PLAYERS) {
-            this.turnClocks[player.value].changeDuration(this.availableTurnTime[player.value]);
+            this.turnClocks[player.getValue()].changeDuration(this.availableTurnTime[player.getValue()]);
             const globalTime: number =
-                this.getPartDurationInMs() + this.extraGlobalTime[player.value] - this.takenGlobalTime[player.value];
-            this.globalClocks[player.value].changeDuration(globalTime);
+                this.getPartDurationInMs() + this.extraGlobalTime[player.getValue()] - this.takenGlobalTime[player.getValue()];
+            this.globalClocks[player.getValue()].changeDuration(globalTime);
         }
     }
     // Pauses all clocks that are running

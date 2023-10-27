@@ -38,10 +38,10 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
         return TableUtils.compare(this.board, other.board);
     }
     public getNumberOfPiecesToPlace(player: Player): number {
-        return this.sidePieces[player.value];
+        return this.sidePieces[player.getValue()];
     }
     public getNumberOfPiecesCaptured(player: Player): number {
-        return this.capturedPieces[player.value];
+        return this.capturedPieces[player.getValue()];
     }
     public setAtUnsafe(coord: Coord, v: FourStatePiece): this {
         const newBoard: FourStatePiece[][] = TableUtils.copy(this.board);

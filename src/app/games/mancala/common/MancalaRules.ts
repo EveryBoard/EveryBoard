@@ -40,7 +40,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     ]);
     public static isStarving(player: Player, board: Table<number>): boolean {
         let i: number = 0;
-        const playerY: number = player.getOpponent().value; // For player 0 has row 1
+        const playerY: number = player.getOpponent().getValue(); // For player 0 has row 1
         while (i < MancalaState.WIDTH) {
             if (board[playerY][i++] > 0) {
                 return false; // found some food there, so not starving
@@ -189,7 +189,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     }
     public canDistribute(player: Player, board: Table<number>): boolean {
         for (let x: number = 0; x < MancalaState.WIDTH; x++) {
-            if (this.doesDistribute(x, player.getOpponent().value, board)) {
+            if (this.doesDistribute(x, player.getOpponent().getValue(), board)) {
                 return true;
             }
         }
@@ -207,14 +207,14 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
         let capturedSum: number = 0;
         const captureMap: number[][] = TableUtils.copy(postCaptureResult.captureMap);
         let x: number = 0;
-        const mansoonedY: number = mansooningPlayer.getOpponent().value;
+        const mansoonedY: number = mansooningPlayer.getOpponent().getValue();
         while (x < MancalaState.WIDTH) {
             capturedSum += resultingBoard[mansoonedY][x];
             captureMap[mansoonedY][x] += resultingBoard[mansoonedY][x];
             resultingBoard[mansoonedY][x] = 0;
             x++;
         }
-        captured[mansooningPlayer.value] += capturedSum;
+        captured[mansooningPlayer.getValue()] += capturedSum;
         return {
             capturedSum,
             captureMap,

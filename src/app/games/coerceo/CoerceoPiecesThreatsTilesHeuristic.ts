@@ -28,12 +28,12 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    scores[owner.value] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE;
+                    scores[owner.getValue()] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE;
                 } else {
-                    scores[owner.value] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
+                    scores[owner.getValue()] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
                 }
             }
-            scores[owner.value] += state.tiles[owner.value];
+            scores[owner.getValue()] += state.tiles[owner.getValue()];
         }
         return scores;
     }
@@ -70,7 +70,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
         return threatMap;
     }
     public getThreat(coord: Coord, state: CoerceoState): MGPOptional<PieceThreat> {
-        const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
+        const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).getValue());
         const opponent: Player = threatenerPlayer.getOpponent();
         let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
         let emptiableNeighborTile: MGPOptional<Coord> = MGPOptional.empty();

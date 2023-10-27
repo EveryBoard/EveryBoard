@@ -80,7 +80,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.indicatorArrows = [];
     }
     public async selectPieceForInsertion(player: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.value);
+        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.getValue());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -310,6 +310,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return this.getPlayerClass(this.getCurrentPlayer());
     }
     public playerPieces(player: Player): number {
-        return 5 - this.getState().countPlayersPawn()[player.value];
+        return 5 - this.getState().countPlayersPawn()[player.getValue()];
     }
 }

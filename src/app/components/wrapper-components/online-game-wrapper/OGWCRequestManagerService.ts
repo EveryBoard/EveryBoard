@@ -79,7 +79,7 @@ export class OGWCRequestManagerService {
                 return true;
             case 'Reject':
                 // When one of our requests is rejected, we cannot make this request until the next turn
-                if (reply.player === currentPlayer.getOpponent().value) {
+                if (reply.player === currentPlayer.getOpponent().getValue()) {
                     // Opponent denied our request
                     this.lastDeniedRequest = MGPOptional.of(reply.requestType);
                     this.forbiddenRequests.add(reply.requestType);
@@ -97,7 +97,7 @@ export class OGWCRequestManagerService {
     public getRequestAwaitingReplyFrom(player: Player): MGPOptional<RequestType> {
         // Different from canMakeRequest, as we can play if our requests have not been answered for example.
         if (this.requestAwaitingReply.isPresent() &&
-            this.requestAwaitingReply.get().player === player.getOpponent().value)
+            this.requestAwaitingReply.get().player === player.getOpponent().getValue())
         {
             return MGPOptional.of(this.requestAwaitingReply.get().requestType);
         } else {

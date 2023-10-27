@@ -16,7 +16,7 @@ export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
     private orderMoves(node: AwaleNode, moves: AwaleMove[]): AwaleMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const playerY: number = node.gameState.getOpponentY();
-        const opponentY: number = player.value;
+        const opponentY: number = player.getValue();
         // sort by captured houses
         ArrayUtils.sortByDescending(moves, (move: AwaleMove): number => {
             const board: number[][] = node.gameState.getCopiedBoard();

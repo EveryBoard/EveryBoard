@@ -9,8 +9,8 @@ export class QuixoHeuristic extends PlayerMetricHeuristic<QuixoMove, QuixoState>
     public getMetrics(node: QuixoNode): [number, number] {
         const state: QuixoState = node.gameState;
         const linesSums: { [key: string]: { [key: number]: number[]; }; } = QuixoRules.getLinesSums(state);
-        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
-        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
+        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.getValue()]);
+        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.getValue()]);
         return [zerosFullestLine, onesFullestLine];
     }
 }

@@ -20,7 +20,7 @@ export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
             for (let x: number = 0; x < state.board[0].length; x++) {
                 const piece: GoPiece = state.getPieceAtXY(x, y);
                 if (piece.type === 'dead') {
-                    killed[piece.player.value] = killed[piece.player.value] + 1;
+                    killed[piece.player.getValue()] = killed[piece.player.getValue()] + 1;
                 }
             }
         }

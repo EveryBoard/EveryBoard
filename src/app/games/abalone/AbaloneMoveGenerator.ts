@@ -52,7 +52,7 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
         const scores: [number, number] = state.getScores();
         const status: MGPFallible<AbaloneLegalityInformation> = AbaloneRules.get().isLegal(move, state);
         if (status.isSuccess()) {
-            const OPPONENT: number = state.getCurrentOpponent().value;
+            const OPPONENT: number = state.getCurrentOpponent().getValue();
             const newState: AbaloneState = new AbaloneState(status.get(), state.turn + 1);
             const newScores: [number, number] = newState.getScores();
             if (newScores[OPPONENT] > scores[OPPONENT]) {
