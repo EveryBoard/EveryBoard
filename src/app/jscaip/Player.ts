@@ -6,7 +6,7 @@ class PlayerNone implements ComparableObject {
 
     public static NONE: PlayerNone = new PlayerNone();
 
-    public value: number = 2;
+    private readonly value: number = 2;
 
     private constructor() {
     }
@@ -19,13 +19,16 @@ class PlayerNone implements ComparableObject {
     public equals(other: PlayerOrNone): boolean {
         return this === other;
     }
+    public getValue() : number {
+        return this.value;
+    }
 }
 
 export class Player implements ComparableObject {
 
     public static encoder: Encoder<Player> = Encoder.tuple(
         [Encoder.identity<number>()],
-        (player: Player) => [player.value],
+        (player: Player) => [player.getValue()],
         (fields: [number]) => Player.of(fields[0]),
     );
     public static readonly ZERO: Player = new Player(0);
@@ -44,7 +47,7 @@ export class Player implements ComparableObject {
     public static ofTurn(turn: number): Player {
         return turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
-    protected constructor(public readonly value: number) {}
+    protected constructor(private readonly value: number) {}
 
     public isPlayer(): this is Player {
         return true;
@@ -82,9 +85,12 @@ export class Player implements ComparableObject {
                 return Player.ZERO;
         }
     }
+    public getValue(): number {
+        return this.value;
+    }
 }
 
-export type PlayerOrNone = Player | PlayerNone
+export type PlayerOrNone = Player | PlayerNone;
 
 // eslint-disable-next-line no-redeclare, @typescript-eslint/no-redeclare
 export namespace PlayerOrNone {
@@ -94,7 +100,7 @@ export namespace PlayerOrNone {
 
     export const encoder: Encoder<PlayerOrNone> = new class extends Encoder<PlayerOrNone> {
         public encode(player: PlayerOrNone): JSONValueWithoutArray {
-            return player.value;
+            return player.getValue();
         }
         public decode(encoded: JSONValueWithoutArray): PlayerOrNone {
             if (encoded === 2) return PlayerOrNone.NONE;
