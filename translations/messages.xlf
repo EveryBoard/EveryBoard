@@ -1066,14 +1066,11 @@
       <trans-unit id="898651979160418937" datatype="html">
         <source>You can only perform two translations per turn, not three.</source>
       </trans-unit>
-      <trans-unit id="1779552786277618671" datatype="html">
-        <source>Distance</source>
-      </trans-unit>
       <trans-unit id="5626639193339311369" datatype="html">
         <source>Goal of the game</source>
       </trans-unit>
-      <trans-unit id="3137410140518293408" datatype="html">
-        <source>The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by the small circle, into the home line of the opponent.</source>
+      <trans-unit id="6598638598311685089" datatype="html">
+        <source>The goal of Diaballik is to bring your ball, represented by the small circle, into the home line of the opponent (i.e, its starting position). The ball is currently being held by your center piece.</source>
       </trans-unit>
       <trans-unit id="488799603315113699" datatype="html">
         <source>Translations</source>
@@ -1090,8 +1087,23 @@
       <trans-unit id="351600669711653781" datatype="html">
         <source>Blocking the opponent</source>
       </trans-unit>
-      <trans-unit id="6254470264310005605" datatype="html">
-        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each column, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
+      <trans-unit id="5111602140043708281" datatype="html">
+        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each column, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Light, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
+      </trans-unit>
+      <trans-unit id="6691085433163106876" datatype="html">
+        <source>AllMoves</source>
+      </trans-unit>
+      <trans-unit id="8328626778107972059" datatype="html">
+        <source>MCTS (3 only)</source>
+      </trans-unit>
+      <trans-unit id="2268888865744326832" datatype="html">
+        <source>MCTS (without dups)</source>
+      </trans-unit>
+      <trans-unit id="5930186357813280917" datatype="html">
+        <source>MCTS (3, no dups)</source>
+      </trans-unit>
+      <trans-unit id="1337900792840930042" datatype="html">
+        <source>Distance (<x id="PH" equiv-text="i"/>)</source>
       </trans-unit>
       <trans-unit id="3460005588993308010" datatype="html">
         <source>You do not have any pieces of this type anymore.</source>
@@ -3082,11 +3094,8 @@
       <trans-unit id="7542102025019708759" datatype="html">
         <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
       </trans-unit>
-      <trans-unit id="6986218395331151516" datatype="html">
-        <source>You must pick one of your pieces.</source>
-      </trans-unit>
-      <trans-unit id="6079681718244869210" datatype="html">
-        <source>You cannot pick a piece of the opponent.</source>
+      <trans-unit id="7484306131506665789" datatype="html">
+        <source>You have selected a piece of the opponent. You must pick one of your pieces.</source>
       </trans-unit>
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>

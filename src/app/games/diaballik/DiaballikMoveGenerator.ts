@@ -148,14 +148,16 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                                 if (moveInConstruction.hasPass) {
                                     // There was a pass before, so we only keep this if
                                     //   - it is the piece that passed, or
-                                    const isPieceThatPassed: boolean = moveInConstruction.getPassEnd().equalsValue(coord);
+                                    const isPieceThatPassed: boolean =
+                                        moveInConstruction.getPassEnd().equalsValue(coord);
                                     //   - it goes through the path of the pass,
                                     const goesThroughPassPath: boolean = moveInConstruction.passPathContains(end);
                                     keep = isPieceThatPassed || goesThroughPassPath;
                                 }
                                 if (keep || this.avoidDuplicates === false) {
                                     // The translation here is valid and legal by construction
-                                    const translation: DiaballikTranslation = DiaballikTranslation.from(coord, end).get();
+                                    const translation: DiaballikTranslation =
+                                        DiaballikTranslation.from(coord, end).get();
                                     moveInConstruction.addIfLegal(translation, nextMovesInConstruction);
                                 }
                             }

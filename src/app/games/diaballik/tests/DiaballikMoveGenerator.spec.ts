@@ -1,5 +1,5 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DiaballikMove, DiaballikTranslation } from '../DiaballikMove';
+import { DiaballikBallPass, DiaballikMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode } from '../DiaballikRules';
 import { DiaballikState } from '../DiaballikState';
@@ -25,6 +25,25 @@ describe('DiaballikMoveInConstruction', () => {
         // Then it should be empty
         expect(previousTranslation.isAbsent()).toBeTrue();
     });
+    it('should detect coordinates that are part of a pass', () => {
+        // Given a move with a pass
+        const pass: DiaballikBallPass = DiaballikBallPass.from(new Coord(0, 0), new Coord(3, 0)).get();
+        const move: DiaballikMoveInConstruction =
+            new DiaballikMoveInConstruction([pass], DiaballikState.getInitialState(), DiaballikState.getInitialState());
+        // When checking a coord that is part of its path pass
+        const isInPass: boolean = move.passPathContains(new Coord(2, 0));
+        // Then it should be true
+        expect(isInPass).toBeFalse();
+    });
+    it('should not consider a coord part of a pass if there is no pass', () => {
+        // Given a move without pass
+        const move: DiaballikMoveInConstruction =
+            new DiaballikMoveInConstruction([], DiaballikState.getInitialState(), DiaballikState.getInitialState());
+        // When checking whether a coord is part of its path pass
+        const isInPass: boolean = move.passPathContains(new Coord(0, 0));
+        // Then it should be false
+        expect(isInPass).toBeFalse();
+    });
 });
 
 describe('DiaballikMoveGenerator', () => {
@@ -49,7 +68,7 @@ describe('DiaballikMoveGenerator', () => {
         // 2-steps, and 3-steps move
         expect(moves.filter(numberOfSubMovesIs(1)).length).toBe(8);
         expect(moves.filter(numberOfSubMovesIs(2)).length).toBe(68);
-        expect(moves.filter(numberOfSubMovesIs(3)).length).toBe(136);
-        expect(moves.length).toBe(8 + 68 + 136);
+        expect(moves.filter(numberOfSubMovesIs(3)).length).toBe(138);
+        expect(moves.length).toBe(8 + 68 + 138);
     });
 });

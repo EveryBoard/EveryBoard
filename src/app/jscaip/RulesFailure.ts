@@ -2,7 +2,7 @@ import { Localized } from '../utils/LocaleUtils';
 
 export class RulesFailure {
 
-    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT: Localized = () => $localize`You have selected a piece of the opponent. You must pick on of your pieces.`;
+    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT: Localized = () => $localize`You have selected a piece of the opponent. You must pick one of your pieces.`;
 
     public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: Localized = () => $localize`You have selected an empty space, you must select one of your own pieces.`;
 

@@ -1548,13 +1548,9 @@
         <source>You can only perform two translations per turn, not three.</source>
         <target>Vous ne pouvez faire que deux translations par tour, pas trois.</target>
       </trans-unit>
-      <trans-unit id="1779552786277618671" datatype="html">
-        <source>Distance</source>
-        <target>Distance</target>
-      </trans-unit>
-      <trans-unit id="3137410140518293408" datatype="html">
-        <source>The goal of Diaballik is to bring your ball, currently being held by your center piece as represented by the small circle, into the home line of the opponent.</source>
-        <target>Le but à Diaballik est d'amener votre balle, initialement tenue par votre pièce centrale tel que représenté par le petit cercle, du côté adverse.</target>
+      <trans-unit id="6598638598311685089" datatype="html">
+        <source>The goal of Diaballik is to bring your ball, represented by the small circle, into the home line of the opponent (i.e, its starting position). The ball is currently being held by your center piece.</source>
+        <target>Le but à Diaballik est d'amener votre balle, représentée par le petit cercle, du côté adverse (c'est-à-dire, là où ses pièces se situent initialement). La balle est actuellement détenue par votre pièce centrale.</target>
       </trans-unit>
       <trans-unit id="488799603315113699" datatype="html">
         <source>Translations</source>
@@ -1576,9 +1572,29 @@
         <source>Blocking the opponent</source>
         <target>Bloquer l'adversaire</target>
       </trans-unit>
-      <trans-unit id="6254470264310005605" datatype="html">
-        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each column, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Clear, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
+      <trans-unit id="5111602140043708281" datatype="html">
+        <source>There is a special anti-game rule. If a player forms a contiguous line, with one piece in each column, they block the opponent from reaching their home line. If the opponent is in contact with three pieces in this case, they win instantaneously.&lt;br/&gt;&lt;br/&gt;Here, playing Light, your opponent is blocking you and you already have two pieces in contact with their line. If you can connect a third piece, you win. Do it!</source>
         <target>Il y a une règle spéciale contre l'anti-jeu. Si un joueur forme une ligne contiguë, avec une pièce dans chaque colonne, il empêche l'adversaire d'atteindre sa ligne de victoire. Si l'adversaire est en contact avec trois pièces dans un tel cas, cette personne gagne immédiatement la partie.&lt;br/&gt;&lt;br/&gt;Ici, en jouant Clair, votre opposant vous bloque et est déjà en contact avec deux de vos pièces. Si vous pouvez le toucher avec une troisième pièce, vous gagnez. Faites-le !</target>
+      </trans-unit>
+      <trans-unit id="6691085433163106876" datatype="html">
+        <source>AllMoves</source>
+        <target>Tous les mouvements</target>
+      </trans-unit>
+      <trans-unit id="8328626778107972059" datatype="html">
+        <source>MCTS (3 only)</source>
+        <target>MCTS (3 seulement)</target>
+      </trans-unit>
+      <trans-unit id="2268888865744326832" datatype="html">
+        <source>MCTS (without dups)</source>
+        <target>MCTS (pas de duplications)</target>
+      </trans-unit>
+      <trans-unit id="5930186357813280917" datatype="html">
+        <source>MCTS (3, no dups)</source>
+        <target>MCTS (3, pas de duplication)</target>
+      </trans-unit>
+      <trans-unit id="1337900792840930042" datatype="html">
+        <source>Distance (<x id="PH" equiv-text="i"/>)</source>
+        <target>Distance (<x id="PH" equiv-text="i"/>)</target>
       </trans-unit>
       <trans-unit id="514608014907395319" datatype="html">
         <source>Chaining jumps in a single move</source>
@@ -4318,9 +4334,9 @@
         <source>You must move in a straight line! You can only move orthogonally or diagonally!</source>
         <target>Votre mouvement doit être en ligne droite ! Votre mouvement doit être orthogonal ou diagonal !</target>
       </trans-unit>
-      <trans-unit id="6079681718244869210" datatype="html">
-        <source>You cannot pick a piece of the opponent.</source>
-        <target>Vous ne pouvez pas choisir une pièce de l&apos;adversaire.</target>
+      <trans-unit id="7484306131506665789" datatype="html">
+        <source>You have selected a piece of the opponent. You must pick one of your pieces.</source>
+        <target>Vous avez choisi une pièce adverse. Vous devez choisir une de vos pièces.</target>
       </trans-unit>
       <trans-unit id="7236012742212037533" datatype="html">
         <source>You must click on an empty space.</source>
@@ -4333,10 +4349,6 @@
       <trans-unit id="8905154297816550312" datatype="html">
         <source>Your landing space should be empty or contain a piece of the opponent.</source>
         <target>Votre case d&apos;arrivée doit être vide ou contenir une pièce de l'adversaire.</target>
-      </trans-unit>
-      <trans-unit id="6986218395331151516" datatype="html">
-        <source>You must pick one of your pieces.</source>
-        <target>Veuillez utiliser une de vos pièces.</target>
       </trans-unit>
       <trans-unit id="2056314675813734949" datatype="html">
         <source>You cannot pass your turn.</source>

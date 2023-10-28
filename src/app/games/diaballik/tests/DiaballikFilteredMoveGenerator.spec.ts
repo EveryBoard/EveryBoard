@@ -20,25 +20,19 @@ function expectFinalMoveToBePasserTranslation(move: DiaballikMove): void {
     }
 }
 
-describe('DiaballikFilteredMoveGenerator', () => {
+function hasNSteps(n: number): (move: DiaballikMove) => boolean {
+    return function(move: DiaballikMove): boolean {
+        expect(move.getSubMoves().length).toBe(n);
+        return move.getSubMoves().length === n;
+    };
+}
+
+describe('DiaballikFilteredMoveGenerator of length 3', () => {
 
     let moveGenerator: DiaballikFilteredMoveGenerator;
 
     beforeEach(() => {
-        moveGenerator = new DiaballikFilteredMoveGenerator();
-    });
-    it('should have only 3 step moves', () => {
-        // Given a node
-        const node: DiaballikNode = new DiaballikNode(DiaballikState.getInitialState());
-
-        // When computing the list of moves
-        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
-
-        // Then it should have only 3-step moves
-        function has3Steps(move: DiaballikMove): boolean {
-            return move.getSubMoves().length === 3;
-        }
-        expect(moves.every(has3Steps)).toBeTrue();
+        moveGenerator = new DiaballikFilteredMoveGenerator(3);
     });
     it('should have all 3-step move options at first turn', () => {
         // Given the initial node
@@ -47,11 +41,29 @@ describe('DiaballikFilteredMoveGenerator', () => {
         // When computing the list of moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
 
-        // Then it should have all interesting move options, which is 136 moves
-        expect(moves.length).toBe(136);
+        // Then it should have all interesting move options, which is 138 moves
+        expect(moves.length).toBe(138);
         // It should not contain A -> B, B -> A moves
         moves.forEach(expectNoBackAndForth);
         // It should only have translation after passes when the translated piece is the one that had the ball
         moves.forEach(expectFinalMoveToBePasserTranslation);
     });
+});
+
+describe('DiaballikFilteredMoveGenerator', () => {
+
+
+    for (let moveLength: number = 1; moveLength <= 3; moveLength++) {
+        it(`should have only the requested length moves (n = ${moveLength})`, () => {
+            const moveGenerator: DiaballikFilteredMoveGenerator = new DiaballikFilteredMoveGenerator(moveLength);
+            // Given a node
+            const node: DiaballikNode = new DiaballikNode(DiaballikState.getInitialState());
+
+            // When computing the list of moves
+            const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+
+            // Then it should have only n-step moves
+            expect(moves.every(hasNSteps(moveLength))).toBeTrue();
+        });
+    }
 });

@@ -388,8 +388,8 @@ describe('DiaballikComponent', () => {
     }));
     it('should show the number of translations and passes made', fakeAsync(async() => {
         // Given a state where no translation or pass has been made at this turn
-        testUtils.expectInnerTextToBe('#translationCount', '0');
-        testUtils.expectInnerTextToBe('#passCount', '0');
+        testUtils.expectTextToBe('#translationCount', '0');
+        testUtils.expectTextToBe('#passCount', '0');
 
         // When doing a translation and pass
         await testUtils.expectClickSuccess('#click_0_6');
@@ -398,8 +398,8 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_4_6');
 
         // Then it should increase the shown counts
-        testUtils.expectInnerTextToBe('#translationCount', '1');
-        testUtils.expectInnerTextToBe('#passCount', '1');
+        testUtils.expectTextToBe('#translationCount', '1');
+        testUtils.expectTextToBe('#passCount', '1');
     }));
     it('should not show number of translations and passes when not interactive', fakeAsync(async() => {
         // Given a non-interactive component
