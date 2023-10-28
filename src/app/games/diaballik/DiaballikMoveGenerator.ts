@@ -57,6 +57,17 @@ export class DiaballikMoveInConstruction {
         return MGPOptional.empty();
     }
 
+    public passPathContains(coord: Coord): boolean {
+        for (const subMove of this.subMoves) {
+            if (subMove instanceof DiaballikBallPass) {
+                const passPath: Coord[] = subMove.getStart().getCoordsToward(subMove.getEnd());
+                return passPath.some((c: Coord): boolean => c.equals(coord));
+            }
+        }
+        return false;
+
+    }
+
     public getPreviousTranslation(): MGPOptional<DiaballikTranslation> {
         for (const subMove of this.subMoves) {
             if (subMove instanceof DiaballikTranslation) {
@@ -86,6 +97,10 @@ export class DiaballikMoveInConstruction {
 
 
 export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, DiaballikState> {
+
+    public constructor(private readonly avoidDuplicates: boolean = true) {
+        super();
+    }
 
     public getListMoves(node: DiaballikNode): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
@@ -122,27 +137,27 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                 } else {
                     // Can only do two translations per move
                     const hasLessThanTwoTranslations: boolean = moveInConstruction.translations < 2;
-                    // If there was a pass, we ignore other pieces than the one that has made the pass
-                    // The reasoning is that any other translation could have been done before the pass,
-                    // hence they are not interesting to generate.
-                    const ifHasPassThenIsPieceThatPassed: boolean =
-                        moveInConstruction.hasPass === false || moveInConstruction.getPassEnd().equalsValue(coord);
-                    if (hasLessThanTwoTranslations && ifHasPassThenIsPieceThatPassed) {
-                        let forbiddenEnd: MGPOptional<Coord> = MGPOptional.empty();
-                        if (moveInConstruction.translations > 0) {
-                            const previousTranslation: DiaballikTranslation =
-                                moveInConstruction.getPreviousTranslation().get();
-                            if (previousTranslation.getEnd().equals(coord)) {
-                                forbiddenEnd = MGPOptional.of(previousTranslation.getStart());
-                            }
-                        }
+                    if (hasLessThanTwoTranslations) {
+                        const forbiddenEnd: MGPOptional<Coord> =
+                            this.getPreviousTranslationStartThatEndsAt(moveInConstruction, coord);
                         for (const end of this.getTranslationEnds(state, coordAndContent.coord)) {
                             // We ignore the forbidden end because it is the opposite
                             // of the previous translation, hence it a no-op
-                            if (forbiddenEnd.equalsValue(end) === false) {
-                                // The translation here is valid and legal by construction
-                                const translation: DiaballikTranslation = DiaballikTranslation.from(coord, end).get();
-                                moveInConstruction.addIfLegal(translation, nextMovesInConstruction);
+                            if (forbiddenEnd.equalsValue(end) === false || this.avoidDuplicates === false) {
+                                let keep: boolean = true;
+                                if (moveInConstruction.hasPass) {
+                                    // There was a pass before, so we only keep this if
+                                    //   - it is the piece that passed, or
+                                    const isPieceThatPassed: boolean = moveInConstruction.getPassEnd().equalsValue(coord);
+                                    //   - it goes through the path of the pass,
+                                    const goesThroughPassPath: boolean = moveInConstruction.passPathContains(end);
+                                    keep = isPieceThatPassed || goesThroughPassPath;
+                                }
+                                if (keep || this.avoidDuplicates === false) {
+                                    // The translation here is valid and legal by construction
+                                    const translation: DiaballikTranslation = DiaballikTranslation.from(coord, end).get();
+                                    moveInConstruction.addIfLegal(translation, nextMovesInConstruction);
+                                }
                             }
                         }
                     }
@@ -150,6 +165,19 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
             }
         }
         return nextMovesInConstruction;
+    }
+
+    private getPreviousTranslationStartThatEndsAt(moveInConstruction: DiaballikMoveInConstruction,
+                                                  end: Coord)
+    : MGPOptional<Coord>
+    {
+        if (moveInConstruction.translations > 0) {
+            const previousTranslation: DiaballikTranslation = moveInConstruction.getPreviousTranslation().get();
+            if (previousTranslation.getEnd().equals(end)) {
+                return MGPOptional.of(previousTranslation.getStart());
+            }
+        }
+        return MGPOptional.empty();
     }
 
     /**

@@ -17,6 +17,7 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 import { DiaballikFailure } from './DiaballikFailure';
 import { Line } from 'src/app/jscaip/Line';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
 
 @Component({
     selector: 'app-diaballik',
@@ -48,7 +49,7 @@ export class DiaballikComponent
     private lastMovedBallCoords: Coord[] = [];
     private lastMovedPiecesCoords: Coord[] = [];
 
-    private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator();
+    private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator(false);
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -60,9 +61,15 @@ export class DiaballikComponent
         this.encoder = DiaballikMove.encoder;
         this.tutorial = new DiaballikTutorial().tutorial;
         this.availableAIs = [
-            new DiaballikMinimax(),
+            new DiaballikMinimax($localize`AllMoves`, new DiaballikMoveGenerator(true)),
             new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
+            new MCTS($localize`MCTS (3 only)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
+            new MCTS($localize`MCTS (without dups)`, new DiaballikMoveGenerator(true), this.rules),
+            new MCTS($localize`MCTS (3, no dups)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
         ];
+        for (let i: number = 1; i <= 3; i++) {
+            this.availableAIs.push(new DiaballikMinimax($localize`Distance (${i})`, new DiaballikFilteredMoveGenerator(i)));
+        }
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -93,6 +100,7 @@ export class DiaballikComponent
     }
 
     public override async showLastMove(move: DiaballikMove): Promise<void> {
+        this.hideLastMove();
         for (const subMove of move.getSubMoves()) {
             this.showSubMove(subMove);
         }

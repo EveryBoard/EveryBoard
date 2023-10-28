@@ -400,6 +400,15 @@ describe('DiaballikComponent', () => {
         // Then it should increase the shown counts
         testUtils.expectInnerTextToBe('#translationCount', '1');
         testUtils.expectInnerTextToBe('#passCount', '1');
-
+    }));
+    it('should not show number of translations and passes when not interactive', fakeAsync(async() => {
+        // Given a non-interactive component
+        testUtils.expectElementToExist('#translationCount');
+        testUtils.expectElementToExist('#passCount');
+        testUtils.getGameComponent().setInteractive(false);
+        // When displaying it
+        // Then there should be no translation or pass count
+        testUtils.expectElementNotToExist('#translationCount');
+        testUtils.expectElementNotToExist('#passCount');
     }));
 });

@@ -56,7 +56,8 @@
               (click)="onClick(coord.x, coord.y)"
               class="indicator"/>
     </g>
-    <g [attr.transform]="getTranslationXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
+    <g *ngIf="isInteractive"
+       [attr.transform]="getTranslationXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
         <rect class="base"
               [attr.x]="0"
               [attr.y]="0"
@@ -88,7 +89,8 @@
               [attr.font-size]="SPACE_SIZE / 2"
         >{{ translationsMade }}</text>
     </g>
-    <g [attr.transform]="getTranslationXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
+    <g *ngIf="isInteractive"
+       [attr.transform]="getTranslationXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
         <rect class="base"
               [attr.x]="0"
               [attr.y]="0"
@@ -130,7 +132,7 @@
               [attr.x]="- 0.6 * SPACE_SIZE"
               [attr.y]="SPACE_SIZE/2"
               [attr.font-size]="SPACE_SIZE / 2"
-        >{{ hasMadePass ? 0 : 1 }}</text>
+        >{{ hasMadePass ? 1 : 0 }}</text>
     </g>
 
     <g *ngIf="showDoneButton()"

@@ -243,7 +243,7 @@ export class SimpleComponentTestUtils<T> {
     public expectInnerTextToBe(elementName: string, expectedText: string): void {
         const element: DebugElement = this.findElement('#chatForm');
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        expect(element.nativeElement.innerText).toEqual(expectedText)
+        expect(element.nativeElement.innerText).toEqual(expectedText);
     }
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
