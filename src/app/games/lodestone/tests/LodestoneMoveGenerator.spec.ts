@@ -3,11 +3,10 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneMoveGenerator } from '../LodestoneMoveGenerator';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
-import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
 describe('LodestoneMoveGenerator', () => {
     let moveGenerator: LodestoneMoveGenerator;
@@ -33,10 +32,8 @@ describe('LodestoneMoveGenerator', () => {
     });
     it('should propose 8 moves on a specific minimal board', () => {
         // Given a state with 4 empty spaces and no remaining pressure plate
-        const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
-                                                             { direction: 'pull', orientation: 'diagonal' });
-        const X: LodestonePiece = LodestonePieceLodestone.of(Player.ONE,
-                                                             { direction: 'push', orientation: 'diagonal' });
+        const O: LodestonePiece = LodestonePieceLodestone.ZERO_PULL_DIAGONAL;
+        const X: LodestonePiece = LodestonePieceLodestone.ONE_PUSH_DIAGONAL;
         const board: Table<LodestonePiece> = [
             [N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N],
@@ -52,10 +49,10 @@ describe('LodestoneMoveGenerator', () => {
             { key: Player.ONE, value: new Coord(4, 2) },
         ]);
         const pressurePlates: LodestonePressurePlates = {
-            top: MGPOptional.empty(),
-            bottom: MGPOptional.empty(),
-            left: MGPOptional.empty(),
-            right: MGPOptional.empty(),
+            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
+            bottom: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
+            left: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
+            right: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
         };
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
 
@@ -78,10 +75,10 @@ describe('LodestoneMoveGenerator', () => {
         ];
         const lodestones: LodestonePositions = new MGPMap();
         const pressurePlates: LodestonePressurePlates = {
-            top: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
-            bottom: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
-            left: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
-            right: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
+            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
+            bottom: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
+            left: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
+            right: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
         };
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
 

@@ -20,6 +20,7 @@ import { AI, AIOptions } from 'src/app/jscaip/AI';
  * by sub components which themselves are not GameComponent subclasses
  */
 export abstract class BaseGameComponent {
+
     // Make ArrayUtils available in game components
     public ArrayUtils: typeof ArrayUtils = ArrayUtils;
 
@@ -35,6 +36,12 @@ export abstract class BaseGameComponent {
                 return '';
         }
     }
+
+    public SPACE_SIZE: number = 100;
+
+    public readonly STROKE_WIDTH: number = 8;
+
+    public readonly SMALL_STROKE_WIDTH: number = 2;
 }
 
 /**
@@ -56,12 +63,6 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public encoder: Encoder<M>;
 
     public Player: typeof Player = Player;
-
-    public SPACE_SIZE: number = 100;
-
-    public readonly STROKE_WIDTH: number = 8;
-
-    public readonly SMALL_STROKE_WIDTH: number = 2;
 
     public rules: R;
 
@@ -151,6 +152,13 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     }
     public getPreviousState(): S {
         return this.node.parent.get().gameState;
+    }
+    public getPreviousStateOr(state: S): S {
+        if (this.node.parent.isPresent()) {
+            return this.getPreviousState();
+        } else {
+            return state;
+        }
     }
     public async showLastMove(move: M): Promise<void> {
         // Not needed by default

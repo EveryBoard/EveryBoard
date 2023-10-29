@@ -1,0 +1,20 @@
+<svg:g [attr.transform]="'translate(' + (SPACE_SIZE / 2) + ' ' + (SPACE_SIZE / 2) + ')'">
+    <svg:circle class="base black-fill outside"
+                [ngClass]="lodestoneInfo.selectedClass"
+                [attr.r]="PIECE_RADIUS"
+                cx="0"
+                cy="0"/>
+    <svg:circle class="base no-stroke"
+                [ngClass]="lodestoneInfo.pieceClasses"
+                [attr.r]="PIECE_RADIUS / 4"
+                cx="0"
+                cy="0"/>
+    <svg:g attr.transform="rotate({{ lodestoneInfo.orientation === 'diagonal' ? 45 : 0 }})">
+        <svg:g *ngFor="let i of [0, 1, 2, 3]">
+            <svg:polygon class="base no-stroke"
+                         [ngClass]="lodestoneInfo.movingClass"
+                         [attr.points]="lodestoneInfo.direction === 'push' ? TRIANGLE_OUT : TRIANGLE_IN"
+                         attr.transform="rotate({{ i * 90 }})"/>
+        </svg:g>
+    </svg:g>
+</svg:g>

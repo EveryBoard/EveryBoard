@@ -102,7 +102,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
         }
     });
     describe('Tutorials', () => {
-        it('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+        fit('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;

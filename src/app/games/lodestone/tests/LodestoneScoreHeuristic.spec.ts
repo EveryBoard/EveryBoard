@@ -2,7 +2,7 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
 import { LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
-import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { LodestonePositions, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
@@ -15,12 +15,7 @@ describe('LodestoneScoreHeuristic', () => {
     const O: LodestonePiece = LodestonePiecePlayer.ZERO;
     const X: LodestonePiece = LodestonePiecePlayer.ONE;
 
-    const allPressurePlates: LodestonePressurePlates = {
-        top: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-        bottom: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-        left: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-        right: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-    };
+    const allPressurePlates: LodestonePressurePlates = LodestoneState.INITIAL_PRESSURE_PLATES;
 
     const noLodestones: LodestonePositions = new MGPMap();
 

@@ -49,7 +49,7 @@ export class SiamPiece {
         }
     }
     public isEmptyOrMountain(): boolean {
-        return this.value === 0 || this.value === 9;
+        return this.value === 0 || this.value === 9; // TODO: BERK PUTAIN, value devrait être utilisé pour le equals, histoire qu'ils soient différents, mais après comparer avec === MaPiece.SON_SUPER_NOM
     }
     public isPiece(): boolean {
         return this.isEmptyOrMountain() === false;

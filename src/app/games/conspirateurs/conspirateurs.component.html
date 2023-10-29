@@ -21,7 +21,7 @@
                   [attr.width]="SPACE_SIZE - STROKE_WIDTH * 3"
                   [attr.height]="SPACE_SIZE - STROKE_WIDTH * 3"
             />
-            <circle *ngIf="square.hasPiece"
+            <circle *ngIf="square.isTherePieceToDraw"
                     id="piece_{{ x }}_{{ y }}"
                     [ngClass]="square.pieceClasses"
                     class="base"

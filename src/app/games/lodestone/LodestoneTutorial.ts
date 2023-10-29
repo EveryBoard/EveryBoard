@@ -2,24 +2,19 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LodestoneMove } from './LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';
-import { LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from './LodestoneState';
+import { LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 
 const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
 const _: LodestonePiece = LodestonePieceNone.EMPTY;
 const A: LodestonePiece = LodestonePiecePlayer.ZERO;
 const B: LodestonePiece = LodestonePiecePlayer.ONE;
-const X: LodestonePiece = LodestonePieceLodestone.of(Player.ONE, { direction: 'push', orientation: 'orthogonal' });
+const X: LodestonePiece = LodestonePieceLodestone.ONE_PUSH_ORTHOGONAL;
 
-const allPressurePlates: LodestonePressurePlates = {
-    top: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-    bottom: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-    left: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-    right: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-};
+const allPressurePlates: LodestonePressurePlates = LodestoneState.INITIAL_PRESSURE_PLATES;
+
 export class LodestoneTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
@@ -79,11 +74,11 @@ export class LodestoneTutorial extends Tutorial {
                 { key: Player.ONE, value: new Coord(2, 2) },
             ]), {
                 ...allPressurePlates,
-                top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
+                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
             }),
             new LodestoneMove(new Coord(6, 2), 'push', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 }),
             (_: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
-                if (result.pressurePlates.top.get().width === 5) {
+                if (result.pressurePlates.top.getCurrentPlateWidth() === 5) {
                     return MGPValidation.failure($localize`You must capture and place your capture on the top pressure plate to make it crumble!`);
                 }
                 return MGPValidation.SUCCESS;
@@ -106,11 +101,11 @@ export class LodestoneTutorial extends Tutorial {
                 { key: Player.ONE, value: new Coord(1, 4) },
             ]), {
                 ...allPressurePlates,
-                top: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ONE, 2),
+                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
             }),
             new LodestoneMove(new Coord(3, 5), 'pull', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 }),
             (_: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
-                if (result.pressurePlates.top.isPresent()) {
+                if (result.pressurePlates.top.getCurrentPlate().isPresent()) {
                     return MGPValidation.failure($localize`You must capture and place your capture on the top pressure plate to make it crumble a second time!`);
                 }
                 return MGPValidation.SUCCESS;
@@ -132,10 +127,10 @@ export class LodestoneTutorial extends Tutorial {
             ], 0, new MGPMap([
                 { key: Player.ONE, value: new Coord(2, 3) },
             ]), {
-                top: MGPOptional.empty(),
-                bottom: MGPOptional.empty(),
-                left: MGPOptional.empty(),
-                right: MGPOptional.empty(),
+                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
+                bottom: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
+                left: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
+                right: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
             }),
         ),
         TutorialStep.fromMove(
@@ -154,7 +149,7 @@ export class LodestoneTutorial extends Tutorial {
                 { key: Player.ONE, value: new Coord(3, 2) },
             ]), {
                 ...allPressurePlates,
-                top: LodestonePressurePlate.EMPTY_5.addCaptured(Player.ONE, 4),
+                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 4),
             }),
             [new LodestoneMove(new Coord(4, 0), 'pull', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 })],
             $localize`Congratulations! At your next turn, you will be allowed to place your lodestone on any side.`,
@@ -175,10 +170,10 @@ export class LodestoneTutorial extends Tutorial {
             ], 0, new MGPMap([
                 { key: Player.ONE, value: new Coord(2, 3) },
             ]), {
-                top: MGPOptional.empty(),
-                bottom: LodestonePressurePlate.EMPTY_3.addCaptured(Player.ZERO, 2),
-                left: MGPOptional.of(LodestonePressurePlate.EMPTY_3),
-                right: MGPOptional.empty(),
+                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
+                bottom: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 7),
+                left: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 5),
+                right: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
             }),
             [new LodestoneMove(new Coord(4, 2), 'pull', 'orthogonal', { top: 0, bottom: 0, left: 3, right: 0 })],
             $localize`Congratulations, you won!`,

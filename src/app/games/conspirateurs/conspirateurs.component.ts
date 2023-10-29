@@ -30,7 +30,7 @@ interface SquareInfo {
     squareClasses: string[],
     shelterClasses: string[],
     pieceClasses: string[],
-    hasPiece: boolean,
+    isTherePieceToDraw: boolean,
     isShelter: boolean,
     isOccupiedShelter: boolean,
 }
@@ -90,7 +90,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                     squareClasses: [],
                     shelterClasses: [],
                     pieceClasses: [this.getPlayerClass(piece)],
-                    hasPiece: piece.isPlayer(),
+                    isTherePieceToDraw: piece.isPlayer(),
                     isShelter: false,
                     isOccupiedShelter: false,
                 };
@@ -106,7 +106,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         for (const shelter of ConspirateursState.ALL_SHELTERS) {
             const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
             squareInfo.isShelter = true;
-            if (squareInfo.hasPiece) {
+            if (squareInfo.isTherePieceToDraw) {
                 squareInfo.shelterClasses.push('selectable-stroke');
             }
         }
@@ -117,10 +117,10 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const jump: ConspirateursMoveJump = this.jumpInConstruction.get();
                 const jumpStart: Coord = jump.getStartingCoord();
                 const jumpCurrent: Coord = jump.getEndingCoord();
-                this.viewInfo.boardInfo[jumpStart.y][jumpStart.x].hasPiece = false;
+                this.viewInfo.boardInfo[jumpStart.y][jumpStart.x].isTherePieceToDraw = false;
                 this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].pieceClasses =
                     [this.getPlayerClass(this.getCurrentPlayer()), 'selected-stroke'];
-                this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].hasPiece = true;
+                this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].isTherePieceToDraw = true;
                 for (const coord of jump.coords) {
                     this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 }

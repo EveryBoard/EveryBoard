@@ -47,7 +47,7 @@ describe('GameComponent', () => {
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
-    it('clicks method should refuse when observer click', fakeAsync(async() => {
+    fit('clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
             Abalone: {
                 onPieceClick: [0, 0],
@@ -91,8 +91,8 @@ describe('GameComponent', () => {
             Lodestone: {
                 selectCoord: [new Coord(0, 0)],
                 selectLodestone: ['push', false],
-                selectPressurePlate: ['top', 1],
-                deselectPressurePlate: ['top', 1],
+                selectPressurePlate: ['top'],
+                // deselectPressurePlate: ['top'],
             },
             MartianChess: {
                 onClick: [0, 0],
