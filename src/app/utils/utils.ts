@@ -49,7 +49,6 @@ export class Debug {
         localStorage.setItem('verbosity', JSON.stringify(verbosity));
     }
     private static isVerbose(name: string): [boolean, boolean] {
-        /* eslint-disable dot-notation */
         const verbosityJSON: string | null = localStorage.getItem('verbosity');
         if (verbosityJSON == null) return [false, false];
         try {
@@ -58,10 +57,9 @@ export class Debug {
             Utils.assert(Array.isArray(verbosity[name]), `malformed verbosity levels: ${verbosity[name]}`);
             return verbosity[name] as [boolean, boolean];
         } catch (e) {
-            // If verbosity is not proper JSON, we consider it not verbose
-            return [false, false];
+            // Verbosity is not proper JSON
+            throw new Error(`malformed verbosity object: ${verbosityJSON}`);
         }
-        /* eslint-enable dot-notation */
     }
     private static isMethodVerboseEntry(className: string, methodName: string): boolean {
         return Debug.isVerbose(className)[0] || Debug.isVerbose(className + '.' + methodName)[0];
@@ -123,6 +121,7 @@ export class Utils {
             throw new Error(`A default switch case did not observe the correct value, expected ${expected}, but got ${value} instead.`);
         }
     }
+
     public static expectToBeMultiple<T>(value: T, expectedValues: T[]): void {
         let found: boolean = false;
         for (const expected of expectedValues) {
@@ -135,6 +134,8 @@ export class Utils {
             throw new Error(`A default switch case did not observe the correct value, expected a value among ${expectedValues}, but got ${value} instead.`);
         }
     }
+
+
     public static getNonNullable<T>(value : T | null | undefined): T {
         if (value == null) {
             throw new Error(`Expected value not to be null or undefined, but it was.`);
@@ -142,6 +143,7 @@ export class Utils {
             return value;
         }
     }
+
     public static assert(condition: boolean, message: string): void {
         if (condition === false) {
             // We log the error but we also throw an exception
@@ -152,6 +154,7 @@ export class Utils {
             throw new Error(`Assertion failure: ${message}`);
         }
     }
+
     public static identity<T>(thing: T): T {
         return thing;
     }

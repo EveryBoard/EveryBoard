@@ -49,7 +49,7 @@ export abstract class Rules<M extends Move, S extends GameState, L = void> {
      */
     public abstract isLegal(move: M, state: S): MGPFallible<L>;
 
-    public abstract getInitialState(): S
+    public abstract getInitialState(): S;
 
     public getInitialNode(): GameNode<M, S> {
         const initialState: S = this.getInitialState();

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MancalaState } from './MancalaState';
 import { MancalaMove } from './MancalaMove';
@@ -18,7 +18,7 @@ export function DoMancalaRulesTests<M extends MancalaMove>(entries: MancalaRules
     describe(entries.gameName + ' component generic tests', () => {
         it('should allow simple move', () => {
             // Given any board
-            const state: MancalaState = new MancalaState(TableUtils.create(MancalaState.WIDTH, 2, 4), 0, [0, 0]);
+            const state: MancalaState = entries.rules.getInitialState();
             // When doing a simple move
             // Then the seed should be distributed
             const expectedBoard: Table<number> = [
