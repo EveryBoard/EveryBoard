@@ -7,7 +7,7 @@
             <g id="square_{{ x }}_{{ y }}"
                [attr.transform]="'translate(' + (SPACE_SIZE * x) + ' ' + (SPACE_SIZE * y) +')'"
                (click)="selectCoord(square.coord)" >
-                <rect *ngIf="square.status === 'not crumbled' else crumbled"
+                <rect *ngIf="square.isCrumbled === false else crumbled"
                       class="base"
                       [ngClass]="square.squareClasses"
                       [attr.x]="0"
@@ -33,7 +33,7 @@
                         [attr.cy]="SPACE_SIZE / 2"/>
                 <g *ngIf="square.lodestone"
                    id="lodestone_{{ x }}_{{ y }}"
-                   class="lodestone"
+                   [attr.class]="square.isCrumbled ? 'semi-transparent' : ''"
                    app-lodestone-lodestone
                    [lodestoneInfo]="square.lodestone"
                 />
@@ -56,29 +56,32 @@
        app-lodestone-lodestone
        [lodestoneInfo]="lodestone"
     />
-    <g *ngFor="let plate of viewInfo.pressurePlatesInfo"
-       id="pressurePlate_{{ plate.position }}_{{ plate.index }}">
-        <g *ngFor="let square of plate.coords; index as i">
-            <g id="plate_{{ plate.position }}_{{ plate.index }}_{{ i }}"
-               (click)="onPressurePlateClick(square.temporary, plate.position, plate.index, i)" >
-                <rect id="plateSquare_{{ plate.position }}_{{ plate.index }}_{{ i }}"
-                      class="base"
-                      [ngClass]="square.squareClasses"
-                      [attr.x]="SPACE_SIZE * square.coord.x"
-                      [attr.y]="SPACE_SIZE * square.coord.y"
-                      [attr.width]="SPACE_SIZE"
-                      [attr.height]="SPACE_SIZE"
-                      [attr.rx]="0.2 * SPACE_SIZE"
-                      [attr.ry]="0.2 * SPACE_SIZE"
-                />
-                <circle *ngIf="square.hasPiece"
-                        id="platePiece_{{ plate.position }}_{{ plate.index }}_{{ i }}"
-                        class="base"
-                        [ngClass]="square.pieceClasses"
-                        [attr.r]="PIECE_RADIUS"
-                        [attr.cx]="(SPACE_SIZE * square.coord.x) + (SPACE_SIZE / 2)"
-                        [attr.cy]="(SPACE_SIZE * square.coord.y) + (SPACE_SIZE / 2)"
-                />
+    <g *ngFor="let groupInfo of viewInfo.pressurePlateGroupInfos"
+       id="pressurePlateGroup_{{ groupInfo.groupPosition }}">
+        <g *ngFor="let plate of groupInfo.plateInfos"
+           id="pressurePlate_{{ groupInfo.groupPosition }}_{{ plate.plateIndex }}">
+            <g *ngFor="let square of plate.coords; index as pieceIndex">
+                <g id="plate_{{ groupInfo.groupPosition }}_{{ plate.plateIndex }}_{{ pieceIndex }}"
+                   (click)="onPressurePlateClick(square.temporary, groupInfo.groupPosition, plate.plateIndex, pieceIndex)" >
+                    <rect id="plateSquare_{{ groupInfo.groupPosition }}_{{ plate.plateIndex }}_{{ pieceIndex }}"
+                          class="base"
+                          [ngClass]="square.squareClasses"
+                          [attr.x]="SPACE_SIZE * square.coord.x"
+                          [attr.y]="SPACE_SIZE * square.coord.y"
+                          [attr.width]="SPACE_SIZE"
+                          [attr.height]="SPACE_SIZE"
+                          [attr.rx]="0.2 * SPACE_SIZE"
+                          [attr.ry]="0.2 * SPACE_SIZE"
+                    />
+                    <circle *ngIf="square.hasPiece"
+                            id="platePiece_{{ groupInfo.groupPosition }}_{{ plate.plateIndex }}_{{ pieceIndex }}"
+                            class="base"
+                            [ngClass]="square.pieceClasses"
+                            [attr.r]="PIECE_RADIUS"
+                            [attr.cx]="(SPACE_SIZE * square.coord.x) + (SPACE_SIZE / 2)"
+                            [attr.cy]="(SPACE_SIZE * square.coord.y) + (SPACE_SIZE / 2)"
+                    />
+                </g>
             </g>
         </g>
     </g>

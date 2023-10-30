@@ -9,7 +9,6 @@ import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
@@ -20,6 +19,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Utils } from 'src/app/utils/utils';
 
 export type LodestoneInfo = {
     direction: LodestoneDirection,
@@ -29,9 +29,13 @@ export type LodestoneInfo = {
     orientation: LodestoneOrientation,
 };
 
+type PressurePlateGroupInfo = {
+    groupPosition: LodestonePressurePlatePosition,
+    plateInfos: PressurePlateInfo[],
+};
+
 type PressurePlateInfo = {
-    position: LodestonePressurePlatePosition,
-    index: number,
+    plateIndex: number,
     coords: PressurePlateCoordInfo[],
 };
 
@@ -51,18 +55,16 @@ type ViewInfo = {
     boardInfo: SquareInfo[][],
     availableLodestones: LodestoneInfo[],
     capturesToPlace: CaptureInfo[],
-    pressurePlatesInfo: PressurePlateInfo[],
+    pressurePlateGroupInfos: PressurePlateGroupInfo[],
     currentPlayerClass: string,
     opponentClass: string,
     selected: MGPOptional<Coord>,
 };
 
-type SquareStatus = 'not crumbled' | 'crumbled last turn' | 'crumbled';
-
 type SquareInfo = {
     coord: Coord,
     squareClasses: string[],
-    status: SquareStatus,
+    isCrumbled: boolean,
     isTherePieceToDraw: boolean,
     pieceClasses: string[],
     lodestone?: LodestoneInfo,
@@ -119,7 +121,7 @@ export class LodestoneComponent
         boardInfo: [],
         currentPlayerClass: '',
         opponentClass: '',
-        pressurePlatesInfo: [],
+        pressurePlateGroupInfos: [],
         selected: MGPOptional.empty(),
     };
 
@@ -342,7 +344,8 @@ export class LodestoneComponent
             }
         }
         if (this.selectedCoord.isPresent() &&
-            this.displayedState.getPieceAt(this.selectedCoord.get()).isUnreachable() === false) {
+            this.isCrumbled(this.selectedCoord.get()) === false)
+        {
             this.viewInfo.selected = this.selectedCoord;
         } else {
             this.viewInfo.selected = MGPOptional.empty();
@@ -355,7 +358,7 @@ export class LodestoneComponent
         const squareInfo: SquareInfo = {
             coord,
             squareClasses: [],
-            status: this.getStatus(coord),
+            isCrumbled: this.isCrumbled(coord),
             isTherePieceToDraw: false,
             pieceClasses: [],
             lodestone: lodestoneInfo,
@@ -374,43 +377,55 @@ export class LodestoneComponent
         const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
         if (piece.isLodestone()) {
             return this.getLodestoneInfoAt(this.displayedState, coord);
-        } else if (this.hadLodestone(coord)) {
+        } else if (this.wasLodestoneLastTurn(coord)) {
             return this.getLodestoneInfoAt(this.getPreviousState(), coord);
-        } else if (this.lodestoneHasBeenCrumbled(coord)) {
+        } else if (this.wasLodestoneDroppedThenCrumbled(coord)) {
+            return this.getLastMoveLodestoneInfo();
+        } else if (this.lodestoneCrumbledOnDisplayedState(coord)) {
             return this.getCrumbledLodestone();
         } else {
             return undefined;
         }
     }
 
-    private getCrumbledLodestone(): LodestoneInfo | undefined {
-        const previousMove: LodestoneMove = this.node.previousMove.get();
-        const owner: Player = this.getCurrentOpponent();
-        const lodestoneInfo: LodestoneInfo = {
-            direction: previousMove.direction,
-            pieceClasses: [this.getPlayerClass(owner)],
-            selectedClass: '',
-            movingClass: '',
-            orientation: previousMove.orientation,
+    private getLastMoveLodestoneInfo(): LodestoneInfo {
+        const lastMove: LodestoneMove = this.node.previousMove.get();
+        const lodestoneDescription: LodestoneDescription = {
+            direction: lastMove.direction, orientation: lastMove.orientation,
         };
-        if (previousMove.direction === 'push') {
-            lodestoneInfo.movingClass = this.getPlayerClass(owner.getOpponent());
+        const lodestone: LodestonePieceLodestone =
+            LodestonePieceLodestone.of(this.getCurrentOpponent(), lodestoneDescription);
+        return this.getLodestoneInfoFromLodestone(lodestone);
+    }
+
+    private getLodestoneInfoFromLodestone(lodestone: LodestonePieceLodestone): LodestoneInfo {
+        const lodestoneInfo: LodestoneInfo = {
+            direction: lodestone.direction,
+            movingClass: '',
+            orientation: lodestone.orientation,
+            pieceClasses: [],
+            selectedClass: '',
+        };
+        if (lodestone.direction === 'push') {
+            lodestoneInfo.movingClass = this.getPlayerClass(lodestone.owner.getOpponent());
         } else {
-            lodestoneInfo.movingClass = this.getPlayerClass(owner);
+            lodestoneInfo.movingClass = this.getPlayerClass(lodestone.owner);
         }
         return lodestoneInfo;
     }
 
-    private lodestoneHasBeenCrumbled(coord: Coord): boolean {
-        if (this.node.previousMove.isPresent()) {
-            const previousMove: LodestoneMove = this.node.previousMove.get();
-            return previousMove.coord.equals(coord);
-        } else {
-            return false;
-        }
+    private getCrumbledLodestone(): LodestoneInfo | undefined {
+        const lodestone: LodestonePieceLodestone = this.selectedLodestone.get();
+        return this.getLodestoneInfoFromLodestone(lodestone);
     }
 
-    private hadLodestone(coord: Coord): boolean {
+    private lodestoneCrumbledOnDisplayedState(coord: Coord): boolean {
+        const coordIsDisplayedLodestone: boolean = this.selectedCoord.equalsValue(coord);
+        const coordIsUnreachable: boolean = this.isCrumbled(coord);
+        return coordIsDisplayedLodestone && coordIsUnreachable;
+    }
+
+    private wasLodestoneLastTurn(coord: Coord): boolean {
         if (this.node.parent.isPresent()) {
             const previousState: LodestoneState = this.node.parent.get().gameState;
             const piece: LodestonePiece = previousState.getPieceAt(coord);
@@ -420,28 +435,23 @@ export class LodestoneComponent
         }
     }
 
-    private getLodestoneInfoAt(state: LodestoneState, coord: Coord): LodestoneInfo {
-        const piece: LodestonePieceLodestone = state.getPieceAt(coord) as LodestonePieceLodestone;
-        if (piece.owner.isPlayer() === false) console.log('LE CUL DLA CHATTE')
-        const lodestone: LodestoneInfo = {
-            direction: piece.direction,
-            pieceClasses: [this.getPlayerClass(piece.owner)],
-            selectedClass: '',
-            movingClass: '',
-            orientation: piece.orientation,
-        };
-        if (piece.direction === 'push') {
-            lodestone.movingClass = this.getPlayerClass(piece.owner.getOpponent());
+    private wasLodestoneDroppedThenCrumbled(coord: Coord): boolean {
+        if (this.node.parent.isPresent()) {
+            return this.node.previousMove.get().coord.equals(coord);
         } else {
-            lodestone.movingClass = this.getPlayerClass(piece.owner);
+            return false;
         }
-        return lodestone;
+    }
+
+    private getLodestoneInfoAt(state: LodestoneState, coord: Coord): LodestoneInfo {
+        const lodestone: LodestonePieceLodestone = state.getPieceAt(coord) as LodestonePieceLodestone;
+        Utils.assert(lodestone.isLodestone(), 'piece should be lodestone');
+        return this.getLodestoneInfoFromLodestone(lodestone);
     }
 
     private coordHasJustBeenCrumbled(coord: Coord): boolean {
         if (this.node.parent.isPresent()) {
-            const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
-            const pieceIsUnreachable: boolean = piece.isUnreachable();
+            const pieceIsUnreachable: boolean = this.isCrumbled(coord);
             const previousPiece: LodestonePiece = this.getPreviousState().getPieceAt(coord);
             const pieceWasReachable: boolean = previousPiece.isUnreachable() === false;
             return pieceIsUnreachable && pieceWasReachable;
@@ -455,26 +465,9 @@ export class LodestoneComponent
         return previousState.getPieceAt(coord).owner;
     }
 
-    private hadPiece(coord: Coord): boolean {
-        if (this.node.parent.isPresent()) {
-            return this.getPreviousState().getPieceAt(coord).isEmpty() === false;
-        } else {
-            return false;
-        }
-    }
-
-    private getStatus(coord: Coord): SquareStatus {
+    private isCrumbled(coord: Coord): boolean {
         const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
-        if (piece.isUnreachable()) {
-            if (this.node.parent.isPresent()) {
-                if (this.getPreviousState().getPieceAt(coord).isUnreachable() === false) {
-                    return 'crumbled last turn';
-                }
-            }
-            return 'crumbled';
-        } else {
-            return 'not crumbled';
-        }
+        return piece.isUnreachable();
     }
 
     private showAvailableLodestones(): void {
@@ -516,18 +509,7 @@ export class LodestoneComponent
 
     private nextLodestone(player: Player, description: LodestoneDescription): LodestoneInfo {
         const lodestone: LodestonePieceLodestone = LodestonePieceLodestone.of(player, description);
-        const info: LodestoneInfo = {
-            direction: lodestone.direction,
-            orientation: lodestone.orientation,
-            pieceClasses: [this.getPlayerClass(lodestone.owner)],
-            movingClass: '',
-            selectedClass: '',
-        };
-        if (lodestone.direction === 'push') {
-            info.movingClass = this.getPlayerClass(lodestone.owner.getOpponent());
-        } else {
-            info.movingClass = this.getPlayerClass(lodestone.owner);
-        }
+        const info: LodestoneInfo = this.getLodestoneInfoFromLodestone(lodestone);
         if (this.selectedLodestone.equalsValue(lodestone)) {
             info.selectedClass = 'selected-stroke';
         }
@@ -535,70 +517,69 @@ export class LodestoneComponent
     }
 
     private showPressurePlates(): void {
-        this.viewInfo.pressurePlatesInfo = [];
-        for (const pressurePlatePosition of LodestonePressurePlate.POSITIONS) {
-            const plateCoordInfos: PressurePlateCoordInfo[] = [];
-            const plates: LodestonePressurePlateGroup = this.getPlatesToDisplay(pressurePlatePosition);
-            let plateIndex: number = 0;
-            for (const plate of plates.plates) {
-                const plateViewPosition: PressurePlateViewPosition =
-                    LodestoneComponent.PRESSURE_PLATES_POSITIONS.get(pressurePlatePosition).get();
-                const size: number = plate.width;
-                let coord: Coord = plateViewPosition.start(plateIndex, size);
-                for (let i: number = 0; i < size; i++) {
-                    const content: LodestonePiece = plate.getPieceAt(i);
-                    let pieceClass: string = '';
-                    if (content.isPlayerPiece()) {
-                        pieceClass = this.getPlayerClass(content.owner);
-                    }
-                    const hadPiece: boolean = this.plateHadPiece(pressurePlatePosition, plateIndex, i);
-                    plateCoordInfos.push({
-                        coord,
-                        hasPiece: content.isPlayerPiece() || hadPiece,
-                        pieceClasses: [pieceClass],
-                        squareClasses: [],
-                        temporary: false,
-                    });
-                    coord = coord.getNext(plateViewPosition.direction);
-                }
-                this.viewInfo.pressurePlatesInfo.push({
-                    position: pressurePlatePosition,
-                    index: plateIndex,
-                    coords: plateCoordInfos,
-                });
-                plateIndex++;
-            }
+        this.viewInfo.pressurePlateGroupInfos = [];
+        for (const position of LodestonePressurePlate.POSITIONS) {
+            const groupInfo: PressurePlateGroupInfo = this.getPressurePlateGroupInfo(position);
+            this.viewInfo.pressurePlateGroupInfos.push(groupInfo);
         }
     }
 
-    private getPlatesToDisplay(platePosition: LodestonePressurePlatePosition): LodestonePressurePlateGroup {
-        const previousState: LodestoneState = this.getPreviousStateOr(this.getState());
-        const previousPlate: LodestonePressurePlateGroup = previousState.pressurePlates[platePosition];
-        const currentPlate: LodestonePressurePlateGroup = this.displayedState.pressurePlates[platePosition];
-        const previousWidth: number = previousPlate.getCurrentPlateWidth();
-        const currentWidth: number = currentPlate.getCurrentPlateWidth();
-        const plateJustCrumbled: boolean = previousWidth > currentWidth;
-        if (plateJustCrumbled) {
-            return this.getPreviousStateOr(this.displayedState).pressurePlates[platePosition];
-        } else {
-            return this.displayedState.pressurePlates[platePosition];
+    private getPressurePlateGroupInfo(groupPosition: LodestonePressurePlatePosition): PressurePlateGroupInfo {
+        const groupInfo: PressurePlateGroupInfo = {
+            groupPosition,
+            plateInfos: [],
+        };
+        const plateGroup: LodestonePressurePlateGroup = this.displayedState.pressurePlates[groupPosition];
+        let plateIndex: number = 0;
+        for (const plate of plateGroup.plates) {
+            const pressurePlateInfo: PressurePlateInfo = this.getPressurePlateInfo(plate, groupPosition, plateIndex);
+            groupInfo.plateInfos.push(pressurePlateInfo);
+            plateIndex++;
         }
+        return groupInfo;
     }
 
-    private plateHadPiece(platePosition: LodestonePressurePlatePosition,
-                          plateIndex: number,
-                          pieceIndex: number)
-    : boolean
+    private getPressurePlateInfo(plate: LodestonePressurePlate,
+                                 position: LodestonePressurePlatePosition,
+                                 plateIndex: number)
+    : PressurePlateInfo
     {
-        if (this.node.parent.isPresent()) {
-            const previousState: LodestoneState = this.getPreviousState();
-            const plate: LodestonePressurePlate =
-                previousState.pressurePlates[platePosition].plates[plateIndex];
-            const piece: LodestonePiece = plate.getPieceAt(pieceIndex);
-            return piece.isEmpty() === false;
-        } else {
-            return false;
+        const plateInfo: PressurePlateInfo = {
+            plateIndex,
+            coords: [],
+        };
+        const size: number = plate.width;
+        for (let i: number = 0; i < size; i++) {
+            const pressurePlateCoordInfo: PressurePlateCoordInfo =
+                this.getPressurePlateCoordInfo(plate, position, plateIndex, i);
+            plateInfo.coords.push(pressurePlateCoordInfo);
         }
+        return plateInfo;
+    }
+
+    private getPressurePlateCoordInfo(plate: LodestonePressurePlate,
+                                      position: LodestonePressurePlatePosition,
+                                      plateIndex: number,
+                                      pieceIndex: number)
+    : PressurePlateCoordInfo
+    {
+        const content: LodestonePiece = plate.getPieceAt(pieceIndex);
+        let pieceClass: string = '';
+        if (content.isPlayerPiece()) {
+            pieceClass = this.getPlayerClass(content.owner);
+        }
+        const plateViewPosition: PressurePlateViewPosition =
+            LodestoneComponent.PRESSURE_PLATES_POSITIONS.get(position).get();
+        const initialCoord: Coord = plateViewPosition.start(plateIndex, plate.width);
+        const coord: Coord = initialCoord.getNext(plateViewPosition.direction, pieceIndex);
+        const coordInfo: PressurePlateCoordInfo = {
+            coord,
+            hasPiece: content.isPlayerPiece(),
+            pieceClasses: [pieceClass],
+            squareClasses: [],
+            temporary: false,
+        };
+        return coordInfo;
     }
 
     public override async showLastMove(move: LodestoneMove): Promise<void> {
@@ -612,44 +593,43 @@ export class LodestoneComponent
 
     private showPressurePlateDifferences(oldState: LodestoneState, newState: LodestoneState, temporary: boolean): void {
         for (const position of LodestonePressurePlate.POSITIONS) {
-            const lastPressurePlate: LodestonePressurePlateGroup = oldState.pressurePlates[position];
-            const currentPressurePlate: LodestonePressurePlateGroup = newState.pressurePlates[position];
-            this.showPressurePlateDifference(lastPressurePlate, currentPressurePlate, position, temporary);
+            const nbPlates: number = oldState.pressurePlates[position].plates.length;
+            for (let plateIndex: number = 0; plateIndex < nbPlates; plateIndex++) {
+                const lastPressurePlate: LodestonePressurePlate =
+                    oldState.pressurePlates[position].plates[plateIndex];
+                const currentPressurePlate: LodestonePressurePlate =
+                    newState.pressurePlates[position].plates[plateIndex];
+                this.showPressurePlateDifference(lastPressurePlate,
+                                                 currentPressurePlate,
+                                                 position,
+                                                 plateIndex,
+                                                 temporary);
+            }
         }
     }
 
-    private showPressurePlateDifference(oldPlateGroup: LodestonePressurePlateGroup,
-                                        newPlateGroup: LodestonePressurePlateGroup,
+    private showPressurePlateDifference(oldPlate: LodestonePressurePlate,
+                                        newPlate: LodestonePressurePlate,
                                         position: LodestonePressurePlatePosition,
+                                        plateIndex: number,
                                         temporary: boolean)
     : void
     {
-        let indexPlate: number = 0;
-        for (const oldPlate of oldPlateGroup.plates) {
-            const actualNewPlate: LodestonePressurePlate = newPlateGroup.plates[indexPlate];
-            const plateInfo: PressurePlateInfo =
-                Utils.getNonNullable(this.viewInfo.pressurePlatesInfo.find((infos: PressurePlateInfo) =>
-                    infos.position === position));
-            if (oldPlate.width === actualNewPlate.width) {
-                // Only show the different squares
-                for (let i: number = 0; i < actualNewPlate.width; i++) {
-                    const oldPiece: LodestonePiece = oldPlate.getPieceAt(i);
-                    const newPiece: LodestonePiece = actualNewPlate.getPieceAt(i);
-                    if (oldPiece.equals(newPiece) === false) {
-                        plateInfo.coords[i].squareClasses.push('moved-fill');
-                        plateInfo.coords[i].temporary = temporary;
-                        if (temporary) {
-                            plateInfo.coords[i].pieceClasses.push('semi-transparent');
-                        }
-                    }
-                }
-            } else {
-                // Pressure plate has crumbled, show all squares as moved
-                for (const info of plateInfo.coords) {
-                    info.squareClasses.push('moved-fill');
+        const groupInfos: PressurePlateGroupInfo[] = this.viewInfo.pressurePlateGroupInfos.filter(
+            (ppgi: PressurePlateGroupInfo) => ppgi.groupPosition === position,
+        );
+        const groupInfo: PressurePlateGroupInfo = groupInfos[0];
+        const plateInfo: PressurePlateInfo = groupInfo.plateInfos[plateIndex];
+        for (let i: number = 0; i < oldPlate.width; i++) {
+            const oldPiece: LodestonePiece = oldPlate.getPieceAt(i);
+            const newPiece: LodestonePiece = newPlate.getPieceAt(i);
+            if (oldPiece.equals(newPiece) === false) {
+                plateInfo.coords[i].squareClasses.push('moved-fill');
+                plateInfo.coords[i].temporary = temporary;
+                if (temporary) {
+                    plateInfo.coords[i].pieceClasses.push('semi-transparent');
                 }
             }
-            indexPlate++;
         }
     }
 
@@ -660,12 +640,6 @@ export class LodestoneComponent
         for (const captured of infos.captures) {
             this.viewInfo.boardInfo[captured.y][captured.x].squareClasses.push('captured-fill');
         }
-    }
-
-    public getSquareTransform(x: number, y: number): string {
-        const dx: number = x * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
-        const dy: number = y * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
-        return `translate(${dx}, ${dy})`;
     }
 
     public getCaptureTransform(x: number): string {

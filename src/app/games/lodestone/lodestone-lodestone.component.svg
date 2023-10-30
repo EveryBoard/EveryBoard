@@ -1,5 +1,5 @@
 <svg:g [attr.transform]="'translate(' + (SPACE_SIZE / 2) + ' ' + (SPACE_SIZE / 2) + ')'">
-    <svg:circle class="base black-fill outside"
+    <svg:circle class="base black-fill"
                 [ngClass]="lodestoneInfo.selectedClass"
                 [attr.r]="PIECE_RADIUS"
                 cx="0"

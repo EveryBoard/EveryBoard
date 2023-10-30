@@ -63,7 +63,7 @@ fdescribe('LodestoneComponent', () => {
             // When clicking of a lodestone
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
             // Then it should be selected
-            testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > g > .outside', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > g > .black-fill', 'selected-stroke');
         }));
 
     });
@@ -97,7 +97,7 @@ fdescribe('LodestoneComponent', () => {
             await testUtils.expectMoveSuccess('#lodestone_push_orthogonal', move);
 
             // Then the selected lodestone and square should not be 'selected'
-            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > g > .outside', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > g > .black-fill', 'selected-stroke');
             testUtils.expectElementNotToExist('#selection_0_0');
         }));
 
@@ -119,8 +119,8 @@ fdescribe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#square_3_3');
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
             // Then the lodestone should be shown on the board, and the moved pieces too
-            testUtils.expectElementToExist('#square_3_3 > .lodestone');
-            testUtils.expectElementNotToExist('#square_3_0 > circle');
+            testUtils.expectElementToExist('#lodestone_3_3');
+            testUtils.expectElementNotToExist('#piece_3_0');
         }));
 
         it('should deselect square when clicking on it again', fakeAsync(async() => {
@@ -142,7 +142,7 @@ fdescribe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > g > .outside', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > g > .black-fill', 'selected-stroke');
         }));
 
     });
@@ -186,7 +186,7 @@ fdescribe('LodestoneComponent', () => {
         it('should crumble a pressure plate when full (first time)', fakeAsync(async() => {
             // Given a state where a pressure plate will soon crumble
             const board: Table<LodestonePiece> = [
-                [_, _, _, _, _, _, _, B],
+                [_, _, _, _, B, _, _, B],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -223,6 +223,37 @@ fdescribe('LodestoneComponent', () => {
             testUtils.expectElementToExist('#platePiece_top_0_2');
             testUtils.expectElementToExist('#platePiece_top_0_3');
             testUtils.expectElementToExist('#platePiece_top_0_4');
+            // And the crumbled lodestone should be there
+            testUtils.expectElementToHaveClasses('#lodestone_0_0', ['semi-transparent']);
+            testUtils.expectElementToHaveClasses('#lodestone_0_0 > g > g > g > polygon', ['base', 'no-stroke', 'player1-fill']);
+        }));
+
+        it('should display crumbled lodestone in the middle of placing capture', fakeAsync(async() => {
+            // Given a state where a pressure plate will soon crumble
+            const board: Table<LodestonePiece> = [
+                [B, _, _, _, _, _, _, B],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+            ];
+            const pressurePlates: LodestonePressurePlates = {
+                ...allPressurePlates,
+                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
+            };
+            const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
+            await testUtils.setupState(state);
+
+            // When filling the pressure plate in the middle of a move
+            await testUtils.expectClickSuccess('#square_1_0');
+            await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
+            await testUtils.expectClickSuccess('#plate_top_0_4');
+
+            // Then the lodestone should be displayed semi-transparent as crumbled
+            testUtils.expectElementToHaveClasses('#lodestone_1_0', ['semi-transparent']);
         }));
 
         it('should crumble a pressure plate when full (second time)', fakeAsync(async() => {

@@ -271,7 +271,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                         }
                     }
                 } else {
-                    console.log('TODO QUOICOUBEH')
+                    // console.log('TODO QUOICOUBEH')
                 }
             }
         }

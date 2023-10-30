@@ -47,7 +47,7 @@ describe('DemoCardComponent', () => {
         expect(gameComponent['isInteractive']).toBeTrue();
 
     }));
-    fit('should simulate clicks', fakeAsync(async() => {
+    it('should simulate clicks', fakeAsync(async() => {
         // Given a demo component
         // When displaying it for a game that has intermediary clicks
         loadNode({
@@ -56,7 +56,7 @@ describe('DemoCardComponent', () => {
             click: MGPOptional.of('#lodestone_push_orthogonal'),
         });
         // Then it should have performed a click
-        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > g >.outside', 'selected-stroke');
+        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > g >.black-fill', 'selected-stroke');
     }));
     it('should not allow moves', fakeAsync(async() => {
         // Given a demo component displayed for a game
