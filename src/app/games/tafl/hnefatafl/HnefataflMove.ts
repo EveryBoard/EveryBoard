@@ -11,11 +11,15 @@ export class HnefataflMove extends TaflMove {
         MoveWithTwoCoords.getFallibleEncoder<HnefataflMove>(HnefataflMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<HnefataflMove> {
-        const validity: MGPValidation = TaflMove.isValidStartAndEnd(start, end, 11);
+        const validity: MGPValidation = TaflMove.isValidDirection(start, end);
         if (validity.isFailure()) {
             return validity.toOtherFallible();
         } else {
             return MGPFallible.success(new HnefataflMove(start, end));
         }
+    }
+
+    public getMaximalDistance(): number {
+        return 11;
     }
 }

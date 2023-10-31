@@ -5,42 +5,39 @@ import { MyTaflMove } from './MyTaflMove.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from '../TaflFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidationTestUtils } from 'src/app/utils/tests/MGPValidation.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('TaflMove', () => {
 
-    it('TaflMove creation, as a MoveCoordToCoord, should throw when created static', () => {
-        const error: string = RulesFailure.MOVE_CANNOT_BE_STATIC();
-        // TODO: c'est quelque chose qu'on veut pas, un from qui throw! Ce test teste du code de test mal implémenté, est-il réellement utile ?!
-        expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(0, 0)))
-            .toThrowError(error);
-    });
-
-    describe('isValidStartAndEnd', () => {
+    describe('creation', () => {
         const outOfRange: Coord = new Coord(-1, -1);
         const inRange: Coord = new Coord(0, 0);
-        it('should report when given out of range start coord', () => {
-            const reason: string = 'Starting coord of TaflMove must be on the board, not at (-1, -1).';
-            const validity: MGPValidation = TaflMove.isValidStartAndEnd(outOfRange, inRange, 7);
-            expect(validity.isFailure()).toBeTrue();
-            expect(validity.getReason()).toBe(reason);
+        it('should throw with static moves', () => {
+            const error: string = RulesFailure.MOVE_CANNOT_BE_STATIC();
+            expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(0, 0)))
+                .toThrowError(error);
         });
-        it('should report when given out of range end coord', () => {
-            const reason: string = 'Landing coord of TaflMove must be on the board, not at (-1, -1).';
-            const validity: MGPValidation = TaflMove.isValidStartAndEnd(inRange, outOfRange, 7);
-            expect(validity.isFailure()).toBeTrue();
-            expect(validity.getReason()).toBe(reason);
+        it('should throw with out of range start coord', () => {
+            RulesUtils.expectToThrowAndLog(() => MyTaflMove.from(outOfRange, inRange),
+                                           'Starting coord of TaflMove must be on the board, not at (-1, -1).');
         });
+        it('should throw with out of range end coord', () => {
+            RulesUtils.expectToThrowAndLog(() => MyTaflMove.from(inRange, outOfRange),
+                                           'Landing coord of TaflMove must be on the board, not at (-1, -1).');
+        });
+    });
+
+    describe('isValidDirection', () => {
         it('should report diagonal moves', () => {
+            const validity: MGPValidation = TaflMove.isValidDirection(new Coord(0, 0), new Coord(1, 1));
             const reason: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
-            const validity: MGPValidation = TaflMove.isValidStartAndEnd(new Coord(0, 0), new Coord(1, 1), 7);
-            expect(validity.isFailure()).toBeTrue();
-            expect(validity.getReason()).toBe(reason);
+            MGPValidationTestUtils.expectToBeFailure(validity, reason);
         });
         it('should report non-straight moves', () => {
+            const validity: MGPValidation = TaflMove.isValidDirection(new Coord(0, 0), new Coord(2, 5));
             const reason: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
-            const validity: MGPValidation = TaflMove.isValidStartAndEnd(new Coord(0, 0), new Coord(2, 5), 7);
-            expect(validity.isFailure()).toBeTrue();
-            expect(validity.getReason()).toBe(reason);
+            MGPValidationTestUtils.expectToBeFailure(validity, reason);
         });
     });
     it('should override equals and toString correctly', () => {

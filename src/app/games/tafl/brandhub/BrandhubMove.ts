@@ -11,11 +11,15 @@ export class BrandhubMove extends TaflMove {
         MoveWithTwoCoords.getFallibleEncoder<BrandhubMove>(BrandhubMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<BrandhubMove> {
-        const validity: MGPValidation = TaflMove.isValidStartAndEnd(start, end, 7);
+        const validity: MGPValidation = TaflMove.isValidDirection(start, end);
         if (validity.isFailure()) {
             return validity.toOtherFallible();
         } else {
             return MGPFallible.success(new BrandhubMove(start, end));
         }
+    }
+
+    public getMaximalDistance(): number {
+        return 7;
     }
 }

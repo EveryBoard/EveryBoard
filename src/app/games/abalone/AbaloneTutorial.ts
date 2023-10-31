@@ -26,7 +26,7 @@ export class AbaloneTutorial extends Tutorial {
         To make a move, click on one of your pieces, then click on an arrow to choose the move direction.<br/><br/>
         You're playing Dark, make any move!`,
             AbaloneState.getInitialState(),
-            AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.UP).get(),
+            AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.UP),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromMove(
@@ -47,7 +47,7 @@ export class AbaloneTutorial extends Tutorial {
                 [_, _, _, O, _, _, N, N, N],
                 [_, _, O, _, _, N, N, N, N],
             ], 0),
-            [AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.RIGHT).get()],
+            [AbaloneMove.ofSingleCoord(new Coord(4, 4), HexaDirection.RIGHT)],
             $localize`Congratulations! You know everything you need to start a game!`,
             $localize`Failed. Try again.`,
         ),

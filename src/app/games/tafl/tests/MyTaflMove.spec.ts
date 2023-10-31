@@ -8,4 +8,9 @@ export class MyTaflMove extends TaflMove {
     public static from(start: Coord, end: Coord): MGPFallible<MyTaflMove> {
         return MGPFallible.success(new MyTaflMove(start, end));
     }
+
+
+    public getMaximalDistance(): number {
+        return 9;
+    }
 }
