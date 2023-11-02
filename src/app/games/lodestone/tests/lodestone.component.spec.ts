@@ -13,7 +13,7 @@ import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
-fdescribe('LodestoneComponent', () => {
+describe('LodestoneComponent', () => {
 
     let testUtils: ComponentTestUtils<LodestoneComponent>;
 
@@ -228,10 +228,10 @@ fdescribe('LodestoneComponent', () => {
             testUtils.expectElementToHaveClasses('#lodestone_0_0 > g > g > g > polygon', ['base', 'no-stroke', 'player1-fill']);
         }));
 
-        it('should display crumbled lodestone in the middle of placing capture', fakeAsync(async() => {
+        it('should display crumbled lodestone and pieces in the middle of placing capture', fakeAsync(async() => {
             // Given a state where a pressure plate will soon crumble
             const board: Table<LodestonePiece> = [
-                [B, _, _, _, _, _, _, B],
+                [B, B, _, _, B, _, B, B],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -248,12 +248,16 @@ fdescribe('LodestoneComponent', () => {
             await testUtils.setupState(state);
 
             // When filling the pressure plate in the middle of a move
-            await testUtils.expectClickSuccess('#square_1_0');
+            await testUtils.expectClickSuccess('#square_2_0');
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal');
             await testUtils.expectClickSuccess('#plate_top_0_4');
 
             // Then the lodestone should be displayed semi-transparent as crumbled
-            testUtils.expectElementToHaveClasses('#lodestone_1_0', ['semi-transparent']);
+            testUtils.expectElementToHaveClasses('#lodestone_2_0', ['semi-transparent']);
+            testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player1-fill', 'semi-transparent']);
+            testUtils.expectElementNotToExist('#piece_4_0');
+            testUtils.expectElementToHaveClasses('#piece_5_0', ['base', 'player1-fill', 'semi-transparent']);
+            testUtils.expectElementToHaveClasses('#piece_7_0', ['base', 'player1-fill', 'semi-transparent']);
         }));
 
         it('should crumble a pressure plate when full (second time)', fakeAsync(async() => {

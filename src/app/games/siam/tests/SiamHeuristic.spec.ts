@@ -21,6 +21,7 @@ const u: SiamPiece = SiamPiece.DARK_UP;
 const l: SiamPiece = SiamPiece.DARK_LEFT;
 const r: SiamPiece = SiamPiece.DARK_RIGHT;
 const d: SiamPiece = SiamPiece.DARK_DOWN;
+
 describe('SiamHeuristic', () => {
 
     let heuristic: SiamHeuristic;

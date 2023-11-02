@@ -96,7 +96,7 @@ export class LodestonePressurePlateGroup {
         return newGroup.addCaptured(player, quantity);
     }
 
-    public getFillablePlateIndex(): number { // TODO CHECK WHY WE USE IT
+    public getFillablePlateIndex(): number {
         let i: number = 0;
         for (const plate of this.plates) {
             if (plate.getRemainingSpaces() > 0) {
@@ -180,24 +180,6 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         ];
         const plates: LodestonePressurePlates = LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]);
         return new LodestoneState(board, 0, new MGPMap(), plates);
-        // ====================
-        // const B: LodestonePiece = LodestonePiecePlayer.ONE;
-        // const board: Table<LodestonePiece> = [
-        //     [_, _, _, _, _, _, _, B],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, O, O, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        // ];
-        // const pressurePlates: LodestonePressurePlates = {
-        //     ...LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]),
-        //     top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
-        // };
-        // const state: LodestoneState = new LodestoneState(board, 0, new MGPMap(), pressurePlates);
-        // return state;
     }
 
     public constructor(board: Table<LodestonePiece>,

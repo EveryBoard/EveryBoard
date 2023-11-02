@@ -70,6 +70,11 @@ type SquareInfo = {
     lodestone?: LodestoneInfo,
 };
 
+type PreCaptureInfo = {
+    preCaptureState: LodestoneState;
+    preCaptureMove: LodestoneMove;
+}
+
 @Component({
     selector: 'app-lodestone',
     templateUrl: './lodestone.component.html',
@@ -366,30 +371,68 @@ export class LodestoneComponent
         if (piece.isPlayerPiece()) {
             squareInfo.isTherePieceToDraw = true;
             squareInfo.pieceClasses = [this.getPlayerClass(piece.owner)];
-        } else if (this.coordHasJustBeenCrumbled(coord)) {
-            const crumbledOwner: PlayerOrNone = this.getCrumbledOwner(coord);
-            squareInfo.pieceClasses = [this.getPlayerClass(crumbledOwner)]; // TODO CHECK IF THIS IS OK
+        } else if (squareInfo.isCrumbled) {
+            return this.getCrumbledSquareInfo(coord, squareInfo);
         }
         return squareInfo;
+    }
+
+    private getCrumbledSquareInfo(coord: Coord, squareInfo: SquareInfo): SquareInfo {
+        const preCaptureInfo: MGPOptional<PreCaptureInfo> = this.getPreCaptureInfo();
+        if (preCaptureInfo.isAbsent()) {
+            return squareInfo;
+        }
+        const pieceThatCrumbledLastEndOfTurn: MGPOptional<LodestonePiece> =
+            this.getPieceThatCrumbledLastEndOfTurn(coord,
+                                                   preCaptureInfo.get().preCaptureState,
+                                                   preCaptureInfo.get().preCaptureMove);
+        if (pieceThatCrumbledLastEndOfTurn.isPresent()) {
+            const crumbledOwner: PlayerOrNone = pieceThatCrumbledLastEndOfTurn.get().owner;
+            squareInfo.isTherePieceToDraw = true;
+            squareInfo.pieceClasses = [
+                this.getPlayerClass(crumbledOwner),
+                'semi-transparent',
+            ];
+        }
+        return squareInfo;
+    }
+
+    private getPreCaptureInfo(): MGPOptional<PreCaptureInfo> {
+        if (this.selectedCoord.isPresent() && this.selectedLodestone.isPresent()) {
+            return MGPOptional.of({
+                preCaptureMove: new LodestoneMove(this.selectedCoord.get(),
+                                                  this.selectedLodestone.get().direction,
+                                                  this.selectedLodestone.get().orientation),
+                preCaptureState: this.getState(),
+            });
+        } else if (this.node.previousMove.isPresent()) {
+            return MGPOptional.of({
+                preCaptureMove: this.node.previousMove.get(),
+                preCaptureState: this.getPreviousState(),
+            });
+        } else {
+            return MGPOptional.empty();
+        }
     }
 
     private getLodestoneInfo(coord: Coord): LodestoneInfo | undefined {
         const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
         if (piece.isLodestone()) {
             return this.getLodestoneInfoAt(this.displayedState, coord);
-        } else if (this.wasLodestoneLastTurn(coord)) {
-            return this.getLodestoneInfoAt(this.getPreviousState(), coord);
-        } else if (this.wasLodestoneDroppedThenCrumbled(coord)) {
-            return this.getLastMoveLodestoneInfo();
-        } else if (this.lodestoneCrumbledOnDisplayedState(coord)) {
-            return this.getCrumbledLodestone();
-        } else {
-            return undefined;
+        } else if (this.isCrumbled(coord)) {
+            const preCaptureInfo: MGPOptional<PreCaptureInfo> = this.getPreCaptureInfo();
+            if (preCaptureInfo.isPresent()) {
+                if (this.selectedCoord.equalsValue(coord)) {
+                    const lodestone: LodestonePieceLodestone = this.selectedLodestone.get();
+                    return this.getLodestoneInfoFromLodestone(lodestone);
+                } else if (this.wasLodestoneDroppedThenCrumbled(coord)) {
+                    return this.getLastMoveLodestoneInfo(this.node.previousMove.get());
+                }
+            }
         }
     }
 
-    private getLastMoveLodestoneInfo(): LodestoneInfo {
-        const lastMove: LodestoneMove = this.node.previousMove.get();
+    private getLastMoveLodestoneInfo(lastMove: LodestoneMove): LodestoneInfo {
         const lodestoneDescription: LodestoneDescription = {
             direction: lastMove.direction, orientation: lastMove.orientation,
         };
@@ -414,27 +457,6 @@ export class LodestoneComponent
         return lodestoneInfo;
     }
 
-    private getCrumbledLodestone(): LodestoneInfo | undefined {
-        const lodestone: LodestonePieceLodestone = this.selectedLodestone.get();
-        return this.getLodestoneInfoFromLodestone(lodestone);
-    }
-
-    private lodestoneCrumbledOnDisplayedState(coord: Coord): boolean {
-        const coordIsDisplayedLodestone: boolean = this.selectedCoord.equalsValue(coord);
-        const coordIsUnreachable: boolean = this.isCrumbled(coord);
-        return coordIsDisplayedLodestone && coordIsUnreachable;
-    }
-
-    private wasLodestoneLastTurn(coord: Coord): boolean {
-        if (this.node.parent.isPresent()) {
-            const previousState: LodestoneState = this.node.parent.get().gameState;
-            const piece: LodestonePiece = previousState.getPieceAt(coord);
-            return piece.isLodestone();
-        } else {
-            return false;
-        }
-    }
-
     private wasLodestoneDroppedThenCrumbled(coord: Coord): boolean {
         if (this.node.parent.isPresent()) {
             return this.node.previousMove.get().coord.equals(coord);
@@ -449,20 +471,28 @@ export class LodestoneComponent
         return this.getLodestoneInfoFromLodestone(lodestone);
     }
 
-    private coordHasJustBeenCrumbled(coord: Coord): boolean {
-        if (this.node.parent.isPresent()) {
-            const pieceIsUnreachable: boolean = this.isCrumbled(coord);
-            const previousPiece: LodestonePiece = this.getPreviousState().getPieceAt(coord);
-            const pieceWasReachable: boolean = previousPiece.isUnreachable() === false;
-            return pieceIsUnreachable && pieceWasReachable;
+    private getPieceThatCrumbledLastEndOfTurn(coord: Coord,
+                                              previousState: LodestoneState,
+                                              moveToDisplay: LodestoneMove)
+    : MGPOptional<LodestonePiece>
+    {
+        // This coord was filled after move, then crumbled after capture were placed
+        const lodestoneDescription: LodestoneDescription = {
+            direction: moveToDisplay.direction,
+            orientation: moveToDisplay.orientation,
+        };
+        const lodestoneInfos: LodestoneInfos =
+            this.rules.applyMoveWithoutPlacingCaptures(previousState,
+                                                       moveToDisplay.coord,
+                                                       lodestoneDescription);
+        const previousPiece: LodestonePiece = lodestoneInfos.board[coord.y][coord.x];
+        const coordHadAPiece: boolean = previousPiece.isEmpty() === false;
+        const pieceWasReachable: boolean = previousPiece.isUnreachable() === false;
+        if (coordHadAPiece && pieceWasReachable) {
+            return MGPOptional.of(previousPiece);
         } else {
-            return false;
+            return MGPOptional.empty();
         }
-    }
-
-    private getCrumbledOwner(coord: Coord): PlayerOrNone {
-        const previousState: LodestoneState = this.getPreviousState();
-        return previousState.getPieceAt(coord).owner;
     }
 
     private isCrumbled(coord: Coord): boolean {
