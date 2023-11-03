@@ -10,7 +10,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils, ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
 

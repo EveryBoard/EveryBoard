@@ -8,6 +8,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('TeekoRules', () => {
 
@@ -36,7 +37,7 @@ describe('TeekoRules', () => {
 
             // Then the move attempt should throw
             const reason: string = 'Cannot translate in dropping phase !';
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });
