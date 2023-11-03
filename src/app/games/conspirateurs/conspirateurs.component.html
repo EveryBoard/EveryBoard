@@ -36,11 +36,11 @@
         <rect class="base no-fill mid-stroke"
               [ngClass]="viewInfo.boardInfo[shelter.y][shelter.x].shelterClasses"
               (click)="onClick(shelter)"
-              [attr.x]="(SPACE_SIZE * shelter.x) + STROKE_WIDTH"
-              [attr.y]="(SPACE_SIZE * shelter.y) + STROKE_WIDTH"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-         />
+              [attr.x]="(SPACE_SIZE * shelter.x) + (2.5 * STROKE_WIDTH)"
+              [attr.y]="(SPACE_SIZE * shelter.y) + (2.5 * STROKE_WIDTH)"
+              [attr.width]="SPACE_SIZE - (3 * STROKE_WIDTH)"
+              [attr.height]="SPACE_SIZE - (3 * STROKE_WIDTH)"
+        />
     </g>
     <circle *ngFor="let y of ArrayUtils.range(viewInfo.sidePieces[0])"
             id="sidePiece_0_{{ y }}"
@@ -59,7 +59,7 @@
           [attr.y]="(SPACE_SIZE * CENTRAL_ZONE_START.y) + STROKE_WIDTH"
           [attr.width]="CENTRAL_ZONE_SIZE.x * SPACE_SIZE"
           [attr.height]="CENTRAL_ZONE_SIZE.y * SPACE_SIZE"
-          class="base no-fill selectable-stroke mid-stroke"
+          class="base no-fill selectable-stroke big-stroke"
     />
     <polyline id="lastJump"
               class="base no-fill"
