@@ -12,6 +12,8 @@ const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
+const defaultConfig: TaflConfig = TablutRules.RULES_CONFIG_DESCRIPTION.defaultConfig.config;
+
 const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove, TablutState> = {
     component: TablutComponent,
     gameName: 'Tablut',

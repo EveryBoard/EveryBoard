@@ -17,19 +17,14 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         TestBed.inject(ErrorLoggerService);
     }));
 
-    it('should show partCreation config at start', () => {
+    it('should show partCreation config and button to accept default config, at start', () => {
         // Given any game needing a config, like P4
         // When rendering component
         // Then a rules Configuration component should be present
         testUtils.expectElementToExist('#rulesConfigComponent');
-    });
-
-    it('should show button to accept default configuration', fakeAsync(async() => {
-        // Given any game needing a config, like P4
-        // When rendering component
-        // Then a button to accept default rules config should be present
+        // And a button to accept default rules config should be present
         testUtils.expectElementToExist('#startGameWithConfig');
-    }));
+    });
 
     it('should disable button to accept default configuration when receiving empty optional from child component', fakeAsync(async() => {
         // Given any game needing a config, like P4

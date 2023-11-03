@@ -7,7 +7,7 @@ import { RulesConfigDescription } from 'src/app/components/wrapper-components/ru
 
 describe('RulesConfigUtil', () => {
 
-    describe('RulesConfigDescriptionClass', () => {
+    describe('RulesConfigDescription', () => {
 
         type MaConfig = {
             helaRosee: number;
@@ -27,7 +27,7 @@ describe('RulesConfigUtil', () => {
         };
 
         it('should have at least one default standard RulesConfig', () => {
-            // Given any RulesConfigDescriptionClass
+            // Given any RulesConfigDescription
             const rcdc: RulesConfigDescription<MaConfig> =
                 new RulesConfigDescription(defaultConfig, translations, [], validators);
 
@@ -39,7 +39,7 @@ describe('RulesConfigUtil', () => {
         });
 
         it('should be possible to have other standard RulesConfig', () => {
-            // Given any RulesConfigDescriptionClass
+            // Given any RulesConfigDescription
             const secondaryConfig: NamedRulesConfig<MaConfig> = {
                 config: { helaRosee: 7 },
                 name: () => 'numéro dosse',
@@ -55,7 +55,7 @@ describe('RulesConfigUtil', () => {
         });
 
         it('should throw when standard configs are of different type', () => {
-            // Given any RulesConfigDescriptionClass
+            // Given any RulesConfigDescription
             interface MaConfigInterface extends RulesConfig {
                 helaRosee: number;
             }
@@ -83,7 +83,7 @@ describe('RulesConfigUtil', () => {
         });
 
         it('should throw when a number validator is missing', () => {
-            // Given any RulesConfigDescriptionClass
+            // Given any RulesConfigDescription
             const defaultConfig: NamedRulesConfig<MaConfig> = {
                 config: { helaRosee: 2012 },
                 name: () => 'default',
@@ -100,7 +100,7 @@ describe('RulesConfigUtil', () => {
         });
 
         it('should throw if not provided with translation for one field', () => {
-            // Given any RulesConfigDescriptionClass
+            // Given any RulesConfigDescription
             // When trying to create the element
             // Then it should throw and log
             const missingTranslation: { [name in keyof MaConfig]: Localized } =

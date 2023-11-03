@@ -61,6 +61,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     // Will set the default rules config
     // Will set it to {} if the game don't exist, but an error will be handled by some other function
+    // Because rules that don't override their rules have DEFAULT_RULES value, hence {}
     private setDefaultRulesConfig(): void {
         const gameName: string = this.getGameName();
         const defaultConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);

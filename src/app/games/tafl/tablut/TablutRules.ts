@@ -12,22 +12,19 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
 
     private static singleton: MGPOptional<TablutRules> = MGPOptional.empty();
 
-    public static readonly TODO_REMOVE_APRES_REVOYAGE_VOYAGE: TaflConfig = {
-        castleIsLeftForGood: false,
-        edgesAreKingsEnnemy: true,
-        centralThroneCanSurroundKing: false,
-        kingFarFromHomeCanBeSandwiched: false,
-        invaderStarts: true,
-    };
-
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TaflConfig> =
         new RulesConfigDescription(
             {
                 name: (): string => $localize`Tablut`,
-                config: TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE,
+                config: {
+                    castleIsLeftForGood: false,
+                    edgesAreKingsEnnemy: true,
+                    centralThroneCanSurroundKing: false,
+                    kingFarFromHomeCanBeSandwiched: false,
+                    invaderStarts: true,
+                },
             }, {
                 castleIsLeftForGood: (): string => $localize`Central throne is left for good`,
-                TODO_FOR_REVIEW: (): string => `quand config est la ref d'une variable, cette ligne est acceptée, si on colle cette exacte même valeur au lieu d'une ref, cette ligne ne compile plus, on fait quoi ? Pareil si qqch manque, seulement repéré at run time (du coup bah ça pète bien clairement et casse les tests qui commencent même pas)`,
                 edgesAreKingsEnnemy: (): string => $localize`Edges are king's ennemy`,
                 centralThroneCanSurroundKing: (): string => $localize`Central throne can surround king`,
                 kingFarFromHomeCanBeSandwiched: (): string => $localize`King far from home can be sandwiched`,
@@ -42,7 +39,7 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
     }
 
     private constructor() {
-        super(TablutState, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE, TablutMove.from);
+        super(TablutState, TablutRules.RULES_CONFIG_DESCRIPTION.defaultConfig.config, TablutMove.from);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
