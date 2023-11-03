@@ -25,10 +25,6 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    // TODO FOR REVIEW: euh non 1ms c'est mieux, je crois que ça fait partie de zéro remarques "d'user"
-    //  "oh non l'ia joue trop vite, je ne comprend pas quand elle joue"
-    // Alors que la voir jouer super vite contre elle même c'est trop bieeeeen
-    // Tu veux vraiment que je remette :p ?
     public static readonly AI_TIMEOUT: number = 1;
 
     public aiOptions: [string, string] = ['none', 'none'];

@@ -33,13 +33,13 @@
         </g>
     </g>
     <g *ngFor="let shelter of ALL_SHELTERS">
-        <rect class="base mid-stroke"
+        <rect class="base no-fill mid-stroke"
               [ngClass]="viewInfo.boardInfo[shelter.y][shelter.x].shelterClasses"
               (click)="onClick(shelter)"
-              [attr.x]="(SPACE_SIZE * shelter.x) + STROKE_WIDTH"
-              [attr.y]="(SPACE_SIZE * shelter.y) + STROKE_WIDTH"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
+              [attr.x]="(SPACE_SIZE * shelter.x) + (2.5 * STROKE_WIDTH)"
+              [attr.y]="(SPACE_SIZE * shelter.y) + (2.5 * STROKE_WIDTH)"
+              [attr.width]="SPACE_SIZE - (3 * STROKE_WIDTH)"
+              [attr.height]="SPACE_SIZE - (3 * STROKE_WIDTH)"
         />
     </g>
     <circle *ngFor="let y of ArrayUtils.range(viewInfo.sidePieces[0])"
