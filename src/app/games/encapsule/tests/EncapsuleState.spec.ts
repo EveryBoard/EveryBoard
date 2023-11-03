@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
@@ -9,7 +9,7 @@ describe('EncapsuleState', () => {
 
     const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 
-    const emptyBoard: EncapsuleSpace[][] = ArrayUtils.createTable(3, 3, _);
+    const emptyBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
 
     describe('getPieceAt', () => {
         it('should return the expected space', () => {

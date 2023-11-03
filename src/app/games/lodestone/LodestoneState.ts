@@ -83,7 +83,7 @@ export class LodestonePressurePlateGroup {
         const fullPlates: LodestonePressurePlate[] = this.getCrumbledPlates();
         const currentPlate: LodestonePressurePlate = this.getCurrentPlate().get();
         const nextPlates: LodestonePressurePlate[] = this.getFollowingPlates();
-        const newPieces: LodestonePiecePlayer[] = ArrayUtils.copyImmutableArray(currentPlate.getPiecesCopy());
+        const newPieces: LodestonePiecePlayer[] = ArrayUtils.copy(currentPlate.getPiecesCopy());
         const maxPiecesToPut: number = Math.min(quantity, currentPlate.getRemainingSpaces());
         for (let i: number = 0; i < maxPiecesToPut; i++) {
             newPieces.push(LodestonePiecePlayer.of(player));
@@ -130,7 +130,7 @@ export class LodestonePressurePlate {
     }
 
     public getPiecesCopy(): LodestonePiecePlayer[] {
-        return ArrayUtils.copyImmutableArray(this.pieces);
+        return ArrayUtils.copy(this.pieces);
     }
 
 }

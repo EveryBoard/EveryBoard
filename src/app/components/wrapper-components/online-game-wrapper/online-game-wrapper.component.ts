@@ -275,8 +275,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
         Utils.assert(legality.isSuccess(), message);
-        const success: MGPOptional<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
-        Utils.assert(success.isPresent(), 'Chosen move should be legal after all checks, but it is not!');
+        const success: MGPFallible<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove);
+        Utils.assert(success.isSuccess(), 'Chosen move should be legal after all checks, but it is not! Reason: ' + success.getReasonOr(''));
         this.gameComponent.node = success.get();
         if (this.role === PlayerOrNone.NONE) {
             await this.updateBoardAndShowLastMove(isLastMoveOfBatch);

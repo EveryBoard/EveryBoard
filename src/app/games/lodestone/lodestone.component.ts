@@ -4,7 +4,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -273,7 +273,7 @@ export class LodestoneComponent
         this.captures[position]++;
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
         const opponent: Player = this.getCurrentOpponent();
-        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
+        const board: LodestonePiece[][] = TableUtils.copy(state.board);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         const lodestones: LodestonePositions = state.lodestones.getCopy();
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
@@ -292,7 +292,7 @@ export class LodestoneComponent
         this.captures[position]--;
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
         const opponent: Player = this.getCurrentOpponent();
-        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
+        const board: LodestonePiece[][] = TableUtils.copy(state.board);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         const lodestones: LodestonePositions = state.lodestones.getCopy();
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
@@ -314,7 +314,7 @@ export class LodestoneComponent
         const playerLodestone: MGPOptional<Coord> = this.displayedState.lodestones.get(this.getCurrentPlayer());
         if (playerLodestone.isPresent()) {
             // Hide the lodestone so that it is clearer that the player can make its next move here
-            const board: LodestonePiece[][] = ArrayUtils.copyBiArray(this.displayedState.board);
+            const board: LodestonePiece[][] = TableUtils.copy(this.displayedState.board);
             board[playerLodestone.get().y][playerLodestone.get().x] = LodestonePieceNone.EMPTY;
             this.displayedState = this.displayedState.withBoard(board);
         }

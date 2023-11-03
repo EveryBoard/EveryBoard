@@ -1,4 +1,4 @@
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
@@ -8,9 +8,9 @@ import { Utils } from 'src/app/utils/utils';
 export class PylosState extends GameState {
 
     public static getInitialState(): PylosState {
-        const board0: PlayerOrNone[][] = ArrayUtils.createTable(4, 4, PlayerOrNone.NONE);
-        const board1: PlayerOrNone[][] = ArrayUtils.createTable(3, 3, PlayerOrNone.NONE);
-        const board2: PlayerOrNone[][] = ArrayUtils.createTable(2, 2, PlayerOrNone.NONE);
+        const board0: PlayerOrNone[][] = TableUtils.create(4, 4, PlayerOrNone.NONE);
+        const board1: PlayerOrNone[][] = TableUtils.create(3, 3, PlayerOrNone.NONE);
+        const board2: PlayerOrNone[][] = TableUtils.create(2, 2, PlayerOrNone.NONE);
         const board3: PlayerOrNone[][] = [[PlayerOrNone.NONE]];
         const turn: number = 0;
         return new PylosState([board0, board1, board2, board3], turn);
@@ -54,10 +54,10 @@ export class PylosState extends GameState {
     }
     public setBoardAtCoords(coordValues: {coord: PylosCoord, value: PlayerOrNone}[], turn: number): PylosState {
         const newBoard: PlayerOrNone[][][] = [
-            ArrayUtils.copyBiArray(this.boards[0]),
-            ArrayUtils.copyBiArray(this.boards[1]),
-            ArrayUtils.copyBiArray(this.boards[2]),
-            ArrayUtils.copyBiArray(this.boards[3]),
+            TableUtils.copy(this.boards[0]),
+            TableUtils.copy(this.boards[1]),
+            TableUtils.copy(this.boards[2]),
+            TableUtils.copy(this.boards[3]),
         ];
 
         for (const coordValue of coordValues) {

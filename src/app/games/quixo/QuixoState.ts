@@ -1,4 +1,4 @@
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -9,9 +9,7 @@ export class QuixoState extends GameStateWithTable<PlayerOrNone> {
     public static readonly SIZE: number = 5;
 
     public static getInitialState(): QuixoState {
-        const initialBoard: PlayerOrNone[][] = ArrayUtils.createTable(QuixoState.SIZE,
-                                                                      QuixoState.SIZE,
-                                                                      PlayerOrNone.NONE);
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(QuixoState.SIZE, QuixoState.SIZE, PlayerOrNone.NONE);
         return new QuixoState(initialBoard, 0);
     }
     public static isOnBoard(coord: Coord): boolean {

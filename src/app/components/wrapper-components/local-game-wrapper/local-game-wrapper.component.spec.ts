@@ -31,6 +31,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -306,7 +307,7 @@ describe('LocalGameWrapperComponent', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board and a buggy AI (that performs an illegal move)
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPOptional.empty());
+            spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPFallible.failure('illegal'));
             const minimax: Minimax<P4Move, P4State> =
                 new Minimax('Minimax', P4Rules.get(), new P4Heuristic(), new P4MoveGenerator());
             spyOn(minimax, 'chooseNextMove').and.returnValue(P4Move.ZERO);
@@ -321,7 +322,7 @@ describe('LocalGameWrapperComponent', () => {
             // Then it should fail and an error should be logged
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
-            const errorData: JSONValue = { game: 'P4', name: 'Minimax', move: 'P4Move(0)' };
+            const errorData: JSONValue = { game: 'P4', name: 'Minimax', move: 'P4Move(0)', reason: 'illegal' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {

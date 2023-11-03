@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -48,7 +48,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
         return new SixState(pieces, this.turn);
     }
     public toRepresentation(): Table<PlayerOrNone> {
-        const board: PlayerOrNone[][] = ArrayUtils.createTable(this.width, this.height, PlayerOrNone.NONE);
+        const board: PlayerOrNone[][] = TableUtils.create(this.width, this.height, PlayerOrNone.NONE);
         for (const piece of this.pieces.listKeys()) {
             const pieceValue: PlayerOrNone = this.getPieceAt(piece);
             board[piece.y][piece.x] = pieceValue;
