@@ -49,7 +49,6 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 
-
 @Component({})
 export class BlankComponent {}
 

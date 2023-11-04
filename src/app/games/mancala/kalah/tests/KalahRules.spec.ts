@@ -9,6 +9,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { DoMancalaRulesTests } from '../../common/GenericMancalaRulesTest.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('KalahRules', () => {
 
@@ -79,7 +80,7 @@ describe('KalahRules', () => {
 
             // Then the move should be wildly considered as illegal, you scumbag hacker !
             const reason: string = 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE';
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });
@@ -127,7 +128,7 @@ describe('KalahRules', () => {
 
             // Then it should be refused
             const reason: string = 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE';
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });

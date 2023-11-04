@@ -203,7 +203,7 @@ describe('TeekoRules', () => {
 
             // Then the move attempt should throw
             const reason: string = 'Cannot drop in translation phase !';
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });

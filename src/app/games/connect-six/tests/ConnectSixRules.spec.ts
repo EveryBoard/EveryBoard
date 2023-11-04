@@ -6,6 +6,7 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../Connect
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConnectSixRules', () => {
     /**
@@ -65,7 +66,7 @@ describe('ConnectSixRules', () => {
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            RulesUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'First move should be instance of ConnectSixFirstMove');
+            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'First move should be instance of ConnectSixFirstMove');
         });
     });
     describe('next turns', () => {
@@ -213,7 +214,7 @@ describe('ConnectSixRules', () => {
             function trySingleDropAfterFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            RulesUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'non-firsts moves should be instance of ConnectSixDrops');
+            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'non-firsts moves should be instance of ConnectSixDrops');
         });
         it('should notify victory when aligning 6 stones of your color', () => {
             const state: ConnectSixState = new ConnectSixState([

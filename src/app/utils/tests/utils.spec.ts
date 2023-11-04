@@ -2,7 +2,6 @@
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { Debug, isJSONPrimitive, Utils } from '../utils';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('utils', () => {
 

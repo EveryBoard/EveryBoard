@@ -54,7 +54,7 @@ export class Debug {
         try {
             const verbosity: object = JSON.parse(verbosityJSON);
             if (verbosity[name] == null) return [false, false];
-            Utils.assert(Array.isArray(verbosity[name]), `malformed verbosity levels: ${verbosity[name]}`);
+            Utils.assert(Array.isArray(verbosity[name]), `malformed verbosity levels for ${name}: ${verbosity[name]}`);
             return verbosity[name] as [boolean, boolean];
         } catch (e) {
             // Verbosity is not proper JSON
