@@ -22,14 +22,18 @@ describe('SiamMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new SiamMoveGenerator();
     });
+
     it('should provide 44 possible moves on initial board', () => {
         // Given the initial board
         const node: SiamNode = new SiamNode(SiamState.getInitialState());
-        // When computing the list of moves
+
+        // When listing the moves
         const firstTurnMoves: SiamMove[] = moveGenerator.getListMoves(node);
+
         // Then there should be exactly 44 moves
         expect(firstTurnMoves.length).toEqual(44);
     });
+
     it('should compute all expected moves', () => {
         // Given a specific board
         const board: Table<SiamPiece> = [
@@ -41,8 +45,10 @@ describe('SiamMoveGenerator', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const node: SiamNode = new SiamNode(state);
-        // When computing all moves
+
+        // When listing the moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node);
+
         // Then all expected moves are returned
         const moveType: { [moveTYpe: string]: number} = {
             moving: 0,
@@ -76,9 +82,11 @@ describe('SiamMoveGenerator', () => {
         ];
         const state: SiamState = new SiamState(board, 1);
         const node: SiamNode = new SiamNode(state);
-        // When computing the moves
+
+        // When listing the moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node);
         for (const move of moves) {
+
             // Then no move should insert a new piece
             expect(move.isInsertion()).toBeFalse();
         }

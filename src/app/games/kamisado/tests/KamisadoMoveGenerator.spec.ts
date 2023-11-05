@@ -24,18 +24,22 @@ describe('KamisadoMoveGenerator', () => {
         rules = KamisadoRules.get();
         moveGenerator = new KamisadoMoveGenerator();
     });
+
     it('should provide 102 possible moves at turn 0', () => {
         // Each piece on the side can do 6 vertical moves and 6 diagonal ones = 12 moves per piece * 2 side pieces
         // Other pieces can do 6 vertical and 7 diagonal = 13 moves per piece * 6 pieces
         // In total, that makes 102 possible moves
 
         // Given the initial board
-        // When computing all moves
         const node: KamisadoNode = rules.getInitialNode();
+
+        // When listing the moves
         const firstTurnMoves: KamisadoMove[] = moveGenerator.getListMoves(node);
+
         // Then there should be exactly 102 moves
         expect(firstTurnMoves.length).toEqual(102);
     });
+
     it('should return only Kamisado.PASS when position is stuck', () => {
         // Given a stuck board
         const board: Table<KamisadoPiece> = [
@@ -52,7 +56,7 @@ describe('KamisadoMoveGenerator', () => {
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const node: KamisadoNode = new KamisadoNode(state);
 
-        // When listing moves
+        // When listing the moves
         const moves: KamisadoMove[] = moveGenerator.getListMoves(node);
 
         // Then the only choice should be KamisadoMove.PASS
@@ -76,7 +80,7 @@ describe('KamisadoMoveGenerator', () => {
             new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
         const node: KamisadoNode = new KamisadoNode(state);
 
-        // When listing moves
+        // When listing the moves
         const moves: KamisadoMove[] = moveGenerator.getListMoves(node);
 
         // Then there should only be that one legal move

@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
@@ -33,7 +33,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         return PenteRules.singleton.get();
     }
     private constructor() {
-        super(PenteState, defaultGobanConfig);
+        super(PenteState);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<GobanConfig> {

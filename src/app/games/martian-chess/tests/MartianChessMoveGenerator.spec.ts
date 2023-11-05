@@ -31,7 +31,7 @@ describe('MartianChessMoveGenerator', () => {
         const state: MartianChessState = MartianChessState.getInitialState();
         const node: MartianChessNode = new MartianChessNode(state);
 
-        // When asking the list of moves
+        // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be a total of 13 moves, all, not calling the clock
@@ -62,7 +62,7 @@ describe('MartianChessMoveGenerator', () => {
         const state: MartianChessState = new MartianChessState(board, 1);
         const node: MartianChessNode = new MartianChessNode(state);
 
-        // When asking the list of moves
+        // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then 6 moves should be included
@@ -86,7 +86,7 @@ describe('MartianChessMoveGenerator', () => {
         const state: MartianChessState = new MartianChessState(board, 1, MGPOptional.empty(), MGPOptional.of(1));
         const node: MartianChessNode = new MartianChessNode(state);
 
-        // When asking the list of moves
+        // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then the 15 moves should be included, 2 for the pawn and 13 for the drone
@@ -113,7 +113,7 @@ describe('MartianChessMoveGenerator', () => {
         const state: MartianChessState = new MartianChessState(board, 1, optLast, MGPOptional.of(1));
         const node: MartianChessNode = new MartianChessNode(state);
 
-        // When asking the list of moves
+        // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then the reverse last move should not be in it
@@ -135,7 +135,7 @@ describe('MartianChessMoveGenerator', () => {
         const state: MartianChessState = new MartianChessState(board, 1, MGPOptional.empty(), MGPOptional.of(4));
         const node: MartianChessNode = new MartianChessNode(state);
 
-        // When asking the list of moves
+        // When listing the moves
         const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
 
         // Then the 13 moves should be included, but only once (not with clock called)

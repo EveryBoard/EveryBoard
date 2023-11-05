@@ -14,7 +14,7 @@ describe('SaharaMoves', () => {
     it('should have a bijective encoder', () => {
         const rules: SaharaRules = SaharaRules.get();
         const moveGenerator: SaharaMoveGenerator = new SaharaMoveGenerator();
-        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, SaharaMove.encoder);
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, SaharaMove.encoder, {});
     });
     it('should throw error when starting coord is outside the board', () => {
         const start: Coord = new Coord(-1, 0);

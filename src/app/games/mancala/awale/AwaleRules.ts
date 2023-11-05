@@ -6,7 +6,7 @@ import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '.
 import { Utils } from 'src/app/utils/utils';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export class AwaleRules extends MancalaRules {
 
@@ -25,7 +25,7 @@ export class AwaleRules extends MancalaRules {
                     width: 6,
                 },
             }, {
-                width: (): string => $localize`Width`,
+                width: RulesConfigDescriptionLocalizable.WIDTH,
                 seedsByHouse: (): string => $localize`Seed by house`,
                 feedOriginalHouse: (): string => $localize`Feed original house`,
                 mustFeed: (): string => $localize`Must feed`,
@@ -42,10 +42,6 @@ export class AwaleRules extends MancalaRules {
             AwaleRules.singleton = MGPOptional.of(new AwaleRules());
         }
         return AwaleRules.singleton.get();
-    }
-
-    private constructor() {
-        super(AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<MancalaConfig> {

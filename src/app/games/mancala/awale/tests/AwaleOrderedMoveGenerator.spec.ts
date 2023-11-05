@@ -15,6 +15,7 @@ describe('AwaleOrderedMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new AwaleOrderedMoveGenerator();
     });
+
     it('should order by captured houses', () => {
         // Given a state with a possible capture
         const board: Table<number> = [
@@ -23,10 +24,13 @@ describe('AwaleOrderedMoveGenerator', () => {
         ];
         const state: MancalaState = new MancalaState(board, 1, [0, 0], config);
         const node: MancalaNode = new MancalaNode(state);
+
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node);
+
         // Then the first move should be the capture
         expect(moves.length).toBe(2);
         expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5)));
     });
+
 });

@@ -10,7 +10,7 @@ import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
@@ -37,7 +37,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
     }
 
     private constructor() {
-        super(ConnectSixState, defaultGobanConfig);
+        super(ConnectSixState);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<GobanConfig> {

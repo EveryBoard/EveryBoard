@@ -14,17 +14,19 @@ describe('KalahMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new KalahMoveGenerator();
     });
+
     it('should have all move options', () => {
         // Given an initial node
         const initialState: MancalaState = MancalaState.getInitialState(config);
         const node: MancalaNode = new MancalaNode(initialState);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be 5 moves of one sub-moves, and 5 moves of two sub-moves
         expect(moves.length).toBe(10);
     });
+
     it('Given a state where possible moves must end in Kalah', () => {
         // Given a state with possible moves
         const state: MancalaState = new MancalaState([
@@ -33,10 +35,11 @@ describe('KalahMoveGenerator', () => {
         ], 24, [13, 20], config);
         const node: MancalaNode = new MancalaNode(state);
 
-        // When calculating the list of possible moves
+        // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be those moves
         expect(moves.length).toBe(1);
     });
+
 });

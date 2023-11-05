@@ -107,7 +107,7 @@ describe('P4Rules', () => {
         });
 
         it('should be a draw', () => {
-            // Given a penultian board without victory
+            // Given a penultimate board without victory
             const board: Table<PlayerOrNone> = [
                 [O, O, O, _, O, O, O],
                 [X, X, X, O, X, X, X],

@@ -32,7 +32,7 @@ describe('TaflMoveGenerator', () => {
         const state: BrandhubState = new BrandhubState(board, 1, config);
         const node: BrandhubNode = new BrandhubNode(state);
 
-        // When asking the list of legal move
+        // When listing the moves
         const moves: BrandhubMove[] = moveGenerator.getListMoves(node);
 
         // Then going back on throne should not be part of it

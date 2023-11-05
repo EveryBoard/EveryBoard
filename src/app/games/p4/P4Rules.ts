@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type P4Config = {
@@ -35,8 +35,8 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
                     height: 6,
                 },
             }, {
-                width: (): string => $localize`Width`,
-                height: (): string => $localize`Height`,
+                width: RulesConfigDescriptionLocalizable.WIDTH,
+                height: RulesConfigDescriptionLocalizable.HEIGHT,
             }, [
             ], {
                 width: MGPValidators.range(1, 99),
@@ -54,7 +54,7 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
     public readonly P4_HELPER: NInARowHelper<PlayerOrNone>;
 
     private constructor() {
-        super(P4State, P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
+        super(P4State);
         this.P4_HELPER = new NInARowHelper(Utils.identity, 4);
     }
 

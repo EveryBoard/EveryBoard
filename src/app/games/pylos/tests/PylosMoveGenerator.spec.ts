@@ -45,7 +45,7 @@ describe('PylosMoveGenerator', () => {
         const state: PylosState = new PylosState(board, 0);
         const node: PylosNode = new PylosNode(state);
 
-        // When listing all possibles moves
+        // When listing the moves
         const choices: PylosMove[] = moveGenerator.getListMoves(node);
 
         // Then the minimax should provide them all
@@ -83,7 +83,7 @@ describe('PylosMoveGenerator', () => {
         const state: PylosState = new PylosState(board, 0);
         const node: PylosNode = new PylosNode(state);
 
-        // When listing all possibles moves
+        // When listing the moves
         const choices: PylosMove[] = moveGenerator.getListMoves(node);
 
         // Then the minimax should not provide one that capture the startingCoord

@@ -11,7 +11,7 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type EpaminondasConfig = {
@@ -39,7 +39,7 @@ export class EpaminondasRules
                     rowOfSoldiers: 2,
                 },
             }, {
-                width: (): string => $localize`Width`,
+                width: RulesConfigDescriptionLocalizable.WIDTH,
                 emptyRows: (): string => $localize`Number of empty rows`,
                 rowOfSoldiers: (): string => $localize`Number of soldier rows`,
             }, [
@@ -155,7 +155,7 @@ export class EpaminondasRules
     }
 
     private constructor() {
-        super(EpaminondasState, EpaminondasRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
+        super(EpaminondasState);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<EpaminondasConfig> {

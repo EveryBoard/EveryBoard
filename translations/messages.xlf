@@ -725,14 +725,14 @@
       <trans-unit id="3852843717175527075" datatype="html">
         <source>The game has been canceled!</source>
       </trans-unit>
-      <trans-unit id="5607669932062416162" datatype="html">
-        <source>Default</source>
-      </trans-unit>
       <trans-unit id="2018922024247045709" datatype="html">
         <source>Width</source>
       </trans-unit>
       <trans-unit id="3033623772164647792" datatype="html">
         <source>Height</source>
+      </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
       </trans-unit>
       <trans-unit id="7694289842795780023" datatype="html">
         <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> part</source>
@@ -2342,8 +2342,8 @@
       <trans-unit id="821589059503120913" datatype="html">
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
       </trans-unit>
-      <trans-unit id="6056279063431893237" datatype="html">
-        <source>At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark, do a simple move.</source>
+      <trans-unit id="6954191985152707764" datatype="html">
+        <source>At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a simple move.</source>
       </trans-unit>
       <trans-unit id="1640662905904405955" datatype="html">
         <source>You have made a move with a rotation. This tutorial step is about moves without rotations!</source>
@@ -2572,8 +2572,8 @@
       <trans-unit id="6014794960681933717" datatype="html">
         <source>Capture (2/2)</source>
       </trans-unit>
-      <trans-unit id="5534919927538147018" datatype="html">
-        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt; You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
+      <trans-unit id="7280078972566788741" datatype="html">
+        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
       </trans-unit>
       <trans-unit id="863291659187903950" datatype="html">
         <source>Lower and more to the left, please.</source>
@@ -2883,8 +2883,8 @@
       <trans-unit id="3540730147473795195" datatype="html">
         <source>King far from home can be sandwiched</source>
       </trans-unit>
-      <trans-unit id="843632127033881976" datatype="html">
-        <source>Invader Starts</source>
+      <trans-unit id="3329390039243374527" datatype="html">
+        <source>Invader starts</source>
       </trans-unit>
       <trans-unit id="3469374446011769111" datatype="html">
         <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>

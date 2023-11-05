@@ -25,7 +25,7 @@ describe('SixMoveGenerator', () => {
         const state: SixState = SixState.ofRepresentation(board, 40);
         const node: SixNode = new SixNode(state);
 
-        // When listing the choices
+        // When listing the moves
         const choices: SixMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be all the possibilities

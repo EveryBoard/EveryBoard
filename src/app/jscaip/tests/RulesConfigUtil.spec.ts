@@ -9,49 +9,49 @@ describe('RulesConfigUtil', () => {
 
     describe('RulesConfigDescription', () => {
 
-        type MaConfig = {
+        type MyConfig = {
             helaRosee: number;
         };
 
-        const defaultConfig: NamedRulesConfig<MaConfig> = {
+        const defaultNamedRulesConfig: NamedRulesConfig<MyConfig> = {
             config: { helaRosee: 5 },
             name: () => 'default',
         };
 
-        const translations: { [name in keyof MaConfig]: Localized } = { // This is the expected type of translations
+        const translations: { [name in keyof MyConfig]: Localized } = { // This is the expected type of translations
             helaRosee: () => 'yéssoui idizwitenne!',
         };
 
-        const validators: Record<string, MGPValidator> = {
+        const validators: { [name in keyof MyConfig]: MGPValidator } = {
             helaRosee: MGPValidators.range(1, 99),
         };
 
         it('should have at least one default standard RulesConfig', () => {
             // Given any RulesConfigDescription
-            const rcdc: RulesConfigDescription<MaConfig> =
-                new RulesConfigDescription(defaultConfig, translations, [], validators);
+            const rulesConfigDescription: RulesConfigDescription<MyConfig> =
+                new RulesConfigDescription(defaultNamedRulesConfig, translations, [], validators);
 
             // When getting default config
-            const anakin: NamedRulesConfig<MaConfig> = rcdc.getDefaultConfig();
+            const namedRulesConfig: NamedRulesConfig<MyConfig> = rulesConfigDescription.getDefaultConfig();
 
             // Then it should be the one we provided
-            expect(anakin).toEqual(defaultConfig);
+            expect(namedRulesConfig).toEqual(defaultNamedRulesConfig);
         });
 
         it('should be possible to have other standard RulesConfig', () => {
             // Given any RulesConfigDescription
-            const secondaryConfig: NamedRulesConfig<MaConfig> = {
+            const secondaryConfig: NamedRulesConfig<MyConfig> = {
                 config: { helaRosee: 7 },
                 name: () => 'numéro dosse',
             };
-            const rcdc: RulesConfigDescription<MaConfig> =
-                new RulesConfigDescription(defaultConfig, translations, [secondaryConfig], validators);
+            const rulesConfigDescription: RulesConfigDescription<MyConfig> =
+                new RulesConfigDescription(defaultNamedRulesConfig, translations, [secondaryConfig], validators);
 
             // When getting default config
-            const anakin: NamedRulesConfig<MaConfig> = rcdc.getDefaultConfig();
+            const namedRulesConfig: NamedRulesConfig<MyConfig> = rulesConfigDescription.getDefaultConfig();
 
             // Then it should still be first we provided
-            expect(anakin).toEqual(defaultConfig);
+            expect(namedRulesConfig).toEqual(defaultNamedRulesConfig);
         });
 
         it('should throw when standard configs are of different type', () => {
@@ -84,7 +84,7 @@ describe('RulesConfigUtil', () => {
 
         it('should throw when a number validator is missing', () => {
             // Given any RulesConfigDescription
-            const defaultConfig: NamedRulesConfig<MaConfig> = {
+            const defaultConfig: NamedRulesConfig<MyConfig> = {
                 config: { helaRosee: 2012 },
                 name: () => 'default',
             };
@@ -103,11 +103,11 @@ describe('RulesConfigUtil', () => {
             // Given any RulesConfigDescription
             // When trying to create the element
             // Then it should throw and log
-            const missingTranslation: { [name in keyof MaConfig]: Localized } =
-                {} as { [name in keyof MaConfig]: Localized };
+            const missingTranslation: { [name in keyof MyConfig]: Localized } =
+                {} as { [name in keyof MyConfig]: Localized };
             // The casting allow to avoid the compilation error, but it is still broken
             RulesUtils.expectToThrowAndLog(() => {
-                new RulesConfigDescription(defaultConfig, missingTranslation, [], validators);
+                new RulesConfigDescription(defaultNamedRulesConfig, missingTranslation, [], validators);
             }, `Field 'helaRosee' missing in translation!`);
         });
 

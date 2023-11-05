@@ -16,7 +16,7 @@ describe('ApagosMoveGenerator', () => {
         const initialState: ApagosState = ApagosState.getInitialState();
         const node: ApagosNode = new ApagosNode(initialState);
 
-        // When calling getListMoves
+        // When listing the moves
         const moves: ApagosMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be 8 drops

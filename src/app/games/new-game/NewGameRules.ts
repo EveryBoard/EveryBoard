@@ -40,9 +40,9 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
     private static singleton: MGPOptional<NewGameRules> = MGPOptional.empty();
 
     /**
-     * If you want your game to be configurable (different board sizes by example)
+     * If you want your game to be configurable (different board sizes for example)
      * Here should be the default config
-     * You have the option to create a type NewRulesConfig for more type safety
+     * You have the option to create a type NewRulesConfig for more type safety.
      * It is FULLY mandatory, if you don't want to make your game configurable just yet, ignore this!
      */
     private static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription =
@@ -80,8 +80,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
      * The constructor is made private to avoid creating other instances of this class.
      */
     private constructor() {
-        const config: RulesConfig = NewGameRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
-        super(NewGameState, config);
+        super(NewGameState);
     }
 
     /**

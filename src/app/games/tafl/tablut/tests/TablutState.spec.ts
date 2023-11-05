@@ -4,11 +4,14 @@ import { TablutState } from '../TablutState';
 import { TablutRules } from '../TablutRules';
 
 describe('TablutState', () => {
+
+    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().defaultConfig.config;
+
     describe('getInitialState', () => {
         it('should make invader Player.ZERO when invaders start', () => {
             // Given an initial state with a config where invader starts
             const config: TaflConfig = {
-                ...TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE,
+                ...defaultConfig,
                 invaderStarts: true,
             };
             const state: TablutState = TablutState.getInitialState(config);
@@ -21,7 +24,7 @@ describe('TablutState', () => {
         it('should make invader Player.ONE when invaders start is false', () => {
             // Given an initial state with a config where invader does not starts
             const config: TaflConfig = {
-                ...TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE,
+                ...defaultConfig,
                 invaderStarts: false,
             };
             const state: TablutState = TablutState.getInitialState(config);

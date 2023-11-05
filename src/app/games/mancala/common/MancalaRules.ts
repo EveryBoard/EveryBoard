@@ -55,8 +55,8 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         return true;
     }
 
-    protected constructor(config: MancalaConfig) {
-        super(MancalaState, config);
+    protected constructor() {
+        super(MancalaState);
     }
 
     public isLegal(move: MancalaMove, state: MancalaState): MGPValidation {
@@ -103,7 +103,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
 
     /**
      * Apply the distribution part of the move MancalaMove
-     * Apply the capture that happend due to distribution (by example the passage in the store)
+     * Apply the capture that happend due to distribution (for example the passage in the store)
      * Should NOT increment the turn of the state
      */
     public distributeMove(move: MancalaMove, state: MancalaState): MancalaDistributionResult {
@@ -248,7 +248,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
     : MGPOptional<Coord>
     {
         if (coord.y === 0) {
-            if (coord.x === (state.board[0].length - 1)) {
+            if (coord.x === (state.getWidth() - 1)) {
                 if (state.config.passByPlayerStore && player === Player.ONE && previousDropWasStore === false) {
                     return MGPOptional.empty(); // This seed is dropped in the store
                 } else {
@@ -305,7 +305,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         const captureMap: number[][] = TableUtils.copy(postCaptureResult.captureMap);
         let x: number = 0;
         const mansoonedY: number = mansooningPlayer.getOpponent().value;
-        while (x < state.board[0].length) {
+        while (x < state.getWidth()) {
             capturedSum += resultingBoard[mansoonedY][x];
             captureMap[mansoonedY][x] += resultingBoard[mansoonedY][x];
             resultingBoard[mansoonedY][x] = 0;

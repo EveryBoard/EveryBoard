@@ -15,7 +15,7 @@ describe('KamisadoMove', () => {
     it('should have a bijective encoder', () => {
         const rules: KamisadoRules = KamisadoRules.get();
         const moveGenerator: KamisadoMoveGenerator = new KamisadoMoveGenerator();
-        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, KamisadoMove.encoder);
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, KamisadoMove.encoder, {});
         EncoderTestUtils.expectToBeBijective(KamisadoMove.encoder, KamisadoMove.PASS);
     });
     it('should force move to start and end inside the board', () => {

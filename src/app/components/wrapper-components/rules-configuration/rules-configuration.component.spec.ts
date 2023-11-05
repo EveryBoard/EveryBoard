@@ -18,9 +18,9 @@ describe('RulesConfigurationComponent', () => {
 
     let component: RulesConfigurationComponent;
 
-    async function chooseSecondConfig(): Promise<void> {
+    async function chooseConfig(configIndex: number): Promise<void> {
         const selectAI: HTMLSelectElement = testUtils.findElement('#ruleSelect').nativeElement;
-        selectAI.value = selectAI.options[1].value;
+        selectAI.value = selectAI.options[configIndex].value;
         selectAI.dispatchEvent(new Event('change'));
         testUtils.detectChanges();
         await testUtils.whenStable();
@@ -40,27 +40,48 @@ describe('RulesConfigurationComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    const secondConfig: RulesConfig = { nombre: 42, canailleDeBoule: 42 };
+
+    const rulesConfigDescriptionWithNumber: RulesConfigDescription =
+        new RulesConfigDescription(
+            {
+                name: (): string => 'the_default_config_name',
+                config: {
+                    nombre: 5,
+                    canailleDeBoule: 12,
+                },
+            },
+            {
+                nombre: (): string => 'nombre',
+                canailleDeBoule: (): string => 'canaille',
+            }, [{
+                name: (): string => 'the_other_config_name',
+                config: secondConfig,
+            }], {
+                nombre: MGPValidators.range(1, 99),
+                canailleDeBoule: MGPValidators.range(1, 99),
+            },
+        );
+
+    const rulesConfigDescriptionWithBooleans: RulesConfigDescription = new RulesConfigDescription(
+        {
+            name: (): string => 'config name',
+            config: {
+                booleen: false,
+                truth: false,
+            },
+        },
+        {
+            booleen: (): string => 'booleen',
+            truth: (): string => 'veritasserum',
+        },
+    );
+
     describe('creator behavior', () => {
 
         beforeEach(() => {
             component.userIsCreator = true;
-            component.rulesConfigDescription = new RulesConfigDescription(
-                {
-                    name: (): string => 'the_default_config_name',
-                    config: {
-                        nombre: 5,
-                        canailleDeBoule: 12,
-                    },
-                },
-                {
-                    nombre: (): string => 'nombre',
-                    canailleDeBoule: (): string => 'canaille',
-                }, [
-                ], {
-                    nombre: MGPValidators.range(1, 99),
-                    canailleDeBoule: MGPValidators.range(1, 99),
-                },
-            );
+            component.rulesConfigDescription = rulesConfigDescriptionWithNumber;
         });
 
         it('should  display enabled rules select', fakeAsync(async() => {
@@ -95,31 +116,11 @@ describe('RulesConfigurationComponent', () => {
         it('should allow to change to another standard config', fakeAsync(async() => {
             // Given any component
             // And a config with two standard config (the default and the other)
-            const secondConfig: RulesConfig = { nombre: 42, canailleDeBoule: 42 };
-            component.rulesConfigDescription = new RulesConfigDescription(
-                {
-                    name: (): string => 'the_default_config_name',
-                    config: {
-                        nombre: 5,
-                        canailleDeBoule: 12,
-                    },
-                },
-                {
-                    nombre: (): string => 'nombre',
-                    canailleDeBoule: (): string => 'canaille',
-                }, [{
-                    name: (): string => 'the_other_config_name',
-                    config: secondConfig,
-                }], {
-                    nombre: MGPValidators.range(1, 99),
-                    canailleDeBoule: MGPValidators.range(1, 99),
-                },
-            );
             testUtils.detectChanges();
             spyOn(component.updateCallback, 'emit').and.callThrough();
 
             // When changing the chosen config
-            await chooseSecondConfig();
+            await chooseConfig(1);
             expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.of(secondConfig));
         }));
 
@@ -169,24 +170,8 @@ describe('RulesConfigurationComponent', () => {
             describe('number config', () => {
 
                 beforeEach(fakeAsync(async() => {
-                    component.rulesConfigDescription = new RulesConfigDescription(
-                        {
-                            name: (): string => 'name',
-                            config: {
-                                nombre: 5,
-                                canailleDeBoule: 12,
-                            },
-                        },
-                        {
-                            nombre: (): string => 'nombre',
-                            canailleDeBoule: (): string => 'canaille',
-                        }, [
-                        ], {
-                            nombre: MGPValidators.range(1, 99),
-                            canailleDeBoule: MGPValidators.range(1, 99),
-                        },
-                    );
-                    await chooseSecondConfig(); // Hence the Custom
+                    component.rulesConfigDescription = rulesConfigDescriptionWithNumber;
+                    await chooseConfig(2); // Choosing the customisable config
                 }));
 
                 it('should propose a number input when given a config of type number', fakeAsync(async() => {
@@ -206,7 +191,7 @@ describe('RulesConfigurationComponent', () => {
                     spyOn(component.updateCallback, 'emit').and.callThrough();
                     component.rulesConfigForm.get('nombre')?.setValue(80);
 
-                    // Then the resulting value
+                    // Then the resulting value should be updated
                     const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ nombre: 80, canailleDeBoule: 12 });
                     expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
                 }));
@@ -228,7 +213,7 @@ describe('RulesConfigurationComponent', () => {
                     // Given a component loaded with a config description that has a validator
                     testUtils.detectChanges();
 
-                    // When modifying config to null or negative
+                    // When modifying config to zero or negative
                     spyOn(component.updateCallback, 'emit').and.callThrough();
                     component.rulesConfigForm.get('nombre')?.setValue(0);
 
@@ -278,20 +263,8 @@ describe('RulesConfigurationComponent', () => {
             describe('boolean config', () => {
 
                 beforeEach(fakeAsync(async() => {
-                    component.rulesConfigDescription = new RulesConfigDescription(
-                        {
-                            name: (): string => 'config name',
-                            config: {
-                                booleen: true,
-                                truth: false,
-                            },
-                        },
-                        {
-                            booleen: (): string => 'booleen',
-                            truth: (): string => 'veritasserum',
-                        },
-                    );
-                    await chooseSecondConfig(); // Hence the Custom
+                    component.rulesConfigDescription = rulesConfigDescriptionWithBooleans;
+                    await chooseConfig(1); // Choosing the customisable config
                 }));
 
                 it('should propose a boolean input when given a config of type boolean', fakeAsync(async() => {
@@ -311,7 +284,7 @@ describe('RulesConfigurationComponent', () => {
                     spyOn(component.updateCallback, 'emit').and.callThrough();
                     component.rulesConfigForm.get('booleen')?.setValue(false);
 
-                    // Then the resulting value
+                    // Then the resulting value should be updated
                     const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ booleen: false, truth: false });
                     expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
                 }));
@@ -324,8 +297,8 @@ describe('RulesConfigurationComponent', () => {
                     spyOn(component.updateCallback, 'emit').and.callThrough();
                     component.rulesConfigForm.get('truth')?.setValue(true);
 
-                    // Then the resulting value should be the default, for the unmodified one
-                    const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ booleen: true, truth: true });
+                    // Then the resulting value should be the default, from the unmodified one
+                    const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ booleen: false, truth: true });
                     expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
                 }));
 
@@ -385,23 +358,7 @@ describe('RulesConfigurationComponent', () => {
                         nombre: 5,
                         canailleDeBoule: 12,
                     };
-                    component.rulesConfigDescription = new RulesConfigDescription(
-                        {
-                            name: (): string => 'name',
-                            config: {
-                                nombre: 5,
-                                canailleDeBoule: 12,
-                            },
-                        },
-                        {
-                            nombre: (): string => 'nombre',
-                            canailleDeBoule: (): string => 'canaille',
-                        }, [
-                        ], {
-                            nombre: MGPValidators.range(1, 99),
-                            canailleDeBoule: MGPValidators.range(1, 99),
-                        },
-                    );
+                    component.rulesConfigDescription = rulesConfigDescriptionWithNumber;
                 });
 
                 it('should propose a disabled number input when given a config of type number', fakeAsync(async() => {
@@ -438,19 +395,7 @@ describe('RulesConfigurationComponent', () => {
                         booleen: true,
                         truth: true,
                     };
-                    component.rulesConfigDescription = new RulesConfigDescription(
-                        {
-                            name: (): string => 'config name',
-                            config: {
-                                booleen: false,
-                                truth: false,
-                            },
-                        },
-                        {
-                            booleen: (): string => 'booleen',
-                            truth: (): string => 'veritasserum',
-                        },
-                    );
+                    component.rulesConfigDescription = rulesConfigDescriptionWithBooleans;
                 });
 
                 it('should display value of the rulesConfigToDisplay, not of the default config', fakeAsync(async() => {

@@ -16,7 +16,7 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove, S exten
 
     public override getBoardValue(node: TaflNode<M, S>): BoardValue {
         const state: S = node.gameState;
-        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(state);
+        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node);
         const defender: Player = state.getPieceAt(this.rules.getKingCoord(state).get()).getOwner() as Player;
         const stepForEscape: number = this.getStepForEscape(state) * defender.getScoreModifier();
         if (stepForEscape === -1) {
@@ -60,9 +60,7 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove, S exten
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {
                 let landing: Coord = piece.getNext(dir, 1);
-                while (landing.isInRange(this.width, this.width) &&
-                       state.getPieceAt(landing) === TaflPawn.UNOCCUPIED)
-                {
+                while (state.isOnBoard(landing) && state.getPieceAt(landing) === TaflPawn.UNOCCUPIED) {
                     if (handledCoords.every((coord: Coord) => coord.equals(landing) === false)) {
                         // coord is new
                         newGen.push(landing);

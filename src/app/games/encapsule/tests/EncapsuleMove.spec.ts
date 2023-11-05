@@ -20,7 +20,7 @@ describe('EncapsuleMove', () => {
         it('should be bijective for first turn moves', () => {
             const rules: EncapsuleRules = EncapsuleRules.get();
             const moveGenerator: EncapsuleMoveGenerator = new EncapsuleMoveGenerator();
-            MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, EncapsuleMove.encoder);
+            MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, EncapsuleMove.encoder, {});
         });
         it('should be bijective for moves', () => {
             const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 2));

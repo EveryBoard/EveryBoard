@@ -26,7 +26,7 @@ export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
                 edgesAreKingsEnnemy: (): string => $localize`Edges are king's ennemy`,
                 centralThroneCanSurroundKing: (): string => $localize`Central throne can surround king`,
                 kingFarFromHomeCanBeSandwiched: (): string => $localize`King far from home can be sandwiched`,
-                invaderStarts: (): string => $localize`Invader Starts`,
+                invaderStarts: (): string => $localize`Invader starts`,
             });
 
     private static singleton: MGPOptional<MyTaflRules> = MGPOptional.empty();
@@ -39,9 +39,7 @@ export class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
     }
 
     private constructor() {
-        super(MyTaflState,
-              MyTaflRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config,
-              MyTaflMove.from);
+        super(MyTaflState, MyTaflMove.from);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {

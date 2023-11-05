@@ -28,7 +28,7 @@ export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
             let sameTerritoryValue: number = 0;
             if (endHouse.y === playerY) {
                 captured = 0;
-                if (toDistribute <= node.gameState.board[0].length) {
+                if (toDistribute <= node.gameState.getWidth()) {
                     sameTerritoryValue = 10;
                 }
             } else {

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 describe('MancalaMove', () => {

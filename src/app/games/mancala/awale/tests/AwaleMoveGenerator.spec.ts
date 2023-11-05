@@ -33,9 +33,9 @@ describe('AwaleMoveGenerator', () => {
         expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5)));
     });
 
-    describe('Cross Config Case', () => {
+    describe('Custom Config', () => {
 
-        it('should provde move with several distribution when possible by config', () => {
+        it('should provide move with several distributions when possible by config', () => {
             // Given a state with a config allowing multiple sowing
             const customConfig: MancalaConfig = {
                 ...config,
@@ -49,11 +49,11 @@ describe('AwaleMoveGenerator', () => {
             // When listing the moves
             const moves: MancalaMove[] = moveGenerator.getListMoves(node);
 
-            // Then there should be the 5 move not passing by the store
+            // Then there should be the 5 moves not passing by the store
             const noStoreMoves: MancalaMove[] =
                 moves.filter((move: MancalaMove) => move.distributions.length === 1);
             expect(noStoreMoves.length).toBe(5);
-            // And there should be 5 with two sowing
+            // And there should be 5 with two sowings
             const storeMoves: MancalaMove[] =
                 moves.filter((move: MancalaMove) => move.distributions.length === 2);
             expect(storeMoves.length).toBe(5);

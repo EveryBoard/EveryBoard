@@ -28,7 +28,7 @@ describe('LascaControlMoveGenerator', () => {
         ], 1);
         const node: LascaNode = new LascaNode(state);
 
-        // When asking it a list of move for this state
+        // When listing the moves
         const moves: LascaMove[] = moveGenerator.getListMoves(node);
 
         // Then it should return the list of capture
@@ -39,7 +39,7 @@ describe('LascaControlMoveGenerator', () => {
         const state: LascaState = LascaState.getInitialState();
         const node: LascaNode = new LascaNode(state);
 
-        // When asking it a list of move for that state
+        // When listing the moves
         const moves: LascaMove[] = moveGenerator.getListMoves(node);
 
         // Then it should return the list of steps

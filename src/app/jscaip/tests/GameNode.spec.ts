@@ -55,7 +55,7 @@ describe('GameNode', () => {
 
         beforeEach(() => {
             GameNode.ID = 0;
-            rules = new RulesMock(GameStateMock, {});
+            rules = new RulesMock(GameStateMock);
 
             const move: MoveMock = new MoveMock(1);
             const optionalMove: MGPOptional<MoveMock> = MGPOptional.of(move);

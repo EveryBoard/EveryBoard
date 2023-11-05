@@ -38,7 +38,7 @@ export class SixRules extends Rules<SixMove, SixState, RulesConfig, SixLegalityI
         return SixRules.singleton.get();
     }
     private constructor() {
-        super(SixState, {});
+        super(SixState);
     }
 
     private currentVictorySource: SixVictorySource;

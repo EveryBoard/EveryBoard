@@ -62,7 +62,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return left + ' ' + up + ' ' + width + ' ' + height;
     }
     public getWidth(): number {
-        return 60 + ((2 + this.board[0].length) * this.SPACE_SIZE);
+        return 60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE);
     }
     public override async showLastMove(move: MancalaMove): Promise<void> {
         this.droppedInStore = [0, 0];
@@ -178,7 +178,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 scores[player.value] += 1;
             } else {
                 coord = nextCoord.get();
-                if (initial.equals(coord) === false || this.rules.config.feedOriginalHouse) {
+                if (initial.equals(coord) === false || state.config.feedOriginalHouse) {
                     // not to distribute on our starting space
                     resultingBoard[coord.y][coord.x] += 1;
                     this.filledCoords.push(coord);

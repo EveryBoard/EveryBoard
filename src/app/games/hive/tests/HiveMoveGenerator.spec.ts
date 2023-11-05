@@ -24,7 +24,7 @@ describe('HiveMoveGenerator', () => {
         const state: HiveState = HiveState.getInitialState();
         const node: HiveNode = new HiveNode(state);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: HiveMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be 5 moves
@@ -37,7 +37,7 @@ describe('HiveMoveGenerator', () => {
         ], 1);
         const node: HiveNode = new HiveNode(state);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: HiveMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be 6x5 moves: 6 possible drop locations for 5 pieces
@@ -50,7 +50,7 @@ describe('HiveMoveGenerator', () => {
         ], 5);
         const node: HiveNode = new HiveNode(state);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: HiveMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be exactly one move: passing
@@ -64,7 +64,7 @@ describe('HiveMoveGenerator', () => {
         ], 6);
         const node: HiveNode = new HiveNode(state);
 
-        // When computing
+        // When listing the moves
         const moves: HiveMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be 5 moves (one per position where the queen bee can be dropped)

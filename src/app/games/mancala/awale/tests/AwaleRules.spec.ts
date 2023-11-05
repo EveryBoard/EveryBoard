@@ -254,7 +254,7 @@ describe('AwaleRules', () => {
 
     });
 
-    describe('Cross Config Rules', () => {
+    describe('Custom Config', () => {
 
         it('should feed store when config requires to', () => {
             // Given a mancala state with a config with passByPlayerStore set to true
@@ -264,7 +264,7 @@ describe('AwaleRules', () => {
             };
             const state: MancalaState = MancalaState.getInitialState(customConfig);
 
-            // When doing simple distribution from the leftest house
+            // When doing simple distribution from the leftmost house
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
 
             // Then the move should be legal and the store should contain one (so, the score)

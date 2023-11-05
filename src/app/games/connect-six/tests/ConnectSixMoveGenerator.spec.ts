@@ -25,7 +25,7 @@ describe('ConnectSixMoveGenerator', () => {
         const state: ConnectSixState = ConnectSixState.getInitialState(defaultGobanConfig);
         const node: ConnectSixNode = new ConnectSixNode(state);
 
-        // When asking it the list of move at the first turn
+        // When listing the moves
         const moves: ConnectSixMove[] = moveGenerator.getListMoves(node);
 
         // Then it should only include the center of the board
@@ -62,7 +62,7 @@ describe('ConnectSixMoveGenerator', () => {
         const state: ConnectSixState = new ConnectSixState(board, 3);
         const node: ConnectSixNode = new ConnectSixNode(state);
 
-        // When counting the number of choices
+        // When listing the moves
         const moves: ConnectSixMove[] = moveGenerator.getListMoves(node);
 
         // Then the answer should be 65

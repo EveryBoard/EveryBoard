@@ -7,6 +7,7 @@ import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
+import { TaflConfig } from '../TaflConfig';
 
 describe('TaflPieceAndInfluenceMinimax', () => {
 
@@ -31,7 +32,8 @@ describe('TaflPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().defaultConfig.config;
+        const state: TablutState = new TablutState(board, 1, defaultConfig);
         const node: TablutNode = new TablutNode(state);
         const expectedMove: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(0, 0));
         for (let depth: number = 1; depth < 4; depth++) {

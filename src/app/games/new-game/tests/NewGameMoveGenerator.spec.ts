@@ -20,7 +20,7 @@ describe('NewGameMoveGenerator', () => {
         const initialState: NewGameState = NewGameState.getInitialState();
         const node: NewGameNode = new NewGameNode(initialState);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: NewGameMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be this many moves

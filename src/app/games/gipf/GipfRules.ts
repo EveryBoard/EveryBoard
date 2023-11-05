@@ -5,7 +5,6 @@ import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GipfMove, GipfPlacement } from './GipfMove';
@@ -16,6 +15,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Utils } from 'src/app/utils/utils';
 
 export type GipfLegalityInformation = GipfState
 
@@ -33,7 +33,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
     }
 
     private constructor() {
-        super(GipfState, {});
+        super(GipfState);
     }
 
     public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
@@ -140,9 +140,9 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
                 moved.push(cur);
                 cur = cur.getNext(dir);
             }
-            assert(stateAfterCapture.isOnBoard(cur) &&
-                   stateAfterCapture.getPieceAt(cur) === FourStatePiece.EMPTY,
-                   'getPiecesMoved called with an invalid placement performed on a full line');
+            Utils.assert(stateAfterCapture.isOnBoard(cur) &&
+                         stateAfterCapture.getPieceAt(cur) === FourStatePiece.EMPTY,
+                         'getPiecesMoved called with an invalid placement performed on a full line');
             // This is the space filled by the last pushed piece
             moved.push(cur);
             return moved;

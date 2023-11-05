@@ -60,6 +60,6 @@ describe('AbaloneMove', () => {
     it('should have a bijective encoder', () => {
         const rules: AbaloneRules = AbaloneRules.get();
         const moveGenerator: AbaloneMoveGenerator = new AbaloneMoveGenerator();
-        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, AbaloneMove.encoder);
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, AbaloneMove.encoder, {});
     });
 });

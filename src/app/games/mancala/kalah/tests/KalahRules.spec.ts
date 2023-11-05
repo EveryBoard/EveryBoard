@@ -329,7 +329,7 @@ describe('KalahRules', () => {
         });
     });
 
-    describe('Cross Config', () => {
+    describe('Custom Config', () => {
 
         it('should not require additionnal distribution when not allowed by config (mustContinueDistributionAfterStore)', () => {
             // Given a mancala state with a config with mustContinueDistributionAfterStore set to false

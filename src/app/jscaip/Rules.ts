@@ -15,10 +15,7 @@ export abstract class Rules<M extends Move,
                             L = void>
 {
 
-    public constructor(public readonly stateType: Type<S>,
-                       public config: C)
-    {
-    }
+    public constructor(public readonly stateType: Type<S>) { }
 
     /* The data that represent the status of the game at the current moment, including:
      * the board
@@ -62,9 +59,6 @@ export abstract class Rules<M extends Move,
     public abstract isLegal(move: M, state: S): MGPFallible<L>;
 
     public getInitialNode(config?: C): GameNode<M, S> {
-        if (config != null) {
-            this.config = config; // TODO FOR REVIEW: j'advocadise la présente de config dans les state, vu que les rules sont singletonisée alors que la règles peut varier d'avantage, essentiellement dans les tests
-        }
         // eslint-disable-next-line dot-notation
         const initialState: S = this.stateType['getInitialState'](config);
         return new GameNode(initialState);

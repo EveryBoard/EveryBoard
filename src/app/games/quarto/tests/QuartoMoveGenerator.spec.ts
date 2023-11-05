@@ -24,8 +24,10 @@ describe('QuartoMoveGenerator', () => {
         const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
         const node: QuartoNode = new QuartoNode(state);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
-        // When getting the list of moves
+
+        // When listing the moves
         const possibleMoves: QuartoMove[] = moveGenerator.getListMoves(node);
+
         // Then only one move should be listed
         expect(possibleMoves.length).toBe(1);
         expect(possibleMoves[0]).toEqual(move);

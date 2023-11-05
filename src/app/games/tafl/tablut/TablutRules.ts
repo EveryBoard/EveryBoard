@@ -28,7 +28,7 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
                 edgesAreKingsEnnemy: (): string => $localize`Edges are king's ennemy`,
                 centralThroneCanSurroundKing: (): string => $localize`Central throne can surround king`,
                 kingFarFromHomeCanBeSandwiched: (): string => $localize`King far from home can be sandwiched`,
-                invaderStarts: (): string => $localize`Invader Starts`,
+                invaderStarts: (): string => $localize`Invader starts`,
             });
 
     public static get(): TablutRules {
@@ -39,7 +39,7 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
     }
 
     private constructor() {
-        super(TablutState, TablutRules.RULES_CONFIG_DESCRIPTION.defaultConfig.config, TablutMove.from);
+        super(TablutState, TablutMove.from);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {

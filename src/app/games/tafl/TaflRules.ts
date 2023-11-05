@@ -5,7 +5,7 @@ import { TaflMove } from './TaflMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Debug, Utils } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -22,15 +22,11 @@ export class TaflNode<M extends TaflMove, S extends TaflState> extends GameNode<
 export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S, TaflConfig> {
 
     protected constructor(stateType: Type<S>,
-                          config: TaflConfig,
                           public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(stateType, config);
-        Utils.assert(Object.keys(this.config).length > 0, 'CONFIG CANNOT BE NULL');// TODO FOR REVIEW: on kill ça ?
+        super(stateType);
     }
     public isLegal(move: TaflMove, state: S): MGPValidation {
-        Utils.assert(Object.keys(state.config).length > 0, 'CONFIG CANNOT BE NULL');// TODO FOR REVIEW: on kill ça ?
-
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
         if (validity.isFailure()) {

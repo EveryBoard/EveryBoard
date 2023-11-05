@@ -7,6 +7,14 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
 
+export class RulesConfigDescriptionLocalizable {
+
+    public static readonly WIDTH: () => string = (): string => $localize`Width`;
+
+    public static readonly HEIGHT: () => string = (): string => $localize`Height`;
+
+}
+
 export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
     // TODO FOR REVIEW: pour les config non type, si j'enlève le "= RulesConfig" ça devient obligé de mettre ça a plein d'endroit, moyen ?
 
@@ -25,7 +33,7 @@ export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
     {
         const defaultKeys: MGPSet<string> = new MGPSet(Object.keys(defaultConfig.config));
         const translationsKey: MGPSet<string> = new MGPSet(Object.keys(translations));
-        const missingTranslation: MGPOptional<string> = translationsKey.getMissingElement(defaultKeys);
+        const missingTranslation: MGPOptional<string> = translationsKey.getMissingElementFrom(defaultKeys);
         Utils.assert(missingTranslation.isAbsent(),
                      `Field '${ missingTranslation.getOrElse('') }' missing in translation!`);
         for (const otherStandardConfig of nonDefaultStandardConfigs) {
@@ -79,8 +87,8 @@ export class RulesConfigDescriptions {
         name: (): string => $localize`Default`,
         config: defaultGobanConfig,
     }, {
-        width: (): string => $localize`Width`,
-        height: (): string => $localize`Height`,
+        width: RulesConfigDescriptionLocalizable.WIDTH,
+        height: RulesConfigDescriptionLocalizable.HEIGHT,
     }, [
     ], {
         width: MGPValidators.range(1, 99),

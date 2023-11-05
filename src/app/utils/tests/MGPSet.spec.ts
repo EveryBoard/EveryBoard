@@ -125,13 +125,13 @@ describe('MGPSet', () => {
 
     describe('getMissingElement', () => {
 
-        it('should return first element missing', () => {
+        it('should return a missing element', () => {
             // Given two set, one with one element, the other empty
             const fullSet: MGPSet<number> = new MGPSet([0]);
             const emptySet: MGPSet<number> = new MGPSet([]);
 
             // When calling getMissingElement on the empty one
-            const missingElement: MGPOptional<number> = emptySet.getMissingElement(fullSet);
+            const missingElement: MGPOptional<number> = emptySet.getMissingElementFrom(fullSet);
 
             // Then it should appear than the empty set miss one element
             expect(missingElement).toEqual(MGPOptional.of(0));
@@ -143,7 +143,7 @@ describe('MGPSet', () => {
             const emptySet: MGPSet<number> = new MGPSet([]);
 
             // When calling getMissingElement on the full one
-            const missingElement: MGPOptional<number> = fullSet.getMissingElement(emptySet);
+            const missingElement: MGPOptional<number> = fullSet.getMissingElementFrom(emptySet);
 
             // Then it should appear than the full set miss nothing
             expect(missingElement).toEqual(MGPOptional.empty());

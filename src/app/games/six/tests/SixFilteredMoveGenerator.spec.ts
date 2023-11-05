@@ -29,7 +29,7 @@ describe('SixFilteredMoveGenerator', () => {
         const state: SixState = SixState.ofRepresentation(board, 40);
         const node: SixNode = new SixNode(state);
 
-        // When listing the choices
+        // When listing the moves
         const choices: SixMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be only one starting piece
@@ -46,7 +46,7 @@ describe('SixFilteredMoveGenerator', () => {
         const state: SixState = SixState.ofRepresentation(board, 40);
         const node: SixNode = new SixNode(state);
 
-        // When listing the choices
+        // When listing the moves
         const choices: SixMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be only one starting piece
@@ -63,7 +63,7 @@ describe('SixFilteredMoveGenerator', () => {
         const state: SixState = SixState.ofRepresentation(board, 40);
         const node: SixNode = new SixNode(state);
 
-        // When listing the choices
+        // When listing the moves
         const choices: SixMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be only one starting piece
@@ -77,7 +77,7 @@ describe('SixFilteredMoveGenerator', () => {
         ], 1);
         const node: SixNode = new SixNode(state);
 
-        // When calculating the list of moves
+        // When listing the moves
         const listMoves: SixMove[] = moveGenerator.getListMoves(node);
 
         // Then the list should have all the possible drops and only them
@@ -92,7 +92,7 @@ describe('SixFilteredMoveGenerator', () => {
         ], 42);
         const node: SixNode = new SixNode(state);
 
-        // When calculating the list of moves
+        // When listing the moves
         const listMoves: SixMove[] = moveGenerator.getListMoves(node);
 
         // Then the list should have all the possible moves and only them
@@ -106,7 +106,7 @@ describe('SixFilteredMoveGenerator', () => {
         ], 43);
         const node: SixNode = new SixNode(state);
 
-        // When calculating the list of moves
+        // When listing the moves
         const listMoves: SixMove[] = moveGenerator.getListMoves(node);
 
         // Then the list should have all the possible moves and only them

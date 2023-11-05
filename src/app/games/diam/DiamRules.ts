@@ -4,7 +4,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, TableUtils } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DiamFailure } from './DiamFailure';
@@ -12,6 +11,7 @@ import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Utils } from 'src/app/utils/utils';
 
 export class DiamNode extends GameNode<DiamMove, DiamState> {}
 
@@ -26,7 +26,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         return DiamRules.singleton.get();
     }
     private constructor() {
-        super(DiamState, {});
+        super(DiamState);
     }
     public applyLegalMove(move: DiamMove, state: DiamState, _info: void): DiamState {
         if (move.isDrop()) {
@@ -97,7 +97,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         const highestAlignment: MGPOptional<Coord> = this.findHighestAlignment(node.gameState);
         if (highestAlignment.isPresent()) {
             const winningPiece: DiamPiece = node.gameState.getPieceAt(highestAlignment.get());
-            assert(winningPiece.owner.isPlayer(), 'highest alignment is owned by a player');
+            Utils.assert(winningPiece.owner.isPlayer(), 'highest alignment is owned by a player');
             return GameStatus.getVictory(winningPiece.owner as Player);
         } else {
             return GameStatus.ONGOING;

@@ -8,11 +8,12 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { TaflPawn } from '../TaflPawn';
 import { TablutState } from '../tablut/TablutState';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
-import { TablutRules } from '../tablut/TablutRules';
+import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
+import { TaflConfig } from '../TaflConfig';
 
 describe('TafPieceAndInfluenceHeuristic', () => {
 
@@ -21,6 +22,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().defaultConfig.config;
 
     beforeEach(() => {
         const rules: TablutRules = TablutRules.get();
@@ -38,7 +40,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const weakState: TablutState = new TablutState(weakBoard, 0, defaultConfig);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, O, A, O, _, X, _, _],
@@ -50,7 +52,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const strongState: TablutState = new TablutState(strongBoard, 1, defaultConfig);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -68,7 +70,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const weakState: TablutState = new TablutState(weakBoard, 0, defaultConfig);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, O, _, _, _, _],
@@ -80,7 +82,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const strongState: TablutState = new TablutState(strongBoard, 1, defaultConfig);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -98,7 +100,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const weakState: TablutState = new TablutState(weakBoard, 0, defaultConfig);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -110,7 +112,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const strongState: TablutState = new TablutState(strongBoard, 1, defaultConfig);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -128,7 +130,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const weakState: TablutState = new TablutState(weakBoard, 0, defaultConfig);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -140,7 +142,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const strongState: TablutState = new TablutState(strongBoard, 1, defaultConfig);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -158,7 +160,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const weakState: TablutState = new TablutState(weakBoard, 0, defaultConfig);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -170,7 +172,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const strongState: TablutState = new TablutState(strongBoard, 1, defaultConfig);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -189,9 +191,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+            const state: TablutState = new TablutState(board, 0, defaultConfig);
+            const node: TablutNode = new TablutNode(state);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 1))).toBeTrue();
@@ -208,9 +211,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+            const state: TablutState = new TablutState(board, 0, defaultConfig);
+            const node: TablutNode = new TablutNode(state);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
@@ -227,9 +231,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+            const state: TablutState = new TablutState(board, 0, defaultConfig);
+            const node: TablutNode = new TablutNode(state);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
@@ -246,9 +251,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+            const state: TablutState = new TablutState(board, 0, defaultConfig);
+            const node: TablutNode = new TablutNode(state);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(3, 4))).toBeFalse();
@@ -265,9 +271,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+            const state: TablutState = new TablutState(board, 1, defaultConfig);
+            const node: TablutNode = new TablutNode(state);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
                 heuristic.filterThreatMap(threatMap, state);
             const expectedThreats: SandwichThreat[] = [
@@ -292,9 +299,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+            const state: TablutState = new TablutState(board, 1, defaultConfig);
+            const node: TablutNode = new TablutNode(state);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
 
             // When checking the threat list
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
@@ -315,9 +323,10 @@ describe('TafPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+            const state: TablutState = new TablutState(board, 0, defaultConfig);
+            const node: TablutNode = new TablutNode(state);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(node, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(4, 5))).toBeFalse();

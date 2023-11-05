@@ -31,7 +31,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
     }
 
     private constructor() {
-        super(TeekoState, {});
+        super(TeekoState);
     }
 
     public isLegal(move: TeekoMove, state: TeekoState): MGPValidation {

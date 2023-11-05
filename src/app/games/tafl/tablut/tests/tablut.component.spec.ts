@@ -6,6 +6,7 @@ import { TaflPawn } from '../../TaflPawn';
 import { TablutState } from '../TablutState';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { TablutComponent } from '../tablut.component';
+import { TaflConfig } from '../../TaflConfig';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -32,11 +33,11 @@ const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove, T
         [_, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _],
-    ], 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE),
+    ], 1, defaultConfig),
     capture: TablutMove.of(new Coord(1, 0), new Coord(2, 0)),
     firstCaptured: new Coord(2, 1),
     otherPlayerPiece: new Coord(5, 0),
-    stateReadyForJumpOver: TablutState.getInitialState(TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE),
+    stateReadyForJumpOver: TablutState.getInitialState(defaultConfig),
     jumpOver: TablutMove.of(new Coord(5, 0), new Coord(5, 5)),
 };
 DoTaflTests(tablutEntries);

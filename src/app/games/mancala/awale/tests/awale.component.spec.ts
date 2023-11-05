@@ -68,7 +68,7 @@ describe('AwaleComponent', () => {
         },
     });
 
-    describe('Cross Config Tests', () => {
+    describe('Custom Config', () => {
 
         let testUtils: ComponentTestUtils<AwaleComponent>;
 

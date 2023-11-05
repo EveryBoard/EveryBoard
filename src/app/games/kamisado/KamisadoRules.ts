@@ -12,9 +12,9 @@ import { KamisadoFailure } from './KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
+import { Utils } from 'src/app/utils/utils';
 
 export class KamisadoNode extends GameNode<KamisadoMove, KamisadoState> {}
 
@@ -29,7 +29,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         return KamisadoRules.singleton.get();
     }
     private constructor() {
-        super(KamisadoState, {});
+        super(KamisadoState);
     }
     public static getColorMatchingPiece(state: KamisadoState): Array<Coord> {
         if (state.coordToPlay.isPresent()) {
@@ -89,7 +89,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
 
         KamisadoBoard.allPieceCoords(state.board).forEach((c: Coord) => {
             const piece: KamisadoPiece = state.getPieceAt(c);
-            assert(piece !== KamisadoPiece.EMPTY, 'allPieceCoords failed to filter KamisadoPiece.EMPTY');
+            Utils.assert(piece !== KamisadoPiece.EMPTY, 'allPieceCoords failed to filter KamisadoPiece.EMPTY');
             if (piece.player === Player.ONE) { // player 1, top (0) to bottom (7) so we want the max
                 furthest1 = Math.max(furthest1, c.y);
             } else { // player 0, bottom (7) to top (0), so we want the min

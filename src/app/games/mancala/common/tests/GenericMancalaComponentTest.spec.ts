@@ -31,7 +31,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         const playerY: number = state.getCurrentPlayerY();
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
         let lastDistributionSeedNumber: number = state.getPieceAtXY(lastDistribution.x, playerY);
-        if (lastDistributionSeedNumber > (2 * state.board[0].length)) {
+        if (lastDistributionSeedNumber > (2 * state.getWidth())) {
             // Since we are distributing enough seed to do the whole turn
             // it'll take TIMEOUT_BETWEEN_SEED ms to skip the initial house
             lastDistributionSeedNumber++;
@@ -423,7 +423,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const rules: R = mancalaTestUtils.testUtils.getGameComponent().rules;
             const encoder: Encoder<MancalaMove> = mancalaTestUtils.testUtils.getGameComponent().encoder;
             const moveGenerator: MoveGenerator<MancalaMove, MancalaState> = mancalaTestUtils.moveGenerator;
-            MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, encoder);
+            MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, encoder, defaultConfig);
         });
     });
 }

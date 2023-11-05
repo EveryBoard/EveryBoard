@@ -43,7 +43,7 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
         const state: EpaminondasState = new EpaminondasState(board, 1);
         const node: EpaminondasNode = new EpaminondasNode(state);
 
-        // When getting the list of move
+        // When listing the moves
         const moves: EpaminondasMove[] = moveGenerator.getListMoves(node);
 
         // Then we should have all of them (8)

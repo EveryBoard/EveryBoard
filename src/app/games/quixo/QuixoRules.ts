@@ -14,7 +14,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { QuixoFailure } from './QuixoFailure';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
@@ -32,8 +32,8 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
                     height: 5,
                 },
             }, {
-                width: (): string => $localize`Width`, // TODO FOR REVIEW: put width and height in common everyEffingWhere ?
-                height: (): string => $localize`Height`,
+                width: RulesConfigDescriptionLocalizable.WIDTH,
+                height: RulesConfigDescriptionLocalizable.HEIGHT,
             }, [
             ], {
                 width: MGPValidators.range(1, 99),
@@ -48,7 +48,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
 
     private constructor() {
-        super(QuixoState, QuixoRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
+        super(QuixoState);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<QuixoConfig> {

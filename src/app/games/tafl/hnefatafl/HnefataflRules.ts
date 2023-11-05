@@ -27,7 +27,7 @@ export class HnefataflRules extends TaflRules<HnefataflMove, HnefataflState> {
             edgesAreKingsEnnemy: (): string => $localize`Edges are king's ennemy`,
             centralThroneCanSurroundKing: (): string => $localize`Central throne can surround king`,
             kingFarFromHomeCanBeSandwiched: (): string => $localize`King far from home can be sandwiched`,
-            invaderStarts: (): string => $localize`Invader Starts`,
+            invaderStarts: (): string => $localize`Invader starts`,
         });
 
     public static get(): HnefataflRules {
@@ -37,9 +37,7 @@ export class HnefataflRules extends TaflRules<HnefataflMove, HnefataflState> {
         return HnefataflRules.singleton.get();
     }
     private constructor() {
-        super(HnefataflState,
-              HnefataflRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config,
-              HnefataflMove.from);
+        super(HnefataflState, HnefataflMove.from);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {

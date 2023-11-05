@@ -27,7 +27,7 @@ export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
             edgesAreKingsEnnemy: (): string => $localize`Edges are king's ennemy`,
             centralThroneCanSurroundKing: (): string => $localize`Central throne can surround king`,
             kingFarFromHomeCanBeSandwiched: (): string => $localize`King far from home can be sandwiched`,
-            invaderStarts: (): string => $localize`Invader Starts`,
+            invaderStarts: (): string => $localize`Invader starts`,
         });
 
     public static get(): BrandhubRules {
@@ -38,9 +38,7 @@ export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
     }
 
     private constructor() {
-        super(BrandhubState,
-              BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config,
-              BrandhubMove.from);
+        super(BrandhubState, BrandhubMove.from);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {

@@ -4,7 +4,7 @@ import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '.
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class KalahRules extends MancalaRules {
@@ -23,7 +23,7 @@ export class KalahRules extends MancalaRules {
                 width: 6,
             },
         }, {
-            width: (): string => $localize`Width`,
+            width: RulesConfigDescriptionLocalizable.WIDTH,
             seedsByHouse: (): string => $localize`Seed by house`,
             feedOriginalHouse: (): string => $localize`Feed original house`,
             mustFeed: (): string => $localize`Must feed`,
@@ -40,10 +40,6 @@ export class KalahRules extends MancalaRules {
             KalahRules.singleton = MGPOptional.of(new KalahRules());
         }
         return KalahRules.singleton.get();
-    }
-
-    private constructor() {
-        super(KalahRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<MancalaConfig> {
@@ -72,7 +68,7 @@ export class KalahRules extends MancalaRules {
                 // We can capture
                 const board: number[][] = distributedState.getCopiedBoard();
                 const capturedSum: number = board[0][landingSpace.x] + board[1][landingSpace.x];
-                const captureMap: number[][] = TableUtils.create(distributedState.board[0].length, 2, 0);
+                const captureMap: number[][] = TableUtils.create(distributedState.getWidth(), 2, 0);
                 captureMap[0][landingSpace.x] = board[0][landingSpace.x];
                 captureMap[1][landingSpace.x] = board[1][landingSpace.x];
                 board[0][landingSpace.x] = 0;

@@ -414,7 +414,7 @@ describe('GoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('Phase.COUNTING + GoMove/play = Phase.PLAYING', () => {
-            // Given a board on counting phase (by example, incorrectly marked)
+            // Given a board on counting phase (for example, incorrectly marked)
             const board: Table<GoPiece> = [
                 [b, b, b, b, b],
                 [b, b, b, b, b],
@@ -439,7 +439,7 @@ describe('GoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('Phase.COUNTING + GoMove.ACCEPT = Phase.ACCEPT', () => {
-            // Given a board on counting phase (by example, incorrectly marked)
+            // Given a board on counting phase (for example, incorrectly marked)
             const board: Table<GoPiece> = [
                 [b, b, b, b, b],
                 [b, b, b, b, b],

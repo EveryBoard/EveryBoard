@@ -22,7 +22,7 @@ describe('TeekoMoveGenerator', () => {
         const initialState: TeekoState = TeekoState.getInitialState();
         const node: TeekoNode = new TeekoNode(initialState);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: TeekoMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be (TeekoState.WIDTH * TeekoState.WIDTH) move, one by space
@@ -40,7 +40,7 @@ describe('TeekoMoveGenerator', () => {
         const state: TeekoState = new TeekoState(board, 8);
         const node: TeekoNode = new TeekoNode(state);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: TeekoMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be 8 moves (2 movable pieces, 8 valid targets in total)
@@ -59,7 +59,7 @@ describe('TeekoMoveGenerator', () => {
         const node: TeekoNode = new TeekoNode(state);
         TeekoRules.CAN_TELEPORT = true;
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: TeekoMove[] = moveGenerator.getListMoves(node);
 
         // Then there should be 4 x 17 (the number of piece x the number of empty space)

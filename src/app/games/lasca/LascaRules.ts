@@ -25,7 +25,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         return LascaRules.singleton.get();
     }
     private constructor() {
-        super(LascaState, {});
+        super(LascaState);
     }
     public getCaptures(state: LascaState): LascaMove[] {
         const player: Player = state.getCurrentPlayer();

@@ -29,7 +29,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, RulesCo
         return EncapsuleRules.singleton.get();
     }
     private constructor() {
-        super(EncapsuleState, {});
+        super(EncapsuleState);
     }
     public static readonly LINES: Coord[][] = [
         [new Coord(0, 0), new Coord(0, 1), new Coord(0, 2)],

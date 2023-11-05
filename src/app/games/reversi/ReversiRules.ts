@@ -37,7 +37,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, RulesConfig, 
         return ReversiRules.singleton.get();
     }
     private constructor() {
-        super(ReversiState, {});
+        super(ReversiState);
     }
     public static getGameStatus(node: ReversiNode): GameStatus {
         const state: ReversiState = node.gameState;

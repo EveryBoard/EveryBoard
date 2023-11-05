@@ -26,7 +26,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return LinesOfActionRules.singleton.get();
     }
     private constructor() {
-        super(LinesOfActionState, {});
+        super(LinesOfActionState);
     }
     public static getNumberOfGroups(state: LinesOfActionState): [number, number] {
         const groups: number[][] = TableUtils.create(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);

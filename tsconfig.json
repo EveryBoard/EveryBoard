@@ -12,11 +12,11 @@
         "sourceMap": true,
         "declaration": false,
         "alwaysStrict": true,
-        "noImplicitThis": true,
         "strictBindCallApply": true,
         "strictNullChecks": true,
         "noImplicitOverride": true,
         "strict": true,
+        "noImplicitThis": true,
         // The following options still need to be set to true (they are false by default, but we list them explicitly)
         "noUncheckedIndexedAccess": false, // Include 'undefined' in index signature results, e.g., a[0] could be undefined
         "noImplicitAny": false, // some fixes to do before enabling this one

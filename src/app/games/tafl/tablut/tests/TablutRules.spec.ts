@@ -9,6 +9,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { TaflFailure } from '../../TaflFailure';
+import { TaflConfig } from '../../TaflConfig';
 
 describe('TablutRules', () => {
 
@@ -17,6 +18,7 @@ describe('TablutRules', () => {
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().defaultConfig.config;
 
     beforeEach(() => {
         rules = TablutRules.get();
@@ -47,9 +49,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 3, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 3, defaultConfig);
         const move: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(2, 0));
-        const expectedState: TablutState = new TablutState(expectedBoard, 4, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const expectedState: TablutState = new TablutState(expectedBoard, 4, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('Capturing against empty throne should work', () => {
@@ -75,9 +77,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 3, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 3, defaultConfig);
         const move: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(2, 0));
-        const expectedState: TablutState = new TablutState(expectedBoard, 4, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const expectedState: TablutState = new TablutState(expectedBoard, 4, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('Capturing king should require four invader and lead to victory', () => {
@@ -103,9 +105,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 0, defaultConfig);
         const move: TablutMove = TablutMove.of(new Coord(2, 0), new Coord(3, 0));
-        const expectedState: TablutState = new TablutState(expectedBoard, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const expectedState: TablutState = new TablutState(expectedBoard, 1, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
@@ -133,9 +135,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 0, defaultConfig);
         const move: TablutMove = TablutMove.of(new Coord(2, 1), new Coord(3, 1));
-        const expectedState: TablutState = new TablutState(expectedBoard, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const expectedState: TablutState = new TablutState(expectedBoard, 1, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
@@ -163,9 +165,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 2, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 2, defaultConfig);
         const move: TablutMove = TablutMove.of(new Coord(2, 1), new Coord(1, 1));
-        const expectedState: TablutState = new TablutState(expectedBoard, 3, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const expectedState: TablutState = new TablutState(expectedBoard, 3, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         // Then it should be considered as ongoing
@@ -184,7 +186,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 0, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 0, defaultConfig);
 
         // When trying to sandwich
         const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
@@ -201,7 +203,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: TablutState = new TablutState(expectedBoard, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const expectedState: TablutState = new TablutState(expectedBoard, 1, defaultConfig);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeOngoing(rules, node);
@@ -219,7 +221,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 12, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 12, defaultConfig);
 
         // When attempting to surround him
         const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
@@ -236,7 +238,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: TablutState = new TablutState(expectedBoard, 13, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const expectedState: TablutState = new TablutState(expectedBoard, 13, defaultConfig);
         const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeOngoing(rules, node);
@@ -254,7 +256,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 1, defaultConfig);
 
         // When moving the king back to his throne
         const move: TablutMove = TablutMove.of(new Coord(4, 3), new Coord(4, 4));
@@ -271,7 +273,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: TablutState = new TablutState(expectedBoard, 2, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const expectedState: TablutState = new TablutState(expectedBoard, 2, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should forbid soldier to land on the central throne (4, 4)', () => {
@@ -287,7 +289,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 1, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 1, defaultConfig);
 
         // When trying to sit on the king's throne
         const move: TablutMove = TablutMove.of(new Coord(0, 4), new Coord(4, 4));
@@ -309,7 +311,7 @@ describe('TablutRules', () => {
             [A, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 2, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const state: TablutState = new TablutState(board, 2, defaultConfig);
 
         // When trying to sandwiching the king
         const move: TablutMove = TablutMove.of(new Coord(0, 4), new Coord(0, 6));
@@ -326,7 +328,7 @@ describe('TablutRules', () => {
             [A, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: TablutState = new TablutState(expectedBoard, 3, TablutRules.TODO_REMOVE_APRES_REVOYAGE_VOYAGE);
+        const expectedState: TablutState = new TablutState(expectedBoard, 3, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
 });
