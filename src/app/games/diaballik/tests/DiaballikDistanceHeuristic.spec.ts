@@ -17,6 +17,7 @@ describe('DiaballikDistanceHeuristic', () => {
     beforeEach(() => {
         heuristic = new DiaballikDistanceHeuristic();
     });
+
     it('should prefer states where the ball is closest to opponent line', () => {
         // Given two states, where one has the ball closest to the opponent line
         const weakState: DiaballikState = new DiaballikState([
@@ -38,6 +39,7 @@ describe('DiaballikDistanceHeuristic', () => {
             [O, O, O, _, _, O, O],
         ], 0);
         // When computing their heuristic value
+
         // Then it should prefer the one with the ball closest to opponent line
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState,

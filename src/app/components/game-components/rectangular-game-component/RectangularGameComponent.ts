@@ -20,19 +20,18 @@ export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
     public board: Table<P>;
 
     public getWidth(): number {
-        return this.board[0].length;
+        return this.getState().getWidth();
     }
 
     public getHeight(): number {
-        return this.board.length;
+        return this.getState().getHeight();
     }
 
     public getViewBox(): ViewBox {
-        const left: number = -0.5 * this.STROKE_WIDTH;
-        const up: number = -0.5 * this.STROKE_WIDTH;
-        const right: number = this.getWidth() * this.SPACE_SIZE + this.STROKE_WIDTH;
-        const down: number = this.getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH;
-        return ViewBox.fromLimits(left, right, up, down);
+        const width: number = this.getWidth() * this.SPACE_SIZE;
+        const height: number = this.getHeight() * this.SPACE_SIZE;
+        const halfStroke: number = 0.5 * this.STROKE_WIDTH;
+        return ViewBox.fromLimits(0, width, 0, height).expand(halfStroke, halfStroke, 0, 0);
     }
 
 }

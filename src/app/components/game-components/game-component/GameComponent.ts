@@ -168,8 +168,10 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getTranslation(coord: Coord): string {
         return this.getTranslationXY(coord.x, coord.y);
     }
-    public getTranslationXY(x: number, y: number): string {
-        return `translate(${x * this.SPACE_SIZE} ${y * this.SPACE_SIZE})`;
+    public getTranslationXY(coordX: number, coordY: number): string {
+        const svgX: number = coordX * this.SPACE_SIZE;
+        const svgY: number = coordY * this.SPACE_SIZE;
+        return `translate(${svgX} ${svgY})`;
     }
 }
 

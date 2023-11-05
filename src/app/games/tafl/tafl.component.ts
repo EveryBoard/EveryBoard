@@ -39,9 +39,8 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         super(messageDisplayer);
     }
     public override getViewBox(): ViewBox {
-        const begin: number = - this.STROKE_WIDTH;
         const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
-        return ViewBox.fromLimits(begin, begin, width, width);
+        return ViewBox.fromLimits(0, width, 0, width).expand(this.STROKE_WIDTH, this.STROKE_WIDTH, 0, 0);
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();

@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="left + ' ' + up + ' ' + width + ' ' + height"
+     [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
+
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let spaceContent of line; index as x"
            id="click_{{ x }}_{{ y }}"
@@ -62,7 +63,7 @@
            [attr.transform]="getTilesCountTranslate(player)">
             <polygon [attr.points]="getTilesCountCoordinate()"
                      [attr.stroke]="lastTurnWasTilesExchange(player) ? 'yellow' : 'black'"
-                     [ngClass]="['base', 'player' + player + '-fill']"
+                     [ngClass]="['base', 'player' + player.value + '-fill']"
                      stroke-linecap="round"
             />
             <text id="playerZeroTilesCount"

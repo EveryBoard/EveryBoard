@@ -21,9 +21,11 @@ describe('DiaballikComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<DiaballikComponent>('Diaballik');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     it('should finish the move when clicking on the done button after one sub move', fakeAsync(async() => {
         // Given a state with a submove already done
         await testUtils.expectClickSuccess('#click_0_6');
@@ -38,6 +40,7 @@ describe('DiaballikComponent', () => {
                               MGPOptional.empty());
         await testUtils.expectMoveSuccess('#done', move);
     }));
+
     it('should finish the move when clicking on the done button after two sub moves', fakeAsync(async() => {
         // Given a state
 
@@ -54,6 +57,7 @@ describe('DiaballikComponent', () => {
         // Then it should succeed
         await testUtils.expectMoveSuccess('#done', move);
     }));
+
     it('should finish the move upon selection of the third sub move', fakeAsync(async() => {
         // Given a state where we two submoves and almost entirely the third one
         await testUtils.expectClickSuccess('#click_0_6');
@@ -71,16 +75,19 @@ describe('DiaballikComponent', () => {
         // Then it should do the move
         await testUtils.expectMoveSuccess('#click_4_6', move);
     }));
+
     it('should cancel move when deselecting the first selected piece', fakeAsync(async() => {
         // Given a state where a piece has been selected
         await testUtils.expectClickSuccess('#click_0_6');
         testUtils.expectElementToHaveClass('#piece_0_6', 'selected-stroke');
 
         // When clicking on it a second time
+
         // Then it should cancel the move and deselect the piece
         await testUtils.expectClickFailure('#click_0_6');
         testUtils.expectElementNotToHaveClass('#piece_0_6', 'selected-stroke');
     }));
+
     it('should deselect current piece when clicking a second time on it', fakeAsync(async() => {
         // Given a state where a sub move has been done and a piece selected
         await testUtils.expectClickSuccess('#click_0_6');
@@ -90,9 +97,11 @@ describe('DiaballikComponent', () => {
 
         // When deselecting the selected piece
         await testUtils.expectClickSuccess('#click_1_6');
+
         // Then it should not cancel the move but just deselect the piece
         testUtils.expectElementNotToHaveClass('#piece_1_6', 'selected-stroke');
     }));
+
     it('should show possible targets when selecting a piece without ball', fakeAsync(async() => {
         // Given a state
 
@@ -104,6 +113,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementNotToExist('#indicator_1_5'); // diagonal is not a target
         testUtils.expectElementNotToExist('#indicator_1_6'); // occupied space is not a target
     }));
+
     it('should show possible targets when selecting the piece with the ball', fakeAsync(async() => {
         // Given a state
 
@@ -115,6 +125,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToExist('#indicator_4_6');
         testUtils.expectElementNotToExist('#indicator_0_6'); // obstructed path, not a target
     }));
+
     it('should forbid selecting the piece that holds the ball if a pass has already been done', fakeAsync(async() => {
         // Given a state where a pass has already been done for the current move
         await testUtils.expectClickSuccess('#click_3_6');
@@ -125,20 +136,25 @@ describe('DiaballikComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_6', DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
     }));
+
     it('should forbid selecting the empty piece', fakeAsync(async() => {
         // Given a state
 
         // When clicking on an empty space
+
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     }));
+
     it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
         // Given a state
 
         // When clicking on a piece of the opponent
+
         // Then it should fail
         await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
+
     it('should forbid passing the ball to an opponent', fakeAsync(async() => {
         // Given a state where the piece with the ball has been selected
         await testUtils.expectClickSuccess('#click_3_6');
@@ -148,6 +164,7 @@ describe('DiaballikComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_3_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
+
     it('should forbid moving on another piece', fakeAsync(async() => {
         // Given a state
 
@@ -157,6 +174,7 @@ describe('DiaballikComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_1_6', RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
     }));
+
     it('should forbid moving diagonally', fakeAsync(async() => {
         // Given a state
 
@@ -166,6 +184,7 @@ describe('DiaballikComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_1_5', DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
     }));
+
     it('should forbid passing not in a straight line', fakeAsync(async() => {
         // Given a state in construction where a strange pass is possible (but illegal)
         await testUtils.expectClickSuccess('#click_4_6');
@@ -174,10 +193,12 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_4_4');
 
         // When trying to pass along a non-straight line
+
         // Then it should fail
         await testUtils.expectClickSuccess('#click_3_6');
         await testUtils.expectClickFailure('#click_4_4', DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
     }));
+
     it('should forbid moving more than one space at a time', fakeAsync(async() => {
         // Given a state
 
@@ -187,6 +208,7 @@ describe('DiaballikComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_0_3', DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
     }));
+
     it('should forbid selecting a piece for a third translation', fakeAsync(async() => {
         // Given a state where two translations have already been done
         await testUtils.expectClickSuccess('#click_0_6');
@@ -199,6 +221,7 @@ describe('DiaballikComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_6', DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
     }));
+
     it('should show the last move', fakeAsync(async() => {
         // Given a state with a last move
         const state: DiaballikState = new DiaballikState([
@@ -234,6 +257,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementNotToHaveClass('#piece_4_6', 'last-move-stroke');
         testUtils.expectElementToHaveClass('#ball_4_6', 'last-move-stroke');
     }));
+
     it('should not show last move upon construction of a new move', fakeAsync(async() => {
         // Given a state with a last move
         const state: DiaballikState = new DiaballikState([
@@ -267,6 +291,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementNotToHaveClass('#space_4_6', 'moved-fill');
         testUtils.expectElementNotToHaveClass('#ball_4_6', 'last-move-stroke');
     }));
+
     it('should show last move if current move is canceled by deselecting the first piece', fakeAsync(async() => {
         // Given a state with a last move and a selected piece
         const state: DiaballikState = new DiaballikState([
@@ -301,6 +326,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#space_4_6', 'moved-fill');
         testUtils.expectElementToHaveClass('#ball_4_6', 'last-move-stroke');
     }));
+
     it('should show move being constructed as last move', fakeAsync(async() => {
         // Given a state
 
@@ -320,6 +346,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#space_4_6', 'moved-fill');
         testUtils.expectElementToHaveClass('#ball_4_6', 'last-move-stroke');
     }));
+
     it('should show the victory', fakeAsync(async() => {
         // Given a state with victory
         const state: DiaballikState = new DiaballikState([
@@ -338,6 +365,7 @@ describe('DiaballikComponent', () => {
         // Then it should show the victory
         testUtils.expectElementToHaveClass('#piece_4_0', 'victory-stroke');
     }));
+
     it('should show the defeat upon blocking the opponent (Player.ZERO)', fakeAsync(async() => {
         // Given a state with a defeat due to blocking the opponent
         const state: DiaballikState = new DiaballikState([
@@ -362,6 +390,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#piece_5_6', 'defeat-stroke');
         testUtils.expectElementToHaveClass('#piece_6_6', 'defeat-stroke');
     }));
+
     it('should show the defeat upon blocking the opponent (Player.ONE)', fakeAsync(async() => {
         // Given a state with a defeat due to blocking the opponent
         const state: DiaballikState = new DiaballikState([
@@ -386,6 +415,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#piece_5_3', 'defeat-stroke');
         testUtils.expectElementToHaveClass('#piece_6_2', 'defeat-stroke');
     }));
+
     it('should show the number of translations and passes made', fakeAsync(async() => {
         // Given a state where no translation or pass has been made at this turn
         testUtils.expectTextToBe('#translationCount', '0');
@@ -401,12 +431,15 @@ describe('DiaballikComponent', () => {
         testUtils.expectTextToBe('#translationCount', '1');
         testUtils.expectTextToBe('#passCount', '1');
     }));
+
     it('should not show number of translations and passes when not interactive', fakeAsync(async() => {
         // Given a non-interactive component
         testUtils.expectElementToExist('#translationCount');
         testUtils.expectElementToExist('#passCount');
         testUtils.getGameComponent().setInteractive(false);
+
         // When displaying it
+
         // Then there should be no translation or pass count
         testUtils.expectElementNotToExist('#translationCount');
         testUtils.expectElementNotToExist('#passCount');

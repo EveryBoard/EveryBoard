@@ -18,6 +18,7 @@ import { DiaballikFailure } from './DiaballikFailure';
 import { Line } from 'src/app/jscaip/Line';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
     selector: 'app-diaballik',
@@ -300,5 +301,9 @@ export class DiaballikComponent
         const centerX: number = boardWidth / 2;
         const centerY: number = boardHeight / 2;
         return `rotate(${rotation} ${centerX} ${centerY})`;
+    }
+
+    public override getViewBox(): ViewBox {
+        return super.getViewBox().expand(0, 0, this.SPACE_SIZE, this.SPACE_SIZE);
     }
 }

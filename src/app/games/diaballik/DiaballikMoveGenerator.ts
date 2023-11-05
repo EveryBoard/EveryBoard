@@ -1,5 +1,5 @@
 import { MoveGenerator } from 'src/app/jscaip/AI';
-import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { DiaballikNode, DiaballikRules } from './DiaballikRules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -143,7 +143,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                         for (const end of this.getTranslationEnds(state, coordAndContent.coord)) {
                             // We ignore the forbidden end because it is the opposite
                             // of the previous translation, hence it a no-op
-                            if (forbiddenEnd.equalsValue(end) === false || this.avoidDuplicates === false) {
+                            if ((forbiddenEnd.equalsValue(end) === false) || this.avoidDuplicates === false) {
                                 let keep: boolean = true;
                                 if (moveInConstruction.hasPass) {
                                     // There was a pass before, so we only keep this if
@@ -153,6 +153,9 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                                     //   - it goes through the path of the pass,
                                     const goesThroughPassPath: boolean = moveInConstruction.passPathContains(end);
                                     keep = isPieceThatPassed || goesThroughPassPath;
+                                }
+                                if (this.isTranslationDuplicate(coord, end, moveInConstruction)) {
+                                    keep = false;
                                 }
                                 if (keep || this.avoidDuplicates === false) {
                                     // The translation here is valid and legal by construction
@@ -167,6 +170,26 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
             }
         }
         return nextMovesInConstruction;
+    }
+
+    private isTranslationDuplicate(start: Coord, end: Coord, moveInConstruction: DiaballikMoveInConstruction): boolean {
+        // We want to avoid duplicate translation pairs, e.g., in one move we do A->B then C->D,
+        // and in another move we do C-> then A->B, without passes in between: this is the same move.
+        // To do so, we only keep double translations that are ordered, i.e., we keep the one which has (A, B) < (C, D)
+        if (moveInConstruction.subMoves.length > 1) {
+            const lastSubMove: DiaballikSubMove = moveInConstruction.subMoves[moveInConstruction.subMoves.length-1];
+            if (isTranslation(lastSubMove)) {
+                // A is start, B is end
+                // C is lastSubMove.start, D is lastSubMove.end
+                const compareAtoB: number = start.compareTo(lastSubMove.getStart());
+                const compareCtoD: number = end.compareTo(lastSubMove.getEnd());
+                return compareAtoB === -1 && compareCtoD === -1;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     private getPreviousTranslationStartThatEndsAt(moveInConstruction: DiaballikMoveInConstruction,

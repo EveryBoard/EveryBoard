@@ -7,6 +7,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { DiaballikFailure } from '../DiaballikFailure';
 
 describe('DiaballikMove', () => {
+
     it('should reject out of board moves', () => {
         const invalidCoord: Coord = new Coord(-1, 0);
         const validCoord: Coord = new Coord(0, 0);
@@ -19,6 +20,7 @@ describe('DiaballikMove', () => {
         RulesUtils.expectToThrowAndLog(() => DiaballikBallPass.from(validCoord, invalidCoord),
                                        'DiaballikMove not on board');
     });
+
     it('should reject move with more than one pass', () => {
         const pass: DiaballikBallPass = DiaballikBallPass.from(new Coord(0, 0), new Coord(1, 0)).get();
         const translation: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
@@ -27,6 +29,7 @@ describe('DiaballikMove', () => {
         RulesUtils.expectToThrowAndLog(() => new DiaballikMove(pass, MGPOptional.of(translation), MGPOptional.of(pass)),
                                        'DiaballikMove should have at most one pass');
     });
+
     it('should reject move with three translations', () => {
         const first: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(0, 1)).get();
         const second: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 1), new Coord(1, 1)).get();
@@ -34,24 +37,28 @@ describe('DiaballikMove', () => {
         RulesUtils.expectToThrowAndLog(() => new DiaballikMove(first, MGPOptional.of(second), MGPOptional.of(third)),
                                        'DiaballikMove should have at most two translations');
     });
+
     it('should reject move that translate by more than one orthogonal space', () => {
         const invalidTranslation: MGPFallible<DiaballikTranslation> =
             DiaballikTranslation.from(new Coord(0, 0), new Coord(3, 0));
         expect(invalidTranslation.isFailure()).toBeTrue();
         expect(invalidTranslation.getReason()).toBe(DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
     });
+
     it('should reject move that translate diagonally', () => {
         const invalidTranslation: MGPFallible<DiaballikTranslation> =
             DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 1));
         expect(invalidTranslation.isFailure()).toBeTrue();
         expect(invalidTranslation.getReason()).toBe(DiaballikFailure.MUST_MOVE_BY_ONE_ORTHOGONAL_SPACE());
     });
+
     it('should reject move that do not pass on a straight line', () => {
         const invalidPass: MGPFallible<DiaballikBallPass> =
             DiaballikBallPass.from(new Coord(0, 0), new Coord(1, 2));
         expect(invalidPass.isFailure()).toBeTrue();
         expect(invalidPass.getReason()).toBe(DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
     });
+
     it('should compute the list of moves with getSubMoves', () => {
         const first: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
         const second: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 1), new Coord(1, 1)).get();
@@ -63,6 +70,7 @@ describe('DiaballikMove', () => {
         expect(moveWithTwo.getSubMoves().length).toBe(2);
         expect(moveWithThree.getSubMoves().length).toBe(3);
     });
+
     describe('toString', () => {
         it('should be defined', () => {
             const translation: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
@@ -70,12 +78,14 @@ describe('DiaballikMove', () => {
             expect(move.toString()).toBe('DiaballikMove((0, 0) -> (1, 0), MGPOptional.empty(), MGPOptional.empty())');
         });
     });
+
     describe('equals', () => {
         it('should return true for the same move', () => {
             const translation: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
             const move: DiaballikMove = new DiaballikMove(translation, MGPOptional.empty(), MGPOptional.empty());
             expect(move.equals(move)).toBeTrue();
         });
+
         it('should return false for another move', () => {
             const firstTranslation: DiaballikTranslation =
                 DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
@@ -101,6 +111,7 @@ describe('DiaballikMove', () => {
             expect(fullMove.equals(moveWithoutPass)).toBeFalse();
         });
     });
+
     describe('encoder', () => {
         it('should be bijective', () => {
             const firstTranslation: DiaballikTranslation =

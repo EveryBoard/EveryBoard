@@ -18,6 +18,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
 import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
     selector: 'app-coerceo',
@@ -42,11 +43,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public possibleLandings: Coord[] = [];
 
-    public left: number = - 2 * this.STROKE_WIDTH;
-    public up: number = (- this.SPACE_SIZE / 2) - (2 * this.STROKE_WIDTH);
-    public width: number = this.SPACE_SIZE * 6;
-    public height: number = 8 * (this.SPACE_SIZE + this.STROKE_WIDTH);
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
@@ -62,8 +58,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         ];
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
-        this.SPACE_SIZE = 70;
-        // this.updateBoard();
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.chosenCoord = MGPOptional.empty();
@@ -246,5 +240,14 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         x = this.SPACE_SIZE * x;
         y = this.SPACE_SIZE * y;
         return 'translate(' + x + ', ' + y + ')';
+    }
+
+    public getViewBox(): ViewBox {
+        const left: number = - this.SPACE_SIZE / 2;
+        const up: number = - this.SPACE_SIZE / 2;
+        const width: number = this.SPACE_SIZE * 8.5 + this.STROKE_WIDTH * 2;
+        const height: number = this.SPACE_SIZE * 10.5 + this.STROKE_WIDTH * 2;
+        const halfStroke: number = this.STROKE_WIDTH / 2;
+        return new ViewBox(left, up, width, height).expand(halfStroke, halfStroke, halfStroke, halfStroke);
     }
 }

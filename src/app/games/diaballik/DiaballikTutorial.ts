@@ -19,7 +19,7 @@ export class DiaballikTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Translations`,
-            $localize`During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step from any piece that does not hold the ball.<br/><br/>Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.`,
+            $localize`During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step of any piece that does not hold the ball.<br/><br/>Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.`,
             DiaballikState.getInitialState(),
             [new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                                MGPOptional.empty(),
@@ -29,7 +29,7 @@ export class DiaballikTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Pass`,
-            $localize`Another action that you are allowed to do at most once per turn is a pass. You can pass the ball by clicking on the piece that holds the ball, then on another one of your piece that can receive it. A pass must be made in a straight line along an unobstructed path.<br/><br/>Here, you can make two moves and a pass to win the game, do it!`,
+            $localize`Another action that you are allowed to do at most once per turn is a pass. You can pass the ball by clicking on the piece that holds the ball, then on another one of your piece that can receive it. A pass must be made in a straight line along an unobstructed path.<br/><br/>Here, playing Dark, you can make two moves and a pass to win the game, do it!`,
             new DiaballikState([
                 [X, X, X, Ẋ, _, X, X],
                 [_, _, _, O, _, _, _],

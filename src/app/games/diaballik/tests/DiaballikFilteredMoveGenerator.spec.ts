@@ -34,6 +34,7 @@ describe('DiaballikFilteredMoveGenerator of length 3', () => {
     beforeEach(() => {
         moveGenerator = new DiaballikFilteredMoveGenerator(3);
     });
+
     it('should have all 3-step move options at first turn', () => {
         // Given the initial node
         const node: DiaballikNode = new DiaballikNode(DiaballikState.getInitialState());
