@@ -120,7 +120,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (endPiece.owner === state.getCurrentOpponent()) {
-            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+            return MGPFallible.failure(DiaballikFailure.CANNOT_PASS_TO_OPPONENT());
         }
 
         // The straight-line path between origin and destination contains no other piece

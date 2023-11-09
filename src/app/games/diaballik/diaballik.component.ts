@@ -47,8 +47,8 @@ export class DiaballikComponent
     public translationsMade: number = 0;
     private subMoves: DiaballikSubMove[] = [];
 
-    private lastMovedBallCoords: Coord[] = [];
-    private lastMovedPiecesCoords: Coord[] = [];
+    private highlightedBallCoords: Coord[] = [];
+    private highlightedPiecesCoords: Coord[] = [];
 
     private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator(false);
 
@@ -101,7 +101,6 @@ export class DiaballikComponent
     }
 
     public override async showLastMove(move: DiaballikMove): Promise<void> {
-        this.hideLastMove();
         for (const subMove of move.getSubMoves()) {
             this.showSubMove(subMove);
         }
@@ -109,16 +108,16 @@ export class DiaballikComponent
 
     private showSubMove(subMove: DiaballikSubMove): void {
         if (subMove instanceof DiaballikTranslation) {
-            this.lastMovedPiecesCoords.push(subMove.getStart(), subMove.getEnd());
+            this.highlightedPiecesCoords.push(subMove.getStart(), subMove.getEnd());
         } else {
             Utils.assert(subMove instanceof DiaballikBallPass, 'DiaballikMove can only be a translation or a pass');
-            this.lastMovedBallCoords.push(subMove.getStart(), subMove.getEnd());
+            this.highlightedBallCoords.push(subMove.getStart(), subMove.getEnd());
         }
     }
 
     public override hideLastMove(): void {
-        this.lastMovedPiecesCoords = [];
-        this.lastMovedBallCoords = [];
+        this.highlightedPiecesCoords = [];
+        this.highlightedBallCoords = [];
     }
 
     public override cancelMoveAttempt(): void {
@@ -128,15 +127,17 @@ export class DiaballikComponent
         this.translationsMade = 0;
         this.subMoves = [];
         this.indicators = [];
+        this.highlightedPiecesCoords = [];
+        this.highlightedBallCoords = [];
     }
 
     public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
-        if (this.lastMovedPiecesCoords.some((c: Coord) => c.equals(coord))) {
+        if (this.highlightedPiecesCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('moved-fill');
         }
-        if (this.lastMovedBallCoords.some((c: Coord) => c.equals(coord))) {
+        if (this.highlightedBallCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('moved-fill');
         }
         return classes;
@@ -145,7 +146,7 @@ export class DiaballikComponent
     public getPieceClasses(x: number, y: number, piece: DiaballikPiece): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(piece.owner)];
-        if (this.lastMovedPiecesCoords.some((c: Coord) => c.equals(coord))) {
+        if (this.highlightedPiecesCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('last-move-stroke');
         }
         if (piece.holdsBall === false && this.currentSelection.equalsValue(new Coord(x, y))) {
@@ -163,7 +164,7 @@ export class DiaballikComponent
     public getBallClasses(x: number, y: number, piece: DiaballikPiece): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(piece.owner)];
-        if (this.lastMovedBallCoords.some((c: Coord) => c.equals(coord))) {
+        if (this.highlightedBallCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('last-move-stroke');
         }
         if (this.currentSelection.equalsValue(new Coord(x, y))) {

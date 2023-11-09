@@ -314,7 +314,6 @@ describe('DiaballikRules', () => {
             const node: DiaballikNode = new DiaballikNode(state);
 
             // When checking for victory
-
             // Then it should detect a victory for the blocked player
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
@@ -349,8 +348,8 @@ describe('DiaballikRules', () => {
                 [_, _, O, Ȯ, O, O, O],
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
-            // When checking for victory
 
+            // When checking for victory
             // Then it should detect a defeat for the current player (here, zero loses so one wins)
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
@@ -367,8 +366,8 @@ describe('DiaballikRules', () => {
                 [O, O, O, _, _, O, O],
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
-            // When checking for victory
 
+            // When checking for victory
             // Then it should detect the victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
@@ -387,7 +386,6 @@ describe('DiaballikRules', () => {
             const node: DiaballikNode = new DiaballikNode(state);
 
             // When checking for victory
-
             // Then it should detect the victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
@@ -398,7 +396,6 @@ describe('DiaballikRules', () => {
             const node: DiaballikNode = new DiaballikNode(state);
 
             // When checking its status
-
             // Then it should be ongoing
             RulesUtils.expectToBeOngoing(rules, node);
         });
@@ -410,7 +407,6 @@ describe('DiaballikRules', () => {
             const state: DiaballikState = DiaballikState.getInitialState();
 
             // When computing victory/defeat coords
-
             // Then it should have none
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });
@@ -428,8 +424,6 @@ describe('DiaballikRules', () => {
             ], 0);
 
             // When computing victory/defeat coords
-
-            // Then it should not return anything
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });
         it('should not detect blockers when the goal line accessible (empty column)', () => {
@@ -445,7 +439,6 @@ describe('DiaballikRules', () => {
             ], 0);
 
             // When computing victory/defeat coords
-
             // Then it should not return anything
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });

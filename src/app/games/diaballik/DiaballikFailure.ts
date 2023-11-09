@@ -13,4 +13,6 @@ export class DiaballikFailure {
     public static CAN_ONLY_DO_ONE_PASS: Localized = () => $localize`You can only perform one pass per turn.`;
 
     public static CAN_ONLY_TRANSLATE_TWICE: Localized = () => $localize`You can only perform two translations per turn, not three.`;
+
+    public static CANNOT_PASS_TO_OPPONENT: Localized = () => $localize`You cannot pass the ball to the opponent. You must pick one of your pieces.`;
 }

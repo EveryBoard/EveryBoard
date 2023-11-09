@@ -1,9 +1,10 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DiaballikBallPass, DiaballikMove, DiaballikTranslation } from '../DiaballikMove';
+import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode } from '../DiaballikRules';
-import { DiaballikState } from '../DiaballikState';
+import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Coord } from 'src/app/jscaip/Coord';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 describe('DiaballikMoveInConstruction', () => {
 
@@ -41,7 +42,7 @@ describe('DiaballikMoveInConstruction', () => {
         const isInPass: boolean = move.passPathContains(new Coord(2, 0));
 
         // Then it should be true
-        expect(isInPass).toBeFalse();
+        expect(isInPass).toBeTrue();
     });
 
     it('should not consider a coord part of a pass if there is no pass', () => {
@@ -55,14 +56,51 @@ describe('DiaballikMoveInConstruction', () => {
         // Then it should be false
         expect(isInPass).toBeFalse();
     });
+
+    it('should filter duplicates when put in a set', () => {
+        // Given two equal moves
+        const firstTranslation: DiaballikSubMove = DiaballikTranslation.from(new Coord(0, 0), new Coord(0, 1)).get();
+        const secondTranslation: DiaballikSubMove = DiaballikTranslation.from(new Coord(1, 0), new Coord(1, 1)).get();
+        const state: DiaballikState = DiaballikState.getInitialState();
+        const move: DiaballikMoveInConstruction =
+            new DiaballikMoveInConstruction([firstTranslation, secondTranslation], state, state);
+        const equalMove: DiaballikMoveInConstruction =
+            new DiaballikMoveInConstruction([firstTranslation, secondTranslation], state, state);
+
+        // When putting them in a set
+        const set: MGPSet<DiaballikMoveInConstruction> = new MGPSet([move, equalMove]);
+
+        // Then there should be only one move
+        expect(set.size()).toBe(1);
+    });
+
 });
 
 describe('DiaballikMoveGenerator', () => {
 
     let moveGenerator: DiaballikMoveGenerator;
 
+    const O: DiaballikPiece = DiaballikPiece.ZERO;
+    const X: DiaballikPiece = DiaballikPiece.ONE;
+    const Ẋ: DiaballikPiece = DiaballikPiece.ONE_WITH_BALL;
+    const _: DiaballikPiece = DiaballikPiece.NONE;
+
     function numberOfSubMovesIs(n: number): (move: DiaballikMove) => boolean {
         return (move: DiaballikMove): boolean => move.getSubMoves().length === n;
+    }
+
+    function expectToHaveOnlyOneTranslationPair(moves: DiaballikMove[],
+                                                firstTranslation: DiaballikTranslation,
+                                                secondTranslation: DiaballikTranslation): void
+    {
+        const firstOrder: DiaballikMove =
+            new DiaballikMove(firstTranslation, MGPOptional.of(secondTranslation), MGPOptional.empty());
+        const secondOrder: DiaballikMove =
+            new DiaballikMove(secondTranslation, MGPOptional.of(firstTranslation), MGPOptional.empty());
+        const firstIsPresent: boolean = moves.some((m: DiaballikMove) => m.equals(firstOrder));
+        const secondIsPresent: boolean = moves.some((m: DiaballikMove) => m.equals(secondOrder));
+        // Only one of them can be true. Here, !== is xor on booleans
+        expect(firstIsPresent !== secondIsPresent).toBeTrue();
     }
 
     beforeEach(() => {
@@ -79,8 +117,57 @@ describe('DiaballikMoveGenerator', () => {
         // Then it should have all move options containing 1-step moves (8 exactly, 6 translations and 2 passes),
         // 2-steps, and 3-steps move
         expect(moves.filter(numberOfSubMovesIs(1)).length).toBe(8);
-        expect(moves.filter(numberOfSubMovesIs(2)).length).toBe(68);
-        expect(moves.filter(numberOfSubMovesIs(3)).length).toBe(138);
-        expect(moves.length).toBe(8 + 68 + 138);
+        expect(moves.filter(numberOfSubMovesIs(2)).length).toBe(53);
+        expect(moves.filter(numberOfSubMovesIs(3)).length).toBe(98);
+        expect(moves.length).toBe(8 + 53 + 98);
+    });
+
+    it('should filter A->B B->A translations', () => {
+        // Given a fictitious state with only one piece for Player.ZERO
+        const state: DiaballikState = new DiaballikState([
+            [X, X, X, Ẋ, X, X, X],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _],
+        ], 0);
+        const node: DiaballikNode = new DiaballikNode(state);
+
+        // When computing the list of moves
+        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+
+        // Then it should not have "no-op" translations
+        // Here, possible moves include: 2 of length 1, 4 of length 2
+        expect(moves.length).toBe(2+4);
+        expect(moves.filter(numberOfSubMovesIs(1)).length).toBe(2);
+        expect(moves.filter(numberOfSubMovesIs(2)).length).toBe(4);
+    });
+
+    it('should filter should keep either A->B;C->D or C->D;A->B', () => {
+        // Given a state
+        const state: DiaballikState = new DiaballikState([
+            [X, X, X, Ẋ, X, X, X],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _],
+            [_, _, O, O, _, _, _],
+            [O, O, _, _, _, _, _],
+        ], 0);
+        const node: DiaballikNode = new DiaballikNode(state);
+
+        // When computing the list of moves
+        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+
+        // Then it should only have one of each 2-translation option
+        // We look for some specific ones here: (0,6) -> (0,5) ; (1, 6) -> (1, 5)
+        expectToHaveOnlyOneTranslationPair(moves,
+                                           DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+                                           DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get());
+        expectToHaveOnlyOneTranslationPair(moves,
+                                           DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
+                                           DiaballikTranslation.from(new Coord(2, 5), new Coord(2, 4)).get());
     });
 });

@@ -32,23 +32,23 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_0_5');
 
         // When clicking on the 'done' button
-
-        // Then it should succeed
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.empty(),
                               MGPOptional.empty());
+
+        // Then it should succeed
         await testUtils.expectMoveSuccess('#done', move);
     }));
 
     it('should finish the move when clicking on the done button after two sub moves', fakeAsync(async() => {
-        // Given a state
-
-        // When doing two submoves and then clicking on 'done'
+        // Given a state with two submoves already done
         await testUtils.expectClickSuccess('#click_0_6');
         await testUtils.expectClickSuccess('#click_0_5');
         await testUtils.expectClickSuccess('#click_1_6');
         await testUtils.expectClickSuccess('#click_1_5');
+
+        // When clicking on 'done'
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
@@ -59,7 +59,7 @@ describe('DiaballikComponent', () => {
     }));
 
     it('should finish the move upon selection of the third sub move', fakeAsync(async() => {
-        // Given a state where we two submoves and almost entirely the third one
+        // Given a state where we did two submoves and almost entirely the third one
         await testUtils.expectClickSuccess('#click_0_6');
         await testUtils.expectClickSuccess('#click_0_5');
         await testUtils.expectClickSuccess('#click_1_6');
@@ -82,7 +82,6 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#piece_0_6', 'selected-stroke');
 
         // When clicking on it a second time
-
         // Then it should cancel the move and deselect the piece
         await testUtils.expectClickFailure('#click_0_6');
         testUtils.expectElementNotToHaveClass('#piece_0_6', 'selected-stroke');
@@ -132,7 +131,6 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_2_6');
 
         // When selecting the piece with the ball
-
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_6', DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
     }));
@@ -141,7 +139,6 @@ describe('DiaballikComponent', () => {
         // Given a state
 
         // When clicking on an empty space
-
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     }));
@@ -150,7 +147,6 @@ describe('DiaballikComponent', () => {
         // Given a state
 
         // When clicking on a piece of the opponent
-
         // Then it should fail
         await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
@@ -160,9 +156,8 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_3_6');
 
         // When passing the ball to the opponent
-
         // Then it should fail
-        await testUtils.expectClickFailure('#click_3_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+        await testUtils.expectClickFailure('#click_3_0', DiaballikFailure.CANNOT_PASS_TO_OPPONENT());
     }));
 
     it('should forbid moving on another piece', fakeAsync(async() => {
@@ -193,7 +188,6 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_4_4');
 
         // When trying to pass along a non-straight line
-
         // Then it should fail
         await testUtils.expectClickSuccess('#click_3_6');
         await testUtils.expectClickFailure('#click_4_4', DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
@@ -217,7 +211,6 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_1_5');
 
         // When selecting a third piece for a translation
-
         // Then it should fail
         await testUtils.expectClickFailure('#click_2_6', DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
     }));
@@ -439,9 +432,28 @@ describe('DiaballikComponent', () => {
         testUtils.getGameComponent().setInteractive(false);
 
         // When displaying it
-
         // Then there should be no translation or pass count
         testUtils.expectElementNotToExist('#translationCount');
         testUtils.expectElementNotToExist('#passCount');
+    }));
+
+    it('should show the number of translations and passes in the color of the active player', fakeAsync(async() => {
+        // Given a state at the turn of player 1
+        const state: DiaballikState = new DiaballikState([
+            [X, X, X, Ẋ, X, X, X],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, O, _],
+            [O, O, O, Ȯ, O, _, O],
+        ], 1);
+
+        // When displaying it
+        await testUtils.setupState(state);
+
+        // Then it should display the translation and passes in the color of player 1
+        testUtils.expectElementToHaveClass('#passCountIndicator circle', 'player1-fill');
+        testUtils.expectElementToHaveClass('#translationCountIndicator circle', 'player1-fill');
     }));
 });

@@ -28,6 +28,10 @@ export class DiaballikBallPass extends MoveCoordToCoord {
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
+
+    public override equals(other: this): boolean {
+        return other instanceof DiaballikBallPass && super.equals(other);
+    }
 }
 
 export class DiaballikTranslation extends MoveCoordToCoord {
@@ -47,6 +51,10 @@ export class DiaballikTranslation extends MoveCoordToCoord {
 
     private constructor(start: Coord, end: Coord) {
         super(start, end);
+    }
+
+    public override equals(other: this): boolean {
+        return other instanceof DiaballikTranslation && super.equals(other);
     }
 }
 

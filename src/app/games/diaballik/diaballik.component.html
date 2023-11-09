@@ -56,83 +56,85 @@
               (click)="onClick(coord.x, coord.y)"
               class="indicator"/>
     </g>
-    <g *ngIf="isInteractive"
-       [attr.transform]="getTranslationXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
-        <rect class="base"
-              [attr.x]="0"
-              [attr.y]="0"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-        />
-        <circle class="base"
-                [ngClass]="getPlayerClass(getPointOfView())"
-                [attr.r]="42"
-                [attr.cx]="SPACE_SIZE / 2"
-                [attr.cy]="SPACE_SIZE / 2"
-        />
-        <rect class="base"
-              [attr.x]="SPACE_SIZE"
-              [attr.y]="0"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-        />
-        <line [attr.x1]="SPACE_SIZE/2"
-              [attr.y1]="SPACE_SIZE/2"
-              [attr.x2]="SPACE_SIZE + SPACE_SIZE/2"
-              [attr.y2]="SPACE_SIZE/2"
-              class="arrow"
-              marker-end="url(#arrowhead)" />
-        <text id="translationCount"
-              class="base-no-stroke text-giant"
-              [attr.x]="2.3 * SPACE_SIZE"
-              [attr.y]="SPACE_SIZE/2"
-              [attr.font-size]="SPACE_SIZE / 2"
-        >{{ translationsMade }}</text>
-    </g>
-    <g *ngIf="isInteractive"
-       [attr.transform]="getTranslationXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
-        <rect class="base"
-              [attr.x]="0"
-              [attr.y]="0"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-        />
-        <circle class="base"
-                [ngClass]="getPlayerClass(getPointOfView())"
-                [attr.r]="42"
-                [attr.cx]="SPACE_SIZE / 2"
-                [attr.cy]="SPACE_SIZE / 2"
-        />
-        <circle class="base"
-                [ngClass]="getPlayerClass(getPointOfView())"
-                [attr.r]="22"
-                [attr.cx]="SPACE_SIZE / 2"
-                [attr.cy]="SPACE_SIZE / 2"
-        />
-        <rect class="base"
-              [attr.x]="SPACE_SIZE"
-              [attr.y]="0"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-        />
-        <circle class="base"
-                [ngClass]="getPlayerClass(getPointOfView())"
-                [attr.r]="42"
-                [attr.cx]="SPACE_SIZE + SPACE_SIZE / 2"
-                [attr.cy]="SPACE_SIZE / 2"
-        />
-        <line [attr.x1]="SPACE_SIZE/2"
-              [attr.y1]="SPACE_SIZE/2"
-              [attr.x2]="SPACE_SIZE + SPACE_SIZE/2"
-              [attr.y2]="SPACE_SIZE/2"
-              class="arrow"
-              marker-end="url(#arrowhead)" />
-        <text id="passCount"
-              class="base-no-stroke text-giant"
-              [attr.x]="- 0.6 * SPACE_SIZE"
-              [attr.y]="SPACE_SIZE/2"
-              [attr.font-size]="SPACE_SIZE / 2"
-        >{{ hasMadePass ? 1 : 0 }}</text>
+    <g *ngIf="isInteractive">
+        <g id="translationCountIndicator"
+           [attr.transform]="getTranslationXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
+            <rect class="base"
+                  [attr.x]="0"
+                  [attr.y]="0"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+            />
+            <circle class="base"
+                    [ngClass]="getPlayerClass(getCurrentPlayer())"
+                    [attr.r]="42"
+                    [attr.cx]="SPACE_SIZE / 2"
+                    [attr.cy]="SPACE_SIZE / 2"
+            />
+            <rect class="base"
+                  [attr.x]="SPACE_SIZE"
+                  [attr.y]="0"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+            />
+            <line [attr.x1]="SPACE_SIZE/2"
+                  [attr.y1]="SPACE_SIZE/2"
+                  [attr.x2]="SPACE_SIZE + SPACE_SIZE/2"
+                  [attr.y2]="SPACE_SIZE/2"
+                  class="arrow"
+                  marker-end="url(#arrowhead)" />
+            <text id="translationCount"
+                  class="base-no-stroke text-giant"
+                  [attr.x]="2.3 * SPACE_SIZE"
+                  [attr.y]="SPACE_SIZE/2"
+                  [attr.font-size]="SPACE_SIZE / 2"
+            >{{ translationsMade }}</text>
+        </g>
+        <g id="passCountIndicator"
+           [attr.transform]="getTranslationXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
+            <rect class="base"
+                  [attr.x]="0"
+                  [attr.y]="0"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+            />
+            <circle class="base"
+                    [ngClass]="getPlayerClass(getCurrentPlayer())"
+                    [attr.r]="42"
+                    [attr.cx]="SPACE_SIZE / 2"
+                    [attr.cy]="SPACE_SIZE / 2"
+            />
+            <circle class="base"
+                    [ngClass]="getPlayerClass(getCurrentPlayer())"
+                    [attr.r]="22"
+                    [attr.cx]="SPACE_SIZE / 2"
+                    [attr.cy]="SPACE_SIZE / 2"
+            />
+            <rect class="base"
+                  [attr.x]="SPACE_SIZE"
+                  [attr.y]="0"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+            />
+            <circle class="base"
+                    [ngClass]="getPlayerClass(getCurrentPlayer())"
+                    [attr.r]="42"
+                    [attr.cx]="SPACE_SIZE + SPACE_SIZE / 2"
+                    [attr.cy]="SPACE_SIZE / 2"
+            />
+            <line [attr.x1]="SPACE_SIZE/2"
+                  [attr.y1]="SPACE_SIZE/2"
+                  [attr.x2]="SPACE_SIZE + SPACE_SIZE/2"
+                  [attr.y2]="SPACE_SIZE/2"
+                  class="arrow"
+                  marker-end="url(#arrowhead)" />
+            <text id="passCount"
+                  class="base-no-stroke text-giant"
+                  [attr.x]="- 0.6 * SPACE_SIZE"
+                  [attr.y]="SPACE_SIZE/2"
+                  [attr.font-size]="SPACE_SIZE / 2"
+            >{{ hasMadePass ? 1 : 0 }}</text>
+        </g>
     </g>
 
     <g *ngIf="showDoneButton()"

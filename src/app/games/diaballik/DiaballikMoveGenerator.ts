@@ -8,8 +8,11 @@ import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPSet } from 'src/app/utils/MGPSet';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ComparableObject } from 'src/app/utils/Comparable';
 
-export class DiaballikMoveInConstruction {
+export class DiaballikMoveInConstruction implements ComparableObject {
 
     public readonly hasPass: boolean;
     public readonly translations: number;
@@ -27,7 +30,7 @@ export class DiaballikMoveInConstruction {
         let translations: number = 0;
         for (const subMove of subMoves) {
             if (subMove instanceof DiaballikBallPass) {
-                Utils.assert(hasPass === false, 'DiaballikMoveInConstruction can have at moste one pass');
+                Utils.assert(hasPass === false, 'DiaballikMoveInConstruction can have at most one pass');
                 hasPass = true;
             } else {
                 Utils.assert(translations < 2, 'DiaballikMoveInConstruction can have at most two translations');
@@ -38,14 +41,65 @@ export class DiaballikMoveInConstruction {
         this.translations = translations;
     }
 
+    public equals(other: this): boolean {
+        return ArrayUtils.compare(this.subMoves, other.subMoves);
+    }
+
     public addIfLegal(subMove: DiaballikSubMove, listToAddTo: DiaballikMoveInConstruction[]): void {
         const legality: MGPFallible<DiaballikState> =
             DiaballikRules.get().isLegalSubMove(this.stateAfterSubMoves, subMove);
         if (legality.isSuccess()) {
+            const newSubMoves: DiaballikSubMove[] = this.subMoves.concat([subMove]);
+            this.sortIfNeeded(newSubMoves); // Sort to avoid duplicates, when possible
             const newMoveInConstruction: DiaballikMoveInConstruction =
-                new DiaballikMoveInConstruction(this.subMoves.concat([subMove]), this.stateBefore, legality.get());
+                new DiaballikMoveInConstruction(newSubMoves, this.stateBefore, legality.get());
             listToAddTo.push(newMoveInConstruction);
         }
+    }
+
+    private sortIfNeeded(subMoves: DiaballikSubMove[]): void {
+        // If we have to subsequent translations that do not have any coordinate in common,
+        // then their order does not matter. To avoid duplicates, we sort them then.
+        const firstTranslationIndex: MGPOptional<number> = this.getFirstTranslationIndex(subMoves);
+        if (firstTranslationIndex.isAbsent()) {
+            // No translation, no sort to do
+            return;
+        }
+        const i: number = firstTranslationIndex.get();
+        if (i+1 >= subMoves.length || isTranslation(subMoves[i+1]) === false) {
+            // We don't have two consecutive translations, no sort to do
+            return;
+        }
+        const firstTranslation: DiaballikSubMove = subMoves[i];
+        const firstTranslationCoords: MGPSet<Coord> = new MGPSet(firstTranslation.getCoords());
+        const secondTranslation: DiaballikSubMove = subMoves[i+1];
+        const secondTranslationCoords: MGPSet<Coord> = new MGPSet(secondTranslation.getCoords());
+        const translationIntersect: boolean =
+            firstTranslationCoords.intersection(secondTranslationCoords).size() > 0;
+        if (translationIntersect) {
+            // If they intersect, their order are important so we preserve it
+            return;
+        }
+        // The "smallest" translation goes first, according to coordinate order
+        // Note: we only need to compare start. Either first is bigger (and we
+        // have to swap them), or it is smaller (and we keep them as is). It
+        // cannot be equal, as otherwise the translations would have
+        // intersected.
+        const compareStart: number = firstTranslation.getStart().compareTo(secondTranslation.getStart());
+        const firstIsBigger: boolean = compareStart > 0;
+        if (firstIsBigger) {
+            subMoves[i] = secondTranslation;
+            subMoves[i+1] = firstTranslation;
+        }
+    }
+
+    private getFirstTranslationIndex(subMoves: DiaballikSubMove[]): MGPOptional<number> {
+        for (let i: number = 0; i < subMoves.length; i++) {
+            if (isTranslation(subMoves[i])) {
+                return MGPOptional.of(i);
+            }
+        }
+        return MGPOptional.empty();
     }
 
     public getPassEnd(): MGPOptional<Coord> {
@@ -77,6 +131,18 @@ export class DiaballikMoveInConstruction {
         return MGPOptional.empty();
     }
 
+    /**
+     * Checks if this move has a previous translation that is the opposite of (start, end)
+     */
+    public hasOppositeTranslation(start: Coord, end: Coord) : boolean {
+        if (this.translations > 0) {
+            const previousTranslation: DiaballikTranslation = this.getPreviousTranslation().get();
+            return previousTranslation.getStart().equals(end) && previousTranslation.getEnd().equals(start);
+        } else {
+            return false;
+        }
+    }
+
     private finalize(): DiaballikMove {
         Utils.assert(this.subMoves.length > 0, 'DiaballikMoveInConstruction can only be finalized if it contains something');
         const first: DiaballikSubMove = this.subMoves[0];
@@ -106,17 +172,17 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
-        let moves: DiaballikMove[] = [];
+        const moves: MGPSet<DiaballikMove> = new MGPSet();
         for (let i: number = 0; i < 3; i++) {
             let nextMovesInConstruction: DiaballikMoveInConstruction[] = [];
             for (const move of movesInConstruction) {
                 const newMovesInConstruction: DiaballikMoveInConstruction[] = this.addAllPossibleSubMoves(move);
-                moves = moves.concat(newMovesInConstruction.map(DiaballikMoveInConstruction.finalize));
+                moves.addAll(new MGPSet(newMovesInConstruction.map(DiaballikMoveInConstruction.finalize)));
                 nextMovesInConstruction = nextMovesInConstruction.concat(newMovesInConstruction);
             }
             movesInConstruction = nextMovesInConstruction;
         }
-        return moves;
+        return moves.toList();
     }
 
     protected addAllPossibleSubMoves(moveInConstruction: DiaballikMoveInConstruction): DiaballikMoveInConstruction[] {
@@ -138,12 +204,11 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                     // Can only do two translations per move
                     const hasLessThanTwoTranslations: boolean = moveInConstruction.translations < 2;
                     if (hasLessThanTwoTranslations) {
-                        const forbiddenEnd: MGPOptional<Coord> =
-                            this.getPreviousTranslationStartThatEndsAt(moveInConstruction, coord);
                         for (const end of this.getTranslationEnds(state, coordAndContent.coord)) {
-                            // We ignore the forbidden end because it is the opposite
-                            // of the previous translation, hence it a no-op
-                            if ((forbiddenEnd.equalsValue(end) === false) || this.avoidDuplicates === false) {
+                            // We ignore this one if we already did the opposite translation
+                            const doesNotHaveOppositeTranslation: boolean =
+                                moveInConstruction.hasOppositeTranslation(coordAndContent.coord, end) === false;
+                            if (doesNotHaveOppositeTranslation || this.avoidDuplicates === false) {
                                 let keep: boolean = true;
                                 if (moveInConstruction.hasPass) {
                                     // There was a pass before, so we only keep this if
@@ -153,9 +218,6 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                                     //   - it goes through the path of the pass,
                                     const goesThroughPassPath: boolean = moveInConstruction.passPathContains(end);
                                     keep = isPieceThatPassed || goesThroughPassPath;
-                                }
-                                if (this.isTranslationDuplicate(coord, end, moveInConstruction)) {
-                                    keep = false;
                                 }
                                 if (keep || this.avoidDuplicates === false) {
                                     // The translation here is valid and legal by construction
@@ -170,39 +232,6 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
             }
         }
         return nextMovesInConstruction;
-    }
-
-    private isTranslationDuplicate(start: Coord, end: Coord, moveInConstruction: DiaballikMoveInConstruction): boolean {
-        // We want to avoid duplicate translation pairs, e.g., in one move we do A->B then C->D,
-        // and in another move we do C-> then A->B, without passes in between: this is the same move.
-        // To do so, we only keep double translations that are ordered, i.e., we keep the one which has (A, B) < (C, D)
-        if (moveInConstruction.subMoves.length > 1) {
-            const lastSubMove: DiaballikSubMove = moveInConstruction.subMoves[moveInConstruction.subMoves.length-1];
-            if (isTranslation(lastSubMove)) {
-                // A is start, B is end
-                // C is lastSubMove.start, D is lastSubMove.end
-                const compareAtoB: number = start.compareTo(lastSubMove.getStart());
-                const compareCtoD: number = end.compareTo(lastSubMove.getEnd());
-                return compareAtoB === -1 && compareCtoD === -1;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    private getPreviousTranslationStartThatEndsAt(moveInConstruction: DiaballikMoveInConstruction,
-                                                  end: Coord)
-    : MGPOptional<Coord>
-    {
-        if (moveInConstruction.translations > 0) {
-            const previousTranslation: DiaballikTranslation = moveInConstruction.getPreviousTranslation().get();
-            if (previousTranslation.getEnd().equals(end)) {
-                return MGPOptional.of(previousTranslation.getStart());
-            }
-        }
-        return MGPOptional.empty();
     }
 
     /**

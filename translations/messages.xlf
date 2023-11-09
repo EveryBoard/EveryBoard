@@ -1066,6 +1066,9 @@
       <trans-unit id="898651979160418937" datatype="html">
         <source>You can only perform two translations per turn, not three.</source>
       </trans-unit>
+      <trans-unit id="2023900957694052396" datatype="html">
+        <source>You cannot pass the ball to the opponent. You must pick one of your pieces.</source>
+      </trans-unit>
       <trans-unit id="5626639193339311369" datatype="html">
         <source>Goal of the game</source>
       </trans-unit>
@@ -1075,14 +1078,14 @@
       <trans-unit id="488799603315113699" datatype="html">
         <source>Translations</source>
       </trans-unit>
-      <trans-unit id="6723437388577428437" datatype="html">
-        <source>During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step from any piece that does not hold the ball.&lt;br/&gt;&lt;br/&gt;Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.</source>
+      <trans-unit id="1549947696122814495" datatype="html">
+        <source>During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step of any piece that does not hold the ball.&lt;br/&gt;&lt;br/&gt;Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.</source>
       </trans-unit>
       <trans-unit id="4552397654536129176" datatype="html">
         <source>Pass</source>
       </trans-unit>
-      <trans-unit id="6010383497630089959" datatype="html">
-        <source>Another action that you are allowed to do at most once per turn is a pass. You can pass the ball by clicking on the piece that holds the ball, then on another one of your piece that can receive it. A pass must be made in a straight line along an unobstructed path.&lt;br/&gt;&lt;br/&gt;Here, you can make two moves and a pass to win the game, do it!</source>
+      <trans-unit id="4859534391622035346" datatype="html">
+        <source>Another action that you are allowed to do at most once per turn is a pass. You can pass the ball by clicking on the piece that holds the ball, then on another one of your piece that can receive it. A pass must be made in a straight line along an unobstructed path.&lt;br/&gt;&lt;br/&gt;Here, playing Dark, you can make two moves and a pass to win the game, do it!</source>
       </trans-unit>
       <trans-unit id="351600669711653781" datatype="html">
         <source>Blocking the opponent</source>
