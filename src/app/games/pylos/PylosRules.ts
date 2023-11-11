@@ -12,6 +12,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPFallible } from '../../utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
@@ -106,7 +107,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return possiblesCapturesSet;
     }
-    public static applyLegalMove(move: PylosMove, state: PylosState, _info: void): PylosState {
+    public static applyLegalMove(move: PylosMove, state: PylosState, _config: RulesConfig, _info: void): PylosState {
         return state.applyLegalMove(move);
     }
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {
@@ -132,8 +133,8 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return GameStatus.ONGOING;
         }
     }
-    public applyLegalMove(move: PylosMove, state: PylosState, status: void): PylosState {
-        return PylosRules.applyLegalMove(move, state, status);
+    public applyLegalMove(move: PylosMove, state: PylosState, config: RulesConfig, status: void): PylosState {
+        return PylosRules.applyLegalMove(move, state, config, status);
     }
     public isLegal(move: PylosMove, state: PylosState): MGPValidation {
         const startingCoordLegality: MGPFallible<PylosState> = this.isLegalStartingCoord(move, state);

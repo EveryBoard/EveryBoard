@@ -38,7 +38,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Quixo');
+        this.setRulesAndNode('Quixo');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new QuixoHeuristic(), new QuixoMoveGenerator()),
             new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),

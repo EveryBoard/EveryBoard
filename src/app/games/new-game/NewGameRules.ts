@@ -8,6 +8,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Utils } from 'src/app/utils/utils';
 
 /**
  * This class is optional.
@@ -43,9 +44,9 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
      * If you want your game to be configurable (different board sizes for example)
      * Here should be the default config
      * You have the option to create a type NewRulesConfig for more type safety.
-     * It is FULLY mandatory, if you don't want to make your game configurable just yet, ignore this!
+     * It is FULLY optional, if you don't want to make your game configurable just yet, ignore this!
      */
-    private static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription =
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription =
         new RulesConfigDescription({
             name: (): string => 'the internationalisable name of that standard config',
             config: {
@@ -109,7 +110,9 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
      * @param info the info that had been returned by `isLegal`
      * @returns the resulting state, i.e., the state on which move has been applied
      */
-    public applyLegalMove(move: NewGameMove, state: NewGameState, info: NewGameLegalityInfo): NewGameState {
+    public applyLegalMove(_move: NewGameMove, state: NewGameState, _config: RulesConfig, _info: NewGameLegalityInfo)
+    : NewGameState
+    {
         return new NewGameState(state.turn + 1);
     }
 
@@ -127,3 +130,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, 
     }
 
 }
+
+// For coverage
+// eslint-disable-next-line dot-notation
+Utils.getNonNullable(NewGameRules.RULES_CONFIG_DESCRIPTION.validator['the_name_you_will_use_in_your_rules_and_states'])(null);

@@ -70,7 +70,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public applyLegalMove(move: TeekoMove, state: TeekoState): TeekoState {
+    public applyLegalMove(move: TeekoMove, state: TeekoState): TeekoState { // TODO: ADD TELEPORTIKO !
         if (move instanceof TeekoDropMove) {
             return this.applyLegalDrop(move, state);
         } else {

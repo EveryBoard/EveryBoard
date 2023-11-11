@@ -15,6 +15,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Utils } from 'src/app/utils/utils';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class KamisadoNode extends GameNode<KamisadoMove, KamisadoState> {}
 
@@ -158,7 +159,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         }));
     }
     // Apply the move by only relying on tryMove
-    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _info: void): KamisadoState {
+    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _config: RulesConfig, _info: void): KamisadoState {
         if (KamisadoMove.isPiece(move)) {
             const start: Coord = move.getStart();
             const end: Coord = move.getEnd();

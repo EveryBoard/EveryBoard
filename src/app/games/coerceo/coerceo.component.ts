@@ -49,7 +49,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Coerceo');
+        this.setRulesAndNode('Coerceo');
         this.availableAIs = [
             new Minimax($localize`Pieces > Threats > Tiles`,
                         this.rules,

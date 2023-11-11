@@ -6,6 +6,7 @@ import { GameStatus } from '../GameStatus';
 import { GameNode } from '../GameNode';
 import { Move } from '../Move';
 import { Rules } from '../Rules';
+import { RulesConfig } from '../RulesConfigUtil';
 
 class GameStateMock extends GameState {
 
@@ -31,7 +32,7 @@ class MockNode extends GameNode<MoveMock, GameStateMock> {}
 
 class RulesMock extends Rules<MoveMock, GameStateMock> {
 
-    public applyLegalMove(move: MoveMock, state: GameStateMock, info: void): GameStateMock {
+    public applyLegalMove(_move: MoveMock, _state: GameStateMock, _config: RulesConfig, _info: void): GameStateMock {
         throw new Error('RulesMock.applyLegalMove method not implemented.');
     }
     public isLegal(move: MoveMock, state: GameStateMock): MGPValidation {
@@ -71,6 +72,7 @@ describe('GameNode', () => {
             const optionalTreeRoot: MGPOptional<MockNode> = MGPOptional.of(treeRoot);
             const child: MockNode = new MockNode(stateAtTurn1, optionalTreeRoot, optionalMove);
             treeRoot.addChild(child);
+            // TODO: tester à chaque fois que l'enfant a la config de maman sa mère
 
             const otherChild: MockNode = new MockNode(stateAtTurn1, optionalTreeRoot, optionalOtherMove);
             treeRoot.addChild(otherChild);

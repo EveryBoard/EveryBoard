@@ -12,8 +12,9 @@ import { Utils } from 'src/app/utils/utils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
+export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState, GobanConfig> {}
 
 export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, GobanConfig> {
 
@@ -44,7 +45,9 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         return ConnectSixRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _info: void): ConnectSixState {
+    public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _config: RulesConfig, _info: void)
+    : ConnectSixState
+    {
         if (move instanceof ConnectSixDrops) {
             return this.applyLegalDrops(move, state);
         } else {

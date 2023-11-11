@@ -77,8 +77,7 @@ export class KalahRules extends MancalaRules {
                 captured[distributedState.getCurrentPlayer().value] += capturedSum;
                 const postCaptureState: MancalaState = new MancalaState(board,
                                                                         distributedState.turn,
-                                                                        captured,
-                                                                        distributedState.config);
+                                                                        captured);
                 return {
                     capturedSum, captureMap, resultingState: postCaptureState,
                 };

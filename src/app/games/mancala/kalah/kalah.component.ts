@@ -19,7 +19,7 @@ export class KalahComponent extends MancalaComponent<KalahRules> {
                        cdr: ChangeDetectorRef)
     {
         super(messageDisplayer, activatedRoute, cdr);
-        this.setRuleAndNode('Kalah');
+        this.setRulesAndNode('Kalah');
         this.availableAIs = this.createAIs(new KalahMoveGenerator());
         this.encoder = MancalaMove.encoder;
     }

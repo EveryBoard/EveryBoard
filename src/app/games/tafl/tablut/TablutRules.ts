@@ -6,7 +6,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
-export class TablutNode extends GameNode<TablutMove, TablutState> {}
+export class TablutNode extends GameNode<TablutMove, TablutState, TaflConfig> {}
 
 export class TablutRules extends TaflRules<TablutMove, TablutState> {
 

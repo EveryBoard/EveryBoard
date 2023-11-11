@@ -19,7 +19,7 @@ export class AwaleComponent extends MancalaComponent<AwaleRules> {
                        cdr: ChangeDetectorRef)
     {
         super(messageDisplayer, activatedRoute, cdr);
-        this.setRuleAndNode('Awale');
+        this.setRulesAndNode('Awale');
         this.availableAIs = this.createAIs(new AwaleMoveGenerator());
         this.encoder = MancalaMove.encoder;
     }

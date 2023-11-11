@@ -15,7 +15,7 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute, TablutMove.from);
-        this.setRuleAndNode('Tablut');
+        this.setRulesAndNode('Tablut');
         this.availableAIs = this.createAIs();
         this.encoder = TablutMove.encoder;
     }

@@ -8,6 +8,10 @@ import { TaflPieceAndControlHeuristic } from './TaflPieceAndControlHeuristic';
 export class TaflPieceAndControlMinimax<M extends TaflMove, S extends TaflState> extends Minimax<M, S> {
 
     public constructor(rules: TaflRules<M, S>) {
-        super($localize`Pieces > Control`, rules, new TaflPieceAndControlHeuristic(rules), new TaflMoveGenerator(rules));
+        super($localize`Pieces > Control`,
+              rules,
+              new TaflPieceAndControlHeuristic(rules),
+              new TaflMoveGenerator(rules),
+        );
     }
 }

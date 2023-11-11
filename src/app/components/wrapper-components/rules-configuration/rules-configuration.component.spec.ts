@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { RulesConfigurationComponent } from './rules-configuration.component';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -217,7 +217,7 @@ describe('RulesConfigurationComponent', () => {
                     spyOn(component.updateCallback, 'emit').and.callThrough();
                     component.rulesConfigForm.get('nombre')?.setValue(0);
 
-                    // Then the resulting value should not have been emitted
+                    // Then an optional should have been emitted to inform parent that child is failing math class !
                     expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
                 }));
 
@@ -228,10 +228,13 @@ describe('RulesConfigurationComponent', () => {
                         testUtils.detectChanges();
 
                         // When modifying config to zero or negative
+                        spyOn(component.updateCallback, 'emit').and.callThrough();
                         component.rulesConfigForm.get('nombre')?.setValue(0);
 
-                        // Then the resulting value should not have been emitted
+                        // Then error reason should have been display
                         expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('0 is too small, the minimum is 1');
+                        // and the component should have emitted an empty optional
+                        expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
                     }));
 
                     it('should display custom validation error when making the value too big', fakeAsync(async() => {
@@ -239,10 +242,13 @@ describe('RulesConfigurationComponent', () => {
                         testUtils.detectChanges();
 
                         // When modifying config to 100 or more
+                        spyOn(component.updateCallback, 'emit').and.callThrough();
                         component.rulesConfigForm.get('nombre')?.setValue(100);
 
-                        // Then the resulting value should not have been emitted
+                        // Then error reason should have been displayed
                         expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('100 is too big, the maximum is 99');
+                        // and the component should have emitted an empty optional
+                        expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
                     }));
 
                     it('should display custom validation error when erasing value', fakeAsync(async() => {
@@ -250,10 +256,13 @@ describe('RulesConfigurationComponent', () => {
                         testUtils.detectChanges();
 
                         // When erasing value
+                        spyOn(component.updateCallback, 'emit').and.callThrough();
                         component.rulesConfigForm.get('nombre')?.setValue(null);
 
-                        // Then the resulting value should not have been emitted
+                        // Then error reason should have been displayed
                         expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('This value is mandatory');
+                        // and the component should have emitted an empty optional
+                        expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
                     }));
 
                 });

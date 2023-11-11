@@ -4,18 +4,10 @@ import { TaflPawn } from './TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { TaflConfig } from './TaflConfig';
 
 export abstract class TaflState extends GameStateWithTable<TaflPawn> {
 
-    public abstract of(board: Table<TaflPawn>, turn: number, config: TaflConfig): this;
-
-    public constructor(board: Table<TaflPawn>,
-                       turn: number,
-                       public readonly config: TaflConfig)
-    {
-        super(board, turn);
-    }
+    public abstract of(board: Table<TaflPawn>, turn: number): this;
 
     public isCentralThrone(coord: Coord): boolean {
         return coord.equals(this.getCentralThrone());

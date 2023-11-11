@@ -14,6 +14,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 type TutorialPlayer = 'tutorial-player';
 
@@ -96,9 +97,11 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
+        const config: RulesConfig = this.gameComponent.node.getConfig();
         this.gameComponent.node = new GameNode(currentStep.state,
-                                               MGPOptional.empty<AbstractNode>(),
-                                               currentStep.previousMove);
+                                               undefined,
+                                               currentStep.previousMove,
+                                               MGPOptional.of(config));
         // Set role will update view with updateBoardAndShowLastMove
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive

@@ -51,7 +51,7 @@ export class SixComponent
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Six');
+        this.setRulesAndNode('Six');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new SixHeuristic(), new SixFilteredMoveGenerator()),
             new MCTS($localize`MCTS`, new SixMoveGenerator(), this.rules),

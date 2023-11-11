@@ -19,7 +19,7 @@ export type P4Config = {
     height: number;
 };
 
-export class P4Node extends GameNode<P4Move, P4State> {}
+export class P4Node extends GameNode<P4Move, P4State, P4Config> {}
 
 @Debug.log
 export class P4Rules extends Rules<P4Move, P4State, P4Config> {
@@ -62,7 +62,7 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         return P4Rules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
+    public applyLegalMove(move: P4Move, state: P4State, _config: P4Config, _info: void): P4State {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         const y: number = P4Rules.get().getLowestUnoccupiedSpace(board, x);

@@ -27,11 +27,11 @@ export class TablutState extends TaflState {
             [_, _, _, I, I, I, _, _, _],
         ];
 
-        return new TablutState(board, 0, config);
+        return new TablutState(board, 0);
     }
 
-    public of(board: Table<TaflPawn>, turn: number, config: TaflConfig): this {
-        return new TablutState(board, turn, config) as this;
+    public of(board: Table<TaflPawn>, turn: number): this {
+        return new TablutState(board, turn) as this;
     }
 
 }

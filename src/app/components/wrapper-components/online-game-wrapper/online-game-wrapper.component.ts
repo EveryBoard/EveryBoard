@@ -14,7 +14,7 @@ import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Debug, JSONValue, Utils } from 'src/app/utils/utils';
-import { Rules } from 'src/app/jscaip/Rules';
+import { AbstractRules, Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -267,7 +267,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const rules: Rules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
-        const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, this.gameComponent.getState());
+        const legality: MGPFallible<unknown> =
+            rules.isLegal(chosenMove, this.gameComponent.getState(), await this.getConfig());
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
@@ -407,15 +408,18 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // We will update the part with new scores and game status (if needed)
             // We have to compute the game status before adding the move to avoid
             // risking receiving the move before computing the game status (thereby adding twice the same move)
-            const legality: MGPFallible<unknown> =
-                this.gameComponent.rules.isLegal(move, this.gameComponent.node.gameState);
+            const oldNode: AbstractNode = this.gameComponent.node;
+            const rules: AbstractRules = this.gameComponent.rules;
+            const state: GameState = oldNode.gameState;
+            const config: RulesConfig = oldNode.getConfig();
+            const legality: MGPFallible<unknown> = rules.isLegal(move, state, config);
             Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
-            const stateAfterMove: GameState =
-                this.gameComponent.rules.applyLegalMove(move, this.gameComponent.node.gameState, legality.get());
-            const node: AbstractNode = new GameNode(stateAfterMove,
-                                                    MGPOptional.of(this.gameComponent.node),
-                                                    MGPOptional.of(move));
-            const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(node);
+            const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
+            const newNode: AbstractNode = new GameNode(stateAfterMove,
+                                                       MGPOptional.of(oldNode),
+                                                       MGPOptional.of(move),
+                                                       MGPOptional.of(config));
+            const gameStatus: GameStatus = rules.getGameStatus(newNode);
 
             // To adhere to security rules, we must add the move before updating the part
             const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);

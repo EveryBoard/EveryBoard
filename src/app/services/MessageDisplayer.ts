@@ -16,13 +16,14 @@ export class MessageDisplayer {
         this.message(message, 'is-danger');
     }
     private message(message: string, cssClass: ToastType): void {
-        const duration: number = this.getDuration(message);
-        this.toast(message, cssClass, duration);
+        const durationInMs: number = this.getDurationInMs(message);
+        this.toast(message, cssClass, durationInMs);
     }
-    private toast(message: string, cssClass: ToastType, duration: number): void {
+    private toast(message: string, cssClass: ToastType, durationInMs: number): void {
+        console.log(durationInMs, message, 'tachaaaaa')
         toast({
             message,
-            duration,
+            duration: durationInMs,
             type: cssClass,
             position: 'top-center',
             closeOnClick: true,
@@ -33,7 +34,7 @@ export class MessageDisplayer {
      * Returns the duration during which the message should be displayed.
      * It is at least 3 seconds, and increases with the length of the message.
      */
-    private getDuration(message: string): number {
+    private getDurationInMs(message: string): number {
         const words: number = message.split(' ').length;
         const belowAverageReadingSpeed: number = 150; // Average reading speed is around 200 words per minute
         const readingTime: number = words * 60 * 1000/ belowAverageReadingSpeed;

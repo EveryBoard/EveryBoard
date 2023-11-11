@@ -57,7 +57,7 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 4, 4, 4, 4, 4],
                 [0, 2, 0, 2, 4, 0],
-            ], 4, [0, 0], config),
+            ], 4, [0, 0]),
             MancalaMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(0), MancalaDistribution.of(3)]),
             (_move: MancalaMove, _state: MancalaState, resultingState: MancalaState) => {
                 if (resultingState.getPieceAtXY(1, 0) === 0) {
@@ -74,7 +74,7 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 0, 0, 0, 2, 0],
                 [2, 0, 0, 0, 0, 1],
-            ], 0, [19, 24], config),
+            ], 0, [19, 24]),
             [
                 MancalaMove.of(MancalaDistribution.of(5)),
             ],

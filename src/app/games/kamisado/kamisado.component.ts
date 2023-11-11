@@ -38,7 +38,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Kamisado');
+        this.setRulesAndNode('Kamisado');
         this.availableAIs = [
             new Minimax($localize`Minimax`, KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator()),
             new MCTS($localize`MCTS`, new KamisadoMoveGenerator(), this.rules),

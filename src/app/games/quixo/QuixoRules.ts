@@ -16,10 +16,11 @@ import { QuixoFailure } from './QuixoFailure';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
+export class QuixoNode extends GameNode<QuixoMove, QuixoState, QuixoConfig> {}
 
-export class QuixoRules extends Rules<QuixoMove, QuixoState> {
+export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
 
     private static singleton: MGPOptional<QuixoRules> = MGPOptional.empty();
 
@@ -169,7 +170,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
                      `Invalid direction: pawn on the top side can't be moved up.`);
     }
 
-    public applyLegalMove(move: QuixoMove, state: QuixoState, _info: void): QuixoState {
+    public applyLegalMove(move: QuixoMove, state: QuixoState, _config: RulesConfig, _info: void): QuixoState {
         return state.applyLegalMove(move);
     }
 

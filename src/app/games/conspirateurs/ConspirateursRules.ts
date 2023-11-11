@@ -10,6 +10,7 @@ import { MGPValidation } from '../../utils/MGPValidation';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
@@ -26,7 +27,9 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
     private constructor() {
         super(ConspirateursState);
     }
-    public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _info: void): ConspirateursState {
+    public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _config: RulesConfig, _info: void)
+    : ConspirateursState
+    {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
         if (ConspirateursMove.isDrop(move)) {
             updatedBoard[move.coord.y][move.coord.x] = state.getCurrentPlayer();

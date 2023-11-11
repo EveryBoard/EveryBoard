@@ -53,7 +53,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Epaminondas');
+        this.setRulesAndNode('Epaminondas');
         this.availableAIs = [
             new EpaminondasMinimax(),
             new EpaminondasPositionalMinimax(),

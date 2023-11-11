@@ -103,7 +103,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     };
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Yinsh');
+        this.setRulesAndNode('Yinsh');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new YinshScoreHeuristic(), new YinshMoveGenerator()),
             new MCTS($localize`MCTS`, new YinshMoveGenerator(), this.rules),

@@ -68,15 +68,8 @@ export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
     }
 
     public getValidator(fieldName: string): MGPValidator {
-        return this.getOptionalValidator(fieldName).get();
-    }
-
-    private getOptionalValidator(fieldName: string): MGPOptional<MGPValidator> {
-        if (fieldName in this.validator) {
-            return MGPOptional.of(this.validator[fieldName] as MGPValidator);
-        } else {
-            return MGPOptional.empty();
-        }
+        Utils.assert(fieldName in this.validator, fieldName + ' is not a validator!');
+        return this.validator[fieldName] as MGPValidator;
     }
 
 }

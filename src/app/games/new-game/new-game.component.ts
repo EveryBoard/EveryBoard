@@ -37,7 +37,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      */
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('NewGame');
+        this.setRulesAndNode('NewGame');
         this.availableAIs = [
             new NewGameMinimax(),
             new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),

@@ -55,7 +55,12 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, RulesConfig, 
         }
         return GameStatus.DRAW;
     }
-    public applyLegalMove(move: ReversiMove, state: ReversiState, switched: ReversiLegalityInformation): ReversiState {
+    public applyLegalMove(move: ReversiMove,
+                          state: ReversiState,
+                          _config: RulesConfig,
+                          info: ReversiLegalityInformation)
+    : ReversiState
+    {
         const turn: number = state.turn;
         const player: Player = state.getCurrentPlayer();
         const board: PlayerOrNone[][] = state.getCopiedBoard();
@@ -64,7 +69,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, RulesConfig, 
                 new ReversiState(board, turn + 1);
             return sameBoardDifferentTurn;
         }
-        for (const s of switched) {
+        for (const s of info) {
             board[s.y][s.x] = player;
         }
         board[move.coord.y][move.coord.x] = player;

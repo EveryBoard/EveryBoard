@@ -16,6 +16,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type GoLegalityInformation = Coord[];
 
@@ -24,7 +25,7 @@ export type GoConfig = GobanConfig & {
     handicap: number;
 };
 
-export class GoNode extends GameNode<GoMove, GoState> {}
+export class GoNode extends GameNode<GoMove, GoState, GoConfig> {}
 
 @Debug.log
 export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformation> {
@@ -448,7 +449,9 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
     public isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         return GoRules.isLegal(move, state);
     }
-    public applyLegalMove(legalMove: GoMove, state: GoState, infos: GoLegalityInformation): GoState {
+    public applyLegalMove(legalMove: GoMove, state: GoState, _config: RulesConfig, infos: GoLegalityInformation)
+    : GoState
+    {
         if (GoRules.isPass(legalMove)) {
             Debug.display('GoRules', 'applyLegalMove', 'isPass');
             return GoRules.applyPass(state);

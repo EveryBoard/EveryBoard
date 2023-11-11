@@ -157,7 +157,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('MartianChess');
+        this.setRulesAndNode('MartianChess');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new MartianChessScoreHeuristic(), new MartianChessMoveGenerator()),
             new MCTS($localize`MCTS`, new MartianChessMoveGenerator(), this.rules),

@@ -62,7 +62,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Conspirateurs');
+        this.setRulesAndNode('Conspirateurs');
         this.availableAIs = [
             new ConspirateursJumpMinimax(),
             new MCTS($localize`MCTS`, new ConspirateursMoveGenerator(), this.rules),

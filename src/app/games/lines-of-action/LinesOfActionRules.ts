@@ -12,6 +12,7 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
@@ -64,7 +65,9 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             }
         }
     }
-    public applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _info: void): LinesOfActionState {
+    public applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _config: RulesConfig, _info: void)
+    : LinesOfActionState
+    {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         board[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
         board[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();

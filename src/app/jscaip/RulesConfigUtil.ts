@@ -16,17 +16,13 @@ export type RulesConfig = {
 
 export class RulesConfigUtils {
 
-    public static getDefaultConfig(rulesConfigDescription: RulesConfigDescription): RulesConfig {
-        return rulesConfigDescription.getDefaultConfig().config;
-    }
-
-    public static getGameDefaultConfig(gameName: string): RulesConfig {
+    public static getGameDefaultConfig<C extends RulesConfig>(gameName: string): C {
         const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
         let rulesConfigDescription: RulesConfigDescription = RulesConfigDescription.DEFAULT;
         if (gameInfos.length > 0) {
             rulesConfigDescription = gameInfos[0].getRulesConfigDescription();
         }
-        return rulesConfigDescription.getDefaultConfig().config;
+        return rulesConfigDescription.getDefaultConfig().config as C;
     }
 
 }

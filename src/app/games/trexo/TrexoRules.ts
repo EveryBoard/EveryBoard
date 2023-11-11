@@ -10,6 +10,7 @@ import { MGPValidation } from '../../utils/MGPValidation';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 
@@ -32,7 +33,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     private constructor() {
         super(TrexoState);
     }
-    public applyLegalMove(move: TrexoMove, state: TrexoState, _info: void): TrexoState {
+    public applyLegalMove(move: TrexoMove, state: TrexoState, _config: RulesConfig, _info: void): TrexoState {
         return state
             .drop(move.getZero(), Player.ZERO)
             .drop(move.getOne(), Player.ONE)

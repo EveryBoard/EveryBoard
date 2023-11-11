@@ -70,7 +70,7 @@ describe('DemoCardComponent', () => {
         // Given a demo component displayed for a game
         loadNode({
             name: 'P4',
-            node: new P4Node(P4State.getInitialState(config)),
+            node: new GameNode(P4State.getInitialState(config), undefined, undefined, MGPOptional.of(config)),
             click: MGPOptional.empty(),
         });
         const rules: AbstractRules = testUtils.getComponent().gameComponent.rules;
@@ -95,7 +95,7 @@ describe('DemoCardComponent', () => {
         // Given a component already initialised with one given set of infos
         loadNode({
             name: 'P4',
-            node: new GameNode(P4State.getInitialState(config)),
+            node: new GameNode(P4State.getInitialState(config), undefined, undefined, MGPOptional.of(config)),
             click: MGPOptional.empty(),
         });
         testUtils.expectElementNotToExist('.player0-fill');
@@ -105,7 +105,7 @@ describe('DemoCardComponent', () => {
         const stateWithPieces: P4State = new P4State(boardWithPiece, 42);
         loadNode({
             name: 'P4',
-            node: new GameNode(stateWithPieces),
+            node: new GameNode(stateWithPieces, undefined, undefined, MGPOptional.of(config)),
             click: MGPOptional.empty(),
         });
         await testUtils.getComponent().ngOnChanges({} as SimpleChanges);

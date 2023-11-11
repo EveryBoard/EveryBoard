@@ -15,6 +15,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -192,7 +193,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     public isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
         return QuartoRules.isLegal(move, state);
     }
-    public applyLegalMove(move: QuartoMove, state: QuartoState, _info: void): QuartoState {
+    public applyLegalMove(move: QuartoMove, state: QuartoState, _config: RulesConfig, _info: void): QuartoState {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = state.pieceInHand;
         const resultingState: QuartoState = new QuartoState(newBoard, state.turn + 1, move.piece);

@@ -68,7 +68,9 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, RulesCo
     private constructor() {
         super(LodestoneState);
     }
-    public applyLegalMove(move: LodestoneMove, state: LodestoneState, infos: LodestoneInfos): LodestoneState {
+    public applyLegalMove(move: LodestoneMove, state: LodestoneState, _config: RulesConfig, infos: LodestoneInfos)
+    : LodestoneState
+    {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = TableUtils.copy(infos.board);

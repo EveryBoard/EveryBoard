@@ -69,7 +69,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Lasca');
+        this.setRulesAndNode('Lasca');
         this.availableAIs = [
             new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),
             new Minimax($localize`Control and Domination`,

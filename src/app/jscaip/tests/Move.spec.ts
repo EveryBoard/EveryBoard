@@ -19,7 +19,7 @@ export class MoveTestUtils {
         config: C,
     ): void
     {
-        const node: GameNode<M, S> = rules.getInitialNode(config);
+        const node: GameNode<M, S, C> = rules.getInitialNode(config);
         const moves: M[] = generator.getListMoves(node);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(encoder, move);

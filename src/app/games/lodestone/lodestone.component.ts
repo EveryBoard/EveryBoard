@@ -130,7 +130,7 @@ export class LodestoneComponent
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Lodestone');
+        this.setRulesAndNode('Lodestone');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
             new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),

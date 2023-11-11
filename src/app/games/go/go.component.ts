@@ -41,7 +41,7 @@ export class GoComponent
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Go');
+        this.setRulesAndNode('Go');
         this.availableAIs = [
             new Minimax($localize`Minimax`, GoRules.get(), new GoHeuristic(), new GoMoveGenerator()),
             new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),

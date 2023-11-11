@@ -37,7 +37,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('LinesOfAction');
+        this.setRulesAndNode('LinesOfAction');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),
             new MCTS($localize`MCTS`, new LinesOfActionMoveGenerator(), this.rules),

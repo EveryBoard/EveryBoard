@@ -14,7 +14,7 @@ describe('TaflPieceAndControlHeuristic', () => {
     let heuristic: TaflPieceAndControlHeuristic<BrandhubMove, BrandhubState>;
 
     let rules: BrandhubRules;
-    const config: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
@@ -36,7 +36,7 @@ describe('TaflPieceAndControlHeuristic', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const weakState: BrandhubState = new BrandhubState(weakBoard, 1, config);
+        const weakState: BrandhubState = new BrandhubState(weakBoard, 1);
 
         // And a board where what threatens you is a threatened piece
         // (and each player has 1 threat)
@@ -49,7 +49,7 @@ describe('TaflPieceAndControlHeuristic', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const strongState: BrandhubState = new BrandhubState(strongBoard, 1, config);
+        const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
 
         // Then the strong board should be preferred
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

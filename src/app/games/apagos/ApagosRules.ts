@@ -11,6 +11,7 @@ import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 import { Utils } from 'src/app/utils/utils';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
@@ -28,7 +29,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         super(ApagosState);
     }
 
-    public applyLegalMove(move: ApagosMove, state: ApagosState, _info: void): ApagosState {
+    public applyLegalMove(move: ApagosMove, state: ApagosState, _config: RulesConfig, _info: void): ApagosState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {

@@ -35,7 +35,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Reversi');
+        this.setRulesAndNode('Reversi');
         this.availableAIs = [
             new ReversiMinimax(),
             new MCTS($localize`MCTS`, new ReversiMoveGenerator(), this.rules),

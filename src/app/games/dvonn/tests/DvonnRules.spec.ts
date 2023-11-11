@@ -63,7 +63,7 @@ describe('DvonnRules', () => {
             expect(state.getPieceAt(coord).belongsTo(Player.ZERO)).toBeTrue();
         }
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get();
-        const state2: DvonnState = rules.applyLegalMove(move, state, undefined);
+        const state2: DvonnState = rules.applyLegalMove(move, state, {});
         const movablePieces2: Coord[] = DvonnRules.getMovablePieces(state2);
         for (const coord of movablePieces2) {
             expect(state2.getPieceAt(coord).belongsTo(Player.ONE)).toBeTrue();

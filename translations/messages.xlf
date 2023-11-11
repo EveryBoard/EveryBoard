@@ -734,8 +734,8 @@
       <trans-unit id="5607669932062416162" datatype="html">
         <source>Default</source>
       </trans-unit>
-      <trans-unit id="7694289842795780023" datatype="html">
-        <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> part</source>
+      <trans-unit id="7536677055379713952" datatype="html">
+        <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> game</source>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>

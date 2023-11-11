@@ -10,6 +10,7 @@ import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 
@@ -50,7 +51,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         [new Coord(1, 4), new Vector(1, 0), true],
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
-    public applyLegalMove(move: PentagoMove, state: PentagoState, _info: void): PentagoState {
+    public applyLegalMove(move: PentagoMove, state: PentagoState, _config: RulesConfig, _info: void): PentagoState {
         return state.applyLegalMove(move);
     }
     public isLegal(move: PentagoMove, state: PentagoState): MGPValidation {

@@ -19,7 +19,7 @@ export class GameNodeStats {
  * As an extra, a node may contain cached values used by AIs.
  */
 @Debug.log
-export class GameNode<M extends Move, S extends GameState> {
+export class GameNode<M extends Move, S extends GameState, C extends RulesConfig = RulesConfig> {
 
     public static ID: number = 0;
 
@@ -30,7 +30,7 @@ export class GameNode<M extends Move, S extends GameState> {
      * It is a map keyed with moves, with as value the child that corresponds
      * to applying that move to the current state.
      */
-    private readonly children: MGPMap<M, GameNode<M, S>> = new MGPMap();
+    private readonly children: MGPMap<M, GameNode<M, S, C>> = new MGPMap();
 
     /**
      * A cache that AIs can use. It is up to the AIs to properly name and type the values in the cache.
@@ -38,8 +38,9 @@ export class GameNode<M extends Move, S extends GameState> {
     private readonly cache: MGPMap<string, NonNullable<unknown>> = new MGPMap();
 
     public constructor(public readonly gameState: S,
-                       public readonly parent: MGPOptional<GameNode<M, S>> = MGPOptional.empty(),
-                       public readonly previousMove: MGPOptional<M> = MGPOptional.empty())
+                       public readonly parent: MGPOptional<GameNode<M, S, C>> = MGPOptional.empty(),
+                       public readonly previousMove: MGPOptional<M> = MGPOptional.empty(),
+                       private readonly config: MGPOptional<C> = MGPOptional.empty())
     {
         this.id = GameNode.ID++;
         GameNodeStats.createdNodes++;
@@ -48,7 +49,7 @@ export class GameNode<M extends Move, S extends GameState> {
      * Returns the child corresponding to applying the given move to the current state,
      * or empty if it has not yet been calculated.
      */
-    public getChild(move: M): MGPOptional<GameNode<M, S>> {
+    public getChild(move: M): MGPOptional<GameNode<M, S, C>> {
         return this.children.get(move);
     }
     /**
@@ -60,13 +61,13 @@ export class GameNode<M extends Move, S extends GameState> {
     /**
      * Returns all the children of the node
      */
-    public getChildren(): GameNode<M, S>[] {
+    public getChildren(): GameNode<M, S, C>[] {
         return this.children.listValues();
     }
     /**
      * Adds a child to this node.
      */
-    public addChild(node: GameNode<M, S>): void {
+    public addChild(node: GameNode<M, S, C>): void {
         Utils.assert(node.previousMove.isPresent(), 'GameNode: addChild expects a node with a previous move');
         this.children.set(node.previousMove.get(), node);
     }
@@ -76,7 +77,7 @@ export class GameNode<M extends Move, S extends GameState> {
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
     public printDot<L>(rules: Rules<M, S, RulesConfig, L>,
-                       labelFn?: (node: GameNode<M, S>) => string,
+                       labelFn?: (node: GameNode<M, S, C>) => string,
                        max?: number,
                        level: number = 0,
                        id: number = 0)
@@ -132,6 +133,13 @@ export class GameNode<M extends Move, S extends GameState> {
             this.cache.replace(key, value);
         } else {
             this.cache.set(key, value);
+        }
+    }
+    public getConfig(): C {
+        if (this.config.isPresent()) {
+            return this.config.get();
+        } else {
+            return {} as C;
         }
     }
 }

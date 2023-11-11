@@ -42,7 +42,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [5, 5, 5, 4, 4, 4],
                 [0, 4, 4, 4, 4, 4],
-            ], 1, [1, 0], config),
+            ], 1, [1, 0]),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -56,7 +56,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 2, 0],
                 [1, 0, 0, 0, 0, 1],
-            ], 100, [0, 0], config),
+            ], 100, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(5)),
             result: [
                 { x: 4, y: 0, content: { mainContent: ' -2 ' } },
@@ -68,7 +68,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 6, 6, 5, 5, 5],
                 [6, 0, 5, 0, 4, 4],
-            ], 2, [0, 0], config),
+            ], 2, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(5)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' -6 ' } },
@@ -79,7 +79,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [8, 0, 0, 0, 0, 0],
-            ], 0, [0, 0], config),
+            ], 0, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 5, y: 0, content: { mainContent: ' -1 ' } },
@@ -149,8 +149,8 @@ describe('KalahComponent', () => {
                 const state: MancalaState = new MancalaState([
                     [0, 1, 0, 0, 0, 0],
                     [0, 0, 13, 0, 0, 0],
-                ], 0, [0, 0], config);
-                await mancalaTestUtils.testUtils.setupState(state);
+                ], 0, [0, 0]);
+                await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, config);
 
                 // When distributing the house
                 mancalaTestUtils.testUtils.findElement('#click_2_1').triggerEventHandler('click', null);
@@ -226,8 +226,8 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [6, 1, 7, 6, 1, 7],
                 [2, 1, 6, 2, 2, 5],
-            ], 3, [4, 2], config);
-            await mancalaTestUtils.testUtils.setupState(state);
+            ], 3, [4, 2]);
+            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, config);
 
             // When doing the complex move
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(0, 0));
@@ -243,8 +243,8 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [5, 0, 6, 6, 0, 6],
                 [0, 5, 5, 1, 5, 5],
-            ], 2, [2, 2], config);
-            await mancalaTestUtils.testUtils.setupState(state);
+            ], 2, [2, 2]);
+            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, config);
 
             // When doing the complex move
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(4, 1));
@@ -261,14 +261,14 @@ describe('KalahComponent', () => {
                 [4, 4, 4, 4, 4, 4],
                 [0, 0, 0, 2, 0, 0],
             ];
-            const previousState: MancalaState = new MancalaState(previousBoard, 4, [0, 0], config);
+            const previousState: MancalaState = new MancalaState(previousBoard, 4, [0, 0]);
             const board: Table<number> = [
                 [4, 0, 4, 4, 4, 4],
                 [0, 0, 1, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 5, [5, 0], config);
+            const state: MancalaState = new MancalaState(board, 5, [5, 0]);
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
-            await mancalaTestUtils.testUtils.setupState(state, previousState, move);
+            await mancalaTestUtils.testUtils.setupState(state, previousState, move, config);
 
             // When starting a multiple-capture move
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(2, 0));
@@ -293,8 +293,8 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 1, 0, 0],
                 [0, 4, 0, 0, 0, 0],
-            ], 0, [0, 0], config);
-            await mancalaTestUtils.testUtils.setupState(state);
+            ], 0, [0, 0]);
+            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, config);
 
             // When giving turn to AI to play and waiting for move
             await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
@@ -309,8 +309,8 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
-            ], 10, [13, 9], config);
-            await mancalaTestUtils.testUtils.setupState(state);
+            ], 10, [13, 9]);
+            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, config);
 
             // When doing the only move possible for the remaining sub-move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));

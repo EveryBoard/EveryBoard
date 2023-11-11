@@ -96,7 +96,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     };
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Diam');
+        this.setRulesAndNode('Diam');
         this.availableAIs = [
             new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new DiamMoveGenerator()),
             new MCTS($localize`MCTS`, new DiamMoveGenerator(), this.rules),

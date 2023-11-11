@@ -40,6 +40,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
     }
     public applyLegalMove(move: MartianChessMove,
                           state: MartianChessState,
+                          _config: RulesConfig,
                           info: MartianChessMoveResult)
     : MartianChessState
     {

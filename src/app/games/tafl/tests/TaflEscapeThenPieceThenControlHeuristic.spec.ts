@@ -15,7 +15,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
     let heuristic: TaflEscapeThenPieceThenControlHeuristic<BrandhubMove, BrandhubState>;
 
     let rules: BrandhubRules;
-    const config: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
@@ -35,7 +35,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const weakState: BrandhubState = new BrandhubState(weakBoard, 0, config);
+        const weakState: BrandhubState = new BrandhubState(weakBoard, 0);
         const strongBoard: Table<TaflPawn> = [
             [_, _, O, _, _, _, _],
             [_, _, O, _, _, _, _],
@@ -45,7 +45,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const strongState: BrandhubState = new BrandhubState(strongBoard, 1, config);
+        const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -61,7 +61,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const weakState: BrandhubState = new BrandhubState(weakBoard, 0, config);
+        const weakState: BrandhubState = new BrandhubState(weakBoard, 0);
         const strongBoard: Table<TaflPawn> = [
             [_, _, O, A, _, _, _],
             [_, _, O, _, _, _, _],
@@ -71,7 +71,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const strongState: BrandhubState = new BrandhubState(strongBoard, 1, config);
+        const strongState: BrandhubState = new BrandhubState(strongBoard, 1);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),

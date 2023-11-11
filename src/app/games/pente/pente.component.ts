@@ -27,7 +27,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Pente');
+        this.setRulesAndNode('Pente');
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
             new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),

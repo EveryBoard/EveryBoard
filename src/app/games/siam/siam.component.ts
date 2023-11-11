@@ -54,7 +54,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Siam');
+        this.setRulesAndNode('Siam');
         this.availableAIs = [
             new SiamMinimax(),
             new MCTS($localize`MCTS`, new SiamMoveGenerator(), this.rules),

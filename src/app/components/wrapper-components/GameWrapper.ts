@@ -129,7 +129,13 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
     }
 
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
-        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, this.gameComponent.getState());
+        const config: RulesConfig = this.gameComponent.node.getConfig();
+        // TODO FOR REVIEW: so here we rely on the NODE's config
+        // instead of the one that the component fetched from the user then put inside the node
+        // So actually the async MyWrapper.getConfig() is (at least for (O & L)GWCs)) awaiting the user's config
+        // Then put it in the node, after that we could always fetch via wrapper.component.node ?
+        const legality: MGPFallible<unknown> =
+            this.gameComponent.rules.isLegal(move, this.gameComponent.getState(), config);
         if (legality.isFailure()) {
             await this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);

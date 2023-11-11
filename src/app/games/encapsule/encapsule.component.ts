@@ -43,7 +43,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Encapsule');
+        this.setRulesAndNode('Encapsule');
         this.availableAIs = [
             new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new EncapsuleMoveGenerator()),
             new MCTS($localize`MCTS`, new EncapsuleMoveGenerator(), this.rules),

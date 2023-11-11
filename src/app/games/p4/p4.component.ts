@@ -26,7 +26,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('P4');
+        this.setRulesAndNode('P4');
         this.availableAIs = [
             new P4Minimax(),
             new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),

@@ -6,7 +6,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
-export class HnefataflNode extends GameNode<HnefataflMove, HnefataflState> {}
+export class HnefataflNode extends GameNode<HnefataflMove, HnefataflState, TaflConfig> {}
 
 export class HnefataflRules extends TaflRules<HnefataflMove, HnefataflState> {
 

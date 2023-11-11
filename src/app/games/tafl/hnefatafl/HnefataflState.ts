@@ -28,9 +28,9 @@ export class HnefataflState extends TaflState {
             [_, _, _, _, _, I, _, _, _, _, _],
             [_, _, _, I, I, I, I, I, _, _, _],
         ];
-        return new HnefataflState(board, 0, config);
+        return new HnefataflState(board, 0);
     }
-    public of(board: Table<TaflPawn>, turn: number, config: TaflConfig): this {
-        return new HnefataflState(board, turn, config) as this;
+    public of(board: Table<TaflPawn>, turn: number): this {
+        return new HnefataflState(board, turn) as this;
     }
 }

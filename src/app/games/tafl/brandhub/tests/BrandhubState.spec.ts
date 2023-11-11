@@ -3,14 +3,14 @@ import { TaflConfig } from '../../TaflConfig';
 import { BrandhubState } from '../BrandhubState';
 import { BrandhubRules } from '../BrandhubRules';
 
-const config: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+const defaultConfig: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
 describe('BrandhubState', () => {
     describe('getInitialState', () => {
         it('should make invader Player.ZERO when invaders start', () => {
             // Given an initial state with a config where invader starts
             const customConfig: TaflConfig = {
-                ...config,
+                ...defaultConfig,
                 invaderStarts: true,
             };
             const state: BrandhubState = BrandhubState.getInitialState(customConfig);
@@ -23,7 +23,7 @@ describe('BrandhubState', () => {
         it('should make invader Player.ONE when invaders start is false', () => {
             // Given an initial state with a config where invader does not starts
             const customConfig: TaflConfig = {
-                ...config,
+                ...defaultConfig,
                 invaderStarts: false,
             };
             const state: BrandhubState = BrandhubState.getInitialState(customConfig);

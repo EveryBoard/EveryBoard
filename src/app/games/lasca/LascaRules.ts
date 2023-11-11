@@ -11,6 +11,7 @@ import { LascaMove } from './LascaMove';
 import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LascaNode extends GameNode<LascaMove, LascaState> {}
 
@@ -106,7 +107,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return pieceMoves;
     }
-    public applyLegalMove(move: LascaMove, state: LascaState, _info: void): LascaState {
+    public applyLegalMove(move: LascaMove, state: LascaState, _config: RulesConfig, _info: void): LascaState {
         const moveStart: Coord = move.getStartingCoord();
         const moveEnd: Coord = move.getEndingCoord();
         let movingStack: LascaStack = state.getPieceAt(moveStart);

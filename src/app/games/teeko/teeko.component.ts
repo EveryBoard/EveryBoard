@@ -33,7 +33,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Teeko');
+        this.setRulesAndNode('Teeko');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new TeekoHeuristic(), new TeekoMoveGenerator()),
             new MCTS($localize`MCTS`, new TeekoMoveGenerator(), this.rules),

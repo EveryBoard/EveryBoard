@@ -3,6 +3,7 @@ import { MancalaState } from '../common/MancalaState';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaDistributionResult, MancalaNode, MancalaRules } from '../common/MancalaRules';
+import { MancalaConfig } from './MancalaConfig';
 
 export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaState> {
 
@@ -13,15 +14,16 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
     public getListMoves(node: MancalaNode): MancalaMove[] {
         const moves: MancalaMove[] = [];
         const state: MancalaState = node.gameState;
+        const config: MancalaConfig = node.getConfig();
         const playerY: number = state.getCurrentPlayerY();
         for (let x: number = 0; x < state.getWidth(); x++) {
             if (state.getPieceAtXY(x, playerY) > 0) {
                 // if the house is not empty
                 const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(x));
-                if (state.config.mustContinueDistributionAfterStore) {
-                    moves.push(...this.getPossibleMoveContinuations(state, x, playerY, move));
+                if (config.mustContinueDistributionAfterStore) {
+                    moves.push(...this.getPossibleMoveContinuations(state, x, playerY, move, config));
                 } else {
-                    const legality: MGPValidation = this.rules.isLegal(move, state);
+                    const legality: MGPValidation = this.rules.isLegal(move, state, config);
                     if (legality.isSuccess()) {
                         moves.push(move);
                     }
@@ -31,11 +33,15 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
         return moves;
     }
 
-    private getPossibleMoveContinuations(state: MancalaState, x: number, y: number, currentMove: MancalaMove)
+    private getPossibleMoveContinuations(state: MancalaState,
+                                         x: number,
+                                         y: number,
+                                         currentMove: MancalaMove,
+                                         config: MancalaConfig)
     : MancalaMove[]
     {
         const moves: MancalaMove[] = [];
-        const distributionResult: MancalaDistributionResult = this.rules.distributeHouse(x, y, state);
+        const distributionResult: MancalaDistributionResult = this.rules.distributeHouse(x, y, state, config);
         const stateAfterDistribution: MancalaState = distributionResult.resultingState;
         const isStarving: boolean =
             MancalaRules.isStarving(stateAfterDistribution.getCurrentPlayer(),
@@ -45,7 +51,7 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
             for (let x: number = 0; x < stateAfterDistribution.getWidth(); x++) {
                 if (stateAfterDistribution.getPieceAtXY(x, y) > 0) {
                     const move: MancalaMove = currentMove.add(MancalaDistribution.of(x));
-                    moves.push(...this.getPossibleMoveContinuations(stateAfterDistribution, x, y, move));
+                    moves.push(...this.getPossibleMoveContinuations(stateAfterDistribution, x, y, move, config));
                 }
             }
             return moves;

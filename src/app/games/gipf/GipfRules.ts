@@ -36,7 +36,12 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
         super(GipfState);
     }
 
-    public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
+    public applyLegalMove(_move: GipfMove,
+                          _state: GipfState,
+                          _config: RulesConfig,
+                          computedState: GipfLegalityInformation)
+    : GipfState
+    {
         return new GipfState(computedState.board,
                              computedState.turn + 1,
                              computedState.sidePieces,

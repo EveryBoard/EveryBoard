@@ -33,7 +33,7 @@ const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove, T
         [_, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _],
-    ], 1, defaultConfig),
+    ], 1),
     capture: TablutMove.of(new Coord(1, 0), new Coord(2, 0)),
     firstCaptured: new Coord(2, 1),
     otherPlayerPiece: new Coord(5, 0),

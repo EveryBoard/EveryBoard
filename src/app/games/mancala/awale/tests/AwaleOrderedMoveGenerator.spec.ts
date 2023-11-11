@@ -1,16 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from '../../common/MancalaState';
-import { AwaleRules } from '../AwaleRules';
 import { AwaleOrderedMoveGenerator } from '../AwaleOrderedMoveGenerator';
-import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
 
 describe('AwaleOrderedMoveGenerator', () => {
 
     let moveGenerator: AwaleOrderedMoveGenerator;
-    const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     beforeEach(() => {
         moveGenerator = new AwaleOrderedMoveGenerator();
@@ -22,7 +19,7 @@ describe('AwaleOrderedMoveGenerator', () => {
             [0, 0, 0, 0, 1, 1],
             [0, 0, 0, 0, 0, 2],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], config);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
         const node: MancalaNode = new MancalaNode(state);
 
         // When listing the moves

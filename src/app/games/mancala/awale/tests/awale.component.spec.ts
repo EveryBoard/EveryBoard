@@ -32,7 +32,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 4, 4, 4, 4, 4],
-            ], 1, [0, 0], config),
+            ], 1, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(1)),
             result: [
                 { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -46,7 +46,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 0, 0, 4],
-            ], 121, [0, 0], config),
+            ], 121, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(5)),
             result: [{ x: 5, y: 1, content: { mainContent: ' -5 ' } }],
         },
@@ -54,7 +54,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [4, 1, 4, 4, 4, 4],
                 [2, 4, 4, 4, 4, 4],
-            ], 0, [0, 0], config),
+            ], 0, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [{ x: 1, y: 0, content: { mainContent: ' -2 ' } }],
         },
@@ -62,7 +62,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [11, 4, 4, 4, 4, 0],
                 [17, 4, 4, 4, 4, 4],
-            ], 0, [0, 0], config),
+            ], 0, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [{ x: 5, y: 0, content: { mainContent: ' -2 ' } }],
         },
@@ -83,7 +83,7 @@ describe('AwaleComponent', () => {
                 passByPlayerStore: true,
             };
             const state: MancalaState = MancalaState.getInitialState(customConfig);
-            await testUtils.setupState(state);
+            await testUtils.setupState(state, undefined, undefined, customConfig);
 
             // When doing simple distribution ending in store
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
@@ -100,7 +100,7 @@ describe('AwaleComponent', () => {
                 mustContinueDistributionAfterStore: true,
             };
             const state: MancalaState = MancalaState.getInitialState(customConfig);
-            await testUtils.setupState(state);
+            await testUtils.setupState(state, undefined, undefined, customConfig);
             await testUtils.expectClickSuccess('#click_3_1');
             tick(1400);
 
@@ -112,7 +112,7 @@ describe('AwaleComponent', () => {
             const expectedState: MancalaState = new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 5, 5, 0, 4, 4],
-            ], 1, [2, 0], customConfig);
+            ], 1, [2, 0]);
             const actualState: MancalaState = testUtils.getGameComponent().getState();
             expect(actualState).toEqual(expectedState);
         }));

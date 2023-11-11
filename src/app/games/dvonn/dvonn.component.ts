@@ -36,7 +36,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Dvonn');
+        this.setRulesAndNode('Dvonn');
         this.availableAIs = [
             new Minimax($localize`Stacks`, this.rules, new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator()),
             new Minimax($localize`Score`, this.rules, new DvonnScoreHeuristic(), new DvonnOrderedMoveGenerator()),

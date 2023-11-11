@@ -6,13 +6,11 @@ import { HnefataflState } from '../HnefataflState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TaflPawn } from '../../TaflPawn';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
-import { TaflConfig } from '../../TaflConfig';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-const config: TaflConfig = HnefataflRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 const stateReadyForCapture: HnefataflState = new HnefataflState([
     [_, A, _, _, _, _, _, _, _, _, _],
     [_, x, x, _, _, _, _, _, _, _, _],
@@ -25,7 +23,7 @@ const stateReadyForCapture: HnefataflState = new HnefataflState([
     [_, _, _, _, _, _, _, _, _, _, _],
     [_, _, _, _, _, _, _, _, _, _, _],
     [_, _, _, _, _, _, _, _, _, _, _],
-], 1, config);
+], 1);
 
 const hnefataflEntries: TaflTestEntries<HnefataflComponent, HnefataflRules, HnefataflMove, HnefataflState> = {
     gameName: 'Hnefatafl',

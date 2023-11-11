@@ -6,7 +6,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
-export class BrandhubNode extends GameNode<BrandhubMove, BrandhubState> {}
+export class BrandhubNode extends GameNode<BrandhubMove, BrandhubState, TaflConfig> {}
 
 export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
 

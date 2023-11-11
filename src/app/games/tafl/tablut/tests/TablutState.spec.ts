@@ -10,11 +10,11 @@ describe('TablutState', () => {
     describe('getInitialState', () => {
         it('should make invader Player.ZERO when invaders start', () => {
             // Given an initial state with a config where invader starts
-            const config: TaflConfig = {
+            const customConfig: TaflConfig = {
                 ...defaultConfig,
                 invaderStarts: true,
             };
-            const state: TablutState = TablutState.getInitialState(config);
+            const state: TablutState = TablutState.getInitialState(customConfig);
 
             // When checking the invaders coord
             // Then they should be of Player.ZERO
@@ -23,11 +23,11 @@ describe('TablutState', () => {
         });
         it('should make invader Player.ONE when invaders start is false', () => {
             // Given an initial state with a config where invader does not starts
-            const config: TaflConfig = {
+            const customConfig: TaflConfig = {
                 ...defaultConfig,
                 invaderStarts: false,
             };
-            const state: TablutState = TablutState.getInitialState(config);
+            const state: TablutState = TablutState.getInitialState(customConfig);
 
             // When checking the invaders coord
             // Then they should be of Player.ONE

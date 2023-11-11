@@ -97,6 +97,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, RulesCo
     }
     public applyLegalMove(move: EncapsuleMove,
                           state: EncapsuleState,
+                          _config: RulesConfig,
                           newLandingSpace: EncapsuleLegalityInformation)
     : EncapsuleState
     {

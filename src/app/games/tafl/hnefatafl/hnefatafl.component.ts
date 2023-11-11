@@ -16,7 +16,7 @@ export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflM
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute, HnefataflMove.from);
-        this.setRuleAndNode('Hnefatafl');
+        this.setRulesAndNode('Hnefatafl');
         this.availableAIs = this.createAIs();
         this.encoder = HnefataflMove.encoder;
     }

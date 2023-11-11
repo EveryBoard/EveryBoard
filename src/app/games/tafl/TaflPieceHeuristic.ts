@@ -3,6 +3,7 @@ import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { TaflConfig } from './TaflConfig';
 
 export class TaflPieceHeuristic<M extends TaflMove, S extends TaflState> extends PlayerMetricHeuristic<M, S> {
 
@@ -12,9 +13,10 @@ export class TaflPieceHeuristic<M extends TaflMove, S extends TaflState> extends
 
     public getMetrics(node: TaflNode<M, S>): [number, number] {
         const state: S = node.gameState;
+        const config: TaflConfig = node.getConfig();
         const nbPlayerZeroPawns: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
-        const invader: Player = this.rules.getInvader(state);
+        const invader: Player = this.rules.getInvader(config);
         const zeroMult: number = [1, 2][invader.value]; // invaders pawn are twice as numerous
         const oneMult: number = [2, 1][invader.value]; // so they're twice less valuable
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;

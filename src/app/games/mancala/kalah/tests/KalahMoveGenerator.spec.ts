@@ -5,6 +5,7 @@ import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('KalahMoveGenerator', () => {
 
@@ -15,10 +16,18 @@ describe('KalahMoveGenerator', () => {
         moveGenerator = new KalahMoveGenerator();
     });
 
+    function getMancalaNode(state: MancalaState, config: MancalaConfig): MancalaNode {
+        return new MancalaNode(
+            state,
+            MGPOptional.empty(),
+            MGPOptional.empty(),
+            MGPOptional.of(config),
+        );
+    }
     it('should have all move options', () => {
         // Given an initial node
         const initialState: MancalaState = MancalaState.getInitialState(config);
-        const node: MancalaNode = new MancalaNode(initialState);
+        const node: MancalaNode = getMancalaNode(initialState, config);
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node);
@@ -32,8 +41,8 @@ describe('KalahMoveGenerator', () => {
         const state: MancalaState = new MancalaState([
             [5, 2, 3, 2, 1, 2],
             [1, 0, 0, 0, 0, 0],
-        ], 24, [13, 20], config);
-        const node: MancalaNode = new MancalaNode(state);
+        ], 24, [13, 20]);
+        const node: MancalaNode = getMancalaNode(state, config);
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node);

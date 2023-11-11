@@ -69,7 +69,12 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, RulesConfig, 
             return GameStatus.ONGOING;
         }
     }
-    public applyLegalMove(_move: AbaloneMove, state: AbaloneState, newBoard: AbaloneLegalityInformation): AbaloneState {
+    public applyLegalMove(_move: AbaloneMove,
+                          state: AbaloneState,
+                          _config: RulesConfig,
+                          newBoard: AbaloneLegalityInformation)
+    : AbaloneState
+    {
         return new AbaloneState(newBoard, state.turn + 1);
     }
     public isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {

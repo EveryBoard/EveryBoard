@@ -25,7 +25,7 @@ describe('AwaleScoreMinimax', () => {
     it('should not throw at first choice', () => {
         const node: MancalaNode = rules.getInitialNode(config);
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2);
-        expect(rules.isLegal(bestMove, MancalaState.getInitialState(config)).isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, MancalaState.getInitialState(config), config).isSuccess()).toBeTrue();
     });
     it('should choose capture when possible (at depth 1)', () => {
         // Given a state with a possible capture
@@ -33,7 +33,7 @@ describe('AwaleScoreMinimax', () => {
             [4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 1],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], config);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
         const node: MancalaNode = new MancalaNode(state);
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1);
@@ -46,7 +46,7 @@ describe('AwaleScoreMinimax', () => {
             [0, 0, 0, 0, 3, 1],
             [0, 0, 0, 0, 1, 0],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], config);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
         const node: MancalaNode = new MancalaNode(state);
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2);
@@ -59,7 +59,7 @@ describe('AwaleScoreMinimax', () => {
             [1, 0, 0, 0, 0, 7],
             [0, 1, 0, 0, 0, 0],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], config);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
         const node: MancalaNode = new MancalaNode(state);
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1);

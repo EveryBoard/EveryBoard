@@ -74,7 +74,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Apagos');
+        this.setRulesAndNode('Apagos');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new ApagosHeuristic(), new ApagosMoveGenerator()),
             new MCTS($localize`MCTS`, new ApagosMoveGenerator(), this.rules),

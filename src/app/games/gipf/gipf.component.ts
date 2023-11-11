@@ -66,7 +66,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Gipf');
+        this.setRulesAndNode('Gipf');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new GipfScoreHeuristic(), new GipfMoveGenerator()),
             new MCTS($localize`MCTS`, new GipfMoveGenerator(), this.rules),

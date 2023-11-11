@@ -342,8 +342,8 @@
         <source>Pass by player store</source>
         <target>Passer par le magasin</target>
       </trans-unit>
-      <trans-unit id="4475848272710836308" datatype="html">
-        <source>Continue distribution after last seed ends in store</source>
+      <trans-unit id="8576122948092687879" datatype="html">
+        <source>Must continue distribution after last seed ends in store</source>
         <target>Continuer la distribution après que la dernière graine soit tombée dans le magasin</target>
       </trans-unit>
       <trans-unit id="9195784792324730674" datatype="html">
@@ -362,7 +362,7 @@
         <source>King far from home can be sandwiched</source>
         <target>Le roi loin du trône central peut être sandwiché</target>
       </trans-unit>
-      <trans-unit id="843632127033881976" datatype="html">
+      <trans-unit id="3329390039243374527" datatype="html">
         <source>Invader starts</source>
         <target>L'envahisseur commence</target>
       </trans-unit>
@@ -993,8 +993,8 @@
         <source>The game has been canceled!</source>
         <target>La partie a été annulée !</target>
       </trans-unit>
-      <trans-unit id="7694289842795780023" datatype="html">
-        <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> part</source>
+      <trans-unit id="7536677055379713952" datatype="html">
+        <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> game</source>
         <target>Configuration de votre partie de <x id="INTERPOLATION" equiv-text="{{ gameName }}"/></target>
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
@@ -3242,8 +3242,8 @@
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
         <target>Le but du Pentago est d&apos;aligner 5 de vos pièces. Dans le plateau ci-dessous, Foncé gagne.</target>
       </trans-unit>
-      <trans-unit id="6056279063431893237" datatype="html">
-        <source>At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark, do a simple move.</source>
+      <trans-unit id="6954191985152707764" datatype="html">
+        <source>At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a simple move.</source>
         <target>Chacun à son tour, les joueurs posent une pièce sur le plateau, et effectuent éventuellement une rotation d&apos;un quadrant. Tant qu&apos;il existe des quadrants neutres, c&apos;est à dire des quadrants qui ne changeraient pas après avoir été tournés, l&apos;option de ne pas effectuer de rotation est acceptée. Pour ce faire il faut cliquer sur le rond barré qui apparaît au centre du plateau quand c&apos;est possible.&lt;br/&gt;&lt;br/&gt; Vous jouez Foncé, faites un mouvement simple.</target>
       </trans-unit>
       <trans-unit id="1640662905904405955" datatype="html">
@@ -3599,8 +3599,8 @@
         <source>Capture (2/2)</source>
         <target>Capture (2/2)</target>
       </trans-unit>
-      <trans-unit id="5534919927538147018" datatype="html">
-        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt; You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
+      <trans-unit id="7280078972566788741" datatype="html">
+        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
         <target>Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.&lt;br/&gt;&lt;br/&gt; Vous jouez Clair. Joueez en bas à gauche pour voir un exemple de capture.</target>
       </trans-unit>
       <trans-unit id="863291659187903950" datatype="html">

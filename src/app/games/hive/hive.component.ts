@@ -116,7 +116,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Hive');
+        this.setRulesAndNode('Hive');
         this.availableAIs = [
             new Minimax($localize`Minimax`, HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator()),
             new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),

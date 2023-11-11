@@ -50,7 +50,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
         super(messageDisplayer, activatedRoute);
-        this.setRuleAndNode('Pylos');
+        this.setRulesAndNode('Pylos');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new PylosHeuristic(), new PylosOrderedMoveGenerator()),
             new MCTS($localize`MCTS`, new PylosMoveGenerator(), this.rules),

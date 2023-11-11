@@ -15,6 +15,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
@@ -56,7 +57,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return playerFreedoms.sort((a: number, b: number) => a - b);
     }
-    public applyLegalMove(move: SaharaMove, state: SaharaState, _info: void): SaharaState {
+    public applyLegalMove(move: SaharaMove, state: SaharaState, _config: RulesConfig, _info: void): SaharaState {
         const board: FourStatePiece[][] = state.getCopiedBoard();
         board[move.getEnd().y][move.getEnd().x] = board[move.getStart().y][move.getStart().x];
         board[move.getStart().y][move.getStart().x] = FourStatePiece.EMPTY;

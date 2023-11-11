@@ -13,16 +13,17 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type EpaminondasConfig = {
     width: number;
     emptyRows: number;
-    rowOfSoldiers: number;
+    rowsOfSoldiers: number;
 };
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
-export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState> {}
+export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState, EpaminondasConfig> {}
 
 export class EpaminondasRules
     extends Rules<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
@@ -36,17 +37,17 @@ export class EpaminondasRules
                 config: {
                     width: 14,
                     emptyRows: 8,
-                    rowOfSoldiers: 2,
+                    rowsOfSoldiers: 2,
                 },
             }, {
                 width: RulesConfigDescriptionLocalizable.WIDTH,
                 emptyRows: (): string => $localize`Number of empty rows`,
-                rowOfSoldiers: (): string => $localize`Number of soldier rows`,
+                rowsOfSoldiers: (): string => $localize`Number of soldier rows`,
             }, [
             ], {
                 width: MGPValidators.range(1, 99),
                 emptyRows: MGPValidators.range(1, 99),
-                rowOfSoldiers: MGPValidators.range(1, 99),
+                rowsOfSoldiers: MGPValidators.range(1, 99),
             });
 
     public static get(): EpaminondasRules {
@@ -168,6 +169,7 @@ export class EpaminondasRules
 
     public applyLegalMove(_move: EpaminondasMove,
                           state: EpaminondasState,
+                          _config: RulesConfig,
                           newBoard: EpaminondasLegalityInformation)
     : EpaminondasState
     {

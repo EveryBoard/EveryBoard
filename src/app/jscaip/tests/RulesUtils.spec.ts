@@ -11,6 +11,7 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { GameStatus } from '../GameStatus';
 import { JSONValue, Utils } from 'src/app/utils/utils';
 import { RulesConfig } from '../RulesConfigUtil';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class RulesUtils {
 
@@ -18,12 +19,12 @@ export class RulesUtils {
                                     M extends Move,
                                     S extends GameState,
                                     L,
-                                    C extends RulesConfig>(rules: R, state: S, move: M, expectedState: S)
+                                    C extends RulesConfig>(rules: R, state: S, move: M, expectedState: S, config?: C)
     : void
     {
-        const legality: MGPFallible<L> = rules.isLegal(move, state);
+        const legality: MGPFallible<L> = rules.isLegal(move, state, config as C);
         if (legality.isSuccess()) {
-            const resultingState: S = rules.applyLegalMove(move, state, legality.get());
+            const resultingState: S = rules.applyLegalMove(move, state, config as C, legality.get());
             if (isComparableObject(resultingState)) {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
                 if (equals === false) {
@@ -45,10 +46,11 @@ export class RulesUtils {
                                     C extends RulesConfig = RulesConfig>(rules: R,
                                                                          state: S,
                                                                          move: M,
-                                                                         reason: string)
+                                                                         reason: string,
+                                                                         config?: C)
     : void
     {
-        const legality: MGPFallible<L> = rules.isLegal(move, state);
+        const legality: MGPFallible<L> = rules.isLegal(move, state, config as C);
         expect(legality.isFailure()).withContext('move should have failed but it succeeded').toBeTrue();
         expect(legality.getReason()).toBe(reason);
     }
@@ -59,7 +61,7 @@ export class RulesUtils {
                                        L,
                                        C extends RulesConfig = RulesConfig>(
         rules: R,
-        node: GameNode<M, S>,
+        node: GameNode<M, S, C>,
         player: Player)
     : void
     {
@@ -74,7 +76,7 @@ export class RulesUtils {
                                     L,
                                     C extends RulesConfig = RulesConfig>(
         rules: R,
-        node: GameNode<M, S>)
+        node: GameNode<M, S, C>)
     : void
     {
         expect(rules.getGameStatus(node)).toEqual(GameStatus.ONGOING);
@@ -86,7 +88,7 @@ export class RulesUtils {
                                  L,
                                  C extends RulesConfig = RulesConfig>(
         rules: R,
-        node: GameNode<M, S>)
+        node: GameNode<M, S, C>)
     : void
     {
         expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
@@ -95,7 +97,9 @@ export class RulesUtils {
     public static expectToThrowAndLog(func: () => void, error: string): void {
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         const expectedErrorMessage: string = 'Assertion failure: ' + error;
-        expect(func).withContext('Excpected function to throw error "' + expectedErrorMessage + '"').toThrowError(expectedErrorMessage);
+        expect(func)
+            .withContext('Excpected function to throw error "' + expectedErrorMessage + '"')
+            .toThrowError(expectedErrorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
     }
 
@@ -112,15 +116,22 @@ export class RulesUtils {
                              C extends RulesConfig>(ruler: Rules<M, S, C, L>,
                                                     encodedMoves: JSONValue[],
                                                     state: S,
-                                                    moveDecoder: (em: JSONValue) => M)
+                                                    moveDecoder: (em: JSONValue) => M,
+                                                    config: MGPOptional<C> = MGPOptional.empty())
     : S
     {
         let i: number = 0;
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);
-            const legality: MGPFallible<L> = ruler.isLegal(move, state);
-            Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
-            state = ruler.applyLegalMove(move, state, legality.get());
+            if (config.isPresent()) {
+                const legality: MGPFallible<L> = ruler.isLegal(move, state, config.get());
+                Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
+                state = ruler.applyLegalMove(move, state, config.get(), legality.get());
+            } else {
+                const legality: MGPFallible<L> = ruler.isLegal(move, state, {} as C);
+                Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
+                state = ruler.applyLegalMove(move, state, {} as C, legality.get());
+            }
             i++;
         }
         return state;

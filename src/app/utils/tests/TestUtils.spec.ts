@@ -48,6 +48,7 @@ import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServic
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({})
 export class BlankComponent {}
@@ -345,14 +346,17 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
     public async setupState(state: GameState,
                             previousState?: GameState,
-                            previousMove?: Move)
+                            previousMove?: Move,
+                            config?: RulesConfig)
     : Promise<void>
     {
+        const optionalConfig: MGPOptional<RulesConfig> = MGPOptional.ofNullable(config);
         this.gameComponent.node = new GameNode(
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
-                new GameNode(previousState)),
+                new GameNode(previousState, undefined, undefined, optionalConfig)),
             MGPOptional.ofNullable(previousMove),
+            optionalConfig,
         );
         await this.gameComponent.updateBoard(false);
         if (previousMove !== undefined) {

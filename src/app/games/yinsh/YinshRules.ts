@@ -33,7 +33,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
     private constructor() {
         super(YinshState);
     }
-    public applyLegalMove(_move: YinshMove, _state: YinshState, info: YinshState): YinshState {
+    public applyLegalMove(_move: YinshMove, _state: YinshState, _config: RulesConfig, info: YinshState): YinshState {
         const stateWithoutTurn: YinshState = info;
         return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn + 1);
     }

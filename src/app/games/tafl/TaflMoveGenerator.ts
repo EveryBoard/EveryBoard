@@ -6,6 +6,7 @@ import { Debug } from 'src/app/utils/utils';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { TaflConfig } from './TaflConfig';
 
 @Debug.log
 export class TaflMoveGenerator<M extends TaflMove, S extends TaflState> extends MoveGenerator<M, S> {
@@ -15,13 +16,14 @@ export class TaflMoveGenerator<M extends TaflMove, S extends TaflState> extends 
     }
     public getListMoves(node: TaflNode<M, S>): M[] {
         const state: S = node.gameState;
+        const config: TaflConfig = node.getConfig();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state);
-        return this.orderMoves(state, listMoves);
+        const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state, config);
+        return this.orderMoves(state, listMoves, config);
     }
-    public orderMoves(state: S, listMoves: M[]): M[] {
+    public orderMoves(state: S, listMoves: M[], config: TaflConfig): M[] {
         const king: Coord = this.rules.getKingCoord(state).get();
-        const invader: Player = this.rules.getInvader(state);
+        const invader: Player = this.rules.getInvader(config);
         if (state.getCurrentPlayer() === invader) { // Invader
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
                 return - move.getEnd().getOrthogonalDistance(king);

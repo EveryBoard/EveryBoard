@@ -5,10 +5,13 @@ import { Move } from '../Move';
 import { Heuristic } from '../Minimax';
 import { Player } from '../Player';
 import { GameNode } from '../GameNode';
+import { RulesConfig } from '../RulesConfigUtil';
 
 export class HeuristicUtils {
 
-    public static expectSecondStateToBeBetterThanFirstFor<M extends Move, S extends GameState>(
+    public static expectSecondStateToBeBetterThanFirstFor<M extends Move,
+                                                          S extends GameState,
+                                                          C extends RulesConfig = RulesConfig>(
         heuristic: Heuristic<M, S>,
         weakState: S,
         weakMove: MGPOptional<M>,
@@ -17,9 +20,9 @@ export class HeuristicUtils {
         player: Player)
     : void
     {
-        const weakNode: GameNode<M, S> = new GameNode(weakState, MGPOptional.empty(), weakMove);
+        const weakNode: GameNode<M, S, C> = new GameNode(weakState, MGPOptional.empty(), weakMove);
         const weakValue: number = heuristic.getBoardValue(weakNode).value;
-        const strongNode: GameNode<M, S> = new GameNode(strongState, MGPOptional.empty(), strongMove);
+        const strongNode: GameNode<M, S, C> = new GameNode(strongState, MGPOptional.empty(), strongMove);
         const strongValue: number = heuristic.getBoardValue(strongNode).value;
         if (player === Player.ZERO) {
             expect(weakValue).toBeGreaterThan(strongValue);

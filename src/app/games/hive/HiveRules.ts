@@ -13,6 +13,7 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 
@@ -29,7 +30,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     private constructor() {
         super(HiveState);
     }
-    public applyLegalMove(move: HiveMove, state: HiveState, _info: void): HiveState {
+    public applyLegalMove(move: HiveMove, state: HiveState, _config: RulesConfig, _info: void): HiveState {
         if (move instanceof HiveDropMove) {
             return this.applyLegalDrop(move, state);
         } else if (move instanceof HiveCoordToCoordMove) {

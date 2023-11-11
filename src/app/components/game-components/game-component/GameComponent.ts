@@ -76,7 +76,7 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
 
     public rules: R;
 
-    public node: GameNode<M, S>;
+    public node: GameNode<M, S, C>;
 
     public availableAIs: AI<M, S, AIOptions>[];
 
@@ -186,13 +186,17 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
         return;
     }
 
-    protected setRuleAndNode(urlName: string): void {
+    protected setRulesAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName)[0];
         const defaultConfig: RulesConfig = gameInfo.getRulesConfigDescription().getDefaultConfig().config;
 
         this.rules = gameInfo.rules as R;
         this.node = this.rules.getInitialNode(defaultConfig as C);
         this.tutorial = gameInfo.tutorial.tutorial;
+    }
+
+    protected getConfig(): C {
+        return this.node.getConfig();
     }
 
 }

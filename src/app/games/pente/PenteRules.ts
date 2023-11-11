@@ -13,8 +13,9 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export class PenteNode extends GameNode<PenteMove, PenteState> {}
+export class PenteNode extends GameNode<PenteMove, PenteState, GobanConfig> {}
 
 export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
 
@@ -49,7 +50,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
             return MGPValidation.SUCCESS;
         }
     }
-    public applyLegalMove(move: PenteMove, state: PenteState, info: void): PenteState {
+    public applyLegalMove(move: PenteMove, state: PenteState, _config: RulesConfig, _info: void): PenteState {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x]= player;

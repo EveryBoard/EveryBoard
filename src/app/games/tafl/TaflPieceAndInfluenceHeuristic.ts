@@ -25,7 +25,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove, S extends TaflSt
 
     public getPointValue(node: TaflNode<M, S>): PointValue {
         // eslint-disable-next-line dot-notation
-        const initialState: S = this.rules.stateType['getInitialState'](node.gameState.config);
+        const initialState: S = this.rules.stateType['getInitialState'](node.getConfig());
         const width: number = initialState.board.length;
         const maxInfluence: number = 16 * ((width * 2) - 2);
         const scoreByThreatenedPiece: number = (16 * maxInfluence) + 1;

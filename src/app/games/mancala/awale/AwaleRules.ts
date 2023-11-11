@@ -99,7 +99,7 @@ export class AwaleRules extends MancalaRules {
         return {
             capturedSum,
             captureMap,
-            resultingState: new MancalaState(resultingBoard, state.turn, captured, state.config),
+            resultingState: new MancalaState(resultingBoard, state.turn, captured),
         };
     }
 

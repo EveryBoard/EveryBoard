@@ -24,9 +24,9 @@ export class BrandhubState extends TaflState {
             [_, _, _, I, _, _, _],
             [_, _, _, I, _, _, _],
         ];
-        return new BrandhubState(board, 0, config);
+        return new BrandhubState(board, 0);
     }
-    public of(board: Table<TaflPawn>, turn: number, config: TaflConfig): this {
-        return new BrandhubState(board, turn, config) as this;
+    public of(board: Table<TaflPawn>, turn: number): this {
+        return new BrandhubState(board, turn) as this;
     }
 }

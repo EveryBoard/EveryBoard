@@ -6,12 +6,22 @@ import { AwaleRules } from '../AwaleRules';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { KalahMoveGenerator } from '../../kalah/KalahMoveGenerator';
 
 describe('AwaleMoveGenerator', () => {
 
-    let moveGenerator: AwaleMoveGenerator;
+    let moveGenerator: KalahMoveGenerator;
     const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
+    function getMancalaNode(state: MancalaState, config: MancalaConfig): MancalaNode {
+        return new MancalaNode(
+            state,
+            MGPOptional.empty(),
+            MGPOptional.empty(),
+            MGPOptional.of(config),
+        );
+    }
     beforeEach(() => {
         moveGenerator = new AwaleMoveGenerator();
     });
@@ -22,8 +32,8 @@ describe('AwaleMoveGenerator', () => {
             [1, 0, 0, 0, 0, 1],
             [0, 0, 0, 0, 0, 0],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0], config);
-        const node: MancalaNode = new MancalaNode(state);
+        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+        const node: MancalaNode = getMancalaNode(state, config);
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node);
@@ -44,7 +54,7 @@ describe('AwaleMoveGenerator', () => {
             };
             const state: MancalaState = MancalaState.getInitialState(customConfig);
 
-            const node: MancalaNode = new MancalaNode(state);
+            const node: MancalaNode = getMancalaNode(state, customConfig);
 
             // When listing the moves
             const moves: MancalaMove[] = moveGenerator.getListMoves(node);

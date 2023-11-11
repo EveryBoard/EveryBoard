@@ -9,6 +9,7 @@ import { TaflFailure } from '../../TaflFailure';
 import { BrandhubMove } from '../BrandhubMove';
 import { TaflPawn } from '../../TaflPawn';
 import { TaflConfig } from '../../TaflConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('BrandhubRules', () => {
 
@@ -18,14 +19,14 @@ describe('BrandhubRules', () => {
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     let rules: BrandhubRules;
-    const config: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
     beforeEach(() => {
         rules = BrandhubRules.get();
     });
     it('should allow first move by invader', () => {
         // Given the initial board
-        const state: BrandhubState = BrandhubState.getInitialState(config);
+        const state: BrandhubState = BrandhubState.getInitialState(defaultConfig);
 
         // When moving an invader
         const move: BrandhubMove = BrandhubMove.of(new Coord(1, 3), new Coord(1, 6));
@@ -40,8 +41,8 @@ describe('BrandhubRules', () => {
             [_, _, _, O, _, _, _],
             [_, O, _, O, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1, config);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
     it('should allow second move by defender', () => {
         // Given the initial board
@@ -54,7 +55,7 @@ describe('BrandhubRules', () => {
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 1, config);
+        const state: BrandhubState = new BrandhubState(board, 1);
 
         // When moving an invader
         const move: BrandhubMove = BrandhubMove.of(new Coord(3, 2), new Coord(3, 1));
@@ -69,8 +70,8 @@ describe('BrandhubRules', () => {
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 2, config);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 2);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
     it('should allow soldier to be captured against a throne', () => {
         // Given a board with an endangered invader
@@ -83,7 +84,7 @@ describe('BrandhubRules', () => {
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 1, config);
+        const state: BrandhubState = new BrandhubState(board, 1);
 
         // When sandwiching the invader against a corner
         const move: BrandhubMove = BrandhubMove.of(new Coord(4, 3), new Coord(4, 0));
@@ -98,8 +99,8 @@ describe('BrandhubRules', () => {
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 2, config);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 2);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
     it('should forbid king to move back on the throne', () => {
         // Given a board where the king has the possibility to move back to his throne
@@ -112,14 +113,14 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 1, config);
+        const state: BrandhubState = new BrandhubState(board, 1);
 
         // When moving the king to his throne
         const move: BrandhubMove = BrandhubMove.of(new Coord(3, 0), new Coord(3, 3));
 
         // Then the move should be deemed illegal
         const reason: string = TaflFailure.THRONE_IS_LEFT_FOR_GOOD();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
     it('should allow capturing the king on his throne with 4 soldiers', () => {
         // Given a board where the king is on his throne, surrounded by 3 invaders
@@ -132,7 +133,7 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 0, config);
+        const state: BrandhubState = new BrandhubState(board, 0);
 
         // When moving a fourth invader next to the king
         const move: BrandhubMove = BrandhubMove.of(new Coord(1, 2), new Coord(3, 2));
@@ -147,9 +148,9 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1, config);
-        const node: BrandhubNode = new BrandhubNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should allow capturing the king next to his throne with 3 invader (option throne sandwich)', () => {
@@ -163,7 +164,7 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 0, config);
+        const state: BrandhubState = new BrandhubState(board, 0);
 
         // When moving a third piece next to the king
         const move: BrandhubMove = BrandhubMove.of(new Coord(1, 1), new Coord(3, 1));
@@ -178,9 +179,9 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1, config);
-        const node: BrandhubNode = new BrandhubNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should allow capturing the king next to his throne with 3 invader (option soldier sandwich)', () => {
@@ -194,7 +195,7 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 0, config);
+        const state: BrandhubState = new BrandhubState(board, 0);
 
         // When moving a third piece next to the king
         const move: BrandhubMove = BrandhubMove.of(new Coord(2, 0), new Coord(2, 2));
@@ -209,9 +210,9 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1, config);
-        const node: BrandhubNode = new BrandhubNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should allow capturing the king with only two soldier when not touching a throne', () => {
@@ -225,7 +226,7 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 0, config);
+        const state: BrandhubState = new BrandhubState(board, 0);
 
         // When moving a second piece next to the king
         const move: BrandhubMove = BrandhubMove.of(new Coord(2, 0), new Coord(3, 0));
@@ -240,9 +241,9 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1, config);
-        const node: BrandhubNode = new BrandhubNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should allow capturing the king between one soldier and a corner-throne', () => {
@@ -256,7 +257,7 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 0, config);
+        const state: BrandhubState = new BrandhubState(board, 0);
 
         // When moving a second piece next to the king
         const move: BrandhubMove = BrandhubMove.of(new Coord(2, 0), new Coord(4, 0));
@@ -271,9 +272,9 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1, config);
-        const node: BrandhubNode = new BrandhubNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should forbid soldier to land on the central throne (3, 3)', () => {
@@ -287,14 +288,14 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 0, config);
+        const state: BrandhubState = new BrandhubState(board, 0);
 
         // When attempting it
         const move: BrandhubMove = BrandhubMove.of(new Coord(3, 0), new Coord(3, 3));
 
         // Then the move should be deemed illegal
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
     it('should not allow capturing the king with 4 soldiers if one is an ally', () => {
         // Given a board where the king is surrounded by 2 opponents and 1 ally
@@ -307,7 +308,7 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 0, config);
+        const state: BrandhubState = new BrandhubState(board, 0);
 
         // When moving a fourth opponent next to the king
         const move: BrandhubMove = BrandhubMove.of(new Coord(1, 2), new Coord(3, 2));
@@ -322,8 +323,8 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1, config);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
     it('should not allow capturing the king with one piece next to central throne', () => {
         // Given a board where the king next to his throne
@@ -336,7 +337,7 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 0, config);
+        const state: BrandhubState = new BrandhubState(board, 0);
 
         // When moving an invader next to the king (on the opposite side)
         const move: BrandhubMove = BrandhubMove.of(new Coord(1, 1), new Coord(1, 3));
@@ -351,8 +352,8 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1, config);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
     it('should not allow capturing the king with two pieces next to central throne', () => {
         // Given a board where the king next to his throne and to one opponent
@@ -365,7 +366,7 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 0, config);
+        const state: BrandhubState = new BrandhubState(board, 0);
 
         // When moving an invader next to the king (on the opposite side)
         const move: BrandhubMove = BrandhubMove.of(new Coord(2, 1), new Coord(2, 2));
@@ -380,7 +381,7 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1, config);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 });

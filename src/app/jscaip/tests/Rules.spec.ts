@@ -9,6 +9,7 @@ import { GameStatus } from '../GameStatus';
 import { JSONValue } from 'src/app/utils/utils';
 import { RulesUtils } from './RulesUtils.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { RulesConfig } from '../RulesConfigUtil';
 
 class MyAbstractState extends GameStateWithTable<number> {
 
@@ -32,7 +33,9 @@ class AbstractRules extends Rules<P4Move, MyAbstractState> {
     private constructor() {
         super(MyAbstractState);
     }
-    public applyLegalMove(move: P4Move, state: MyAbstractState, _legality: void): MyAbstractState {
+    public applyLegalMove(move: P4Move, state: MyAbstractState, _config: RulesConfig, _legality: void)
+    : MyAbstractState
+    {
         const board: readonly number[] = state.board[0];
         return new MyAbstractState([board.concat([move.x])], state.turn + 1);
     }

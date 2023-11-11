@@ -33,7 +33,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     @Input() userIsCreator: boolean;
 
     /**
-     * notify that the config has been update
+     * notify that the config has been updated
      * if the optional is empty, the last update was invalid
      * we do want to emit something when the current config is invalid,
      * so that the parent component knows that the situation is not ok
@@ -79,7 +79,8 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         if (this.stateProvider.isPresent()) {
             // eslint-disable-next-line dot-notation
             const stateProvider: (config: RulesConfig) => GameState = this.stateProvider.get();
-            const node: AbstractNode = new GameNode(stateProvider(config));
+            const node: AbstractNode =
+                new GameNode(stateProvider(config), undefined, undefined, MGPOptional.of(config));
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.gameName,
@@ -134,6 +135,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     public onUpdate(): void {
+        // TODO: Utils.assert
         if (this.userIsCreator === false) {
             ErrorLoggerService.logError('RulesConfiguration', 'Only creator should be able to modify rules config');
         } else if (this.chosenConfigName !== 'Custom') {

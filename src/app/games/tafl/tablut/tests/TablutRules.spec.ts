@@ -49,10 +49,10 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 3, defaultConfig);
+        const state: TablutState = new TablutState(board, 3);
         const move: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(2, 0));
-        const expectedState: TablutState = new TablutState(expectedBoard, 4, defaultConfig);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: TablutState = new TablutState(expectedBoard, 4);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
     it('Capturing against empty throne should work', () => {
         const board: Table<TaflPawn> = [
@@ -77,10 +77,10 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 3, defaultConfig);
+        const state: TablutState = new TablutState(board, 3);
         const move: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(2, 0));
-        const expectedState: TablutState = new TablutState(expectedBoard, 4, defaultConfig);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: TablutState = new TablutState(expectedBoard, 4);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
     it('Capturing king should require four invader and lead to victory', () => {
         const board: Table<TaflPawn> = [
@@ -105,11 +105,12 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 0, defaultConfig);
+        const state: TablutState = new TablutState(board, 0);
         const move: TablutMove = TablutMove.of(new Coord(2, 0), new Coord(3, 0));
-        const expectedState: TablutState = new TablutState(expectedBoard, 1, defaultConfig);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const expectedState: TablutState = new TablutState(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        const node: TablutNode =
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('Capturing king should require three invader and an edge lead to victory', () => {
@@ -135,11 +136,12 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 0, defaultConfig);
+        const state: TablutState = new TablutState(board, 0);
         const move: TablutMove = TablutMove.of(new Coord(2, 1), new Coord(3, 1));
-        const expectedState: TablutState = new TablutState(expectedBoard, 1, defaultConfig);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const expectedState: TablutState = new TablutState(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        const node: TablutNode =
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('Capturing king with one soldier, one throne, and one edge should not work', () => {
@@ -165,11 +167,12 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 2, defaultConfig);
+        const state: TablutState = new TablutState(board, 2);
         const move: TablutMove = TablutMove.of(new Coord(2, 1), new Coord(1, 1));
-        const expectedState: TablutState = new TablutState(expectedBoard, 3, defaultConfig);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const expectedState: TablutState = new TablutState(expectedBoard, 3);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        const node: TablutNode =
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node);
     });
@@ -186,7 +189,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 0, defaultConfig);
+        const state: TablutState = new TablutState(board, 0);
 
         // When trying to sandwich
         const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
@@ -203,9 +206,10 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: TablutState = new TablutState(expectedBoard, 1, defaultConfig);
-        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: TablutState = new TablutState(expectedBoard, 1);
+        const node: TablutNode =
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeOngoing(rules, node);
     });
     it('Capturing king against a throne with 3 soldier should not work', () => {
@@ -221,7 +225,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 12, defaultConfig);
+        const state: TablutState = new TablutState(board, 12);
 
         // When attempting to surround him
         const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
@@ -238,9 +242,10 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: TablutState = new TablutState(expectedBoard, 13, defaultConfig);
-        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: TablutState = new TablutState(expectedBoard, 13);
+        const node: TablutNode =
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeOngoing(rules, node);
     });
     it('should allow King to come back on the throne', () => {
@@ -256,7 +261,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 1, defaultConfig);
+        const state: TablutState = new TablutState(board, 1);
 
         // When moving the king back to his throne
         const move: TablutMove = TablutMove.of(new Coord(4, 3), new Coord(4, 4));
@@ -273,8 +278,8 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: TablutState = new TablutState(expectedBoard, 2, defaultConfig);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: TablutState = new TablutState(expectedBoard, 2);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
     it('should forbid soldier to land on the central throne (4, 4)', () => {
         // Given a board where a soldier could reach the throne
@@ -289,14 +294,14 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 1, defaultConfig);
+        const state: TablutState = new TablutState(board, 1);
 
         // When trying to sit on the king's throne
         const move: TablutMove = TablutMove.of(new Coord(0, 4), new Coord(4, 4));
 
         // Then the move should be illegal
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
     it('should not sandwich the king far from throne', () => {
         // Given a board where the king is next to a corner and one move ahead from sandwich
@@ -311,7 +316,7 @@ describe('TablutRules', () => {
             [A, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 2, defaultConfig);
+        const state: TablutState = new TablutState(board, 2);
 
         // When trying to sandwiching the king
         const move: TablutMove = TablutMove.of(new Coord(0, 4), new Coord(0, 6));
@@ -328,7 +333,7 @@ describe('TablutRules', () => {
             [A, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: TablutState = new TablutState(expectedBoard, 3, defaultConfig);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const expectedState: TablutState = new TablutState(expectedBoard, 3);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 });
