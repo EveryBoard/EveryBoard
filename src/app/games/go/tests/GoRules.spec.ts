@@ -609,7 +609,7 @@ describe('GoRules', () => {
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
-            // Then it should be recognised as a victory for Player.ZERO
+            // Then it should be recognized as a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
     });

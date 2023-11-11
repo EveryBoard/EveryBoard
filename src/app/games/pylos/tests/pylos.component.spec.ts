@@ -432,7 +432,7 @@ describe('PylosComponent', () => {
             testUtils.expectElementToHaveClass('#drop_0_1_0', 'captured-fill');
         }));
         it('should fail when clicking on a third capturable piece', fakeAsync(async() => {
-            // Given a board on which two captured piece has been selected but the capture not finalised
+            // Given a board on which two captured piece has been selected but the capture not finalized
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
             await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0');

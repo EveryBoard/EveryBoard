@@ -11,7 +11,7 @@ import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
@@ -60,7 +60,7 @@ export abstract class BaseGameComponent {
 export abstract class GameComponent<R extends Rules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
-                                    C extends RulesConfig = RulesConfig,
+                                    C extends RulesConfig = EmptyRulesConfig,
                                     L = void>
     extends BaseGameComponent
 {

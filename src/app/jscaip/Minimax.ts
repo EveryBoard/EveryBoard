@@ -10,7 +10,7 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { Utils } from '../utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { GameStatus } from './GameStatus';
-import { RulesConfig } from './RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 import { GameNode } from './GameNode';
 
 /**
@@ -21,12 +21,14 @@ import { GameNode } from './GameNode';
 export abstract class Heuristic<M extends Move,
                                 S extends GameState,
                                 B extends BoardValue = BoardValue,
-                                C extends RulesConfig = RulesConfig>
+                                C extends RulesConfig = EmptyRulesConfig>
 {
     public abstract getBoardValue(node: GameNode<M, S, C>): B;
 }
 
-export abstract class PlayerMetricHeuristic<M extends Move, S extends GameState, C extends RulesConfig = RulesConfig>
+export abstract class PlayerMetricHeuristic<M extends Move,
+                                            S extends GameState,
+                                            C extends RulesConfig = EmptyRulesConfig>
     extends Heuristic<M, S>
 {
     public abstract getMetrics(node: GameNode<M, S, C>): [number, number];
@@ -37,7 +39,7 @@ export abstract class PlayerMetricHeuristic<M extends Move, S extends GameState,
     }
 }
 
-export class DummyHeuristic<M extends Move, S extends GameState, C extends RulesConfig = RulesConfig>
+export class DummyHeuristic<M extends Move, S extends GameState, C extends RulesConfig = EmptyRulesConfig>
     extends PlayerMetricHeuristic<M, S>
 {
     public getMetrics(_node: GameNode<M, S, C>): [number, number] {
@@ -51,7 +53,7 @@ export class DummyHeuristic<M extends Move, S extends GameState, C extends Rules
  */
 export class Minimax<M extends Move,
                      S extends GameState,
-                     C extends RulesConfig = RulesConfig,
+                     C extends RulesConfig = EmptyRulesConfig,
                      L = void> implements AI<M, S, AIDepthLimitOptions>
 {
 

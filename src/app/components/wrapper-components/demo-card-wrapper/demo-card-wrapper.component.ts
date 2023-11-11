@@ -56,8 +56,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     public async ngOnChanges(_changes: SimpleChanges): Promise<void> {
-        // This function is triggered when the parent component modify the @Input of this one
-        // And also it is called on creation, then, this.gameComponent is not setted yet
+        // This function is triggered when the parent component modifies the @Input of this one
+        // And also it is called on creation, then, this.gameComponent is not set yet
         if (this.gameComponent != null) {
             // When it is, we want to manually update the board with the new infos and display them
             this.gameComponent.node = this.demoNodeInfo.node;

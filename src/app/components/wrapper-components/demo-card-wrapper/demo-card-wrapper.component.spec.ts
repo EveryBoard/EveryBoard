@@ -92,7 +92,7 @@ describe('DemoCardComponent', () => {
     }));
 
     it('should reload node when input are updated by parents', fakeAsync(async() => {
-        // Given a component already initialised with one given set of infos
+        // Given a component already initialized with one given set of infos
         loadNode({
             name: 'P4',
             node: new GameNode(P4State.getInitialState(config), undefined, undefined, MGPOptional.of(config)),

@@ -5,13 +5,16 @@ import { Localized } from '../utils/LocaleUtils';
 
 export type ConfigDescriptionType = number | boolean;
 
-export type NamedRulesConfig<R extends RulesConfig = RulesConfig> = {
+export type NamedRulesConfig<R extends RulesConfig = EmptyRulesConfig> = {
     config: R;
     name: Localized;
 };
 
 export type RulesConfig = {
     [member: string]: ConfigDescriptionType;
+}
+
+export interface EmptyRulesConfig extends RulesConfig {
 }
 
 export class RulesConfigUtils {

@@ -1,14 +1,14 @@
 import { GameNode } from './GameNode';
 import { GameState } from './GameState';
 import { Move } from './Move';
-import { RulesConfig } from './RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 
 /**
  * A move generator should have a method that generates move from a node.
  * It may generate all possible moves, but may also just filter out some uninteresting moves.
  * It may also order moves from more interesting to less interesting.
  */
-export abstract class MoveGenerator<M extends Move, S extends GameState, C extends RulesConfig = RulesConfig> {
+export abstract class MoveGenerator<M extends Move, S extends GameState, C extends RulesConfig = EmptyRulesConfig> {
     /**
      * Gives the list of all the possible moves.
      * Has to be implemented for each rule so that the AI can choose among theses moves.
@@ -48,7 +48,7 @@ export class AIStats {
 export abstract class AI<M extends Move,
                          S extends GameState,
                          O extends AIOptions,
-                         C extends RulesConfig = RulesConfig>
+                         C extends RulesConfig = EmptyRulesConfig>
 {
     public abstract readonly name: string;
     public abstract readonly availableOptions: O[];

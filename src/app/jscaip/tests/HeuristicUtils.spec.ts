@@ -5,13 +5,13 @@ import { Move } from '../Move';
 import { Heuristic } from '../Minimax';
 import { Player } from '../Player';
 import { GameNode } from '../GameNode';
-import { RulesConfig } from '../RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 
 export class HeuristicUtils {
 
     public static expectSecondStateToBeBetterThanFirstFor<M extends Move,
                                                           S extends GameState,
-                                                          C extends RulesConfig = RulesConfig>(
+                                                          C extends RulesConfig = EmptyRulesConfig>(
         heuristic: Heuristic<M, S>,
         weakState: S,
         weakMove: MGPOptional<M>,

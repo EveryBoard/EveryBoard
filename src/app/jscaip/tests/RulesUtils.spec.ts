@@ -10,7 +10,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { GameStatus } from '../GameStatus';
 import { JSONValue, Utils } from 'src/app/utils/utils';
-import { RulesConfig } from '../RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class RulesUtils {
@@ -43,11 +43,11 @@ export class RulesUtils {
                                     M extends Move,
                                     S extends GameState,
                                     L,
-                                    C extends RulesConfig = RulesConfig>(rules: R,
-                                                                         state: S,
-                                                                         move: M,
-                                                                         reason: string,
-                                                                         config?: C)
+                                    C extends RulesConfig = EmptyRulesConfig>(rules: R,
+                                                                              state: S,
+                                                                              move: M,
+                                                                              reason: string,
+                                                                              config?: C)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state, config as C);
@@ -59,7 +59,7 @@ export class RulesUtils {
                                        M extends Move,
                                        S extends GameState,
                                        L,
-                                       C extends RulesConfig = RulesConfig>(
+                                       C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S, C>,
         player: Player)
@@ -74,7 +74,7 @@ export class RulesUtils {
                                     M extends Move,
                                     S extends GameState,
                                     L,
-                                    C extends RulesConfig = RulesConfig>(
+                                    C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S, C>)
     : void
@@ -86,7 +86,7 @@ export class RulesUtils {
                                  M extends Move,
                                  S extends GameState,
                                  L,
-                                 C extends RulesConfig = RulesConfig>(
+                                 C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S, C>)
     : void

@@ -6,7 +6,7 @@ import { GameState } from './GameState';
 import { Rules } from './Rules';
 import { GameStatus } from './GameStatus';
 import { Player } from './Player';
-import { RulesConfig } from './RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 
 export class GameNodeStats {
     public static createdNodes: number = 0;
@@ -19,7 +19,7 @@ export class GameNodeStats {
  * As an extra, a node may contain cached values used by AIs.
  */
 @Debug.log
-export class GameNode<M extends Move, S extends GameState, C extends RulesConfig = RulesConfig> {
+export class GameNode<M extends Move, S extends GameState, C extends RulesConfig = EmptyRulesConfig> {
 
     public static ID: number = 0;
 
@@ -76,7 +76,7 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public printDot<L>(rules: Rules<M, S, RulesConfig, L>,
+    public printDot<L>(rules: Rules<M, S, C, L>,
                        labelFn?: (node: GameNode<M, S, C>) => string,
                        max?: number,
                        level: number = 0,

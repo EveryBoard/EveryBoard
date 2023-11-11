@@ -26,7 +26,7 @@ export class AwaleRules extends MancalaRules {
                 },
             }, {
                 width: RulesConfigDescriptionLocalizable.WIDTH,
-                seedsByHouse: (): string => $localize`Seed by house`,
+                seedsByHouse: (): string => $localize`Seeds by house`,
                 feedOriginalHouse: (): string => $localize`Feed original house`,
                 mustFeed: (): string => $localize`Must feed`,
                 passByPlayerStore: (): string => $localize`Pass by player store`,

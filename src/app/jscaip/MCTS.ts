@@ -9,7 +9,7 @@ import { GameNode } from './GameNode';
 import { Move } from './Move';
 import { Player } from './Player';
 import { Rules } from './Rules';
-import { RulesConfig } from './RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 
 type NodeAndPath<M extends Move, S extends GameState, C extends RulesConfig> = {
     node: GameNode<M, S, C>,
@@ -24,7 +24,7 @@ type NodeAndPath<M extends Move, S extends GameState, C extends RulesConfig> = {
  */
 export class MCTS<M extends Move,
                   S extends GameState,
-                  C extends RulesConfig = RulesConfig,
+                  C extends RulesConfig = EmptyRulesConfig,
                   L = void> implements AI<M, S, AITimeLimitOptions>
 {
     // The exploration parameter influences the MCTS results.

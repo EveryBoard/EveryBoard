@@ -5,14 +5,14 @@ import { GameNode } from '../GameNode';
 import { Move } from '../Move';
 import { Rules } from '../Rules';
 import { MoveGenerator } from '../AI';
-import { RulesConfig } from '../RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 
 export class MoveTestUtils {
 
     public static testFirstTurnMovesBijectivity<M extends Move,
                                                 S extends GameState,
                                                 L,
-                                                C extends RulesConfig = RulesConfig>(
+                                                C extends RulesConfig = EmptyRulesConfig>(
         rules: Rules<M, S, C, L>,
         generator: MoveGenerator<M, S>,
         encoder: Encoder<M>,

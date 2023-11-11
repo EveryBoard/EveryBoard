@@ -6,12 +6,12 @@ import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
 import { GameStatus } from './GameStatus';
-import { RulesConfig } from './RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 import { RulesConfigDescription } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export abstract class Rules<M extends Move,
                             S extends GameState,
-                            C extends RulesConfig = RulesConfig,
+                            C extends RulesConfig = EmptyRulesConfig,
                             L = void>
 {
 

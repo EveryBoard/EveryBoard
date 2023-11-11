@@ -215,11 +215,11 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
     }
 
     public getRulesConfigDescriptionByName(gameName: string): RulesConfigDescription {
-        const game: GameInfo[] = GameInfo.getByUrlName(gameName);
-        if (game.length === 0) {
+        const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
+        if (gameInfos.length === 0) {
             return RulesConfigDescription.DEFAULT;
         } else {
-            return game[0].getRulesConfigDescription();
+            return gameInfos[0].getRulesConfigDescription();
         }
     }
 }

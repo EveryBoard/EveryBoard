@@ -78,25 +78,28 @@ describe('PartCreationComponent', () => {
         testUtils.detectChanges();
         tick(0);
     }
-    async function clickElement(elementName: string): Promise<void> { // Ticketted Refactor (2022.124)
-        // TODO FOR REVIEW: [W] [medium] PartCreationComponent & TestUtils refactor
-        // Le ticket est là mais le marqueur reste utile à garder
+    async function clickElement(elementName: string): Promise<void> {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
         await testUtils.clickElement(elementName, false);
     }
-    function expectElementToExist(elementName: string): void { // Ticketted Refactor (2022.124)
+    function expectElementToExist(elementName: string): void {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
         testUtils.expectElementToExist(elementName);
     }
-    function expectElementNotToExist(elementName: string): void { // Ticketted Refactor (2022.124)
+    function expectElementNotToExist(elementName: string): void {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
         testUtils.expectElementNotToExist(elementName);
     }
-    function findElement(elementName: string): DebugElement { // Ticketted Refactor (2022.124)
+    function findElement(elementName: string): DebugElement {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
         return testUtils.findElement(elementName);
     }
-    function expectElementToHaveClass(elementName: string, classes: string): void { // Ticketted Refactor (2022.124)
+    function expectElementToHaveClass(elementName: string, classes: string): void {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
         testUtils.expectElementToHaveClass(elementName, classes);
     }

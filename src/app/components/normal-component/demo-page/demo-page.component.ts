@@ -36,11 +36,11 @@ export class DemoPageComponent {
         let i: number = 0;
         this.columns = [];
         // Create a game card for each demo node of each game
-        for (const game of allGames) {
+        for (const gameInfo of allGames) {
             const demoNodes: { node: AbstractNode, click: MGPOptional<string> }[] = [];
-            const rules: AbstractRules = game.rules;
-            const steps: TutorialStep[] = game.tutorial.tutorial;
-            const config: RulesConfig = game.getRulesConfigDescription().defaultConfig.config;
+            const rules: AbstractRules = gameInfo.rules;
+            const steps: TutorialStep[] = gameInfo.tutorial.tutorial;
+            const config: RulesConfig = gameInfo.getRulesConfigDescription().defaultConfig.config;
             for (const step of steps) {
                 const nodeFromStep: { node: AbstractNode, click: MGPOptional<string>} =
                     this.getNodeFromStep(step, rules, config);
@@ -53,7 +53,7 @@ export class DemoPageComponent {
                     this.columns.push([]);
                 }
                 this.columns[column].push({
-                    name: game.urlName,
+                    name: gameInfo.urlName,
                     node: node.node,
                     click: node.click,
                 });

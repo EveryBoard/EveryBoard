@@ -40,11 +40,11 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
      */
     @Output() updateCallback: EventEmitter<MGPOptional<RulesConfig>> = new EventEmitter<MGPOptional<RulesConfig>>();
 
-    public configDemo: DemoNodeInfo; // setted onInit
+    public configDemo: DemoNodeInfo; // set in onInit
 
     public rulesConfigForm: FormGroup = new FormGroup({});
 
-    public gameName: string; // setted onInit
+    public gameName: string; // set in onInit
 
     private chosenConfigName: string = '';
 
@@ -115,11 +115,11 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     private getRulesConfigDescriptionValue(name: string, defaultValue: ConfigDescriptionType): ConfigDescriptionType {
-        if (this.userIsCreator === false) {
+        if (this.userIsCreator) {
+            return defaultValue;
+        } else {
             const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
             return configuration[name];
-        } else {
-            return defaultValue;
         }
     }
 
@@ -142,8 +142,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
             ErrorLoggerService.logError('RulesConfiguration', 'Only Customifiable config should be modified!');
         } else {
             const rulesConfig: RulesConfig = {};
-            const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
-            const parameterNames: string[] = Object.keys(config);
+            const parameterNames: string[] = this.rulesConfigDescription.getFields();
             for (const parameterName of parameterNames) {
                 if (this.isValid(parameterName)) {
                     rulesConfig[parameterName] = this.rulesConfigForm.controls[parameterName].value;
@@ -180,7 +179,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
         } else {
             Utils.expectToBe(typeof value, 'boolean');
             // Angular make those controls invalid when they are boolean, not sure why
-            return true; // So we return false cause they cannot be invalid, checked or not, its always valid
+            return true; // So we return true cause they are always valid
         }
     }
 
@@ -191,8 +190,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     public getFields(): string[] {
-        const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
-        return Object.keys(config);
+        return this.rulesConfigDescription.getFields();
     }
 
     public onChange(event: Event): void {
@@ -215,8 +213,7 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     public isCustomisable(): boolean {
-        const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
-        return Object.keys(config).length > 0;
+        return this.rulesConfigDescription.getFields().length > 0;
     }
 
 }

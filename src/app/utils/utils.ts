@@ -51,7 +51,7 @@ export class Debug {
     }
     private static getStringified(o: object): string {
         try {
-            return JSON.stringify(o); // TODO FOR REVIEW ANSWER: the mocks of DB I believe
+            return JSON.stringify(o);
         } catch (e) {
             return 'recursive and not stringifiable!';
         }

@@ -6,14 +6,14 @@ import { Move } from 'src/app/jscaip/Move';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameComponent } from './GameComponent';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({ template: '' })
 export abstract class HexagonalGameComponent<R extends Rules<M, S, C, L>,
                                              M extends Move,
                                              S extends GameState,
                                              P,
-                                             C extends RulesConfig = RulesConfig,
+                                             C extends RulesConfig = EmptyRulesConfig,
                                              L = void>
     extends GameComponent<R, M, S, C, L>
 {

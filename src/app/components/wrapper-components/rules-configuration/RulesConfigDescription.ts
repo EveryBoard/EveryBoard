@@ -1,6 +1,6 @@
 import { MGPValidator, MGPValidators } from 'src/app/utils/MGPValidator';
 
-import { NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { Utils } from 'src/app/utils/utils';
@@ -15,7 +15,7 @@ export class RulesConfigDescriptionLocalizable {
 
 }
 
-export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
+export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
     // TODO FOR REVIEW: pour les config non type, si j'enlève le "= RulesConfig" ça devient obligé de mettre ça a plein d'endroit, moyen ?
 
     public static readonly DEFAULT: RulesConfigDescription = new RulesConfigDescription(
@@ -34,8 +34,8 @@ export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
         const defaultKeys: MGPSet<string> = new MGPSet(Object.keys(defaultConfig.config));
         const translationsKey: MGPSet<string> = new MGPSet(Object.keys(translations));
         const missingTranslation: MGPOptional<string> = translationsKey.getMissingElementFrom(defaultKeys);
-        Utils.assert(missingTranslation.isAbsent(),
-                     `Field '${ missingTranslation.getOrElse('') }' missing in translation!`);
+        const translationMissingError: string = `Field '${ missingTranslation.getOrElse('') }' missing in translation!`;
+        Utils.assert(missingTranslation.isAbsent(), translationMissingError);
         for (const otherStandardConfig of nonDefaultStandardConfigs) {
             const key: MGPSet<string> = new MGPSet(Object.keys(otherStandardConfig.config));
             Utils.assert(key.equals(defaultKeys), `Field missing in ${ otherStandardConfig.name() } config!`);
@@ -53,6 +53,11 @@ export class RulesConfigDescription<R extends RulesConfig = RulesConfig> {
 
     public getDefaultConfig(): NamedRulesConfig<R> {
         return this.defaultConfig;
+    }
+
+    public getFields(): string[] {
+        const config: RulesConfig = this.getDefaultConfig().config;
+        return Object.keys(config);
     }
 
     public getNonDefaultStandardConfigs(): NamedRulesConfig<R>[] {
