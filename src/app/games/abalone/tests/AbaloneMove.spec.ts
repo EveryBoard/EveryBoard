@@ -5,18 +5,18 @@ import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneRules } from '../AbaloneRules';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('AbaloneMove', () => {
 
     it('should not construct a move with more than three piece', () => {
-        RulesUtils.expectToThrowAndLog(
+        TestUtils.expectToThrowAndLog(
             () => AbaloneMove.ofDoubleCoord(new Coord(0, 0), new Coord(3, 0), HexaDirection.DOWN),
             'Distance between first coord and last coord is too big');
     });
     it('should not construct when created with an out of range coord', () => {
         const coord: Coord = new Coord(9, 9);
-        RulesUtils.expectToThrowAndLog(
+        TestUtils.expectToThrowAndLog(
             () => AbaloneMove.ofSingleCoord(coord, HexaDirection.DOWN),
             CoordFailure.OUT_OF_RANGE(coord));
     });
@@ -54,7 +54,7 @@ describe('AbaloneMove', () => {
         expect(move.equals(otherMove)).toBeFalse();
     });
     it('should not construct when creating move with no HexaDirectionnal alignement', () => {
-        RulesUtils.expectToThrowAndLog(
+        TestUtils.expectToThrowAndLog(
             () => AbaloneMove.ofDoubleCoord(new Coord(0, 0), new Coord(1, 1), HexaDirection.UP),
             'Invalid direction');
     });

@@ -6,7 +6,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from '../TaflFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPValidationTestUtils } from 'src/app/utils/tests/MGPValidation.spec';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('TaflMove', () => {
 
@@ -19,12 +19,12 @@ describe('TaflMove', () => {
                 .toThrowError(error);
         });
         it('should throw with out of range start coord', () => {
-            RulesUtils.expectToThrowAndLog(() => MyTaflMove.from(outOfRange, inRange),
-                                           'Starting coord of TaflMove must be on the board, not at (-1, -1).');
+            TestUtils.expectToThrowAndLog(() => MyTaflMove.from(outOfRange, inRange),
+                                          'Starting coord of TaflMove must be on the board, not at (-1, -1).');
         });
         it('should throw with out of range end coord', () => {
-            RulesUtils.expectToThrowAndLog(() => MyTaflMove.from(inRange, outOfRange),
-                                           'Landing coord of TaflMove must be on the board, not at (-1, -1).');
+            TestUtils.expectToThrowAndLog(() => MyTaflMove.from(inRange, outOfRange),
+                                          'Landing coord of TaflMove must be on the board, not at (-1, -1).');
         });
     });
 
