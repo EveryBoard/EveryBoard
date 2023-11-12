@@ -12,7 +12,7 @@
                      [attr.points]="getTrianglePoints(x, y)"
                      [attr.transform]="getTriangleInHexTranslate(x, y)"
                      [ngClass]="getSpaceClass(x, y)"
-                     class="base mid-stroke"
+                     class="base normal-stroke"
                      stroke-linecap="round"
             />
         </g>
@@ -35,7 +35,7 @@
         <polygon id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
                  [attr.points]="getTrianglePoints(chosenCoord.get().x, chosenCoord.get().y)"
                  [attr.transform]="getTriangleInHexTranslate(chosenCoord.get().x, chosenCoord.get().y)"
-                 class="base no-fill mid-stroke selected-stroke"/>
+                 class="base no-fill normal-stroke selected-stroke"/>
         <rect *ngFor="let possibleLanding of possibleLandings"
               [attr.x]="- INDICATOR_SIZE / 2"
               [attr.y]="getIndicatorY(possibleLanding)"
@@ -50,12 +50,12 @@
                  id="last_start_{{ lastStart.get().x }}_{{ lastStart.get().y }}"
                  [attr.points]="getTrianglePoints(lastStart.get().x, lastStart.get().y)"
                  [attr.transform]="getTriangleInHexTranslate(lastStart.get().x, lastStart.get().y)"
-                 class="base no-fill mid-stroke last-move-stroke"/>
+                 class="base no-fill normal-stroke last-move-stroke"/>
         <polygon *ngIf="lastEnd.isPresent()"
                  id="last_end_{{ lastEnd.get().x }}_{{ lastEnd.get().y }}"
                  [attr.points]="getTrianglePoints(lastEnd.get().x, lastEnd.get().y)"
                  [attr.transform]="getTriangleInHexTranslate(lastEnd.get().x, lastEnd.get().y)"
-                 class="base no-fill mid-stroke last-move-stroke"/>
+                 class="base no-fill normal-stroke last-move-stroke"/>
     </ng-template>
     <g *ngFor="let player of Player.PLAYERS">
         <g *ngIf="mustShowTilesOf(player)"

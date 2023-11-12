@@ -7,6 +7,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { DiaballikFailure } from '../DiaballikFailure';
+import { DiaballikRules } from '../DiaballikRules';
 
 describe('DiaballikComponent', () => {
 
@@ -233,7 +234,7 @@ describe('DiaballikComponent', () => {
 
 
         // When displaying it
-        await testUtils.setupState(state, DiaballikState.getInitialState(), move);
+        await testUtils.setupState(state, DiaballikRules.get().getInitialState(), move);
 
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#space_0_6', 'moved-fill');
@@ -266,7 +267,7 @@ describe('DiaballikComponent', () => {
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
-        await testUtils.setupState(state, DiaballikState.getInitialState(), move);
+        await testUtils.setupState(state, DiaballikRules.get().getInitialState(), move);
 
         // When starting a new move
         await testUtils.expectClickSuccess('#click_0_0');
@@ -300,7 +301,7 @@ describe('DiaballikComponent', () => {
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
-        await testUtils.setupState(state, DiaballikState.getInitialState(), move);
+        await testUtils.setupState(state, DiaballikRules.get().getInitialState(), move);
         await testUtils.expectClickSuccess('#click_0_0');
 
         // When deselecting the piece

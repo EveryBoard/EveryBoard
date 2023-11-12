@@ -3,6 +3,7 @@ import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './DiaballikMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { DiaballikRules } from './DiaballikRules';
 
 const O: DiaballikPiece = DiaballikPiece.ZERO;
 const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
@@ -15,12 +16,12 @@ export class DiaballikTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`The goal of Diaballik is to bring your ball, represented by the small circle, into the home line of the opponent (i.e, its starting position). The ball is currently being held by your center piece.`,
-            DiaballikState.getInitialState(),
+            DiaballikRules.get().getInitialState(),
         ),
         TutorialStep.fromMove(
             $localize`Translations`,
             $localize`During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step of any piece that does not hold the ball.<br/><br/>Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.`,
-            DiaballikState.getInitialState(),
+            DiaballikRules.get().getInitialState(),
             [new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                                MGPOptional.empty(),
                                MGPOptional.empty())],

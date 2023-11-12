@@ -182,7 +182,24 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
             }
             movesInConstruction = nextMovesInConstruction;
         }
-        return moves.toList();
+        return this.removeDuplicates(node.gameState, moves);
+    }
+
+    private removeDuplicates(state: DiaballikState, moves: MGPSet<DiaballikMove>): DiaballikMove[] {
+        if (this.avoidDuplicates === false) {
+            return moves.toList();
+        }
+        const seenStates: MGPSet<DiaballikState> = new MGPSet();
+        const movesToKeep: DiaballikMove[] = [];
+        for (const move of moves) {
+            const legalityInfo: MGPFallible<DiaballikState> = DiaballikRules.get().isLegal(move, state);
+            const stateAfterMove: DiaballikState = DiaballikRules.get().applyLegalMove(move, state, legalityInfo.get());
+            if (seenStates.contains(stateAfterMove) === false) {
+                movesToKeep.push(move);
+                seenStates.add(stateAfterMove);
+            }
+        }
+        return movesToKeep;
     }
 
     protected addAllPossibleSubMoves(moveInConstruction: DiaballikMoveInConstruction): DiaballikMoveInConstruction[] {

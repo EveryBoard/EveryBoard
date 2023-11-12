@@ -31,7 +31,7 @@ export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
         const width: number = this.getWidth() * this.SPACE_SIZE;
         const height: number = this.getHeight() * this.SPACE_SIZE;
         const halfStroke: number = 0.5 * this.STROKE_WIDTH;
-        return ViewBox.fromLimits(0, width, 0, height).expand(halfStroke, halfStroke, 0, 0);
+        return ViewBox.fromLimits(0, width, 0, height).expand(halfStroke, halfStroke, halfStroke, halfStroke);
     }
 
 }

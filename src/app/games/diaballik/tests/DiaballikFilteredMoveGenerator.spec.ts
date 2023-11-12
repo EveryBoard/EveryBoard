@@ -1,7 +1,6 @@
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
-import { DiaballikNode } from '../DiaballikRules';
-import { DiaballikState } from '../DiaballikState';
+import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 
 function expectNoBackAndForth(move: DiaballikMove): void {
     const subMoves: DiaballikSubMove[] = move.getSubMoves();
@@ -37,7 +36,7 @@ describe('DiaballikFilteredMoveGenerator of length 3', () => {
 
     it('should have all 3-step move options at first turn', () => {
         // Given the initial node
-        const node: DiaballikNode = new DiaballikNode(DiaballikState.getInitialState());
+        const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
         // When computing the list of moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
@@ -58,7 +57,7 @@ describe('DiaballikFilteredMoveGenerator', () => {
         it(`should have only the requested length moves (n = ${moveLength})`, () => {
             const moveGenerator: DiaballikFilteredMoveGenerator = new DiaballikFilteredMoveGenerator(moveLength);
             // Given a node
-            const node: DiaballikNode = new DiaballikNode(DiaballikState.getInitialState());
+            const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
             // When computing the list of moves
             const moves: DiaballikMove[] = moveGenerator.getListMoves(node);

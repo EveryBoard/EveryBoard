@@ -1,7 +1,7 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';

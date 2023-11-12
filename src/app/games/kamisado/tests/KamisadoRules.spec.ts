@@ -328,7 +328,7 @@ describe('KamisadoRules', () => {
         });
         it('should forbid moving empty pieces', () => {
             // Given the initial state
-            const state: KamisadoState = KamisadoState.getInitialState();
+            const state: KamisadoState = KamisadoRules.get().getInitialState();
 
             // When moving from an empty space
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));

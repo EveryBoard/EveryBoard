@@ -91,7 +91,7 @@ describe('SiamRules', () => {
     });
     it('should forbid moving the empty piece', () => {
         // Given a state
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
 
         // When trying to move an empty piece
         const move: SiamMove = SiamMove.from(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();

@@ -3,39 +3,39 @@ import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../Diaba
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { DiaballikFailure } from '../DiaballikFailure';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('DiaballikMove', () => {
 
     it('should reject out of board moves', () => {
         const invalidCoord: Coord = new Coord(-1, 0);
         const validCoord: Coord = new Coord(0, 0);
-        RulesUtils.expectToThrowAndLog(() => DiaballikTranslation.from(invalidCoord, validCoord),
-                                       'DiaballikMove not on board');
-        RulesUtils.expectToThrowAndLog(() => DiaballikTranslation.from(validCoord, invalidCoord),
-                                       'DiaballikMove not on board');
-        RulesUtils.expectToThrowAndLog(() => DiaballikBallPass.from(invalidCoord, validCoord),
-                                       'DiaballikMove not on board');
-        RulesUtils.expectToThrowAndLog(() => DiaballikBallPass.from(validCoord, invalidCoord),
-                                       'DiaballikMove not on board');
+        TestUtils.expectToThrowAndLog(() => DiaballikTranslation.from(invalidCoord, validCoord),
+                                      'DiaballikMove not on board');
+        TestUtils.expectToThrowAndLog(() => DiaballikTranslation.from(validCoord, invalidCoord),
+                                      'DiaballikMove not on board');
+        TestUtils.expectToThrowAndLog(() => DiaballikBallPass.from(invalidCoord, validCoord),
+                                      'DiaballikMove not on board');
+        TestUtils.expectToThrowAndLog(() => DiaballikBallPass.from(validCoord, invalidCoord),
+                                      'DiaballikMove not on board');
     });
 
     it('should reject move with more than one pass', () => {
         const pass: DiaballikBallPass = DiaballikBallPass.from(new Coord(0, 0), new Coord(1, 0)).get();
         const translation: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
-        RulesUtils.expectToThrowAndLog(() => new DiaballikMove(pass, MGPOptional.of(pass), MGPOptional.empty()),
-                                       'DiaballikMove should have at most one pass');
-        RulesUtils.expectToThrowAndLog(() => new DiaballikMove(pass, MGPOptional.of(translation), MGPOptional.of(pass)),
-                                       'DiaballikMove should have at most one pass');
+        TestUtils.expectToThrowAndLog(() => new DiaballikMove(pass, MGPOptional.of(pass), MGPOptional.empty()),
+                                      'DiaballikMove should have at most one pass');
+        TestUtils.expectToThrowAndLog(() => new DiaballikMove(pass, MGPOptional.of(translation), MGPOptional.of(pass)),
+                                      'DiaballikMove should have at most one pass');
     });
 
     it('should reject move with three translations', () => {
         const first: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(0, 1)).get();
         const second: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 1), new Coord(1, 1)).get();
         const third: DiaballikTranslation = DiaballikTranslation.from(new Coord(1, 1), new Coord(2, 1)).get();
-        RulesUtils.expectToThrowAndLog(() => new DiaballikMove(first, MGPOptional.of(second), MGPOptional.of(third)),
-                                       'DiaballikMove should have at most two translations');
+        TestUtils.expectToThrowAndLog(() => new DiaballikMove(first, MGPOptional.of(second), MGPOptional.of(third)),
+                                      'DiaballikMove should have at most two translations');
     });
 
     it('should reject move that translate by more than one orthogonal space', () => {

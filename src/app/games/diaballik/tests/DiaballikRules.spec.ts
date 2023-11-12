@@ -7,6 +7,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFailure } from '../DiaballikFailure';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('DiaballikRules', () => {
 
@@ -36,7 +37,7 @@ describe('DiaballikRules', () => {
 
     it('should allow full move with two translations of the same piece and one pass', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When doing a move containing two legal translations of the same piece and one pass
         const move: DiaballikMove =
@@ -59,7 +60,7 @@ describe('DiaballikRules', () => {
 
     it('should allow move with two translations of different pieces', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When doing a move containing two legal translations of different pieces and one pass
         const move: DiaballikMove =
@@ -82,7 +83,7 @@ describe('DiaballikRules', () => {
 
     it('should allow move with one translation and one pass', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When doing a move containing one translation and one pass
         const move: DiaballikMove =
@@ -105,7 +106,7 @@ describe('DiaballikRules', () => {
 
     it('should allow move with no translation and one pass', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When doing a move containing zero translations and one pass
         const move: DiaballikMove =
@@ -128,7 +129,7 @@ describe('DiaballikRules', () => {
 
     it('should allow move with two translations and no pass', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When doing a move containing two translations and no pass
         const move: DiaballikMove =
@@ -151,7 +152,7 @@ describe('DiaballikRules', () => {
 
     it('should allow move with one translation and no pass', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When doing a move containing one translation and no pass
         const move: DiaballikMove = translation(new Coord(1, 6), new Coord(1, 5));
@@ -171,7 +172,7 @@ describe('DiaballikRules', () => {
 
     it('should allow passing between moves', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When doing a move containing one translation, one pass, and then another translation
         const move: DiaballikMove =
@@ -194,7 +195,7 @@ describe('DiaballikRules', () => {
 
     it('should forbid moving with the ball', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move with the ball
         const move: DiaballikMove = translation(new Coord(3, 6), new Coord(3, 5));
@@ -205,7 +206,7 @@ describe('DiaballikRules', () => {
 
     it('should forbid moving from an empty space', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move from an empty space
         const move: DiaballikMove = translation(new Coord(3, 3), new Coord(3, 4));
@@ -216,7 +217,7 @@ describe('DiaballikRules', () => {
 
     it('should forbid moving opponent pieces', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move a piece of the opponent
         const move: DiaballikMove = translation(new Coord(0, 0), new Coord(0, 1));
@@ -227,7 +228,7 @@ describe('DiaballikRules', () => {
 
     it('should forbid passing from an empty piece', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to pass from an empty space
         const move: DiaballikMove = pass(new Coord(4, 1), new Coord(4, 0));
@@ -238,7 +239,7 @@ describe('DiaballikRules', () => {
 
     it('should forbid passing from a piece of the opponent', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to pass from a piece of the opponent
         const move: DiaballikMove = pass(new Coord(3, 0), new Coord(4, 0));
@@ -249,18 +250,18 @@ describe('DiaballikRules', () => {
 
     it('should throw when passing from a piece of the player that does not hold the ball', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to pass from a piece that does not hold the ball
         const move: DiaballikMove = pass(new Coord(2, 6), new Coord(1, 6));
 
         // Then it should throw, the component should not allow it at all
-        RulesUtils.expectToThrowAndLog(() => rules.isLegal(move, state), 'DiaballikRules: cannot pass without the ball');
+        TestUtils.expectToThrowAndLog(() => rules.isLegal(move, state), 'DiaballikRules: cannot pass without the ball');
     });
 
     it('should forbid passing to something else than a player piece', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to pass from a piece to an empty space for example
         const move: DiaballikMove = pass(new Coord(3, 6), new Coord(3, 3));
@@ -271,7 +272,7 @@ describe('DiaballikRules', () => {
 
     it('should forbid moving to an occupied space', () => {
         // Given a state
-        const state: DiaballikState = DiaballikState.getInitialState();
+        const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move to an occupied space
         const move: DiaballikMove = translation(new Coord(1, 6), new Coord(2, 6));
@@ -392,7 +393,7 @@ describe('DiaballikRules', () => {
 
         it('should detect non victories as ongoing', () => {
             // Given a state without victory
-            const state: DiaballikState = DiaballikState.getInitialState();
+            const state: DiaballikState = DiaballikRules.get().getInitialState();
             const node: DiaballikNode = new DiaballikNode(state);
 
             // When checking its status
@@ -404,7 +405,7 @@ describe('DiaballikRules', () => {
     describe('victory and blocker coords', () => {
         it('should not detect anything on initial state', () => {
             // Given a state without victory
-            const state: DiaballikState = DiaballikState.getInitialState();
+            const state: DiaballikState = DiaballikRules.get().getInitialState();
 
             // When computing victory/defeat coords
             // Then it should have none

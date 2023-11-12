@@ -40,7 +40,8 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
     public override getViewBox(): ViewBox {
         const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
-        return ViewBox.fromLimits(0, width, 0, width).expand(this.STROKE_WIDTH, this.STROKE_WIDTH, 0, 0);
+        const halfStroke: number = this.STROKE_WIDTH / 2;
+        return ViewBox.fromLimits(0, width, 0, width).expand(halfStroke, halfStroke, halfStroke, halfStroke);
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();

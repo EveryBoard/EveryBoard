@@ -1,9 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { ComparableObject } from 'src/app/utils/Comparable';
 
-export class DiaballikPiece {
+export class DiaballikPiece implements ComparableObject {
 
     public static readonly NONE: DiaballikPiece = new DiaballikPiece(PlayerOrNone.NONE, false);
     public static readonly ZERO: DiaballikPiece = new DiaballikPiece(Player.ZERO, false);
@@ -15,6 +15,10 @@ export class DiaballikPiece {
                         public readonly holdsBall: boolean)
     {
     }
+
+    public equals(other: this): boolean {
+        return this === other;
+    }
 }
 
 export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
@@ -25,21 +29,13 @@ export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
         return coord.isInRange(DiaballikState.SIZE, DiaballikState.SIZE);
     }
 
-    public static getInitialState(): DiaballikState {
-        const O: DiaballikPiece = DiaballikPiece.ZERO;
-        const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
-        const X: DiaballikPiece = DiaballikPiece.ONE;
-        const Ẋ: DiaballikPiece = DiaballikPiece.ONE_WITH_BALL;
-        const _: DiaballikPiece = DiaballikPiece.NONE;
-        const board: Table<DiaballikPiece> = [
-            [X, X, X, Ẋ, X, X, X],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [O, O, O, Ȯ, O, O, O],
-        ];
-        return new DiaballikState(board, 0);
+    public equals(other: this): boolean {
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            const otherPiece: DiaballikPiece = other.getPieceAt(coordAndContent.coord);
+            if (otherPiece.equals(coordAndContent.content) === false) {
+                return false;
+            }
+        }
+        return true;
     }
 }
