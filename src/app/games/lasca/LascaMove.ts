@@ -60,6 +60,7 @@ export class LascaMove extends Move {
         }
         return MGPFallible.success(new LascaMove([start, end], true));
     }
+
     public static encoder: Encoder<LascaMove> = Encoder.tuple(
         [Encoder.list(Coord.encoder), Encoder.identity<boolean>()],
         (move: LascaMove) => [move.coords.toList(), move.isStep],
@@ -72,7 +73,7 @@ export class LascaMove extends Move {
         this.coords = new MGPUniqueList(coords);
     }
     public override toString(): string {
-        const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());
+        const coordStrings: string[] = this.coords.toList().map(Coord.toString);
         const coordString: string = coordStrings.join(', ');
         return 'LascaMove(' + coordString + ')';
     }
