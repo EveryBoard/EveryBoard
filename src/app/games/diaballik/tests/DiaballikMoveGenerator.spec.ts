@@ -77,6 +77,10 @@ describe('DiaballikMoveInConstruction', () => {
 
 });
 
+function numberOfSubMovesIs(n: number): (move: DiaballikMove) => boolean {
+    return (move: DiaballikMove): boolean => move.getSubMoves().length === n;
+}
+
 describe('DiaballikMoveGenerator', () => {
 
     let moveGenerator: DiaballikMoveGenerator;
@@ -85,10 +89,6 @@ describe('DiaballikMoveGenerator', () => {
     const X: DiaballikPiece = DiaballikPiece.ONE;
     const Ẋ: DiaballikPiece = DiaballikPiece.ONE_WITH_BALL;
     const _: DiaballikPiece = DiaballikPiece.NONE;
-
-    function numberOfSubMovesIs(n: number): (move: DiaballikMove) => boolean {
-        return (move: DiaballikMove): boolean => move.getSubMoves().length === n;
-    }
 
     function expectToHaveOnlyOneTranslationPair(moves: DiaballikMove[],
                                                 firstTranslation: DiaballikTranslation,
@@ -187,5 +187,29 @@ describe('DiaballikMoveGenerator', () => {
         expectToHaveOnlyOneTranslationPair(moves,
                                            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                                            DiaballikTranslation.from(new Coord(2, 5), new Coord(2, 4)).get());
+    });
+});
+
+describe('DiaballikMoveGenerator (not avoiding duplicates)', () => {
+
+    let moveGenerator: DiaballikMoveGenerator;
+
+    beforeEach(() => {
+        moveGenerator = new DiaballikMoveGenerator(false);
+    });
+
+    it('should have at least all move options at first turn', () => {
+        // Given the initial node
+        const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
+
+        // When computing the list of moves
+        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+
+        // Then it should have all move options containing 1-step moves (8 exactly, 6 translations and 2 passes),
+        // 2-steps, and 3-steps move
+        expect(moves.filter(numberOfSubMovesIs(1)).length).toBe(8);
+        expect(moves.filter(numberOfSubMovesIs(2)).length).toBeGreaterThanOrEqual(45);
+        expect(moves.filter(numberOfSubMovesIs(3)).length).toBeGreaterThanOrEqual(80);
+        expect(moves.length).toBeGreaterThanOrEqual(8 + 45 + 80);
     });
 });
