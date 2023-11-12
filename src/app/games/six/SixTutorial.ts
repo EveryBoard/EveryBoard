@@ -5,6 +5,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { SixRules } from './SixRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = Player.ZERO;
@@ -24,7 +25,7 @@ export class SixTutorial extends Tutorial {
             $localize`Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
         Each player has 21 pieces, with one for each player already on the board.
         The goal of the game is to form one of the three winning shapes with your pieces.`,
-            SixState.getInitialState(),
+            SixRules.get().getInitialState(),
         ),
         TutorialStep.fromMove(
             $localize`Victory (line)`,

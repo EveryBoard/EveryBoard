@@ -484,6 +484,14 @@ export class TestUtils {
         expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
     }
 
+    public static expectToThrowAndLog(func: () => void, error: string): void {
+        if (jasmine.isSpy(ErrorLoggerService.logError) === false) {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        }
+        expect(func).toThrowError('Assertion failure: ' + error);
+        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
+    }
+
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [
@@ -506,6 +514,7 @@ export class TestUtils {
             ],
         }).compileComponents();
     }
+
     public static async configureTestingModule(componentType: object,
                                                activatedRouteStub?: ActivatedRouteStub)
     : Promise<void>

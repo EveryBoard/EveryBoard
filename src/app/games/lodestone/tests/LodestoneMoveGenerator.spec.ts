@@ -22,7 +22,7 @@ describe('LodestoneMoveGenerator', () => {
     });
     it('should propose at least 618 moves at first turn', () => {
         // Given the initial state
-        const node: LodestoneNode = new LodestoneNode(LodestoneState.getInitialState());
+        const node: LodestoneNode = new LodestoneNode(LodestoneRules.get().getInitialState());
 
         // When computing all possible moves
         // Then there should be 618 possible moves

@@ -18,7 +18,7 @@ export function DoMancalaRulesTests<M extends MancalaMove>(entries: MancalaRules
     describe(entries.gameName + ' component generic tests', () => {
         it('should allow simple move', () => {
             // Given any board
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = entries.rules.getInitialState();
             // When doing a simple move
             // Then the seed should be distributed
             const expectedBoard: Table<number> = [

@@ -2,6 +2,7 @@
 import { YinshState } from '../YinshState';
 import { YinshPiece } from '../YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { YinshRules } from '../YinshRules';
 
 describe('YinshState', () => {
 
@@ -24,7 +25,7 @@ describe('YinshState', () => {
             [N, _, _, _, _, N, N, N, N, N, N],
         ];
         it('should detect that a state is equal to itself', () => {
-            const state: YinshState = YinshState.getInitialState();
+            const state: YinshState = YinshRules.get().getInitialState();
             expect(state.equals(state)).toBeTrue();
         });
         it('should detect when two states differ due to their turn', () => {

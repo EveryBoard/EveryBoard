@@ -4,6 +4,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
+import { ConspirateursRules } from './ConspirateursRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -15,12 +16,12 @@ export class ConspirateursTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Board and aim of the game`,
             $localize`Conspirateurs is played on a 17x17 board. The goal of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.`,
-            ConspirateursState.getInitialState(),
+            ConspirateursRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Initial phase`,
             $localize`In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.<br/><br/>You're playing Dark, drop one of your piece in the central zone.`,
-            ConspirateursState.getInitialState(),
+            ConspirateursRules.get().getInitialState(),
             ConspirateursMoveDrop.of(new Coord(7, 7)),
             $localize`Congratulations!`,
         ),

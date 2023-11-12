@@ -35,7 +35,7 @@ describe('HiveRules', () => {
     describe('dropping', () => {
         it('should allow first player to drop any piece initially', () => {
             // Given the initial state
-            const state: HiveState = HiveState.getInitialState();
+            const state: HiveState = HiveRules.get().getInitialState();
 
             // When dropping the first piece
             const move: HiveMove = HiveMove.drop(B, new Coord(0, 0));

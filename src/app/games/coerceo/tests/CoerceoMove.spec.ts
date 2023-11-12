@@ -4,9 +4,9 @@ import { CoerceoRules } from '../CoerceoRules';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('CoerceoMove', () => {
 
@@ -21,21 +21,21 @@ describe('CoerceoMove', () => {
             function createMoveWithInvalidDistance(): void {
                 CoerceoRegularMove.of(new Coord(2, 2), new Coord(9, 9));
             }
-            RulesUtils.expectToThrowAndLog(createMoveWithInvalidDistance, CoerceoFailure.INVALID_DISTANCE());
+            TestUtils.expectToThrowAndLog(createMoveWithInvalidDistance, CoerceoFailure.INVALID_DISTANCE());
         });
         it('should not allow out of range starting coord', () => {
             function createOutOfRangeStartingCoord(): void {
                 CoerceoRegularMove.ofMovement(new Coord(-1, 0), CoerceoStep.LEFT);
             }
-            RulesUtils.expectToThrowAndLog(createOutOfRangeStartingCoord,
-                                           'Starting coord cannot be out of range (width: 15, height: 10).');
+            TestUtils.expectToThrowAndLog(createOutOfRangeStartingCoord,
+                                          'Starting coord cannot be out of range (width: 15, height: 10).');
         });
         it('should not allow out of range landing coord', () => {
             function allowOutOfRangeLandingCoord(): void {
                 CoerceoRegularMove.ofMovement(new Coord(0, 0), CoerceoStep.LEFT);
             }
-            RulesUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord,
-                                           'Landing coord cannot be out of range (width: 15, height: 10).');
+            TestUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord,
+                                          'Landing coord cannot be out of range (width: 15, height: 10).');
         });
     });
     describe('CoerceoTileExchangeMove.of', () => {
@@ -44,7 +44,7 @@ describe('CoerceoMove', () => {
             function allowOutOfRangeCaptureCoord(): void {
                 CoerceoTileExchangeMove.of(new Coord(-1, 16));
             }
-            RulesUtils.expectToThrowAndLog(allowOutOfRangeCaptureCoord, reason);
+            TestUtils.expectToThrowAndLog(allowOutOfRangeCaptureCoord, reason);
         });
     });
     describe('Overrides', () => {

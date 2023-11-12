@@ -7,6 +7,7 @@ import { ApagosCoord } from '../ApagosCoord';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosState } from '../ApagosState';
+import { ApagosRules } from '../ApagosRules';
 
 describe('ApagosComponent', () => {
 
@@ -108,7 +109,7 @@ describe('ApagosComponent', () => {
         }));
         it('should show last dropped piece (from drop by Player.ZERO)', fakeAsync(async() => {
             // Given a board with a previous drop by Player.ZERO
-            const previousState: ApagosState = ApagosState.getInitialState();
+            const previousState: ApagosState = ApagosRules.get().getInitialState();
             const previousMove: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ONE);
             const state: ApagosState = ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],
@@ -124,7 +125,7 @@ describe('ApagosComponent', () => {
         }));
         it('should show last dropped piece (from drop on righmost coord)', fakeAsync(async() => {
             // Given a board with a previous drop by Player.ZERO
-            const previousState: ApagosState = ApagosState.getInitialState();
+            const previousState: ApagosState = ApagosRules.get().getInitialState();
             const previousMove: ApagosMove = ApagosMove.drop(ApagosCoord.THREE, Player.ZERO);
             const state: ApagosState = ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],

@@ -220,7 +220,7 @@ describe('EncapsuleRules', () => {
     });
     it('should refuse to drop opponent piece on the board', () => {
         // Given any board
-        const state: EncapsuleState = EncapsuleState.getInitialState();
+        const state: EncapsuleState = EncapsuleRules.get().getInitialState();
 
         // When trying to drop a piece of the opponent
         const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_LIGHT, new Coord(2, 2));
@@ -250,7 +250,7 @@ describe('EncapsuleRules', () => {
     });
     it('should refuse to drop nothing', () => {
         // Given any board
-        const state: EncapsuleState = EncapsuleState.getInitialState();
+        const state: EncapsuleState = EncapsuleRules.get().getInitialState();
 
         // When trying to drop "nothing"
         const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.NONE, new Coord(2, 2));
@@ -261,7 +261,7 @@ describe('EncapsuleRules', () => {
     });
     it('should refuse to move from an empty space', () => {
         // Given any board
-        const state: EncapsuleState = EncapsuleState.getInitialState();
+        const state: EncapsuleState = EncapsuleRules.get().getInitialState();
 
         // When trying to drop "nothing"
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 2));

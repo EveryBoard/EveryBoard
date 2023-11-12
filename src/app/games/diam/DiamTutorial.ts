@@ -3,6 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
+import { DiamRules } from './DiamRules';
 
 const __: DiamPiece = DiamPiece.EMPTY;
 const A1: DiamPiece = DiamPiece.ZERO_FIRST;
@@ -16,7 +17,7 @@ export class DiamTutorial {
         TutorialStep.informational(
             $localize`Initial board and player pieces`,
             $localize`Diam's board is a circular board made of 8 spaces. Each player has 8 pieces: 4 of one color, and 4 of another color. Initially, the board is empty. All the remaining pieces are displayed next to the board: Dark's pieces are on the left, Light's pieces are on the right.`,
-            DiamState.getInitialState(),
+            DiamRules.get().getInitialState(),
         ),
         TutorialStep.fromMove(
             $localize`Goal of the game`,

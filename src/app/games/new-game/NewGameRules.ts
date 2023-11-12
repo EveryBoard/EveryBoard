@@ -45,15 +45,23 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
         }
         return NewGameRules.singleton.get();
     }
+
     /**
      * The constructor is made private to avoid creating other instances of this class.
      */
     private constructor() {
-        super(NewGameState);
+        super();
     }
 
     /**
-     * This methods checks whether it is legal to apply a move to a state.
+     * This method returns the initial state of a game
+     */
+    public getInitialState(): NewGameState {
+        return new NewGameState(0);
+    }
+
+    /**
+     * This method checks whether it is legal to apply a move to a state.
      * @param move the move
      * @param state the state on which to check the move legality
      * @returns a MGPFallible of the GameLegalityInfo, being a success if the move is legal,

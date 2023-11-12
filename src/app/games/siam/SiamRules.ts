@@ -34,8 +34,15 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         return SiamRules.singleton.get();
     }
-    private constructor() {
-        super(SiamState);
+
+    public getInitialState(): SiamState {
+        const board: SiamPiece[][] = TableUtils.create(SiamState.SIZE, SiamState.SIZE, SiamPiece.EMPTY);
+
+        board[2][1] = SiamPiece.MOUNTAIN;
+        board[2][2] = SiamPiece.MOUNTAIN;
+        board[2][3] = SiamPiece.MOUNTAIN;
+
+        return new SiamState(board, 0);
     }
 
     public isLegal(move: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {

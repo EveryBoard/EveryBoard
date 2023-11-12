@@ -7,6 +7,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
+import { YinshRules } from './YinshRules';
 
 const _: YinshPiece = YinshPiece.EMPTY;
 const N: YinshPiece = YinshPiece.UNREACHABLE;
@@ -51,7 +52,7 @@ export class YinshTutorial extends Tutorial {
         At the beginning of the game, each player puts one of its ring on the board at their turn.
         This phase stops when all rings have been placed on the board.<br/><br/>
         You're playing Dark, put one of your ring on the board by clicking the space where you want to place it.`,
-            new YinshState(YinshState.getInitialState().board, [5, 5], 0),
+            new YinshState(YinshRules.get().getInitialState().board, [5, 5], 0),
             new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
             $localize`Congratulations!`),
         TutorialStep.anyMove(

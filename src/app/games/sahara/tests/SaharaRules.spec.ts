@@ -34,7 +34,7 @@ describe('SaharaHeuristic', () => {
     });
     it('Bouncing on occupied space should be illegal', () => {
         // Given a board where two piece are neighbor
-        const state: SaharaState = SaharaState.getInitialState();
+        const state: SaharaState = SaharaRules.get().getInitialState();
 
         // When trying to rebound on occupied piece
         const move: SaharaMove = SaharaMove.from(new Coord(7, 0), new Coord(8, 1)).get();
@@ -44,7 +44,7 @@ describe('SaharaHeuristic', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should forbid moving opponent piece', () => {
-        const state: SaharaState = SaharaState.getInitialState();
+        const state: SaharaState = SaharaRules.get().getInitialState();
         const move: SaharaMove = SaharaMove.from(new Coord(3, 0), new Coord(4, 0)).get();
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
