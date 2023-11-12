@@ -2,7 +2,7 @@
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConnectSixMove', () => {
     describe('ConnectSixDrops', () => {
@@ -11,19 +11,19 @@ describe('ConnectSixMove', () => {
                 function tryingOutOfRangeFirstCoord(): void {
                     ConnectSixDrops.of(new Coord(-1, -1), new Coord(0, 0));
                 }
-                RulesUtils.expectToThrowAndLog(tryingOutOfRangeFirstCoord, 'FIRST_COORD_IS_OUT_OF_RANGE');
+                TestUtils.expectToThrowAndLog(tryingOutOfRangeFirstCoord, 'FIRST_COORD_IS_OUT_OF_RANGE');
             });
             it('should not create move where second coord is out of board', () => {
                 function tryingOutOfRangeSecondCoord(): void {
                     ConnectSixDrops.of(new Coord(0, 0), new Coord(-1, -1));
                 }
-                RulesUtils.expectToThrowAndLog(tryingOutOfRangeSecondCoord, 'SECOND_COORD_IS_OUT_OF_RANGE');
+                TestUtils.expectToThrowAndLog(tryingOutOfRangeSecondCoord, 'SECOND_COORD_IS_OUT_OF_RANGE');
             });
             it('should not create move where first coord and second coord are the same', () => {
                 function tryingIdenticalCoords(): void {
                     ConnectSixDrops.of(new Coord(0, 0), new Coord(0, 0));
                 }
-                RulesUtils.expectToThrowAndLog(tryingIdenticalCoords, 'COORDS_SHOULD_BE_DIFFERENT');
+                TestUtils.expectToThrowAndLog(tryingIdenticalCoords, 'COORDS_SHOULD_BE_DIFFERENT');
             });
             it('should create move when inputs are valid', () => {
                 ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1));
@@ -64,7 +64,7 @@ describe('ConnectSixMove', () => {
             function tryingOutOfRangeCoord(): void {
                 ConnectSixFirstMove.of(new Coord(-1, -1));
             }
-            RulesUtils.expectToThrowAndLog(tryingOutOfRangeCoord, 'FIRST_COORD_IS_OUT_OF_RANGE');
+            TestUtils.expectToThrowAndLog(tryingOutOfRangeCoord, 'FIRST_COORD_IS_OUT_OF_RANGE');
         });
         it('should create move when coord is in the board', () => {
             const move: ConnectSixFirstMove = ConnectSixFirstMove.of(new Coord(0, 0));

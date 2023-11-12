@@ -7,6 +7,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
+import { MartianChessRules } from '../MartianChessRules';
 
 describe('MartianChessScoreHeuristic', () => {
 
@@ -16,7 +17,7 @@ describe('MartianChessScoreHeuristic', () => {
         heuristic = new MartianChessScoreHeuristic();
     });
     it('should simply prefer higher score', () => {
-        const weakState: MartianChessState = MartianChessState.getInitialState();
+        const weakState: MartianChessState = MartianChessRules.get().getInitialState();
         const strongBoard: Table<MartianChessPiece> = weakState.getCopiedBoard();
         const captured: MGPMap<Player, MartianChessCapture> = weakState.captured.getCopy();
         const capturedPawn: MartianChessCapture = MartianChessCapture.of([MartianChessPiece.PAWN]);

@@ -11,6 +11,7 @@ import { LascaMove } from './LascaMove';
 import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export class LascaNode extends GameNode<LascaMove, LascaState> {}
 
@@ -24,9 +25,23 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return LascaRules.singleton.get();
     }
-    private constructor() {
-        super(LascaState);
+
+    public getInitialState(): LascaState {
+        const O: LascaStack = new LascaStack([LascaPiece.ZERO]);
+        const X: LascaStack = new LascaStack([LascaPiece.ONE]);
+        const _: LascaStack = LascaStack.EMPTY;
+        const board: Table<LascaStack> = [
+            [X, _, X, _, X, _, X],
+            [_, X, _, X, _, X, _],
+            [X, _, X, _, X, _, X],
+            [_, _, _, _, _, _, _],
+            [O, _, O, _, O, _, O],
+            [_, O, _, O, _, O, _],
+            [O, _, O, _, O, _, O],
+        ];
+        return new LascaState(board, 0);
     }
+
     public getCaptures(state: LascaState): LascaMove[] {
         const player: Player = state.getCurrentPlayer();
         return this.getCapturesOf(state, player);

@@ -9,6 +9,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { DoMancalaRulesTests } from '../../common/GenericMancalaRulesTest.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('KalahRules', () => {
 
@@ -24,7 +25,7 @@ describe('KalahRules', () => {
     describe('distribution', () => {
         it('should allow simple move', () => {
             // Given any board
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing a simple move
             const move: KalahMove = KalahMove.of(MancalaDistribution.FIVE);
@@ -57,7 +58,7 @@ describe('KalahRules', () => {
         });
         it('should allow to distribute twice when first landing end up in the Kalah', () => {
             // Given a move with the first sub-move landing in the Kalah
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing the double distribution
             const move: KalahMove = KalahMove.of(MancalaDistribution.THREE, [MancalaDistribution.FIVE]);
@@ -72,20 +73,20 @@ describe('KalahRules', () => {
         });
         it('should throw when distributing twice when first landing did not end in the Kalah', () => {
             // Given a double distribution with the first one not landing in the Kalah
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing the double distribution
             const move: KalahMove = KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.TWO]);
 
             // Then the move should be wildly considered as illegal, you scumbag hacker !
             const reason: string = 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE';
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });
         it('should drop a piece in your Kalah when passing by', () => {
             // Given any move going further than your last house
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing it
             const move: KalahMove = KalahMove.of(MancalaDistribution.ZERO);
@@ -120,14 +121,14 @@ describe('KalahRules', () => {
         });
         it('should forbid to stop distributing after landing in your Kalah', () => {
             // Given a simple distribution ending in the Kalah
-            const state: MancalaState = MancalaState.getInitialState();
+            const state: MancalaState = KalahRules.get().getInitialState();
 
             // When doing the move
             const move: KalahMove = KalahMove.of(MancalaDistribution.THREE);
 
             // Then it should be refused
             const reason: string = 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE';
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });

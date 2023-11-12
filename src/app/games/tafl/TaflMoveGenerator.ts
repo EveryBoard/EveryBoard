@@ -8,18 +8,18 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 
 @Debug.log
-export class TaflMoveGenerator<M extends TaflMove, S extends TaflState> extends MoveGenerator<M, S> {
+export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, TaflState> {
 
-    public constructor(private readonly rules: TaflRules<M, S>) {
+    public constructor(private readonly rules: TaflRules<M>) {
         super();
     }
-    public getListMoves(node: TaflNode<M, S>): M[] {
-        const state: S = node.gameState;
+    public getListMoves(node: TaflNode<M>): M[] {
+        const state: TaflState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state);
         return this.orderMoves(state, listMoves);
     }
-    public orderMoves(state: S, listMoves: M[]): M[] {
+    public orderMoves(state: TaflState, listMoves: M[]): M[] {
         const king: Coord = this.rules.getKingCoord(state).get();
         if (state.getCurrentPlayer() === this.rules.config.INVADER) {
             // Invader

@@ -3,7 +3,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { PylosCoord } from '../PylosCoord';
 import { PylosFailure } from '../PylosFailure';
 import { PylosMove, PylosMoveFailure } from '../PylosMove';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('PylosMove', () => {
 
@@ -18,7 +18,7 @@ describe('PylosMove', () => {
         }
         // Then it should throw
         const error: string = PylosFailure.MUST_MOVE_UPWARD();
-        RulesUtils.expectToThrowAndLog(creatingAMoveGoingHorizontally, error);
+        TestUtils.expectToThrowAndLog(creatingAMoveGoingHorizontally, error);
     });
     it('should allow move creation', () => {
         // From Climb

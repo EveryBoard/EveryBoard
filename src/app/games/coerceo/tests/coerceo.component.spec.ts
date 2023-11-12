@@ -8,6 +8,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { CoerceoRules } from '../CoerceoRules';
 
 describe('CoerceoComponent', () => {
 
@@ -32,7 +33,7 @@ describe('CoerceoComponent', () => {
     });
     describe('visual features', () => {
         it('should show tile when more than zero', fakeAsync(async() => {
-            const board: Table<FourStatePiece> = CoerceoState.getInitialState().getCopiedBoard();
+            const board: Table<FourStatePiece> = CoerceoRules.get().getInitialState().getCopiedBoard();
             const state: CoerceoState = new CoerceoState(board, 0, [1, 0], [0, 0]);
             testUtils.expectElementNotToExist('#tilesCount0');
             await testUtils.setupState(state);

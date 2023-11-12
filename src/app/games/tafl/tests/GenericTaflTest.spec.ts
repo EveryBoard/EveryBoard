@@ -15,10 +15,9 @@ import { TaflState } from '../TaflState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 
-export class TaflTestEntries<C extends TaflComponent<R, M, S>,
-                             R extends TaflRules<M, S>,
-                             M extends TaflMove,
-                             S extends TaflState>
+export class TaflTestEntries<C extends TaflComponent<R, M>,
+                             R extends TaflRules<M>,
+                             M extends TaflMove>
 {
     component: Type<C>; // TablutComponent, BrandhubComponent, etc
     gameName: string; // 'Tablut', 'Brandhub', etc
@@ -27,17 +26,16 @@ export class TaflTestEntries<C extends TaflComponent<R, M, S>,
     moveProvider: (start: Coord, end: Coord) => MGPFallible<M>;
     validSecondCoord: Coord; // The coord of an empty space that could be the landing coord of validFirstCoord
     diagonalSecondCoord: Coord; // An empty space coord in diagonal of validFirstCoord
-    stateReadyForCapture: S; // A state in which a capture is possible for current player
+    stateReadyForCapture: TaflState; // A state in which a capture is possible for current player
     capture: M; // The capture possible in stateReadyForCapture
     firstCaptured: Coord; // The capture made by 'capture'
     otherPlayerPiece: Coord; // A different coord as validFirstCoord of the same player
-    stateReadyForJumpOver: S;
+    stateReadyForJumpOver: TaflState;
     jumpOver: M; // An illegal move on stateReadyForJumpOver, that could make a piece jump over another
 }
-export function DoTaflTests<C extends TaflComponent<R, M, S>,
-                            R extends TaflRules<M, S>,
-                            M extends TaflMove,
-                            S extends TaflState>(entries: TaflTestEntries<C, R, M, S>)
+export function DoTaflTests<C extends TaflComponent<R, M>,
+                            R extends TaflRules<M>,
+                            M extends TaflMove>(entries: TaflTestEntries<C, R, M>)
     : void
 {
     let testUtils: ComponentTestUtils<C>;
@@ -158,7 +156,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
         it('should have a bijective encoder', () => {
             const rules: R = testUtils.getGameComponent().rules;
             const encoder: Encoder<M> = testUtils.getGameComponent().encoder;
-            const moveGenerator: TaflMoveGenerator<M, S> = new TaflMoveGenerator(rules);
+            const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(rules);
             const firstTurnMoves: M[] = moveGenerator
                 .getListMoves(rules.getInitialNode())
                 .map((move: TaflMove) => {

@@ -71,4 +71,12 @@ export abstract class GameStateWithTable<P> extends GameState {
         }
         return linedUpElements.values();
     }
+
+    public getWidth(): number {
+        return this.board[0].length;
+    }
+
+    public getHeight(): number {
+        return this.board.length;
+    }
 }

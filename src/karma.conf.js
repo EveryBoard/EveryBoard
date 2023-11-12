@@ -34,6 +34,9 @@ module.exports = function(config) {
             ChromeHeadlessCustom: {
                 base: 'ChromeHeadless',
                 flags: ['--no-sandbox', '--disable-gpu'],
+                browserNoActivityTimeout: 10000,
+                browserDisconnectTimeout: 10000,
+                pingTimeout: 10000
             },
         },
         reporters: ['progress', 'coverage', 'kjhtml'],

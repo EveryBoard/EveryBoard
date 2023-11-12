@@ -21,6 +21,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         new Vector(-3, +1), // DOWN_LEFT
         new Vector(-3, -1), // UP_LEFT
     ];
+
     public static getTilesUpperLeftCoord(tile: Coord): Coord {
         const x: number = tile.x - (tile.x % 3);
         let y: number = tile.y;
@@ -31,9 +32,11 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return new Coord(x, y);
     }
+
     public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(15, 10);
     }
+
     public static getPresentNeighborEntrances(tileUpperLeft: Coord): Coord[] {
         return [
             new Coord(tileUpperLeft.x + 1, tileUpperLeft.y - 1), // UP
@@ -44,25 +47,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             new Coord(tileUpperLeft.x - 1, tileUpperLeft.y + 0), // UP-LEFT
         ].filter(CoerceoState.isOnBoard);
     }
-    public static getInitialState(): CoerceoState {
-        const _: FourStatePiece = FourStatePiece.EMPTY;
-        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
-        const O: FourStatePiece = FourStatePiece.ZERO;
-        const X: FourStatePiece = FourStatePiece.ONE;
-        const board: Table<FourStatePiece> = [
-            [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],
-            [N, N, N, _, _, O, _, _, _, O, _, _, N, N, N],
-            [_, X, _, X, _, _, O, _, O, _, _, X, _, X, _],
-            [X, _, _, _, X, _, _, _, _, _, X, _, _, _, X],
-            [_, X, _, X, _, _, _, _, _, _, _, X, _, X, _],
-            [_, O, _, O, _, _, _, _, _, _, _, O, _, O, _],
-            [O, _, _, _, O, _, _, _, _, _, O, _, _, _, O],
-            [_, O, _, O, _, _, X, _, X, _, _, O, _, O, _],
-            [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
-            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
-        ];
-        return new CoerceoState(board, 0, [0, 0], [0, 0]);
-    }
+
     public constructor(board: Table<FourStatePiece>,
                        turn: number,
                        public readonly tiles: readonly [number, number],
@@ -70,6 +55,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     {
         super(board, turn);
     }
+
     public applyLegalMovement(move: CoerceoRegularMove): CoerceoState {
         const start: Coord = move.getStart();
         const landing: Coord = move.getEnd();
@@ -79,6 +65,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
         return new CoerceoState(newBoard, this.turn, this.tiles, this.captures);
     }
+
     public doMovementCaptures(move: CoerceoRegularMove): CoerceoState {
         const capturedCoords: Coord[] = this.getCapturedNeighbors(move.getEnd());
         // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -88,6 +75,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return resultingState;
     }
+
     public getCapturedNeighbors(coord: Coord): Coord[] {
         const opponent: Player = this.getCurrentOpponent();
         const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord);
@@ -101,10 +89,12 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             return false;
         });
     }
+
     public isSurrounded(coord: Coord): boolean {
         const remainingFreedom: Coord[] = this.getEmptyNeighbors(coord, FourStatePiece.EMPTY);
         return remainingFreedom.length === 0;
     }
+
     public capture(coord: Coord): CoerceoState {
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
         const newCaptures: [number, number] = [this.captures[0], this.captures[1]];
@@ -112,6 +102,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         newCaptures[this.getCurrentPlayer().value] += 1;
         return new CoerceoState(newBoard, this.turn, this.tiles, newCaptures);
     }
+
     public removeTilesIfNeeded(piece: Coord, countTiles: boolean): CoerceoState {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
@@ -134,6 +125,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return resultingState;
     }
+
     public isTileEmpty(tileUpperLeft: Coord): boolean {
         Utils.assert(this.getPieceAt(tileUpperLeft) !== FourStatePiece.UNREACHABLE,
                      'Should not call isTileEmpty on removed tile');
@@ -147,6 +139,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return true;
     }
+
     public isDeconnectable(tile: Coord): boolean {
         const neighborsIndex: number[] = this.getPresentNeighborTilesRelativeIndexes(tile);
         if (neighborsIndex.length > 3) {
@@ -163,10 +156,12 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return holeCount <= 1;
     }
+
     private areNeighbor(smallTileIndex: number, bigTileIndex: number): boolean {
         return smallTileIndex + 1 === bigTileIndex ||
                (smallTileIndex === 0 && bigTileIndex === 5);
     }
+
     public getPresentNeighborTilesRelativeIndexes(tile: Coord): number[] {
         const neighborsIndexes: number[] = [];
         let firstIndex: MGPOptional<number> = MGPOptional.empty();
@@ -184,6 +179,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return neighborsIndexes;
     }
+
     public deconnectTile(tileUpperLeft: Coord, countTiles: boolean): CoerceoState {
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
         const x0: number = tileUpperLeft.x;
@@ -199,6 +195,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return new CoerceoState(newBoard, this.turn, newTiles, this.captures);
     }
+
     public getLegalLandings(coord: Coord): Coord[] {
         const legalLandings: Coord[] = [];
         for (const step of CoerceoStep.STEPS) {
@@ -209,6 +206,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return legalLandings;
     }
+
     public getPiecesByFreedom(): number[][] {
         const playersScores: number[][] = [
             [0, 0, 0, 0],

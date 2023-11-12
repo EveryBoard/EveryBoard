@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { KalahMove } from '../KalahMove';
-import { KalahNode } from '../KalahRules';
+import { KalahNode, KalahRules } from '../KalahRules';
 import { MancalaState } from '../../common/MancalaState';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
 
@@ -13,7 +13,7 @@ describe('KalahMoveGenerator', () => {
     });
     it('should have all move options', () => {
         // Given an initial node
-        const initialState: MancalaState = MancalaState.getInitialState();
+        const initialState: MancalaState = KalahRules.get().getInitialState();
         const node: KalahNode = new KalahNode(initialState);
 
         // When computing the list of moves

@@ -5,6 +5,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
+import { TrexoRules } from '../TrexoRules';
 
 describe('TrexoState', () => {
     it('should refuse creating a board of which width is not 10', () => {
@@ -31,7 +32,7 @@ describe('TrexoState', () => {
     });
     it('should drop piece at the lowest level possible', () => {
         // Given an empty board
-        const state: TrexoState = TrexoState.getInitialState();
+        const state: TrexoState = TrexoRules.get().getInitialState();
 
         // When trying to add piece
         const owner: Player = Player.ZERO;

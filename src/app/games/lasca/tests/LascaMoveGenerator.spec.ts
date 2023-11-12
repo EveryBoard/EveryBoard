@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { LascaMove } from '../LascaMove';
 import { LascaMoveGenerator } from '../LascaMoveGenerator';
-import { LascaNode } from '../LascaRules';
+import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 
 const u: LascaStack = new LascaStack([LascaPiece.ZERO]);
@@ -36,7 +36,7 @@ describe('LascaControlMoveGenerator', () => {
     });
     it('should return full list of steps when no capture must be done', () => {
         // Given a state where only steps can be made
-        const state: LascaState = LascaState.getInitialState();
+        const state: LascaState = LascaRules.get().getInitialState();
         const node: LascaNode = new LascaNode(state);
 
         // When asking it a list of move for that state

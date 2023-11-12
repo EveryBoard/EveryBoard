@@ -5,6 +5,7 @@ import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { KamisadoRules } from './KamisadoRules';
 
 const __: KamisadoPiece = KamisadoPiece.EMPTY;
 const or: KamisadoPiece = KamisadoPiece.ZERO.ORANGE;
@@ -51,7 +52,7 @@ export class KamisadoTutorial extends Tutorial {
         At Kamisado, pieces can only move forward, vertically or diagonally.
         You're playing first, with dark pieces, you can make your first move.<br/><br/>
         You're playing Dark, click on the piece of your choice and click on a landing square.`,
-            KamisadoState.getInitialState(),
+            KamisadoRules.get().getInitialState(),
             KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
             $localize`Perfect! Note that each of your piece has a different color.`,
         ),
