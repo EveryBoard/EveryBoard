@@ -29,7 +29,7 @@ describe('GipfRules', () => {
         rules = GipfRules.get();
     });
     it('should start with the expected board for the basic variant', () => {
-        const state: GipfState = GipfState.getInitialState();
+        const state: GipfState = GipfRules.get().getInitialState();
         const expectedState: GipfState = new GipfState([
             [N, N, N, B, _, _, A],
             [N, N, _, _, _, _, _],
@@ -45,7 +45,7 @@ describe('GipfRules', () => {
     });
     describe('isLegal and applyLegalMove', () => {
         it('should forbid placements on non-border spaces', () => {
-            const state: GipfState = GipfState.getInitialState();
+            const state: GipfState = GipfRules.get().getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 3), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
@@ -53,7 +53,7 @@ describe('GipfRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should require a direction when placing a piece on an occupied space', () => {
-            const state: GipfState = GipfState.getInitialState();
+            const state: GipfState = GipfRules.get().getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
@@ -61,7 +61,7 @@ describe('GipfRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should allow simple move without direction when target coord is empty', () => {
-            const state: GipfState = GipfState.getInitialState();
+            const state: GipfState = GipfRules.get().getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(6, 1), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
@@ -397,7 +397,7 @@ describe('GipfRules', () => {
     });
     describe('applyPlacement', () => {
         it('should not allow applying placements where a piece already is no direction is given', () => {
-            const state: GipfState = GipfState.getInitialState();
+            const state: GipfState = GipfRules.get().getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(6, 3), MGPOptional.empty());
             expect(() => GipfRules.applyPlacement(placement, state)).toThrow();
         });
@@ -452,7 +452,8 @@ describe('GipfRules', () => {
     });
     describe('getAllDirectionsForEntrance', () => {
         it('should fail on non-entrances', () => {
-            expect(() => GipfRules.getAllDirectionsForEntrance(GipfState.getInitialState(), new Coord(3, 3))).toThrow();
+            expect(() => GipfRules.getAllDirectionsForEntrance(GipfRules.get().getInitialState(), new Coord(3, 3)))
+                .toThrow();
         });
     });
 });

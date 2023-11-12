@@ -3,7 +3,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PylosCoord } from '../PylosCoord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('PylosCoord', () => {
 
@@ -21,25 +21,25 @@ describe('PylosCoord', () => {
         function createCoordWithInvalidX(): void {
             new PylosCoord(-1, 0, 0);
         }
-        RulesUtils.expectToThrowAndLog(createCoordWithInvalidX, 'PylosCoord: Invalid X: -1.');
+        TestUtils.expectToThrowAndLog(createCoordWithInvalidX, 'PylosCoord: Invalid X: -1.');
     });
     it('should forbid invalid Y in coord creation', () => {
         function createCoordWithInvalidY(): void {
             new PylosCoord( 0, -1, 0);
         }
-        RulesUtils.expectToThrowAndLog(createCoordWithInvalidY, 'PylosCoord: Invalid Y: -1.');
+        TestUtils.expectToThrowAndLog(createCoordWithInvalidY, 'PylosCoord: Invalid Y: -1.');
     });
     it('should forbid invalid Z in coord creation', () => {
         function createCoordWithInvalidZ(): void {
             new PylosCoord( 0, 0, -1);
         }
-        RulesUtils.expectToThrowAndLog(createCoordWithInvalidZ, 'PylosCoord: Invalid Z: -1.');
+        TestUtils.expectToThrowAndLog(createCoordWithInvalidZ, 'PylosCoord: Invalid Z: -1.');
     });
     it('should forbid invalid out of range coord creation', () => {
         function createCoordWithInvalidOutOfRangeCoord(): void {
             new PylosCoord( 3, 3, 3);
         }
-        RulesUtils.expectToThrowAndLog(createCoordWithInvalidOutOfRangeCoord, 'PylosCoord(3, 3, 3) is not in range.');
+        TestUtils.expectToThrowAndLog(createCoordWithInvalidOutOfRangeCoord, 'PylosCoord(3, 3, 3) is not in range.');
     });
 
     it('should override equals correctly', () => {

@@ -6,17 +6,17 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { TaflPawn } from '../TaflPawn';
-import { TablutState } from '../tablut/TablutState';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
+import { TaflState } from '../TaflState';
 
 describe('TablutPieceAndInfluenceHeuristic', () => {
 
-    let heuristic: TaflPieceAndInfluenceHeuristic<TablutMove, TablutState>;
+    let heuristic: TaflPieceAndInfluenceHeuristic<TablutMove>;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;
     const X: TaflPawn = TaflPawn.DEFENDERS;
@@ -38,7 +38,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const weakState: TaflState = new TaflState(weakBoard, 0);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, O, A, O, _, X, _, _],
@@ -50,7 +50,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1);
+        const strongState: TaflState = new TaflState(strongBoard, 1);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -68,7 +68,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const weakState: TaflState = new TaflState(weakBoard, 0);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, O, _, _, _, _],
@@ -80,7 +80,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1);
+        const strongState: TaflState = new TaflState(strongBoard, 1);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -98,7 +98,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const weakState: TaflState = new TaflState(weakBoard, 0);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -110,7 +110,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1);
+        const strongState: TaflState = new TaflState(strongBoard, 1);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -128,7 +128,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const weakState: TaflState = new TaflState(weakBoard, 0);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -140,7 +140,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1);
+        const strongState: TaflState = new TaflState(strongBoard, 1);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -158,7 +158,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const weakState: TaflState = new TaflState(weakBoard, 0);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -170,7 +170,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 1);
+        const strongState: TaflState = new TaflState(strongBoard, 1);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -189,7 +189,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0);
+            const state: TaflState = new TaflState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
@@ -208,7 +208,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0);
+            const state: TaflState = new TaflState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
@@ -227,7 +227,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0);
+            const state: TaflState = new TaflState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
@@ -246,7 +246,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0);
+            const state: TaflState = new TaflState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
@@ -265,7 +265,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 1);
+            const state: TaflState = new TaflState(board, 1);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =
@@ -292,7 +292,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 1);
+            const state: TaflState = new TaflState(board, 1);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
 
@@ -315,7 +315,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutState = new TablutState(board, 0);
+            const state: TaflState = new TaflState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> =

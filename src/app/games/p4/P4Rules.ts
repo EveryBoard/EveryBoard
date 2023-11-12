@@ -5,7 +5,7 @@ import { P4State } from './P4State';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Utils, Debug } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { P4Failure } from './P4Failure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
@@ -33,27 +33,17 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public static getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
-        while (y < P4State.HEIGHT && board[y][x] === PlayerOrNone.NONE) {
+        while (y < board.length && board[y][x] === PlayerOrNone.NONE) {
             y++;
         }
         return y - 1;
     }
-    public static getListMoves(node: P4Node): P4Move[] {
-        // should be called only if the game is not over
-        const originalState: P4State = node.gameState;
-        const moves: P4Move[] = [];
 
-        for (let x: number = 0; x < P4State.WIDTH; x++) {
-            if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
-                const move: P4Move = P4Move.of(x);
-                moves.push(move);
-            }
-        }
-        return moves;
+    public getInitialState(): P4State {
+        const board: PlayerOrNone[][] = TableUtils.create(7, 6, PlayerOrNone.NONE);
+        return new P4State(board, 0);
     }
-    private constructor() {
-        super(P4State);
-    }
+
     public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();

@@ -20,7 +20,7 @@ describe('PenteRules', () => {
     });
     it('should allow a drop on an empty space', () => {
         // Given a state
-        const state: PenteState = PenteState.getInitialState();
+        const state: PenteState = PenteRules.get().getInitialState();
 
         // When doing a drop on an empty space
         const move: PenteMove = PenteMove.of(new Coord(9, 8));
@@ -51,7 +51,7 @@ describe('PenteRules', () => {
     });
     it('should forbid a drop on an occupied space', () => {
         // Given a state
-        const state: PenteState = PenteState.getInitialState();
+        const state: PenteState = PenteRules.get().getInitialState();
 
         // When doing a drop on an occupied space
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
@@ -164,7 +164,7 @@ describe('PenteRules', () => {
     });
     it('should be ongoing if there are still available spaces and no victory', () => {
         // Given a state with available spaces and no victory
-        const state: PenteState = PenteState.getInitialState();
+        const state: PenteState = PenteRules.get().getInitialState();
         const node: PenteNode = new PenteNode(state);
         // Then it should be ongoing
         RulesUtils.expectToBeOngoing(rules, node);

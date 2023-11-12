@@ -18,8 +18,8 @@ describe('TeekoMoveGenerator', () => {
         moveGenerator = new TeekoMoveGenerator();
     });
     it('should have all move options in drop phase', () => {
-        // Given an initial state
-        const initialState: TeekoState = TeekoState.getInitialState();
+        // Given an initial node
+        const initialState: TeekoState = TeekoRules.get().getInitialState();
         const node: TeekoNode = new TeekoNode(initialState);
 
         // When computing the list of moves

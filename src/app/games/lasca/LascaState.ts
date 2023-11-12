@@ -18,6 +18,7 @@ export class LascaPiece {
             return LascaPiece.ONE_OFFICER;
         }
     }
+
     private constructor(public readonly player: Player, public readonly isOfficer: boolean) {}
 
     public toString(): string {
@@ -38,26 +39,31 @@ export class LascaStack {
 
     public static EMPTY: LascaStack = new LascaStack([]);
 
-    public constructor(public readonly pieces: ReadonlyArray<LascaPiece>) {
-    }
+    public constructor(public readonly pieces: ReadonlyArray<LascaPiece>) {}
+
     public isEmpty(): boolean {
         return this.pieces.length === 0;
     }
+
     public isCommandedBy(player: Player): boolean {
         if (this.isEmpty()) {
             return false;
         }
         return this.getCommander().player === player;
     }
+
     public getCommander(): LascaPiece {
         return this.pieces[0];
     }
+
     public getPiecesUnderCommander(): LascaStack {
         return new LascaStack(this.pieces.slice(1));
     }
+
     public capturePiece(piece: LascaPiece): LascaStack {
         return new LascaStack(this.pieces.concat(piece));
     }
+
     public addStackBelow(stack: LascaStack): LascaStack {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingStack: LascaStack = this;
@@ -66,9 +72,11 @@ export class LascaStack {
         }
         return resultingStack;
     }
+
     public getStackSize(): number {
         return this.pieces.length;
     }
+
     public promoteCommander(): LascaStack {
         let commander: LascaPiece = this.getCommander();
         if (commander.isOfficer) {
@@ -80,9 +88,11 @@ export class LascaStack {
             return commandingStack.addStackBelow(remainingStack);
         }
     }
+
     public get(index: number): LascaPiece {
         return this.pieces[index];
     }
+
     public toString(length: number): string {
         let leftFill: number = length - this.getStackSize();
         let result: string = '';
@@ -101,30 +111,18 @@ export class LascaState extends GameStateWithTable<LascaStack> {
 
     public static readonly SIZE: number = 7;
 
-    public static getInitialState(): LascaState {
-        const O: LascaStack = new LascaStack([LascaPiece.ZERO]);
-        const X: LascaStack = new LascaStack([LascaPiece.ONE]);
-        const _: LascaStack = LascaStack.EMPTY;
-        const board: Table<LascaStack> = [
-            [X, _, X, _, X, _, X],
-            [_, X, _, X, _, X, _],
-            [X, _, X, _, X, _, X],
-            [_, _, _, _, _, _, _],
-            [O, _, O, _, O, _, O],
-            [_, O, _, O, _, O, _],
-            [O, _, O, _, O, _, O],
-        ];
-        return new LascaState(board, 0);
-    }
     public static of(board: Table<LascaStack>, turn: number): LascaState {
         return new LascaState(board, turn);
     }
+
     public static isNotOnBoard(coord: Coord): boolean {
         return coord.isNotInRange(LascaState.SIZE, LascaState.SIZE);
     }
+
     public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(LascaState.SIZE, LascaState.SIZE);
     }
+
     public getStacksOf(player: Player): Coord[] {
         const stackCoords: Coord[] = [];
         for (let y: number = 0; y < LascaState.SIZE; y++) {
@@ -136,17 +134,21 @@ export class LascaState extends GameStateWithTable<LascaStack> {
         }
         return stackCoords;
     }
+
     public set(coord: Coord, value: LascaStack): LascaState {
         const newBoard: LascaStack[][] = this.getCopiedBoard();
         newBoard[coord.y][coord.x] = value;
         return new LascaState(newBoard, this.turn);
     }
+
     public remove(coord: Coord): LascaState {
         return this.set(coord, LascaStack.EMPTY);
     }
+
     public incrementTurn(): LascaState {
         return new LascaState(this.getCopiedBoard(), this.turn + 1);
     }
+
     public getFinishLineOf(player: Player): number {
         if (player === Player.ZERO) {
             return 0;
@@ -154,6 +156,7 @@ export class LascaState extends GameStateWithTable<LascaStack> {
             return LascaState.SIZE - 1;
         }
     }
+
     public override toString(): string {
         let biggerStack: number = 1;
         for (let y: number = 0; y < LascaState.SIZE; y++) {

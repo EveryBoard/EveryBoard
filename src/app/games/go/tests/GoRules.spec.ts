@@ -34,7 +34,7 @@ describe('GoRules', () => {
     describe('Phase.PLAYING', () => {
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
-            const state: GoState = GoState.getInitialState();
+            const state: GoState = GoRules.get().getInitialState();
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
@@ -202,7 +202,7 @@ describe('GoRules', () => {
         });
         it('Phase.PLAYING + GoMove.PASS = Phase.PASSED', () => {
             // Given initial board (so, playing phase)
-            const state: GoState = GoState.getInitialState();
+            const state: GoState = GoRules.get().getInitialState();
             expect(state.phase).toBe(Phase.PLAYING);
 
             // When passing

@@ -104,10 +104,6 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.koCoord = koCoord;
         this.phase = phase;
     }
-    public static getInitialState(): GoState {
-        const board: Table<GoPiece> = GoState.getStartingBoard();
-        return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
-    }
     public getCapturedCopy(): [number, number] {
         return [this.captured[0], this.captured[1]];
     }

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { SiamNode } from '../SiamRules';
+import { SiamNode, SiamRules } from '../SiamRules';
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
@@ -24,7 +24,7 @@ describe('SiamMoveGenerator', () => {
     });
     it('should provide 44 possible moves on initial board', () => {
         // Given the initial board
-        const node: SiamNode = new SiamNode(SiamState.getInitialState());
+        const node: SiamNode = new SiamNode(SiamRules.get().getInitialState());
         // When computing the list of moves
         const firstTurnMoves: SiamMove[] = moveGenerator.getListMoves(node);
         // Then there should be exactly 44 moves

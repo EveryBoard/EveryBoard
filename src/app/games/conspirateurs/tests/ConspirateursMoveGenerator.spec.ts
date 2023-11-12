@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { ConspirateursState } from '../ConspirateursState';
-import { ConspirateursNode } from '../ConspirateursRules';
+import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConspirateursMoveGenerator } from '../ConspirateursMoveGenerator';
 
@@ -18,7 +18,7 @@ describe('ConspirateursMoveGenerator', () => {
     describe('drop phase', () => {
         it('should propose 45 moves at first turn', () => {
             // Given the initial state
-            const node: ConspirateursNode = new ConspirateursNode(ConspirateursState.getInitialState());
+            const node: ConspirateursNode = new ConspirateursNode(ConspirateursRules.get().getInitialState());
             // Then there should be 45 possible moves
             expect(moveGenerator.getListMoves(node).length).toBe(45);
         });
