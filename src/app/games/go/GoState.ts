@@ -125,7 +125,7 @@ export class GoState extends GameStateWithTable<GoPiece> {
             new Coord(left, verticalCenter),
             new Coord(right, verticalCenter),
         ];
-        if (config.handicap >= 1) {
+        if (1 <= config.handicap) {
             turn = 1;
         }
         for (let i: number = 0; i < config.handicap; i++) {

@@ -11,7 +11,7 @@ export class P4Move extends Move {
     );
 
     public static of(x: number): P4Move {
-        Utils.assert(x >= 0, 'P4Move should be a positive integer!');
+        Utils.assert(0 <= x, 'P4Move should be a positive integer!');
         return new P4Move(x);
     }
 

@@ -103,7 +103,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return MGPValidation.SUCCESS;
     }
     public mustPlaceQueenBee(state: HiveState): boolean {
-        return state.turn >= 6 && state.hasQueenBeeOnBoard(state.getCurrentPlayer()) === false;
+        return 6 <= state.turn && state.hasQueenBeeOnBoard(state.getCurrentPlayer()) === false;
     }
     public isLegalDrop(move: HiveDropMove, state: HiveState): MGPValidation {
         const player: Player = state.getCurrentPlayer();

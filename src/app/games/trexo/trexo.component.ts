@@ -234,7 +234,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     private async selectPiece(clicked: Coord): Promise<MGPValidation> {
         if (this.possibleMoves.some((move: TrexoMove) => move.getZero().equals(clicked))) {
             const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
-            if (pieceHeight >= this.pieceOnBoard.length) {
+            if (this.pieceOnBoard.length <= pieceHeight) {
                 this.pieceOnBoard.push(TableUtils.create(TrexoState.SIZE,
                                                          TrexoState.SIZE,
                                                          TrexoComponent.INITIAL_PIECE_ON_BOARD));

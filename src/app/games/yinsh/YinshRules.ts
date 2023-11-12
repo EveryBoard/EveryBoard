@@ -244,14 +244,14 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
                 }
                 consecutives += 1;
             } else {
-                if (consecutives >= 5) {
+                if (5 <= consecutives) {
                     // There can only be one portion with at least 5 pieces, we found it
                     break;
                 }
                 consecutives = 0;
             }
         }
-        if (consecutives >= 5) {
+        if (5 <= consecutives) {
             return MGPOptional.of({ start, end: cur, dir });
         }
         return MGPOptional.empty();
@@ -262,7 +262,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         this.getLinePortionsWithAtLeastFivePiecesOfPlayer(state, player)
             .forEach((linePortion: { start: Coord, end: Coord, dir: HexaDirection}) => {
                 for (let cur: Coord = linePortion.start;
-                    cur.getDistance(linePortion.end) >= 5;
+                    5 <= cur.getDistance(linePortion.end);
                     cur = cur.getNext(linePortion.dir)) {
                     captures.push(YinshCapture.of(cur, cur.getNext(linePortion.dir, 4)));
                 }
@@ -296,10 +296,10 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         if (node.gameState.isInitialPlacementPhase()) {
             return GameStatus.ONGOING;
         }
-        if (node.gameState.sideRings[0] >= 3) {
+        if (3 <= node.gameState.sideRings[0]) {
             return GameStatus.ZERO_WON;
         }
-        if (node.gameState.sideRings[1] >= 3) {
+        if (3 <= node.gameState.sideRings[1]) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;

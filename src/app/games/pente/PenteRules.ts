@@ -82,7 +82,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
     public getGameStatus(node: PenteNode): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        if (state.captures[opponent.value] >= 10) {
+        if (10 <= state.captures[opponent.value]) {
             return GameStatus.getVictory(opponent);
         }
         const victoriousCoord: Coord[] = PenteRules.PENTE_HELPER.getVictoriousCoord(state);

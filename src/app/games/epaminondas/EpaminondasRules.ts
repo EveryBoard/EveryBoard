@@ -147,7 +147,7 @@ export class EpaminondasRules
                 board[capturedSoldier.y][capturedSoldier.x] = PlayerOrNone.NONE;
             }
             captured++;
-            if (captured >= move.movedPieces) {
+            if (move.movedPieces <= captured) {
                 return MGPFallible.failure(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE());
             }
             capturedSoldier = capturedSoldier.getNext(move.direction, 1);

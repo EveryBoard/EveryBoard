@@ -109,10 +109,10 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
     }
     public static getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;
-        if (state.captures[0] >= 18) {
+        if (18 <= state.captures[0]) {
             return GameStatus.ZERO_WON;
         }
-        if (state.captures[1] >= 18) {
+        if (18 <= state.captures[1]) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;

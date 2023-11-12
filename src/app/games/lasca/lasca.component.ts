@@ -123,7 +123,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const square: LascaStack = state.getPieceAtXY(x, y);
         const pieceInfos: LascaPieceInfo[] = [];
         // Start by the lower piece
-        for (let pieceIndex: number = square.getStackSize() - 1; pieceIndex >= 0; pieceIndex--) {
+        for (let pieceIndex: number = square.getStackSize() - 1; 0 <= pieceIndex; pieceIndex--) {
             const piece: LascaPiece = square.get(pieceIndex);
             pieceInfos.push({
                 classes: [this.getPlayerClass(piece.player)],

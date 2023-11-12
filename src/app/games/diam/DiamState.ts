@@ -30,7 +30,7 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
                 }
             }
         }
-        assert(pieces.every((remaining: number) => remaining >= 0),
+        assert(pieces.every((remaining: number) => 0 <= remaining),
                'Invalid DiamState representation uses too many pieces');
         return new DiamState(board, pieces, turn);
     }

@@ -287,7 +287,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         }
         const storeOffset: number = config.passByPlayerStore ? 1 : 0;
         const pieceNeededToFeedOpponent: number = pieceNeededToFeedStore + storeOffset;
-        return board[y][x] >= pieceNeededToFeedOpponent; // distribution from right to left
+        return pieceNeededToFeedOpponent <= board[y][x]; // distribution from right to left
     }
 
     public canDistribute(player: Player, state: MancalaState, config: MancalaConfig): boolean {

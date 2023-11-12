@@ -49,7 +49,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
                        empty: number)
     {
         super(turn, board, width, height, excludedSpaces, empty);
-        if (this.excludedSpaces.length >= (this.height / 2) + 1) {
+        if ((this.height / 2) + 1 <= this.excludedSpaces.length) {
             throw new Error('Invalid excluded spaces specification for HexaBoard.');
         }
     }

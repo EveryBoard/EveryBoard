@@ -47,7 +47,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, RulesConfig, 
             opponentPieces++;
             firstOpponent = firstOpponent.getNext(move.dir);
         }
-        if (opponentPieces >= pushingPieces) {
+        if (pushingPieces <= opponentPieces) {
             return MGPFallible.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
         } else if (AbaloneState.isOnBoard(firstOpponent)) {
             if (state.getPieceAt(firstOpponent) === FourStatePiece.EMPTY) {

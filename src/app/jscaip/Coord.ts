@@ -62,10 +62,10 @@ export class Coord extends Vector {
         if (this.y < 0) {
             return false;
         }
-        if (this.x >= sizeX) {
+        if (sizeX <= this.x) {
             return false;
         }
-        if (this.y >= sizeY) {
+        if (sizeY <= this.y) {
             return false;
         }
         return true;
@@ -77,10 +77,10 @@ export class Coord extends Vector {
         if (this.y < 0) {
             return true;
         }
-        if (this.x >= sizeX) {
+        if (sizeX <= this.x) {
             return true;
         }
-        if (this.y >= sizeY) {
+        if (sizeY <= this.y) {
             return true;
         }
         return false;

@@ -43,9 +43,9 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
         }
     }
     public isCentralZone(coord: Coord): boolean {
-        return coord.x >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x &&
+        return ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x <= coord.x &&
             coord.x <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x &&
-            coord.y >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y &&
+            ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y <= coord.y &&
             coord.y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y;
     }
     public isDropPhase(): boolean {

@@ -246,10 +246,11 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     private getPieceColor(i: number, zero: number, neutral: number): string {
         if (i < zero) {
             return 'player0-fill';
-        } else if (i >= (zero + neutral)) {
+        } else if (i < (zero + neutral)) {
+            return '';
+        } else {
             return 'player1-fill';
         }
-        return '';
 
     }
     public async onSquareClick(x: number): Promise<MGPValidation> {

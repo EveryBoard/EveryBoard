@@ -54,7 +54,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
     }
     public dropLegality(move: ConspirateursMoveDrop, state: ConspirateursState): MGPValidation {
-        if (state.turn >= 40) {
+        if (40 <= state.turn) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40());
         }
         if (state.getPieceAt(move.coord).isPlayer()) {

@@ -96,7 +96,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         if (stack.belongsTo(state.getCurrentPlayer()) === false) {
             return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE());
         }
-        if (state.numberOfNeighbors(coord) >= 6) {
+        if (6 <= state.numberOfNeighbors(coord)) {
             return MGPValidation.failure(DvonnFailure.TOO_MANY_NEIGHBORS());
         }
         if (DvonnRules.pieceHasTarget(state, coord) === false) {
