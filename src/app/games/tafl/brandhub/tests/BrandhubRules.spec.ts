@@ -29,7 +29,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = BrandhubRules.get().getInitialState(defaultConfig);
 
         // When moving an invader
-        const move: BrandhubMove = BrandhubMove.of(new Coord(1, 3), new Coord(1, 6));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(1, 3), new Coord(1, 6)).get();
 
         // Then invader piece should be moved
         const expectedBoard: Table<TaflPawn> = [
@@ -58,7 +58,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 1);
 
         // When moving an invader
-        const move: BrandhubMove = BrandhubMove.of(new Coord(3, 2), new Coord(3, 1));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(3, 2), new Coord(3, 1)).get();
 
         // Then invader piece should be moved
         const expectedBoard: Table<TaflPawn> = [
@@ -87,7 +87,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 1);
 
         // When sandwiching the invader against a corner
-        const move: BrandhubMove = BrandhubMove.of(new Coord(4, 3), new Coord(4, 0));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(4, 3), new Coord(4, 0)).get();
 
         // Then the invader should be captured
         const expectedBoard: Table<TaflPawn> = [
@@ -116,7 +116,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 1);
 
         // When moving the king to his throne
-        const move: BrandhubMove = BrandhubMove.of(new Coord(3, 0), new Coord(3, 3));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(3, 0), new Coord(3, 3)).get();
 
         // Then the move should be deemed illegal
         const reason: string = TaflFailure.THRONE_IS_LEFT_FOR_GOOD();
@@ -136,7 +136,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 0);
 
         // When moving a fourth invader next to the king
-        const move: BrandhubMove = BrandhubMove.of(new Coord(1, 2), new Coord(3, 2));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(1, 2), new Coord(3, 2)).get();
 
         // Then the king should be captured and the game over
         const expectedBoard: Table<TaflPawn> = [
@@ -167,7 +167,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 0);
 
         // When moving a third piece next to the king
-        const move: BrandhubMove = BrandhubMove.of(new Coord(1, 1), new Coord(3, 1));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(1, 1), new Coord(3, 1)).get();
 
         // Then the king should be captured and the game over
         const expectedBoard: Table<TaflPawn> = [
@@ -198,7 +198,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 0);
 
         // When moving a third piece next to the king
-        const move: BrandhubMove = BrandhubMove.of(new Coord(2, 0), new Coord(2, 2));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(2, 0), new Coord(2, 2)).get();
 
         // Then the king should be captured and the game over
         const expectedBoard: Table<TaflPawn> = [
@@ -229,7 +229,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 0);
 
         // When moving a second piece next to the king
-        const move: BrandhubMove = BrandhubMove.of(new Coord(2, 0), new Coord(3, 0));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(2, 0), new Coord(3, 0)).get();
 
         // Then the king should be captured and the game over
         const expectedBoard: Table<TaflPawn> = [
@@ -260,7 +260,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 0);
 
         // When moving a second piece next to the king
-        const move: BrandhubMove = BrandhubMove.of(new Coord(2, 0), new Coord(4, 0));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(2, 0), new Coord(4, 0)).get();
 
         // Then the king should be captured and the game over
         const expectedBoard: Table<TaflPawn> = [
@@ -291,7 +291,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 0);
 
         // When attempting it
-        const move: BrandhubMove = BrandhubMove.of(new Coord(3, 0), new Coord(3, 3));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(3, 0), new Coord(3, 3)).get();
 
         // Then the move should be deemed illegal
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
@@ -311,7 +311,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 0);
 
         // When moving a fourth opponent next to the king
-        const move: BrandhubMove = BrandhubMove.of(new Coord(1, 2), new Coord(3, 2));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(1, 2), new Coord(3, 2)).get();
 
         // Then the king should not be captured and the game ongoing
         const expectedBoard: Table<TaflPawn> = [
@@ -340,7 +340,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 0);
 
         // When moving an invader next to the king (on the opposite side)
-        const move: BrandhubMove = BrandhubMove.of(new Coord(1, 1), new Coord(1, 3));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(1, 1), new Coord(1, 3)).get();
 
         // Then the king should not be captured
         const expectedBoard: Table<TaflPawn> = [
@@ -369,7 +369,7 @@ describe('BrandhubRules', () => {
         const state: TaflState = new TaflState(board, 0);
 
         // When moving an invader next to the king (on the opposite side)
-        const move: BrandhubMove = BrandhubMove.of(new Coord(2, 1), new Coord(2, 2));
+        const move: BrandhubMove = BrandhubMove.from(new Coord(2, 1), new Coord(2, 2)).get();
 
         // Then the king should not be captured
         const expectedBoard: Table<TaflPawn> = [

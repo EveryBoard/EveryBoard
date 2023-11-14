@@ -4,7 +4,9 @@ import { Encoder } from '../utils/Encoder';
 import { Vector } from './Vector';
 
 export class CoordFailure {
-    public static readonly OUT_OF_RANGE: (coord: Coord) => string = (coord: Coord) => `The coordinate ${ coord.toString() } is not on the board`;
+    public static OUT_OF_RANGE(coord: Coord): string {
+        return `The coordinate ${ coord.toString() } is not on the board`;
+    }
 }
 
 export class Coord extends Vector {

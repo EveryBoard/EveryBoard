@@ -20,7 +20,7 @@ const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove> =
     gameName: 'Tablut',
     secondPlayerPiece: new Coord(4, 4),
     validFirstCoord: new Coord(4, 1),
-    moveProvider: TablutMove.of,
+    moveProvider: TablutMove.from,
     validSecondCoord: new Coord(1, 1),
     diagonalSecondCoord: new Coord(5, 2),
     stateReadyForCapture: new TaflState([
@@ -34,10 +34,10 @@ const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove> =
         [_, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _],
     ], 1),
-    capture: TablutMove.of(new Coord(1, 0), new Coord(2, 0)),
+    capture: TablutMove.from(new Coord(1, 0), new Coord(2, 0)).get(),
     firstCaptured: new Coord(2, 1),
     otherPlayerPiece: new Coord(5, 0),
     stateReadyForJumpOver: TablutRules.get().getInitialState(defaultConfig),
-    jumpOver: TablutMove.of(new Coord(5, 0), new Coord(5, 5)),
+    jumpOver: TablutMove.from(new Coord(5, 0), new Coord(5, 5)).get(),
 };
 DoTaflTests(tablutEntries);

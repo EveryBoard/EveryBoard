@@ -26,14 +26,14 @@ const brandhubEntries: TaflTestEntries<BrandhubComponent, BrandhubRules, Brandhu
     component: BrandhubComponent,
     secondPlayerPiece: new Coord(3, 2),
     validFirstCoord: new Coord(3, 0),
-    moveProvider: BrandhubMove.of,
+    moveProvider: BrandhubMove.from,
     validSecondCoord: new Coord(2, 0),
     diagonalSecondCoord: new Coord(2, 1),
     stateReadyForCapture,
-    capture: BrandhubMove.of(new Coord(1, 0), new Coord(2, 0)),
+    capture: BrandhubMove.from(new Coord(1, 0), new Coord(2, 0)).get(),
     firstCaptured: new Coord(2, 1),
     otherPlayerPiece: new Coord(3, 1),
     stateReadyForJumpOver: stateReadyForCapture,
-    jumpOver: BrandhubMove.of(new Coord(1, 0), new Coord(1, 4)),
+    jumpOver: BrandhubMove.from(new Coord(1, 0), new Coord(1, 4)).get(),
 };
 DoTaflTests(brandhubEntries);

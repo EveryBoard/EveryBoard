@@ -37,7 +37,7 @@ describe('TaflPieceAndInfluenceMinimax', () => {
         ];
         const state: TaflState = new TaflState(board, 1);
         const node: TablutNode = new TablutNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
-        const expectedMove: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(0, 0));
+        const expectedMove: TablutMove = TablutMove.from(new Coord(1, 0), new Coord(0, 0)).get();
         for (let depth: number = 1; depth < 4; depth++) {
             const chosenMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level', maxDepth: depth });
             expect(chosenMove).toEqual(expectedMove);

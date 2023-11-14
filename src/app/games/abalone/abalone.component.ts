@@ -165,9 +165,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             }
             let theoritical: AbaloneMove;
             if (single) {
-                theoritical = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
+                theoritical = AbaloneMove.ofSingleCoord(firstPiece, dir);
             } else {
-                theoritical = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
+                theoritical = AbaloneMove.ofDoubleCoord(firstPiece, lastPiece, dir);
             }
             const isLegal: MGPFallible<AbaloneLegalityInformation> = this.rules.isLegal(theoritical, state);
             if (isLegal.isSuccess()) {
@@ -290,11 +290,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private async _chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
         const firstPiece: Coord = this.selecteds[0];
         if (this.selecteds.length === 1) {
-            const move: AbaloneMove = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
+            const move: AbaloneMove = AbaloneMove.ofSingleCoord(firstPiece, dir);
             return this.chooseMove(move);
         } else {
             const lastPiece: Coord = this.selecteds[this.selecteds.length - 1];
-            const move: AbaloneMove = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
+            const move: AbaloneMove = AbaloneMove.ofDoubleCoord(firstPiece, lastPiece, dir);
             return this.chooseMove(move);
         }
     }

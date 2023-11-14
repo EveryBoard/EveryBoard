@@ -14,6 +14,7 @@ import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
 import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { TaflConfig } from '../TaflConfig';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class TaflTestEntries<C extends TaflComponent<R, M>,
                              R extends TaflRules<M>,
@@ -23,7 +24,7 @@ export class TaflTestEntries<C extends TaflComponent<R, M>,
     gameName: string; // 'Tablut', 'Brandhub', etc
     secondPlayerPiece: Coord; // The coord of a piece belonging to Player.ONE
     validFirstCoord: Coord; // The coord of a piece belonging to Player.ZERO that could move this turn (in initialState)
-    moveProvider: (start: Coord, end: Coord) => M;
+    moveProvider: (start: Coord, end: Coord) => MGPFallible<M>;
     validSecondCoord: Coord; // The coord of an empty space that could be the landing coord of validFirstCoord
     diagonalSecondCoord: Coord; // An empty space coord in diagonal of validFirstCoord
     stateReadyForCapture: TaflState; // A state in which a capture is possible for current player
@@ -79,7 +80,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
                 // When moving your piece
-                const move: M = entries.moveProvider(entries.validFirstCoord, entries.validSecondCoord);
+                const move: M = entries.moveProvider(entries.validFirstCoord, entries.validSecondCoord).get();
 
                 // Then the move should be legal
                 const landingSpace: string = '#click_' + entries.validSecondCoord.x + '_' + entries.validSecondCoord.y;
@@ -163,7 +164,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             const firstTurnMoves: M[] = moveGenerator
                 .getListMoves(rules.getInitialNode(rulesConfig))
                 .map((move: TaflMove) => {
-                    return entries.moveProvider(move.getStart(), move.getEnd());
+                    return entries.moveProvider(move.getStart(), move.getEnd()).get();
                 });
             for (const move of firstTurnMoves) {
                 EncoderTestUtils.expectToBeBijective(encoder, move);
@@ -173,7 +174,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             // Given a state with a first move done
             const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
             await testUtils.expectClickSuccess('#click_' + playersCoord);
-            const move: M = entries.moveProvider(entries.validFirstCoord, entries.validSecondCoord);
+            const move: M = entries.moveProvider(entries.validFirstCoord, entries.validSecondCoord).get();
             const landingCoord: string = entries.validSecondCoord.x + '_' + entries.validSecondCoord.y;
             const landingSpace: string = '#click_' + landingCoord;
             await testUtils.expectMoveSuccess(landingSpace, move);
