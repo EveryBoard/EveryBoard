@@ -9,19 +9,21 @@ import { MoveGenerator } from 'src/app/jscaip/AI';
 import { TaflConfig } from './TaflConfig';
 
 @Debug.log
-export class TaflMoveGenerator<M extends TaflMove, S extends TaflState> extends MoveGenerator<M, S> {
+export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, TaflState> {
 
-    public constructor(private readonly rules: TaflRules<M, S>) {
+    public constructor(private readonly rules: TaflRules<M>) {
         super();
     }
-    public getListMoves(node: TaflNode<M, S>): M[] {
-        const state: S = node.gameState;
+
+    public getListMoves(node: TaflNode<M>): M[] {
+        const state: TaflState = node.gameState;
         const config: TaflConfig = node.getConfig();
         const currentPlayer: Player = state.getCurrentPlayer();
         const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state, config);
         return this.orderMoves(state, listMoves, config);
     }
-    public orderMoves(state: S, listMoves: M[], config: TaflConfig): M[] {
+
+    public orderMoves(state: TaflState, listMoves: M[], config: TaflConfig): M[] {
         const king: Coord = this.rules.getKingCoord(state).get();
         const invader: Player = this.rules.getInvader(config);
         if (state.getCurrentPlayer() === invader) { // Invader
@@ -43,4 +45,5 @@ export class TaflMoveGenerator<M extends TaflMove, S extends TaflState> extends 
         }
         return listMoves;
     }
+
 }

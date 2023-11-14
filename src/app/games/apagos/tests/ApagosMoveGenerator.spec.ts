@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
-import { ApagosNode } from '../ApagosRules';
+import { ApagosNode, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
 
 describe('ApagosMoveGenerator', () => {
@@ -13,7 +13,7 @@ describe('ApagosMoveGenerator', () => {
     });
     it('should have all 8 drop as possible move at first turn', () => {
         // Given initial node
-        const initialState: ApagosState = ApagosState.getInitialState();
+        const initialState: ApagosState = ApagosRules.get().getInitialState();
         const node: ApagosNode = new ApagosNode(initialState);
 
         // When listing the moves

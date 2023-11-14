@@ -290,7 +290,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1); // Need to be at least 1ms
-        if (testUtils.getWrapper() instanceof LocalGameWrapperComponent && chooseDefaultConfig) {
+        const canChooseConfig: boolean = testUtils.getWrapper() instanceof LocalGameWrapperComponent;
+        if (canChooseConfig && chooseDefaultConfig) {
             await testUtils.acceptDefaultConfig();
         }
         if (chooseDefaultConfig) {
@@ -501,6 +502,12 @@ export class TestUtils {
         expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
     }
 
+    public static expectToThrowAndLog(func: () => void, error: string): void {
+        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        expect(func).toThrowError('Assertion failure: ' + error);
+        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
+    }
+
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [
@@ -523,6 +530,7 @@ export class TestUtils {
             ],
         }).compileComponents();
     }
+
     public static async configureTestingModule(componentType: object,
                                                activatedRouteStub?: ActivatedRouteStub)
     : Promise<void>

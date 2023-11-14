@@ -123,7 +123,7 @@ describe('EpaminondasRules', () => {
 
     it('should forbid out of range move', () => {
         // Given any state
-        const state: EpaminondasState = EpaminondasState.getInitialState(config);
+        const state: EpaminondasState = EpaminondasRules.get().getInitialState(config);
 
         // When doing a move starting out of range
         const move: EpaminondasMove = new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT);

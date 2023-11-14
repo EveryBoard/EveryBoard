@@ -6,8 +6,6 @@ import { Rules } from '../Rules';
 import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { GameStatus } from '../GameStatus';
 import { JSONValue, Utils } from 'src/app/utils/utils';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
@@ -93,16 +91,6 @@ export class RulesUtils {
     {
         expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
     }
-
-    public static expectToThrowAndLog(func: () => void, error: string): void {
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-        const expectedErrorMessage: string = 'Assertion failure: ' + error;
-        expect(func)
-            .withContext('Excpected function to throw error "' + expectedErrorMessage + '"')
-            .toThrowError(expectedErrorMessage);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
-    }
-
     /**
      * @param ruler the rules of the game you need to debug
      * @param encodedMoves the encoded moves that caused the bug

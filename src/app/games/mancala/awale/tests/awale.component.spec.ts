@@ -19,7 +19,7 @@ describe('AwaleComponent', () => {
         gameName: 'Awale',
         moveGenerator: new AwaleMoveGenerator(),
         distribution: {
-            state: MancalaState.getInitialState(config),
+            state: AwaleRules.get().getInitialState(config),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
@@ -82,7 +82,7 @@ describe('AwaleComponent', () => {
                 ...config,
                 passByPlayerStore: true,
             };
-            const state: MancalaState = MancalaState.getInitialState(customConfig);
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, undefined, undefined, customConfig);
 
             // When doing simple distribution ending in store
@@ -99,7 +99,7 @@ describe('AwaleComponent', () => {
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             };
-            const state: MancalaState = MancalaState.getInitialState(customConfig);
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, undefined, undefined, customConfig);
             await testUtils.expectClickSuccess('#click_3_1');
             tick(1400);

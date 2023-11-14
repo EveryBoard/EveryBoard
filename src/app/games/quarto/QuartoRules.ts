@@ -16,6 +16,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -136,9 +137,12 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         return QuartoRules.singleton.get();
     }
-    private constructor() {
-        super(QuartoState);
+
+    public getInitialState(): QuartoState {
+        const board: QuartoPiece[][] = TableUtils.create(4, 4, QuartoPiece.EMPTY);
+        return new QuartoState(board, 0, QuartoPiece.AAAA);
     }
+
     public static readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals
         new QuartoLine(new Coord(0, 0), Direction.DOWN),

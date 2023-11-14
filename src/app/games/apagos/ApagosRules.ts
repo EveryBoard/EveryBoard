@@ -17,6 +17,8 @@ export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
 export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 
+    public static PIECES_PER_PLAYER: number = 10;
+
     private static singleton: MGPOptional<ApagosRules> = MGPOptional.empty();
 
     public static get(): ApagosRules {
@@ -25,8 +27,13 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         }
         return ApagosRules.singleton.get();
     }
-    private constructor() {
-        super(ApagosState);
+
+    public getInitialState(): ApagosState {
+        return ApagosState.fromRepresentation(0, [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [7, 5, 3, 1],
+        ], ApagosRules.PIECES_PER_PLAYER, ApagosRules.PIECES_PER_PLAYER);
     }
 
     public applyLegalMove(move: ApagosMove, state: ApagosState, _config: RulesConfig, _info: void): ApagosState {

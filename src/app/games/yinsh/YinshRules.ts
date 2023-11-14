@@ -30,13 +30,31 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         }
         return YinshRules.singleton.get();
     }
-    private constructor() {
-        super(YinshState);
+
+    public getInitialState(): YinshState {
+        const _: YinshPiece = YinshPiece.EMPTY;
+        const N: YinshPiece = YinshPiece.UNREACHABLE;
+        const board: Table<YinshPiece> = [
+            [N, N, N, N, N, N, _, _, _, _, N],
+            [N, N, N, N, _, _, _, _, _, _, _],
+            [N, N, N, _, _, _, _, _, _, _, _],
+            [N, N, _, _, _, _, _, _, _, _, _],
+            [N, _, _, _, _, _, _, _, _, _, _],
+            [N, _, _, _, _, _, _, _, _, _, N],
+            [_, _, _, _, _, _, _, _, _, _, N],
+            [_, _, _, _, _, _, _, _, _, N, N],
+            [_, _, _, _, _, _, _, _, N, N, N],
+            [_, _, _, _, _, _, _, N, N, N, N],
+            [N, _, _, _, _, N, N, N, N, N, N],
+        ];
+        return new YinshState(board, [5, 5], 0);
     }
+
     public applyLegalMove(_move: YinshMove, _state: YinshState, _config: RulesConfig, info: YinshState): YinshState {
         const stateWithoutTurn: YinshState = info;
         return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn + 1);
     }
+
     public applyCaptures(captures: ReadonlyArray<YinshCapture>, state: YinshState): YinshState {
         let computedState: YinshState = state;
         captures.forEach((capture: YinshCapture) => {
@@ -44,10 +62,12 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         });
         return computedState;
     }
+
     public applyCapture(capture: YinshCapture, state: YinshState): YinshState {
         const board: Table<YinshPiece> = this.applyCaptureWithoutTakingRing(state, capture);
         return this.takeRing(new YinshState(board, state.sideRings, state.turn), capture.ringTaken.get());
     }
+
     public takeRing(state: YinshState, ringTaken: Coord): YinshState {
         const player: number = state.getCurrentPlayer().value;
         const board: Table<YinshPiece> = state.setAt(ringTaken, YinshPiece.EMPTY).board;
@@ -55,6 +75,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         sideRings[player] += 1;
         return new YinshState(board, sideRings, state.turn);
     }
+
     public applyCaptureWithoutTakingRing(state: YinshState, capture: YinshCapture): Table<YinshPiece> {
         // Take all markers
         capture.forEach((coord: Coord) => {
@@ -62,6 +83,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         });
         return state.board;
     }
+
     public ringSelectionValidity(state: YinshState, coord: Coord): MGPValidation {
         const player: number = state.getCurrentPlayer().value;
         if (state.getPieceAt(coord) === YinshPiece.RINGS[player]) {
@@ -70,6 +92,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
             return MGPValidation.failure(YinshFailure.CAPTURE_SHOULD_TAKE_RING());
         }
     }
+
     public applyRingMoveAndFlip(start: Coord, end: Coord, state: YinshState): YinshState {
         const player: number = state.getCurrentPlayer().value;
         // Move ring from start (only the marker remains) to
@@ -87,6 +110,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         }
         return newState;
     }
+
     public isLegal(move: YinshMove, state: YinshState): MGPFallible<YinshLegalityInformation> {
         if (move.isInitialPlacement()) {
             return this.initialPlacementValidity(state, move.start);
@@ -122,6 +146,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
 
         return MGPFallible.success(stateAfterFinalCaptures);
     }
+
     public initialPlacementValidity(state: YinshState, coord: Coord): MGPFallible<YinshLegalityInformation> {
         if (state.isInitialPlacementPhase() !== true) {
             return MGPFallible.failure(YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE());
@@ -136,6 +161,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         const newState: YinshState = new YinshState(newBoard, sideRings, state.turn);
         return MGPFallible.success(newState);
     }
+
     public moveStartValidity(state: YinshState, start: Coord): MGPValidation {
         const player: number = state.getCurrentPlayer().value;
         // Start coord has to contain a ring of the current player
@@ -144,6 +170,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         }
         return MGPValidation.SUCCESS;
     }
+
     public moveValidity(state: YinshState, start: Coord, end: Coord): MGPValidation {
         const moveStartValidity: MGPValidation = this.moveStartValidity(state, start);
         if (moveStartValidity.isFailure()) {
@@ -177,6 +204,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         }
         return MGPValidation.SUCCESS;
     }
+
     private capturesValidity(state: YinshState, captures: ReadonlyArray<YinshCapture>)
     : MGPValidation
     {
@@ -190,6 +218,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         }
         return MGPValidation.SUCCESS;
     }
+
     public captureValidity(state: YinshState, capture: YinshCapture): MGPValidation {
         const player: number = state.getCurrentPlayer().value;
         // There should be exactly 5 consecutive spaces, on the same line (invariants of YinshCapture)
@@ -205,6 +234,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         }
         return MGPValidation.SUCCESS;
     }
+
     private noMoreCapturesValidity(state: YinshState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const linePortions: ReadonlyArray<{ start: Coord, end: Coord, dir: HexaDirection}> =
@@ -215,6 +245,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
             return MGPValidation.failure(YinshFailure.MISSING_CAPTURES());
         }
     }
+
     private getLinePortionsWithAtLeastFivePiecesOfPlayer(state: YinshState, player: Player)
     : ReadonlyArray<{ start: Coord, end: Coord, dir: HexaDirection}>
     {
@@ -228,6 +259,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         });
         return linePortions;
     }
+
     private getLinePortionWithAtLeastFivePiecesOfPlayer(state: YinshState, player: Player, line: HexaLine)
     : MGPOptional<{ start: Coord, end: Coord, dir: HexaDirection}>
     {
@@ -256,6 +288,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         }
         return MGPOptional.empty();
     }
+
     public getPossibleCaptures(state: YinshState): YinshCapture[] {
         const player: Player = state.getCurrentPlayer();
         const captures: YinshCapture[] = [];
@@ -269,6 +302,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
             });
         return captures;
     }
+
     public getRingTargets(state: YinshState, start: Coord): Coord[] {
         const targets: Coord[] = [];
         for (const dir of HexaDirection.factory.all) {
@@ -292,6 +326,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         }
         return targets;
     }
+
     public getGameStatus(node: YinshNode): GameStatus {
         if (node.gameState.isInitialPlacementPhase()) {
             return GameStatus.ONGOING;
@@ -304,4 +339,5 @@ export class YinshRules extends Rules<YinshMove, YinshState, RulesConfig, YinshL
         }
         return GameStatus.ONGOING;
     }
+
 }

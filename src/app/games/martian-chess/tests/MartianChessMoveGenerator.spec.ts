@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MartianChessMove } from '../MartianChessMove';
-import { MartianChessNode } from '../MartianChessRules';
+import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
@@ -28,7 +28,7 @@ describe('MartianChessMoveGenerator', () => {
     });
     it('should includes all moves at first turn (but no call the clock)', () => {
         // Given the initial state
-        const state: MartianChessState = MartianChessState.getInitialState();
+        const state: MartianChessState = MartianChessRules.get().getInitialState();
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When listing the moves

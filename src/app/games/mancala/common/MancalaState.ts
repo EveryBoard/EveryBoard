@@ -1,13 +1,7 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { MancalaConfig } from './MancalaConfig';
 
 export class MancalaState extends GameStateWithTable<number> {
-
-    public static getInitialState(config: MancalaConfig): MancalaState {
-        const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
-        return new MancalaState(board, 0, [0, 0]);
-    }
 
     public constructor(b: Table<number>,
                        turn: number,

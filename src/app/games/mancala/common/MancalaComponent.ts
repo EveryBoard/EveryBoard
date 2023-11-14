@@ -57,11 +57,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public override getViewBox(): string {
         const left: number = - this.STROKE_WIDTH / 2;
         const up: number = - this.STROKE_WIDTH / 2;
-        const width: number = this.getWidth() + this.STROKE_WIDTH;
+        const width: number = this.getViewBoxWidth() + this.STROKE_WIDTH;
         const height: number = (2 * this.SPACE_SIZE) + 50;
         return left + ' ' + up + ' ' + width + ' ' + height;
     }
-    public getWidth(): number {
+    public getViewBoxWidth(): number {
         return 60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE);
     }
     public override async showLastMove(move: MancalaMove): Promise<void> {

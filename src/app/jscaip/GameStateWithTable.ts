@@ -90,4 +90,5 @@ export abstract class GameStateWithTable<P> extends GameState {
         }
         return linedUpElements.values();
     }
+
 }

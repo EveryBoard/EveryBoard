@@ -1,9 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement, SimpleChanges } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { LodestoneNode } from 'src/app/games/lodestone/LodestoneRules';
-import { LodestoneState } from 'src/app/games/lodestone/LodestoneState';
 import { P4Config, P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
+import { LodestoneNode, LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { AbstractRules } from 'src/app/jscaip/Rules';
@@ -33,7 +32,7 @@ describe('DemoCardComponent', () => {
 
     it('should display the game interactively from the point of view the current player', fakeAsync(async() => {
         // Given a demo component
-        const board: Table<PlayerOrNone> = P4State.getInitialState(config).board; // dummy board
+        const board: Table<PlayerOrNone> = P4Rules.get().getInitialState(config).board; // dummy board
 
         // When displaying it for a given game
         loadNode({
@@ -59,7 +58,7 @@ describe('DemoCardComponent', () => {
         // When displaying it for a game that has intermediary clicks
         loadNode({
             name: 'Lodestone',
-            node: new LodestoneNode(LodestoneState.getInitialState()),
+            node: new LodestoneNode(LodestoneRules.get().getInitialState()),
             click: MGPOptional.of('#lodestone_push_orthogonal'),
         });
         // Then it should have performed a click
@@ -70,7 +69,7 @@ describe('DemoCardComponent', () => {
         // Given a demo component displayed for a game
         loadNode({
             name: 'P4',
-            node: new GameNode(P4State.getInitialState(config), undefined, undefined, MGPOptional.of(config)),
+            node: new GameNode(P4Rules.get().getInitialState(config), undefined, undefined, MGPOptional.of(config)),
             click: MGPOptional.empty(),
         });
         const rules: AbstractRules = testUtils.getComponent().gameComponent.rules;
@@ -95,7 +94,7 @@ describe('DemoCardComponent', () => {
         // Given a component already initialized with one given set of infos
         loadNode({
             name: 'P4',
-            node: new GameNode(P4State.getInitialState(config), undefined, undefined, MGPOptional.of(config)),
+            node: new GameNode(P4Rules.get().getInitialState(config), undefined, undefined, MGPOptional.of(config)),
             click: MGPOptional.empty(),
         });
         testUtils.expectElementNotToExist('.player0-fill');
@@ -121,7 +120,7 @@ describe('DemoCardComponent', () => {
             const defaultRulesConfig: RulesConfig = { mais_quelles_belles_chaussettes: 42 };
             loadNode({
                 name: 'P4',
-                node: new P4Node(P4State.getInitialState(config)),
+                node: new P4Node(P4Rules.get().getInitialState(config)),
                 click: MGPOptional.empty(),
             });
 

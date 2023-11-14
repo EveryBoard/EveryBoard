@@ -5,7 +5,7 @@ import { GoGroupDatas } from 'src/app/games/go/GoGroupsDatas';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('GoGroupDatas', () => {
 
@@ -22,7 +22,7 @@ describe('GoGroupDatas', () => {
                                                      [coord, coord],
                                                      [],
                                                      []);
-        RulesUtils.expectToThrowAndLog(
+        TestUtils.expectToThrowAndLog(
             () => group.getWrapper(),
             `Can't call getWrapper on non-mono-wrapped group`,
         );

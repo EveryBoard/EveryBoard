@@ -55,8 +55,13 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         return true;
     }
 
+    public static getInitialState(config: MancalaConfig): MancalaState {
+        const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
+        return new MancalaState(board, 0, [0, 0]);
+    }
+
     protected constructor() {
-        super(MancalaState);
+        super();
     }
 
     public isLegal(move: MancalaMove, state: MancalaState, config: MancalaConfig): MGPValidation {
@@ -84,6 +89,10 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
             }
         }
         return MGPValidation.SUCCESS;
+    }
+
+    public getInitialState(config: MancalaConfig): MancalaState {
+        return MancalaRules.getInitialState(config);
     }
 
     /**

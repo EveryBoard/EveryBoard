@@ -2,8 +2,7 @@
 import { defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
 import { PenteMove } from '../PenteMove';
 import { PenteMoveGenerator } from '../PenteMoveGenerator';
-import { PenteNode } from '../PenteRules';
-import { PenteState } from '../PenteState';
+import { PenteNode, PenteRules } from '../PenteRules';
 
 describe('PenteMoveGenerator', () => {
 
@@ -14,7 +13,7 @@ describe('PenteMoveGenerator', () => {
     });
     it('should propose exactly 360 moves at first turn', () => {
         // Given the initial state
-        const node: PenteNode = new PenteNode(PenteState.getInitialState(defaultGobanConfig));
+        const node: PenteNode = new PenteNode(PenteRules.get().getInitialState(defaultGobanConfig));
 
         // When listing the moves
         const moves: PenteMove[] = moveGenerator.getListMoves(node);

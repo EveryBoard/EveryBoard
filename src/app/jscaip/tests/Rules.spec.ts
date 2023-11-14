@@ -11,16 +11,13 @@ import { RulesUtils } from './RulesUtils.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesConfig } from '../RulesConfigUtil';
 
-class MyAbstractState extends GameStateWithTable<number> {
+class AbstractState extends GameStateWithTable<number> {
 
-    public static getInitialState(): MyAbstractState {
-        return new MyAbstractState([[]], 0);
-    }
 }
 
-class AbstractNode extends GameNode<P4Move, MyAbstractState> {}
+class AbstractNode extends GameNode<P4Move, AbstractState> {}
 
-class AbstractRules extends Rules<P4Move, MyAbstractState> {
+class AbstractRules extends Rules<P4Move, AbstractState> {
 
     private static singleton: MGPOptional<AbstractRules> = MGPOptional.empty();
 
@@ -30,19 +27,23 @@ class AbstractRules extends Rules<P4Move, MyAbstractState> {
         }
         return AbstractRules.singleton.get();
     }
+
     private constructor() {
-        super(MyAbstractState);
+        super();
     }
-    public applyLegalMove(move: P4Move, state: MyAbstractState, _config: RulesConfig, _legality: void)
-    : MyAbstractState
-    {
+
+    public getInitialState(_config: RulesConfig): AbstractState {
+        return new AbstractState([[]], 0);
+    }
+
+    public applyLegalMove(move: P4Move, state: AbstractState, _config: RulesConfig, _legality: void): AbstractState {
         const board: readonly number[] = state.board[0];
-        return new MyAbstractState([board.concat([move.x])], state.turn + 1);
+        return new AbstractState([board.concat([move.x])], state.turn + 1);
     }
-    public isLegal(move: P4Move, state: MyAbstractState): MGPValidation {
+    public isLegal(_move: P4Move, _state: AbstractState): MGPValidation {
         return MGPValidation.SUCCESS;
     }
-    public getGameStatus(node: AbstractNode): GameStatus {
+    public getGameStatus(_node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;
     }
 }
@@ -68,15 +69,15 @@ describe('Rules', () => {
     });
     it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
         // Given an initial list of encoded moves and an initial state
-        const initialState: MyAbstractState = MyAbstractState.getInitialState();
+        const initialState: AbstractState = AbstractRules.get().getInitialState({});
         const moveValues: number[] = [0, 1, 2, 3];
         const encodedMoveList: JSONValue[] = moveValues.map((n: number) => P4Move.encoder.encode(P4Move.of(n)));
 
         // When calling applyMoves
-        const state: MyAbstractState = RulesUtils.applyMoves(rules,
-                                                             encodedMoveList,
-                                                             initialState,
-                                                             P4Move.encoder.decode);
+        const state: AbstractState = RulesUtils.applyMoves(rules,
+                                                           encodedMoveList,
+                                                           initialState,
+                                                           P4Move.encoder.decode);
 
         // Then last move should be the last one encoded and state should be adapted
         expect(state.board).toEqual([moveValues]);

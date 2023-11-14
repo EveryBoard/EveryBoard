@@ -12,6 +12,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 
@@ -28,9 +29,19 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, RulesCo
         }
         return EncapsuleRules.singleton.get();
     }
-    private constructor() {
-        super(EncapsuleState);
+
+    public getInitialState(): EncapsuleState {
+        const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+        const startingBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
+        const initialPieces: EncapsulePiece[] = [
+            EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
+            EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,
+            EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.SMALL_DARK,
+            EncapsulePiece.SMALL_DARK, EncapsulePiece.SMALL_LIGHT, EncapsulePiece.SMALL_LIGHT,
+        ];
+        return new EncapsuleState(startingBoard, 0, initialPieces);
     }
+
     public static readonly LINES: Coord[][] = [
         [new Coord(0, 0), new Coord(0, 1), new Coord(0, 2)],
         [new Coord(1, 0), new Coord(1, 1), new Coord(1, 2)],

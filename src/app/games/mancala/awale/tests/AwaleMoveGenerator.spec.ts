@@ -52,7 +52,7 @@ describe('AwaleMoveGenerator', () => {
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             };
-            const state: MancalaState = MancalaState.getInitialState(customConfig);
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             const node: MancalaNode = getMancalaNode(state, customConfig);
 

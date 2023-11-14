@@ -20,6 +20,6 @@ describe('ReversiMinimax', () => {
     it('should not throw at first choice', () => {
         const node: ReversiNode = rules.getInitialNode();
         const bestMove: ReversiMove = minimax.chooseNextMove(node, minimaxOptions);
-        expect(rules.isLegal(bestMove, ReversiState.getInitialState()).isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, ReversiRules.get().getInitialState()).isSuccess()).toBeTrue();
     });
 });

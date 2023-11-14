@@ -11,22 +11,21 @@ import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
 import { TaflConfig } from './TaflConfig';
-import { Type } from '@angular/core';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class TaflNode<M extends TaflMove, S extends TaflState> extends GameNode<M, S, TaflConfig> {}
+export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState, TaflConfig> {}
 
-export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S, TaflConfig> {
+export abstract class TaflRules<M extends TaflMove> extends Rules<M, TaflState, TaflConfig> {
 
-    protected constructor(stateType: Type<S>,
-                          public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
+    protected constructor(public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(stateType);
+        super();
     }
-    public isLegal(move: TaflMove, state: S, config: TaflConfig): MGPValidation {
+
+    public isLegal(move: TaflMove, state: TaflState, config: TaflConfig): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state, config);
         if (validity.isFailure()) {
@@ -34,7 +33,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPValidation.SUCCESS;
     }
-    private getMoveValidity(player: Player, move: TaflMove, state: S, config: TaflConfig): MGPValidation {
+
+    private getMoveValidity(player: Player, move: TaflMove, state: TaflState, config: TaflConfig): MGPValidation {
         const owner: RelativePlayer = state.getRelativeOwner(player, move.getStart());
         if (owner === RelativePlayer.NONE) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -66,13 +66,15 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPValidation.SUCCESS;
     }
-    public isThrone(state: S, coord: Coord): boolean {
+
+    public isThrone(state: TaflState, coord: Coord): boolean {
         if (this.isExternalThrone(state, coord)) {
             return true;
         } else {
             return state.isCentralThrone(coord);
         }
     }
+
     public isExternalThrone(state: TaflState, coord: Coord): boolean {
         const max: number = state.getSize() - 1;
         if (coord.x === 0) {
@@ -82,7 +84,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return false;
     }
-    public tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, state: S, config: TaflConfig)
+
+    public tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, state: TaflState, config: TaflConfig)
     : MGPOptional<Coord>
     {
         /* landingPawn is the piece that just moved
@@ -106,7 +109,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return this.capturePawn(player, landingPawn, d, state);
     }
-    private captureKing(player: Player, landingPiece: Coord, d: Orthogonal, state: S, config: TaflConfig)
+
+    private captureKing(player: Player, landingPiece: Coord, d: Orthogonal, state: TaflState, config: TaflConfig)
     : MGPOptional<Coord>
     {
         const kingCoord: Coord = landingPiece.getNext(d);
@@ -128,7 +132,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
-    public getSurroundings(c: Coord, d: Orthogonal, player: Player, state: S)
+
+    public getSurroundings(c: Coord, d: Orthogonal, player: Player, state: TaflState)
     : { backCoord: Coord, back: RelativePlayer, backInRange: boolean,
         leftCoord: Coord, left: RelativePlayer,
         rightCoord: Coord, right: RelativePlayer }
@@ -157,6 +162,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             rightCoord, right,
         };
     }
+
     private captureKingAgainstTheWall(left: RelativePlayer,
                                       right: RelativePlayer,
                                       kingCoord: Coord,
@@ -172,6 +178,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         // those were the only two way to capture against the border
         return MGPOptional.empty();
     }
+
     private captureKingAgainstThrone(state: TaflState,
                                      backCoord: Coord,
                                      kingCoord: Coord,
@@ -194,7 +201,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
-    private capturePawn(player: Player, coord: Coord, direction: Orthogonal, state: S): MGPOptional<Coord> {
+
+    private capturePawn(player: Player, coord: Coord, direction: Orthogonal, state: TaflState): MGPOptional<Coord> {
         /**
          * the captured pawn is on the next coord after 'coord' (in direction 'direction')
          * coord partipate in the capture
@@ -238,7 +246,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                       ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
         return MGPOptional.empty();
     }
-    private captureKingWithAtLeastASandwich(state: S,
+
+    private captureKingWithAtLeastASandwich(state: TaflState,
                                             kingCoord: Coord,
                                             left: RelativePlayer,
                                             leftCoord: Coord,
@@ -262,11 +271,13 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
-    private kingTouchCentralThrone(state: S, kingCoord: Coord): boolean {
+
+    private kingTouchCentralThrone(state: TaflState, kingCoord: Coord): boolean {
         const centralThrone: Coord = state.getCentralThrone();
         return kingCoord.getOrthogonalDistance(centralThrone) <= 1;
     }
-    public applyLegalMove(move: TaflMove, state: S, config: TaflConfig, _info: void): S {
+
+    public applyLegalMove(move: TaflMove, state: TaflState, config: TaflConfig, _info: void): TaflState {
         const turn: number = state.turn;
 
         const board: TaflPawn[][] = state.getCopiedBoard();
@@ -281,10 +292,11 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                 board[captured.get().y][captured.get().x] = TaflPawn.UNOCCUPIED;
             }
         }
-        return state.of(board, turn + 1);
+        return new TaflState(board, turn + 1);
     }
-    public getGameStatus(node: TaflNode<M, S>): GameStatus {
-        const state: S = node.gameState;
+
+    public getGameStatus(node: TaflNode<M>): GameStatus {
+        const state: TaflState = node.gameState;
         const config: TaflConfig = node.getConfig();
 
         const winner: MGPOptional<Player> = this.getWinner(state, config);
@@ -293,7 +305,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return GameStatus.ONGOING;
     }
-    public getWinner(state: S, config: TaflConfig): MGPOptional<Player> {
+
+    public getWinner(state: TaflState, config: TaflConfig): MGPOptional<Player> {
         const optionalKingCoord: MGPOptional<Coord> = this.getKingCoord(state);
         if (optionalKingCoord.isAbsent()) {
             Debug.display('TaflRules', 'getWinner', 'The king is dead, victory to invader');
@@ -317,7 +330,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         Debug.display('TaflRules', 'getWinner', 'no victory');
         return MGPOptional.empty();
     }
-    public getKingCoord(state: S): MGPOptional<Coord> {
+
+    public getKingCoord(state: TaflState): MGPOptional<Coord> {
         const size: number = state.getSize();
         for (let y: number = 0; y < size; y++) {
             for (let x: number = 0; x < size; x++) {
@@ -328,16 +342,20 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
+
     public getInvader(config: TaflConfig): Player {
         return config.invaderStarts ? Player.ZERO : Player.ONE;
     }
+
     public getDefender(config: TaflConfig): Player {
         return this.getInvader(config).getOpponent();
     }
-    public isPlayerImmobilized(player: Player, state: S, config: TaflConfig): boolean {
+
+    public isPlayerImmobilized(player: Player, state: TaflState, config: TaflConfig): boolean {
         return this.getPlayerListMoves(player, state, config).length === 0;
     }
-    public getPlayerListMoves(player: Player, state: S, config: TaflConfig): M[] {
+
+    public getPlayerListMoves(player: Player, state: TaflState, config: TaflConfig): M[] {
         const listMoves: M[] = [];
         const listPawns: Coord[] = this.getPlayerListPawns(player, state);
 
@@ -350,7 +368,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return listMoves;
     }
-    public getPlayerListPawns(player: Player, state: S): Coord[] {
+
+    public getPlayerListPawns(player: Player, state: TaflState): Coord[] {
         const size: number = state.getSize();
         const listPawn: Coord[] = [];
         for (let y: number = 0; y < size; y++) {
@@ -365,7 +384,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return listPawn;
     }
-    public getPossibleDestinations(start: Coord, state: S, config: TaflConfig): Coord[] {
+
+    public getPossibleDestinations(start: Coord, state: TaflState, config: TaflConfig): Coord[] {
         // search the possible destinations for the pawn at "start"
         const destinations: Coord[] = [];
         let foundDestination: Coord;

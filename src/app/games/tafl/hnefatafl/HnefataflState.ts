@@ -3,9 +3,9 @@ import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
 import { TaflConfig } from '../TaflConfig';
 
-export class HnefataflState extends TaflState {
+export class TaflState extends TaflState {
 
-    public static getInitialState(config: TaflConfig): HnefataflState {
+    public static getInitialState(config: TaflConfig): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
@@ -28,9 +28,9 @@ export class HnefataflState extends TaflState {
             [_, _, _, _, _, I, _, _, _, _, _],
             [_, _, _, I, I, I, I, I, _, _, _],
         ];
-        return new HnefataflState(board, 0);
+        return new TaflState(board, 0);
     }
     public of(board: Table<TaflPawn>, turn: number): this {
-        return new HnefataflState(board, turn) as this;
+        return new TaflState(board, turn) as this;
     }
 }

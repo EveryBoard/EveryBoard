@@ -10,6 +10,7 @@ import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
 import { MancalaRules } from '../MancalaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 export class MancalaRulesTestEntries {
     gameName: string; // 'Awale', 'Kalah', etc
@@ -26,7 +27,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
         it('should allow simple move', () => {
             // Given any board
-            const state: MancalaState = MancalaState.getInitialState(defaultConfig);
+            const state: MancalaState = MancalaRules.getInitialState(defaultConfig);
             // When doing a simple move
             // Then the seed should be distributed
             const expectedBoard: Table<number> = [
@@ -123,14 +124,14 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             };
-            const state: MancalaState = MancalaState.getInitialState(customConfig);
+            const state: MancalaState = MancalaRules.getInitialState(customConfig);
 
             // When attempting a store-ending single distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
             // Then the move should be legal and the store should contain one (so, the score)
             const reason: string = 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE';
-            RulesUtils.expectToThrowAndLog(
+            TestUtils.expectToThrowAndLog(
                 () => RulesUtils.expectMoveFailure(entries.rules, state, move, reason, customConfig),
                 reason,
             );

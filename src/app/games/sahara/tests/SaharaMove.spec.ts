@@ -5,9 +5,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaFailure } from '../SaharaFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('SaharaMoves', () => {
 
@@ -23,7 +23,7 @@ describe('SaharaMoves', () => {
             SaharaMove.from(start, end);
         }
         const error: string = 'Move must start inside the board not at '+ start.toString() + '.';
-        RulesUtils.expectToThrowAndLog(createMoveWithOutOfRangeStart, error);
+        TestUtils.expectToThrowAndLog(createMoveWithOutOfRangeStart, error);
     });
     it('should throw error when move end outside the board', () => {
         const end: Coord = new Coord(-1, 0);
@@ -32,7 +32,7 @@ describe('SaharaMoves', () => {
             SaharaMove.from(start, end);
         }
         const error: string = 'Move must end inside the board not at '+ end.toString() + '.';
-        RulesUtils.expectToThrowAndLog(createMoveWithOutOfRangeEnd, error);
+        TestUtils.expectToThrowAndLog(createMoveWithOutOfRangeEnd, error);
     });
     it('should throw error when start and end are too far away', () => {
         const start: Coord = new Coord(0, 0);

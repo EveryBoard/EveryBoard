@@ -3,7 +3,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { HiveMove } from '../HiveMove';
 import { HiveMoveGenerator } from '../HiveMoveGenerator';
 import { HivePiece } from '../HivePiece';
-import { HiveNode } from '../HiveRules';
+import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 
 describe('HiveMoveGenerator', () => {
@@ -21,7 +21,7 @@ describe('HiveMoveGenerator', () => {
     });
     it('should propose 5 moves at first turn', () => {
         // Given the initial state
-        const state: HiveState = HiveState.getInitialState();
+        const state: HiveState = HiveRules.get().getInitialState();
         const node: HiveNode = new HiveNode(state);
 
         // When listing the moves

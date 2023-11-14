@@ -1,14 +1,15 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { TablutMove } from './TablutMove';
-import { TablutState } from './TablutState';
-import { TaflRules } from '../TaflRules';
+import { TaflNode, TaflRules } from '../TaflRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { TaflPawn } from '../TaflPawn';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { TaflState } from '../TaflState';
 
-export class TablutNode extends GameNode<TablutMove, TablutState, TaflConfig> {}
+export class TablutNode extends TaflNode<TablutMove> {}
 
-export class TablutRules extends TaflRules<TablutMove, TablutState> {
+export class TablutRules extends TaflRules<TablutMove> {
 
     private static singleton: MGPOptional<TablutRules> = MGPOptional.empty();
 
@@ -39,7 +40,31 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
     }
 
     private constructor() {
-        super(TablutState, TablutMove.from);
+        super(TablutMove.from);
+    }
+
+    public getInitialState(config: TaflConfig): TaflState {
+        const _: TaflPawn = TaflPawn.UNOCCUPIED;
+        let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+        let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
+        let K: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+        if (config.invaderStarts === false) {
+            I = TaflPawn.PLAYER_ONE_PAWN;
+            D = TaflPawn.PLAYER_ZERO_PAWN;
+            K = TaflPawn.PLAYER_ZERO_KING;
+        }
+        const board: Table<TaflPawn> = [
+            [_, _, _, I, I, I, _, _, _],
+            [_, _, _, _, I, _, _, _, _],
+            [_, _, _, _, D, _, _, _, _],
+            [I, _, _, _, D, _, _, _, I],
+            [I, I, D, D, K, D, D, I, I],
+            [I, _, _, _, D, _, _, _, I],
+            [_, _, _, _, D, _, _, _, _],
+            [_, _, _, _, I, _, _, _, _],
+            [_, _, _, I, I, I, _, _, _],
+        ];
+        return new TaflState(board, 0);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {

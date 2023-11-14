@@ -14,6 +14,7 @@ import { PenteState } from './PenteState';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class PenteNode extends GameNode<PenteMove, PenteState, GobanConfig> {}
 
@@ -33,8 +34,15 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         }
         return PenteRules.singleton.get();
     }
-    private constructor() {
-        super(PenteState);
+
+    public getInitialState(config: GobanConfig): PenteState {
+        const board: PlayerOrNone[][] = TableUtils.create(config.width,
+                                                          config.height,
+                                                          PlayerOrNone.NONE);
+        const cx: number = Math.floor(config.width / 2);
+        const cy: number = Math.floor(config.height / 2);
+        board[cy][cx] = PlayerOrNone.ONE;
+        return new PenteState(board, [0, 0], 0);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<GobanConfig> {
@@ -50,6 +58,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
             return MGPValidation.SUCCESS;
         }
     }
+
     public applyLegalMove(move: PenteMove, state: PenteState, _config: RulesConfig, _info: void): PenteState {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
@@ -62,6 +71,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         captures[player.value] += capturedPieces.length;
         return new PenteState(newBoard, captures, state.turn+1);
     }
+
     public getCaptures(coord: Coord, state: PenteState, player: Player): Coord[] {
         const opponent: Player = player.getOpponent();
         const captures: Coord[] = [];
@@ -79,6 +89,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         }
         return captures;
     }
+
     public getGameStatus(node: PenteNode): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
@@ -95,6 +106,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
             return GameStatus.DRAW;
         }
     }
+
     private stillHaveEmptySquare(state: PenteState): boolean {
         const width: number = state.board[0].length;
         const height: number = state.board.length;
@@ -107,4 +119,5 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         }
         return false;
     }
+
 }

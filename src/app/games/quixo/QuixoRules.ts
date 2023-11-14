@@ -17,6 +17,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState, QuixoConfig> {}
 
@@ -40,21 +41,6 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
                 width: MGPValidators.range(1, 99),
                 height: MGPValidators.range(1, 99),
             });
-
-    public static get(): QuixoRules {
-        if (QuixoRules.singleton.isAbsent()) {
-            QuixoRules.singleton = MGPOptional.of(new QuixoRules());
-        }
-        return QuixoRules.singleton.get();
-    }
-
-    private constructor() {
-        super(QuixoState);
-    }
-
-    public override getRulesConfigDescription(): RulesConfigDescription<QuixoConfig> {
-        return QuixoRules.RULES_CONFIG_DESCRIPTION;
-    }
 
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 5);
@@ -87,15 +73,6 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
             }
         }
         return horizontalCenterCoords;
-    }
-
-    public getPossibleDirections(state: QuixoState, coord: Coord): Orthogonal[] {
-        const possibleDirections: Orthogonal[] = [];
-        if (coord.x !== 0) possibleDirections.push(Orthogonal.LEFT);
-        if (coord.y !== 0) possibleDirections.push(Orthogonal.UP);
-        if (coord.x !== (state.getWidth() - 1)) possibleDirections.push(Orthogonal.RIGHT);
-        if (coord.y !== (state.getHeight() - 1)) possibleDirections.push(Orthogonal.DOWN);
-        return possibleDirections;
     }
 
     public static getLinesSums(state: QuixoState): {[player: number]: {[lineType: string]: MGPMap<number, number>}} {
@@ -141,6 +118,33 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
         linesScores = linesScores.concat(playerLinesInfo.ascendingDiagonal.listValues());
         linesScores = linesScores.concat(playerLinesInfo.descendingDiagonal.listValues());
         return Math.max(...linesScores);
+    }
+
+    public static get(): QuixoRules {
+        if (QuixoRules.singleton.isAbsent()) {
+            QuixoRules.singleton = MGPOptional.of(new QuixoRules());
+        }
+        return QuixoRules.singleton.get();
+    }
+
+    public override getRulesConfigDescription(): RulesConfigDescription<QuixoConfig> {
+        return QuixoRules.RULES_CONFIG_DESCRIPTION;
+    }
+
+    public getInitialState(config: QuixoConfig): QuixoState {
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.width,
+                                                                 config.height,
+                                                                 PlayerOrNone.NONE);
+        return new QuixoState(initialBoard, 0);
+    }
+
+    public getPossibleDirections(state: QuixoState, coord: Coord): Orthogonal[] {
+        const possibleDirections: Orthogonal[] = [];
+        if (coord.x !== 0) possibleDirections.push(Orthogonal.LEFT);
+        if (coord.y !== 0) possibleDirections.push(Orthogonal.UP);
+        if (coord.x !== (state.getWidth() - 1)) possibleDirections.push(Orthogonal.RIGHT);
+        if (coord.y !== (state.getHeight() - 1)) possibleDirections.push(Orthogonal.DOWN);
+        return possibleDirections;
     }
 
     public isValidCoord(state: QuixoState, coord: Coord): MGPValidation {

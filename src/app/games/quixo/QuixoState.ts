@@ -1,4 +1,3 @@
-import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -10,13 +9,6 @@ export type QuixoConfig = {
 };
 
 export class QuixoState extends GameStateWithTable<PlayerOrNone> {
-
-    public static getInitialState(config: QuixoConfig): QuixoState {
-        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.width,
-                                                                 config.height,
-                                                                 PlayerOrNone.NONE);
-        return new QuixoState(initialBoard, 0);
-    }
 
     public applyLegalMove(move: QuixoMove): QuixoState {
         const newBoard: PlayerOrNone[][] = this.getCopiedBoard();

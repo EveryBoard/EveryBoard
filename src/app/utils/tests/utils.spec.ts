@@ -111,8 +111,21 @@ describe('Debug', () => {
             Debug.enableLog([false, false], 'Class', 'method');
             // When calling Debug.display
             Debug.display('Class', 'method', 'message');
-            // Then it should have logged the message
+            // Then it should not have logged the message
             expect(console.log).not.toHaveBeenCalled();
+        });
+        it('should throw when verbose is set to something invalid', () => {
+            // Given a verbose-disabled method and class
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(console, 'log').and.returnValue();
+            localStorage.setItem('verbosity', 'lolilol');
+            // When calling Debug.display
+            // Then it should throw and not log
+            expect(() => Debug.display('Class', 'method', 'message'))
+                .toThrowError('malformed verbosity object: lolilol');
+            expect(console.log).not.toHaveBeenCalled();
+            // because this is an error resulting from a user error, devs don't want to know about it
+            expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
         });
         it('should not log when verbose is unset', () => {
             // Given a verbose-unset method and class

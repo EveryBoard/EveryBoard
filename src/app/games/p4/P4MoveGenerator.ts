@@ -8,7 +8,8 @@ import { MoveGenerator } from 'src/app/jscaip/AI';
 export class P4MoveGenerator extends MoveGenerator<P4Move, P4State> {
 
     public getListMoves(node: P4Node): P4Move[] {
-        const width: number = node.gameState.board[0].length;
+        const state: P4State = node.gameState;
+        const width: number = state.getWidth();
         const virtualCX: number = Math.floor((width - 1) / 2);
         return P4Rules.get().getListMoves(node)
             .sort((left: P4Move, right: P4Move) => {
@@ -17,4 +18,5 @@ export class P4MoveGenerator extends MoveGenerator<P4Move, P4State> {
                 return distanceFromCenterLeft - distanceFromCenterRight;
             });
     }
+
 }

@@ -47,7 +47,7 @@ describe('YinshMoveGenerator', () => {
             expect(moveGenerator.getListMoves(node).length).toBe(84);
         });
         it('should have no moves at the end of the game', () => {
-            const state: YinshState = new YinshState(YinshState.getInitialState().board, [3, 2], 20);
+            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, [3, 2], 20);
             const node: YinshNode = new YinshNode(state);
             expect(moveGenerator.getListMoves(node).length).toBe(0);
         });

@@ -3,9 +3,9 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflState } from '../TaflState';
 import { TaflConfig } from '../TaflConfig';
 
-export class TablutState extends TaflState {
+export class TaflState extends TaflState {
 
-    public static getInitialState(config: TaflConfig): TablutState {
+    public static getInitialState(config: TaflConfig): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
@@ -27,11 +27,11 @@ export class TablutState extends TaflState {
             [_, _, _, I, I, I, _, _, _],
         ];
 
-        return new TablutState(board, 0);
+        return new TaflState(board, 0);
     }
 
     public of(board: Table<TaflPawn>, turn: number): this {
-        return new TablutState(board, turn) as this;
+        return new TaflState(board, turn) as this;
     }
 
 }

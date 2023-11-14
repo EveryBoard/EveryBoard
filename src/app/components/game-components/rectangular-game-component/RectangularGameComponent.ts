@@ -26,4 +26,13 @@ export abstract class RectangularGameComponent<R extends Rules<M, S, C, L>,
             (this.board[0].length * this.SPACE_SIZE + this.STROKE_WIDTH) + ' ' +
             (this.board.length * this.SPACE_SIZE + this.STROKE_WIDTH);
     }
+
+    public getWidth(): number {
+        return this.getState().getWidth();
+    }
+
+    public getHeight(): number {
+        return this.getState().getHeight();
+    }
+
 }

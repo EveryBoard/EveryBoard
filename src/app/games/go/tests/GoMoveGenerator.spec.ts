@@ -3,7 +3,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoMove } from '../GoMove';
 import { GoState, GoPiece, Phase } from '../GoState';
-import { GoConfig, GoNode } from '../GoRules';
+import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoMoveGenerator } from '../GoMoveGenerator';
 
 const X: GoPiece = GoPiece.LIGHT;
@@ -39,14 +39,14 @@ describe('GoMoveGenerator', () => {
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });
         it('should only have GoMove.ACCEPT in ACCEPT Phase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoState.getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
         it('should only have GoMove.ACCEPT in COUNTNG Phase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoState.getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([]);
@@ -54,7 +54,7 @@ describe('GoMoveGenerator', () => {
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
         it('should only have counting moves in COUNTING Phase when not agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoState.getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);

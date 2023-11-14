@@ -4,6 +4,7 @@ import { SiamState } from 'src/app/games/siam/SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { SiamRules } from './SiamRules';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -31,7 +32,7 @@ export class SiamTutorial extends Tutorial {
             <li>Move one of its piece and optionally reorient it.</li>
             <li>Take one of its pieces out of the board.</li>
         </ol>`,
-            SiamState.getInitialState(),
+            SiamRules.get().getInitialState(), // TODO: config Siam et Reversi by the way tiens !!
         ),
         TutorialStep.anyMove(
             $localize`Inserting a piece`,
@@ -43,7 +44,7 @@ export class SiamTutorial extends Tutorial {
             <li>Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.</li>
         </ol><br/>
         You're playing Dark, insert a piece on the board.`,
-            SiamState.getInitialState(),
+            SiamRules.get().getInitialState(),
             SiamMove.from(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
             $localize`Congratulations!`,
         ),

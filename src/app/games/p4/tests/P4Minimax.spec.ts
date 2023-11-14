@@ -14,7 +14,7 @@ describe('P4Minimax', () => {
         minimax = new P4Minimax();
     });
     it('First choice should be center at all AI depths', () => {
-        const initialState: P4State = P4State.getInitialState(config);
+        const initialState: P4State = P4Rules.get().getInitialState(config);
         for (let depth: number = 1; depth < 6; depth ++) {
             const node: P4Node = new P4Node(initialState);
             expect(minimax.chooseNextMove(node, { name: `Level ${depth}`, maxDepth: depth }))

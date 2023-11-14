@@ -20,7 +20,6 @@ export class MessageDisplayer {
         this.toast(message, cssClass, durationInMs);
     }
     private toast(message: string, cssClass: ToastType, durationInMs: number): void {
-        console.log(durationInMs, message, 'tachaaaaa')
         toast({
             message,
             duration: durationInMs,

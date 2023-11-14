@@ -46,7 +46,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public ARROW_COORD: string = ApagosComponent.getArrowCoord();
 
-    public PIECES_PER_PLAYER: number = ApagosState.PIECES_PER_PLAYER;
+    public PIECES_PER_PLAYER: number = ApagosRules.PIECES_PER_PLAYER;
 
     public PIECE_RADIUS: number;
 

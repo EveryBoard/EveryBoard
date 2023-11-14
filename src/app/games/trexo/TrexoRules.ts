@@ -11,6 +11,7 @@ import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 
@@ -30,8 +31,9 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
         new NInARowHelper(TrexoRules.getOwner, 5);
 
-    private constructor() {
-        super(TrexoState);
+    public getInitialState(): TrexoState {
+        const board: TrexoPieceStack[][] = TableUtils.create(TrexoState.SIZE, TrexoState.SIZE, TrexoPieceStack.EMPTY);
+        return new TrexoState(board, 0);
     }
     public applyLegalMove(move: TrexoMove, state: TrexoState, _config: RulesConfig, _info: void): TrexoState {
         return state

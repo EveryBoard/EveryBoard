@@ -15,6 +15,7 @@ import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
@@ -31,17 +32,19 @@ export class SixRules extends Rules<SixMove, SixState, RulesConfig, SixLegalityI
 
     private static singleton: MGPOptional<SixRules> = MGPOptional.empty();
 
+    private currentVictorySource: SixVictorySource;
+
     public static get(): SixRules {
         if (SixRules.singleton.isAbsent()) {
             SixRules.singleton = MGPOptional.of(new SixRules());
         }
         return SixRules.singleton.get();
     }
-    private constructor() {
-        super(SixState);
-    }
 
-    private currentVictorySource: SixVictorySource;
+    public getInitialState(): SixState {
+        const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
+        return SixState.ofRepresentation(board, 0);
+    }
 
     public applyLegalMove(move: SixMove, state: SixState, _config: RulesConfig, kept: SixLegalityInformation)
     : SixState

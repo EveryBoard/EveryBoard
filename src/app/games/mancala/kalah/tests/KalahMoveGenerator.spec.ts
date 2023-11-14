@@ -26,7 +26,7 @@ describe('KalahMoveGenerator', () => {
     }
     it('should have all move options', () => {
         // Given an initial node
-        const initialState: MancalaState = MancalaState.getInitialState(config);
+        const initialState: MancalaState = KalahRules.get().getInitialState(config);
         const node: MancalaNode = getMancalaNode(initialState, config);
 
         // When listing the moves

@@ -18,12 +18,12 @@ export class P4Tutorial extends Tutorial {
             $localize`The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
         The first player plays Dark, the second plays Light.
         The goal is to be the first to align 4 of its pieces (horizontally, vertically, or diagonally).`,
-            P4State.getInitialState(config),
+            P4Rules.get().getInitialState(config),
         ),
         TutorialStep.anyMove(
             $localize`Dropping a piece`,
             $localize`Click on any space in any column.`,
-            P4State.getInitialState(config),
+            P4Rules.get().getInitialState(config),
             P4Move.of(3),
             $localize`As you can see, the piece falls at the bottom of the column.`,
         ),

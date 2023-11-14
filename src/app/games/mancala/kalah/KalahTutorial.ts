@@ -16,19 +16,19 @@ export class KalahTutorial extends Tutorial {
         TutorialStep.informational(
             this.gameName,
             $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.`,
-            MancalaState.getInitialState(config),
+            KalahRules.get().getInitialState(config),
         ),
         TutorialStep.informational(
             $localize`Kalah`,
             $localize`Bonus fact: Kalah has been created in the U.S.A in 1940 by William Julius Champion Jr.`,
-            MancalaState.getInitialState(config),
+            KalahRules.get().getInitialState(config),
         ),
-        MancalaTutorial.SOWING(MancalaMove.of(MancalaDistribution.of(5)), config),
+        MancalaTutorial.sowing(KalahRules.get().getInitialState(config), MancalaMove.of(MancalaDistribution.of(5))),
 
         TutorialStep.forClick(
             $localize`The Kalah (1/2)`,
             $localize`The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent's on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah, but you won't have to drop seed in your opponent's Kalah. When you make a capture, the captured seeds are put in your Kalah.<br/><br/>You're playing Dark. Make a move that passes through your Kalah then feeds opponent's houses.`,
-            MancalaState.getInitialState(config),
+            KalahRules.get().getInitialState(config),
             [
                 '#click_0_1',
                 '#click_1_1',
@@ -40,7 +40,7 @@ export class KalahTutorial extends Tutorial {
         TutorialStep.fromPredicate(
             $localize`The Kalah (2/2)`,
             $localize`When ending in the Kalah, you must distribute again.<br/><br/>You're playing Dark, play the house that ends up in the Kalah then do a second distribution!`,
-            MancalaState.getInitialState(config),
+            KalahRules.get().getInitialState(config),
             MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(1)]),
             (move: MancalaMove, _previous: MancalaState, _result: MancalaState) => {
                 if (move.distributions.length === 1) {

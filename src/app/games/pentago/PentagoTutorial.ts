@@ -3,6 +3,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
+import { PentagoRules } from './PentagoRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -14,7 +15,7 @@ export class PentagoTutorial {
         TutorialStep.informational(
             $localize`Initial board`,
             $localize`The initial Pentago board is made of 6x6 spaces, subdivided in 4 quadrants, which can each rotate.`,
-            PentagoState.getInitialState(),
+            PentagoRules.get().getInitialState(),
         ),
         TutorialStep.informational(
             $localize`Goal of the game`,

@@ -16,6 +16,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export type GipfLegalityInformation = GipfState
 
@@ -32,8 +33,21 @@ export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegal
         return GipfRules.singleton.get();
     }
 
-    private constructor() {
-        super(GipfState);
+    public getInitialState(): GipfState {
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const board: Table<FourStatePiece> = [
+            [N, N, N, X, _, _, O],
+            [N, N, _, _, _, _, _],
+            [N, _, _, _, _, _, _],
+            [O, _, _, _, _, _, X],
+            [_, _, _, _, _, _, N],
+            [_, _, _, _, _, N, N],
+            [X, _, _, O, N, N, N],
+        ];
+        return new GipfState(board, 0, [12, 12], [0, 0]);
     }
 
     public applyLegalMove(_move: GipfMove,

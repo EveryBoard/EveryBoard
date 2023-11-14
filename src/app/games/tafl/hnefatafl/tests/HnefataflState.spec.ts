@@ -1,11 +1,11 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
-import { HnefataflState } from '../HnefataflState';
 import { HnefataflRules } from '../HnefataflRules';
+import { TaflState } from '../../TaflState';
 
 const defaultConfig: TaflConfig = HnefataflRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
-describe('HnefataflState', () => {
+describe('TaflState', () => {
     describe('getInitialState', () => {
         it('should make invader Player.ZERO when invaders start', () => {
             // Given an initial state with a config where invader starts
@@ -13,7 +13,7 @@ describe('HnefataflState', () => {
                 ...defaultConfig,
                 invaderStarts: true,
             };
-            const state: HnefataflState = HnefataflState.getInitialState(customConfig);
+            const state: TaflState = HnefataflRules.get().getInitialState(customConfig);
 
             // When checking the invaders coord
             // Then they should be of Player.ZERO
@@ -26,7 +26,7 @@ describe('HnefataflState', () => {
                 ...defaultConfig,
                 invaderStarts: false,
             };
-            const state: HnefataflState = HnefataflState.getInitialState(customConfig);
+            const state: TaflState = HnefataflRules.get().getInitialState(customConfig);
 
             // When checking the invaders coord
             // Then they should be of Player.ONE

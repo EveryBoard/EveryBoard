@@ -16,10 +16,6 @@ import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export class SixState extends OpenHexagonalGameState<Player> {
 
-    public static getInitialState(): SixState {
-        const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
-        return SixState.ofRepresentation(board, 0);
-    }
     /**
       * @param board the representation of the board
       * @param turn the turn of the board
@@ -41,12 +37,14 @@ export class SixState extends OpenHexagonalGameState<Player> {
         }
         return new SixState(pieces, turn);
     }
+
     public movePiece(move: SixMove): SixState {
         const pieces: ReversibleMap<Coord, Player> = this.pieces.getCopy();
         pieces.delete(move.start.get());
         pieces.set(move.landing, this.getCurrentPlayer());
         return new SixState(pieces, this.turn);
     }
+
     public toRepresentation(): Table<PlayerOrNone> {
         const board: PlayerOrNone[][] = TableUtils.create(this.width, this.height, PlayerOrNone.NONE);
         for (const piece of this.pieces.listKeys()) {
@@ -55,6 +53,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
         }
         return board;
     }
+
     public isIllegalLandingZone(landing: Coord, start: MGPOptional<Coord>): MGPValidation {
         if (this.pieces.containsKey(landing)) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
@@ -65,6 +64,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
             return MGPValidation.failure(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE());
         }
     }
+
     public isCoordConnected(coord: Coord, except: MGPOptional<Coord>): boolean {
         for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
             if (this.pieces.containsKey(neighbor) &&
@@ -75,6 +75,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
         }
         return false;
     }
+
     public getPieceAt(coord: Coord): PlayerOrNone {
         if (this.isOnBoard(coord)) {
             return this.pieces.get(coord).get();
@@ -82,11 +83,13 @@ export class SixState extends OpenHexagonalGameState<Player> {
             return PlayerOrNone.NONE;
         }
     }
+
     public applyLegalDrop(coord: Coord): SixState {
         const pieces: ReversibleMap<Coord, Player> = this.pieces.getCopy();
         pieces.put(coord, this.getCurrentPlayer());
         return new SixState(pieces, this.turn + 1);
     }
+
     public applyLegalDeplacement(move: SixMove, kept: MGPSet<Coord>): SixState {
         const stateAfterMove: SixState = this.movePiece(move);
 
@@ -101,12 +104,14 @@ export class SixState extends OpenHexagonalGameState<Player> {
         }
 
     }
+
     public countPieces(): [number, number] {
         const pieces: ReversibleMap<Player, MGPSet<Coord>> = this.pieces.reverse();
         const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrElse(new CoordSet());
         const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrElse(new CoordSet());
         return [zeroPieces.size(), onePieces.size()];
     }
+
     public switchPiece(coord: Coord): SixState {
         const newPieces: ReversibleMap<Coord, Player> = this.pieces.getCopy();
         const oldPiece: PlayerOrNone = this.getPieceAt(coord);
@@ -117,6 +122,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
             ErrorLoggerService.logErrorAndFail('SixState', 'Cannot switch piece if there is no piece!', { coord: coord.toString() });
         }
     }
+
     public equals(other: SixState): boolean {
         return this.turn === other.turn && this.pieces.equals(other.pieces);
     }

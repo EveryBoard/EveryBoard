@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { RulesConfigurationComponent } from './rules-configuration.component';
-import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, SimpleComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Utils } from 'src/app/utils/utils';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription } from './RulesConfigDescription';
+import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 
 describe('RulesConfigurationComponent', () => {
 
@@ -31,7 +31,7 @@ describe('RulesConfigurationComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
         component = testUtils.getComponent();
         const stateProvider: (_: RulesConfig) => KamisadoState = (_: RulesConfig) => {
-            return KamisadoState.getInitialState();
+            return KamisadoRules.get().getInitialState();
         };
         component.stateProvider = MGPOptional.of(stateProvider); // A game needing no config
     });
@@ -353,7 +353,7 @@ describe('RulesConfigurationComponent', () => {
                 // Given a component intended for passive user with no config to display
                 component.rulesConfigToDisplay = undefined;
 
-                RulesUtils.expectToThrowAndLog(() => {
+                TestUtils.expectToThrowAndLog(() => {
                     // When rendering it
                     testUtils.detectChanges();
                     // Then it should throw

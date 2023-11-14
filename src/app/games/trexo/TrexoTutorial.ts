@@ -34,12 +34,12 @@ export class TrexoTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!`,
-            TrexoState.getInitialState(),
+            TrexoRules.get().getInitialState(), // TODO CONFIG DU PAITE
         ),
         TutorialStep.anyMove(
             $localize`Dropping a tile`,
             $localize`When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To drop a tile, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.<br/><br/>You're playing Dark, put a tile on the board.`,
-            TrexoState.getInitialState(),
+            TrexoRules.get().getInitialState(),
             TrexoMove.from(new Coord(4, 4), new Coord(3, 4)).get(),
             $localize`Congratulations!`,
         ),

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
 import { GoPiece, GoState, Phase } from '../GoState';
-import { GoConfig } from '../GoRules';
+import { GoConfig, GoRules } from '../GoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const O: GoPiece = GoPiece.DARK;
@@ -36,7 +36,7 @@ describe('GoState', () => {
             const config: GoConfig = { width: 19, height: 19, handicap: 2 };
 
             // When creating an initialState with it
-            const state: GoState = GoState.getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(config);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -69,7 +69,7 @@ describe('GoState', () => {
             const config: GoConfig = { width: 19, height: 19, handicap: 4 };
 
             // When creating an initialState with it
-            const state: GoState = GoState.getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(config);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -102,7 +102,7 @@ describe('GoState', () => {
             const config: GoConfig = { width: 19, height: 19, handicap: 5 };
 
             // When creating an initialState with it
-            const state: GoState = GoState.getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(config);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -135,7 +135,7 @@ describe('GoState', () => {
             const config: GoConfig = { width: 19, height: 19, handicap: 9 };
 
             // When creating an initialState with it
-            const state: GoState = GoState.getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(config);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [

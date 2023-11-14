@@ -1,4 +1,5 @@
 import { MancalaConfig } from '../MancalaConfig';
+import { MancalaRules } from '../MancalaRules';
 import { MancalaState } from '../MancalaState';
 
 const myMancalaConfig: MancalaConfig = {
@@ -11,9 +12,10 @@ const myMancalaConfig: MancalaConfig = {
 };
 
 describe('MancalaState', () => {
+
     it('should compare correctly', () => {
         // Given an initial state
-        const state: MancalaState = MancalaState.getInitialState(myMancalaConfig);
+        const state: MancalaState = MancalaRules.getInitialState(myMancalaConfig);
         // and state with different board
         const differentBoard: MancalaState = new MancalaState([
             [1, 2, 3, 4, 5, 6],
@@ -32,4 +34,5 @@ describe('MancalaState', () => {
         expect(state.equals(differentScore)).toBeFalse();
         expect(state.equals(differentTurn)).toBeFalse();
     });
+
 });

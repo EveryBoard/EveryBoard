@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { RulesUtils } from './RulesUtils.spec';
 import { MGPValidator, MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('RulesConfigUtil', () => {
 
@@ -77,7 +77,7 @@ describe('RulesConfigUtil', () => {
 
             // When trying to create the element
             // Then it should throw and log
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 new RulesConfigDescription(defaultConfig, bananaTranslations, [secondaryConfig], validators);
             }, 'Field missing in secondary config!');
         });
@@ -94,7 +94,7 @@ describe('RulesConfigUtil', () => {
 
             // When trying to create the element
             // Then it should throw and log
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 new RulesConfigDescription(defaultConfig, translations);
             }, 'Validator missing for helaRosee!');
         });
@@ -106,7 +106,7 @@ describe('RulesConfigUtil', () => {
             const missingTranslation: { [name in keyof MyConfig]: Localized } =
                 {} as { [name in keyof MyConfig]: Localized };
             // The casting allow to avoid the compilation error, but it is still broken
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 new RulesConfigDescription(defaultNamedRulesConfig, missingTranslation, [], validators);
             }, `Field 'helaRosee' missing in translation!`);
         });

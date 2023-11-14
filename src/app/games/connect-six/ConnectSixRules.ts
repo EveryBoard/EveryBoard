@@ -13,6 +13,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState, GobanConfig> {}
 
@@ -37,12 +38,15 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
 
-    private constructor() {
-        super(ConnectSixState);
-    }
-
     public override getRulesConfigDescription(): RulesConfigDescription<GobanConfig> {
         return ConnectSixRules.RULES_CONFIG_DESCRIPTION;
+    }
+
+    public getInitialState(config: GobanConfig): ConnectSixState {
+        const board: Table<PlayerOrNone> = TableUtils.create(config.width,
+                                                             config.height,
+                                                             PlayerOrNone.NONE);
+        return new ConnectSixState(board, 0);
     }
 
     public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _config: RulesConfig, _info: void)

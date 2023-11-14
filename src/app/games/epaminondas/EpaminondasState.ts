@@ -1,20 +1,8 @@
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { EpaminondasConfig } from './EpaminondasRules';
 
 export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
-    public static getInitialState(config: EpaminondasConfig): EpaminondasState {
-        const _: PlayerOrNone = PlayerOrNone.NONE;
-        const O: PlayerOrNone = PlayerOrNone.ZERO;
-        const X: PlayerOrNone = PlayerOrNone.ONE;
-        const upperBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.rowsOfSoldiers, X);
-        const middleBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.emptyRows, _);
-        const lowerBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.rowsOfSoldiers, O);
-        const board: Table<PlayerOrNone> = upperBoard.concat(middleBoard).concat(lowerBoard);
-        return new EpaminondasState(board, 0);
-    }
     public count(piece: Player, row: number): number {
         let result: number = 0;
         const width: number = this.board[0].length;
@@ -25,6 +13,7 @@ export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
         }
         return result;
     }
+
     public doesOwnPiece(player: Player): boolean {
         for (const coordAndContent of this.getCoordsAndContents()) {
             if (coordAndContent.content === player) {

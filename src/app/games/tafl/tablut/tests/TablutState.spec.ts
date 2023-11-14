@@ -1,9 +1,9 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
-import { TablutState } from '../TablutState';
 import { TablutRules } from '../TablutRules';
+import { TaflState } from '../../TaflState';
 
-describe('TablutState', () => {
+describe('TaflState', () => {
 
     const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().defaultConfig.config;
 
@@ -14,7 +14,7 @@ describe('TablutState', () => {
                 ...defaultConfig,
                 invaderStarts: true,
             };
-            const state: TablutState = TablutState.getInitialState(customConfig);
+            const state: TaflState = TablutRules.get().getInitialState(customConfig);
 
             // When checking the invaders coord
             // Then they should be of Player.ZERO
@@ -27,7 +27,7 @@ describe('TablutState', () => {
                 ...defaultConfig,
                 invaderStarts: false,
             };
-            const state: TablutState = TablutState.getInitialState(customConfig);
+            const state: TaflState = TablutRules.get().getInitialState(customConfig);
 
             // When checking the invaders coord
             // Then they should be of Player.ONE

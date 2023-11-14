@@ -4,6 +4,7 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 import { ApagosCoord } from './ApagosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { ApagosRules } from './ApagosRules';
 
 export class ApagosTutorial extends Tutorial {
 
@@ -11,7 +12,7 @@ export class ApagosTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Initial board and object of the game`,
             $localize`At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!`,
-            ApagosState.getInitialState(),
+            ApagosRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Drop`,

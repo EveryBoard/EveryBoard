@@ -11,8 +11,20 @@ import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflNode, MyTaflRules } from './MyTaflRules.spec';
-import { MyTaflState } from './MyTaflState.spec';
 import { TaflConfig } from '../TaflConfig';
+
+export const myTaflConfig: TaflConfig = {
+
+    castleIsLeftForGood: true,
+
+    invaderStarts: true,
+
+    kingFarFromHomeCanBeSandwiched: true,
+
+    centralThroneCanSurroundKing: true,
+
+    edgesAreKingsEnnemy: true,
+};
 
 describe('TaflRules', () => {
 
@@ -41,7 +53,7 @@ describe('TaflRules', () => {
 
     it('should be illegal to move an empty square', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState(defaultConfig);
+        const state: TaflState = MyTaflRules.get().getInitialState(defaultConfig);
 
         // When trying to move an empty square
         const move: MyTaflMove = MyTaflMove.from(new Coord(0, 1), new Coord(1, 1)).get();
@@ -53,7 +65,7 @@ describe('TaflRules', () => {
 
     it('should be illegal to move an opponent pawn', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState(defaultConfig);
+        const state: TaflState = MyTaflRules.get().getInitialState(defaultConfig);
 
         // When trying to move an opponent pawn
         const move: MyTaflMove = MyTaflMove.from(new Coord(4, 2), new Coord(4, 3)).get();
@@ -65,7 +77,7 @@ describe('TaflRules', () => {
 
     it('should be illegal to land on a pawn', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState(defaultConfig);
+        const state: TaflState = MyTaflRules.get().getInitialState(defaultConfig);
 
         // When doing a move landing on the opponent
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 3)).get();
@@ -77,7 +89,7 @@ describe('TaflRules', () => {
 
     it('should be illegal to pass through a pawn', () => {
         // Given the initial board
-        const state: MyTaflState = MyTaflState.getInitialState(defaultConfig);
+        const state: TaflState = MyTaflRules.get().getInitialState(defaultConfig);
 
         // When doing a move passing through a piece
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 4)).get();
@@ -100,7 +112,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: MyTaflState = new MyTaflState(board, 23);
+        const state: TaflState = new TaflState(board, 23);
 
         // When sacrificing him
         const move: MyTaflMove = MyTaflMove.from(new Coord(3, 0), new Coord(2, 0)).get();
@@ -117,7 +129,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: MyTaflState = new MyTaflState(expectedBoard, 24);
+        const expectedState: TaflState = new TaflState(expectedBoard, 24);
         const node: MyTaflNode =
             new MyTaflNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -137,7 +149,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: MyTaflState = new MyTaflState(board, 24);
+        const state: TaflState = new TaflState(board, 24);
 
         // When sacrificing him
         const move: MyTaflMove = MyTaflMove.from(new Coord(8, 4), new Coord(1, 4)).get();
@@ -154,7 +166,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const expectedState: MyTaflState = new MyTaflState(expectedBoard, 25);
+        const expectedState: TaflState = new TaflState(expectedBoard, 25);
         const node: MyTaflNode =
             new MyTaflNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);

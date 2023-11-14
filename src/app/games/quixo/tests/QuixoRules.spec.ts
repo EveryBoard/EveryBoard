@@ -11,6 +11,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { QuixoFailure } from '../QuixoFailure';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('QuixoRules', () => {
 
@@ -40,7 +41,7 @@ describe('QuixoRules', () => {
 
     it('should forbid move creation from coord not on the side', () => {
         // Given a normal config board
-        const state: QuixoState = QuixoState.getInitialState(config);
+        const state: QuixoState = QuixoRules.get().getInitialState(config);
 
         // When doing a move inside the board
         const move: QuixoMove = new QuixoMove(1, 1, Orthogonal.UP);
@@ -52,11 +53,11 @@ describe('QuixoRules', () => {
 
     it('should throw when suggesting move for out of range', () => {
         // Given an normal config board
-        const state: QuixoState = QuixoState.getInitialState(config);
+        const state: QuixoState = QuixoRules.get().getInitialState(config);
 
         // When doing a move out of range
         const move: QuixoMove = new QuixoMove(-1, 0, Orthogonal.DOWN);
-        RulesUtils.expectToThrowAndLog(() => {
+        TestUtils.expectToThrowAndLog(() => {
             RulesUtils.expectMoveFailure(rules, state, move, `won't reach the return of isLegal`);
         }, 'Invalid coord for QuixoMove: (-1, 0) is outside the board.');
     });
@@ -77,14 +78,14 @@ describe('QuixoRules', () => {
     for (let i: number = 0; i < 4; i++) {
         it(`should throw when suggesting move with coord whose side is the same as the direction (${ i })`, () => {
             // Given any normal config board
-            const state: QuixoState = QuixoState.getInitialState(config);
+            const state: QuixoState = QuixoRules.get().getInitialState(config);
 
             // When providing a move where a piece try to leave the board
             const move: QuixoMove = moveByDirection[i];
 
             // Then it should throw
             const reason: string = errorByDirection[i];
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, `won't reach the return of isLegal`);
             }, reason);
         });

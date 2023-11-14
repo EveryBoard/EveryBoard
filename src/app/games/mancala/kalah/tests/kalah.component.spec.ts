@@ -30,7 +30,7 @@ describe('KalahComponent', () => {
         moveGenerator: new KalahMoveGenerator(),
 
         distribution: {
-            state: MancalaState.getInitialState(config),
+            state: KalahRules.get().getInitialState(config),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },

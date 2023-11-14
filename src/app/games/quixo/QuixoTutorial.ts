@@ -20,7 +20,7 @@ export class QuixoTutorial extends Tutorial {
         The first player plays with dark pieces, the second with light pieces.
         The board is made of 25 spaces spread over a 5x5 square.
         Every piece has a neutral side, a light side, and a dark side.`,
-            QuixoState.getInitialState(config),
+            QuixoRules.get().getInitialState(config),
         ),
         TutorialStep.fromMove(
             $localize`What a move looks like (without animation)`,

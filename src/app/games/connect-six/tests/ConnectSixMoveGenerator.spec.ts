@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
-import { ConnectSixNode } from '../ConnectSixRules';
+import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -22,7 +22,7 @@ describe('ConnectSixMoveGenerator', () => {
         // Given the initial node
         const width: number = defaultGobanConfig.width;
         const height: number = defaultGobanConfig.height;
-        const state: ConnectSixState = ConnectSixState.getInitialState(defaultGobanConfig);
+        const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultGobanConfig);
         const node: ConnectSixNode = new ConnectSixNode(state);
 
         // When listing the moves

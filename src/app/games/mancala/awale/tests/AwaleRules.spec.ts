@@ -263,7 +263,7 @@ describe('AwaleRules', () => {
                 ...config,
                 passByPlayerStore: true,
             };
-            const state: MancalaState = MancalaState.getInitialState(customConfig);
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             // When doing simple distribution from the leftmost house
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
@@ -283,7 +283,7 @@ describe('AwaleRules', () => {
                 ...config,
                 passByPlayerStore: true,
             };
-            const state: MancalaState = MancalaState.getInitialState(customConfig);
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             // When doing simple distribution ending in store
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
@@ -304,7 +304,7 @@ describe('AwaleRules', () => {
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             };
-            const state: MancalaState = MancalaState.getInitialState(customConfig);
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             // When doing a double distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);

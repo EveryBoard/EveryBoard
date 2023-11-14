@@ -11,6 +11,7 @@ import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MartianChessRules } from '../MartianChessRules';
 
 describe('MartianChessComponent', () => {
 
@@ -250,7 +251,7 @@ describe('MartianChessComponent', () => {
         }));
         it('should not select the circle when clock was called in previous turns', fakeAsync(async() => {
             // Given a board where the clock has been called in the past
-            const board: Table<MartianChessPiece> = MartianChessState.getInitialState().board;
+            const board: Table<MartianChessPiece> = MartianChessRules.get().getInitialState().board;
             const state: MartianChessState = new MartianChessState(board, 4, MGPOptional.empty(), MGPOptional.of(3));
             await testUtils.setupState(state);
 

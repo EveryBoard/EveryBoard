@@ -17,6 +17,7 @@ export class MartianChessCapture {
         }
         return new MartianChessCapture(map);
     }
+
     public static addToMap(map: MGPMap<MartianChessPiece, number>, piece: MartianChessPiece): void {
         const oldValue: MGPOptional<number> = map.get(piece);
         if (oldValue.isPresent()) {
@@ -25,9 +26,11 @@ export class MartianChessCapture {
             map.set(piece, 1);
         }
     }
+
     public constructor(public readonly captures: MGPMap<MartianChessPiece, number>) {
         captures.makeImmutable();
     }
+
     public toValue(): number {
         let sum: number = 0;
         this.captures.forEach((item: {key: MartianChessPiece, value: number}) => {
@@ -35,12 +38,14 @@ export class MartianChessCapture {
         });
         return sum;
     }
+
     public add(piece: MartianChessPiece): MartianChessCapture {
         const newMap: MGPMap<MartianChessPiece, number> = this.captures.getCopy();
         MartianChessCapture.addToMap(newMap, piece);
         return new MartianChessCapture(newMap);
     }
 }
+
 export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
 
     public static readonly WIDTH: number = 4;
@@ -51,26 +56,10 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
 
     public static readonly PLAYER_ONE_TERRITORY: MGPSet<number> = new MGPSet([0, 1, 2, 3]);
 
-    public static getInitialState(): MartianChessState {
-        const _: MartianChessPiece = MartianChessPiece.EMPTY;
-        const A: MartianChessPiece = MartianChessPiece.PAWN;
-        const B: MartianChessPiece = MartianChessPiece.DRONE;
-        const C: MartianChessPiece = MartianChessPiece.QUEEN;
-        const board: Table<MartianChessPiece> = [
-            [C, C, B, _],
-            [C, B, A, _],
-            [B, A, A, _],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, A, A, B],
-            [_, A, B, C],
-            [_, B, C, C],
-        ];
-        return new MartianChessState(board, 0, MGPOptional.empty());
-    }
     public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(MartianChessState.WIDTH, MartianChessState.HEIGHT);
     }
+
     public readonly captured: MGPMap<Player, MartianChessCapture>;
 
     public constructor(board: Table<MartianChessPiece>,
@@ -89,6 +78,7 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         captured.makeImmutable();
         this.captured = captured;
     }
+
     public getPlayerTerritory(player: Player): MGPSet<number> {
         if (player === Player.ZERO) {
             return MartianChessState.PLAYER_ZERO_TERRITORY;
@@ -96,6 +86,7 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
             return MartianChessState.PLAYER_ONE_TERRITORY;
         }
     }
+
     public isTherePieceOnPlayerSide(piece: MartianChessPiece): boolean {
         const currentPlayer: Player = this.getCurrentPlayer();
         const playerTerritory: MGPSet<number> = this.getPlayerTerritory(currentPlayer);
@@ -108,9 +99,11 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         }
         return false;
     }
+
     public getScoreOf(player: Player): number {
         return this.captured.get(player).get().toValue();
     }
+
     public getEmptyTerritory(): MGPOptional<Player> {
         if (this.isTerritoryEmpty(Player.ZERO)) {
             return MGPOptional.of(Player.ZERO);
@@ -120,6 +113,7 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
             return MGPOptional.empty();
         }
     }
+
     public isTerritoryEmpty(player: Player): boolean {
         const playerTerritory: MGPSet<number> = this.getPlayerTerritory(player);
         for (const y of playerTerritory) {
@@ -131,16 +125,19 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
         }
         return true;
     }
+
     public isInOpponentTerritory(coord: Coord): boolean {
         const opponent: Player = this.getCurrentOpponent();
         const opponentTerritory: MGPSet<number> = this.getPlayerTerritory(opponent);
         return opponentTerritory.contains(coord.y);
     }
+
     public isInPlayerTerritory(coord: Coord): boolean {
         const player: Player = this.getCurrentPlayer();
         const playerTerritory: MGPSet<number> = this.getPlayerTerritory(player);
         return playerTerritory.contains(coord.y);
     }
+
     public getCapturesOf(player: Player): [number, number, number] {
         const capture: MartianChessCapture = this.captured.get(player).get();
         return [

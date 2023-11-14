@@ -13,6 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export type ReversiLegalityInformation = Coord[];
 
@@ -36,9 +37,18 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, RulesConfig, 
         }
         return ReversiRules.singleton.get();
     }
-    private constructor() {
-        super(ReversiState);
+
+    public getInitialState(): ReversiState {
+        const board: PlayerOrNone[][] = TableUtils.create(ReversiState.BOARD_WIDTH,
+                                                          ReversiState.BOARD_HEIGHT,
+                                                          PlayerOrNone.NONE);
+        board[3][3] = Player.ZERO;
+        board[4][4] = Player.ZERO;
+        board[3][4] = Player.ONE;
+        board[4][3] = Player.ONE;
+        return new ReversiState(board, 0);
     }
+
     public static getGameStatus(node: ReversiNode): GameStatus {
         const state: ReversiState = node.gameState;
         const gameIsEnded: boolean = ReversiRules.isGameEnded(state);

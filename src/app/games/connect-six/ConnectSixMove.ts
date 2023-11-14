@@ -9,11 +9,13 @@ export class ConnectSixFirstMove extends MoveCoord {
     public static of(coord: Coord): ConnectSixFirstMove {
         return new ConnectSixFirstMove(coord.x, coord.y);
     }
+
     public static encoder: Encoder<ConnectSixFirstMove> = MoveCoord.getEncoder(ConnectSixFirstMove.of);
 
     private constructor(x: number, y: number) {
         super(x, y);
     }
+
     public toString(): string {
         return 'ConnectSixFirstMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }

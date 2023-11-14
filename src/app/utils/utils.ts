@@ -57,14 +57,17 @@ export class Debug {
         }
     }
     private static isVerbose(name: string): [boolean, boolean] {
-        /* eslint-disable dot-notation */
         const verbosityJSON: string | null = localStorage.getItem('verbosity');
         if (verbosityJSON == null) return [false, false];
-        const verbosity: object = JSON.parse(verbosityJSON);
-        if (verbosity[name] == null) return [false, false];
-        Utils.assert(Array.isArray(verbosity[name]), `malformed verbosity levels: ${verbosity[name]}`);
-        return verbosity[name] as [boolean, boolean];
-        /* eslint-enable dot-notation */
+        try {
+            const verbosity: object = JSON.parse(verbosityJSON);
+            if (verbosity[name] == null) return [false, false];
+            Utils.assert(Array.isArray(verbosity[name]), `malformed verbosity levels for ${name}: ${verbosity[name]}`);
+            return verbosity[name] as [boolean, boolean];
+        } catch (e) {
+            // Verbosity is not proper JSON
+            throw new Error(`malformed verbosity object: ${verbosityJSON}`);
+        }
     }
     private static isMethodVerboseEntry(className: string, methodName: string): boolean {
         return Debug.isVerbose(className)[0] || Debug.isVerbose(className + '.' + methodName)[0];

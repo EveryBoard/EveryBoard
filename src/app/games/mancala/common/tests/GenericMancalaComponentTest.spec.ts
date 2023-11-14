@@ -22,9 +22,11 @@ type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: strin
 export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                                        R extends MancalaRules>
 {
+
     public constructor(public readonly testUtils: ComponentTestUtils<C>,
                        public readonly moveGenerator: MoveGenerator<MancalaMove, MancalaState>) {
     }
+
     public async expectMancalaMoveSuccess(click: string, move: MancalaMove): Promise<void> {
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
@@ -40,6 +42,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         const moveDuration: number = (lastDistributionSeedNumber + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEED;
         await this.testUtils.expectMoveSuccess(click, move, moveDuration);
     }
+
     public async expectMancalaClickSuccess(coord: Coord): Promise<void> {
         const pieceInHouse: number = this.testUtils.getGameComponent().constructedState.getPieceAt(coord);
         const timeToWait: number = (pieceInHouse + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEED;
@@ -47,6 +50,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         await this.testUtils.expectClickSuccess(click);
         tick(timeToWait);
     }
+
     public expectToBeCaptured(cells: MancalaHouseContents[]): void {
         for (const cell of cells) {
             const coordSuffix: string = cell.x + '_' + cell.y;
@@ -56,6 +60,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             this.testUtils.expectElementToHaveClasses('#circle_' + coordSuffix, ['base', 'moved-stroke', 'captured-fill']);
         }
     }
+
     private getCellAt(coord: Coord, actionAndResult: MancalaActionAndResult): MGPOptional<MancalaHouseContents> {
         for (const cell of actionAndResult.result) {
             if (coord.equals(new Coord(cell.x, cell.y))) {
@@ -64,8 +69,9 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         }
         return MGPOptional.empty();
     }
+
     public expectToBeFed(actionAndResult: MancalaActionAndResult, config: MancalaConfig): void {
-        for (const coordAndContent of MancalaState.getInitialState(config).getCoordsAndContents()) {
+        for (const coordAndContent of MancalaRules.getInitialState(config).getCoordsAndContents()) {
             const suffix: string = coordAndContent.coord.x + '_' + coordAndContent.coord.y;
             const optionalCell: MGPOptional<MancalaHouseContents> =
                 this.getCellAt(coordAndContent.coord, actionAndResult);
@@ -90,6 +96,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             }
         }
     }
+
     public expectHouseToContain(coord: Coord, value: string, secondaryMessage?: string): void {
         const suffix: string = '_' + coord.x + '_' + coord.y;
         const content: DebugElement = this.testUtils.findElement('#number' + suffix);
@@ -103,6 +110,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             expect(content.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(secondaryMessage);
         }
     }
+
     public expectStoreContentToBe(player: Player, value: string, secondaryMessage?: string): void {
         if (player === Player.ZERO) {
             const coord: Coord = new Coord(-1, -1);
@@ -112,11 +120,13 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             return this.expectHouseToContain(coord, value, secondaryMessage);
         }
     }
+
     public getSuffix(mancalaActionAndResult: MancalaActionAndResult): string {
         const lastMoveX: number = mancalaActionAndResult.move.distributions[0].x;
         const suffix: string = lastMoveX + '_' + (mancalaActionAndResult.state.turn + 1) % 2;
         return suffix;
     }
+
 }
 
 export type MancalaActionAndResult = {

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { P4Move } from '../P4Move';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('P4Move', () => {
 
@@ -14,8 +14,8 @@ describe('P4Move', () => {
         });
 
         it('should throw when creating negative x indices', () => {
-            RulesUtils.expectToThrowAndLog(() => P4Move.of(-1),
-                                           'P4Move should be a positive integer!');
+            TestUtils.expectToThrowAndLog(() => P4Move.of(-1),
+                                          'P4Move should be a positive integer!');
         });
 
     });

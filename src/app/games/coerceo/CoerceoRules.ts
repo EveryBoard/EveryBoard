@@ -11,6 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
@@ -25,8 +26,25 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         }
         return CoerceoRules.singleton.get();
     }
-    private constructor() {
-        super(CoerceoState);
+
+    public getInitialState(): CoerceoState {
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],
+            [N, N, N, _, _, O, _, _, _, O, _, _, N, N, N],
+            [_, X, _, X, _, _, O, _, O, _, _, X, _, X, _],
+            [X, _, _, _, X, _, _, _, _, _, X, _, _, _, X],
+            [_, X, _, X, _, _, _, _, _, _, _, X, _, X, _],
+            [_, O, _, O, _, _, _, _, _, _, _, O, _, O, _],
+            [O, _, _, _, O, _, _, _, _, _, O, _, _, _, O],
+            [_, O, _, O, _, _, X, _, X, _, _, O, _, O, _],
+            [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
+            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
+        ];
+        return new CoerceoState(board, 0, [0, 0], [0, 0]);
     }
     public applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: RulesConfig, _info: void): CoerceoState {
         if (CoerceoMove.isTileExchange(move)) {

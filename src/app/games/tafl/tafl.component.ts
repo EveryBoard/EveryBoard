@@ -22,8 +22,8 @@ import { TaflPieceMinimax } from './TaflPieceMinimax';
 import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
 
-export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
-    extends RectangularGameComponent<R, M, S, TaflPawn, TaflConfig>
+export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
+    extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>
 {
 
     public viewInfo: { pieceClasses: string[][][] } = { pieceClasses: [] };
@@ -52,7 +52,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.updateViewInfo();
     }
     public override async showLastMove(move: M): Promise<void> {
-        const previousState: S = this.getPreviousState();
+        const previousState: TaflState = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = move.getEnd().getNext(orthogonal, 1);
@@ -126,7 +126,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         return MGPValidation.SUCCESS;
     }
     private pieceBelongToCurrentPlayer(coord: Coord): boolean {
-        const state: S = this.getState();
+        const state: TaflState = this.getState();
         const player: Player = state.getCurrentPlayer();
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
@@ -135,7 +135,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.updateViewInfo();
     }
     public isThrone(x: number, y: number): boolean {
-        const state: S = this.getState();
+        const state: TaflState = this.getState();
         return this.rules.isThrone(state, new Coord(x, y));
     }
     public isCentralThrone(x: number, y: number): boolean {
@@ -191,8 +191,8 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
     }
-    protected createAIs(): AI<TaflMove, S, AIOptions>[] {
-        const moveGenerator: TaflMoveGenerator<M, S> = new TaflMoveGenerator(this.rules);
+    protected createAIs(): AI<TaflMove, TaflState, AIOptions>[] {
+        const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(this.rules);
         return [
             new TaflPieceMinimax(this.rules),
             new TaflPieceAndInfluenceMinimax(this.rules),

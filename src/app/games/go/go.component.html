@@ -3,8 +3,8 @@
      [attr.viewBox]="getViewBox()"
      preserveAspectRatio="xMidYMid meet">
     <rect x="0" y="0"
-          [attr.width]="boardWidth * SPACE_SIZE"
-          [attr.height]="boardHeight * SPACE_SIZE"
+          [attr.width]="getState().getWidth() * SPACE_SIZE"
+          [attr.height]="getState().getHeight() * SPACE_SIZE"
           class="base mid-small-stroke"
     />
     <g id="blank_board">

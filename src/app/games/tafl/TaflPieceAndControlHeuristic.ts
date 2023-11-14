@@ -19,12 +19,12 @@ export type TaflPieceAndControlHeuristicMetrics = {
     safeScore: number,
 };
 
-export class TaflPieceAndControlHeuristic<M extends TaflMove, S extends TaflState>
-    extends TaflPieceAndInfluenceHeuristic<M, S>
+export class TaflPieceAndControlHeuristic<M extends TaflMove>
+    extends TaflPieceAndInfluenceHeuristic<M>
 {
 
-    public override getBoardValue(node: TaflNode<M, S>): BoardValue {
-        const state: S = node.gameState;
+    public override getBoardValue(node: TaflNode<M>): BoardValue {
+        const state: TaflState = node.gameState;
 
         const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node);
         let scoreValue: number = metrics.controlScore;
@@ -37,8 +37,8 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove, S extends TaflStat
         return new BoardValue(scoreValue);
     }
 
-    protected getControlScoreAndPieceScores(node: TaflNode<M, S>): TaflPieceAndControlHeuristicMetrics {
-        const state: S = node.gameState;
+    protected getControlScoreAndPieceScores(node: TaflNode<M>): TaflPieceAndControlHeuristicMetrics {
+        const state: TaflState = node.gameState;
         const pointValue: PointValue = this.getPointValue(node);
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
@@ -86,7 +86,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove, S extends TaflStat
         return value;
     }
 
-    protected getScoreByThreatenedPiece(state: S): number {
+    protected getScoreByThreatenedPiece(state: TaflState): number {
         const width: number = state.board.length;
         // The value of the four corners (each being "width" * "width")
         // + the value of what remains of the four edges (each border square being worth "width")
@@ -95,7 +95,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove, S extends TaflStat
         return (4 * width * width) + (4 * reducedWidth * width) + (reducedWidth * reducedWidth);
     }
 
-    private getScoreBySafePiece(state: S): number {
+    private getScoreBySafePiece(state: TaflState): number {
         const scoreByThreatenedPiece: number = this.getScoreByThreatenedPiece(state);
         return (16 * scoreByThreatenedPiece) + 1;
     }

@@ -194,7 +194,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (gameInfos.length > 0) {
             const stateProvider: (config: RulesConfig) => GameState = (config: RulesConfig) => {
                 // eslint-disable-next-line dot-notation
-                return gameInfos[0].rules.stateType['getInitialState'](config);
+                return gameInfos[0].rules.getInitialState(config);
             };
             return MGPOptional.of(stateProvider);
         } else {

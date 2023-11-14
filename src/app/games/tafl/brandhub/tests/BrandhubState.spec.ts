@@ -1,11 +1,11 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
-import { BrandhubState } from '../BrandhubState';
+import { TaflState } from '../../TaflState';
 import { BrandhubRules } from '../BrandhubRules';
 
 const defaultConfig: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
-describe('BrandhubState', () => {
+describe('TaflState', () => {
     describe('getInitialState', () => {
         it('should make invader Player.ZERO when invaders start', () => {
             // Given an initial state with a config where invader starts
@@ -13,7 +13,7 @@ describe('BrandhubState', () => {
                 ...defaultConfig,
                 invaderStarts: true,
             };
-            const state: BrandhubState = BrandhubState.getInitialState(customConfig);
+            const state: TaflState = BrandhubRules.get().getInitialState(customConfig);
 
             // When checking the invaders coord
             // Then they should be of Player.ZERO
@@ -26,7 +26,7 @@ describe('BrandhubState', () => {
                 ...defaultConfig,
                 invaderStarts: false,
             };
-            const state: BrandhubState = BrandhubState.getInitialState(customConfig);
+            const state: TaflState = BrandhubRules.get().getInitialState(customConfig);
 
             // When checking the invaders coord
             // Then they should be of Player.ONE

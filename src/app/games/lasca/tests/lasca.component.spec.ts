@@ -8,6 +8,7 @@ import { LascaComponent } from '../lasca.component';
 import { LascaFailure } from '../LascaFailure';
 import { LascaMove } from '../LascaMove';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
+import { LascaRules } from '../LascaRules';
 
 describe('LascaComponent', () => {
 
@@ -337,7 +338,7 @@ describe('LascaComponent', () => {
             // Given a state
             // When it is not interactive
             testUtils.getGameComponent().setInteractive(false);
-            await testUtils.setupState(LascaState.getInitialState());
+            await testUtils.setupState(LascaRules.get().getInitialState());
             // Then it should not show possible selections
             testUtils.expectElementNotToExist('.selectable-fill');
         }));

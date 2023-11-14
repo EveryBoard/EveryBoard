@@ -25,7 +25,7 @@ describe('AwaleScoreMinimax', () => {
     it('should not throw at first choice', () => {
         const node: MancalaNode = rules.getInitialNode(config);
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2);
-        expect(rules.isLegal(bestMove, MancalaState.getInitialState(config), config).isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, AwaleRules.get().getInitialState(config), config).isSuccess()).toBeTrue();
     });
     it('should choose capture when possible (at depth 1)', () => {
         // Given a state with a possible capture

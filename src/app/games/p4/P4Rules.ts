@@ -5,7 +5,7 @@ import { GameNode } from '../../jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Utils, Debug } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { P4Failure } from './P4Failure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
@@ -51,15 +51,34 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         return P4Rules.singleton.get();
     }
 
+    public static getVictoriousCoords(state: P4State): Coord[] {
+        return P4Rules.get().P4_HELPER.getVictoriousCoord(state);
+    }
+
+    public static getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
+        let y: number = 0;
+        while (y < board.length && board[y][x] === PlayerOrNone.NONE) {
+            y++;
+        }
+        return y - 1;
+    }
+
     public readonly P4_HELPER: NInARowHelper<PlayerOrNone>;
 
     private constructor() {
-        super(P4State);
+        super();
         this.P4_HELPER = new NInARowHelper(Utils.identity, 4);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<P4Config> {
         return P4Rules.RULES_CONFIG_DESCRIPTION;
+    }
+
+    public getInitialState(config: P4Config): P4State {
+        const board: PlayerOrNone[][] = TableUtils.create(config.width,
+                                                          config.height,
+                                                          PlayerOrNone.NONE);
+        return new P4State(board, 0);
     }
 
     public applyLegalMove(move: P4Move, state: P4State, _config: P4Config, _info: void): P4State {

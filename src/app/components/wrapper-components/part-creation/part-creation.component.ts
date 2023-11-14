@@ -508,7 +508,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const rules: AbstractRules = GameInfo.getByUrlName(urlName)[0].rules;
         const stateProvider: (config: RulesConfig) => GameState = (config: RulesConfig) => {
             // eslint-disable-next-line dot-notation
-            return rules.stateType['getInitialState'](config);
+            return rules.getInitialState(config);
         };
         return MGPOptional.of(stateProvider);
     }

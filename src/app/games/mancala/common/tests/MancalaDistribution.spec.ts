@@ -1,14 +1,17 @@
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MancalaDistribution } from '../MancalaMove';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('MancalaDistribution', () => {
 
     describe('of', () => {
 
         it('should throw when creating negative x indices', () => {
-            RulesUtils.expectToThrowAndLog(() => MancalaDistribution.of(-1),
-                                           'MancalaDistribution should be a positive integer!');
+            TestUtils.expectToThrowAndLog(
+                () => MancalaDistribution.of(-1),
+                'MancalaDistribution should be a positive integer!',
+            );
         });
+
     });
 
 });

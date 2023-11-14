@@ -6,7 +6,6 @@ import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { GoConfig } from './GoRules';
-import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 
@@ -103,36 +102,6 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.captured = captured;
         this.koCoord = koCoord;
         this.phase = phase;
-    }
-
-    public static getInitialState(config: GoConfig): GoState {
-        const board: GoPiece[][] = GoState.getStartingBoard(config);
-        let turn: number = 0;
-        const left: number = GobanGameComponent.getHorizontalLeft(config.width);
-        const right: number = GobanGameComponent.getHorizontalRight(config.width);
-        const up: number = GobanGameComponent.getVerticalUp(config.height);
-        const down: number = GobanGameComponent.getVerticalDown(config.height);
-        const horizontalCenter: number = GobanGameComponent.getHorizontalCenter(config.width);
-        const verticalCenter: number = GobanGameComponent.getVerticalCenter(config.height);
-        const orderedHandicaps: Coord[] = [
-            new Coord(left, up),
-            new Coord(right, down),
-            new Coord(right, up),
-            new Coord(left, down),
-            new Coord(horizontalCenter, verticalCenter),
-            new Coord(horizontalCenter, up),
-            new Coord(horizontalCenter, down),
-            new Coord(left, verticalCenter),
-            new Coord(right, verticalCenter),
-        ];
-        if (1 <= config.handicap) {
-            turn = 1;
-        }
-        for (let i: number = 0; i < config.handicap; i++) {
-            const handicapToPut: Coord = orderedHandicaps[i];
-            board[handicapToPut.y][handicapToPut.x] = GoPiece.DARK;
-        }
-        return new GoState(board, [0, 0], turn, MGPOptional.empty(), Phase.PLAYING);
     }
 
     public getCapturedCopy(): [number, number] {

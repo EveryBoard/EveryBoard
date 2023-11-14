@@ -88,8 +88,8 @@ export abstract class GobanGameComponent<R extends Rules<M, S, C, L>,
      * Must be called after `this.board` has been set, usually in `updateBoard`.
      */
     public createHoshis(): void {
-        const height: number = this.board.length;
-        const width: number = this.board[0].length;
+        const height: number = this.getHeight();
+        const width: number = this.getWidth();
         this.hoshis = GobanGameComponent.getHoshis(width, height);
     }
 
