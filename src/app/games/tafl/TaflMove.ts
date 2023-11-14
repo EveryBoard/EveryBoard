@@ -3,24 +3,31 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { TaflFailure } from './TaflFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Utils } from 'src/app/utils/utils';
 
 export abstract class TaflMove extends MoveCoordToCoord {
 
-    protected constructor(start: Coord, end: Coord) {
-        super(start, end);
-        if (start.isNotInRange(this.getMaximalDistance(), this.getMaximalDistance())) {
-            throw new Error('Starting coord of TaflMove must be on the board, not at ' + start.toString() + '.');
-        }
-        if (end.isNotInRange(this.getMaximalDistance(), this.getMaximalDistance())) {
-            throw new Error('Landing coord of TaflMove must be on the board, not at ' + end.toString() + '.');
-        }
+    public static isValidDirection(start: Coord, end: Coord): MGPValidation {
         const dir: MGPFallible<Direction> = start.getDirectionToward(end);
         if (dir.isFailure() || dir.get().isDiagonal()) {
-            throw new Error(TaflFailure.MOVE_MUST_BE_ORTHOGONAL());
+            return MGPValidation.failure(TaflFailure.MOVE_MUST_BE_ORTHOGONAL());
         }
+        return MGPValidation.SUCCESS;
     }
+
+    protected constructor(start: Coord, end: Coord) {
+        super(start, end);
+        const maximalDistance: number = this.getMaximalDistance();
+        Utils.assert(start.isInRange(maximalDistance, maximalDistance),
+                     'Starting coord of TaflMove must be on the board, not at ' + start.toString() + '.');
+        Utils.assert(end.isInRange(maximalDistance, maximalDistance),
+                     'Landing coord of TaflMove must be on the board, not at ' + end.toString() + '.');
+    }
+
     public override toString(): string {
         return 'TaflMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
+
     public abstract getMaximalDistance(): number;
 }

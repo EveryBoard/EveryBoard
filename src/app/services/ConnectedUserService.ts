@@ -164,7 +164,7 @@ export class ConnectedUserService implements OnDestroy {
             await Auth.sendPasswordResetEmail(this.auth, email);
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
     }
     /**
@@ -190,7 +190,16 @@ export class ConnectedUserService implements OnDestroy {
             await this.createUser(user.uid, username);
             return MGPFallible.success(user);
         } catch (e) {
+            return this.catchFirebaseError(e);
+        }
+    }
+
+    private catchFirebaseError<V>(e: unknown): MGPFallible<V> {
+        // Errors have an unknown type. We only want to catch firebase error, and keep throwing the rest.
+        if (e instanceof FirebaseError) {
             return MGPFallible.failure(this.mapFirebaseError(e));
+        } else {
+            throw e;
         }
     }
     public mapFirebaseError(error: FirebaseError): string {
@@ -229,7 +238,7 @@ export class ConnectedUserService implements OnDestroy {
                 await Auth.sendEmailVerification(user.get());
                 return MGPValidation.SUCCESS;
             } catch (e) {
-                return MGPValidation.failure(this.mapFirebaseError(e));
+                return this.catchFirebaseError(e);
             }
         } else {
             // This should not be reachable from a component
@@ -246,7 +255,7 @@ export class ConnectedUserService implements OnDestroy {
             await Auth.signInWithEmailAndPassword(this.auth, email, password);
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
     }
     /**
@@ -274,7 +283,7 @@ export class ConnectedUserService implements OnDestroy {
             }
             return MGPFallible.success(user);
         } catch (e) {
-            return MGPFallible.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
 
     }
@@ -308,7 +317,7 @@ export class ConnectedUserService implements OnDestroy {
             await this.reloadUser();
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
     }
     public async setPicture(url: string): Promise<MGPValidation> {
@@ -317,7 +326,7 @@ export class ConnectedUserService implements OnDestroy {
             await Auth.updateProfile(currentUser, { photoURL: url });
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
     }
     public async reloadUser(): Promise<void> {
