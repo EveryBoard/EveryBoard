@@ -1,7 +1,7 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, TableUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
@@ -14,32 +14,27 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
         super(board, turn);
         this.remainingPieces = remainingPieces;
     }
-    public static getInitialState(): EncapsuleState {
-        const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-        const startingBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
-        const initialPieces: EncapsulePiece[] = [
-            EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
-            EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,
-            EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.SMALL_DARK,
-            EncapsulePiece.SMALL_DARK, EncapsulePiece.SMALL_LIGHT, EncapsulePiece.SMALL_LIGHT,
-        ];
-        return new EncapsuleState(startingBoard, 0, initialPieces);
-    }
+
     public getRemainingPieces(): EncapsulePiece[] {
         return ArrayUtils.copy(this.remainingPieces);
     }
+
     public getRemainingPiecesOfPlayer(player: Player): EncapsulePiece[] {
         return this.getRemainingPieces().filter((piece: EncapsulePiece) => piece.getPlayer() === player);
     }
+
     public pieceBelongsToCurrentPlayer(piece: EncapsulePiece): boolean {
         return piece.belongsTo(this.getCurrentPlayer());
     }
+
     public isDroppable(piece: EncapsulePiece): boolean {
         return this.pieceBelongsToCurrentPlayer(piece) && this.isInRemainingPieces(piece);
     }
+
     public isInRemainingPieces(piece: EncapsulePiece): boolean {
         return this.remainingPieces.some((p: EncapsulePiece) => p === piece);
     }
+
     public getPlayerRemainingPieces(): EncapsulePiece[] {
         return this.remainingPieces.filter((piece: EncapsulePiece) => this.pieceBelongsToCurrentPlayer(piece));
     }

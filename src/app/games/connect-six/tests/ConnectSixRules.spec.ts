@@ -6,6 +6,7 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../Connect
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConnectSixRules', () => {
     /**
@@ -27,7 +28,7 @@ describe('ConnectSixRules', () => {
     describe('first turn', () => {
         it('should allow the first player play only one piece', () => {
             // Given the initial state
-            const state: ConnectSixState = ConnectSixState.getInitialState();
+            const state: ConnectSixState = ConnectSixRules.get().getInitialState();
 
             // When dropping one piece
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
@@ -58,14 +59,14 @@ describe('ConnectSixRules', () => {
         });
         it('should refuse move that drop two pieces on first turn', () => {
             // Given the first turn
-            const state: ConnectSixState = ConnectSixState.getInitialState();
+            const state: ConnectSixState = ConnectSixRules.get().getInitialState();
             // When dropping two pieces
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(11, 11), new Coord(10, 10));
             // Then the attempt would have throw
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            RulesUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'First move should be instance of ConnectSixFirstMove');
+            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'First move should be instance of ConnectSixFirstMove');
         });
     });
     describe('next turns', () => {
@@ -213,7 +214,7 @@ describe('ConnectSixRules', () => {
             function trySingleDropAfterFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            RulesUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'non-firsts moves should be instance of ConnectSixDrops');
+            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'non-firsts moves should be instance of ConnectSixDrops');
         });
         it('should notify victory when aligning 6 stones of your color', () => {
             const state: ConnectSixState = new ConnectSixState([

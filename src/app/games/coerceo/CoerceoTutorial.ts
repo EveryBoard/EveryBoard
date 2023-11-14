@@ -3,6 +3,7 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { CoerceoRules } from './CoerceoRules';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -20,7 +21,7 @@ export class CoerceoTutorial extends Tutorial {
          The dark pieces belong to the first player and can only move on the dark spaces,
          while the light pieces belong to the second player and can only move on the light spaces.
          The goal of the game is to capture all of the opponent's pieces.`,
-            CoerceoState.getInitialState(),
+            CoerceoRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Move`,
@@ -32,7 +33,7 @@ export class CoerceoTutorial extends Tutorial {
         You can pass through the opponent's pieces.<br/><br/>
         You're playing first, hence you're playing Dark.
         Perform any move.`,
-            CoerceoState.getInitialState(),
+            CoerceoRules.get().getInitialState(),
             CoerceoRegularMove.of(new Coord(3, 5), new Coord(5, 5)),
             $localize`Congratulations! Let's see captures now.`,
         ),

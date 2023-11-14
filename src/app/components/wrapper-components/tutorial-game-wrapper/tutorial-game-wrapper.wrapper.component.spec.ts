@@ -19,6 +19,7 @@ import { NotFoundComponent } from '../../normal-component/not-found/not-found.co
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Comparable } from 'src/app/utils/Comparable';
 import { Player } from 'src/app/jscaip/Player';
+import { QuartoRules } from 'src/app/games/quarto/QuartoRules';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -114,17 +115,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title 1',
                     'instruction',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title 2',
                     'instruction',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
             ];
             // When page rendered
@@ -140,7 +141,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
         it('should call setRole according to the current player (player zero)', fakeAsync(async() => {
             // Given a tutorial a step for player zero
-            const statePlayerZero: QuartoState = QuartoState.getInitialState();
+            const statePlayerZero: QuartoState = QuartoRules.get().getInitialState();
             const tutorial: TutorialStep[] = [
                 TutorialStep.informational(
                     'title 0',
@@ -187,17 +188,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title 1',
                     'instruction 1',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title 2',
                     'instruction 2',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
             ];
             await wrapper.startTutorial(tutorial);
@@ -220,7 +221,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'instruction',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     [new QuartoMove(0, 0, QuartoPiece.BBBB)],
                     'Congratulations!',
                     'Perdu.',
@@ -239,7 +240,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
             expect(testUtils.getGameComponent().getState())
-                .toEqual(QuartoState.getInitialState());
+                .toEqual(QuartoRules.get().getInitialState());
         }));
         it('should start step again after clicking "retry" on step success', fakeAsync(async() => {
             // Given any TutorialStep
@@ -247,7 +248,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'instruction',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     [new QuartoMove(0, 0, QuartoPiece.BBBB)],
                     'Congratulations!',
                     'Perdu.',
@@ -265,7 +266,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
             expect(testUtils.getGameComponent().getState())
-                .toEqual(QuartoState.getInitialState());
+                .toEqual(QuartoRules.get().getInitialState());
         }));
         it('should forbid clicking again on the board after success', fakeAsync(async() => {
             // Given a TutorialStep on which a valid move has been done.
@@ -273,7 +274,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     [
                         new QuartoMove(0, 0, QuartoPiece.BBBB),
                         new QuartoMove(0, 3, QuartoPiece.BBBB),
@@ -305,7 +306,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'instruction',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#choosePiece_15'],
                     'Congratulations!',
                     'Perdu.',
@@ -322,7 +323,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Congratulations!');
             expect(testUtils.getGameComponent().getState())
-                .toEqual(QuartoState.getInitialState());
+                .toEqual(QuartoRules.get().getInitialState());
         }));
         // /////////////////////// Next /////////////////////////////////////////////////////////
         it('should allow to skip step', fakeAsync(async() => {
@@ -331,7 +332,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'Explanation Explanation Explanation.',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['chooseCoord_0_0'],
                     'Congratulations!',
                     'Perdu.',
@@ -339,7 +340,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'Following Following Following.',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Fini.',
                     'Reperdu.',
@@ -361,7 +362,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Congratulations!',
                     'Perdu.',
@@ -369,7 +370,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 1',
                     'instruction 1',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_1_1'],
                     'Congratulations!',
                     'Perdu.',
@@ -377,7 +378,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 2',
                     'instruction 2',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_2_2'],
                     'Congratulations!',
                     'Perdu.',
@@ -403,7 +404,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Congratulations!',
                     'Perdu.',
@@ -411,7 +412,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 1',
                     'instruction 1',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_1_1'],
                     'Congratulations!',
                     'Perdu.',
@@ -419,7 +420,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 2',
                     'instruction 2',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_2_2'],
                     'Congratulations!',
                     'Perdu.',
@@ -446,7 +447,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Congratulations!',
                     'Perdu.',
@@ -478,7 +479,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
             ]);
             await testUtils.clickElement('#nextButton');
@@ -500,7 +501,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
             ]);
             testUtils.expectElementNotToExist('#playLocallyButton');
@@ -519,7 +520,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
             ]);
             testUtils.expectElementNotToExist('#playOnlineButton');
@@ -541,7 +542,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     [
                         new QuartoMove(0, 0, QuartoPiece.BBBB),
                         new QuartoMove(0, 3, QuartoPiece.BBBB),
@@ -567,7 +568,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     [
                         new QuartoMove(0, 0, QuartoPiece.BBBB),
                         new QuartoMove(0, 3, QuartoPiece.BBBB),
@@ -597,7 +598,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     [
                         new QuartoMove(0, 0, QuartoPiece.BBBB),
                         new QuartoMove(0, 3, QuartoPiece.BBBB),
@@ -627,7 +628,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.anyMove(
                     'title',
                     'instruction',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     new QuartoMove(0, 0, QuartoPiece.BABA),
                     'Congratulations!',
                 ),
@@ -685,7 +686,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.anyMove(
                     'title',
                     'instruction',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     new QuartoMove(0, 0, QuartoPiece.BABA),
                     'Congratulations!',
                 ),
@@ -778,7 +779,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.anyMove(
                     'title',
                     'instruction',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     new QuartoMove(0, 0, QuartoPiece.BABA),
                     'Congratulations!',
                 ),
@@ -804,7 +805,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'Click on (0, 0) or (3, 3)',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0', '#chooseCoord_3_3'],
                     'Congratulations!',
                     'Perdu.',
@@ -827,7 +828,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'Click on (0, 0) or (3, 3)',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0', '#chooseCoord_3_3'],
                     'Congratulations!',
                     'Perdu.',
@@ -883,7 +884,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'Click on (0, 0)',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Bravo !',
                     'Perdu.',
@@ -941,7 +942,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
             ];
             await wrapper.startTutorial(tutorial);
@@ -960,12 +961,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title',
                     'Explanation Explanation Explanation.',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title',
                     'Suite suite.',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                 ),
             ];
             await wrapper.startTutorial(tutorial);
@@ -990,7 +991,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromPredicate(
                     'title',
                     'You shall not pass',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     new QuartoMove(1, 1, QuartoPiece.BAAB),
                     (_move: QuartoMove, _resultingState: QuartoState) => {
                         return MGPValidation.failure('chocolatine');
@@ -1017,7 +1018,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromPredicate(
                     'title',
                     'No matter what you do, it will be success!',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     new QuartoMove(1, 1, QuartoPiece.BAAB),
                     (_move: QuartoMove, _resultingState: QuartoState) => {
                         return MGPValidation.SUCCESS;
@@ -1047,7 +1048,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromPredicate(
                     'title',
                     'You will have to ask me for solution anyway',
-                    QuartoState.getInitialState(),
+                    QuartoRules.get().getInitialState(),
                     solutionMove,
                     (_move: QuartoMove, _resultingState: QuartoState) => {
                         return MGPValidation.failure('what did I say ?');

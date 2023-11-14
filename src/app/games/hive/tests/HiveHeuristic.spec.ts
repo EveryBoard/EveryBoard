@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { HiveHeuristic } from '../HiveHeuristic';
-import { HiveNode } from '../HiveRules';
+import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -21,7 +21,7 @@ describe('HiveHeuristic', () => {
     });
     it('should assign a 0 value if the queen is not on the board', () => {
         // Given a state without the queen
-        const state: HiveState = HiveState.getInitialState();
+        const state: HiveState = HiveRules.get().getInitialState();
         const node: HiveNode = new HiveNode(state);
 
         // When computing its value

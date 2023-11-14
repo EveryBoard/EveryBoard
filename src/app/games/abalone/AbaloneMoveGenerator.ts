@@ -21,7 +21,7 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
                     continue;
                 }
                 for (const dir of HexaDirection.factory.all) {
-                    const move: AbaloneMove = AbaloneMove.fromSingleCoord(first, dir).get();
+                    const move: AbaloneMove = AbaloneMove.ofSingleCoord(first, dir);
                     if (this.isAcceptablePush(move, state)) {
                         moves.push(move);
                     } else {
@@ -34,7 +34,7 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
                             }
                             const second: Coord = first.getNext(alignement, distance);
                             if (AbaloneState.isOnBoard(second)) {
-                                const translation: AbaloneMove = AbaloneMove.fromDoubleCoord(first, second, dir).get();
+                                const translation: AbaloneMove = AbaloneMove.ofDoubleCoord(first, second, dir);
                                 if (AbaloneRules.get().isLegal(translation, state).isSuccess()) {
                                     moves.push(translation);
                                 }

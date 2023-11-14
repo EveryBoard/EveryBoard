@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PentagoMove } from '../PentagoMove';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('PentagoMove', () => {
@@ -9,14 +9,14 @@ describe('PentagoMove', () => {
         function rotatingNonExistingBlock(): void {
             PentagoMove.withRotation(0, 0, -1, true);
         }
-        RulesUtils.expectToThrowAndLog(rotatingNonExistingBlock, 'This block does not exist: -1');
+        TestUtils.expectToThrowAndLog(rotatingNonExistingBlock, 'This block does not exist: -1');
     });
     it('should throw when space not in range', () => {
         function usingOutOfRangeCoord(): void {
             PentagoMove.rotationless(-1, 6);
         }
-        RulesUtils.expectToThrowAndLog(usingOutOfRangeCoord,
-                                       'The board is a 6 space wide square, invalid coord: (-1, 6)');
+        TestUtils.expectToThrowAndLog(usingOutOfRangeCoord,
+                                      'The board is a 6 space wide square, invalid coord: (-1, 6)');
     });
     it('should print nicely', () => {
         let expectedString: string = 'PentagoMove(4, 2)';

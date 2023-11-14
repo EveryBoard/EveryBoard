@@ -2,7 +2,7 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';
-import { LinesOfActionNode } from '../LinesOfActionRules';
+import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionMoveGenerator', () => {
@@ -16,7 +16,7 @@ describe('LinesOfActionMoveGenerator', () => {
         moveGenerator = new LinesOfActionMoveGenerator();
     });
     it('should have 36 moves on the initial state', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const node: LinesOfActionNode = new LinesOfActionNode(state);
         expect(moveGenerator.getListMoves(node).length).toBe(6 * 3 * 2);
     });

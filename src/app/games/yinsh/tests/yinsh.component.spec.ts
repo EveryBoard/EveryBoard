@@ -10,6 +10,7 @@ import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { YinshRules } from '../YinshRules';
 
 describe('YinshComponent', () => {
 
@@ -125,7 +126,7 @@ describe('YinshComponent', () => {
 
         it('should display score as 0 - 0 when game is in placement phase', fakeAsync(async() => {
             // Given the initial state
-            const state: YinshState = YinshState.getInitialState();
+            const state: YinshState = YinshRules.get().getInitialState();
 
             // When rendering the board
             await testUtils.setupState(state);
@@ -435,7 +436,7 @@ describe('YinshComponent', () => {
 
         it('should show the number of rings of each player', fakeAsync(async() => {
             // Given the initial board
-            const state: YinshState = new YinshState(YinshState.getInitialState().board, [2, 1], 10);
+            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, [2, 1], 10);
 
             // When rendering the board
             await testUtils.setupState(state);

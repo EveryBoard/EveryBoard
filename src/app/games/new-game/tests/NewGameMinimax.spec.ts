@@ -1,7 +1,7 @@
 import { NewGameState } from '../NewGameState';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NewGameMove } from '../NewGameMove';
-import { NewGameLegalityInfo, NewGameNode } from '../NewGameRules';
+import { NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameMinimax } from '../NewGameMinimax';
 
 /**
@@ -17,7 +17,7 @@ describe('NewGameMinimax', () => {
     });
     it('should select some move', () => {
         // Given state
-        const state: NewGameState = NewGameState.getInitialState();
+        const state: NewGameState = NewGameRules.get().getInitialState();
         const node: NewGameNode = new NewGameNode(state);
 
         // When selecting the best move

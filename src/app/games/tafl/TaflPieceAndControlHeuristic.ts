@@ -19,12 +19,12 @@ export type TaflPieceAndControlHeuristicMetrics = {
     safeScore: number,
 };
 
-export class TaflPieceAndControlHeuristic<M extends TaflMove, S extends TaflState>
-    extends TaflPieceAndInfluenceHeuristic<M, S>
+export class TaflPieceAndControlHeuristic<M extends TaflMove>
+    extends TaflPieceAndInfluenceHeuristic<M>
 {
 
-    public override getBoardValue(node: TaflNode<M, S>): BoardValue {
-        const state: S = node.gameState;
+    public override getBoardValue(node: TaflNode<M>): BoardValue {
+        const state: TaflState = node.gameState;
 
         const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(state);
         let scoreValue: number = metrics.controlScore;
@@ -36,7 +36,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove, S extends TaflStat
         assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
         return new BoardValue(scoreValue);
     }
-    protected getControlScoreAndPieceScores(state: S): TaflPieceAndControlHeuristicMetrics {
+    protected getControlScoreAndPieceScores(state: TaflState): TaflPieceAndControlHeuristicMetrics {
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
@@ -79,7 +79,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove, S extends TaflStat
           */
         return value;
     }
-    protected getScoreByThreatenedPiece(state: S): number {
+    protected getScoreByThreatenedPiece(state: TaflState): number {
         const width: number = state.board.length;
         // The value of the four corners (each being "width" * "width")
         // + the value of what remains of the four edges (each border square being worth "width")
@@ -87,7 +87,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove, S extends TaflStat
         const reducedWidth: number = width - 2;
         return (4 * width * width) + (4 * reducedWidth * width) + (reducedWidth * reducedWidth);
     }
-    private getScoreBySafePiece(state: S): number {
+    private getScoreBySafePiece(state: TaflState): number {
         const scoreByThreatenedPiece: number = this.getScoreByThreatenedPiece(state);
         return (16 * scoreByThreatenedPiece) + 1;
     }

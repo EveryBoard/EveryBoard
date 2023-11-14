@@ -5,6 +5,7 @@ import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { PylosRules } from './PylosRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -21,14 +22,14 @@ export class PylosTutorial extends Tutorial {
         Here is what the initial board looks like, it is a board of 4 x 4 squares.
         This board will become a pyramid, little by little.
         It will be filled by the pieces of your stock. Each player has 15 pieces.`,
-            PylosState.getInitialState(),
+            PylosRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Dropping a piece`,
             $localize`When it is your turn, you can always drop one of your piece on an empty square.
         The gray squares are where you can drop your pieces.<br/><br/>
         Click on one of the squares to drop a piece there.`,
-            PylosState.getInitialState(),
+            PylosRules.get().getInitialState(),
             PylosMove.ofDrop(new PylosCoord(1, 1, 0), []),
             $localize`There you go, as simple as that.`,
         ),
