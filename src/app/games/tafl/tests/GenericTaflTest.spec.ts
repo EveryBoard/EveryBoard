@@ -92,11 +92,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
                 // When moving your piece
-<<<<<<< HEAD
-                const move: M = entries.moveProvider(start, end);
-=======
-                const move: M = entries.moveProvider(entries.validFirstCoord, entries.validSecondCoord).get();
->>>>>>> f9f58261aa322d1724c7e9bc02bb1ac96729be6a
+                const move: M = entries.moveProvider(start, end).get();
 
                 // Then the move should be legal
                 const landingSpace: string = '#click_' + end.x + '_' + end.y;
