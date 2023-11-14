@@ -28,8 +28,7 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
         return this.getEnd().equals(other.getEnd());
     }
 
-    public getMovedCoords(): Coord[] {
-        // TODO FOR REVEIW: si tu trouve qu'elles sont pas "moved" dit le au css :p et sinon quoi, involved coord ?
+    public getMovedOverCoords(): Coord[] {
         return this.getStart().getAllCoordsToward(this.getEnd());
     }
 

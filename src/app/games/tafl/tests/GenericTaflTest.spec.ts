@@ -12,7 +12,6 @@ import { TaflMove } from '../TaflMove';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
-import { Direction } from 'src/app/jscaip/Direction';
 
 
 export class TaflTestEntries<C extends TaflComponent<R, M, S>,
@@ -34,21 +33,28 @@ export class TaflTestEntries<C extends TaflComponent<R, M, S>,
     stateReadyForJumpOver: S;
     jumpOver: M; // An illegal move on stateReadyForJumpOver, that could make a piece jump over another
 }
+
 export function DoTaflTests<C extends TaflComponent<R, M, S>,
                             R extends TaflRules<M, S>,
                             M extends TaflMove,
                             S extends TaflState>(entries: TaflTestEntries<C, R, M, S>)
     : void
 {
+
     let testUtils: ComponentTestUtils<C>;
+
     describe(entries.gameName + ' component generic tests', () => {
+
         beforeEach(fakeAsync(async() => {
             testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);
         }));
+
         it('should create', () => {
             testUtils.expectToBeCreated();
         });
+
         describe('First click', () => {
+
             it('should cancel move when clicking on opponent piece', fakeAsync( async() => {
                 // Given any state
                 // When clicking on an opponent piece
@@ -57,12 +63,14 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
                 await testUtils.expectClickFailure(opponentPiece, reason);
             }));
+
             it('should cancel move when first click on empty space', fakeAsync( async() => {
                 // Given any state
                 // When clicking on an empty space
                 // Then it should be a failure
                 await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }));
+
             it('should highlight selected piece', fakeAsync(async() => {
                 // Given any state
                 // When clicking on one of your piece
@@ -72,8 +80,11 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 // Then it should have selected the piece
                 testUtils.expectElementToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
+
         });
+
         describe('Second click', () => {
+
             it('should allow simple move', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 const start: Coord = entries.validFirstCoord;
@@ -88,14 +99,13 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 const landingSpace: string = '#click_' + end.x + '_' + end.y;
                 await testUtils.expectMoveSuccess(landingSpace, move);
                 // And the square on the way should be highlighted
-                const moveDirection: Direction = start.getDirectionToward(end).get();
-                let movedCoord: Coord = start.getNext(moveDirection, 1);
-                while (movedCoord.equals(end) === false) {
-                    const elementName: string = '#space_' + movedCoord.x + '_' + movedCoord.y;
+                const movedOverCoords: Coord[] = move.getMovedOverCoords();
+                for (const movedOverCoord of movedOverCoords) {
+                    const elementName: string = '#space_' + movedOverCoord.x + '_' + movedOverCoord.y;
                     testUtils.expectElementToHaveClass(elementName, 'moved-fill');
-                    movedCoord = movedCoord.getNext(moveDirection, 1);
                 }
             }));
+
             it('should fail but not throw during diagonal move attempt', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
@@ -108,6 +118,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 const secondClick: string = '#click_' + entries.diagonalSecondCoord.x + '_' + entries.diagonalSecondCoord.y;
                 expect(async() => await testUtils.expectClickFailure(secondClick, message)).not.toThrow();
             }));
+
             it('should show captured piece and left spaces', fakeAsync(async() => {
                 // Given a board where a capture is ready to be made
                 await testUtils.setupState(entries.stateReadyForCapture);
@@ -124,6 +135,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 expect(component.getRectClasses(firstCoord.x, firstCoord.y)).toContain('moved-fill');
                 expect(component.getRectClasses(secondCoord.x, secondCoord.y)).toContain('moved-fill');
             }));
+
             it('should select other piece when clicking on another piece of the player', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
@@ -137,6 +149,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 testUtils.expectElementToHaveClass('#piece_' + otherCoord, 'selected-stroke');
                 testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
+
             it('should deselect clicked piece when it is click for the second time in a row', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
@@ -148,6 +161,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 // Then that piece should be deselected
                 testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
+
             it('should cancelMove when trying to jump over another piece', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 await testUtils.setupState(entries.stateReadyForJumpOver);
@@ -164,7 +178,9 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 // And the piece should be unselected
                 testUtils.expectElementNotToHaveClass('#piece_' + firstCoord, 'selected-stroke');
             }));
+
         });
+
         it('should have a bijective encoder', () => {
             const rules: R = testUtils.getGameComponent().rules;
             const encoder: Encoder<M> = testUtils.getGameComponent().encoder;
@@ -178,6 +194,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
                 EncoderTestUtils.expectToBeBijective(encoder, move);
             }
         });
+
         it('should hide first move when taking back', fakeAsync(async() => {
             // Given a state with a first move done
             const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
@@ -194,5 +211,7 @@ export function DoTaflTests<C extends TaflComponent<R, M, S>,
             testUtils.expectElementNotToHaveClass('#space_' + playersCoord, 'moved-fill');
             testUtils.expectElementNotToHaveClass('#space_' + landingCoord, 'moved-fill');
         }));
+
     });
+
 }

@@ -64,7 +64,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
                 }
             }
         }
-        this.passedByCoords = this.node.previousMove.get().getMovedCoords();
+        this.passedByCoords = this.node.previousMove.get().getMovedOverCoords();
     }
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];

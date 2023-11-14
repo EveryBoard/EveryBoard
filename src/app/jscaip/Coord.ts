@@ -166,7 +166,6 @@ export class Coord extends Vector {
         if (this.equals(end)) {
             return [end];
         } else {
-            // eslint-disable-next-line @typescript-eslint/no-this-alias
             const start: Coord[] = [this];
             const middle: Coord[] = this.getCoordsToward(end);
             return start.concat(middle).concat(end);
