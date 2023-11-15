@@ -65,7 +65,7 @@ type SquareInfo = {
     coord: Coord,
     squareClasses: string[],
     isCrumbled: boolean,
-    isTherePieceToDraw: boolean,
+    hasPieceToDraw: boolean,
     pieceClasses: string[],
     lodestone?: LodestoneInfo,
 };
@@ -372,12 +372,12 @@ export class LodestoneComponent
             coord,
             squareClasses: [],
             isCrumbled: this.isCrumbled(coord),
-            isTherePieceToDraw: false,
+            hasPieceToDraw: false,
             pieceClasses: [],
             lodestone: lodestoneInfo,
         };
         if (piece.isPlayerPiece()) {
-            squareInfo.isTherePieceToDraw = true;
+            squareInfo.hasPieceToDraw = true;
             squareInfo.pieceClasses = [this.getPlayerClass(piece.owner)];
         } else if (squareInfo.isCrumbled) {
             return this.getCrumbledSquareInfo(coord, squareInfo);
@@ -396,7 +396,7 @@ export class LodestoneComponent
                                                    preCaptureInfo.get().preCaptureMove);
         if (pieceThatCrumbledLastEndOfTurn.isPresent()) {
             const crumbledOwner: PlayerOrNone = pieceThatCrumbledLastEndOfTurn.get().owner;
-            squareInfo.isTherePieceToDraw = true;
+            squareInfo.hasPieceToDraw = true;
             squareInfo.pieceClasses = [
                 this.getPlayerClass(crumbledOwner),
                 'semi-transparent',

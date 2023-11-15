@@ -2,6 +2,7 @@
      width="100%" height="100%"
      [attr.viewBox]="getViewBox()"
      preserveAspectRatio="xMidYMid meet">
+
     <g *ngFor="let line of viewInfo.boardInfo; index as y">
         <g *ngFor="let square of line; index as x">
             <g id="square_{{ x }}_{{ y }}"
@@ -24,7 +25,7 @@
                               class="base"
                     />
                 </ng-template>
-                <circle *ngIf="square.isTherePieceToDraw"
+                <circle *ngIf="square.hasPieceToDraw"
                         id="piece_{{ x }}_{{ y }}"
                         class="base"
                         [ngClass]="square.pieceClasses"
@@ -40,6 +41,7 @@
             </g>
         </g>
     </g>
+
     <g *ngFor="let capture of viewInfo.capturesToPlace; index as x"
        id="capture_{{ x }}"
        [attr.transform]="getCaptureTransform(x)" >
@@ -49,13 +51,18 @@
                 cx="0"
                 cy="0"/>
     </g>
-    <g *ngFor="let lodestone of viewInfo.availableLodestones; index as x"
-       id="lodestone_{{ lodestone.direction }}_{{ lodestone.orientation }}"
-       [attr.transform]="getAvailableLodestoneTransform(x)"
-       (click)="selectLodestone(lodestone)"
-       app-lodestone-lodestone
-       [lodestoneInfo]="lodestone"
-    />
+
+    <g *ngIf="isInteractive"
+       id="availableLodestones">
+        <g *ngFor="let lodestone of viewInfo.availableLodestones; index as x"
+            id="lodestone_{{ lodestone.direction }}_{{ lodestone.orientation }}"
+            [attr.transform]="getAvailableLodestoneTransform(x)"
+            (click)="selectLodestone(lodestone)"
+            app-lodestone-lodestone
+            [lodestoneInfo]="lodestone"
+        />
+    </g>
+
     <g *ngFor="let groupInfo of viewInfo.pressurePlateGroupInfos"
        id="pressurePlateGroup_{{ groupInfo.groupPosition }}">
         <g *ngFor="let plate of groupInfo.plateInfos"
@@ -85,6 +92,7 @@
             </g>
         </g>
     </g>
+
     <rect *ngIf="viewInfo.selected.isPresent()"
           id="selection_{{ viewInfo.selected.get().x }}_{{ viewInfo.selected.get().y }}"
           class="base no-fill selected-stroke"
