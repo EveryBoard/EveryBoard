@@ -14,6 +14,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { KalahRules } from '../kalah/KalahRules';
 
 type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;
 
@@ -64,7 +65,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R, M>,
         return MGPOptional.empty();
     }
     public expectToBeFed(actionAndResult: MancalaActionAndResult<M>): void {
-        for (const coordAndContent of MancalaState.getInitialState().getCoordsAndContents()) {
+        for (const coordAndContent of KalahRules.get().getInitialState().getCoordsAndContents()) {
             const suffix: string = coordAndContent.coord.x + '_' + coordAndContent.coord.y;
             const optionalCell: MGPOptional<MancalaHouseContents> =
                 this.getCellAt(coordAndContent.coord, actionAndResult);

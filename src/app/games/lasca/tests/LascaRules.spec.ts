@@ -32,7 +32,7 @@ describe('LascaRules', () => {
     describe('Move', () => {
         it('should forbid move when first coord is empty', () => {
             // Given any board
-            const state: LascaState = LascaState.getInitialState();
+            const state: LascaState = LascaRules.get().getInitialState();
 
             // When doing a move that starts on an empty coord
             const move: LascaMove = LascaMove.fromStep(new Coord(1, 3), new Coord(2, 2)).get();
@@ -43,7 +43,7 @@ describe('LascaRules', () => {
         });
         it('should forbid moving opponent piece', () => {
             // Given any board
-            const state: LascaState = LascaState.getInitialState();
+            const state: LascaState = LascaRules.get().getInitialState();
 
             // When doing a move that starts on an opponent's piece
             const move: LascaMove = LascaMove.fromStep(new Coord(0, 2), new Coord(1, 3)).get();
@@ -73,7 +73,7 @@ describe('LascaRules', () => {
         });
         it('should forbid landing on an occupied square', () => {
             // Given a board where a piece could be tempted to take another's place
-            const state: LascaState = LascaState.getInitialState();
+            const state: LascaState = LascaRules.get().getInitialState();
 
             // When trying to land on an occupied square
             const move: LascaMove = LascaMove.fromStep(new Coord(5, 5), new Coord(4, 4)).get();
@@ -84,7 +84,7 @@ describe('LascaRules', () => {
         });
         it('should allow simple move', () => {
             // Given any board
-            const state: LascaState = LascaState.getInitialState();
+            const state: LascaState = LascaRules.get().getInitialState();
 
             // When doing a simple move
             const move: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(3, 3)).get();

@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { TablutState } from '../tablut/TablutState';
 import { TaflPawn } from '../TaflPawn';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TablutMove } from '../tablut/TablutMove';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { TaflPieceMinimax } from '../TaflPieceMinimax';
+import { TaflState } from '../TaflState';
 
 describe('TaflPieceMinimax', () => {
 
@@ -27,11 +27,11 @@ describe('TaflPieceMinimax', () => {
             [_, _, _, _, _, _, _, X, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 1);
+        const state: TaflState = new TaflState(board, 1);
         const node: TablutNode = new TablutNode(state);
-        const winnerMove: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(8, 0));
+        const winnerMove: TablutMove = TablutMove.from(new Coord(3, 0), new Coord(8, 0)).get();
 
-        const minimax: Minimax<TablutMove, TablutState> = new TaflPieceMinimax(TablutRules.get());
+        const minimax: Minimax<TablutMove, TaflState> = new TaflPieceMinimax(TablutRules.get());
         const bestMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 });
         expect(bestMove).toEqual(winnerMove);
     });

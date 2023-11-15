@@ -3,7 +3,7 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils, TableUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -25,9 +25,18 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         }
         return DiamRules.singleton.get();
     }
-    private constructor() {
-        super(DiamState);
+
+    public getInitialState(): DiamState {
+        const _: DiamPiece = DiamPiece.EMPTY;
+        const board: Table<DiamPiece> = [
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        return new DiamState(board, [4, 4, 4, 4], 0);
     }
+
     public applyLegalMove(move: DiamMove, state: DiamState, _info: void): DiamState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);

@@ -4,6 +4,7 @@ import { AwaleMove } from '../AwaleMove';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { doMancalaComponentTests as doMancalaComponentTests } from '../../common/GenericMancalaComponentTest.spec';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
+import { AwaleRules } from '../AwaleRules';
 
 describe('AwaleComponent', () => {
 
@@ -12,7 +13,7 @@ describe('AwaleComponent', () => {
         gameName: 'Awale',
         moveGenerator: new AwaleMoveGenerator(),
         distribution: {
-            state: MancalaState.getInitialState(),
+            state: AwaleRules.get().getInitialState(),
             move: AwaleMove.ZERO,
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },

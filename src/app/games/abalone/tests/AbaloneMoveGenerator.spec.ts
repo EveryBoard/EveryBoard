@@ -2,7 +2,7 @@
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
-import { AbaloneNode } from '../AbaloneRules';
+import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { AbaloneState } from '../AbaloneState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -19,7 +19,7 @@ describe('AbaloneMoveGenerator', () => {
     });
     it('should propose all non-suicidal moved at first turn, there is 42', () => {
         // Given initial node
-        const initialState: AbaloneState = AbaloneState.getInitialState();
+        const initialState: AbaloneState = AbaloneRules.get().getInitialState();
         const initialNode: AbaloneNode = new AbaloneNode(initialState);
 
         // Then we should have 44 moves

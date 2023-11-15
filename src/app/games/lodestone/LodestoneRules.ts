@@ -5,15 +5,17 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
-import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription } from './LodestonePiece';
-import { LodestoneState, LodestonePositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlateGroup } from './LodestoneState';
+import { LodestoneOrientation, LodestoneDirection, LodestonePiece } from './LodestonePiece';
+import { LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription, LodestonePiecePlayer } from './LodestonePiece';
+import { LodestoneState, LodestonePositions, LodestonePressurePlates } from './LodestoneState';
+import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlateGroup } from './LodestoneState';
 
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
@@ -66,9 +68,25 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return LodestoneRules.singleton.get();
     }
-    private constructor() {
-        super(LodestoneState);
+
+    public getInitialState(): LodestoneState {
+        const _: LodestonePiece = LodestonePieceNone.EMPTY;
+        const O: LodestonePiece = LodestonePiecePlayer.ZERO;
+        const X: LodestonePiece = LodestonePiecePlayer.ONE;
+        const board: Table<LodestonePiece> = [
+            [_, _, O, X, O, X, _, _],
+            [_, O, X, O, X, O, X, _],
+            [O, X, O, X, O, X, O, X],
+            [X, O, X, _, _, O, X, O],
+            [O, X, O, _, _, X, O, X],
+            [X, O, X, O, X, O, X, O],
+            [_, X, O, X, O, X, O, _],
+            [_, _, X, O, X, O, _, _],
+        ];
+        const plates: LodestonePressurePlates = LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]);
+        return new LodestoneState(board, 0, new MGPMap(), plates);
     }
+
     public applyLegalMove(move: LodestoneMove, state: LodestoneState, infos: LodestoneInfos): LodestoneState {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();

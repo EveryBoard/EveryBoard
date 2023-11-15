@@ -103,7 +103,7 @@ describe('SiamHeuristic', () => {
     describe('pushers computations', () => {
         it('should compute the expected pushers on first turn', () => {
             // Given the initial state
-            const state: SiamState = SiamState.getInitialState();
+            const state: SiamState = SiamRules.get().getInitialState();
             // When computing the pushers
             const pushers: { coord: Coord, distance: number }[] = SiamRules.get().getPushers(state, [1, 2, 3], [2]);
             // Then it should compute 6 pushers to a distance of 5
@@ -288,7 +288,7 @@ describe('SiamHeuristic', () => {
         });
         it('should not count unpushable mountains', () => {
             // Given a board with unpushable mountains, such as the initial board
-            const state: SiamState = SiamState.getInitialState();
+            const state: SiamState = SiamRules.get().getInitialState();
             // When computing the closest pusher horizontally
             const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, new Coord(4, 2), Orthogonal.RIGHT);

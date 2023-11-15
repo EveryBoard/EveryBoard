@@ -10,6 +10,7 @@ import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 
@@ -23,9 +24,14 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return PentagoRules.singleton.get();
     }
-    private constructor() {
-        super(PentagoState);
+
+    public getInitialState(): PentagoState {
+        const initialBoard: Table<PlayerOrNone> = TableUtils.create(PentagoState.SIZE,
+                                                                    PentagoState.SIZE,
+                                                                    PlayerOrNone.NONE);
+        return new PentagoState(initialBoard, 0);
     }
+
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
         // [ firstCoordToTest, directionToTest, shouldLookTheSpaceBeforeAsWellAsSpaceAfter]
         [new Coord(1, 0), new Vector(1, 1), false], // 4 short diagonals

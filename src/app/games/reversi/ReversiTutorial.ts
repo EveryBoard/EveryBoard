@@ -2,6 +2,7 @@ import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiState } from 'src/app/games/reversi/ReversiState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { ReversiRules } from './ReversiRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -32,7 +33,7 @@ export class ReversiTutorial extends Tutorial {
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>
         Do any move by clicking to put your piece
         Dark plays first.`,
-            ReversiState.getInitialState(),
+            ReversiRules.get().getInitialState(),
             new ReversiMove(2, 4),
             $localize`Congratulations!`,
         ),

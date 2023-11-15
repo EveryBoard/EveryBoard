@@ -116,10 +116,6 @@ class HiveStateUpdate {
 
 export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements ComparableObject {
 
-    public static getInitialState(): HiveState {
-        const board: Table<HivePiece[]> = [];
-        return HiveState.fromRepresentation(board, 0);
-    }
     public static fromRepresentation(board: Table<HivePiece[]>, turn: number, vector: Vector = new Vector(0, 0))
     : HiveState
     {
@@ -144,6 +140,7 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
         }
         return new HiveState(pieces, remainingPieces, queenBees, turn);
     }
+
     public constructor(pieces: ReversibleMap<Coord, HivePieceStack>,
                        public readonly remainingPieces: HiveRemainingPieces,
                        public readonly queenBees: MGPMap<Player, Coord>,
@@ -160,15 +157,18 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
         }
         this.queenBees.makeImmutable();
     }
+
     public update(): HiveStateUpdate {
         return HiveStateUpdate.of(this);
     }
+
     public equals(other: HiveState): boolean {
         return this.pieces.equals(other.pieces) &&
                this.remainingPieces.equals(other.remainingPieces) &&
                this.queenBees.equals(other.queenBees) &&
                this.turn === other.turn;
     }
+
     public getAt(coord: Coord): HivePieceStack {
         if (this.isOnBoard(coord)) {
             return this.pieces.get(coord).get();
@@ -176,12 +176,15 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
             return HivePieceStack.EMPTY;
         }
     }
+
     public queenBeeLocation(player: Player): MGPOptional<Coord> {
         return this.queenBees.get(player);
     }
+
     public hasQueenBeeOnBoard(player: Player): boolean {
         return this.queenBeeLocation(player).isPresent();
     }
+
     public numberOfNeighbors(coord: Coord): number {
         let neighbors: number = 0;
         for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
@@ -191,12 +194,15 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
         }
         return neighbors;
     }
+
     public isDisconnected(): boolean {
         return this.getGroups().size() > 1;
     }
+
     public occupiedSpaces(): Coord[] {
         return this.pieces.listKeys();
     }
+
     public emptyNeighbors(coord: Coord): Coord[] {
         const result: Coord[] = [];
         for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
@@ -206,6 +212,7 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
         }
         return result;
     }
+
     public haveCommonNeighbor(first: Coord, second: Coord): boolean {
         const occupiedNeighborsOfFirst: MGPSet<Coord> = this.getOccupiedNeighbors(first);
         const occupiedNeighborsOfSecond: MGPSet<Coord> = this.getOccupiedNeighbors(second);

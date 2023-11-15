@@ -31,7 +31,7 @@ describe('ConspirateursRules', () => {
     describe('drop moves', () => {
         it('should allow drops within the center zone', () => {
             // Given the initial state
-            const state: ConspirateursState = ConspirateursState.getInitialState();
+            const state: ConspirateursState = ConspirateursRules.get().getInitialState();
             // When dropping a piece in the center zone
             const move: ConspirateursMove = drop(new Coord(7, 7));
             // Then the move should be legal and the piece should be put at the expected position
@@ -58,7 +58,7 @@ describe('ConspirateursRules', () => {
         });
         it('should forbid drops out of the center zone', () => {
             // Given the initial state
-            const state: ConspirateursState = ConspirateursState.getInitialState();
+            const state: ConspirateursState = ConspirateursRules.get().getInitialState();
             // When dropping a piece out of the center zone
             const move: ConspirateursMove = drop(new Coord(3, 2));
             // Then the move should be illegal
@@ -451,7 +451,7 @@ describe('ConspirateursRules', () => {
     describe('win', () => {
         it('should consider game ongoing as long as both players have not reached the win condition', () => {
             // Given a state with no victory
-            const state: ConspirateursState = ConspirateursState.getInitialState();
+            const state: ConspirateursState = ConspirateursRules.get().getInitialState();
             const node: ConspirateursNode = new ConspirateursNode(state);
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node);

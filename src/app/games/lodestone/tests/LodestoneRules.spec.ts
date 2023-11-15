@@ -30,7 +30,7 @@ describe('LodestoneRules', () => {
 
     it('should allow placing a lodestone on an empty square', () => {
         // Given any state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone on an empty square
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
                                                       'pull',
@@ -42,7 +42,7 @@ describe('LodestoneRules', () => {
 
     it('should forbid placing a lodestone on a square occupied by a piece', () => {
         // Given any state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone on an occupied square
         const move: LodestoneMove = new LodestoneMove(new Coord(2, 2), 'pull', 'orthogonal');
         // Then the move should be illegal
@@ -154,7 +154,7 @@ describe('LodestoneRules', () => {
 
     it('should allow choosing freely the side of the lodestone when it is in the hands', () => {
         // Given the initial state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone in 'pull' or 'push' direction
         const pull: LodestoneMove = new LodestoneMove(new Coord(4, 4),
                                                       'pull',
@@ -219,7 +219,7 @@ describe('LodestoneRules', () => {
 
     it('should pull the player pieces when making a pull move, capturing opponent pieces on the way', () => {
         // Given any state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone in a position to pull our own pieces
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
                                                       'pull',
@@ -288,7 +288,7 @@ describe('LodestoneRules', () => {
 
     it('should forbid placing more pieces than there have been captures', () => {
         // Given any state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone to pull, such that we try to place more captures than what we actually captured
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
                                                       'pull',
@@ -916,7 +916,7 @@ describe('LodestoneRules', () => {
 
     it('should not consider victory if there are pieces left', () => {
         // Given a state with pieces of both players
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         const node: LodestoneNode = new LodestoneNode(state);
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node);

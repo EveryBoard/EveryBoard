@@ -34,7 +34,7 @@ describe('DvonnRules', () => {
         rules = DvonnRules.get();
     });
     it('initial stacks should be of size 1', () => {
-        const state: DvonnState = DvonnState.getInitialState();
+        const state: DvonnState = DvonnRules.get().getInitialState();
         for (let y: number = 0; y < DvonnState.HEIGHT; y++) {
             for (let x: number = 0; x < DvonnState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
@@ -52,12 +52,12 @@ describe('DvonnRules', () => {
         // the edge of the board may move. The pieces that are not positioned at
         // the edge remain blocked for as long as they remain completely
         // surrounded (see diagram below).
-        const state: DvonnState = DvonnState.getInitialState();
+        const state: DvonnState = DvonnRules.get().getInitialState();
         const firstTurnMovablePieces: Coord[] = DvonnRules.getMovablePieces(state);
         expect(firstTurnMovablePieces.length).toEqual(11);
     });
     it('should only allow moves from the current player color', () => {
-        const state: DvonnState = DvonnState.getInitialState();
+        const state: DvonnState = DvonnRules.get().getInitialState();
         const movablePieces: Coord[] = DvonnRules.getMovablePieces(state);
         for (const coord of movablePieces) {
             expect(state.getPieceAt(coord).belongsTo(Player.ZERO)).toBeTrue();
@@ -73,7 +73,7 @@ describe('DvonnRules', () => {
         RulesUtils.expectMoveFailure(rules, state, illegalMove, reason);
     });
     it('should forbid moves for pieces with more than 6 neighbors', () => {
-        const state: DvonnState = DvonnState.getInitialState();
+        const state: DvonnState = DvonnRules.get().getInitialState();
         const move: DvonnMove = DvonnMove.from(new Coord(1, 3), new Coord(1, 2)).get();
         const reason: string = DvonnFailure.TOO_MANY_NEIGHBORS();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
@@ -125,7 +125,7 @@ describe('DvonnRules', () => {
             [_, O, X, O, O, X, X, X, O, O, N],
             [O, S, O, X, X, O, O, O, X, N, N],
         ];
-        const state: DvonnState = DvonnState.getInitialState();
+        const state: DvonnState = DvonnRules.get().getInitialState();
         const move: DvonnMove = DvonnMove.from(new Coord(0, 3), new Coord(0, 2)).get();
         const expectedState: DvonnState = new DvonnState(expectedBoard, 1, false);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -172,7 +172,7 @@ describe('DvonnRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should not allow to pass turns if moves are possible', () => {
-        const state: DvonnState = DvonnState.getInitialState();
+        const state: DvonnState = DvonnRules.get().getInitialState();
         const move: DvonnMove = DvonnMove.PASS;
         const reason: string = RulesFailure.CANNOT_PASS();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
@@ -252,7 +252,7 @@ describe('DvonnRules', () => {
     describe('isMovablePiece', () => {
         it('should fail if the coord is not on the board', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            expect(() => rules.isMovablePiece(DvonnState.getInitialState(), new Coord(-1, -1)))
+            expect(() => rules.isMovablePiece(DvonnRules.get().getInitialState(), new Coord(-1, -1)))
                 .toThrowError('Assertion failure: piece is not on the board');
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'piece is not on the board');
         }));

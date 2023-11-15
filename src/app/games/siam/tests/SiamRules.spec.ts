@@ -35,7 +35,7 @@ describe('SiamRules', () => {
 
     it('should allow insertions', () => {
         // Given the initial board
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
         // When performing an insertion
         const move: SiamMove = SiamMove.from(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
         // Then it should succeed
@@ -477,7 +477,7 @@ describe('SiamRules', () => {
 
     it('should compute empty list of moves between two impossible squares', () => {
         // Given two coordinatess that are not neighbors
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 2);
         // When computing the list of moves between these coords
@@ -488,7 +488,7 @@ describe('SiamRules', () => {
 
     it('should compute empty list of moves between aligned squares that are too far away', () => {
         // Given two coordinatess that are aligned but of a distance greater than one
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
         // When computing the list of moves between these coords

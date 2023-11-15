@@ -164,28 +164,11 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
     public static readonly INITIAL_PRESSURE_PLATES: LodestonePressurePlates =
         LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]);
 
-    public static getInitialState(): LodestoneState {
-        const _: LodestonePiece = LodestonePieceNone.EMPTY;
-        const O: LodestonePiece = LodestonePiecePlayer.ZERO;
-        const X: LodestonePiece = LodestonePiecePlayer.ONE;
-        const board: Table<LodestonePiece> = [
-            [_, _, O, X, O, X, _, _],
-            [_, O, X, O, X, O, X, _],
-            [O, X, O, X, O, X, O, X],
-            [X, O, X, _, _, O, X, O],
-            [O, X, O, _, _, X, O, X],
-            [X, O, X, O, X, O, X, O],
-            [_, X, O, X, O, X, O, _],
-            [_, _, X, O, X, O, _, _],
-        ];
-        const plates: LodestonePressurePlates = LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]);
-        return new LodestoneState(board, 0, new MGPMap(), plates);
-    }
-
     public constructor(board: Table<LodestonePiece>,
                        turn: number,
                        public readonly lodestones: LodestonePositions,
-                       public readonly pressurePlates: LodestonePressurePlates) {
+                       public readonly pressurePlates: LodestonePressurePlates)
+    {
         super(board, turn);
     }
 

@@ -19,7 +19,7 @@ describe('P4Rules', () => {
     });
     it('should drop piece on the lowest space of the column', () => {
         // Given the initial board
-        const state: P4State = P4State.getInitialState();
+        const state: P4State = P4Rules.get().getInitialState();
 
         // When playing in column 3
         const move: P4Move = P4Move.of(3);

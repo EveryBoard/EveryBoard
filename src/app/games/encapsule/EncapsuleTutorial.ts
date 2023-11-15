@@ -5,6 +5,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { EncapsuleRules } from './EncapsuleRules';
 
 const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 const s: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
@@ -36,7 +37,7 @@ export class EncapsuleTutorial extends Tutorial {
             $localize`Putting a piece`,
             $localize`This is the initial board.<br/><br/>
         You're playing Dark. Pick one of your piece on the side of the board and put it on the board.`,
-            EncapsuleState.getInitialState(),
+            EncapsuleRules.get().getInitialState(),
             EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(1, 1)),
             $localize`Congratulations!`),
         TutorialStep.fromMove(
