@@ -57,12 +57,12 @@ export class SiamPiece {
             if (orientation === Orthogonal.UP) return SiamPiece.DARK_UP;
             if (orientation === Orthogonal.RIGHT) return SiamPiece.DARK_RIGHT;
             if (orientation === Orthogonal.DOWN) return SiamPiece.DARK_DOWN;
-            return SiamPiece.LIGHT_LEFT;
+            return SiamPiece.DARK_LEFT;
         } else {
             if (orientation === Orthogonal.UP) return SiamPiece.LIGHT_UP;
             if (orientation === Orthogonal.RIGHT) return SiamPiece.LIGHT_RIGHT;
             if (orientation === Orthogonal.DOWN) return SiamPiece.LIGHT_DOWN;
-            return SiamPiece.DARK_LEFT;
+            return SiamPiece.LIGHT_LEFT;
         }
     }
 

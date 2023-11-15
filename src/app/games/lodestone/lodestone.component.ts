@@ -247,8 +247,7 @@ export class LodestoneComponent
         return this.chooseMove(move);
     }
 
-    public async onPressurePlateClick(temporary: boolean,
-                                      position: LodestonePressurePlatePosition,
+    public async onPressurePlateClick(position: LodestonePressurePlatePosition,
                                       plateIndex: number,
                                       pieceIndex: number)
     : Promise<MGPValidation>
@@ -258,11 +257,20 @@ export class LodestoneComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (temporary) {
-            return this.deselectPressurePlate(position);
-        } else {
-            return this.selectPressurePlate(position);
+        return this.selectPressurePlate(position);
+    }
+
+    public async onTemporaryPressurePlateClick(position: LodestonePressurePlatePosition,
+                                               plateIndex: number,
+                                               pieceIndex: number)
+    : Promise<MGPValidation>
+    {
+        const squareName: string = '#plate_' + position + '_' + plateIndex + '_' + pieceIndex;
+        const clickValidity: MGPValidation = await this.canUserPlay(squareName);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
         }
+        return this.deselectPressurePlate(position);
     }
 
     private async selectPressurePlate(position: LodestonePressurePlatePosition): Promise<MGPValidation> {

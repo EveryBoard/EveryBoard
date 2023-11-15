@@ -22,6 +22,7 @@ describe('SiamMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new SiamMoveGenerator();
     });
+
     it('should provide 44 possible moves on initial board', () => {
         // Given the initial board
         const node: SiamNode = new SiamNode(SiamRules.get().getInitialState());
@@ -30,6 +31,7 @@ describe('SiamMoveGenerator', () => {
         // Then there should be exactly 44 moves
         expect(firstTurnMoves.length).toEqual(44);
     });
+
     it('should compute all expected moves', () => {
         // Given a specific board
         const board: Table<SiamPiece> = [
@@ -39,7 +41,7 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, U, _],
             [_, _, _, U, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
+        const state: SiamState = new SiamState(board, 1);
         const node: SiamNode = new SiamNode(state);
         // When computing all moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node);
@@ -65,6 +67,7 @@ describe('SiamMoveGenerator', () => {
         }
         expect(moveType).toEqual({ moving: 35, rotation: 12, pushingInsertion: 18, slidingInsertion: 16 });
     });
+
     it('should not propose inserting a piece when 5 pieces of the player are already on the board', () => {
         // Given a board with 5 pieces of the player
         const board: Table<SiamPiece> = [
@@ -74,7 +77,7 @@ describe('SiamMoveGenerator', () => {
             [d, _, _, U, _],
             [_, _, _, M, _],
         ];
-        const state: SiamState = new SiamState(board, 1);
+        const state: SiamState = new SiamState(board, 2);
         const node: SiamNode = new SiamNode(state);
         // When computing the moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node);

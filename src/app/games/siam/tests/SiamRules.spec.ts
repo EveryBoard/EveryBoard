@@ -218,8 +218,10 @@ describe('SiamRules', () => {
             [u, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
+
         // When moving the piece in a different direction than its orientation
         const move: SiamMove = SiamMove.from(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT).get();
+
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],

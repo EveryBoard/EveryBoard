@@ -288,8 +288,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                             board[coord.y][coord.x] = LodestonePieceNone.EMPTY;
                         }
                     }
-                } else {
-                    // console.log('TODO QUOICOUBEH')
                 }
             }
         }
