@@ -1,4 +1,3 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
@@ -23,10 +22,6 @@ export class DiaballikPiece implements ComparableObject {
 }
 
 export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
-
-    public isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(7, 7);
-    }
 
     public equals(other: DiaballikState): boolean {
         return TableUtils.compare(this.board, other.board);

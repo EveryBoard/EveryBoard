@@ -3,7 +3,6 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
-import { DiaballikState } from './DiaballikState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -17,7 +16,6 @@ export class DiaballikBallPass extends MoveCoordToCoord {
         MoveWithTwoCoords.getFallibleEncoder(DiaballikBallPass.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<DiaballikBallPass> {
-        Utils.assert(DiaballikState.isOnBoard(start) && DiaballikState.isOnBoard(end), 'DiaballikMove not on board');
         const direction: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
         if (direction.isFailure()) {
             return MGPFallible.failure(DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
@@ -40,7 +38,6 @@ export class DiaballikTranslation extends MoveCoordToCoord {
         MoveWithTwoCoords.getFallibleEncoder(DiaballikTranslation.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<DiaballikTranslation> {
-        Utils.assert(DiaballikState.isOnBoard(start) && DiaballikState.isOnBoard(end), 'DiaballikMove not on board');
         const vector: Vector = start.getVectorToward(end);
         if (vector.isSingleOrthogonalStep()) {
             return MGPFallible.success(new DiaballikTranslation(start, end));

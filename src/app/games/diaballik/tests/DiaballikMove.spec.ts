@@ -8,19 +8,6 @@ import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('DiaballikMove', () => {
 
-    it('should reject out of board moves', () => {
-        const invalidCoord: Coord = new Coord(-1, 0);
-        const validCoord: Coord = new Coord(0, 0);
-        TestUtils.expectToThrowAndLog(() => DiaballikTranslation.from(invalidCoord, validCoord),
-                                      'DiaballikMove not on board');
-        TestUtils.expectToThrowAndLog(() => DiaballikTranslation.from(validCoord, invalidCoord),
-                                      'DiaballikMove not on board');
-        TestUtils.expectToThrowAndLog(() => DiaballikBallPass.from(invalidCoord, validCoord),
-                                      'DiaballikMove not on board');
-        TestUtils.expectToThrowAndLog(() => DiaballikBallPass.from(validCoord, invalidCoord),
-                                      'DiaballikMove not on board');
-    });
-
     it('should reject move with more than one pass', () => {
         const pass: DiaballikBallPass = DiaballikBallPass.from(new Coord(0, 0), new Coord(1, 0)).get();
         const translation: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();

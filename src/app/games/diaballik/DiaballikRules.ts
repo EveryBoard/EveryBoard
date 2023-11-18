@@ -274,7 +274,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
         for (const direction of [Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT]) {
             const neighbor: Coord = coord.getNext(direction);
-            if (DiaballikState.isOnBoard(neighbor)) {
+            if (state.isOnBoard(neighbor)) {
                 const piece: DiaballikPiece = state.getPieceAt(neighbor);
                 if (piece.owner === player) {
                     return true;
@@ -292,7 +292,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     {
         for (const direction of Orthogonal.factory.all) {
             const neighbor: Coord = coord.getNext(direction);
-            if (DiaballikState.isOnBoard(neighbor)) {
+            if (state.isOnBoard(neighbor)) {
                 const piece: DiaballikPiece = state.getPieceAt(neighbor);
                 if (piece.owner === player.getOpponent()) {
                     opponentsConnected.add(neighbor);
