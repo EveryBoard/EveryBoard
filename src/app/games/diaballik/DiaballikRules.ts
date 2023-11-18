@@ -13,6 +13,7 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { CoordFailure } from '../../jscaip/Coord';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -71,6 +72,14 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     public isLegal(move: DiaballikMove, state: DiaballikState): MGPFallible<DiaballikState> {
         let currentState: DiaballikState = state;
         for (const subMove of move.getSubMoves()) {
+            const start: Coord = subMove.getStart();
+            if (state.isOnBoard(start) === false) {
+                return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
+            }
+            const end: Coord = subMove.getEnd();
+            if (state.isOnBoard(end) === false) {
+                return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(end));
+            }
             const legality: MGPFallible<DiaballikState> = this.isLegalSubMove(currentState, subMove);
             if (legality.isFailure()) {
                 return legality;
@@ -117,8 +126,15 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     public isLegalPass(state: DiaballikState, pass: DiaballikBallPass): MGPFallible<DiaballikState> {
-        // The origin must be a piece of the player that holds the ball
         const start: Coord = pass.getStart();
+        if (state.isOnBoard(start) === false) {
+            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
+        }
+        const end: Coord = pass.getEnd();
+        if (state.isOnBoard(end) === false) {
+            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(end));
+        }
+        // The origin must be a piece of the player that holds the ball
         const startPiece: DiaballikPiece = state.getPieceAt(start);
         if (startPiece.owner === PlayerOrNone.NONE) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
@@ -129,7 +145,6 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         Utils.assert(startPiece.holdsBall, 'DiaballikRules: cannot pass without the ball');
 
         // The destination must be a piece of the player
-        const end: Coord = pass.getEnd();
         const endPiece: DiaballikPiece = state.getPieceAt(end);
         if (endPiece.owner === PlayerOrNone.NONE) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());

@@ -8,6 +8,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { CoordFailure } from '../../../jscaip/Coord';
 
 describe('DiaballikRules', () => {
 
@@ -33,6 +34,57 @@ describe('DiaballikRules', () => {
 
     beforeEach(() => {
         rules = DiaballikRules.get();
+    });
+
+    describe('out of board moves', () => {
+
+        it('should reject translation starting out of board', () => {
+            // Given a state
+            const state: DiaballikState = DiaballikRules.get().getInitialState();
+
+            // When doing a move out of board
+            const move: DiaballikMove = translation(new Coord(-1, 0), new Coord(0, 0));
+
+            // Then it should fail
+            const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+
+        it('should reject translation ending out of board', () => {
+            // Given a state
+            const state: DiaballikState = DiaballikRules.get().getInitialState();
+
+            // When doing a move out of board
+            const move: DiaballikMove = translation(new Coord(0, 0), new Coord(-1, 0));
+
+            // Then it should fail
+            const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+
+        it('should reject pass starting out of board', () => {
+            // Given a state
+            const state: DiaballikState = DiaballikRules.get().getInitialState();
+
+            // When doing a move out of board
+            const move: DiaballikMove = pass(new Coord(-1, 0), new Coord(0, 0));
+
+            // Then it should fail
+            const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+
+        it('should reject pass ending out of board', () => {
+            // Given a state
+            const state: DiaballikState = DiaballikRules.get().getInitialState();
+
+            // When doing a move out of board
+            const move: DiaballikMove = pass(new Coord(0, 0), new Coord(-1, 0));
+
+            // Then it should fail
+            const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
     });
 
     it('should allow full move with two translations of the same piece and one pass', () => {
