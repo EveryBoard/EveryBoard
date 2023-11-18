@@ -126,15 +126,8 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     public isLegalPass(state: DiaballikState, pass: DiaballikBallPass): MGPFallible<DiaballikState> {
-        const start: Coord = pass.getStart();
-        if (state.isOnBoard(start) === false) {
-            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
-        }
-        const end: Coord = pass.getEnd();
-        if (state.isOnBoard(end) === false) {
-            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(end));
-        }
         // The origin must be a piece of the player that holds the ball
+        const start: Coord = pass.getStart();
         const startPiece: DiaballikPiece = state.getPieceAt(start);
         if (startPiece.owner === PlayerOrNone.NONE) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
@@ -145,6 +138,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         Utils.assert(startPiece.holdsBall, 'DiaballikRules: cannot pass without the ball');
 
         // The destination must be a piece of the player
+        const end: Coord = pass.getEnd();
         const endPiece: DiaballikPiece = state.getPieceAt(end);
         if (endPiece.owner === PlayerOrNone.NONE) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
