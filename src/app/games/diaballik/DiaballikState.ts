@@ -17,7 +17,7 @@ export class DiaballikPiece implements ComparableObject {
     {
     }
 
-    public equals(other: this): boolean {
+    public equals(other: DiaballikPiece): boolean {
         return this === other;
     }
 }
