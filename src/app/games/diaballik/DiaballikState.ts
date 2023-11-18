@@ -24,10 +24,8 @@ export class DiaballikPiece implements ComparableObject {
 
 export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
 
-    private static readonly SIZE: number = 7;
-
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(DiaballikState.SIZE, DiaballikState.SIZE);
+    public isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(7, 7);
     }
 
     public equals(other: DiaballikState): boolean {
