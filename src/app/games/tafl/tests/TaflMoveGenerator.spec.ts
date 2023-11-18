@@ -33,7 +33,7 @@ describe('TaflMoveGenerator', () => {
         const moves: BrandhubMove[] = moveGenerator.getListMoves(node);
 
         // Then going back on throne should not be part of it
-        const kingBackOnThrone: BrandhubMove = BrandhubMove.of(new Coord(3, 2), new Coord(3, 3));
+        const kingBackOnThrone: BrandhubMove = BrandhubMove.from(new Coord(3, 2), new Coord(3, 3)).get();
         expect(moves).not.toContain(kingBackOnThrone);
     });
 });

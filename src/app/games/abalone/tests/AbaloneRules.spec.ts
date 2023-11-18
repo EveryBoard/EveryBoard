@@ -32,7 +32,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving one piece
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.UP).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 7), HexaDirection.UP);
 
         // Then the piece should be moved
         const expectedBoard: FourStatePiece[][] = [
@@ -54,7 +54,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving one opponent piece
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(8, 1), HexaDirection.DOWN).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(8, 1), HexaDirection.DOWN);
 
         // Then the movement should be refused
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
@@ -65,7 +65,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving one empty space
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.DOWN).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(4, 4), HexaDirection.DOWN);
 
         // Then the movement should be refused
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
@@ -76,7 +76,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving one piece
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 8), HexaDirection.UP).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 8), HexaDirection.UP);
 
         // Then the piece should be moved
         const expectedBoard: FourStatePiece[][] = [
@@ -109,7 +109,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = new AbaloneState(board, 0);
 
         // When moving four piece
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES();
@@ -131,7 +131,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = new AbaloneState(board, 0);
 
         // When moving one piece against two
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH();
@@ -153,7 +153,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = new AbaloneState(board, 0);
 
         // When moving two pieces against two
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH();
@@ -175,7 +175,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = new AbaloneState(board, 0);
 
         // When moving 3 pieces against 1 but then you're own piece block
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES();
@@ -197,7 +197,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = new AbaloneState(board, 0);
 
         // When pushing
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.LEFT).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(4, 4), HexaDirection.LEFT);
 
         // Then the piece should be throwed out of the board
         const expectedBoard: FourStatePiece[][] = [
@@ -251,7 +251,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving a 3 pieces column sideways
-        const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(2, 6), new Coord(4, 6), HexaDirection.UP).get();
+        const move: AbaloneMove = AbaloneMove.ofDoubleCoord(new Coord(2, 6), new Coord(4, 6), HexaDirection.UP);
 
         // Then the piece should be moved
         const expectedBoard: FourStatePiece[][] = [
@@ -284,9 +284,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = new AbaloneState(board, 0);
 
         // When trying to move 3 pieces down whilst there is a blocking piece in the middle
-        const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(1, 4),
-                                                              new Coord(3, 4),
-                                                              HexaDirection.DOWN).get();
+        const move: AbaloneMove = AbaloneMove.ofDoubleCoord(new Coord(1, 4), new Coord(3, 4), HexaDirection.DOWN);
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.TRANSLATION_IMPOSSIBLE();
@@ -308,9 +306,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = new AbaloneState(board, 0);
 
         // When trying to move 3 pieces down whilst there is a blocking piece in the middle
-        const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(1, 4),
-                                                              new Coord(3, 4),
-                                                              HexaDirection.DOWN).get();
+        const move: AbaloneMove = AbaloneMove.ofDoubleCoord(new Coord(1, 4), new Coord(3, 4), HexaDirection.DOWN);
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES();
@@ -321,7 +317,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = AbaloneRules.get().getInitialState();
 
         // When moving a piece in one of the coord in the array but out of the board
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 8), HexaDirection.RIGHT).get();
+        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(4, 8), HexaDirection.RIGHT);
 
         // Then the piece should be moved
         const expectedBoard: FourStatePiece[][] = [
@@ -354,9 +350,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = new AbaloneState(board, 0);
 
         // When moving a piece in one of the coord in the array but out of the board
-        const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(4, 7),
-                                                              new Coord(5, 7),
-                                                              HexaDirection.DOWN).get();
+        const move: AbaloneMove = AbaloneMove.ofDoubleCoord(new Coord(4, 7), new Coord(5, 7), HexaDirection.DOWN);
 
         // Then the piece should be moved
         const expectedBoard: FourStatePiece[][] = [
@@ -389,9 +383,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneState = new AbaloneState(board, 0);
 
         // When moving a piece in one of the coord in the array but out of the board
-        const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(2, 6),
-                                                              new Coord(0, 8),
-                                                              HexaDirection.LEFT).get();
+        const move: AbaloneMove = AbaloneMove.ofDoubleCoord(new Coord(2, 6), new Coord(0, 8), HexaDirection.LEFT);
 
         // Then the piece should be moved
         const expectedBoard: FourStatePiece[][] = [
