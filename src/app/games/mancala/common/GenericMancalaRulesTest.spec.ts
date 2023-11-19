@@ -1,26 +1,28 @@
 /* eslint-disable max-lines-per-function */
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Rules } from 'src/app/jscaip/Rules';
 import { MancalaState } from './MancalaState';
 import { MancalaMove } from './MancalaMove';
 import { MancalaFailure } from './MancalaFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
+import { MancalaConfig } from './MancalaConfig';
+import { MancalaRules } from './MancalaRules';
 
-export class MancalaRulesTestEntries<M extends MancalaMove> {
+export class MancalaRulesTestEntries {
     gameName: string; // 'Awale', 'Kalah', etc
-    rules: Rules<M, MancalaState>;
-    simpleMove: M;
+    rules: MancalaRules;
+    simpleMove: MancalaMove;
 }
-export function DoMancalaRulesTests<M extends MancalaMove>(entries: MancalaRulesTestEntries<M>): void {
+export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
-    describe(entries.gameName + ' component generic tests', () => {
+    describe(entries.gameName + ' rules generic tests', () => {
+
+        const defaultConfig: MancalaConfig = entries.rules.getRulesConfigDescription().defaultConfig.config;
 
         it('should allow simple move', () => {
             // Given any board
-            // TODO: check why this fuck works without freaking config !!
-            const state: MancalaState = entries.rules.getInitialState();
+            const state: MancalaState = entries.rules.getInitialState(defaultConfig);
             // When doing a simple move
             // Then the seed should be distributed
             const expectedBoard: Table<number> = [
@@ -28,7 +30,7 @@ export function DoMancalaRulesTests<M extends MancalaMove>(entries: MancalaRules
                 [4, 5, 5, 5, 5, 0],
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
-            RulesUtils.expectMoveSuccess(entries.rules, state, entries.simpleMove, expectedState);
+            RulesUtils.expectMoveSuccess(entries.rules, state, entries.simpleMove, expectedState, defaultConfig);
         });
 
         it('should refuse distributing empty space', () => {

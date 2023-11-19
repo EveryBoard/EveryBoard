@@ -11,6 +11,7 @@ interface Limits {
 }
 
 export class ViewBox {
+
     public static fromLimits(left: number, right: number, up: number, down: number): ViewBox {
         const width: number = right - left;
         const height: number = down - up;
@@ -59,7 +60,12 @@ export class ViewBox {
     }
 
     public expand(left: number, right: number, above: number, below: number): ViewBox {
-        return new ViewBox(this.left - left, this.up - above, this.width + left + right, this.height + above + below);
+        return new ViewBox(
+            this.left - left,
+            this.up - above,
+            this.width + left + right,
+            this.height + above + below,
+        );
     }
 
     public containingAtLeast(viewBox: ViewBox): ViewBox {

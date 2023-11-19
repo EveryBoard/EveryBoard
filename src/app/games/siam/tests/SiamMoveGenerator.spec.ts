@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { SiamNode, SiamRules } from '../SiamRules';
+import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -15,9 +16,11 @@ const R: SiamPiece = SiamPiece.LIGHT_RIGHT;
 
 const d: SiamPiece = SiamPiece.DARK_DOWN;
 
-describe('SiamMoveGenerator', () => {
+fdescribe('SiamMoveGenerator', () => {
 
     let moveGenerator: SiamMoveGenerator;
+    const rules: SiamRules = SiamRules.get();
+    const defaultConfig: SiamConfig = rules.getRulesConfigDescription().defaultConfig.config;
 
     beforeEach(() => {
         moveGenerator = new SiamMoveGenerator();
@@ -25,7 +28,8 @@ describe('SiamMoveGenerator', () => {
 
     it('should provide 44 possible moves on initial board', () => {
         // Given the initial board
-        const node: SiamNode = new SiamNode(SiamRules.get().getInitialState());
+        const node: SiamNode =
+            new SiamNode(rules.getInitialState(defaultConfig), undefined, undefined, MGPOptional.of(defaultConfig));
 
         // When listing the moves
         const firstTurnMoves: SiamMove[] = moveGenerator.getListMoves(node);
@@ -44,7 +48,7 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, U, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new SiamNode(state);
+        const node: SiamNode = new SiamNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
 
         // When listing the moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node);
@@ -57,7 +61,7 @@ describe('SiamMoveGenerator', () => {
             slidingInsertion: 0,
         };
         for (const move of moves) {
-            if (move.isInsertion()) {
+            if (rules.isInsertion(move, state)) {
                 if (move.landingOrientation === move.direction.get()) {
                     moveType.pushingInsertion = moveType.pushingInsertion + 1;
                 } else {
@@ -81,14 +85,14 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, M, _],
         ];
         const state: SiamState = new SiamState(board, 1);
-        const node: SiamNode = new SiamNode(state);
+        const node: SiamNode = new SiamNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
 
         // When listing the moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node);
         for (const move of moves) {
 
             // Then no move should insert a new piece
-            expect(move.isInsertion()).toBeFalse();
+            expect(rules.isInsertion(move, state)).toBeFalse();
         }
     });
 

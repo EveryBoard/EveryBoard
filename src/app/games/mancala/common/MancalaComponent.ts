@@ -54,7 +54,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
     }
-    public override getViewBox(): string {
+    public mgetViewBox(): string {
         const left: number = - this.STROKE_WIDTH / 2;
         const up: number = - this.STROKE_WIDTH / 2;
         const width: number = this.getViewBoxWidth() + this.STROKE_WIDTH;

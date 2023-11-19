@@ -4,9 +4,9 @@ import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../Epamino
 
 describe('EpaminondasMoveGenerator', () => {
 
-    let rules: EpaminondasRules;
+    let rules: EpaminondasRules = EpaminondasRules.get();
     let moveGenerator: EpaminondasMoveGenerator;
-    const config: EpaminondasConfig = EpaminondasRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const config: EpaminondasConfig = rules.getRulesConfigDescription().getDefaultConfig().config;
 
     beforeEach(() => {
         rules = EpaminondasRules.get();

@@ -2,10 +2,10 @@ import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
-import { SiamRules, SiamNode } from './SiamRules';
+import { SiamRules, SiamNode, SiamConfig } from './SiamRules';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 
-export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
+export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamConfig> {
 
     public getListMoves(node: SiamNode): SiamMove[] {
         let moves: SiamMove[] = [];
@@ -19,10 +19,11 @@ export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
                                                                   coordAndContent.coord.y));
             }
         }
-        if (node.gameState.countCurrentPlayerPawn() < 5) {
+        const config: SiamConfig = node.getConfig();
+        if (node.gameState.countCurrentPlayerPawn() < config.numberOfPiece) {
             // up to 44 insertions
             // we remove some legal but useless insertions as explained below
-            for (const insertion of SiamRules.get().getInsertions(node.gameState)) {
+            for (const insertion of SiamRules.get().getInsertions(node.gameState, config)) {
                 if (insertion.direction.get().getOpposite() === insertion.landingOrientation) {
                     // this is an insertion with an orientation opposite to its direction,
                     // these are always a useless move and we don't want to take them into account here
