@@ -30,7 +30,7 @@ export class SiamHeuristic extends Heuristic<SiamMove, SiamState> {
         for (const pusher of pushers) {
             if (SiamState.isOnBoard(pusher.coord)) {
                 const piece: SiamPiece = state.getPieceAt(pusher.coord);
-                if (piece.belongTo(Player.ZERO)) {
+                if (piece.belongsTo(Player.ZERO)) {
                     zeroShortestDistance = Math.min(zeroShortestDistance, pusher.distance);
                 } else {
                     oneShortestDistance = Math.min(oneShortestDistance, pusher.distance);

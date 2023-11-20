@@ -109,7 +109,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
     public isLegal(move: QuixoMove, state: QuixoState): MGPValidation {
         if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             return MGPValidation.SUCCESS;
         }

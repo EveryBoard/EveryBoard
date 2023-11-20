@@ -72,7 +72,7 @@ describe('LascaComponent', () => {
             // Given any board
             // When clicking on the opponent's piece
             // Then it should fail
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             await testUtils.expectClickFailure('#coord_0_0', reason);
         }));
         it('should forbid clicking on empty square', fakeAsync(async() => {
@@ -104,7 +104,7 @@ describe('LascaComponent', () => {
 
             // When clicking on an opponent
             // Then it should fail
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             await testUtils.expectClickFailure('#coord_2_2', reason);
         }));
         it('should fail when doing impossible click', fakeAsync(async() => {

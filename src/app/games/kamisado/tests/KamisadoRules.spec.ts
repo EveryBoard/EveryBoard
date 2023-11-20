@@ -16,8 +16,6 @@ describe('KamisadoRules', () => {
 
     let rules: KamisadoRules;
 
-    let node: KamisadoNode;
-
     const _: KamisadoPiece = KamisadoPiece.EMPTY;
     const R: KamisadoPiece = KamisadoPiece.ZERO.RED;
     const G: KamisadoPiece = KamisadoPiece.ZERO.GREEN;
@@ -31,11 +29,9 @@ describe('KamisadoRules', () => {
 
     beforeEach(() => {
         rules = KamisadoRules.get();
-        node = rules.getInitialNode();
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
     });
     describe('Allowed moves', () => {
         it('should allow vertical moves without obstacles', () => {
@@ -301,7 +297,7 @@ describe('KamisadoRules', () => {
             const state: KamisadoState =
                 new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
-            // When moving a piece not lineary
+            // When moving a piece not linearly
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(3, 5));
 
             // Then the move should be illegal
@@ -327,7 +323,18 @@ describe('KamisadoRules', () => {
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
 
             // Then move should be illegal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
+        it('should forbid moving empty pieces', () => {
+            // Given the initial state
+            const state: KamisadoState = KamisadoRules.get().getInitialState();
+
+            // When moving from an empty space
+            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
+
+            // Then move should be illegal
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });

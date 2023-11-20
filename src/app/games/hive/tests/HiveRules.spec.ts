@@ -215,7 +215,7 @@ describe('HiveRules', () => {
             const move: HiveMove = HiveMove.drop(B, new Coord(0, 1));
 
             // Then the move should fail
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });
@@ -245,7 +245,7 @@ describe('HiveRules', () => {
             const move: HiveMove = HiveMove.move(new Coord(-1, 0), new Coord(0, 0)).get();
 
             // Then the move should fail
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should be forbidden to move a piece of the opponent', () => {
@@ -259,7 +259,7 @@ describe('HiveRules', () => {
             const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(0, 1)).get();
 
             // Then the move should fail
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should be forbidden to move a piece under a beetle of the opponent', () => {
@@ -273,7 +273,7 @@ describe('HiveRules', () => {
             const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(0, 1)).get();
 
             // Then the move should fail
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should be forbidden to move on top of another piece for non-beetles (queen bee)', () => {

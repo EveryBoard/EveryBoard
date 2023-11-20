@@ -42,8 +42,11 @@ describe('LinesOfActionComponent', () => {
 
             await testUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }));
+        it('should forbid selecting an empty piece', fakeAsync(async() => {
+            await testUtils.expectClickFailure('#click_2_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }));
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
-            await testUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            await testUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should show selected piece', fakeAsync(async() => {
             // Given any board

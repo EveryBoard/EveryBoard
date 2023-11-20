@@ -41,7 +41,7 @@ export class DvonnMove extends MoveCoordToCoord {
             return MGPFallible.failure(DvonnFailure.MUST_MOVE_IN_STRAIGHT_LINE());
         }
     }
-    public toString(): string {
+    public override toString(): string {
         if (this === DvonnMove.PASS) {
             return 'DvonnMove.PASS';
         }

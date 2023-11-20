@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -246,8 +245,7 @@ describe('MartianChessComponent', () => {
             await testUtils.expectMoveSuccess('#click_0_6', move);
 
             // Then the clock should be replace by the count down (7 turn remaining)
-            const countDownText: DebugElement = testUtils.findElement('#countDownText');
-            expect(countDownText.nativeNode.innerHTML).toEqual('7');
+            testUtils.expectTextToBe('#countDownText', '7');
         }));
         it('should not select the circle when clock was called in previous turns', fakeAsync(async() => {
             // Given a board where the clock has been called in the past
