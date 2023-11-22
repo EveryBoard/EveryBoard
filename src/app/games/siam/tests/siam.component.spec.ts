@@ -15,7 +15,7 @@ import { SiamFailure } from '../SiamFailure';
 import { DebugElement } from '@angular/core';
 import { SiamConfig, SiamRules } from '../SiamRules';
 
-fdescribe('SiamComponent', () => {
+describe('SiamComponent', () => {
 
     let testUtils: ComponentTestUtils<SiamComponent>;
 
@@ -320,7 +320,7 @@ fdescribe('SiamComponent', () => {
 
         // Then Player.ONE's pieces should be on the bottom
         expectTranslationYToBe('#remainingPieces_0_0', -100);
-        expectTranslationYToBe('#remainingPieces_1_0', 700);
+        expectTranslationYToBe('#remainingPieces_1_0', 500);
     }));
 
     it('should display player zero pieces on the bottom (observer)', fakeAsync(async() => {
@@ -339,7 +339,7 @@ fdescribe('SiamComponent', () => {
         await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
 
         // Then player 0's pieces should be on the bottom
-        expectTranslationYToBe('#remainingPieces_0_0', 700);
+        expectTranslationYToBe('#remainingPieces_0_0', 500);
         expectTranslationYToBe('#remainingPieces_1_0', -100);
     }));
 

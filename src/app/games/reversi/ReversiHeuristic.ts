@@ -2,29 +2,29 @@ import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
-import { ReversiNode } from './ReversiRules';
+import { ReversiConfig, ReversiNode } from './ReversiRules';
+import { Coord } from 'src/app/jscaip/Coord';
 
-export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState> {
+export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState, ReversiConfig> {
 
     public getMetrics(node: ReversiNode): [number, number] {
         const state: ReversiState = node.gameState;
-        const board: PlayerOrNone[][] = state.getCopiedBoard();
+        const config: ReversiConfig = node.getConfig();
         let player0Count: number = 0;
         let player1Count: number = 0;
-        for (let y: number = 0; y < ReversiState.BOARD_HEIGHT; y++) {
-            for (let x: number = 0; x < ReversiState.BOARD_WIDTH; x++) {
-                const verticalBorder: boolean = (x === 0) || (x === ReversiState.BOARD_WIDTH - 1);
-                const horizontalBorder: boolean = (y === 0) || (y === ReversiState.BOARD_HEIGHT - 1);
-                const locationValue: number = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
-
-                if (board[y][x] === Player.ZERO) {
-                    player0Count += locationValue;
-                }
-                if (board[y][x] === Player.ONE) {
-                    player1Count += locationValue;
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            const content: PlayerOrNone = coordAndContent.content;
+            const verticalBorder: boolean = (coord.x === 0) || (coord.x === config.width - 1);
+            const horizontalBorder: boolean = (coord.y === 0) || (coord.y === config.height - 1);
+            const locationValue: number = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
+            if (content === Player.ZERO) {
+                player0Count += locationValue;
+            } else if (content === Player.ONE) {
+                player1Count += locationValue;
             }
         }
         return [player0Count, player1Count];
     }
+
 }

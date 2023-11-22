@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversiState } from '../ReversiState';
-import { ReversiNode } from '../ReversiRules';
+import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ReversiHeuristic } from '../ReversiHeuristic';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
@@ -10,6 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
+const defaultConfig: ReversiConfig = ReversiRules.get().getRulesConfigDescription().defaultConfig.config;
 
 describe('ReversiHeuristic', () => {
 
@@ -30,7 +31,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, X],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state);
+        const node: ReversiNode = new ReversiNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
         const boardValue: number = heuristic.getBoardValue(node).value;
         expect(boardValue).toBe(16);
     });
@@ -46,7 +47,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state);
+        const node: ReversiNode = new ReversiNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
         const boardValue: number = heuristic.getBoardValue(node).value;
         expect(boardValue).toBe(4);
     });
@@ -62,7 +63,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state);
+        const node: ReversiNode = new ReversiNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
         const boardValue: number = heuristic.getBoardValue(node).value;
         expect(boardValue).toBe(1);
     });

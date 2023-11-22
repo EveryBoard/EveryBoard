@@ -62,7 +62,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.lastMove = new Coord(-2, -2);
 
         this.scores = MGPOptional.of(state.countScore());
-        this.canPass = ReversiRules.playerCanOnlyPass(state);
+        this.canPass = this.rules.playerCanOnlyPass(state);
     }
     public override async showLastMove(move: ReversiMove): Promise<void> {
         this.lastMove = move.coord;
@@ -70,7 +70,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const dir of Direction.DIRECTIONS) {
             let captured: Coord = this.lastMove.getNext(dir, 1);
-            while (ReversiState.isOnBoard(captured) &&
+            while (this.getState().isOnBoard(captured) &&
                    this.getState().getPieceAt(captured) === opponent &&
                    this.getPreviousState().getPieceAt(captured) === player)
             {

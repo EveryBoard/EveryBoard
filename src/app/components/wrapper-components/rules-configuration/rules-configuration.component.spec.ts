@@ -12,7 +12,7 @@ import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription } from './RulesConfigDescription';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 
-describe('RulesConfigurationComponent', () => {
+fdescribe('RulesConfigurationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
 

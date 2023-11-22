@@ -27,7 +27,7 @@ export class SiamPiece {
 
     public static readonly MOUNTAIN: SiamPiece = new SiamPiece(9);
 
-    public static decode(value: SiamPieceValue): SiamPiece {
+    public static decode(value: SiamPieceValue): SiamPiece { // TODO CHECK WHERE I DESTROYED THAT
         switch (value) {
             case 0: return SiamPiece.EMPTY;
             case 1: return SiamPiece.LIGHT_UP;

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ReversiNode, ReversiRules } from '../ReversiRules';
+import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -16,11 +16,13 @@ describe('ReversiRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ReversiRules;
+    let defaultConfig: ReversiConfig;
     let node: ReversiNode;
 
     beforeEach(() => {
         rules = ReversiRules.get();
-        node = rules.getInitialNode();
+        defaultConfig = rules.getRulesConfigDescription().defaultConfig.config;
+        node = rules.getInitialNode(defaultConfig);
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
@@ -28,7 +30,7 @@ describe('ReversiRules', () => {
     });
     it('First move should be legal and change score', () => {
         // Given the initial state
-        const state: ReversiState = ReversiRules.get().getInitialState();
+        const state: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
 
         // When doing a legal move
         const move: ReversiMove = new ReversiMove(2, 4);
@@ -45,13 +47,13 @@ describe('ReversiRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const expectedState: ReversiState = new ReversiState(expectedBoard, 1);
-        node = new ReversiNode(expectedState);
+        node = new ReversiNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         expect(node.gameState.countScore()).toEqual([4, 1]);
     });
     it('Passing at first turn should be illegal', () => {
         // Given the initial state
-        const state: ReversiState = ReversiRules.get().getInitialState();
+        const state: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
 
         // When passing
         const move: ReversiMove = ReversiMove.PASS;
@@ -62,7 +64,7 @@ describe('ReversiRules', () => {
     });
     it('should forbid non capturing move', () => {
         // Given the initial state
-        const state: ReversiState = ReversiRules.get().getInitialState();
+        const state: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
 
         // When doing a non capturing move
         const move: ReversiMove = new ReversiMove(0, 0);
@@ -73,7 +75,7 @@ describe('ReversiRules', () => {
     });
     it('should forbid choosing occupied space', () => {
         // Given the initial state
-        const state: ReversiState = ReversiRules.get().getInitialState();
+        const state: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
 
         // When playing on an occupied square
         const move: ReversiMove = new ReversiMove(3, 3);
@@ -129,7 +131,8 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            const node: ReversiNode = new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const node: ReversiNode =
+                new ReversiNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
         it('should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
@@ -157,7 +160,8 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            const node: ReversiNode = new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            const node: ReversiNode =
+                new ReversiNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should recognize draws', () => {
@@ -185,9 +189,8 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            const node: ReversiNode = new ReversiNode(expectedState,
-                                                      MGPOptional.empty(),
-                                                      MGPOptional.of(move));
+            const node: ReversiNode =
+                new ReversiNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
             RulesUtils.expectToBeDraw(rules, node);
         });
     });

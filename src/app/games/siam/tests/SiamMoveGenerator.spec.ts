@@ -16,7 +16,7 @@ const R: SiamPiece = SiamPiece.LIGHT_RIGHT;
 
 const d: SiamPiece = SiamPiece.DARK_DOWN;
 
-fdescribe('SiamMoveGenerator', () => {
+describe('SiamMoveGenerator', () => {
 
     let moveGenerator: SiamMoveGenerator;
     const rules: SiamRules = SiamRules.get();

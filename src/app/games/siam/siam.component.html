@@ -2,16 +2,8 @@
      width="100%" height="100%"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    <rect *ngIf="false"
-          fill="red"
-          [attr.x]="getViewBox().left"
-          [attr.y]="getViewBox().up"
-          [attr.height]="getViewBox().height - getViewBox().up"
-          [attr.width]="getViewBox().width - getViewBox().left"
-    />
     <defs>
         <polygon id="triangle" points="0 -6, 10 0, 0 6"/>
-        <polygon id="arrow" points="30 7, 30 50, 10 50, 50 90, 90 50, 70 50, 70 7"/>
         <polygon id="mountain" points="5 95, 16 68, 24 76, 48 28, 64 60, 72 44, 95 95, 5 95"/>
     </defs>
     <g id="siamBoard">
@@ -95,11 +87,10 @@
              xlink:href="#arrow"
              [attr.transform]="getPieceTransform(arrow.source.get().coord.x, arrow.source.get().coord.y)"/>
     </g>
-    <use *ngFor="let move of orientations"
-         id="orientation_{{ move.landingOrientation }}"
-         class="base mid-stroke semi-transparent"
-         [ngClass]="getCurrentPlayerClass()"
-         (click)="selectOrientation(move)"
-         xlink:href="#arrow"
-         [attr.transform]="getOrientationTransform(move.landingOrientation)"/>
+    <g app-siam-orientation-arrow
+       [orientations]="orientations"
+       [currentPlayer]="getCurrentPlayer()"
+       [config]="getConfig()"
+       (moveEmitter)="selectOrientation($event)"
+    />
 </svg>

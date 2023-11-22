@@ -1,23 +1,27 @@
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
-import { ReversiRules, ReversiNode, ReversiMoveWithSwitched } from './ReversiRules';
+import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiConfig } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 
-export class ReversiOrderedMoveGenerator extends MoveGenerator<ReversiMove, ReversiState> {
+export class ReversiOrderedMoveGenerator extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig> {
 
-    private readonly bestCoords: Coord[] = [
-        new Coord(0, 0),
-        new Coord(0, ReversiState.BOARD_HEIGHT - 1),
-        new Coord(ReversiState.BOARD_WIDTH - 1, 0),
-        new Coord(ReversiState.BOARD_WIDTH - 1, ReversiState.BOARD_HEIGHT - 1),
-    ];
+    public getBestCoords(config: ReversiConfig): Coord[] {
+        return [
+            new Coord(0, 0),
+            new Coord(0, config.height - 1),
+            new Coord(config.width - 1, 0),
+            new Coord(config.width - 1, config.height - 1),
+        ];
+    }
+
     public getListMoves(node: ReversiNode): ReversiMove[] {
-        const moves: ReversiMoveWithSwitched[] = ReversiRules.getListMoves(node.gameState);
+        const moves: ReversiMoveWithSwitched[] = ReversiRules.get().getListMoves(node.gameState);
         // Best moves are on the corner, otherwise moves are sorted by number of pieces switched
+        const config: ReversiConfig = node.getConfig();
         ArrayUtils.sortByDescending(moves, (moveWithSwitched: ReversiMoveWithSwitched): number => {
-            if (this.bestCoords.some((coord: Coord): boolean => moveWithSwitched.move.coord.equals(coord))) {
+            if (this.getBestCoords(config).some((coord: Coord): boolean => moveWithSwitched.move.coord.equals(coord))) {
                 return 100;
             } else {
                 return moveWithSwitched.switched;

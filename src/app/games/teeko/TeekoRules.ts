@@ -11,17 +11,18 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table, TableUtils, ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
 
-export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
+export class TeekoNode extends GameNode<TeekoMove, TeekoState, TeekoConfig> {}
 
-export class TeekoRules extends Rules<TeekoMove, TeekoState> {
+export type TeekoConfig = {
+    teleport: boolean;
+};
+
+export class TeekoRules extends Rules<TeekoMove, TeekoState, TeekoConfig> {
 
     private static singleton: MGPOptional<TeekoRules> = MGPOptional.empty();
-
-    public static CAN_TELEPORT: boolean = false;
-
-    public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(Utils.identity, 4);
 
     public static get(): TeekoRules {
         if (TeekoRules.singleton.isAbsent()) {
@@ -30,18 +31,41 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
         return TeekoRules.singleton.get();
     }
 
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TeekoConfig> =
+        new RulesConfigDescription(
+            {
+                name: (): string => $localize`Standard Teeko`,
+                config: {
+                    teleport: false,
+                },
+            }, {
+                teleport: (): string => $localize`Can piece teleport`,
+            }, [{
+                name: (): string => $localize`Teleport Teeko`,
+                config: {
+                    teleport: true,
+                },
+            }]);
+
+    public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
+        new NInARowHelper(Utils.identity, 4);
+
+    public override getRulesConfigDescription(): RulesConfigDescription<TeekoConfig> {
+        return TeekoRules.RULES_CONFIG_DESCRIPTION;
+    };
+
     public getInitialState(): TeekoState {
         const board: Table<PlayerOrNone> = TableUtils.create(TeekoState.WIDTH, TeekoState.WIDTH, PlayerOrNone.NONE);
         return new TeekoState(board, 0);
     }
 
-    public isLegal(move: TeekoMove, state: TeekoState): MGPValidation {
+    public isLegal(move: TeekoMove, state: TeekoState, config: TeekoConfig): MGPValidation {
         if (state.isInDropPhase()) {
             Utils.assert(move instanceof TeekoDropMove, 'Cannot translate in dropping phase !');
             return this.isLegalDrop(move as TeekoDropMove, state);
         } else {
             Utils.assert(move instanceof TeekoTranslationMove, 'Cannot drop in translation phase !');
-            return this.isLegalTranslation(move as TeekoTranslationMove, state);
+            return this.isLegalTranslation(move as TeekoTranslationMove, state, config);
         }
     }
 
@@ -52,7 +76,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
         return MGPValidation.SUCCESS;
     }
 
-    private isLegalTranslation(move: TeekoTranslationMove, state: TeekoState): MGPValidation {
+    private isLegalTranslation(move: TeekoTranslationMove, state: TeekoState, config: TeekoConfig): MGPValidation {
         const currentOpponent: Player = state.getCurrentOpponent();
         const translatedPiece: PlayerOrNone = state.getPieceAt(move.getStart());
         if (translatedPiece === currentOpponent) {
@@ -63,7 +87,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
         if (state.getPieceAt(move.getEnd()).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        if (TeekoRules.CAN_TELEPORT === false) {
+        if (config.teleport === false) {
             if (move.getStart().isNeighborWith(move.getEnd()) === false) {
                 return MGPValidation.failure(RulesFailure.MUST_MOVE_ON_NEIGHBOR());
             }
@@ -71,7 +95,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public applyLegalMove(move: TeekoMove, state: TeekoState): TeekoState { // TODO: ADD TELEPORTIKO !
+    public applyLegalMove(move: TeekoMove, state: TeekoState): TeekoState {
         if (move instanceof TeekoDropMove) {
             return this.applyLegalDrop(move, state);
         } else {

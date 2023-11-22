@@ -22,7 +22,7 @@ const l: SiamPiece = SiamPiece.DARK_LEFT;
 const r: SiamPiece = SiamPiece.DARK_RIGHT;
 const d: SiamPiece = SiamPiece.DARK_DOWN;
 
-fdescribe('SiamHeuristic', () => {
+describe('SiamHeuristic', () => {
 
     let heuristic: SiamHeuristic;
     const defaultConfig: SiamConfig = SiamRules.get().getRulesConfigDescription().defaultConfig.config;

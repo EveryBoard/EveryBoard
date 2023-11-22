@@ -108,6 +108,7 @@ import { DemoCardWrapperComponent } from './components/wrapper-components/demo-c
 import { GameEventService } from './services/GameEventService';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
+import { SiamOrientationArrowComponent } from './games/siam/siam-orientation-arrow/siam-orientation-arrow.component';
 
 registerLocaleData(localeFr);
 
@@ -219,7 +220,7 @@ export class FirebaseProviders {
         QuixoComponent,
         ReversiComponent,
         SaharaComponent,
-        SiamComponent,
+        SiamComponent, SiamOrientationArrowComponent,
         SixComponent,
         TablutComponent,
         TeekoComponent,
@@ -231,6 +232,7 @@ export class FirebaseProviders {
         AutofocusDirective,
         ToggleVisibilityDirective,
         RulesConfigurationComponent,
+        SiamOrientationArrowComponent,
     ],
     imports: [
         FirebaseProviders.app(),

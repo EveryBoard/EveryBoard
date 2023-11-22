@@ -82,7 +82,6 @@ describe('GameNode', () => {
             const optionalTreeRoot: MGPOptional<MockNode> = MGPOptional.of(treeRoot);
             const child: MockNode = new MockNode(stateAtTurn1, optionalTreeRoot, optionalMove);
             treeRoot.addChild(child);
-            // TODO: tester à chaque fois que l'enfant a la config de maman sa mère
 
             const otherChild: MockNode = new MockNode(stateAtTurn1, optionalTreeRoot, optionalOtherMove);
             treeRoot.addChild(otherChild);
@@ -104,6 +103,7 @@ describe('GameNode', () => {
                 consoleLogBuffer.push(line);
             });
         });
+
         it('should output a DOT representation of the node tree on standard output', () => {
             // Given a tree of game nodes
             // When printing it
@@ -124,6 +124,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should print with extra label if needed', () => {
             // Given a tree of game nodes
             // When printing it with a specific label
@@ -136,6 +137,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should limit print depth to the provided max level', () => {
             // Given a tree of game nodes
             // When printing it up to depth 1
@@ -152,6 +154,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should color nodes based on game status (Player.ZERO)', () => {
             // Given a terminal game node where Player.ZERO wins
             getGameStatusSpy.and.callFake((node: MockNode) => {
@@ -167,6 +170,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should color nodes based on game status (Player.ONE)', () => {
             // Given a terminal game node where Player.ZERO wins
             getGameStatusSpy.and.callFake((node: MockNode) => {
@@ -182,6 +186,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should color nodes based on game status (draw)', () => {
             // Given a terminal game node where Player.ZERO wins
             getGameStatusSpy.and.callFake((node: MockNode) => {
@@ -197,5 +202,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
     });
+
 });

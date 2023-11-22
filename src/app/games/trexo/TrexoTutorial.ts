@@ -5,6 +5,7 @@ import { TrexoMove } from './TrexoMove';
 import { TrexoRules } from './TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { Player } from 'src/app/jscaip/Player';
+import { TeekoConfig, TeekoRules } from '../teeko/TeekoRules';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const ONE__0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
@@ -34,7 +35,7 @@ export class TrexoTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!`,
-            TrexoRules.get().getInitialState(), // TODO CONFIG DU PAITE
+            TrexoRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Dropping a tile`,

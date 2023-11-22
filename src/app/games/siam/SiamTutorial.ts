@@ -34,7 +34,7 @@ export class SiamTutorial extends Tutorial {
             <li>Move one of its piece and optionally reorient it.</li>
             <li>Take one of its pieces out of the board.</li>
         </ol>`,
-            SiamRules.get().getInitialState(defaultConfig), // TODO: config Siam et Reversi by the way tiens !!
+            SiamRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
             $localize`Inserting a piece`,

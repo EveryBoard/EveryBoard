@@ -23,6 +23,7 @@ describe('MCTS', () => {
     beforeEach(() => {
         mcts = new MCTS('MCTS', new QuartoMoveGenerator(), QuartoRules.get());
     });
+
     it('should choose possible victory over definite defeat', () => {
         // Given a board that could be a win for opponent in their next moves
         const board: Table<QuartoPiece> = [
@@ -45,6 +46,7 @@ describe('MCTS', () => {
             expect(move.piece).not.toBe(QuartoPiece.AABA);
         }
     });
+
     it('should know how to win multiple turns in advance', () => {
         // Given a board where we have to make a choice between definitely losing or possibly winning,
         // but multiple turns in advance
@@ -61,6 +63,7 @@ describe('MCTS', () => {
         // Then it should choose the move that leads to the wins
         expect(move).toEqual(new QuartoMove(3, 0, QuartoPiece.ABAB));
     });
+
     it('should not fail on games that are too long', () => {
         // Given a MCTS for a game that has a tendency to give long random games
         const otherMcts: MCTS<MancalaMove, MancalaState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
@@ -75,4 +78,23 @@ describe('MCTS', () => {
         // Add 10% to allow for iterations to finish
         expect(Date.now() - beforeSearch).toBeLessThan(1000 * (mctsOptions.maxSeconds + 0.1));
     });
+
+    it('should transmit config to its children', () => {
+        // Given a mother node with a specific config
+        const customConfig: MancalaConfig = {
+            ...AwaleRules.get().getRulesConfigDescription().defaultConfig.config,
+            width: 3,
+        };
+        const configurableMcts: MCTS<MancalaMove, MancalaState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
+        const node: MancalaNode = AwaleRules.get().getInitialNode(customConfig);
+
+        // When creating the children
+        const nextMove: MancalaMove = configurableMcts.chooseNextMove(node, mctsOptions);
+        const child: MancalaNode = node.getChild(nextMove).get();
+
+        // Then the children should have the same config
+        expect(child.getConfig()).toBe(customConfig);
+
+    });
+
 });

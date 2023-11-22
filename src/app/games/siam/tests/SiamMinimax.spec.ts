@@ -18,7 +18,7 @@ const L: SiamPiece = SiamPiece.LIGHT_LEFT;
 const R: SiamPiece = SiamPiece.LIGHT_RIGHT;
 const d: SiamPiece = SiamPiece.DARK_DOWN;
 
-fdescribe('SiamMinimax', () => {
+describe('SiamMinimax', () => {
 
     let minimax: Minimax<SiamMove, SiamState, RulesConfig, SiamLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };

@@ -1,12 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { TeekoNode } from '../TeekoRules';
+import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TeekoHeuristic } from '../TeekoHeuristic';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
+const defaultConfig: TeekoConfig = TeekoRules.get().getRulesConfigDescription().defaultConfig.config;
 
 describe('TeekoHeuristic', () => {
 
@@ -25,7 +27,7 @@ describe('TeekoHeuristic', () => {
             [_, _, _, _, _],
         ];
         const state: TeekoState = new TeekoState(board, 6);
-        const node: TeekoNode = new TeekoNode(state);
+        const node: TeekoNode = new TeekoNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
 
         // When calculating the board value
         const boardValue: number = heuristic.getBoardValue(node).value;

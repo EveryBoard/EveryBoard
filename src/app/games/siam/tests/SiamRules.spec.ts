@@ -12,7 +12,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
 
-fdescribe('SiamRules', () => {
+describe('SiamRules', () => {
 
     let rules: SiamRules = SiamRules.get();
 
@@ -437,88 +437,92 @@ fdescribe('SiamRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
-    it('should assign victory to Player.ZERO if its pieces push the mountain out of the board', () => {
-        // Given a board with two Player.ZERO pieces ready to push a mountain
-        const board: Table<SiamPiece> = [
-            [_, _, M, _, _],
-            [_, _, U, _, _],
-            [_, M, U, M, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
-        const state: SiamState = new SiamState(board, 0);
-        // When pushing the mountain out of the board
-        const move: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        // Then it should succeed
-        const expectedBoard: Table<SiamPiece> = [
-            [_, _, U, _, _],
-            [_, _, U, _, _],
-            [_, M, _, M, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
-        const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        // and victory should be for player zero
-        const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
-    });
+    describe('victory', () => {
 
-    it('should assign victory to the player closest to and aligned with the fallen mountain', () => {
-        // Given a board where 0 can push 1 that pushes the mountain
-        const board: Table<SiamPiece> = [
-            [_, _, M, _, _],
-            [_, _, u, _, _],
-            [_, M, U, M, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
-        const state: SiamState = new SiamState(board, 0);
-        // When pushing the mountain out of the board
-        const move: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        // Then it should succeed
-        const expectedBoard: Table<SiamPiece> = [
-            [_, _, u, _, _],
-            [_, _, U, _, _],
-            [_, M, _, M, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
-        const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        // and victory should be for player zero
-        const node: SiamNode =
+        it('should assign victory to Player.ZERO if its pieces push the mountain out of the board', () => {
+            // Given a board with two Player.ZERO pieces ready to push a mountain
+            const board: Table<SiamPiece> = [
+                [_, _, M, _, _],
+                [_, _, U, _, _],
+                [_, M, U, M, _],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const state: SiamState = new SiamState(board, 0);
+            // When pushing the mountain out of the board
+            const move: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            // Then it should succeed
+            const expectedBoard: Table<SiamPiece> = [
+                [_, _, U, _, _],
+                [_, _, U, _, _],
+                [_, M, _, M, _],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const expectedState: SiamState = new SiamState(expectedBoard, 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            // and victory should be for player zero
+            const node: SiamNode =
             new SiamNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
-    });
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        });
 
-    it('should assign victory to player closest to and aligned with the fallen mountain (and not to the non-aligned pieces)', () => {
-        // Given a board where the piece next to the mountain is not aligned vertically
-        const board: Table<SiamPiece> = [
-            [_, _, M, _, _],
-            [_, _, l, _, _],
-            [_, M, R, M, _],
-            [_, _, R, _, _],
-            [_, _, R, _, _],
-        ];
-        const state: SiamState = new SiamState(board, 0);
-        // When pushing the mountain out of the board vertically
-        const move: SiamMove = SiamMove.of(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        // Then it should succeed
-        const expectedBoard: Table<SiamPiece> = [
-            [_, _, l, _, _],
-            [_, _, R, _, _],
-            [_, M, R, M, _],
-            [_, _, R, _, _],
-            [_, _, U, _, _],
-        ];
-        const expectedState: SiamState = new SiamState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        // and victory should be for player zero, whose pieces are aligned with the push
-        const node: SiamNode =
+        it('should assign victory to the player closest to and aligned with the fallen mountain', () => {
+            // Given a board where 0 can push 1 that pushes the mountain
+            const board: Table<SiamPiece> = [
+                [_, _, M, _, _],
+                [_, _, u, _, _],
+                [_, M, U, M, _],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const state: SiamState = new SiamState(board, 0);
+            // When pushing the mountain out of the board
+            const move: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            // Then it should succeed
+            const expectedBoard: Table<SiamPiece> = [
+                [_, _, u, _, _],
+                [_, _, U, _, _],
+                [_, M, _, M, _],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const expectedState: SiamState = new SiamState(expectedBoard, 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            // and victory should be for player zero
+            const node: SiamNode =
             new SiamNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        });
+
+        it('should assign victory to player closest to and aligned with the fallen mountain (and not to the non-aligned pieces)', () => {
+            // Given a board where the piece next to the mountain is not aligned vertically
+            const board: Table<SiamPiece> = [
+                [_, _, M, _, _],
+                [_, _, l, _, _],
+                [_, M, R, M, _],
+                [_, _, R, _, _],
+                [_, _, R, _, _],
+            ];
+            const state: SiamState = new SiamState(board, 0);
+            // When pushing the mountain out of the board vertically
+            const move: SiamMove = SiamMove.of(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            // Then it should succeed
+            const expectedBoard: Table<SiamPiece> = [
+                [_, _, l, _, _],
+                [_, _, R, _, _],
+                [_, M, R, M, _],
+                [_, _, R, _, _],
+                [_, _, U, _, _],
+            ];
+            const expectedState: SiamState = new SiamState(expectedBoard, 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            // and victory should be for player zero, whose pieces are aligned with the push
+            const node: SiamNode =
+            new SiamNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        });
+
     });
 
     it('should compute empty list of moves between two impossible squares', () => {
@@ -591,6 +595,39 @@ fdescribe('SiamRules', () => {
             ];
             const expectedState: SiamState = new SiamState(expectedBard, 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
+
+        it('should notice victory with lower amount of mountain', () => {
+            // Given a board with at start only two mountains
+            const customConfig: SiamConfig = {
+                ...defaultConfig,
+                numberOfBonusMountain: 1,
+            };
+            const board: Table<SiamPiece> = [
+                [_, _, M, _, _],
+                [_, _, l, _, _],
+                [_, M, R, _, _],
+                [_, _, R, _, _],
+                [_, _, R, _, _],
+            ];
+            const state: SiamState = new SiamState(board, 0);
+
+            // When pushing the mountain out of the board vertically
+            const move: SiamMove = SiamMove.of(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            // Then it should succeed
+            const expectedBoard: Table<SiamPiece> = [
+                [_, _, l, _, _],
+                [_, _, R, _, _],
+                [_, M, R, _, _],
+                [_, _, R, _, _],
+                [_, _, U, _, _],
+            ];
+            const expectedState: SiamState = new SiamState(expectedBoard, 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            // and victory should be for player zero, whose pieces are aligned with the push
+            const node: SiamNode =
+            new SiamNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(customConfig));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
     });
 

@@ -9,7 +9,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 
-fdescribe('SiamMove', () => {
+describe('SiamMove', () => {
 
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;

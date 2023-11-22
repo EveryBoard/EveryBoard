@@ -24,6 +24,8 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
  */
 export abstract class BaseGameComponent {
 
+    public SPACE_SIZE: number = 100;
+
     public constructor(public readonly activatedRoute: ActivatedRoute) {}
 
     // Make ArrayUtils available in game components
@@ -67,8 +69,6 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
     public encoder: Encoder<M>;
 
     public Player: typeof Player = Player;
-
-    public SPACE_SIZE: number = 100;
 
     public readonly STROKE_WIDTH: number = 8;
 

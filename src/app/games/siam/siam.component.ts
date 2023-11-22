@@ -309,19 +309,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return this.getArrowTransform(x, y, orientation);
     }
 
-    public getOrientationTransform(orientation: Orthogonal): string {
-        // This shift will be done before the rotation to have nice visuals
-        const shift: string = `translate(0, ${this.SPACE_SIZE / 1.6})`;
-        // Then, the arrow is rotated
-        const orientationDegrees: number = (orientation.toInt() - 2) * 90;
-        const rotation: string = `rotate(${orientationDegrees} ${this.SPACE_SIZE/2} ${this.SPACE_SIZE/2})`;
-        // We want the arrows bigger so we scale them
-        const scale: string = `scale(2.43)`;
-        // The final translation is to center the arrows
-        const translation: string = `translate(${1.27 * this.SPACE_SIZE}, ${1.27 * this.SPACE_SIZE})`;
-        return [translation, scale, rotation, shift].join(' ');
-    }
-
     public getPieceClasses(x: number, y: number, c: SiamPiece): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(c.getOwner())];
@@ -346,10 +333,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             classes.push('selected-stroke');
         }
         return classes;
-    }
-
-    public getCurrentPlayerClass(): string {
-        return this.getPlayerClass(this.getCurrentPlayer());
     }
 
     public playerPieces(player: Player): number {

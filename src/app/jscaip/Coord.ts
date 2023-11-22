@@ -101,19 +101,21 @@ export class Coord extends Vector {
         const dy: number = Math.abs(c.y - this.y);
         return Math.max(dx, dy);
     }
+
     public isHexagonallyAlignedWith(coord: Coord): boolean {
         const sdx: number = this.x - coord.x;
         const sdy: number = this.y - coord.y;
         if (sdx === sdy) return false;
         if (sdx === -sdy) return true;
-        if (sdx*sdy === 0) return true;
+        if (sdx * sdy === 0) return true;
         return false;
     }
+
     public isAlignedWith(coord: Coord): boolean {
         const dx: number = Math.abs(this.x - coord.x);
         const dy: number = Math.abs(this.y - coord.y);
         if (dx === dy) return true;
-        if (dx*dy === 0) return true;
+        if (dx * dy === 0) return true;
         return false;
     }
 
@@ -171,5 +173,9 @@ export class Coord extends Vector {
     }
     public toSVGPoint(): string {
         return this.x + ',' + this.y;
+    }
+
+    public scale(x: number, y: number): Coord {
+        return new Coord(this.x * x, this.y * y);
     }
 }

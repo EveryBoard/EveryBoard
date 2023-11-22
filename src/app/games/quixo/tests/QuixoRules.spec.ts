@@ -58,7 +58,8 @@ describe('QuixoRules', () => {
         // When doing a move out of range
         const move: QuixoMove = new QuixoMove(-1, 0, Orthogonal.DOWN);
         TestUtils.expectToThrowAndLog(() => {
-            RulesUtils.expectMoveFailure(rules, state, move, `won't reach the return of isLegal`);
+            const reason: string = `won't reach the return of isLegal`;
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         }, 'Invalid coord for QuixoMove: (-1, 0) is outside the board.');
     });
 
@@ -86,7 +87,8 @@ describe('QuixoRules', () => {
             // Then it should throw
             const reason: string = errorByDirection[i];
             TestUtils.expectToThrowAndLog(() => {
-                RulesUtils.expectMoveFailure(rules, state, move, `won't reach the return of isLegal`);
+                const reason: string = `won't reach the return of isLegal`;
+                RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });
     }

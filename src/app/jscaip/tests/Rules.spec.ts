@@ -11,9 +11,7 @@ import { RulesUtils } from './RulesUtils.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesConfig } from '../RulesConfigUtil';
 
-class AbstractState extends GameStateWithTable<number> {
-
-}
+class AbstractState extends GameStateWithTable<number> {}
 
 class AbstractNode extends GameNode<P4Move, AbstractState> {}
 
@@ -40,12 +38,15 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
         const board: readonly number[] = state.board[0];
         return new AbstractState([board.concat([move.x])], state.turn + 1);
     }
+
     public isLegal(_move: P4Move, _state: AbstractState): MGPValidation {
         return MGPValidation.SUCCESS;
     }
+
     public getGameStatus(_node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;
     }
+
 }
 
 describe('Rules', () => {
@@ -55,6 +56,7 @@ describe('Rules', () => {
     beforeEach(() => {
         rules = AbstractRules.get();
     });
+
     it('should create child to already calculated node which did not include this legal child yet', () => {
         // Given a node with children but not the one that will be calculated
         const node: AbstractNode = rules.getInitialNode();
@@ -67,6 +69,7 @@ describe('Rules', () => {
         expect(resultingNode.isSuccess()).toBeTrue();
         expect(resultingNode.get().gameState.turn).toBe(1);
     });
+
     it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
         // Given an initial list of encoded moves and an initial state
         const initialState: AbstractState = AbstractRules.get().getInitialState({});
@@ -83,7 +86,9 @@ describe('Rules', () => {
         expect(state.board).toEqual([moveValues]);
         expect(state.turn).toBe(4);
     });
+
     describe('choose', () => {
+
         it('should return MGPOptional.empty() when the move was illegal', () => {
             // Given a node and a move that will be deemed illegal
             const node: AbstractNode = rules.getInitialNode({});
@@ -96,5 +101,20 @@ describe('Rules', () => {
             expect(legality.isFailure()).toBeTrue();
             expect(legality.getReason()).toEqual('some reason');
         });
+
+        it('should transmit config to its children', () => {
+            // Given a mother node with a specific config
+            const customConfig: RulesConfig = {
+                josefanne: 42,
+            };
+            const node: AbstractNode = rules.getInitialNode(customConfig);
+
+            // When choosing the children
+            const child: AbstractNode = rules.choose(node, P4Move.of(9)).get();
+            // Then the children should have the same config
+            expect(child.getConfig()).toBe(customConfig);
+        });
+
     });
+
 });
