@@ -28,7 +28,7 @@ export class ConfigRoomDAOMock extends FirestoreDAOMock<ConfigRoom> {
     }
 }
 
-xdescribe('ConfigRoomDAOMock', () => {
+describe('ConfigRoomDAOMock', () => {
 
     let configRoomDAOMock: ConfigRoomDAOMock;
 
