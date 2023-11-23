@@ -12,11 +12,12 @@ interface Limits {
 
 export class ViewBox {
 
-    public static fromLimits(left: number, right: number, up: number, down: number): ViewBox {
-        const width: number = right - left;
-        const height: number = down - up;
-        return new ViewBox(left, up, width, height);
+    public static fromLimits(minX: number, maxX: number, minY: number, maxY: number): ViewBox {
+        const width: number = maxX - minX;
+        const height: number = maxY - minY;
+        return new ViewBox(minX, minY, width, height);
     }
+
     public static fromHexa(coords: Coord[], hexaLayout: HexaLayout, strokeWidth: number): ViewBox {
         const points: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getHexaPointsListAt(coord));
         const limits: Limits = ViewBox.getLimits(points);
@@ -26,6 +27,7 @@ export class ViewBox {
         const height: number = strokeWidth + limits.maxY - limits.minY;
         return new ViewBox(left, up, width, height);
     }
+
     private static getLimits(coords: Coord[]): Limits {
         let maxX: number = Number.MIN_SAFE_INTEGER;
         let maxY: number = Number.MIN_SAFE_INTEGER;

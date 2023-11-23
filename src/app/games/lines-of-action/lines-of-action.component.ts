@@ -74,8 +74,11 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         }
     }
     private async select(coord: Coord): Promise<MGPValidation> {
-        if (this.getState().getPieceAt(coord) !== this.getState().getCurrentPlayer()) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const piece: PlayerOrNone = this.getState().getPieceAt(coord);
+        if (piece === PlayerOrNone.NONE) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        } else if (piece === this.getState().getCurrentOpponent()) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         this.selected = MGPOptional.of(coord);
         this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get());

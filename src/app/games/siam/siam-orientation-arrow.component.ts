@@ -1,16 +1,16 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BaseGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { SiamMove } from '../SiamMove';
+import { SiamMove } from './SiamMove';
 import { Player } from 'src/app/jscaip/Player';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { ActivatedRoute } from '@angular/router';
-import { SiamConfig } from '../SiamRules';
+import { SiamConfig } from './SiamRules';
 import { Coord } from 'src/app/jscaip/Coord';
 
 @Component({
     selector: '[app-siam-orientation-arrow]',
     templateUrl: './siam-orientation-arrow.component.svg',
-    styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class SiamOrientationArrowComponent extends BaseGameComponent {
 

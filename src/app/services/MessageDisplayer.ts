@@ -9,16 +9,20 @@ export class MessageDisplayer {
     public infoMessage(message: string): void {
         this.message(message, 'is-info');
     }
+
     public gameMessage(message: string): void {
         this.message(message, 'is-warning');
     }
+
     public criticalMessage(message: string): void {
         this.message(message, 'is-danger');
     }
+
     private message(message: string, cssClass: ToastType): void {
         const durationInMs: number = this.getDurationInMs(message);
         this.toast(message, cssClass, durationInMs);
     }
+
     private toast(message: string, cssClass: ToastType, durationInMs: number): void {
         toast({
             message,
@@ -39,4 +43,5 @@ export class MessageDisplayer {
         const readingTime: number = words * 60 * 1000/ belowAverageReadingSpeed;
         return Math.max(readingTime, 3000);
     }
+
 }

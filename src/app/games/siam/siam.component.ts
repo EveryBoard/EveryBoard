@@ -12,7 +12,7 @@ import { Utils } from 'src/app/utils/utils';
 import { Debug } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SiamFailure } from './SiamFailure';
 import { ActivatedRoute } from '@angular/router';
@@ -94,8 +94,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (player !== this.getCurrentPlayer()) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        if (player === this.getCurrentOpponent()) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (this.insertingPiece) {
             // We were already inserting, we deselect the piece
@@ -162,8 +162,10 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             } else {
                 Utils.assert(this.getState().isOnBoard(clickedCoord), 'SiamComponent: user clicked outside of board when it should not be possible');
                 const clickedPiece: SiamPiece = this.board[y][x];
-                if (clickedPiece.getOwner() !== this.getCurrentPlayer()) {
-                    return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                if (clickedPiece.getOwner() === PlayerOrNone.NONE) {
+                    return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+                } else if (clickedPiece.getOwner() !== this.getCurrentPlayer()) {
+                    return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
                 } else {
                     // Select the piece
                     return this.selectPiece(clickedCoord, clickedPiece);

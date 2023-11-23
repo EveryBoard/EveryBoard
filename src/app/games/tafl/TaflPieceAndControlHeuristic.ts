@@ -87,7 +87,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove>
     }
 
     protected getScoreByThreatenedPiece(state: TaflState): number {
-        const width: number = state.board.length;
+        const width: number = state.getWidth();
         // The value of the four corners (each being "width" * "width")
         // + the value of what remains of the four edges (each border square being worth "width")
         // + the value of what remains of the board (each square being worth one point)

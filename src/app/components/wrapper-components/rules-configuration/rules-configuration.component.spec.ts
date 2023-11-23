@@ -1,9 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { RulesConfigurationComponent } from './rules-configuration.component';
 import { ActivatedRouteStub, SimpleComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
@@ -12,7 +11,7 @@ import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription } from './RulesConfigDescription';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 
-fdescribe('RulesConfigurationComponent', () => {
+describe('RulesConfigurationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
 
@@ -156,15 +155,18 @@ fdescribe('RulesConfigurationComponent', () => {
 
             it('should throw when editing non-custom config', fakeAsync(async() => {
                 // Given a component for creator where we're not editing "Custom"
-                spyOn(ErrorLoggerService, 'logError').and.resolveTo();
+                const error: string = 'Only Customifiable config should be modified!';
                 testUtils.detectChanges();
+                spyOn(component.updateCallback, 'emit').and.callThrough();
 
                 // When modifying a value
-                component.rulesConfigForm.get('nombre')?.setValue(80);
-
                 // Then it should throw
-                const error: string = 'Only Customifiable config should be modified!';
-                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('RulesConfiguration', error);
+                TestUtils.expectToThrowAndLog(() => {
+                    component.rulesConfigForm.get('nombre')?.setValue(80);
+                    tick(0);
+                }, error);
+                // And it should not have update callback
+                expect(component.updateCallback.emit).not.toHaveBeenCalled();
             }));
 
             describe('number config', () => {
@@ -379,9 +381,8 @@ fdescribe('RulesConfigurationComponent', () => {
                     testUtils.expectElementToBeDisabled('#nombre_number_config_input');
                 }));
 
-                it('should not trigger update callback when changing value and throw', () => {
+                it('should not trigger update callback when changing value and throw', fakeAsync(async() => {
                     // Given a component loaded with a config description having a number filled
-                    spyOn(ErrorLoggerService, 'logError').and.resolveTo();
                     const error: string = 'Only creator should be able to modify rules config';
                     testUtils.detectChanges();
                     spyOn(component.updateCallback, 'emit').and.callThrough();
@@ -389,11 +390,13 @@ fdescribe('RulesConfigurationComponent', () => {
                     // When modifying config
                     // (technically impossible but setValue don't need the HTML possibility to do it)
                     // And unit testing that this should not be doable is actually more future proof)
-                    component.rulesConfigForm.get('nombre')?.setValue(80);
+                    TestUtils.expectToThrowAndLog(() => {
+                        component.rulesConfigForm.get('nombre')?.setValue(80);
+                        tick(0);
+                    }, error);
                     // Then there should have been no emission, but an error
-                    expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('RulesConfiguration', error);
                     expect(component.updateCallback.emit).not.toHaveBeenCalled();
-                });
+                }));
 
             });
 
@@ -441,9 +444,8 @@ fdescribe('RulesConfigurationComponent', () => {
                     testUtils.expectElementToBeDisabled('#booleen_boolean_config_input');
                 }));
 
-                it('should not trigger update callback when changing value and throw', () => {
+                it('should not trigger update callback when changing value and throw', fakeAsync(async() => {
                     // Given a component loaded with a config description having a number filled
-                    spyOn(ErrorLoggerService, 'logError').and.resolveTo();
                     const error: string = 'Only creator should be able to modify rules config';
                     testUtils.detectChanges();
                     spyOn(component.updateCallback, 'emit').and.callThrough();
@@ -451,11 +453,13 @@ fdescribe('RulesConfigurationComponent', () => {
                     // When modifying config
                     // (technically impossible but setValue don't need the HTML possibility to do it)
                     // And unit testing that this should not be doable is actually more future proof)
-                    component.rulesConfigForm.get('booleen')?.setValue(false);
+                    TestUtils.expectToThrowAndLog(() => {
+                        component.rulesConfigForm.get('booleen')?.setValue(false);
+                        tick(0);
+                    }, error);
                     // Then there should have been no emission, but an error
-                    expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('RulesConfiguration', error);
                     expect(component.updateCallback.emit).not.toHaveBeenCalled();
-                });
+                }));
 
             });
 

@@ -108,7 +108,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 return MGPValidation.SUCCESS;
             case opponent:
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             default:
                 Utils.expectToBe(this.board[y][x], PlayerOrNone.NONE);
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());

@@ -13,7 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 
@@ -28,7 +28,7 @@ export interface SixVictorySource {
 }
 
 @Debug.log
-export class SixRules extends Rules<SixMove, SixState, RulesConfig, SixLegalityInformation> {
+export class SixRules extends Rules<SixMove, SixState, EmptyRulesConfig, SixLegalityInformation> {
 
     private static singleton: MGPOptional<SixRules> = MGPOptional.empty();
 
@@ -92,7 +92,7 @@ export class SixRules extends Rules<SixMove, SixState, RulesConfig, SixLegalityI
         if (pieceOwner === PlayerOrNone.NONE) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else if (pieceOwner === state.getCurrentOpponent()) {
-            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const stateAfterMove: SixState = state.movePiece(move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();

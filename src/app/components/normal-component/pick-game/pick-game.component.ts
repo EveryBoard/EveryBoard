@@ -29,6 +29,9 @@ import { CoerceoTutorial } from 'src/app/games/coerceo/CoerceoTutorial';
 import { CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
 import { ConspirateursComponent } from 'src/app/games/conspirateurs/conspirateurs.component';
 
+import { DiaballikComponent } from 'src/app/games/diaballik/diaballik.component';
+import { DiaballikTutorial } from 'src/app/games/diaballik/DiaballikTutorial';
+import { DiaballikRules } from 'src/app/games/diaballik/DiaballikRules';
 import { DiamComponent } from 'src/app/games/diam/diam.component';
 import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
@@ -146,6 +149,8 @@ class GameDescription {
 
     public static readonly CONSPIRATEURS: Localized = () => $localize`Hide all of your pieces before your opponent does, or risk to be discovered!`;
 
+    public static readonly DIABALLIK: Localized = () => $localize`Pass the ball up to the side of the opponent to win the game!`;
+
     public static readonly DIAM: Localized = () => $localize`Drop your pieces and move them around to align two pieces of the same color across the board to win!`;
 
     public static readonly DVONN: Localized = () => $localize`Stack your pieces and control as many stacks as you can to win!`;
@@ -249,6 +254,7 @@ export class GameInfo {
             new GameInfo($localize`Pente`,           'Pente',         PenteComponent,         new PenteTutorial(),         PenteRules.get(),         new Date('2023-05-20'), GameDescription.PENTE()          ), //                             * Quentin
             new GameInfo($localize`Teeko`,           'Teeko',         TeekoComponent,         new TeekoTutorial(),         TeekoRules.get(),         new Date('2023-07-30'), GameDescription.TEEKO()          ), //                             * Martin
             new GameInfo($localize`Kalah`,           'Kalah',         KalahComponent,         new KalahTutorial(),         KalahRules.get(),         new Date('2023-09-07'), GameDescription.KALAH()          ), //                             * Martin
+            new GameInfo($localize`Diaballik`,       'Diaballik',     DiaballikComponent,     new DiaballikTutorial(),     DiaballikRules.get(),     new Date('2023-11-18'), GameDescription.DIABALLIK()),
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

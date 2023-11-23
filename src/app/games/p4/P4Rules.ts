@@ -51,18 +51,6 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         return P4Rules.singleton.get();
     }
 
-    public static getVictoriousCoords(state: P4State): Coord[] {
-        return P4Rules.get().P4_HELPER.getVictoriousCoord(state);
-    }
-
-    public static getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
-        let y: number = 0;
-        while (y < board.length && board[y][x] === PlayerOrNone.NONE) {
-            y++;
-        }
-        return y - 1;
-    }
-
     public readonly P4_HELPER: NInARowHelper<PlayerOrNone>;
 
     private constructor() {
@@ -93,12 +81,14 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         const resultingState: P4State = new P4State(board, turn + 1);
         return resultingState;
     }
+
     public isLegal(move: P4Move, state: P4State): MGPValidation {
         if (state.getPieceAtXY(move.x, 0).isPlayer()) {
             return MGPValidation.failure(P4Failure.COLUMN_IS_FULL());
         }
         return MGPValidation.SUCCESS;
     }
+
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;
         const victoriousCoord: Coord[] = this.P4_HELPER.getVictoriousCoord(state);
@@ -109,9 +99,11 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         const height: number = state.board.length;
         return state.turn === (width * height) ? GameStatus.DRAW : GameStatus.ONGOING;
     }
+
     public getVictoriousCoords(state: P4State): Coord[] {
         return this.P4_HELPER.getVictoriousCoord(state);
     }
+
     public getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
         const height: number = board.length;
@@ -120,6 +112,7 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         }
         return y - 1;
     }
+
     public getListMoves(node: P4Node): P4Move[] {
         // should be called only if the game is not over
         const state: P4State = node.gameState;

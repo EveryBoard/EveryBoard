@@ -14,7 +14,7 @@ import { GipfFailure } from './GipfFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 
@@ -22,7 +22,7 @@ export type GipfLegalityInformation = GipfState
 
 export class GipfNode extends GameNode<GipfMove, GipfState> {}
 
-export class GipfRules extends Rules<GipfMove, GipfState, RulesConfig, GipfLegalityInformation> {
+export class GipfRules extends Rules<GipfMove, GipfState, EmptyRulesConfig, GipfLegalityInformation> {
 
     private static singleton: MGPOptional<GipfRules> = MGPOptional.empty();
 

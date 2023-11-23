@@ -5,7 +5,7 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
@@ -33,7 +33,7 @@ export class NewGameNode extends GameNode<NewGameMove, NewGameState> {}
  * It should be a singleton class.
  * It is used by the wrappers to check the legality of a move, and to apply the move on a state.
  */
-export class NewGameRules extends Rules<NewGameMove, NewGameState, RulesConfig, NewGameLegalityInfo> {
+export class NewGameRules extends Rules<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo> {
 
     /**
      * This is the singleton instance. You should keep this as is, except for adapting the class name.

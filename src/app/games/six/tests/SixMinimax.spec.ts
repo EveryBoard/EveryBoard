@@ -8,7 +8,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { SixMinimax } from '../SixMinimax';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
@@ -16,7 +16,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 
 describe('SixMinimax', () => {
 
-    let minimax: Minimax<SixMove, SixState, RulesConfig, SixLegalityInformation>;
+    let minimax: Minimax<SixMove, SixState, EmptyRulesConfig, SixLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
 
     beforeEach(() => {

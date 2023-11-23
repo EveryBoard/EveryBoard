@@ -46,7 +46,7 @@ describe('SaharaHeuristic', () => {
     it('should forbid moving opponent piece', () => {
         const state: SaharaState = SaharaRules.get().getInitialState();
         const move: SaharaMove = SaharaMove.from(new Coord(3, 0), new Coord(4, 0)).get();
-        const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should see that Player.ONE won', () => {

@@ -16,7 +16,6 @@ export class RulesConfigDescriptionLocalizable {
 }
 
 export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
-    // TODO FOR REVIEW: pour les config non type, si j'enlève le "= RulesConfig" ça devient obligé de mettre ça a plein d'endroit, moyen ?
 
     public static readonly DEFAULT: RulesConfigDescription = new RulesConfigDescription(
         {

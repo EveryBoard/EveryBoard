@@ -189,8 +189,8 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         const resultingBoard: GoPiece[][] = state.getCopiedBoard();
         const captured: number[] = state.getCapturedCopy();
         let currentPiece: GoPiece;
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 currentPiece = resultingBoard[y][x];
                 if (currentPiece === GoPiece.DARK_TERRITORY) {
                     resultingBoard[y][x] = GoPiece.EMPTY;
@@ -234,8 +234,8 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         let playerOneScore: number = captured[1];
         let playerZeroScore: number = captured[0];
         let currentSpace: GoPiece;
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 currentSpace = state.getPieceAtXY(x, y);
                 if (currentSpace === GoPiece.DEAD_DARK) {
                     playerOneScore++;
@@ -374,7 +374,7 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
     public static getCapturedInDirection(coord: Coord, direction: Orthogonal, state: GoState): Coord[] {
         const copiedBoard: GoPiece[][] = state.getCopiedBoard();
         const neightbooringCoord: Coord = coord.getNext(direction);
-        if (neightbooringCoord.isInRange(state.board[0].length, state.board.length)) {
+        if (neightbooringCoord.isInRange(state.getWidth(), state.getHeight())) {
             const opponent: GoPiece = state.turn%2 === 0 ? GoPiece.LIGHT : GoPiece.DARK;
             if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === opponent) {
                 Debug.display('GoRules', 'getCapturedInDirection', 'a group could be captured');
@@ -469,8 +469,8 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
     }
 
     public static resurrectStones(state: GoState): GoState {
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 if (state.getPieceAtXY(x, y).isDead()) {
                     state = GoRules.switchAliveness(new Coord(x, y), state);
                 }

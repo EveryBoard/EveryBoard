@@ -9,7 +9,6 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { SiamMinimax } from '../SiamMinimax';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -20,7 +19,7 @@ const d: SiamPiece = SiamPiece.DARK_DOWN;
 
 describe('SiamMinimax', () => {
 
-    let minimax: Minimax<SiamMove, SiamState, RulesConfig, SiamLegalityInformation>;
+    let minimax: Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const defaultConfig: SiamConfig = SiamRules.get().getRulesConfigDescription().defaultConfig.config;
 

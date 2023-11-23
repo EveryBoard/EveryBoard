@@ -241,6 +241,11 @@ export class SimpleComponentTestUtils<T> {
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();
     }
+    public expectTextToBe(elementName: string, expectedText: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
+        expect(element.nativeNode.innerHTML).toEqual(expectedText);
+    }
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist in order to fill its value`).toBeTruthy();
@@ -503,7 +508,9 @@ export class TestUtils {
     }
 
     public static expectToThrowAndLog(func: () => void, error: string): void {
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        if (jasmine.isSpy(ErrorLoggerService.logError) === false) {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        }
         expect(func).toThrowError('Assertion failure: ' + error);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
     }

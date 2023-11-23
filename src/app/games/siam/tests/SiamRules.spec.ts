@@ -132,7 +132,18 @@ describe('SiamRules', () => {
         const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
 
         // Then it should fail
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+    });
+    it('should forbid moving the empty piece', () => {
+        // Given a state
+        const state: SiamState = SiamRules.get().getInitialState(defaultConfig);
+
+        // When trying to move an empty piece
+        const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+
+        // Then it should fail
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 

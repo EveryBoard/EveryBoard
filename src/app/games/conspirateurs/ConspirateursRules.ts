@@ -75,8 +75,12 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (state.turn < 40) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
         }
-        if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const startPiece: PlayerOrNone = state.getPieceAt(move.getStart());
+        if (startPiece === PlayerOrNone.NONE) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (startPiece === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (state.getPieceAt(move.getEnd()).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
@@ -87,8 +91,12 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (state.turn < 40) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
         }
-        if (state.getPieceAt(move.getStartingCoord()) !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const startPiece: PlayerOrNone = state.getPieceAt(move.getStartingCoord());
+        if (startPiece === PlayerOrNone.NONE) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (startPiece === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         for (const jumpedOver of move.getJumpedOverCoords()) {
             if (state.getPieceAt(jumpedOver) === PlayerOrNone.NONE) {

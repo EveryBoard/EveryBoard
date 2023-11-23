@@ -150,7 +150,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             // This becomes a click on the space
             return this.onSpaceClickAfterCheck(x);
         } else {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
     }
     public async onRemainingPieceClick(piece: DiamPiece, z: number): Promise<MGPValidation> {
@@ -158,18 +158,16 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-
-        if (piece.owner === this.getCurrentPlayer()) {
-            if (this.isSelected(piece)) {
-                this.selected = MGPOptional.empty();
-            } else {
-                this.selected = MGPOptional.of({ type: 'pieceFromReserve', piece });
-            }
-            this.updateViewInfo();
-            return MGPValidation.SUCCESS;
-        } else {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        if (piece.owner === this.getCurrentOpponent()) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
+        if (this.isSelected(piece)) {
+            this.selected = MGPOptional.empty();
+        } else {
+            this.selected = MGPOptional.of({ type: 'pieceFromReserve', piece });
+        }
+        this.updateViewInfo();
+        return MGPValidation.SUCCESS;
     }
     private getPieceId(piece: DiamPiece, z: number): string {
         const owner: Player = piece.owner as Player;

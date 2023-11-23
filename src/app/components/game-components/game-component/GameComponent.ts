@@ -16,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { Coord } from 'src/app/jscaip/Coord';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -197,6 +198,19 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
 
     protected getConfig(): C {
         return this.node.getConfig();
+    }
+
+    /**
+     * Gives the translation transform for coordinate x, y, based on SPACE_SIZE
+     */
+    public getTranslation(coord: Coord): string {
+        return this.getTranslationXY(coord.x, coord.y);
+    }
+
+    public getTranslationXY(coordX: number, coordY: number): string {
+        const svgX: number = coordX * this.SPACE_SIZE;
+        const svgY: number = coordY * this.SPACE_SIZE;
+        return `translate(${svgX} ${svgY})`;
     }
 
 }

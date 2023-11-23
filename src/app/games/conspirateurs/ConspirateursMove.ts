@@ -55,7 +55,7 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
-    public toString(): string {
+    public override toString(): string {
         return `ConspirateursMoveSimple(${this.getStart().toString()} -> ${this.getEnd().toString()})`;
     }
     public override equals(other: ConspirateursMove): boolean {

@@ -29,7 +29,7 @@ describe('DiamComponent', () => {
             // Given the initial state
             // When clicking on a piece of the opponent
             // Then the corresponding error is shown
-            await testUtils.expectClickFailure('#piece_PLAYER_ONE_1_7', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            await testUtils.expectClickFailure('#piece_PLAYER_ONE_1_7', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should forbid transferring from a piece not owned by the player', fakeAsync(async() => {
             // Given a state with opponent piece on it
@@ -42,7 +42,7 @@ describe('DiamComponent', () => {
             await testUtils.setupState(state);
             // When clicking on B2
             // Then this is not a legal selection for a shift
-            await testUtils.expectClickFailure('#click_7_1', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            await testUtils.expectClickFailure('#click_7_1', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should forbid clicking on a space without selecting a piece first', fakeAsync(async() => {
             // Given the initial state

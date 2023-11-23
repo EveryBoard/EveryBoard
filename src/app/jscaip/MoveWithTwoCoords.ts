@@ -29,4 +29,7 @@ export abstract class MoveWithTwoCoords extends Move {
     public getSecond(): Coord {
         return this.second;
     }
+    public getCoords(): [Coord, Coord] {
+        return [this.first, this.second];
+    }
 }

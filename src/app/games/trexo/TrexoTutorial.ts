@@ -5,7 +5,6 @@ import { TrexoMove } from './TrexoMove';
 import { TrexoRules } from './TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { Player } from 'src/app/jscaip/Player';
-import { TeekoConfig, TeekoRules } from '../teeko/TeekoRules';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const ONE__0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);

@@ -3,13 +3,20 @@ import { MathUtils } from '../utils/MathUtils';
 
 export class Vector implements ComparableObject {
 
-    public constructor(public readonly x: number,
-                       public readonly y: number)
-    {
-    }
+    public constructor(public readonly x: number, public readonly y: number) {}
 
     public equals(other: Vector): boolean {
         return this.x === other.x && this.y === other.y;
+    }
+    public isSingleOrthogonalStep(): boolean {
+        const isUnitary: boolean = Math.abs(this.x) + Math.abs(this.y) === 1;
+        return this.isOrthogonal() && isUnitary;
+    }
+    public isOrthogonal(): boolean {
+        return this.x === 0 || this.y === 0;
+    }
+    public isDiagonal(): boolean {
+        return this.x !== 0 && this.y !== 0;
     }
     public isDiagonalOfLength(length: number): boolean {
         return Math.abs(this.x) === length &&

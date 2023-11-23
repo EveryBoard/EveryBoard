@@ -10,7 +10,7 @@ import { EncapsuleFailure } from './EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
@@ -19,7 +19,8 @@ export type EncapsuleLegalityInformation = EncapsuleSpace;
 export class EncapsuleNode extends GameNode<EncapsuleMove, EncapsuleState> {}
 
 @Debug.log
-export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, RulesConfig, EncapsuleLegalityInformation> {
+// eslint-disable-next-line max-len
+export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EmptyRulesConfig, EncapsuleLegalityInformation> {
 
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
 
@@ -82,8 +83,12 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, RulesCo
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
-            if (state.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            const owner: PlayerOrNone = movingPiece.getPlayer();
+            if (owner === PlayerOrNone.NONE) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            }
+            if (owner === state.getCurrentOpponent()) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             }
             if (state.isInRemainingPieces(movingPiece) === false) {
                 return MGPFallible.failure(EncapsuleFailure.PIECE_OUT_OF_STOCK());
@@ -92,8 +97,12 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, RulesCo
             const startingCoord: Coord = move.startingCoord.get();
             const startingSpace: EncapsuleSpace = state.getPieceAt(startingCoord);
             movingPiece = startingSpace.getBiggest();
-            if (state.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            const owner: PlayerOrNone = movingPiece.getPlayer();
+            if (owner === PlayerOrNone.NONE) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            }
+            if (owner === state.getCurrentOpponent()) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             }
         }
         const landingSpace: EncapsuleSpace = state.getPieceAt(move.landingCoord);

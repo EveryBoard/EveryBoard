@@ -7,7 +7,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
-import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
 
 describe('TaflPieceAndControlHeuristic', () => {
@@ -15,7 +14,6 @@ describe('TaflPieceAndControlHeuristic', () => {
     let heuristic: TaflPieceAndControlHeuristic<BrandhubMove>;
 
     let rules: BrandhubRules;
-    const defaultConfig: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;

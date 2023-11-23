@@ -16,7 +16,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -30,7 +30,7 @@ import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class SixComponent
-    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, RulesConfig, SixLegalityInformation>
+    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, EmptyRulesConfig, SixLegalityInformation>
 {
     public state: SixState;
 
@@ -44,8 +44,6 @@ export class SixComponent
 
     public selectedPiece: MGPOptional<Coord> = MGPOptional.empty();
     public chosenLanding: MGPOptional<Coord> = MGPOptional.empty();
-
-    public viewBox: string;
 
     private nextClickShouldSelectGroup: boolean = false;
 
@@ -78,7 +76,6 @@ export class SixComponent
         }
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();
-        this.viewBox = this.getViewBox();
     }
     public override hideLastMove(): void {
         this.leftCoord = MGPOptional.empty();
@@ -86,9 +83,9 @@ export class SixComponent
         this.victoryCoords = [];
         this.disconnecteds = [];
     }
-    private getViewBox(): string {
+    public getViewBox(): ViewBox {
         const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
-        return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH).toSVGString();
+        return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
     }
     public override async showLastMove(move: SixMove): Promise<void> {
         this.lastDrop = MGPOptional.of(move.landing);
@@ -144,7 +141,7 @@ export class SixComponent
             return this.cancelMove(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         } else if (this.chosenLanding.isAbsent()) {
             if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (this.selectedPiece.equalsValue(piece)) {
                 this.selectedPiece = MGPOptional.empty();
             } else {

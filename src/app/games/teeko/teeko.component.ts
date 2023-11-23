@@ -88,7 +88,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
                 } else if (clickedPiece === PlayerOrNone.NONE) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
                 } else {
-                    return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+                    return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
                 }
             }
         }

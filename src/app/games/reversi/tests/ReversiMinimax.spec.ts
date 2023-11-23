@@ -5,13 +5,12 @@ import { ReversiConfig, ReversiLegalityInformation, ReversiNode, ReversiRules } 
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { ReversiMinimax } from '../ReversiMinimax';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ReversiMinimax', () => {
 
     let rules: ReversiRules;
     let defaultConfig: ReversiConfig;
-    let minimax: Minimax<ReversiMove, ReversiState, RulesConfig, ReversiLegalityInformation>;
+    let minimax: Minimax<ReversiMove, ReversiState, ReversiConfig, ReversiLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
 
     beforeEach(() => {

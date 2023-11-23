@@ -168,7 +168,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             const startingCoord: PylosCoord = move.startingCoord.get();
             const startingPiece: PlayerOrNone = initialState.getPieceAt(startingCoord);
             if (startingPiece === opponent) {
-                return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (startingPiece === PlayerOrNone.NONE) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }

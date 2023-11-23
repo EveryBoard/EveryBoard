@@ -10,7 +10,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { GameState } from 'src/app/jscaip/GameState';
 import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { RulesConfigDescription } from './RulesConfigDescription';
 
 type ConfigFormJSON = {
@@ -135,26 +134,21 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     public onUpdate(): void {
-        // TODO: Utils.assert
-        if (this.userIsCreator === false) {
-            ErrorLoggerService.logError('RulesConfiguration', 'Only creator should be able to modify rules config');
-        } else if (this.chosenConfigName !== 'Custom') {
-            ErrorLoggerService.logError('RulesConfiguration', 'Only Customifiable config should be modified!');
-        } else {
-            const rulesConfig: RulesConfig = {};
-            const parameterNames: string[] = this.rulesConfigDescription.getFields();
-            for (const parameterName of parameterNames) {
-                if (this.isValid(parameterName)) {
-                    rulesConfig[parameterName] = this.rulesConfigForm.controls[parameterName].value;
-                } else {
-                    // This informs the parent component that an invalid update has been done
-                    this.updateCallback.emit(MGPOptional.empty());
-                    return; // In order not to send update when form is invalid
-                }
+        Utils.assert(this.userIsCreator, 'Only creator should be able to modify rules config');
+        Utils.assert(this.chosenConfigName === 'Custom', 'Only Customifiable config should be modified!');
+        const rulesConfig: RulesConfig = {};
+        const parameterNames: string[] = this.rulesConfigDescription.getFields();
+        for (const parameterName of parameterNames) {
+            if (this.isValid(parameterName)) {
+                rulesConfig[parameterName] = this.rulesConfigForm.controls[parameterName].value;
+            } else {
+                // This informs the parent component that an invalid update has been done
+                this.updateCallback.emit(MGPOptional.empty());
+                return; // In order not to send update when form is invalid
             }
-            this.setConfigDemo(rulesConfig);
-            this.updateCallback.emit(MGPOptional.of(rulesConfig));
         }
+        this.setConfigDemo(rulesConfig);
+        this.updateCallback.emit(MGPOptional.of(rulesConfig));
     }
 
     public isNumber(field: string): boolean {

@@ -7,7 +7,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlHeuristic';
-import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
 
 describe('TaflEscapeThenPieceThenControlMinimax', () => {
@@ -15,7 +14,6 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
     let heuristic: TaflEscapeThenPieceThenControlHeuristic<BrandhubMove>;
 
     let rules: BrandhubRules;
-    const defaultConfig: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;

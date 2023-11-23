@@ -22,14 +22,18 @@ describe('TeekoRules', () => {
     function translate(start: Coord, end: Coord): TeekoMove {
         return TeekoTranslationMove.from(start, end).get();
     }
+
     function drop(coord: Coord): TeekoMove {
         return TeekoDropMove.from(coord).get();
     }
+
     beforeEach(() => {
         rules = TeekoRules.get();
         defaultConfig = rules.getRulesConfigDescription().defaultConfig.config;
     });
+
     describe('dropping phase', () => {
+
         it('should fail if receiving translation in the 8 first turns', () => {
             // Given a board on the first phase
             const state: TeekoState = TeekoRules.get().getInitialState();
@@ -43,6 +47,7 @@ describe('TeekoRules', () => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }, reason);
         });
+
         it('should refuse dropping on the opponent piece', () => {
             // Given a board with a piece, in dropping phase
             const board: Table<PlayerOrNone> = [
@@ -61,6 +66,7 @@ describe('TeekoRules', () => {
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow simple drop', () => {
             // Given a board on the first phase
             const state: TeekoState = TeekoRules.get().getInitialState();
@@ -79,6 +85,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
+
         it('should notice horizontal victory', () => {
             // Given a board about to have 4 O in a line
             const board: Table<PlayerOrNone> = [
@@ -106,6 +113,7 @@ describe('TeekoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
+
         it('should notice diagonal victory', () => {
             // Given a board about to have 4 O in a line
             const board: Table<PlayerOrNone> = [
@@ -133,6 +141,7 @@ describe('TeekoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
+
         it('should notice vertical victory', () => {
             // Given a board about to have 4 O in a line
             const board: Table<PlayerOrNone> = [
@@ -160,6 +169,7 @@ describe('TeekoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
+
         it('should notice square victory', () => {
             // Given a board about to have 4 O in a square
             const board: Table<PlayerOrNone> = [
@@ -188,8 +198,11 @@ describe('TeekoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
+
     });
+
     describe('translation phase', () => {
+
         it('should refuse drop after 8 turns', () => {
             // Given a board on the second phase
             const board: Table<PlayerOrNone> = [
@@ -210,6 +223,7 @@ describe('TeekoRules', () => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }, reason);
         });
+
         it('should refuse moving from an empty space', () => {
             // Given a board in second phase
             const board: Table<PlayerOrNone> = [
@@ -228,6 +242,7 @@ describe('TeekoRules', () => {
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should refuse moving opponent piece', () => {
             // Given a board in second phase
             const board: Table<PlayerOrNone> = [
@@ -243,9 +258,10 @@ describe('TeekoRules', () => {
             const move: TeekoMove = translate(new Coord(0, 3), new Coord(2, 2));
 
             // Then the move should be illegal
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should refuse dropping on occupied space', () => {
             // Given a board in second phase
             const board: Table<PlayerOrNone> = [
@@ -264,6 +280,7 @@ describe('TeekoRules', () => {
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow legal translation to neighbor', () => {
             // Given a board in second phase
             const board: Table<PlayerOrNone> = [
@@ -289,6 +306,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 9);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
+
         it('should forbid teleportation by default', () => {
             // Given a board in second phase
             const board: Table<PlayerOrNone> = [
@@ -307,6 +325,7 @@ describe('TeekoRules', () => {
             const reason: string = RulesFailure.MUST_MOVE_ON_NEIGHBOR();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow teleportation when explicitly enabled', () => {
             // Given a board in second phase, with teleportation enabled
             const board: Table<PlayerOrNone> = [
@@ -335,6 +354,7 @@ describe('TeekoRules', () => {
             const expectedState: TeekoState = new TeekoState(expectedBoard, 9);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
+
         it('should notice horizontal victory', () => {
             // Given a board with 4 O in a line
             const board: Table<PlayerOrNone> = [
@@ -351,6 +371,7 @@ describe('TeekoRules', () => {
             // Then it should be a victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
+
         it('should notice diagonal victory', () => {
             // Given a board with 4 O in a line
             const board: Table<PlayerOrNone> = [
@@ -367,6 +388,7 @@ describe('TeekoRules', () => {
             // Then it should be a victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
+
         it('should notice vertical victory', () => {
             // Given a board with 4 O in a line
             const board: Table<PlayerOrNone> = [
@@ -383,6 +405,7 @@ describe('TeekoRules', () => {
             // Then it should be a victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
+
         it('should notice square victory', () => {
             // Given a board with 4 O in a square
             const board: Table<PlayerOrNone> = [
@@ -399,5 +422,7 @@ describe('TeekoRules', () => {
             // Then it should be a victory
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
+
     });
+
 });

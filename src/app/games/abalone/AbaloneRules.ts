@@ -12,13 +12,13 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
 export class AbaloneNode extends GameNode<AbaloneMove, AbaloneState> {}
 
-export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, RulesConfig, AbaloneLegalityInformation> {
+export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, EmptyRulesConfig, AbaloneLegalityInformation> {
 
     private static singleton: MGPOptional<AbaloneRules> = MGPOptional.empty();
 
@@ -110,7 +110,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, RulesConfig, 
         if (state.isPiece(move.coord) === false) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else if (firstPiece === FourStatePiece.ofPlayer(state.getCurrentOpponent())) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             return MGPValidation.SUCCESS;
         }

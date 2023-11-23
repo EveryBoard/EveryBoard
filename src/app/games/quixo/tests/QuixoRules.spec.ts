@@ -35,7 +35,7 @@ describe('QuixoRules', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
-        const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
 
