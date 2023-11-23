@@ -39,11 +39,6 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     {
         super(messageDisplayer);
     }
-    public override getViewBox(): string {
-        const begin: number = - this.STROKE_WIDTH;
-        const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
-        return begin + ' ' + begin + ' ' + width + ' ' + width;
-    }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
@@ -95,7 +90,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
             return MGPValidation.SUCCESS;
         }
         if (this.chosen.isAbsent() ||
-            this.pieceBelongToCurrentPlayer(clicked))
+            this.pieceBelongsToCurrentPlayer(clicked))
         {
             return this.choosePiece(clicked);
         } else {
@@ -114,17 +109,17 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
     private async choosePiece(coord: Coord): Promise<MGPValidation> {
         if (this.board[coord.y][coord.x] === TaflPawn.UNOCCUPIED) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
-        if (this.pieceBelongToCurrentPlayer(coord) === false) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        if (this.pieceBelongsToCurrentPlayer(coord) === false) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
 
         this.chosen = MGPOptional.of(coord);
         this.updateViewInfo();
         return MGPValidation.SUCCESS;
     }
-    private pieceBelongToCurrentPlayer(coord: Coord): boolean {
+    private pieceBelongsToCurrentPlayer(coord: Coord): boolean {
         const state: TaflState = this.getState();
         const player: Player = state.getCurrentPlayer();
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
@@ -180,7 +175,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
     private isClickable(coord: Coord): boolean {
         // Show if the piece can be clicked
-        return this.isInteractive && this.pieceBelongToCurrentPlayer(coord);
+        return this.isInteractive && this.pieceBelongsToCurrentPlayer(coord);
     }
     public isInvader(x: number, y: number): boolean {
         return this.board[y][x] === TaflPawn.INVADERS;

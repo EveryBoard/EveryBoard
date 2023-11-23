@@ -51,7 +51,7 @@ export class KamisadoPieceMove extends MoveCoordToCoord {
             return false;
         }
     }
-    public toString(): string {
+    public override toString(): string {
         return 'KamisadoMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
 }

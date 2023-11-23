@@ -127,6 +127,12 @@
 .victory-stroke.manual-stroke {
     fill: var(--victory);
 }
+.defeat-fill {
+    fill: var(--defeat);
+}
+.defeat-stroke {
+    stroke: var(--defeat);
+}
 .selected-fill {
     fill: var(--selected);
 }

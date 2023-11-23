@@ -90,7 +90,7 @@ describe('PylosRules', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
-        const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it(`should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {

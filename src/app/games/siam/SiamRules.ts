@@ -48,8 +48,10 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
     public isLegal(move: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {
         if (move.isInsertion() === false) {
             const movedPiece: SiamPiece = state.getPieceAt(move.coord);
-            if (movedPiece.belongTo(state.getCurrentPlayer()) === false) {
-                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            if (movedPiece === SiamPiece.EMPTY) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            } else if (movedPiece.belongsTo(state.getCurrentOpponent())) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             }
         }
         if (move.isRotation()) {

@@ -151,7 +151,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         const movedStack: LascaStack = state.getPieceAt(moveStart);
         const opponent: Player = state.getCurrentOpponent();
         if (movedStack.isCommandedBy(opponent)) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const secondCoord: Coord = move.coords.get(1);
         if (movedStack.getCommander().isOfficer === false) {

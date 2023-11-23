@@ -49,7 +49,7 @@ describe('LascaRules', () => {
             const move: LascaMove = LascaMove.fromStep(new Coord(0, 2), new Coord(1, 3)).get();
 
             // Then it should fail
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid moving normal piece backward', () => {

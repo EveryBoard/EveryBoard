@@ -195,7 +195,7 @@ describe('CoerceoComponent', () => {
             // When clicking on it again
             await testUtils.expectClickSuccess('#click_6_2');
 
-            // Then the different highlighs should be gone since the piece is deselected
+            // Then the different highlights should be gone since the piece is deselected
             const component: CoerceoComponent = testUtils.getGameComponent();
             testUtils.expectElementNotToExist('#selected_6_2');
             expect(component.possibleLandings.length).toBe(0);
@@ -234,8 +234,8 @@ describe('CoerceoComponent', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             await testUtils.setupState(state, undefined, CoerceoRegularMove.of(new Coord(8, 9), new Coord(6, 9)));
-            testUtils.expectElementToHaveClasses('#last_end_6_9', ['base', 'no-fill', 'mid-stroke', 'last-move-stroke']);
-            testUtils.expectElementToHaveClasses('#last_start_8_9', ['base', 'no-fill', 'mid-stroke', 'last-move-stroke']);
+            testUtils.expectElementToHaveClass('#last_end_6_9', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#last_start_8_9', 'last-move-stroke');
 
             // When applying a tile exchange
             await testUtils.expectMoveSuccess('#click_6_9',

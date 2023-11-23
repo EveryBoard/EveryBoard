@@ -87,8 +87,12 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return new LinesOfActionState(board, state.turn + 1);
     }
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
-        if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const piece: PlayerOrNone = state.getPieceAt(move.getStart());
+        if (piece === PlayerOrNone.NONE) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (piece === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.getStart(), move.direction)) {
             return MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());

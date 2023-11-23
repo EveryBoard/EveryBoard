@@ -91,7 +91,7 @@ describe('PylosComponent', () => {
 
             // When clicking on one
             // Then the move should be illegal
-            await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should cancel move when clicking on a supporting piece', fakeAsync(async() => {
             // Given a board where there is supporting piece
