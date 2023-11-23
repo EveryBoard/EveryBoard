@@ -125,6 +125,19 @@ describe('Coord', () => {
             expect(allCoordsToward).toEqual([coord, new Coord(1, 1), farAwayAlignedCoord]);
         });
 
+        it('should only return [start, end] when coords are not aligned', () => {
+            // TODO FOR REVIEW: eh... is it what we want :D ?
+            // Given two coord not aligned
+            const start: Coord = new Coord(0, 0);
+            const end: Coord = new Coord(1, 2);
+
+            // When getting all coord toward end
+            const coords: Coord[] = start.getAllCoordsToward(end);
+
+            // Then the list should be empty
+            expect(coords.length).toBe(0);
+        });
+
     });
 
 });
