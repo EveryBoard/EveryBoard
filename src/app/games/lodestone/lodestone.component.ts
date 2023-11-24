@@ -20,10 +20,11 @@ import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Utils } from 'src/app/utils/utils';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 export type LodestoneInfo = {
     direction: LodestoneDirection,
-    pieceClasses: string[],
+    owner: Player,
     selectedClass: string,
     movingClass: string,
     orientation: LodestoneOrientation,
@@ -130,10 +131,7 @@ export class LodestoneComponent
         selected: MGPOptional.empty(),
     };
 
-    public LEFT: number;
-    public UP: number;
-    public WIDTH: number;
-    public HEIGHT: number;
+    public viewBox: ViewBox;
     public platesGroupSize: number;
     public boardSize: number;
 
@@ -160,15 +158,15 @@ export class LodestoneComponent
         this.scores = MGPOptional.of([0, 0]);
     }
 
-    public getViewBox(): string {
+    public getViewBox(): ViewBox {
         const abstractPlateWidth: number = this.getState().pressurePlates.top.plates.length;
         this.platesGroupSize = abstractPlateWidth * (this.SPACE_SIZE * 1.2);
-        this.LEFT = - this.platesGroupSize;
-        this.UP = - (this.platesGroupSize + this.SPACE_SIZE);
+        const left: number = - this.platesGroupSize;
+        const up: number = - (this.platesGroupSize + this.SPACE_SIZE);
         this.boardSize = this.getState().board.length * this.SPACE_SIZE;
-        this.WIDTH = this.boardSize + (2 * this.platesGroupSize);
-        this.HEIGHT = this.boardSize + (2 * this.platesGroupSize) + (2 * this.SPACE_SIZE) + this.STROKE_WIDTH;
-        return this.LEFT + ' ' + this.UP + ' ' + this.WIDTH + ' ' + this.HEIGHT;
+        const width: number = this.boardSize + (2 * this.platesGroupSize);
+        const height: number = this.boardSize + (2 * this.platesGroupSize) + (2 * this.SPACE_SIZE) + this.STROKE_WIDTH;
+        return new ViewBox(left, up, width, height);
     }
 
     public async selectCoord(coord: Coord): Promise<MGPValidation> {
@@ -197,7 +195,9 @@ export class LodestoneComponent
     }
 
     public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#lodestone_' + lodestone.direction + '_' + lodestone.orientation);
+        const owner: string = this.getCurrentPlayer().toString();
+        const clickedElement: string = '#lodestone_' + lodestone.direction + '_' + lodestone.orientation + '_' + owner;
+        const clickValidity: MGPValidation = await this.canUserPlay(clickedElement);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -454,7 +454,7 @@ export class LodestoneComponent
             direction: lodestone.direction,
             movingClass: '',
             orientation: lodestone.orientation,
-            pieceClasses: [],
+            owner: lodestone.owner,
             selectedClass: '',
         };
         if (lodestone.direction === 'push') {
@@ -484,7 +484,7 @@ export class LodestoneComponent
                                               moveToDisplay: LodestoneMove)
     : MGPOptional<LodestonePiece>
     {
-        // This coord was filled after move, then crumbled after capture were placed
+        // This coord was filled after move, then crumbled after captures were placed
         const lodestoneDescription: LodestoneDescription = {
             direction: moveToDisplay.direction,
             orientation: moveToDisplay.orientation,
@@ -654,7 +654,7 @@ export class LodestoneComponent
     : void
     {
         const groupInfos: PressurePlateGroupInfo[] = this.viewInfo.pressurePlateGroupInfos.filter(
-            (ppgi: PressurePlateGroupInfo) => ppgi.groupPosition === position,
+            (info: PressurePlateGroupInfo) => info.groupPosition === position,
         );
         const groupInfo: PressurePlateGroupInfo = groupInfos[0];
         const plateInfo: PressurePlateInfo = groupInfo.plateInfos[plateIndex];

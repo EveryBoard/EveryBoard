@@ -128,11 +128,8 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                 pressurePlate.addCaptured(opponent, captured);
             const plateInfo: PressurePlateViewPosition =
                 LodestoneRules.THREATENED_COORD_RANGE.get(position).get();
-            for (
-                let plateIndex: number = 0;
-                plateIndex < newPressurePlate.getCrumbledPlates().length;
-                plateIndex++)
-            {
+            const length: number = newPressurePlate.getCrumbledPlates().length;
+            for (let plateIndex: number = 0; plateIndex < length; plateIndex++) {
                 const plateWidth: number = newPressurePlate.plates[plateIndex].width;
                 this.removePressurePlate(board,
                                          plateInfo.start(plateIndex, plateWidth),

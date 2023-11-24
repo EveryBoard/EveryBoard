@@ -24,4 +24,12 @@ export class LodestoneLodestoneComponent extends BaseGameComponent {
         this.TRIANGLE_OUT = `${radius80},0 ${radius30},${radius20} ${radius30},-${radius20}`;
         this.TRIANGLE_IN = `${radius30},0 ${radius80},${radius30} ${radius80},-${radius30}`;
     }
+
+    public getArrowRotate(i: number): string {
+        let rotate: number = i * 90;
+        if (this.lodestoneInfo.orientation === 'diagonal') {
+            rotate += 45;
+        }
+        return 'rotate(' + rotate + ')';
+    }
 }

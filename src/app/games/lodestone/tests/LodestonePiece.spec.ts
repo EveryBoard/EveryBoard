@@ -1,6 +1,7 @@
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 
 describe('LodestonePiece', () => {
+
     it('should redefine equals', () => {
         const empty: LodestonePiece = LodestonePieceNone.EMPTY;
         const unreachable: LodestonePiece = LodestonePieceNone.UNREACHABLE;
@@ -20,4 +21,5 @@ describe('LodestonePiece', () => {
         expect(lodestone.equals(piece)).toBeFalse();
         expect(lodestone.equals(lodestone)).toBeTrue();
     });
+
 });

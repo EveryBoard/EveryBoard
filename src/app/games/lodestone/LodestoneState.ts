@@ -66,6 +66,9 @@ export class LodestonePressurePlateGroup {
         }
     }
 
+    /**
+     * @returns the number of piece that can be put in that pressure plate group, all pressure plate included
+     */
     public getGroupRemainingSpaces(): number {
         const remainingSpaces: number[] =
             this.plates.map((plate: LodestonePressurePlate) => plate.getRemainingSpaces());
@@ -126,6 +129,7 @@ export class LodestonePressurePlate {
     }
 
     public getRemainingSpaces(): number {
+        console.log(this.width, this.pieces.length)
         return this.width - this.pieces.length;
     }
 
@@ -178,6 +182,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
     public remainingSpaces(): number {
         const remaining: LodestoneCaptures = this.remainingSpacesDetails();
+        console.log('remaining spaces ?', remaining)
         return remaining.top + remaining.bottom + remaining.left + remaining.right;
     }
 
@@ -189,8 +194,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
             if (currentlyFillablePlateIndex === -1) {
                 remaining[position] = 0;
             } else {
-                const pressurePlate: LodestonePressurePlate = pressurePlates.plates[currentlyFillablePlateIndex];
-                remaining[position] = pressurePlate.getRemainingSpaces();
+                remaining[position] = pressurePlates.getGroupRemainingSpaces();
             }
         }
         return remaining;

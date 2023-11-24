@@ -655,7 +655,7 @@ describe('LodestoneRules', () => {
         const board: Table<LodestonePiece> = [
             [_, _, _, _, O, _, _, _],
             [_, _, _, _, X, _, _, _],
-            [_, _, O, X, _, X, O, _], // TODO FOR REVIEW EL DEOUS CHRISTOUSS
+            [_, _, O, X, _, X, O, _],
             [_, _, _, _, X, _, _, _],
             [_, _, _, _, O, _, _, _],
             [_, _, _, _, X, _, _, _],

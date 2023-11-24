@@ -51,6 +51,6 @@ describe('LodestoneScoreHeuristic', () => {
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
-
     });
+
 });

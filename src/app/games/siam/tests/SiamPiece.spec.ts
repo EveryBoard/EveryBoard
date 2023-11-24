@@ -38,6 +38,7 @@ describe('SiamPiece', () => {
         expect(SiamPiece.MOUNTAIN.belongTo(Player.ONE)).toBeFalse();
         expect(SiamPiece.MOUNTAIN.belongTo(Player.ZERO)).toBeFalse();
         expect(SiamPiece.DARK_DOWN.belongTo(Player.ZERO)).toBeTrue();
+        // TODO FOR REVIEW: Haha, on avait confondu ZERO ET ONE, ou plutôt DARK ET LIGHT, qui est qui, je crois, mais yavais stuutage dans l'air
         expect(SiamPiece.DARK_DOWN.belongTo(Player.ONE)).toBeFalse();
         expect(SiamPiece.LIGHT_RIGHT.belongTo(Player.ZERO)).toBeFalse();
         expect(SiamPiece.LIGHT_RIGHT.belongTo(Player.ONE)).toBeTrue();

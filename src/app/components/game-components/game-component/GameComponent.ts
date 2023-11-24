@@ -37,6 +37,10 @@ export abstract class BaseGameComponent {
         }
     }
 
+    public getSVGTranslate(x: number, y: number): string {
+        return 'translate(' + x + ', ' + y + ')';
+    }
+
     public SPACE_SIZE: number = 100;
 
     public readonly STROKE_WIDTH: number = 8;

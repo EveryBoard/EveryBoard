@@ -19,6 +19,7 @@ describe('LodestoneMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new LodestoneMoveGenerator();
     });
+
     it('should propose at least 618 moves at first turn', () => {
         // Given the initial state
         const node: LodestoneNode = new LodestoneNode(LodestoneRules.get().getInitialState());
@@ -30,6 +31,7 @@ describe('LodestoneMoveGenerator', () => {
         // The total amounts to 618
         expect(moveGenerator.getListMoves(node).length).toBeGreaterThanOrEqual(618);
     });
+
     it('should propose 8 moves on a specific minimal board', () => {
         // Given a state with 4 empty spaces and no remaining pressure plate
         const O: LodestonePiece = LodestonePieceLodestone.ZERO_PULL_DIAGONAL;
@@ -61,6 +63,7 @@ describe('LodestoneMoveGenerator', () => {
         // Then there should be 4*2 possible moves
         expect(moveGenerator.getListMoves(node).length).toBe(8);
     });
+
     it('should not propose illegal moves when there is only one spot left in pressure plates', () => {
         // Given a state with one remaining spot per pressure plate
         const board: Table<LodestonePiece> = [
@@ -90,4 +93,5 @@ describe('LodestoneMoveGenerator', () => {
         }
 
     });
+
 });
