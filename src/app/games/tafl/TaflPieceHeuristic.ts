@@ -2,7 +2,7 @@ import { TaflNode, TaflRules } from './TaflRules';
 import { TaflMove } from './TaflMove';
 import { TaflState } from './TaflState';
 import { Player } from 'src/app/jscaip/Player';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 
 export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristic<M, TaflState> {
 

@@ -1,7 +1,7 @@
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { QuixoNode, QuixoRules } from './QuixoRules';
 
 export class QuixoHeuristic extends PlayerMetricHeuristic<QuixoMove, QuixoState> {

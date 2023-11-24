@@ -7,7 +7,7 @@ import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { Debug } from 'src/app/utils/utils';
 import { SixNode, SixRules } from './SixRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 
 @Debug.log
 export class SixMoveGenerator extends MoveGenerator<SixMove, SixState> {

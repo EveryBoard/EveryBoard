@@ -1,4 +1,4 @@
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';

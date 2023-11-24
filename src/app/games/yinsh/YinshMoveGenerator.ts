@@ -5,7 +5,7 @@ import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshNode, YinshRules } from './YinshRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { GipfCapture, GipfProjectHelper } from 'src/app/jscaip/GipfProjectHelper';
 
 export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {

@@ -1,4 +1,4 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { LascaControlHeuristic } from './LascaControlHeuristic';
 import { LascaNode } from './LascaRules';

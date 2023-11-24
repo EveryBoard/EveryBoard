@@ -3,7 +3,7 @@ import { MancalaState } from './../common/MancalaState';
 import { KalahNode, KalahRules } from './KalahRules';
 import { MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { MancalaDistribution } from '../common/MancalaMove';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 
 export class KalahMoveGenerator extends MoveGenerator<KalahMove, MancalaState> {
 

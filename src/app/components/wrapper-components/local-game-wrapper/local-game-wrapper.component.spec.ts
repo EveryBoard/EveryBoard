@@ -26,8 +26,8 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Rules } from 'src/app/games/p4/P4Rules';

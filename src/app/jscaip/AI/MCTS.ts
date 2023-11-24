@@ -1,14 +1,14 @@
-import { ArrayUtils } from '../utils/ArrayUtils';
-import { MGPFallible } from '../utils/MGPFallible';
-import { MGPOptional } from '../utils/MGPOptional';
-import { Debug, Utils } from '../utils/utils';
-import { GameState } from './GameState';
-import { GameStatus } from './GameStatus';
+import { ArrayUtils } from '../../utils/ArrayUtils';
+import { MGPFallible } from '../../utils/MGPFallible';
+import { MGPOptional } from '../../utils/MGPOptional';
+import { Debug, Utils } from '../../utils/utils';
+import { GameState } from '../GameState';
+import { GameStatus } from '../GameStatus';
 import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
 import { GameNode } from './GameNode';
-import { Move } from './Move';
-import { Player } from './Player';
-import { Rules } from './Rules';
+import { Move } from '../Move';
+import { Player } from '../Player';
+import { Rules } from '../Rules';
 
 type NodeAndPath<M extends Move, S extends GameState> = {
     node: GameNode<M, S>,

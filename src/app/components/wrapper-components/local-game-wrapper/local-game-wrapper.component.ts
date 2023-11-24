@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractNode, GameNodeStats } from 'src/app/jscaip/GameNode';
+import { AbstractNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
@@ -14,7 +14,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { AbstractAI, AIOptions, AIStats } from 'src/app/jscaip/AI';
+import { AbstractAI, AIOptions, AIStats } from 'src/app/jscaip/AI/AI';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 @Component({

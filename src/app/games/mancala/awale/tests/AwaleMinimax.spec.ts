@@ -3,8 +3,8 @@ import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMove } from '../AwaleMove';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 

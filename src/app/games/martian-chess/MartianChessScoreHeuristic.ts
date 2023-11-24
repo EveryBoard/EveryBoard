@@ -1,4 +1,4 @@
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessNode } from './MartianChessRules';

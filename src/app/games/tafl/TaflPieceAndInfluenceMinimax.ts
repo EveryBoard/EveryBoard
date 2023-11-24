@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TaflMoveGenerator } from './TaflMoveGenerator';
 import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
 import { TaflState } from './TaflState';

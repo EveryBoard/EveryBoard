@@ -1,11 +1,11 @@
-import { Move } from './Move';
-import { MGPMap } from '../utils/MGPMap';
+import { Move } from '../Move';
+import { MGPMap } from '../../utils/MGPMap';
 import { Debug, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from '../utils/MGPOptional';
-import { GameState } from './GameState';
-import { Rules } from './Rules';
-import { GameStatus } from './GameStatus';
-import { Player } from './Player';
+import { MGPOptional } from '../../utils/MGPOptional';
+import { GameState } from '../GameState';
+import { Rules } from '../Rules';
+import { GameStatus } from '../GameStatus';
+import { Player } from '../Player';
 
 export class GameNodeStats {
     public static createdNodes: number = 0;

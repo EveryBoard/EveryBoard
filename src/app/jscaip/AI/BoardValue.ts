@@ -1,4 +1,4 @@
-import { Player } from './Player';
+import { Player } from '../Player';
 
 export class BoardValue {
 
@@ -21,5 +21,5 @@ export class BoardValue {
         playerOneScore = playerOneScore * Player.ONE.getScoreModifier();
         return new BoardValue(playerZeroScore + playerOneScore);
     }
-    public constructor(public readonly value: number) {}
+    public constructor(private readonly value: number) {}
 }

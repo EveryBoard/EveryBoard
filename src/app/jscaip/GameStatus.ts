@@ -1,4 +1,4 @@
-import { BoardValue } from './BoardValue';
+import { BoardValue } from './AI/BoardValue';
 import { Player, PlayerOrNone } from './Player';
 
 export class GameStatus {

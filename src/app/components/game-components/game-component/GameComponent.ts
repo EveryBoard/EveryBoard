@@ -11,8 +11,8 @@ import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { GameNode } from 'src/app/jscaip/GameNode';
-import { AI, AIOptions } from 'src/app/jscaip/AI';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
 import { Coord } from 'src/app/jscaip/Coord';
 
 /**

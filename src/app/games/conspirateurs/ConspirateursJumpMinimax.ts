@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
 import { ConspirateursRules } from './ConspirateursRules';

@@ -1,7 +1,7 @@
 import { YinshState } from './YinshState';
 import { YinshMove } from './YinshMove';
 import { YinshNode } from './YinshRules';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 
 export class YinshScoreHeuristic extends PlayerMetricHeuristic<YinshMove, YinshState> {
 

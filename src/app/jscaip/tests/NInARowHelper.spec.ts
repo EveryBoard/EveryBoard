@@ -3,7 +3,7 @@ import { NInARowHelper } from '../NInARowHelper';
 import { PlayerOrNone } from '../Player';
 import { Coord } from '../Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { BoardValue } from '../BoardValue';
+import { BoardValue } from '../AI/BoardValue';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { GameStatus } from '../GameStatus';
 

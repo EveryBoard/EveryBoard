@@ -5,7 +5,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 
 export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove, ConspirateursState> {
 

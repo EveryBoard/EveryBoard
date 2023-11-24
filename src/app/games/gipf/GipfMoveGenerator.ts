@@ -2,7 +2,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { GipfRules, GipfNode } from './GipfRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { GipfCapture, GipfProjectHelper } from 'src/app/jscaip/GipfProjectHelper';
 
 export class GipfMoveGenerator extends MoveGenerator<GipfMove, GipfState> {

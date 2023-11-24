@@ -1,7 +1,7 @@
 import { ConspirateursMove } from '../ConspirateursMove';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursJumpMinimax } from '../ConspirateursJumpMinimax';
 

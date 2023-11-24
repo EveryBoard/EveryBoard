@@ -1,8 +1,8 @@
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { Heuristic } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
 import { CoordSet } from 'src/app/utils/OptimizedSet';

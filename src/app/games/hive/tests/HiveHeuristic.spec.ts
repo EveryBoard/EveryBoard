@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { HiveHeuristic } from '../HiveHeuristic';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';

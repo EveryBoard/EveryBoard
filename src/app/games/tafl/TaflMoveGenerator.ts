@@ -5,7 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Debug } from 'src/app/utils/utils';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 
 @Debug.log
 export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, TaflState> {

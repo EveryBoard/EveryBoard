@@ -3,7 +3,7 @@ import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
 import { PylosNode, PylosRules } from './PylosRules';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 
 export class PylosMoveGenerator extends MoveGenerator<PylosMove, PylosState> {
 

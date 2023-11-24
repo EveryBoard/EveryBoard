@@ -5,8 +5,8 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasLegalityInformation, EpaminondasNode } from '../EpaminondasRules';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EpaminondasAttackMinimax } from '../EpaminondasAttackMinimax';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

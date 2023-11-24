@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasLegalityInformation, EpaminondasNode } from '../EpaminondasRules';

@@ -1,4 +1,4 @@
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionState } from './LinesOfActionState';

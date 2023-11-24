@@ -1,6 +1,6 @@
 import { GameNode } from './GameNode';
-import { GameState } from './GameState';
-import { Move } from './Move';
+import { GameState } from '../GameState';
+import { Move } from '../Move';
 
 /**
  * A move generator should have a method that generates move from a node.

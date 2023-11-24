@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { hnefataflConfig } from './hnefataflConfig';
 import { TaflRules } from '../TaflRules';
 import { HnefataflMove } from './HnefataflMove';

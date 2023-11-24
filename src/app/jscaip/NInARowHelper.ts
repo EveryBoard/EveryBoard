@@ -1,6 +1,6 @@
 import { assert } from '../utils/assert';
 import { MGPMap } from '../utils/MGPMap';
-import { BoardValue } from './BoardValue';
+import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { GameStateWithTable } from './GameStateWithTable';

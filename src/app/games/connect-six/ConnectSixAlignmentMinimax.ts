@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixState } from './ConnectSixState';
 import { ConnectSixRules } from './ConnectSixRules';

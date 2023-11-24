@@ -11,11 +11,11 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { PylosOrderedMoveGenerator } from './PylosOrderedMoveGenerator';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosHeuristic } from './PylosHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 
 @Component({
     selector: 'app-pylos',

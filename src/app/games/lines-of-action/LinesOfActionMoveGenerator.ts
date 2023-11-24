@@ -3,7 +3,7 @@ import { LinesOfActionState } from './LinesOfActionState';
 import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 
 export class LinesOfActionMoveGenerator extends MoveGenerator<LinesOfActionMove, LinesOfActionState> {
 

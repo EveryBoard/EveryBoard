@@ -1,10 +1,10 @@
 import { Encoder } from 'src/app/utils/Encoder';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { GameState } from '../GameState';
-import { GameNode } from '../GameNode';
+import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { Rules } from '../Rules';
-import { MoveGenerator } from '../AI';
+import { MoveGenerator } from '../AI/AI';
 
 export class MoveTestUtils {
     public static testFirstTurnMovesBijectivity<M extends Move, S extends GameState, L>(

@@ -1,15 +1,15 @@
 import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
-import { Move } from './Move';
+import { Move } from '../Move';
 import { BoardValue } from './BoardValue';
-import { Rules } from './Rules';
-import { GameState } from './GameState';
-import { MGPSet } from '../utils/MGPSet';
-import { MGPOptional } from '../utils/MGPOptional';
-import { Player } from './Player';
-import { MGPFallible } from '../utils/MGPFallible';
-import { Utils } from '../utils/utils';
-import { ArrayUtils } from '../utils/ArrayUtils';
-import { GameStatus } from './GameStatus';
+import { Rules } from '../Rules';
+import { GameState } from '../GameState';
+import { MGPSet } from '../../utils/MGPSet';
+import { MGPOptional } from '../../utils/MGPOptional';
+import { Player } from '../Player';
+import { MGPFallible } from '../../utils/MGPFallible';
+import { Utils } from '../../utils/utils';
+import { ArrayUtils } from '../../utils/ArrayUtils';
+import { GameStatus } from '../GameStatus';
 import { GameNode } from './GameNode';
 
 /**

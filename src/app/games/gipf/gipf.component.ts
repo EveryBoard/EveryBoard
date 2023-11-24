@@ -18,10 +18,10 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfTutorial } from './GipfTutorial';
 import { Utils } from 'src/app/utils/utils';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfScoreHeuristic } from './GipfScoreHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 
 @Component({

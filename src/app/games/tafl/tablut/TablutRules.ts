@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { tablutConfig } from './tablutConfig';
 import { TablutMove } from './TablutMove';
 import { TaflRules } from '../TaflRules';

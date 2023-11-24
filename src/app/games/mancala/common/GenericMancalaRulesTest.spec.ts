@@ -6,7 +6,7 @@ import { MancalaState } from './MancalaState';
 import { MancalaMove } from './MancalaMove';
 import { MancalaFailure } from './MancalaFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
+import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
 
 export class MancalaRulesTestEntries<M extends MancalaMove> {
     gameName: string; // 'Awale', 'Kalah', etc

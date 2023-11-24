@@ -14,8 +14,8 @@ import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
 import { DiamTutorial } from './DiamTutorial';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { DiamMoveGenerator } from './DiamMoveGenerator';
 
 interface ViewInfo {

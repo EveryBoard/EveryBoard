@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { GameNode } from '../GameNode';
+import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { Player } from '../Player';
 import { Rules } from '../Rules';

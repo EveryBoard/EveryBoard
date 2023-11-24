@@ -1,8 +1,8 @@
-import { MGPOptional } from '../utils/MGPOptional';
-import { Coord } from './Coord';
-import { Move } from './Move';
-import { SCORE } from './SCORE';
-import { GameState } from './GameState';
+import { MGPOptional } from '../../utils/MGPOptional';
+import { Coord } from '../Coord';
+import { Move } from '../Move';
+import { SCORE } from '../SCORE';
+import { GameState } from '../GameState';
 import { Heuristic } from './Minimax';
 
 export interface BoardInfo {

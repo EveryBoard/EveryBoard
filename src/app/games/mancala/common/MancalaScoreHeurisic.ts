@@ -1,7 +1,7 @@
 import { MancalaState } from '../common/MancalaState';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { MancalaMove } from './MancalaMove';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 
 export class MancalaScoreHeuristic<M extends MancalaMove> extends PlayerMetricHeuristic<M, MancalaState> {
     public getMetrics(node: GameNode<M, MancalaState>): [number, number] {

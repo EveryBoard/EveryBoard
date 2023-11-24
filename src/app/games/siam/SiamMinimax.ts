@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamState } from './SiamState';
 import { SiamMove } from './SiamMove';

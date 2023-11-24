@@ -1,8 +1,8 @@
-import { Heuristic } from 'src/app/jscaip/Minimax';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { TeekoMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
 import { TeekoNode, TeekoRules } from './TeekoRules';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Coord } from 'src/app/jscaip/Coord';
 
 export class TeekoHeuristic extends Heuristic<TeekoMove, TeekoState> {

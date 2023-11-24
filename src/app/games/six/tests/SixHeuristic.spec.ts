@@ -7,7 +7,7 @@ import { SixMove } from '../SixMove';
 import { SixNode } from '../SixRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { SixHeuristic } from '../SixHeuristic';
 
 const O: PlayerOrNone = Player.ZERO;

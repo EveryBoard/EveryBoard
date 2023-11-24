@@ -13,9 +13,9 @@ import { Table3DUtils, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 
 interface PieceOnBoard {

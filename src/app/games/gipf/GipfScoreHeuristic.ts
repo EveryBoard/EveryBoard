@@ -1,4 +1,4 @@
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { GipfMove } from './GipfMove';
 import { GipfNode, GipfRules } from './GipfRules';

@@ -1,5 +1,5 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Heuristic } from 'src/app/jscaip/Minimax';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { NewGameMove } from './NewGameMove';
 import { NewGameNode } from './NewGameRules';
 import { NewGameState } from './NewGameState';

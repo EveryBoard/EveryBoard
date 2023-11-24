@@ -9,7 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaFailure } from '../common/MancalaFailure';
 import { Utils } from 'src/app/utils/utils';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 
 export class KalahNode extends GameNode<KalahMove, MancalaState> {}
 

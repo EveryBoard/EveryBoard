@@ -1,4 +1,4 @@
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Player } from 'src/app/jscaip/Player';
 import { HiveMove } from './HiveMove';
 import { HivePiece } from './HivePiece';

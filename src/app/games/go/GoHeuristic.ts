@@ -1,6 +1,6 @@
 import { GoState, GoPiece } from './GoState';
 import { GoMove } from './GoMove';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { GoNode, GoRules } from './GoRules';
 
 export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {

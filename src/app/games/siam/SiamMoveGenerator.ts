@@ -3,7 +3,7 @@ import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
 import { SiamRules, SiamNode } from './SiamRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 
 export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
 

@@ -1,6 +1,6 @@
 import { Rules } from 'src/app/jscaip/Rules';
 import { ConnectSixState } from './ConnectSixState';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

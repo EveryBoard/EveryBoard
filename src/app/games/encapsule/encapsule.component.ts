@@ -14,8 +14,8 @@ import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
 
 @Component({

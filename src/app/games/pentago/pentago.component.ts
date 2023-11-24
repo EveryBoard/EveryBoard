@@ -13,8 +13,8 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { PentagoMoveGenerator } from './PentagoMoveGenerator';
 
 interface ArrowInfo {

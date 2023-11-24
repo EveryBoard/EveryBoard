@@ -7,7 +7,7 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { QuartoHeuristic } from '../QuartoHeuristic';
 import { QuartoNode } from '../QuartoRules';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 
 describe('QuartoHeuristic', () => {
 

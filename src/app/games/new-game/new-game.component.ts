@@ -5,7 +5,7 @@ import { NewGameState } from './NewGameState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { NewGameTutorial } from './NewGameTutorial';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameMinimax } from './NewGameMinimax';
 

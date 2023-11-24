@@ -13,7 +13,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { KalahRules } from '../kalah/KalahRules';
 
 type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;

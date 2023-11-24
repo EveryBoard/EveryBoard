@@ -2,7 +2,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameState } from '../GameState';
 import { GameStatus } from '../GameStatus';
-import { GameNode } from '../GameNode';
+import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { Rules } from '../Rules';
 

@@ -1,7 +1,7 @@
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { ReversiNode } from './ReversiRules';
 
 export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState> {

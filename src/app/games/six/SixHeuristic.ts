@@ -7,8 +7,8 @@ import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { Utils } from 'src/app/utils/utils';
 import { SixVictorySource, SixNode } from './SixRules';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { AlignmentHeuristic, BoardInfo } from 'src/app/jscaip/AlignmentHeuristic';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { AlignmentHeuristic, BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
 
 export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVictorySource> {
 

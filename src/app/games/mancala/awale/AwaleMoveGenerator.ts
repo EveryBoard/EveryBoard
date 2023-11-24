@@ -2,7 +2,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MancalaState } from '../common/MancalaState';
 import { AwaleMove } from './AwaleMove';
 import { AwaleNode, AwaleRules } from './AwaleRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 
 export class AwaleMoveGenerator extends MoveGenerator<AwaleMove, MancalaState> {
 

@@ -2,8 +2,8 @@
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { ReversiMinimax } from '../ReversiMinimax';
 
 describe('ReversiMinimax', () => {

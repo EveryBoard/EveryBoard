@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Move } from './Move';
 import { Debug, Utils } from '../utils/utils';
 import { GameState } from './GameState';
