@@ -55,7 +55,7 @@ export class SaharaMove extends MoveCoordToCoord {
         const dy: number = Math.abs(this.getStart().y - this.getEnd().y);
         return dx + dy === 1;
     }
-    public toString(): string {
+    public override toString(): string {
         return 'SaharaMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
 }

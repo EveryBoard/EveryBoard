@@ -69,6 +69,10 @@ describe('GameComponent', () => {
             onPieceInGameClick: [0, 0],
             onRemainingPieceClick: [DiamPiece.ZERO_FIRST],
         },
+        Diaballik: {
+            onClick: [0, 0],
+            done: [],
+        },
         Dvonn: { onClick: [0, 0] },
         Encapsule: {
             onBoardClick: [0, 0],
@@ -156,7 +160,7 @@ describe('GameComponent', () => {
     };
 
     const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
-    for (const gameInfo of GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === 'Lodestone')) {
+    for (const gameInfo of GameInfo.ALL_GAMES()) {
         it(`clicks method should refuse when observer click (${ gameInfo.urlName })`, fakeAsync(async() => {
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {

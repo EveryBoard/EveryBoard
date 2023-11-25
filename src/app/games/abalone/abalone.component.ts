@@ -130,7 +130,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (directionValidity.isSuccess()) {
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {

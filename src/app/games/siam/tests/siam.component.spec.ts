@@ -61,7 +61,7 @@ describe('SiamComponent', () => {
         // Given the initial state
         // When trying to select an opponent's piece for insertion
         // Then it should fail
-        await testUtils.expectClickFailure('#remainingPieces_1', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#remainingPieces_1', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
 
     it('should select piece when clicking first time', fakeAsync(async() => {
@@ -95,7 +95,7 @@ describe('SiamComponent', () => {
 
         // When trying to select the opponent's piece
         // Then it should fail
-        await testUtils.expectClickFailure('#square_4_4', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#square_4_4', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
 
     it('should allow rotation', fakeAsync(async() => {
@@ -179,7 +179,7 @@ describe('SiamComponent', () => {
         // Given the initial board
         // When clicking on an empty piece
         // Then a toast should say it's forbidden
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         await testUtils.expectClickFailure('#square_2_1', reason);
     }));
 

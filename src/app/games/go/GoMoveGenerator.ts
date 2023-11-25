@@ -31,14 +31,14 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         const choices: GoMove[] = [];
         let newMove: GoMove;
 
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
-                newMove = new GoMove(x, y);
-                if (state.getPieceAt(newMove.coord) === GoPiece.EMPTY) {
-                    const legality: MGPFallible<GoLegalityInformation> = GoRules.isLegal(newMove, state);
-                    if (legality.isSuccess()) {
-                        choices.push(newMove);
-                    }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            const content: GoPiece = coordAndContent.content;
+            newMove = new GoMove(coord.x, coord.y);
+            if (content === GoPiece.EMPTY) {
+                const legality: MGPFallible<GoLegalityInformation> = GoRules.isLegal(newMove, state);
+                if (legality.isSuccess()) {
+                    choices.push(newMove);
                 }
             }
         }

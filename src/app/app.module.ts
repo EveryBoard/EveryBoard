@@ -59,6 +59,7 @@ import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { ConnectSixComponent } from './games/connect-six/connect-six.component';
 import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
+import { DiaballikComponent } from './games/diaballik/diaballik.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
 import { EncapsuleComponent } from './games/encapsule/encapsule.component';
@@ -197,6 +198,7 @@ export class FirebaseProviders {
         CoerceoComponent,
         ConnectSixComponent,
         ConspirateursComponent,
+        DiaballikComponent,
         DiamComponent,
         DvonnComponent,
         EncapsuleComponent,

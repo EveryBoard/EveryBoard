@@ -27,4 +27,9 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
         if (this.getStart().equals(other.getStart()) === false) return false;
         return this.getEnd().equals(other.getEnd());
     }
+    public toString(): string {
+        const start: string = this.getStart().toString();
+        const end: string = this.getEnd().toString();
+        return `${start} -> ${end}`;
+    }
 }

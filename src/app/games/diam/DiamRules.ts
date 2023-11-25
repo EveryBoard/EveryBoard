@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
@@ -12,6 +12,7 @@ import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Utils } from 'src/app/utils/utils';
 
 export class DiamNode extends GameNode<DiamMove, DiamState> {}
 
@@ -73,9 +74,10 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         }
     }
     private isDropLegal(drop: DiamMoveDrop, state: DiamState): MGPValidation {
-        // DiamMoveDrop can only be created on a space on the board, so we don't have to check that
-        if (drop.piece.owner !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        Utils.assert(drop.target < DiamState.WIDTH, 'DiamMoveDrop out of board');
+        Utils.assert(drop.piece.owner !== PlayerOrNone.NONE, 'DiamMoveDrop cannot contain an empty piece');
+        if (drop.piece.owner === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (state.getRemainingPiecesOf(drop.piece) === 0) {
             return MGPValidation.failure(DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE());
@@ -89,8 +91,12 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         return MGPValidation.SUCCESS;
     }
     private isShiftLegal(shift: DiamMoveShift, state: DiamState): MGPValidation {
-        if (state.getPieceAt(shift.start).owner !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const piece: DiamPiece = state.getPieceAt(shift.start);
+        if (piece.owner === PlayerOrNone.NONE) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (piece.owner === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         return this.shiftHeightValidity(shift, state);
     }

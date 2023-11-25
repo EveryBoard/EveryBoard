@@ -97,19 +97,19 @@ export class SiamPiece {
     }
 
     public toString(): string {
-        switch (this.value) {
-            case 0: return 'EMPTY';
-            case 1: return 'LIGHT_UP';
-            case 2: return 'LIGHT_RIGHT';
-            case 3: return 'LIGHT_DOWN';
-            case 4: return 'LIGHT_LEFT';
-            case 5: return 'DARK_UP';
-            case 6: return 'DARK_RIGHT';
-            case 7: return 'DARK_DOWN';
-            case 8: return 'DARK_LEFT';
+        switch (this) {
+            case SiamPiece.EMPTY: return 'EMPTY';
+            case SiamPiece.LIGHT_UP: return 'LIGHT_UP';
+            case SiamPiece.LIGHT_RIGHT: return 'LIGHT_RIGHT';
+            case SiamPiece.LIGHT_DOWN: return 'LIGHT_DOWN';
+            case SiamPiece.LIGHT_LEFT: return 'LIGHT_LEFT';
+            case SiamPiece.DARK_UP: return 'DARK_UP';
+            case SiamPiece.DARK_RIGHT: return 'DARK_RIGHT';
+            case SiamPiece.DARK_DOWN: return 'DARK_DOWN';
+            case SiamPiece.DARK_LEFT: return 'DARK_LEFT';
             default:
                 // must be 9, according to this.value's type
-                Utils.expectToBe(this.value, 9);
+                Utils.expectToBe(this, SiamPiece.MOUNTAIN);
                 return 'MOUNTAIN';
         }
     }

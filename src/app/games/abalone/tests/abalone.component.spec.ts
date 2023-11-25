@@ -42,7 +42,7 @@ describe('AbaloneComponent', () => {
             // Given the initial board
             // When clicking on an opponent piece
             // Then expect click to be a failure
-            await testUtils.expectClickFailure('#piece_8_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            await testUtils.expectClickFailure('#piece_8_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should select piece when clicking it', fakeAsync(async() => {
             // Given the initial board

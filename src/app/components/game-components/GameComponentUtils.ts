@@ -11,11 +11,13 @@ interface Limits {
 }
 
 export class ViewBox {
-    public static fromLimits(left: number, right: number, up: number, down: number): ViewBox {
-        const width: number = right - left;
-        const height: number = down - up;
-        return new ViewBox(left, up, width, height);
+
+    public static fromLimits(minX: number, maxX: number, minY: number, maxY: number): ViewBox {
+        const width: number = maxX - minX;
+        const height: number = maxY - minY;
+        return new ViewBox(minX, minY, width, height);
     }
+
     public static fromHexa(coords: Coord[], hexaLayout: HexaLayout, strokeWidth: number): ViewBox {
         const points: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getHexaPointsListAt(coord));
         const limits: Limits = ViewBox.getLimits(points);
@@ -25,6 +27,7 @@ export class ViewBox {
         const height: number = strokeWidth + limits.maxY - limits.minY;
         return new ViewBox(left, up, width, height);
     }
+
     private static getLimits(coords: Coord[]): Limits {
         let maxX: number = Number.MIN_SAFE_INTEGER;
         let maxY: number = Number.MIN_SAFE_INTEGER;
@@ -59,7 +62,10 @@ export class ViewBox {
     }
 
     public expand(left: number, right: number, above: number, below: number): ViewBox {
-        return new ViewBox(this.left - left, this.up - above, this.width + left + right, this.height + above + below);
+        return new ViewBox(this.left - left,
+                           this.up - above,
+                           this.width + left + right,
+                           this.height + above + below);
     }
 
     public containingAtLeast(viewBox: ViewBox): ViewBox {
@@ -77,7 +83,7 @@ export class ViewBox {
 
 export class GameComponentUtils {
 
-    public static getArrowTransform(boardWidth: number, coord: Coord, direction: Orthogonal): string {
+    public static getArrowTransform(boardWidth: number, direction: Orthogonal): string {
         // The triangle will be wrapped inside a square
         // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)
         let tx: number;

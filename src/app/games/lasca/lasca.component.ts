@@ -207,7 +207,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const clickedSpace: LascaStack = this.getState().getPieceAt(clickedCoord);
         const opponent: Player = this.getState().getCurrentOpponent();
         if (clickedSpace.isCommandedBy(opponent)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (this.currentMoveClicks.length === 0) {
             return this.trySelectingPiece(clickedCoord);
