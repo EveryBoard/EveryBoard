@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 
@@ -26,15 +27,30 @@ describe('Coord', () => {
         expect(coord.equals(verticalNeighbors)).toBeFalse();
     });
 
-    it('should give correct coords between this and other coord', () => {
-        const coord: Coord = new Coord(0, 0);
-        const notAligned: Coord = new Coord(2, 1);
-        const neighbors: Coord = new Coord(1, 1);
-        const alignedFar: Coord = new Coord(2, 2);
-        expect(coord.getCoordsToward(coord)).toEqual([]);
-        expect(coord.getCoordsToward(notAligned)).toEqual([]);
-        expect(coord.getCoordsToward(neighbors)).toEqual([]);
-        expect(coord.getCoordsToward(alignedFar)).toEqual([new Coord(1, 1)]);
+    describe('getCoordsToward', () => {
+
+        it('should throw when start and end are not aligned', () => {
+            // Given two unaligned coords
+            const coord: Coord = new Coord(0, 0);
+            const notAligned: Coord = new Coord(2, 1);
+
+            // When calculating the coords from coord to notAligned
+            // Then it should throw
+            const reason: string = 'Should only call getCoordsTowards on aligned coords';
+            TestUtils.expectToThrowAndLog(() => {
+                coord.getCoordsToward(notAligned);
+            }, reason);
+        });
+
+        it('should give correct coords between this and other aligned coord', () => {
+            const coord: Coord = new Coord(0, 0);
+            const neighbors: Coord = new Coord(1, 1);
+            const alignedFar: Coord = new Coord(2, 2);
+            expect(coord.getCoordsToward(coord)).toEqual([]);
+            expect(coord.getCoordsToward(neighbors)).toEqual([]);
+            expect(coord.getCoordsToward(alignedFar)).toEqual([new Coord(1, 1)]);
+        });
+
     });
 
     it('should throw when asked distance toward an unaligned coord', () => {
@@ -125,17 +141,17 @@ describe('Coord', () => {
             expect(allCoordsToward).toEqual([coord, new Coord(1, 1), farAwayAlignedCoord]);
         });
 
-        it('should only return [start, end] when coords are not aligned', () => {
-            // TODO FOR REVIEW: eh... is it what we want :D ?
+        it('should throw and log when coords are not aligned', () => {
             // Given two coord not aligned
             const start: Coord = new Coord(0, 0);
             const end: Coord = new Coord(1, 2);
 
             // When getting all coord toward end
-            const coords: Coord[] = start.getAllCoordsToward(end);
-
-            // Then the list should be empty
-            expect(coords.length).toBe(0);
+            // Then it should throw
+            const reason: string = 'Should only call getCoordsTowards on aligned coords';
+            TestUtils.expectToThrowAndLog(() => {
+                start.getAllCoordsToward(end);
+            }, reason);
         });
 
     });

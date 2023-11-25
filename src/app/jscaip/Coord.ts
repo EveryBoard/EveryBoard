@@ -2,6 +2,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Encoder } from '../utils/Encoder';
 import { Vector } from './Vector';
+import { Utils } from '../utils/utils';
 
 export class CoordFailure {
     public static OUT_OF_RANGE(coord: Coord): string {
@@ -148,10 +149,8 @@ export class Coord extends Vector {
     }
 
     public getCoordsToward(c: Coord): Coord[] {
+        Utils.assert(c.isAlignedWith(this), 'Should only call getCoordsTowards on aligned coords');
         if (c.equals(this)) {
-            return [];
-        }
-        if (c.isAlignedWith(this) === false) {
             return [];
         }
         const dir: Direction = this.getDirectionToward(c).get();
@@ -165,13 +164,12 @@ export class Coord extends Vector {
     }
 
     public getAllCoordsToward(end: Coord): Coord[] {
-        if (this.equals(end)) {
-            return [end];
-        } else {
-            const start: Coord[] = [this];
+        let coords: Coord[] = [this];
+        if (this.equals(end) === false) {
             const middle: Coord[] = this.getCoordsToward(end);
-            return start.concat(middle).concat(end);
+            coords = coords.concat(middle).concat(end);
         }
+        return coords;
     }
 
     public getUntil(end: Coord): Coord[] {
