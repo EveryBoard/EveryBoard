@@ -15,8 +15,8 @@ export class NewGameMove extends Move {
      * There are multiple helpers to create encoders.
      * You'll likely be interested in:
      *   - `MoveCoord.getEncoder` and `MoveWithTwoCoords` to get an encoder for a move of the corresponding type.
-     *   - `MoveEncoder.tuple` to get an encoder for a move that has multiple fields
-     *   - `MoveEncoder.disjunction` to get an encoder for a move that may be of different types
+     *   - `Encoder.tuple` to get an encoder for a move that has multiple fields
+     *   - `Encoder.disjunction` to get an encoder for a move that may be of different types
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public static encoder: Encoder<NewGameMove> = undefined as any;

@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { ArrayUtils } from '../ArrayUtils';
 import { ComparableObject, comparableEquals } from '../Comparable';
 import { Encoder } from '../Encoder';
 import { JSONValue } from '../JSON';
@@ -12,12 +13,16 @@ export class EncoderTestUtils {
     }
 }
 
-class Triplet {
+class Triplet implements ComparableObject {
     public constructor(public elements: [number, number, number]) {
+    }
+
+    public equals(other: Triplet): boolean {
+        return ArrayUtils.compare(this.elements, other.elements);
     }
 }
 
-describe('MoveEncoder', () => {
+describe('Encoder', () => {
     describe('tuple', () => {
         const numberEncoder: Encoder<number> = Encoder.identity<number>();
 
