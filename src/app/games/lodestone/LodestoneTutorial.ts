@@ -52,7 +52,6 @@ export class LodestoneTutorial extends Tutorial {
             LodestoneRules.get().getInitialState(),
             new LodestoneMove(new Coord(0, 6), 'pull', 'orthogonal', { top: 2, bottom: 1, left: 1, right: 1 }),
             (_: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
-                console.log(result.remainingSpaces())
                 if (result.remainingSpaces() === 32) {
                     return MGPValidation.failure($localize`You have not captured any of the opponent's pieces, try again!`);
                 }

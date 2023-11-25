@@ -129,7 +129,6 @@ export class LodestonePressurePlate {
     }
 
     public getRemainingSpaces(): number {
-        console.log(this.width, this.pieces.length)
         return this.width - this.pieces.length;
     }
 
@@ -182,7 +181,6 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
     public remainingSpaces(): number {
         const remaining: LodestoneCaptures = this.remainingSpacesDetails();
-        console.log('remaining spaces ?', remaining)
         return remaining.top + remaining.bottom + remaining.left + remaining.right;
     }
 
