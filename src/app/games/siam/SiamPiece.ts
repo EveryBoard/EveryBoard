@@ -72,7 +72,7 @@ export class SiamPiece {
     {
     }
 
-    public belongTo(player: Player): boolean {
+    public belongsTo(player: Player): boolean {
         return this.owner.equals(player);
     }
 
