@@ -1,14 +1,16 @@
-import { assert } from './assert';
+import { Utils } from './Utils';
 
 export class Combinatorics {
+
     public static getCombinations<T>(elements: T[], size: number): T[][] {
-        assert(elements.length >= size, 'cannot compute combinations for less elements than needed');
+        Utils.assert(elements.length >= size, 'cannot compute combinations for less elements than needed');
         return this.getSubsetsOfSize(elements, size).map((subset: T[]): T[][] => {
             return this.getPermutations(subset);
         }).reduce((accumulator: T[][], combinations: T[][]): T[][] => {
             return accumulator.concat(combinations);
         });
     }
+
     public static getPermutations<T>(elements: T[]): T[][] {
         // Uses Heap's algorithm to compute all permutations of `elements`
         const length: number = elements.length;
@@ -31,6 +33,7 @@ export class Combinatorics {
         }
         return result;
     }
+
     public static getSubsetsOfSize<T>(elements: T[], size: number): T[][] {
         function subsets(length: number, start: number): T[][] {
             if (start >= elements.length || length < 1) {

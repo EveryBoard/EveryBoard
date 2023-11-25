@@ -1,6 +1,6 @@
 import { comparableEquals } from './Comparable';
 import { Encoder } from './Encoder';
-import { JSONValue } from './utils';
+import { JSONValue } from './JSON';
 
 export class MGPOptional<T> {
 

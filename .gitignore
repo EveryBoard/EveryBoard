@@ -46,3 +46,6 @@ Thumbs.db
 
 # Local Netlify folder
 .netlify
+/lib/tsconfig.tsbuildinfo
+/lib/build/
+/lib/node_modules/

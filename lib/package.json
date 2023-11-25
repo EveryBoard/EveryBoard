@@ -1,0 +1,19 @@
+{
+  "name": "@everyboard/lib",
+  "version": "1.0.0",
+  "description": "EveryBoard's library",
+  "main": "index.js",
+  "private": "true",
+  "scripts": {
+    "build": "tsc --build",
+    "watch": "tsc --watch",
+    "test": "jasmine --config=jasmine.json"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "istanbul": "^0.4.5",
+    "jasmine": "^5.1.0"
+  },
+  "dependencies": {
+  }
+}

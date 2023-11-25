@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { CoordSet } from '../OptimizedSet';
+import { Coord } from './Coord';
+import { CoordSet } from './CoordSet';
 
-describe('OptimizedSet (CoordSet)', () => {
+describe('CoordSet', () => {
     it('should build the empty set if no value is provided', () => {
         const set: CoordSet = new CoordSet();
         expect(set.size()).toBe(0);

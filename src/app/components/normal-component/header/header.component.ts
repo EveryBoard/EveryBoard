@@ -34,6 +34,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     {
     }
     public ngOnInit(): void {
+        window['enableLog'] = Debug.enableLog;
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             this.loading = false;
             if (user.username.isPresent()) {

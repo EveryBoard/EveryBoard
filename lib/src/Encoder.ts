@@ -1,4 +1,6 @@
-import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { JSONValue, JSONValueWithoutArray } from './JSON';
+import { Utils } from './Utils';
+
 // Used internally. If T = [A, B, C], then
 // EncoderArray<T> = [Encoder<A>, Encoder<B>, Encoder<C>]
 type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };

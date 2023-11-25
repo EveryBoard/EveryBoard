@@ -1,4 +1,4 @@
-import { isJSONPrimitive, JSONPrimitive } from './utils';
+import { isJSONPrimitive, JSONPrimitive } from './JSON';
 
 export interface ComparableObject {
 
