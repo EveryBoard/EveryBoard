@@ -299,7 +299,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             return this.cancelMove(clickValidity.getReason());
         }
         if (piece.owner === this.getCurrentOpponent()) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (piece.kind !== 'QueenBee' && HiveRules.get().mustPlaceQueenBee(this.getState())) {
             return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
@@ -369,7 +369,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             // If the stack clicked is not owned by the player,
             // the player can still select it in order to inspect it
             if (stack.size() === 1) {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (this.inspectedStack.isPresent()) {
                 this.cancelMoveAttempt();
                 this.clearHighlights();

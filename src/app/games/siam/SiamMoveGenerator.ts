@@ -12,7 +12,7 @@ export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         for (const coordAndContent of node.gameState.getCoordsAndContents()) {
             const piece: SiamPiece = coordAndContent.content;
-            if (piece.belongTo(currentPlayer)) {
+            if (piece.belongsTo(currentPlayer)) {
                 moves = moves.concat(SiamRules.get().getMovesFrom(node.gameState,
                                                                   piece,
                                                                   coordAndContent.coord.x,

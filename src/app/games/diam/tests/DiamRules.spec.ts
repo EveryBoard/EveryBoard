@@ -51,7 +51,7 @@ describe('DiamRules', () => {
             const move: DiamMove = drop(0, B1);
 
             // Then the move should be illegal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid dropping on a space that is full', () => {
@@ -153,7 +153,7 @@ describe('DiamRules', () => {
             const move: DiamMove = shift(new Coord(7, 2), 'clockwise');
 
             // Then the move should be not legal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid moving a stack if the receiving space will become too high', () => {
@@ -178,7 +178,7 @@ describe('DiamRules', () => {
             const move: DiamMove = shift(new Coord(0, 1), 'clockwise');
 
             // Then the move should be not legal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });

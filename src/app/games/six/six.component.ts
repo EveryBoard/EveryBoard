@@ -44,8 +44,6 @@ export class SixComponent
     public selectedPiece: MGPOptional<Coord> = MGPOptional.empty();
     public chosenLanding: MGPOptional<Coord> = MGPOptional.empty();
 
-    public viewBox: string;
-
     private nextClickShouldSelectGroup: boolean = false;
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -79,7 +77,6 @@ export class SixComponent
         }
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();
-        this.viewBox = this.getViewBox();
     }
     public override hideLastMove(): void {
         this.leftCoord = MGPOptional.empty();
@@ -87,9 +84,9 @@ export class SixComponent
         this.victoryCoords = [];
         this.disconnecteds = [];
     }
-    private getViewBox(): string {
+    public getViewBox(): ViewBox {
         const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
-        return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH).toSVGString();
+        return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
     }
     public override async showLastMove(move: SixMove): Promise<void> {
         this.lastDrop = MGPOptional.of(move.landing);
@@ -145,7 +142,7 @@ export class SixComponent
             return this.cancelMove(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         } else if (this.chosenLanding.isAbsent()) {
             if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (this.selectedPiece.equalsValue(piece)) {
                 this.selectedPiece = MGPOptional.empty();
             } else {

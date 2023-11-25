@@ -96,7 +96,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         const clickedPiece: PlayerOrNone = this.state.getPieceAt(clickedCoord);
         const pieceBelongToOpponent: boolean = clickedPiece === this.state.getCurrentOpponent();
         if (pieceBelongToOpponent) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (this.chosenStartingCoord.equalsValue(clickedCoord)) {
             this.cancelMoveAttempt();

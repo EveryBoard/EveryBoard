@@ -32,7 +32,7 @@ describe('SixComponent', () => {
             const state: SixState = SixState.ofRepresentation(board, 41);
             await testUtils.setupState(state);
 
-            await testUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            await testUtils.expectClickFailure('#piece_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should drop before 40th turn', fakeAsync(async() => {
             const move: SixMove = SixMove.ofDrop(new Coord(0, 2));

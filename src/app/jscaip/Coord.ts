@@ -2,6 +2,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Encoder } from '../utils/Encoder';
 import { Vector } from './Vector';
+import { Utils } from '../utils/utils';
 
 export class CoordFailure {
     public static OUT_OF_RANGE(coord: Coord): string {
@@ -18,19 +19,23 @@ export class Coord extends Vector {
             (fields: [number, number]): T => generator(fields[0], fields[1]),
         );
     }
+
     public static encoder: Encoder<Coord> = Coord.getEncoder((x: number, y: number): Coord => new Coord(x, y));
 
     public constructor(x: number, y: number) {
         super(x, y);
     }
+
     public getNext(dir: Vector, distance?: number): Coord {
         const combinedVector: Vector = this.combine(dir, distance);
         return new Coord(combinedVector.x, combinedVector.y);
     }
+
     public getPrevious(dir: Vector, distance?: number): Coord {
         distance = distance == null ? 1 : distance;
         return this.getNext(dir, -distance);
     }
+
     public getLeft(dir: Vector): Coord {
         // looking in the direction "dir", we just go one step left
         // since the directions in DIRECTIONS are sorted in horlogic order,
@@ -50,6 +55,7 @@ export class Coord extends Vector {
         const newY: number = this.y + -dir.x; // (this.x, thix.y) + (dir.y, -dir.x)
         return new Coord(newX, newY);
     }
+
     public getRight(dir: Vector): Coord {
         // looking in the direction "dir", we just go one step right
         // see getLeft's logic, it's the opposite
@@ -57,6 +63,7 @@ export class Coord extends Vector {
         const newY: number = this.y + dir.x; // (this.x, thix.y) + (-dir.y, dir.x)
         return new Coord(newX, newY);
     }
+
     public isInRange(sizeX: number, sizeY: number): boolean {
         if (this.x < 0) {
             return false;
@@ -72,6 +79,7 @@ export class Coord extends Vector {
         }
         return true;
     }
+
     public isNotInRange(sizeX: number, sizeY: number): boolean {
         if (this.x < 0) {
             return true;
@@ -87,12 +95,15 @@ export class Coord extends Vector {
         }
         return false;
     }
+
     public getDirectionToward(c: Coord): MGPFallible<Direction> {
         return Direction.factory.fromMove(this, c);
     }
+
     public getOrthogonalDistance(c: Coord): number {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
     }
+
     public getDistance(c: Coord): number {
         if (c.isAlignedWith(this) === false) {
             throw new Error('Cannot calculate distance with non aligned coords.');
@@ -101,6 +112,7 @@ export class Coord extends Vector {
         const dy: number = Math.abs(c.y - this.y);
         return Math.max(dx, dy);
     }
+
     public isHexagonallyAlignedWith(coord: Coord): boolean {
         const sdx: number = this.x - coord.x;
         const sdy: number = this.y - coord.y;
@@ -109,6 +121,7 @@ export class Coord extends Vector {
         if (sdx*sdy === 0) return true;
         return false;
     }
+
     public isAlignedWith(coord: Coord): boolean {
         const dx: number = Math.abs(this.x - coord.x);
         const dy: number = Math.abs(this.y - coord.y);
@@ -130,12 +143,16 @@ export class Coord extends Vector {
         const dy: number = c.y - this.y;
         return new Vector(dx, dy);
     }
+
     public toVector(): Vector {
         return new Vector(this.x, this.y);
     }
+
     public getCoordsToward(c: Coord): Coord[] {
-        if (c.equals(this)) return [];
-        if (c.isAlignedWith(this) === false) return [];
+        Utils.assert(c.isAlignedWith(this), 'Should only call getCoordsTowards on aligned coords');
+        if (c.equals(this)) {
+            return [];
+        }
         const dir: Direction = this.getDirectionToward(c).get();
         let coord: Coord = this.getNext(dir, 1);
         const coords: Coord[] = [];
@@ -145,6 +162,16 @@ export class Coord extends Vector {
         }
         return coords;
     }
+
+    public getAllCoordsToward(end: Coord): Coord[] {
+        let coords: Coord[] = [this];
+        if (this.equals(end) === false) {
+            const middle: Coord[] = this.getCoordsToward(end);
+            coords = coords.concat(middle).concat(end);
+        }
+        return coords;
+    }
+
     public getUntil(end: Coord): Coord[] {
         const coords: Coord[] = [];
         const direction: Direction = this.getDirectionToward(end).get();
@@ -155,11 +182,13 @@ export class Coord extends Vector {
         }
         return coords;
     }
+
     public override equals(obj: Coord): boolean {
         if (this === obj) return true;
         if (obj.x !== this.x) return false;
         return obj.y === this.y;
     }
+
     public compareTo(c: Coord): number {
         if (c.y === this.y) {
             if (c.x === this.x) {
@@ -169,7 +198,9 @@ export class Coord extends Vector {
         }
         return this.y < c.y ? -1 : 1;
     }
+
     public toSVGPoint(): string {
         return this.x + ',' + this.y;
     }
+
 }

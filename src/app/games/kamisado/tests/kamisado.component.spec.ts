@@ -156,7 +156,7 @@ describe('KamisadoComponent', () => {
         // Given a board (here, the initial board)
         // When clicking on an opponent's piece
         // Then it should fail
-        await testUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
     it('should not highlight selected piece if game has ended', fakeAsync(async() => {
         // Given a board where one player has won

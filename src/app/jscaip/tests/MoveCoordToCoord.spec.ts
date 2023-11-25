@@ -6,11 +6,7 @@ import { Direction } from '../Direction';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../MoveWithTwoCoords';
 
-class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
-    public toString(): string {
-        return 'lel';
-    }
-}
+class ConcreteMoveCoordToCoord extends MoveCoordToCoord {}
 
 describe('MoveCoordToCoord', () => {
     function myMoveConstructor(start: Coord, end: Coord): MGPFallible<ConcreteMoveCoordToCoord> {

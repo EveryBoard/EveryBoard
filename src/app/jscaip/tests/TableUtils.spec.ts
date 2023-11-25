@@ -9,12 +9,12 @@ describe('TableUtils', () => {
             const longBoard: NumberTable = [[1], [2]];
             expect(TableUtils.compare(shortBoard, longBoard)).toBeFalse();
         });
-        it('should deletage sub-list comparaison to ArrayUtils and return false if it does', () => {
+        it('should delegate sub-list comparaison to ArrayUtils and return false if it does', () => {
             spyOn(ArrayUtils, 'compare').and.returnValue(false);
             const table: NumberTable = [[1], [2]];
             expect(TableUtils.compare(table, table)).toBeFalse();
         });
-        it('should deletage sub-list comparaison to ArrayUtils and return true if compareArray always does', () => {
+        it('should delegate sub-list comparaison to ArrayUtils and return true if ArrayUtils.compare always does', () => {
             spyOn(ArrayUtils, 'compare').and.returnValue(true);
             const table: NumberTable = [[1], [2]];
             expect(TableUtils.compare(table, table)).toBeTrue();

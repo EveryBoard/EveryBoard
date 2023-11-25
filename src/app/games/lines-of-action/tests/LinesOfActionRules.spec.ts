@@ -23,10 +23,16 @@ describe('LinesOfActionRules', () => {
     it('should be created', () => {
         expect(rules).toBeTruthy();
     });
+    it('should forbid moving an empty piece', () => {
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(3, 2), new Coord(2, 2)).get();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
     it('should forbid moving a piece of the opponent', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(0, 2), new Coord(2, 2)).get();
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going down', () => {
