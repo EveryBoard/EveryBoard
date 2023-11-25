@@ -8,9 +8,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 export class TeekoHeuristic extends Heuristic<TeekoMove, TeekoState> {
 
     public getBoardValue(node: TeekoNode): BoardValue {
-        const alignmentPossibilities: number = TeekoRules.TEEKO_HELPER.getBoardValue(node.gameState).value;
+        const alignmentPossibilities: number = TeekoRules.TEEKO_HELPER.getBoardValue(node.gameState).value[0];
         const squarePossibilities: { score: number; victoriousCoords: Coord[] } =
             TeekoRules.get().getSquareInfo(node.gameState);
-        return new BoardValue(squarePossibilities.score + alignmentPossibilities);
+        return new BoardValue([squarePossibilities.score + alignmentPossibilities]);
     }
 }

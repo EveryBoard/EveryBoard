@@ -22,6 +22,7 @@ describe('QuartoHeuristic', () => {
     beforeEach(() => {
         heuristic = new QuartoHeuristic();
     });
+
     it('should assign 0 to boards that have no pre-victory', () => {
         // Given a state without a pre-victory
         const board: Table<QuartoPiece> = [
@@ -34,8 +35,9 @@ describe('QuartoHeuristic', () => {
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
         // Then the heuristic should assign 0 as board value
         const boardValue: BoardValue = heuristic.getBoardValue(new QuartoNode(state));
-        expect(boardValue.value).toBe(0);
+        expect(boardValue.value[0]).toBe(0);
     });
+
     it('should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {
         // Given a state with a pre-victory
         const board: Table<QuartoPiece> = [
@@ -49,6 +51,7 @@ describe('QuartoHeuristic', () => {
         // Then the heuristic should detect the previctory
         HeuristicUtils.expectStateToBePreVictory(state, new QuartoMove(1, 0, AAAA), Player.ONE, [heuristic]);
     });
+
     it('should recognize "3 3" as pre-victory', () => {
         // Given a board where 3 piece are aligned with a common criterion
         // and another line of 3 matching another criterion
@@ -65,4 +68,5 @@ describe('QuartoHeuristic', () => {
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
         HeuristicUtils.expectStateToBePreVictory(state, move, Player.ZERO, [heuristic]);
     });
+
 });

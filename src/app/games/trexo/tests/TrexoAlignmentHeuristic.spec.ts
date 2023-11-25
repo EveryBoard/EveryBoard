@@ -15,6 +15,7 @@ describe('TrexoHeuristic', () => {
     beforeEach(() => {
         heuristic = new TrexoAlignmentHeuristic();
     });
+
     it('should prefer to have more visible pieces aligned than less', () => {
         // Given a board where two pieces of player zero are aligned
         const weakState: TrexoState = TrexoState.of([
@@ -53,4 +54,5 @@ describe('TrexoHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
 });

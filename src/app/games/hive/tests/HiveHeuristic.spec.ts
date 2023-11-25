@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { HiveHeuristic } from '../HiveHeuristic';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
@@ -19,17 +18,19 @@ describe('HiveHeuristic', () => {
     beforeEach(() => {
         heuristic = new HiveHeuristic();
     });
+
     it('should assign a 0 value if the queen is not on the board', () => {
         // Given a state without the queen
         const state: HiveState = HiveRules.get().getInitialState();
         const node: HiveNode = new HiveNode(state);
 
         // When computing its value
-        const boardValue: BoardValue = heuristic.getBoardValue(node);
+        const boardValue: number = heuristic.getBoardValue(node).value[0];
 
         // Then it should be zero
-        expect(boardValue.value).toEqual(0);
+        expect(boardValue).toEqual(0);
     });
+
     it('should prefer when queen bee has a higher mobility', () => {
         // Given a state where the queen bee has more empty spaces around it than another one
         const strongState: HiveState = HiveState.fromRepresentation([
@@ -47,4 +48,5 @@ describe('HiveHeuristic', () => {
                                                                Player.ZERO);
 
     });
+
 });

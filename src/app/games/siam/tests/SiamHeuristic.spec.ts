@@ -28,7 +28,9 @@ describe('SiamHeuristic', () => {
     beforeEach(() => {
         heuristic = new SiamHeuristic();
     });
+
     describe('board value test', () => {
+
         it('should know who is closer to victory (with pieces of both players)', () => {
             // Given a board where both players have pieces but one is closer to victory
             const board: Table<SiamPiece> = [
@@ -46,6 +48,7 @@ describe('SiamHeuristic', () => {
                 .withContext('First player should be considered as closer to victory')
                 .toBeLessThan(0);
         });
+
         it('should know who is closer to win (with pieces of a single player)', () => {
             // Given a board where only player zero has a piece
             const board: Table<SiamPiece> = [
@@ -63,6 +66,7 @@ describe('SiamHeuristic', () => {
                 .withContext('First player should be considered as closer to victory')
                 .toBeLessThan(0);
         });
+
         it('should give the advantage to player of the current turn in case both are as close to push mountain off the edge', () => {
             // Given a board where both players are as close to victory than each other
             const board: Table<SiamPiece> = [
@@ -79,6 +83,7 @@ describe('SiamHeuristic', () => {
             // Then player zero should have a higher score because it is their turn
             expect(heuristic.getBoardValue(node).value).toBeLessThan(0);
         });
+
         it('should assign same absolute value to states that only differ in turn', () => {
             // Given two states that only differ in their turn
             const board: Table<SiamPiece> = [
@@ -91,15 +96,18 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             const move: SiamMove = SiamMove.from(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
             const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            const boardValue: number = heuristic.getBoardValue(node).value;
+            const boardValue: number = heuristic.getBoardValue(node).value[0];
 
             const turnOneState: SiamState = new SiamState(board, 1);
             const turnOneNode: SiamNode = new SiamNode(turnOneState, MGPOptional.empty(), MGPOptional.of(move));
-            const turnOneBoardValue: number = heuristic.getBoardValue(turnOneNode).value;
+            const turnOneBoardValue: number = heuristic.getBoardValue(turnOneNode).value[0];
             expect(turnOneBoardValue).withContext('Both board value should have same absolute value').toEqual(-1 * boardValue);
         });
+
     });
+
     describe('pushers computations', () => {
+
         it('should compute the expected pushers on first turn', () => {
             // Given the initial state
             const state: SiamState = SiamRules.get().getInitialState();
@@ -111,6 +119,7 @@ describe('SiamHeuristic', () => {
                 expect(pusher.distance).withContext('should be at a distance of 5').toBe(5);
             }
         });
+
         it('should know how far a mountain is from the border and who is the closest pusher', () => {
             // Given a state
             const board: Table<SiamPiece> = [
@@ -131,6 +140,7 @@ describe('SiamHeuristic', () => {
                 coord: new Coord(3, 3),
             }));
         });
+
         it('should count rotation as +1 for pushing distance for neighor', () => {
             // Given a state with a piece that is a neighbor of a mountain
             const board: Table<SiamPiece> = [
@@ -151,6 +161,7 @@ describe('SiamHeuristic', () => {
                 coord: new Coord(3, 3),
             }));
         });
+
         it('should not count rotation as +1 for pushing distance if not neighbor', () => {
             // Given a state with a piece that is not a neighbor to a mountain
             const board: Table<SiamPiece> = [
@@ -171,6 +182,7 @@ describe('SiamHeuristic', () => {
                 coord: new Coord(3, 4),
             }));
         });
+
         it('should count outside pieces', () => {
             // Given a state without player pieces
             const board: Table<SiamPiece> = [
@@ -295,6 +307,7 @@ describe('SiamHeuristic', () => {
             expect(closestPusher).toEqual(MGPOptional.empty());
         });
     });
+
     it('should compute score from shortest distances correctly (for player zero)', () => {
         const currentPlayer: Player = Player.ZERO;
         const T: number = currentPlayer === Player.ZERO ? -1 : 1;
@@ -325,4 +338,5 @@ describe('SiamHeuristic', () => {
         }
         expect(actualValues).toEqual(expectedValues);
     });
+
 });

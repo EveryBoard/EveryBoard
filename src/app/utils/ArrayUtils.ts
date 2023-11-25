@@ -100,6 +100,50 @@ export class ArrayUtils {
         }
         return total;
     }
+
+    public static isInferior(inferior: ReadonlyArray<number>, superior: ReadonlyArray<number>): boolean {
+        Utils.assert(inferior.length > 0, 'ArrayUtils.isInferior should have a non empty list as first param TODO TEST');
+        Utils.assert(superior.length > 0, 'ArrayUtils.isInferior should have a non empty list as second param TODO TEST');
+        return ArrayUtils.compareNumberList(inferior, superior);
+    }
+
+    public static isSuperior(superior: ReadonlyArray<number>, inferior: ReadonlyArray<number>): boolean {
+        Utils.assert(superior.length > 0, 'ArrayUtils.isSuperior should have a non empty list as first param TODO TEST');
+        Utils.assert(inferior.length > 0, 'ArrayUtils.isSuperior should have a non empty list as second param TODO TEST');
+        return ArrayUtils.compareNumberList(superior, inferior);
+    }
+
+    private static compareNumberList(left: ReadonlyArray<number>, right: ReadonlyArray<number>): boolean {
+        const maximumIndex: number = Math.min(left.length, right.length) - 1;
+        for (let i: number = 0; i < maximumIndex; i++) {
+            if (right[i] < left[i]) {
+                return false; // left is not inferior
+            }
+        }
+        if (right[maximumIndex] === left[maximumIndex]) {
+            return false; // They are equal
+        } else {
+            return true; // left is indeed inferior until the very end
+        }
+        // TODO TEST egality/superiority/inferiority x [on the last; not the last]
+    }
+
+    public static min(left: ReadonlyArray<number>, right: ReadonlyArray<number>): ReadonlyArray<number> {
+        if (ArrayUtils.isInferior(left, right)) {
+            return left;
+        } else {
+            return right;
+        }
+    }
+
+    public static max(left: ReadonlyArray<number>, right: ReadonlyArray<number>): ReadonlyArray<number> {
+        if (ArrayUtils.isSuperior(left, right)) {
+            return left;
+        } else {
+            return right;
+        }
+    }
+
 }
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;

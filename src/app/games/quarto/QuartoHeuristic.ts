@@ -12,13 +12,14 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
 
     private scoreToBoardValue(score: SCORE, turn: number): BoardValue {
         if (score === SCORE.DEFAULT) {
-            return new BoardValue(0);
+            return new BoardValue([0]);
         } else {
             Utils.assert(score === SCORE.PRE_VICTORY, 'QuartoHeuristic score can only be pre-victory or default');
             const player: Player = Player.of(turn % 2);
-            return new BoardValue(player.getPreVictory());
+            return new BoardValue([player.getPreVictory()]);
         }
     }
+
     public getBoardValue(node: QuartoNode): BoardValue {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
@@ -30,4 +31,5 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
         }
         return this.scoreToBoardValue(boardStatus.score, state.turn);
     }
+
 }

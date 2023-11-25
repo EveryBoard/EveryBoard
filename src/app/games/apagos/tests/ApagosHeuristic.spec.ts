@@ -12,6 +12,7 @@ describe('ApagosDummyHeuristic', () => {
     beforeEach(() => {
         heuristic = new ApagosHeuristic();
     });
+
     it('should consider having more rightmost pieces as an advantage', () => {
         // Given two states with the second having more pieces of the current player in the rightmost space
         const weakerState: ApagosState = ApagosState.fromRepresentation(0, [
@@ -35,4 +36,5 @@ describe('ApagosDummyHeuristic', () => {
                                                                Player.ZERO);
 
     });
+
 });

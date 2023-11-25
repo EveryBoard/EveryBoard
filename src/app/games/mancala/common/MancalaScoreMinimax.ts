@@ -8,6 +8,10 @@ import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 export class MancalaScoreMinimax<M extends MancalaMove> extends Minimax<M, MancalaState> {
 
     public constructor(rules: MancalaRules<M>, moveGenerator: MoveGenerator<M, MancalaState>) {
-        super($localize`Score`, rules, new MancalaScoreHeuristic(), moveGenerator);
+        super($localize`Score`,
+              rules,
+              new MancalaScoreHeuristic(),
+              moveGenerator,
+        );
     }
 }

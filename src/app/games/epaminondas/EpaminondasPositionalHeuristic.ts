@@ -10,8 +10,9 @@ import { EpaminondasNode } from './EpaminondasRules';
 export class EpaminondasPositionalHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
 
     public getBoardValue(node: EpaminondasNode): BoardValue {
-        return new BoardValue(this.getPieceCountThenSupportThenAdvancement(node.gameState));
+        return new BoardValue([this.getPieceCountThenSupportThenAdvancement(node.gameState)]);
     }
+
     private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {
         const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * EpaminondasState.WIDTH;
         const SCORE_BY_ALIGNEMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13

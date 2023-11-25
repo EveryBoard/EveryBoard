@@ -19,6 +19,7 @@ describe('ReversiHeuristic', () => {
     beforeEach(() => {
         heuristic = new ReversiHeuristic();
     });
+
     it('should get 16 points for corner', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
@@ -32,9 +33,10 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node).value[0];
         expect(boardValue).toBe(16);
     });
+
     it('should get 4 points for edges', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
@@ -48,9 +50,10 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node).value[0];
         expect(boardValue).toBe(4);
     });
+
     it('should get 1 points for normal square', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
@@ -64,9 +67,10 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node).value[0];
         expect(boardValue).toBe(1);
     });
+
     it('should prefer owning the corners', () => {
         // Given two boards where we control the corner in one, and not in the other
         const weakerBoard: Table<PlayerOrNone> = [
@@ -98,4 +102,5 @@ describe('ReversiHeuristic', () => {
                                                                strongerState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
 });

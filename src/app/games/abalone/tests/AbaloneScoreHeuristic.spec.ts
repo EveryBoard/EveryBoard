@@ -19,6 +19,7 @@ describe('AbaloneScoreHeuristic', () => {
     beforeEach(() => {
         heuristic = new AbaloneScoreHeuristic();
     });
+
     it('should assign a higher score when one has more pieces on board', () => {
         // Given two boards, one with more player piece than the other
         const boardWithLessPieces: Table<FourStatePiece> = [
@@ -52,4 +53,5 @@ describe('AbaloneScoreHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
 });

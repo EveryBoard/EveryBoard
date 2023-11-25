@@ -18,6 +18,7 @@ describe('SaharaTeuristic', () => {
     beforeEach(() => {
         heuristic = new SaharaHeuristic();
     });
+
     it('should prefer having more freedoms', () => {
         const weakBoard: FourStatePiece[][] = [
             [N, N, O, X, _, _, _, O, X, N, N],
@@ -42,4 +43,5 @@ describe('SaharaTeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

@@ -12,8 +12,9 @@ export class SiamHeuristic extends Heuristic<SiamMove, SiamState> {
     public getBoardValue(node: SiamNode): BoardValue {
         const boardValueInfo: { shortestZero: number, shortestOne: number, boardValue: number } =
             this.getBoardValueInfo(node.gameState);
-        return new BoardValue(boardValueInfo.boardValue);
+        return new BoardValue([boardValueInfo.boardValue]);
     }
+
     private getBoardValueInfo(state: SiamState)
     : { shortestZero: number, shortestOne: number, boardValue: number }
     {
@@ -47,4 +48,5 @@ export class SiamHeuristic extends Heuristic<SiamMove, SiamState> {
             SiamRules.get().getScoreFromShortestDistances(zeroShortestDistance, oneShortestDistance, currentPlayer);
         return { shortestZero: zeroShortestDistance, shortestOne: oneShortestDistance, boardValue };
     }
+
 }

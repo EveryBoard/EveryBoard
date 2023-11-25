@@ -19,6 +19,6 @@ export class TrexoAlignmentHeuristic extends Heuristic<TrexoMove, TrexoState> {
                 score += squareScore;
             }
         }
-        return new BoardValue(score);
+        return new BoardValue([score]);
     }
 }

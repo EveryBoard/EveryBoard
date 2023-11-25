@@ -22,9 +22,11 @@ describe('SaharaHeuristic', () => {
     beforeEach(() => {
         rules = SaharaRules.get();
     });
+
     it('SaharaRules should be created', () => {
         expect(rules).toBeTruthy();
     });
+
     it('TriangularCheckerBoard should always give 3 neighbors', () => {
         for (let y: number = 0; y < SaharaState.HEIGHT; y++) {
             for (let x: number = 0; x < SaharaState.WIDTH; x++) {
@@ -32,6 +34,7 @@ describe('SaharaHeuristic', () => {
             }
         }
     });
+
     it('Bouncing on occupied space should be illegal', () => {
         // Given a board where two piece are neighbor
         const state: SaharaState = SaharaRules.get().getInitialState();
@@ -43,12 +46,14 @@ describe('SaharaHeuristic', () => {
         const reason: string = SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+
     it('should forbid moving opponent piece', () => {
         const state: SaharaState = SaharaRules.get().getInitialState();
         const move: SaharaMove = SaharaMove.from(new Coord(3, 0), new Coord(4, 0)).get();
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
+
     it('should see that Player.ONE won', () => {
         const board: FourStatePiece[][] = [
             [N, N, O, _, _, _, X, O, X, N, N],
@@ -62,4 +67,5 @@ describe('SaharaHeuristic', () => {
         const node: SaharaNode = new SaharaNode(state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
+
 });

@@ -16,6 +16,7 @@ describe('LinesOfActionHeuristic', () => {
     beforeEach(() => {
         heuristic = new LinesOfActionHeuristic();
     });
+
     it('should prefer fewer groups', () => {
         // Given a state with fewer groups than another
         const strongState: LinesOfActionState = new LinesOfActionState([
@@ -45,4 +46,5 @@ describe('LinesOfActionHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
 });

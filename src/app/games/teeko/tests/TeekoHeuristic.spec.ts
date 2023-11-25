@@ -15,6 +15,7 @@ describe('TeekoHeuristic', () => {
     beforeEach(() => {
         heuristic = new TeekoHeuristic();
     });
+
     it('should count the number of possible squares and lines', () => {
         // Given any board with only piece of Player.ZERO
         const board: Table<PlayerOrNone> = [
@@ -28,9 +29,10 @@ describe('TeekoHeuristic', () => {
         const node: TeekoNode = new TeekoNode(state);
 
         // When calculating the board value
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node).value[0];
 
         // Then it should be the negative number of possible victories for Player.ZERO
         expect(boardValue).toBe(-12);
     });
+
 });

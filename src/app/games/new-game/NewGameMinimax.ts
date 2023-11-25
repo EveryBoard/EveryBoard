@@ -11,6 +11,10 @@ import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
 export class NewGameMinimax extends Minimax<NewGameMove, NewGameState, NewGameLegalityInfo> {
 
     public constructor() {
-        super('Dummy', NewGameRules.get(), new DummyHeuristic(), new NewGameMoveGenerator());
+        super('Dummy',
+              NewGameRules.get(),
+              new DummyHeuristic(),
+              new NewGameMoveGenerator(),
+        );
     }
 }

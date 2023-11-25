@@ -16,6 +16,7 @@ describe('LascaControlAndDominationHeuristic', () => {
     beforeEach(() => {
         heuristic = new LascaControlAndDominationHeuristic();
     });
+
     it('should not count the immobilized stacks', () => {
         // Given two boards with the exact same stacks, one having blocked stacks
         const immobilizedState: LascaState = LascaState.of([
@@ -46,6 +47,7 @@ describe('LascaControlAndDominationHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     it('should count the potential mobility as primary board value', () => {
         // Given two boards with the same stacks, one with an unique forced capture, the other without
         const forcedState: LascaState = LascaState.of([
@@ -72,6 +74,7 @@ describe('LascaControlAndDominationHeuristic', () => {
         //     the number of non-blocked stacks times the number of piece (which is 11)
         HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState);
     });
+
     it('should count the dominating piece as secondary board value (at equal potential mobility)', () => {
         // Given two boards with the same potential mobility, one with more "dominant pieces" than the other
         // (dominant = that is of the same color as the commander)
@@ -105,4 +108,5 @@ describe('LascaControlAndDominationHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

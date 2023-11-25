@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -15,6 +16,7 @@ describe('ConspirateursHeuristic', () => {
     beforeEach(() => {
         heuristic = new ConspirateursHeuristic();
     });
+
     it('should assign a higher score to a board with pieces closer to the sides', () => {
         const weakState: ConspirateursState = new ConspirateursState([
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -59,6 +61,7 @@ describe('ConspirateursHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
     it('should assign a higher score to a board with a piece in a shelter than on the side', () => {
         const strongState: ConspirateursState = new ConspirateursState([
             [_, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -103,6 +106,7 @@ describe('ConspirateursHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
     it('should assign a higher score for a piece close to an empty shelter', () => {
         // Here, A is close to two empty shelters
         const strongState: ConspirateursState = new ConspirateursState([
@@ -149,4 +153,5 @@ describe('ConspirateursHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
 });

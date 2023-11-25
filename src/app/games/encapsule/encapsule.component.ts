@@ -50,6 +50,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.encoder = EncapsuleMove.encoder;
         this.tutorial = new EncapsuleTutorial().tutorial;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
@@ -64,12 +65,15 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             this.lastStartingCoord = MGPOptional.empty();
         }
     }
+
     public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {
         return content.toList();
     }
+
     public getRemainingPieces(player: Player): EncapsulePiece[] {
         return this.getState().getRemainingPiecesOfPlayer(player);
     }
+
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -101,11 +105,13 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             }
         }
     }
+
     public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.chosenPiece = MGPOptional.empty();
         this.chosenPieceIndex = MGPOptional.empty();
     }
+
     public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
         const clickedId: string = '#piece_' + player + '_' + piece.toString() + '_' + index;
         const clickValidity: MGPValidation = await this.canUserPlay(clickedId);
@@ -129,12 +135,14 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE());
         }
     }
+
     public getRectClasses(x: number, y: number): string {
         if (this.isSelected(x, y)) {
             return 'moved-fill';
         }
         return '';
     }
+
     private isSelected(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
         if (this.lastStartingCoord.equalsValue(coord)) {
@@ -145,17 +153,21 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         }
         return false;
     }
+
     public getPieceClasses(piece: EncapsulePiece): string[] {
         return [this.getPieceStrokeClass(piece)];
     }
+
     public getPieceCenter(xOrY: number): number {
         return (this.SPACE_SIZE * xOrY) + this.STROKE_WIDTH + (this.SPACE_SIZE / 2);
     }
+
     private getPieceStrokeClass(piece: EncapsulePiece): string {
         const player: PlayerOrNone = piece.getPlayer();
         assert(player.isPlayer(), 'EncapsuleComponent.getPieceStrokeClass should only be called with actual pieces!');
         return 'player' + player.value + '-stroke';
     }
+
     public getPieceRadius(piece: EncapsulePiece): number {
         switch (piece.getSize()) {
             case Size.BIG:
@@ -167,6 +179,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                 return (this.SPACE_SIZE / 2) - (3 * this.STROKE_WIDTH) - 6;
         }
     }
+
     public getSidePieceClasses(piece: EncapsulePiece, index: number): string[] {
         const pieceClasses: string[] = this.getPieceClasses(piece);
         if (this.isSelectedPiece(piece) && this.chosenPieceIndex.equalsValue(index)) {
@@ -174,9 +187,11 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         }
         return pieceClasses;
     }
+
     private isSelectedPiece(piece: EncapsulePiece): boolean {
         return this.chosenPiece.equalsValue(piece);
     }
+
     private calculateLeftPieceCoords(): void {
         /**
          * Must have the maximum of piece below the board (for current player)
@@ -209,7 +224,9 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             this.remainingPieceCenterCoords.set(player, playersRemainingPieceLeftPieceCoords);
         }
     }
+
     public getRemainingPieceCenterCoord(player: Player, pieceIdx: number): Coord {
         return this.remainingPieceCenterCoords.get(player).get()[pieceIdx];
     }
+
 }

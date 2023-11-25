@@ -20,6 +20,7 @@ describe('DvonnMaxStacksHeuristic', () => {
     beforeEach(() => {
         heuristic = new DvonnMaxStacksHeuristic();
     });
+
     it('should prefer more stacks over bigger stacks', () => {
         // Given a state with more stacks, for the same number of controlled pieces
         const strongState: DvonnState = new DvonnState([
@@ -43,4 +44,5 @@ describe('DvonnMaxStacksHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

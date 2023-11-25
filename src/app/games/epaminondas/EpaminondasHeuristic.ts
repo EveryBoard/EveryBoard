@@ -10,8 +10,9 @@ import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
 
     public getBoardValue(node: EpaminondasNode): BoardValue {
-        return new BoardValue(this.getPieceCountPlusRowDomination(node.gameState));
+        return new BoardValue([this.getPieceCountPlusRowDomination(node.gameState)]);
     }
+
     public getPieceCountPlusRowDomination(state: EpaminondasState): number {
         const SCORE_BY_PIECE: number = EpaminondasState.WIDTH * 13 * 11;
         const SCORE_BY_ROW_DOMINATION: number = 2;
@@ -47,4 +48,5 @@ export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, Epaminondas
         }
         return total;
     }
+
 }

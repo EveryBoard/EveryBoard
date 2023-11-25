@@ -21,13 +21,13 @@ export class NInARowHelper<T> {
             if (this.getOwner(piece, state).isPlayer()) {
                 const squareScore: number = this.getSquareScore(state, coord);
                 if (BoardValue.VICTORIES.some((victory: number) => victory === squareScore)) {
-                    return new BoardValue(squareScore);
+                    return new BoardValue([squareScore]);
                 } else {
                     score += squareScore;
                 }
             }
         }
-        return new BoardValue(score);
+        return new BoardValue([score]);
     }
     public getSquareScore(state: GameStateWithTable<T>, coord: Coord): number {
         const piece: T = state.getPieceAt(coord);

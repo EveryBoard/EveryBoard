@@ -59,6 +59,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.chosenCoord = MGPOptional.empty();
         this.state = this.getState();
@@ -66,13 +67,16 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.tiles = this.state.tiles;
         this.board = this.getState().board;
     }
+
     private showHighlight(): void {
         this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
     }
+
     public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.possibleLandings = [];
     }
+
     public override async showLastMove(move: CoerceoMove): Promise<void> {
         if (move instanceof CoerceoRegularMove) {
             this.lastStart = MGPOptional.of(move.getStart());
@@ -82,6 +86,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             this.lastEnd = MGPOptional.empty();
         }
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -101,6 +106,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return this.secondClick(coord);
         }
     }
+
     private async firstClick(coord: Coord): Promise<MGPValidation> {
         const clickedPiece: FourStatePiece = this.state.getPieceAt(coord);
         if (clickedPiece.is(this.state.getCurrentOpponent())) {
@@ -114,6 +120,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return this.cancelMove(CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }
     }
+
     private async secondClick(coord: Coord): Promise<MGPValidation> {
         if (this.possibleLandings.some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoRegularMove.of(this.chosenCoord.get(), coord);
@@ -122,10 +129,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE());
         }
     }
+
     public isPyramid(x: number, y: number): boolean {
         const spaceContent: FourStatePiece = this.board[y][x];
         return spaceContent.isPlayer() || this.wasOpponent(x, y);
     }
+
     private wasOpponent(x: number, y: number): boolean {
         const parent: MGPOptional<CoerceoNode> = this.node.parent;
         if (parent.isPresent()) {
@@ -135,6 +144,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return false;
         }
     }
+
     public getPyramidClass(x: number, y: number): string {
         const spaceContent: FourStatePiece = this.board[y][x];
         if (spaceContent === FourStatePiece.ZERO) {
@@ -145,6 +155,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return 'captured-fill';
         }
     }
+
     public mustDraw(x: number, y: number): boolean {
         const spaceContent: FourStatePiece = this.board[y][x];
         if (spaceContent === FourStatePiece.UNREACHABLE) {
@@ -155,6 +166,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return true;
         }
     }
+
     private wasRemoved(x: number, y: number): boolean {
         const spaceContent: FourStatePiece = this.board[y][x];
         const parent: MGPOptional<CoerceoNode> = this.node.parent;
@@ -166,6 +178,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return false;
         }
     }
+
     public getSpaceClass(x: number, y: number): string {
         if (this.wasRemoved(x, y)) {
             return 'captured-alternate-fill';
@@ -177,6 +190,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             }
         }
     }
+
     public getTilesCountCoordinate(): string {
         const bx: number = -40; const by: number = -40;
         const corner0x: number = bx + 25; const corner0y: number = by;
@@ -193,6 +207,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                     corner5x + ', ' + corner5y + ', ' +
                     corner0x + ', ' + corner0y;
     }
+
     public mustShowTilesOf(player: Player): boolean {
         if (this.tiles[player.value] > 0) {
             return true;
@@ -200,6 +215,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return this.lastTurnWasTilesExchange(player);
         }
     }
+
     public lastTurnWasTilesExchange(player: Player): boolean {
         if (this.node.parent.isAbsent()) {
             return false;
@@ -207,6 +223,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         const previousTiles: number = this.getPreviousState().tiles[player.value];
         return previousTiles > this.tiles[player.value];
     }
+
     public getIndicatorY(coord: Coord): number {
         const y: number = this.INDICATOR_SIZE / 2;
         if ((coord.x + coord.y) % 2 === 0) {
@@ -215,6 +232,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return y - 30;
         }
     }
+
     public getTriangleInHexTranslate(x: number, y: number): string {
         const translate: Coord = this.getTriangleTranslateCoord(x, y);
         const translateX: number = translate.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
@@ -227,6 +245,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
         return 'translate(' + translateX + ', ' + translateY + ')';
     }
+
     public getTilesCountTranslate(player: Player): string {
         let x: number;
         let y: number;
@@ -250,4 +269,5 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         const halfStroke: number = this.STROKE_WIDTH / 2;
         return new ViewBox(left, up, width, height).expand(halfStroke, halfStroke, halfStroke, halfStroke);
     }
+
 }

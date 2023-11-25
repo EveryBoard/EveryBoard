@@ -11,6 +11,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
         super($localize`Minimax`,
               EpaminondasRules.get(),
               new EpaminondasHeuristic(),
-              new EpaminondasPhalanxSizeAndFilterMoveGenerator());
+              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        );
     }
 }

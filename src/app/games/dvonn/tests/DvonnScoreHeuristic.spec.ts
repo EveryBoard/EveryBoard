@@ -19,6 +19,7 @@ describe('DvonnScoreHeuristic', () => {
     beforeEach(() => {
         heuristic = new DvonnScoreHeuristic();
     });
+
     it('should compute board value as the score difference', () => {
         // Given a board
         const board: Table<DvonnPieceStack> = [
@@ -32,9 +33,10 @@ describe('DvonnScoreHeuristic', () => {
         const node: DvonnNode = new DvonnNode(state);
 
         // When computing the board value
-        const value: number = heuristic.getBoardValue(node).value;
+        const value: number = heuristic.getBoardValue(node).value[0];
 
         // Then it should be 2 - 1 = 1
         expect(value).toBe(1);
     });
+
 });

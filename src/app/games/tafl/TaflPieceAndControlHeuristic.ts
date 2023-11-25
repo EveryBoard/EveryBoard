@@ -8,10 +8,10 @@ import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { assert } from 'src/app/utils/assert';
 import { TaflMove } from './TaflMove';
 import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
 import { TaflNode } from './TaflRules';
+import { Utils } from 'src/app/utils/utils';
 
 export type TaflPieceAndControlHeuristicMetrics = {
     controlScore: number,
@@ -19,9 +19,7 @@ export type TaflPieceAndControlHeuristicMetrics = {
     safeScore: number,
 };
 
-export class TaflPieceAndControlHeuristic<M extends TaflMove>
-    extends TaflPieceAndInfluenceHeuristic<M>
-{
+export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceAndInfluenceHeuristic<M> {
 
     public override getBoardValue(node: TaflNode<M>): BoardValue {
         const state: TaflState = node.gameState;
@@ -31,11 +29,12 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove>
         scoreValue += metrics.safeScore * this.getScoreBySafePiece(state);
         const maxControl: number = this.getScoreByThreatenedPiece(state);
         scoreValue += metrics.threatenedScore * maxControl;
-        assert(metrics.controlScore <= maxControl, 'Control Score should be below ' + maxControl + ', got ' + metrics.controlScore);
-        assert(metrics.threatenedScore <= 16, 'Threatened Score should be below 16, got ' + metrics.threatenedScore);
-        assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
-        return new BoardValue(scoreValue);
+        Utils.assert(metrics.controlScore <= maxControl, 'Control Score should be below ' + maxControl + ', got ' + metrics.controlScore);
+        Utils.assert(metrics.threatenedScore <= 16, 'Threatened Score should be below 16, got ' + metrics.threatenedScore);
+        Utils.assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
+        return new BoardValue([scoreValue]);
     }
+
     protected getControlScoreAndPieceScores(state: TaflState): TaflPieceAndControlHeuristicMetrics {
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);

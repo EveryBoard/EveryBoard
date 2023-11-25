@@ -8,6 +8,10 @@ import { TaflEscapeThenPieceThenControlHeuristic } from './TaflEscapeThenPieceTh
 export class TaflEscapeThenPieceThenControlMinimax<M extends TaflMove> extends Minimax<M, TaflState> {
 
     public constructor(rules: TaflRules<M>) {
-        super($localize`Escape > Pieces > Control`, rules, new TaflEscapeThenPieceThenControlHeuristic(rules), new TaflMoveGenerator(rules));
+        super($localize`Escape > Pieces > Control`,
+              rules,
+              new TaflEscapeThenPieceThenControlHeuristic(rules),
+              new TaflMoveGenerator(rules),
+        );
     }
 }

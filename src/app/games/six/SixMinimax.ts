@@ -8,6 +8,10 @@ import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
 export class SixMinimax extends Minimax<SixMove, SixState, SixLegalityInformation> {
 
     public constructor() {
-        super($localize`Minimax`, SixRules.get(), new SixHeuristic(), new SixFilteredMoveGenerator());
+        super($localize`Minimax`,
+              SixRules.get(),
+              new SixHeuristic(),
+              new SixFilteredMoveGenerator(),
+        );
     }
 }

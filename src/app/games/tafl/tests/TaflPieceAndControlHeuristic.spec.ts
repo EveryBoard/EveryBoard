@@ -22,6 +22,7 @@ describe('TaflPieceAndControlHeuristic', () => {
         rules = BrandhubRules.get();
         heuristic = new TaflPieceAndControlHeuristic(rules);
     });
+
     it('should prefer to be threatened by false threat than by real one', () => {
         // Given a board where you are threatened by an uncapturable piece
         // here, X is threatened for real (and each player have 1 threat)
@@ -55,4 +56,5 @@ describe('TaflPieceAndControlHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

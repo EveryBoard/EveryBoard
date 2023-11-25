@@ -58,4 +58,5 @@ describe('LodestoneScoreHeuristic', () => {
                                                                Player.ZERO);
 
     });
+
 });

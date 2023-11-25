@@ -13,6 +13,7 @@ export class EpaminondasAttackMinimax
         super($localize`Attack`,
               EpaminondasRules.get(),
               new EpaminondasAttackHeuristic(),
-              new EpaminondasPhalanxSizeAndFilterMoveGenerator());
+              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        );
     }
 }

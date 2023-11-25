@@ -6,6 +6,7 @@ import { NewGameState } from './NewGameState';
 
 // A heuristic assigns values to game states
 export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
+
     /**
      * This function assigns a score to a state, in the form of a `BoardValue`.
      * Most of the time, you want to use `BoardValue` directly. It is simply a number wrapper.
@@ -19,6 +20,6 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
      * is often what you want.
      */
     public getBoardValue(node: NewGameNode): BoardValue {
-        return new BoardValue(node.gameState.turn);
+        return new BoardValue([node.gameState.turn]);
     }
 }

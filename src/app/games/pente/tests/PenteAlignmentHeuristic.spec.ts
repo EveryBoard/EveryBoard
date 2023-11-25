@@ -15,6 +15,7 @@ describe('PenteAlignmentHeuristic', () => {
     beforeEach(() => {
         heuristic = new PenteAlignmentHeuristic();
     });
+
     it('should prefer longer alignments', () => {
         // Given two states, one of which has "better" alignments
         const weakerState: PenteState = new PenteState([
@@ -66,4 +67,5 @@ describe('PenteAlignmentHeuristic', () => {
                                                                strongerState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
 });

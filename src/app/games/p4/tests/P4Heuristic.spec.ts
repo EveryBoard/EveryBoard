@@ -17,6 +17,7 @@ describe('P4Heuristic', () => {
     beforeEach(() => {
         heuristic = new P4Heuristic();
     });
+
     it('should assign greater score to center column', () => {
         const weakBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _],
@@ -42,6 +43,7 @@ describe('P4Heuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
     it('should count three point for the corner', () => {
         // Given a board where player zero have one piece in the corner
         const board: Table<PlayerOrNone> = [
@@ -56,11 +58,12 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node).value[0];
 
         // Then the value should be -3
         expect(boardValue).toBe(-3);
     });
+
     it('should count four for the place next to the corner', () => {
         // Given a board where player zero have one piece next to the corner
         const board: Table<PlayerOrNone> = [
@@ -75,11 +78,12 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node).value[0];
 
         // Then the value should be -4
         expect(boardValue).toBe(-4);
     });
+
     it('should count 5 for the place next to the corner', () => {
         // Given a board where player zero have one piece next to the center
         const board: Table<PlayerOrNone> = [
@@ -94,11 +98,12 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node).value[0];
 
         // Then the value should be -5
         expect(boardValue).toBe(-5);
     });
+
     it('should count 7 for the center', () => {
         // Given a board where player zero have one piece in the center
         const board: Table<PlayerOrNone> = [
@@ -113,9 +118,10 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node).value[0];
 
         // Then the value should be -7
         expect(boardValue).toBe(-7);
     });
+
 });

@@ -49,6 +49,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.tutorial = new QuartoTutorial().tutorial;
         this.pieceInHand = this.getState().pieceInHand;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
         const move: MGPOptional<QuartoMove> = this.node.previousMove;
@@ -58,6 +59,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.victoriousCoords = this.rules.getVictoriousCoords(state);
         this.lastMove = move.map((move: QuartoMove) => move.coord);
     }
+
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
         const clickValidity: MGPValidation = await this.canUserPlay('#chooseCoord_' + x + '_' + y);
@@ -87,6 +89,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
     }
+
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#choosePiece_' + givenPiece);
         if (clickValidity.isFailure()) {
@@ -109,14 +112,17 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             return this.chooseMove(chosenMove);
         }
     }
+
     public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
+
     public override cancelMoveAttempt(): void {
         this.hideLastMove();
         this.pieceToGive = MGPOptional.empty();
         this.chosen = MGPOptional.empty();
     }
+
     public async deselectDroppedPiece(): Promise<MGPValidation> {
         // So it does not throw when there is no dese chosen piece (used in clickValidity test)
         const chosen: Coord = this.chosen.getOrElse(new Coord(404, 404));
@@ -128,12 +134,15 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.cancelMoveAttempt();
         return MGPValidation.SUCCESS;
     }
+
     private showPieceInHandOnBoard(x: number, y: number): void {
         this.chosen = MGPOptional.of(new Coord(x, y));
     }
+
     public isRemaining(pawn: number): boolean {
         return QuartoState.isGivable(QuartoPiece.ofInt(pawn), this.board, this.pieceInHand);
     }
+
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.lastMove.equalsValue(coord)) {
@@ -141,6 +150,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
         return [];
     }
+
     public getPieceClasses(piece: number): string[] {
         const classes: string[] = [];
         if (piece % 2 === 0) {
@@ -150,6 +160,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
         return classes;
     }
+
     public getPieceSize(piece: number): number {
         if (piece < 8) {
             return 40;
@@ -157,7 +168,9 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             return 25;
         }
     }
+
     public pieceHasDot(piece: number): boolean {
         return piece !== QuartoPiece.EMPTY.value && (piece % 8 < 4);
     }
+
 }

@@ -23,7 +23,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         const center: number = this.getCenter(state);
         const winning: number = this.getOffense(state);
         const mobility: number = this.getMobility(state);
-        return new BoardValue(dominance + defense + territory + center + winning + mobility);
+        return new BoardValue([dominance + defense + territory + center + winning + mobility]);
     }
 
     public getDominance(state: EpaminondasState): number {

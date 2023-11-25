@@ -17,6 +17,7 @@ describe('EpaminondasPositionalHeuristic', () => {
     beforeEach(() => {
         heuristic = new EpaminondasPositionalHeuristic();
     });
+
     it('should prefer to get near the opponent line', () => {
         const greaterBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -53,6 +54,7 @@ describe('EpaminondasPositionalHeuristic', () => {
                                                                greaterState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     it('should prefer to have aligned piece than higher piece', () => {
         const greaterBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, _, X],
@@ -89,4 +91,5 @@ describe('EpaminondasPositionalHeuristic', () => {
                                                                greaterState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

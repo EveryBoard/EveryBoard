@@ -63,7 +63,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                 }
             }
         }
-        return new BoardValue(score);
+        return new BoardValue([score]);
     }
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;

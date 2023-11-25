@@ -18,6 +18,7 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
         const safelyMovablePieceOrFirstOne: MGPSet<Coord> = this.getSafelyMovablePieceOrFirstOne(state);
         return this.getMovementsFrom(state, safelyMovablePieceOrFirstOne, legalLandings);
     }
+
     private getSafelyMovablePieceOrFirstOne(state: SixState): MGPSet<Coord> {
         const allPieces: MGPMap<Player, MGPSet<Coord>> = state.getPieces().reverse();
         const currentPlayer: Player = state.getCurrentPlayer();
@@ -36,6 +37,7 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
             return new CoordSet(safePieces);
         }
     }
+
     private isPieceBlockingAVictory(state: SixState, playerPiece: Coord): boolean {
         const hypotheticalState: SixState = state.switchPiece(playerPiece);
 
@@ -52,4 +54,5 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
         }
         return false;
     }
+
 }

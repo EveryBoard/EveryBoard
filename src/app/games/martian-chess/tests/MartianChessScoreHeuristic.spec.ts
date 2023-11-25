@@ -16,6 +16,7 @@ describe('MartianChessScoreHeuristic', () => {
     beforeEach(() => {
         heuristic = new MartianChessScoreHeuristic();
     });
+
     it('should simply prefer higher score', () => {
         const weakState: MartianChessState = MartianChessRules.get().getInitialState();
         const strongBoard: Table<MartianChessPiece> = weakState.getCopiedBoard();
@@ -34,4 +35,5 @@ describe('MartianChessScoreHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
 });

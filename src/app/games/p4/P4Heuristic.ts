@@ -6,6 +6,7 @@ import { P4Node, P4Rules } from './P4Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 
 export class P4Heuristic extends Heuristic<P4Move, P4State> {
+
     public getBoardValue(node: P4Node): BoardValue {
         const state: P4State = node.gameState;
         let score: number = 0;
@@ -17,6 +18,7 @@ export class P4Heuristic extends Heuristic<P4Move, P4State> {
                 score += squareScore;
             }
         }
-        return new BoardValue(score);
+        return new BoardValue([score]);
     }
+
 }

@@ -6,15 +6,20 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 export class HiveHeuristic extends PlayerMetricHeuristic<HiveMove, HiveState> {
 
-    public getMetrics(node: HiveNode): [number, number] {
+    public getMetrics(node: HiveNode): MGPMap<Player, ReadonlyArray<number>> {
         // The board value is based on the number of neighbors to the queen
         const scoreZero: number = this.queenBeeMobility(node.gameState, Player.ZERO);
         const scoreOne: number = this.queenBeeMobility(node.gameState, Player.ONE);
-        return [scoreZero, scoreOne];
+        return new MGPMap<Player, ReadonlyArray<number>>([
+            { key: Player.ZERO, value: [scoreZero] },
+            { key: Player.ONE, value: [scoreOne] },
+        ]);
     }
+
     private queenBeeMobility(state: HiveState, player: Player): number {
         const queenBee: MGPOptional<Coord> = state.queenBeeLocation(player);
         if (queenBee.isPresent()) {
@@ -25,4 +30,5 @@ export class HiveHeuristic extends PlayerMetricHeuristic<HiveMove, HiveState> {
             return 0;
         }
     }
+
 }

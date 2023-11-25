@@ -11,9 +11,7 @@ export interface BoardInfo {
     preVictory: MGPOptional<Coord>,
     sum: number,
 }
-export abstract class AlignmentHeuristic<M extends Move, S extends GameState, V>
-    extends Heuristic<M, S>
-{
+export abstract class AlignmentHeuristic<M extends Move, S extends GameState, V> extends Heuristic<M, S> {
 
     public calculateBoardValue(move: M, state: S): BoardInfo {
         this.startSearchingVictorySources();

@@ -7,7 +7,7 @@ import { LascaStack, LascaState } from './LascaState';
 export class LascaControlAndDominationHeuristic extends LascaControlHeuristic {
 
     public override getBoardValue(node: LascaNode): BoardValue {
-        const controlValue: number = super.getBoardValue(node).value * 12;
+        const controlValue: number = super.getBoardValue(node).value[0] * 12;
         let dominatingPiecesCount: number = 0;
         for (let y: number = 0; y < LascaState.SIZE; y++) {
             for (let x: number = 0; x < LascaState.SIZE; x++) {
@@ -23,6 +23,7 @@ export class LascaControlAndDominationHeuristic extends LascaControlHeuristic {
                 }
             }
         }
-        return new BoardValue(controlValue + dominatingPiecesCount);
+        return new BoardValue([controlValue + dominatingPiecesCount]);
     }
+
 }

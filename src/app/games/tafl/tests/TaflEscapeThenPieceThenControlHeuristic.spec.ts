@@ -23,6 +23,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
         rules = BrandhubRules.get();
         heuristic = new TaflEscapeThenPieceThenControlHeuristic(rules);
     });
+
     it('should be better when king can escape than when he cannot', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, O, _, _, _, _],
@@ -49,6 +50,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     it('should be better when king is one step away from winning than two', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, O, _, _, _, _],
@@ -75,4 +77,5 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

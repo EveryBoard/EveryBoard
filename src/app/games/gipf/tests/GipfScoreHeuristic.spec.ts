@@ -19,6 +19,7 @@ describe('GipfScoreHeuristic', () => {
     beforeEach(() => {
         heuristic = new GipfScoreHeuristic();
     });
+
     it('should favor having captured pieces', () => {
         // Given a state with more captured pieces than another
         const board: Table<FourStatePiece> = [
@@ -41,6 +42,7 @@ describe('GipfScoreHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     it('should favor having pieces to play pieces', () => {
         // Given two states differing only in available pieces to place
         const board: Table<FourStatePiece> = [
@@ -63,4 +65,5 @@ describe('GipfScoreHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

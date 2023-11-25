@@ -18,6 +18,7 @@ describe('PylosHeuristic', () => {
     beforeEach(() => {
         heuristic = new PylosHeuristic();
     });
+
     it('should calculate board value according to number of pawn of each player', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -40,6 +41,7 @@ describe('PylosHeuristic', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
         const node: PylosNode = new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        expect(heuristic.getBoardValue(node).value).toBe(0);
+        expect(heuristic.getBoardValue(node).value[0]).toBe(0);
     });
+
 });

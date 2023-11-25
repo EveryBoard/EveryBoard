@@ -29,9 +29,9 @@ export class GameStatus {
     }
     public toBoardValue(): BoardValue {
         if (this.winner.isPlayer()) {
-            return new BoardValue(this.winner.getVictoryValue());
+            return new BoardValue([this.winner.getVictoryValue()]);
         } else {
-            return new BoardValue(0);
+            return new BoardValue([0]);
         }
     }
 }

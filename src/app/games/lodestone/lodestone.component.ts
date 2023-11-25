@@ -146,6 +146,7 @@ export class LodestoneComponent
         this.displayedState = this.getState();
         this.scores = MGPOptional.of([0, 0]);
     }
+
     public async selectCoord(coord: Coord): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#square_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
@@ -170,6 +171,7 @@ export class LodestoneComponent
             return MGPValidation.SUCCESS;
         }
     }
+
     public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#lodestone_' + lodestone.direction + '_' + lodestone.orientation);
         if (clickValidity.isFailure()) {
@@ -190,6 +192,7 @@ export class LodestoneComponent
             return MGPValidation.SUCCESS;
         }
     }
+
     private async putLodestone(): Promise<MGPValidation> {
         assert(this.selectedCoord.isPresent(), 'coord should have been selected');
         assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
@@ -210,6 +213,7 @@ export class LodestoneComponent
             return MGPValidation.SUCCESS;
         }
     }
+
     private async applyMove(): Promise<MGPValidation> {
         assert(this.selectedCoord.isPresent(), 'coord should have been selected');
         assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
@@ -218,6 +222,7 @@ export class LodestoneComponent
         const move: LodestoneMove = new LodestoneMove(coord, lodestone.direction, lodestone.orientation, this.captures);
         return this.chooseMove(move);
     }
+
     public onPressurePlateClick(temporary: boolean, position: LodestonePressurePlatePosition, index: number)
     : Promise<MGPValidation> {
         if (temporary) {
@@ -226,6 +231,7 @@ export class LodestoneComponent
             return this.selectPressurePlate(position, index);
         }
     }
+
     private async selectPressurePlate(position: LodestonePressurePlatePosition, index: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#plate_' + position + '_' + index);
         if (clickValidity.isFailure()) {
@@ -251,6 +257,7 @@ export class LodestoneComponent
         }
         return MGPValidation.SUCCESS;
     }
+
     public async deselectPressurePlate(position: LodestonePressurePlatePosition, index: number)
     : Promise<MGPValidation>
     {
@@ -271,10 +278,12 @@ export class LodestoneComponent
         this.showPressurePlateDifferences(this.getState(), this.displayedState, true);
         return MGPValidation.SUCCESS;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         this.scores = MGPOptional.of(this.getState().getScores());
     }
+
     public override cancelMoveAttempt(): void {
         this.displayedState = this.getState();
         this.stateAfterPlacingLodestone = MGPOptional.empty();
@@ -292,6 +301,7 @@ export class LodestoneComponent
         this.captures = { top: 0, bottom: 0, left: 0, right: 0 };
         this.updateViewInfo();
     }
+
     private updateViewInfo(): void {
         const state: LodestoneState = this.getState();
         const currentPlayer: Player = state.getCurrentPlayer();
@@ -306,6 +316,7 @@ export class LodestoneComponent
             this.showMovedAndCaptured(this.lastInfos.get());
         }
     }
+
     private showBoard(): void {
         this.viewInfo.boardInfo = [];
         for (let y: number = 0; y < LodestoneState.SIZE; y++) {
@@ -322,6 +333,7 @@ export class LodestoneComponent
             this.viewInfo.selected = MGPOptional.empty();
         }
     }
+
     private getSquareInfo(coord: Coord): SquareInfo {
         const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
         const squareInfo: SquareInfo = {
@@ -350,6 +362,7 @@ export class LodestoneComponent
         }
         return squareInfo;
     }
+
     private showAvailableLodestones(): void {
         if (this.capturesToPlace > 0) {
             // While placing captures, we don't want to display the lodestones (as the player already selected it)
@@ -376,6 +389,7 @@ export class LodestoneComponent
             }
         }
     }
+
     private showCapturesToPlace(): void {
         const opponent: Player = this.getCurrentOpponent();
         this.viewInfo.capturesToPlace = [];
@@ -385,6 +399,7 @@ export class LodestoneComponent
             });
         }
     }
+
     private nextLodestone(player: Player, description: LodestoneDescription): LodestoneInfo {
         const lodestone: LodestonePieceLodestone =
             LodestonePieceLodestone.of(player, description);
@@ -405,6 +420,7 @@ export class LodestoneComponent
         }
         return info;
     }
+
     private showPressurePlates(): void {
         this.viewInfo.pressurePlates = [];
         for (const pressurePlate of LodestonePressurePlate.POSITIONS) {
@@ -436,6 +452,7 @@ export class LodestoneComponent
             this.viewInfo.pressurePlates.push({ position: pressurePlate, coords: plateCoordInfos });
         }
     }
+
     public override async showLastMove(move: LodestoneMove): Promise<void> {
         const lastState: LodestoneState = this.getPreviousState();
         this.lastInfos = MGPOptional.of(
@@ -444,6 +461,7 @@ export class LodestoneComponent
         const currentState: LodestoneState = this.getState();
         this.showPressurePlateDifferences(lastState, currentState, false);
     }
+
     private showPressurePlateDifferences(oldState: LodestoneState, newState: LodestoneState, temporary: boolean): void {
         for (const position of LodestonePressurePlate.POSITIONS) {
             const lastPressurePlate: MGPOptional<LodestonePressurePlate> = oldState.pressurePlates[position];
@@ -451,6 +469,7 @@ export class LodestoneComponent
             this.showPressurePlateDifference(lastPressurePlate, currentPressurePlate, position, temporary);
         }
     }
+
     private showPressurePlateDifference(oldPlate: MGPOptional<LodestonePressurePlate>,
                                         newPlate: MGPOptional<LodestonePressurePlate>,
                                         position: LodestonePressurePlatePosition,
@@ -484,6 +503,7 @@ export class LodestoneComponent
             }
         }
     }
+
     private showMovedAndCaptured(infos: LodestoneInfos): void {
         for (const moved of infos.moved) {
             this.viewInfo.boardInfo[moved.y][moved.x].squareClasses.push('moved-fill');
@@ -492,6 +512,7 @@ export class LodestoneComponent
             this.viewInfo.boardInfo[captured.y][captured.x].squareClasses.push('captured-fill');
         }
     }
+
     private computePressurePlateShift(): void {
         const state: LodestoneState = this.displayedState;
         const left: number = this.getPressurePlateShift(state.pressurePlates.left);
@@ -503,6 +524,7 @@ export class LodestoneComponent
         this.viewInfo.pressurePlateShift.left = new Vector(0, 0.5 * (top - bottom));
         this.viewInfo.pressurePlateShift.right = new Vector(0, 0.5 * (top - bottom));
     }
+
     private getPressurePlateShift(plate: MGPOptional<LodestonePressurePlate>): number {
         if (plate.isAbsent()) {
             return 2;
@@ -512,11 +534,13 @@ export class LodestoneComponent
             return 0;
         }
     }
+
     public getSquareTransform(x: number, y: number): string {
         const dx: number = x * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
         const dy: number = y * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
         return `translate(${dx}, ${dy})`;
     }
+
     public getCaptureTransform(x: number): string {
         const halfSize: number = LodestoneState.SIZE / 2;
         const dx: number = (x + (halfSize - this.viewInfo.capturesToPlace.length / 2)) * this.SPACE_SIZE +
@@ -525,6 +549,7 @@ export class LodestoneComponent
         const dy: number = -30 + -2 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
         return `translate(${dx}, ${dy})`;
     }
+
     public getAvailableLodestoneTransform(x: number): string {
         const halfSize: number = LodestoneState.SIZE / 2;
         const dx: number = (x + (halfSize - this.viewInfo.availableLodestones.length / 2)) * this.SPACE_SIZE +
@@ -533,9 +558,11 @@ export class LodestoneComponent
         const dy: number = 30 + 9 * this.SPACE_SIZE + this.STROKE_WIDTH + this.SPACE_SIZE / 2;
         return `translate(${dx}, ${dy})`;
     }
+
     public getPressurePlateTransform(position: LodestonePressurePlatePosition): string {
         const dx: number = this.viewInfo.pressurePlateShift[position].x * this.SPACE_SIZE;
         const dy: number = this.viewInfo.pressurePlateShift[position].y * this.SPACE_SIZE;
         return `translate(${dx}, ${dy})`;
     }
+
 }

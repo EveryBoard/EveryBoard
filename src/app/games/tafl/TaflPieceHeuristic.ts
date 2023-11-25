@@ -3,6 +3,7 @@ import { TaflMove } from './TaflMove';
 import { TaflState } from './TaflState';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristic<M, TaflState> {
 
@@ -10,7 +11,7 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
         super();
     }
 
-    public getMetrics(node: TaflNode<M>): [number, number] {
+    public getMetrics(node: TaflNode<M>): MGPMap<Player, ReadonlyArray<number>> {
         const state: TaflState = node.gameState;
         // We just count the pawns
         const nbPlayerZeroPawns: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
@@ -19,6 +20,10 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
         const oneMult: number = [2, 1][this.rules.config.INVADER.value]; // so they're twice less valuable
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;
         const scoreOne: number = nbPlayerOnePawns * oneMult;
-        return [scoreZero, scoreOne];
+        return new MGPMap<Player, ReadonlyArray<number>>([
+            { key: Player.ZERO, value: [scoreZero] },
+            { key: Player.ONE, value: [scoreOne] },
+        ]);
     }
+
 }

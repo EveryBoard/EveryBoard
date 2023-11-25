@@ -18,21 +18,23 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
         const defender: Player = state.getPieceAt(this.rules.getKingCoord(state).get()).getOwner() as Player;
         const stepForEscape: number = this.getStepForEscape(state) * defender.getScoreModifier();
         if (stepForEscape === -1) {
-            return new BoardValue(defender.getOpponent().getPreVictory());
+            return new BoardValue([defender.getOpponent().getPreVictory()]);
         }
         const maxControl: number = this.getScoreByThreatenedPiece(state);
         Utils.assert(metrics.controlScore <= maxControl, 'Control Score should be below ' + maxControl + ', got ' + metrics.controlScore);
         Utils.assert(metrics.threatenedScore <= 16, 'Threatened Score should be below 16, got ' + metrics.threatenedScore);
         Utils.assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
-        return new BoardValue((-1 * stepForEscape * (maxControl + 1) * 17 * 17) +
-                              (metrics.safeScore * (maxControl + 1) * 17) +
-                              (metrics.threatenedScore * (maxControl + 1)) +
-                              metrics.controlScore);
+        return new BoardValue([(-1 * stepForEscape * (maxControl + 1) * 17 * 17) +
+                               (metrics.safeScore * (maxControl + 1) * 17) +
+                               (metrics.threatenedScore * (maxControl + 1)) +
+                               metrics.controlScore]);
     }
+
     private getStepForEscape(state: TaflState): number {
         const king: Coord = this.rules.getKingCoord(state).get();
         return this._getStepForEscape(state, 1, [king], []).getOrElse(-1);
     }
+
     private _getStepForEscape(state: TaflState,
                               step: number,
                               previousGen: Coord[],
@@ -53,6 +55,7 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
             return this._getStepForEscape(state, step, nextGen, handledCoords);
         }
     }
+
     private getNextGen(state: TaflState, previousGen: Coord[], handledCoords: Coord[]): Coord[] {
         const newGen: Coord[] = [];
         for (const piece of previousGen) {
@@ -71,4 +74,5 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
         }
         return newGen;
     }
+
 }

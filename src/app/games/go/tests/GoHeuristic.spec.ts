@@ -18,6 +18,7 @@ describe('GoHeuristic', () => {
     beforeEach(() => {
         heuristic = new GoHeuristic();
     });
+
     xit('should getBoardValue according considering alive group who control alone one territory and not considering alive the others', () => {
         const board: Table<GoPiece> = [
             [_, X, _, _, _],
@@ -28,9 +29,10 @@ describe('GoHeuristic', () => {
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
         const initialNode: GoNode = new GoNode(state);
-        const boardValue: number = heuristic.getBoardValue(initialNode).value;
+        const boardValue: number = heuristic.getBoardValue(initialNode).value[0];
         expect(boardValue).toBe(3);
     });
+
     it('should prefer a larger territory', () => {
         // Given a board with more territory for ZERO than another
         const strongBoard: Table<GoPiece> = [
@@ -56,6 +58,7 @@ describe('GoHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
     it('should not care about kills in territory', () => {
         const u: GoPiece = GoPiece.DEAD_DARK;
         // Given two boards with the same territory, but one with a dead opponent piece
@@ -79,4 +82,5 @@ describe('GoHeuristic', () => {
         // Then it should assign the same value for both
         HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState);
     });
+
 });

@@ -3,10 +3,11 @@ import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { ReversiNode } from './ReversiRules';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState> {
 
-    public getMetrics(node: ReversiNode): [number, number] {
+    public getMetrics(node: ReversiNode): MGPMap<Player, ReadonlyArray<number>> {
         const state: ReversiState = node.gameState;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         let player0Count: number = 0;
@@ -25,6 +26,10 @@ export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, Reversi
                 }
             }
         }
-        return [player0Count, player1Count];
+        return new MGPMap<Player, ReadonlyArray<number>>([
+            { key: Player.ZERO, value: [player0Count] },
+            { key: Player.ONE, value: [player1Count] },
+        ]);
     }
+
 }

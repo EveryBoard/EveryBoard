@@ -3,7 +3,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { assert } from '../assert';
 
-describe('assert', () => {
+describe('Assert', () => {
     it('should log error and throw when condition is false', () => {
         // Given the assert function at any moment
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);

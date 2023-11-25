@@ -16,6 +16,7 @@ describe('EpaminondasHeuristic', () => {
     beforeEach(() => {
         heuristic = new EpaminondasHeuristic();
     });
+
     it('should consider two neighbor piece better than two separated piece', () => {
         const weakerState: EpaminondasState = new EpaminondasState([
             [_, _, _, _, _, _, _, _, _, X, _, X, _, _],
@@ -50,4 +51,5 @@ describe('EpaminondasHeuristic', () => {
                                                                strongerState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

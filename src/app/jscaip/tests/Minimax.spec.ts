@@ -22,6 +22,7 @@ describe('Minimax', () => {
         heuristic = new P4Heuristic();
         minimax = new Minimax('Dummy', P4Rules.get(), heuristic, moveGenerator);
     });
+
     it('Minimax should prune when instructed to do so', () => {
         const getBoardValueSpy: jasmine.Spy = spyOn(heuristic, 'getBoardValue').and.callThrough();
         const getListMovesSpy: jasmine.Spy = spyOn(moveGenerator, 'getListMoves').and.callThrough();
@@ -46,6 +47,7 @@ describe('Minimax', () => {
         expect(callsToGetBoardValueWithPruning).toBeLessThan(callsToGetBoardValueWithoutPruning);
         expect(callsToGetListMovesWithPruning).toBeLessThan(callsToGetListMovesWithoutPruning);
     });
+
     it('should compute the score of an already created node that has no score', () => {
         // Given a node that already has a child (but for which we haven't computed the board value)
         // This can happen when another AI has already created the node
@@ -57,6 +59,7 @@ describe('Minimax', () => {
         // Then it should have computed the board value
         expect(node.getCache(minimax.name + '-score').isPresent()).toBeTrue();
     });
+
     it('should select randomly among best children when asked to do so', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
@@ -67,6 +70,7 @@ describe('Minimax', () => {
         // Then it should have selected it randomly among all the best
         expect(ArrayUtils.getRandomElement).toHaveBeenCalled();
     });
+
     it('should not select randomly among best children when not asked to do so', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
@@ -77,9 +81,11 @@ describe('Minimax', () => {
         // Then it should have selected it randomly among all the best
         expect(ArrayUtils.getRandomElement).not.toHaveBeenCalled();
     });
+
 });
 
 describe('DummyHeuristic', () => {
+
     it('should assign a board value of 0', () => {
         // Given the dummy heuristic and a game node
         const heuristic: DummyHeuristic<P4Move, P4State> = new DummyHeuristic();
@@ -89,6 +95,7 @@ describe('DummyHeuristic', () => {
         const boardValue: BoardValue = heuristic.getBoardValue(node);
 
         // Then it should be zero
-        expect(boardValue.value).toBe(0);
+        expect(boardValue.value[0]).toBe(0);
     });
+
 });

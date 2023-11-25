@@ -19,6 +19,7 @@ describe('CoerceoCapturesAndFreedomHeuristic', () => {
     beforeEach(() => {
         heuristic = new CoerceoCapturesAndFreedomHeuristic();
     });
+
     it('should prefer a board with more freedom', () => {
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -51,4 +52,5 @@ describe('CoerceoCapturesAndFreedomHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

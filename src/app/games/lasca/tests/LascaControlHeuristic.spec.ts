@@ -16,6 +16,7 @@ describe('LascaControlHeuristic', () => {
     beforeEach(() => {
         heuristic = new LascaControlHeuristic();
     });
+
     it('should not count the immobilized stacks', () => {
         // Given two boards with the exact same stacks, one having blocked stacks
         const immobilizedState: LascaState = LascaState.of([
@@ -46,6 +47,7 @@ describe('LascaControlHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     it('should count the potential mobility as primary board value', () => {
         // Given two boards with the same stacks, one with an unique forced capture, the other without
         const forcedState: LascaState = LascaState.of([
@@ -72,4 +74,5 @@ describe('LascaControlHeuristic', () => {
         //     the number of non-blocked stacks times the number of piece (which is 11)
         HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState);
     });
+
 });

@@ -13,6 +13,7 @@ describe('MancalaScoreHeuristic', () => {
     beforeEach(() => {
         heuristic = new MancalaScoreHeuristic();
     });
+
     it('should prefer board with better score', () => {
         // Given a board with a big score
         const board: number[][] = [
@@ -32,4 +33,5 @@ describe('MancalaScoreHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
 });

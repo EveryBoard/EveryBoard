@@ -67,6 +67,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         Debug.display('MCTS', 'chooseNextMove', 'Best child has a win ratio of: ' + this.winRatio(bestChild));
         return bestChild.previousMove.get();
     }
+
     private winScore(gameStatus: GameStatus, player: Player): number {
         switch (gameStatus) {
             case GameStatus.DRAW:
@@ -77,6 +78,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
                 else return 0;
         }
     }
+
     /**
      * Computes the UCB value of a node.
      * The UCB (Upper-Confidence-Bound) is a value used to select nodes to explore.
@@ -89,6 +91,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         return (this.wins(node) / simulations) +
                this.explorationParameter * Math.sqrt(Math.log(parentSimulations) / simulations);
     }
+
     /**
      * Computes the win ratio for this node, as how many simulations have been won.
      */
@@ -97,12 +100,15 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         if (this.simulations(node) === 0) return 1;
         return this.wins(node) / simulations;
     }
+
     private wins(node: GameNode<M, S>): number {
         return this.getCounterFromCache(node, 'wins');
     }
+
     private simulations(node: GameNode<M, S>): number {
         return this.getCounterFromCache(node, 'simulations');
     }
+
     private getCounterFromCache(node: GameNode<M, S>, name: string): number {
         const cachedValue: MGPOptional<number> = node.getCache(name);
         if (cachedValue.isPresent()) {
@@ -112,6 +118,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
             return 0;
         }
     }
+
     /**
      * Selects the node that we will consider in this iteration.
      * This takes the first unexplored node it finds in a BFS fashion.
@@ -136,6 +143,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
             return nodeAndPath;
         }
     }
+
     /**
      * Expands a node, i.e., creates children to explore if needed, or returns the node directly.
      * @returns one of the created child, or the node itself if it is terminal
@@ -156,6 +164,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         const pickedChild: GameNode<M, S> = ArrayUtils.getRandomElement(node.getChildren());
         return { node: pickedChild, path: nodeAndPath.path.concat([pickedChild]) };
     }
+
     /**
      * Simulate a game from the given node. Does not change anything in the node.
      * @returns the game status at the end of the simulation
@@ -176,6 +185,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         // Game has taken too long
         return GameStatus.ONGOING;
     }
+
     /**
      * Picks a random move and play it
      * @returns the state after the move
@@ -184,6 +194,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         const move: M = ArrayUtils.getRandomElement(this.moveGenerator.getListMoves(node));
         return this.play(node, move);
     }
+
     /**
      * Plays a move.
      * @returns the state after the move
@@ -195,6 +206,7 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
         const childNode: GameNode<M, S> = new GameNode(childState, MGPOptional.of(node), MGPOptional.of(move));
         return childNode;
     }
+
     /**
      * Backpropagates the result of a simulation in a path from the simulated node to the root of the tree.
      * @returns nothing, as it modifies the nodes directly
@@ -205,15 +217,18 @@ export class MCTS<M extends Move, S extends GameState, L = void> implements AI<M
             Debug.display('MCTS', 'backpropagate', `backpropagate to node which now has ${this.wins(node)/this.simulations(node)}`);
         }
     }
+
     private addSimulationResult(node: GameNode<M, S>, winScore: number): void {
         const simulations: number = this.simulations(node) + 1;
         const wins: number = this.wins(node) + winScore;
         node.setCache('wins', wins);
         node.setCache('simulations', simulations);
     }
+
     public getInfo(node: GameNode<M, S>): string {
         const wins: number = this.getCounterFromCache(node, 'wins');
         const simulations: number = this.getCounterFromCache(node, 'simulations');
         return `wins/simulations=${wins}/${simulations}`;
     }
+
 }

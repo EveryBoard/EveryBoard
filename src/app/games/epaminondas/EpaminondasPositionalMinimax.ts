@@ -13,6 +13,7 @@ export class EpaminondasPositionalMinimax
         super($localize`Positional`,
               EpaminondasRules.get(),
               new EpaminondasPositionalHeuristic(),
-              new EpaminondasPhalanxSizeAndFilterMoveGenerator());
+              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        );
     }
 }

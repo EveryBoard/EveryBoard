@@ -19,21 +19,26 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
 
     public static readonly SCORE_BY_SAFE_PIECE: number = 1000 * 1000;
 
-    public getMetrics(node: CoerceoNode): [number, number] {
+    public getMetrics(node: CoerceoNode): MGPMap<Player, ReadonlyArray<number>> {
         const state: CoerceoState = node.gameState;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
-        const scores: [number, number] = [0, 0];
+        const scores: MGPMap<Player, ReadonlyArray<number>> = new MGPMap<Player, ReadonlyArray<number>>([
+            { key: Player.ZERO, value: [0] },
+            { key: Player.ONE, value: [0] },
+        ]);
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
+                const oldValue: number = scores.get(owner).get()[0];
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    scores[owner.value] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE;
+                    scores.replace(owner, [oldValue + CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE]);
                 } else {
-                    scores[owner.value] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
+                    scores.replace(owner, [oldValue + CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE]);
                 }
             }
-            scores[owner.value] += state.tiles[owner.value];
+            const oldValue: number = scores.get(owner).get()[0];
+            scores.replace(owner, [oldValue + state.tiles[owner.value]]);
         }
         return scores;
     }

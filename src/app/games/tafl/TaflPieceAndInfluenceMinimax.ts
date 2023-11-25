@@ -8,6 +8,10 @@ import { TaflRules } from './TaflRules';
 export class TaflPieceAndInfluenceMinimax<M extends TaflMove> extends Minimax<M, TaflState> {
 
     public constructor(rules: TaflRules<M>) {
-        super($localize`Pieces > Influence`, rules, new TaflPieceAndInfluenceHeuristic(rules), new TaflMoveGenerator(rules));
+        super($localize`Pieces > Influence`,
+              rules,
+              new TaflPieceAndInfluenceHeuristic(rules),
+              new TaflMoveGenerator(rules),
+        );
     }
 }

@@ -17,6 +17,7 @@ describe('AttackEpaminondasHeuristic', () => {
     beforeEach(() => {
         heuristic = new EpaminondasAttackHeuristic();
     });
+
     it('should go forward', () => {
         const weakerBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -53,6 +54,7 @@ describe('AttackEpaminondasHeuristic', () => {
                                                                strongerState, MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
     it('should prefer going into the winning territory', () => {
         const strongerBoard: Table<PlayerOrNone> = [
             [_, O, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -89,4 +91,5 @@ describe('AttackEpaminondasHeuristic', () => {
                                                                weakerState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
 });

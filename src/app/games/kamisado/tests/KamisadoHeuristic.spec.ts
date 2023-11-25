@@ -19,6 +19,7 @@ describe('KamisadoHeuristic', () => {
     beforeEach(() => {
         heuristic = new KamisadoHeuristic();
     });
+
     it('should assign board values based on positions', () => {
         // Given a board with one piece for each player, where zero is closer to its goal than one
         const board: Table<KamisadoPiece> = [
@@ -36,6 +37,7 @@ describe('KamisadoHeuristic', () => {
         const node: KamisadoNode = new KamisadoNode(state);
         // When computing the board value
         // Then the score should be the advantage of zero over one
-        expect(heuristic.getBoardValue(node).value).toEqual(2);
+        expect(heuristic.getBoardValue(node).value[0]).toEqual(2);
     });
+
 });

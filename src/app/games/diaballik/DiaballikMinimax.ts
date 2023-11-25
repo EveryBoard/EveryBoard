@@ -8,6 +8,10 @@ import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 export class DiaballikMinimax extends Minimax<DiaballikMove, DiaballikState, DiaballikState> {
 
     public constructor(name: string, moveGenerator: MoveGenerator<DiaballikMove, DiaballikState>) {
-        super(name, DiaballikRules.get(), new DiaballikDistanceHeuristic(), moveGenerator);
+        super(name,
+              DiaballikRules.get(),
+              new DiaballikDistanceHeuristic(),
+              moveGenerator,
+        );
     }
 }

@@ -30,6 +30,7 @@ describe('QuixoHeuristic', () => {
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        expect(heuristic.getBoardValue(node).value).toEqual(-1);
+        expect(heuristic.getBoardValue(node).value[0]).toEqual(-1);
     });
+
 });

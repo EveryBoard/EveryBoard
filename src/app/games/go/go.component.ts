@@ -52,6 +52,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         this.boardHeight = this.getState().board.length;
         this.boardWidth = this.getState().board[0].length;
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -62,6 +63,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         const resultlessMove: GoMove = new GoMove(x, y);
         return this.chooseMove(resultlessMove);
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: GoState = this.getState();
         const move: MGPOptional<GoMove> = this.node.previousMove;
@@ -80,6 +82,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         this.canPass = phase !== Phase.FINISHED;
         this.createHoshis();
     }
+
     private showCaptures(): void {
         const previousState: GoState = this.getPreviousState();
         this.captures = [];
@@ -95,6 +98,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
             }
         }
     }
+
     public override async pass(): Promise<MGPValidation> {
         const phase: Phase = this.getState().phase;
         if (phase === Phase.PLAYING || phase === Phase.PASSED) {
@@ -104,14 +108,17 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
                'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
     }
+
     public getSpaceClass(x: number, y: number): string {
         const piece: GoPiece = this.getState().getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getOwner());
     }
+
     public spaceIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.getState().getPieceAtXY(x, y);
         return piece !== GoPiece.EMPTY && this.isTerritory(x, y) === false;
     }
+
     public isLastSpace(x: number, y: number): boolean {
         if (this.last.isPresent()) {
             const last: Coord = this.last.get();
@@ -120,10 +127,13 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
             return false;
         }
     }
+
     public isDead(x: number, y: number): boolean {
         return this.getState().isDead(new Coord(x, y));
     }
+
     public isTerritory(x: number, y: number): boolean {
         return this.getState().isTerritory(new Coord(x, y));
     }
+
 }

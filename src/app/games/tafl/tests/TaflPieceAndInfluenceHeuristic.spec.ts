@@ -26,6 +26,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
         const rules: TablutRules = TablutRules.get();
         heuristic = new TaflPieceAndInfluenceHeuristic(rules);
     });
+
     it('should be better of with more piece', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
@@ -56,6 +57,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     it('should be better of with more influence (at piece number equal)', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
@@ -86,6 +88,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     it('should be better of with non threatened piece (at piece number equal)', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
@@ -116,6 +119,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     it('should be better of with non threatened piece (at piece number equal) (opposite one)', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
@@ -146,6 +150,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     it('should be better of with more kill than influence', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
@@ -176,7 +181,9 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                                                                strongState, MGPOptional.empty(),
                                                                Player.ONE);
     });
+
     describe('isThreatened', () => {
+
         it('should now that empty thrones are threatening', () => {
             const board: Table<TaflPawn> = [
                 [_, _, _, _, _, _, _, _, _],
@@ -196,6 +203,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 1))).toBeTrue();
         });
+
         it('should see threats coming straight', () => {
             const board: Table<TaflPawn> = [
                 [_, _, _, _, _, _, _, _, _],
@@ -215,6 +223,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
         });
+
         it('should see threats coming sideways', () => {
             const board: Table<TaflPawn> = [
                 [_, _, _, _, _, _, _, _, _],
@@ -234,6 +243,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
         });
+
         it('should not consider king threatened by one piece only', () => {
             const board: Table<TaflPawn> = [
                 [_, _, _, _, _, _, _, _, _],
@@ -253,6 +263,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(3, 4))).toBeFalse();
         });
+
         it(`should not consider neighbors opponent's threatened pieces as threatening`, () => {
             const board: Table<TaflPawn> = [
                 [_, _, _, _, _, _, _, _, _],
@@ -279,6 +290,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             ]);
             expect(filteredThreatMap.equals(expectedMap)).toBeTrue();
         });
+
         it(`should not consider "moving" opponent's threatened pieces as threatening`, () => {
             // Given a board were the passive player threaten (4, 3) with a "moving" threatened (6, 3)
             const board: Table<TaflPawn> = [
@@ -303,6 +315,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
             // Then (4, 3) should not be deemed threaten since (6, 3) could be killed
             expect(filteredThreatMap.containsKey(new Coord(4, 3))).toBeFalse();
         });
+
         it('should not consider ensandwiched pieces as threatened', () => {
             const board: Table<TaflPawn> = [
                 [_, _, _, _, _, _, _, _, _],
@@ -322,5 +335,7 @@ describe('TablutPieceAndInfluenceHeuristic', () => {
                 heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(4, 5))).toBeFalse();
         });
+
     });
+
 });

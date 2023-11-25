@@ -48,4 +48,5 @@ describe('DiaballikDistanceHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                Player.ZERO);
     });
+
 });
