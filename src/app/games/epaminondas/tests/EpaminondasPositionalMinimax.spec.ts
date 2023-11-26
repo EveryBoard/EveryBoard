@@ -21,6 +21,7 @@ describe('EpaminondasPositionalMinimax', () => {
     beforeEach(() => {
         minimax = new EpaminondasPositionalMinimax();
     });
+
     it('should consider possible capture the best move', () => {
         const board: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
@@ -43,4 +44,5 @@ describe('EpaminondasPositionalMinimax', () => {
 
         expect(bestMove).toEqual(expectedMove);
     });
+
 });

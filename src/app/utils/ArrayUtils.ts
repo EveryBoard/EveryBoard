@@ -110,22 +110,19 @@ export class ArrayUtils {
     public static isSuperior(superior: ReadonlyArray<number>, inferior: ReadonlyArray<number>): boolean {
         Utils.assert(superior.length > 0, 'ArrayUtils.isSuperior should have a non empty list as first param TODO TEST');
         Utils.assert(inferior.length > 0, 'ArrayUtils.isSuperior should have a non empty list as second param TODO TEST');
-        return ArrayUtils.compareNumberList(superior, inferior);
+        return ArrayUtils.compareNumberList(inferior, superior);
     }
 
     private static compareNumberList(left: ReadonlyArray<number>, right: ReadonlyArray<number>): boolean {
-        const maximumIndex: number = Math.min(left.length, right.length) - 1;
+        const maximumIndex: number = Math.min(left.length, right.length);
         for (let i: number = 0; i < maximumIndex; i++) {
-            if (right[i] < left[i]) {
-                return false; // left is not inferior
+            if (right[i] === left[i]) { // They are so far equals
+                continue;
+            } else {
+                return left[i] < right[i];
             }
         }
-        if (right[maximumIndex] === left[maximumIndex]) {
-            return false; // They are equal
-        } else {
-            return true; // left is indeed inferior until the very end
-        }
-        // TODO TEST egality/superiority/inferiority x [on the last; not the last]
+        return false; // They are equal
     }
 
     public static min(left: ReadonlyArray<number>, right: ReadonlyArray<number>): ReadonlyArray<number> {

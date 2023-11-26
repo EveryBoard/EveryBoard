@@ -1,5 +1,6 @@
 import { assert } from '../utils/assert';
 import { MGPMap } from '../utils/MGPMap';
+import { Utils } from '../utils/utils';
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
@@ -13,6 +14,7 @@ export class NInARowHelper<T> {
                        private readonly N: number)
     {
     }
+
     public getBoardValue(state: GameStateWithTable<T>): BoardValue {
         let score: number = 0;
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -29,10 +31,11 @@ export class NInARowHelper<T> {
         }
         return new BoardValue([score]);
     }
+
     public getSquareScore(state: GameStateWithTable<T>, coord: Coord): number {
         const piece: T = state.getPieceAt(coord);
         const ally: Player = this.getOwner(piece, state) as Player;
-        assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
+        Utils.assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
 
         const freeSpaceByDirs: MGPMap<Direction, number> = new MGPMap();
         const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
@@ -45,6 +48,7 @@ export class NInARowHelper<T> {
         const score: number = this.getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs, freeSpaceByDirs);
         return score * ally.getScoreModifier();
     }
+
     public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<Direction, number>,
                                                     freeSpaceByDirs: MGPMap<Direction, number>)
     : number
@@ -67,6 +71,7 @@ export class NInARowHelper<T> {
         }
         return score;
     }
+
     public getNumberOfFreeSpacesAndAllies(state: GameStateWithTable<T>,
                                           i: Coord,
                                           dir: Direction,
@@ -104,6 +109,7 @@ export class NInARowHelper<T> {
         }
         return [freeSpaces, allies];
     }
+
     public getVictoriousCoord(state: GameStateWithTable<T>): Coord[] {
         const coords: Coord[] = [];
         for (const coordAndContents of state.getCoordsAndContents()) {
@@ -121,4 +127,5 @@ export class NInARowHelper<T> {
         }
         return coords;
     }
+
 }

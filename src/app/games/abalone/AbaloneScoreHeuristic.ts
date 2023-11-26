@@ -13,6 +13,5 @@ export class AbaloneScoreHeuristic extends PlayerMetricHeuristic<AbaloneMove, Ab
             { key: Player.ZERO, value: [scores[0]] },
             { key: Player.ONE, value: [scores[1]] },
         ]);
-        // return node.gameState.getScores();
     }
 }

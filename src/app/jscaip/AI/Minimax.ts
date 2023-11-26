@@ -129,6 +129,7 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
         let extremumExpected: ReadonlyArray<number> = this.getExtremumExpected(node);
         const newValueIsBetter: (newValue: ReadonlyArray<number>, currentValue: ReadonlyArray<number>) => boolean =
             currentPlayer === Player.ZERO ? ArrayUtils.isInferior : ArrayUtils.isSuperior;
+        let i: number = 0;
         for (const move of possibleMoves) {
             const child: GameNode<M, S> = this.getOrCreateChild(node, move);
             const bestChildDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta);

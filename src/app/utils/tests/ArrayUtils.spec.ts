@@ -4,47 +4,136 @@ import { ArrayUtils, NumberTable, TableUtils, TableWithPossibleNegativeIndices }
 import { MGPOptional } from '../MGPOptional';
 
 describe('ArrayUtils', () => {
+
     describe('isPrefix', () => {
+
         it('should be false when the prefix is longer than the list', () => {
             const prefix: number[] = [1, 2, 3];
             const list: number[] = [1];
             expect(ArrayUtils.isPrefix(prefix, list)).toBeFalse();
         });
+
         it('should be false when we the prefix is not a prefix', () => {
             const prefix: number[] = [1, 4];
             const list: number[] = [1, 2, 3];
             expect(ArrayUtils.isPrefix(prefix, list)).toBeFalse();
         });
+
         it('should be true when we have a prefix', () => {
             const prefix: number[] = [1, 2, 3];
             const list: number[] = [1, 2, 3, 4, 5];
             expect(ArrayUtils.isPrefix(prefix, list)).toBeTrue();
         });
+
     });
+
+    describe('isSuperior && isInferior', () => {
+
+        function expectCorrectness(left: number[], right: number[], isSuperior: boolean, isInferior: boolean): void {
+            const actualIsSuperior: boolean = ArrayUtils.isSuperior(left, right);
+            const actualIsInferior: boolean = ArrayUtils.isInferior(left, right);
+
+            expect(isSuperior).withContext('isSuperior').toBe(actualIsSuperior);
+            expect(isInferior).withContext('isInferior').toBe(actualIsInferior);
+        }
+
+        it('should discover superiority on short list', () => {
+            // Given a list being superior in the early number
+            const superior: number[] = [874797];
+            // and another list being inferior in the early number
+            const inferior: number[] = [Number.MIN_SAFE_INTEGER];
+
+            // When comparing them
+            // Then isSuperior should be true and isInferior false
+            expectCorrectness(superior, inferior, true, false);
+        });
+
+        it('should discover superiority', () => {
+            // Given a list being superior in the early number
+            const superior: number[] = [3, 2, 1];
+            // and another list being inferior in the early number
+            const inferior: number[] = [2, 2, 1];
+
+            // When comparing them
+            // Then isSuperior should be true and isInferior false
+            expectCorrectness(superior, inferior, true, false);
+        });
+
+        it('should discover inferiority', () => {
+            // Given a list being inferior in the early number
+            const inferior: number[] = [2, 2, 1];
+            // and another list being superior in the early number
+            const superior: number[] = [3, 2, 1];
+
+            // When comparing them
+            // Then isSuperior should be false and isInferior true
+            expectCorrectness(inferior, superior, false, true);
+        });
+
+        it('should discover inferiority on short list', () => {
+            // Given a list being inferior in the early number
+            const inferior: number[] = [9876156];
+            // and another list being superior in the early number
+            const superior: number[] = [Number.MAX_SAFE_INTEGER];
+
+            // When comparing them
+            // Then isSuperior should be false and isInferior true
+            expectCorrectness(inferior, superior, false, true);
+        });
+
+        it('should discover equality', () => {
+            // Given two equal lists
+            const left: number[] = [3, 2, 1];
+            const right: number[] = [3, 2, 1];
+
+            // When comparing them
+            // Then isSuperior should be false and isInferior false
+            expectCorrectness(left, right, false, false);
+        });
+
+        it('should discover equality on short list', () => {
+            // Given two equal lists
+            const left: number[] = [123456789];
+            const right: number[] = [123456789];
+
+            // When comparing them
+            // Then isSuperior should be false and isInferior false
+            expectCorrectness(left, right, false, false);
+        });
+
+    });
+
 });
 
 describe('TableUtils', () => {
+
     describe('compare', () => {
+
         it('should notice different table sizes', () => {
             const shortBoard: NumberTable = [[1]];
             const longBoard: NumberTable = [[1], [2]];
             expect(TableUtils.compare(shortBoard, longBoard)).toBeFalse();
         });
+
         it('should delegate sub-list comparaison to ArrayUtils and return false if it does', () => {
             spyOn(ArrayUtils, 'compare').and.returnValue(false);
             const table: NumberTable = [[1], [2]];
             expect(TableUtils.compare(table, table)).toBeFalse();
         });
+
         it('should delegate sub-list comparaison to ArrayUtils and return true if ArrayUtils.compare always does', () => {
             spyOn(ArrayUtils, 'compare').and.returnValue(true);
             const table: NumberTable = [[1], [2]];
             expect(TableUtils.compare(table, table)).toBeTrue();
         });
+
     });
+
 });
 
 
 describe('Table2DWithPossibleNegativeIndices', () => {
+
     it('should return empty when accessing a non existing element', () => {
         // Given a table
         const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
@@ -53,6 +142,7 @@ describe('Table2DWithPossibleNegativeIndices', () => {
         // Then it should be empty
         expect(element.isAbsent()).toBeTrue();
     });
+
     it('should return the accessed element after it has been set', () => {
         // Given a table with a set element
         const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
@@ -64,6 +154,7 @@ describe('Table2DWithPossibleNegativeIndices', () => {
         expect(element.isPresent()).toBeTrue();
         expect(element.get()).toBe(somePiece);
     });
+
     it('should iterate over elements in order', () => {
         // Given a table with multiple elements
         const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
@@ -78,4 +169,5 @@ describe('Table2DWithPossibleNegativeIndices', () => {
         // Then it should have seen ys from low to high, and xs from low to high
         expect(seen).toEqual([1, 2, 3]);
     });
+
 });
