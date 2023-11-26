@@ -34,7 +34,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             return new BoardValue([victoryValue]);
         }
         if (state.turn > 39) {
-            const pieces: number[] = state.countPieces();
+            const pieces: [number, number] = state.countPieces();
             const zeroPieces: number = pieces[0];
             const onePieces: number = pieces[1];
             return BoardValue.ofSingle(zeroPieces, onePieces);

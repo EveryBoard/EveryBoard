@@ -8,7 +8,6 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { ConnectSixAlignmentMinimax } from '../ConnectSixAlignmentMinimax';
-import { ConnectSixAlignmentHeuristic } from '../ConnectSixAlignmentHeuristic';
 
 describe('ConnectSixAlignmentMinimax', () => {
 
@@ -86,7 +85,7 @@ describe('ConnectSixAlignmentMinimax', () => {
         // When asking what is the best move
         const bestMove: ConnectSixMove = minimax.chooseNextMove(node, level2);
 
-        // Then the minimax level two should block               17             0  16
+        // Then the minimax level two should block
         expect(bestMove).toEqual(ConnectSixDrops.of(new Coord(1, 18), new Coord(7, 18)));
     });
 

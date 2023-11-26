@@ -154,7 +154,7 @@ describe('SixHeuristic', () => {
         ], 40);
         const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
         const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        expect(heuristic.getBoardValue(node).value[0]).toBe(2);
+        expect(heuristic.getBoardValue(node).value[0]).toBe(2 * Player.ZERO.getScoreModifier());
     });
 
 });
