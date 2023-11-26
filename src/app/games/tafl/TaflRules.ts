@@ -5,33 +5,27 @@ import { TaflMove } from './TaflMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
 import { TaflConfig } from './TaflConfig';
-import { Type } from '@angular/core';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
+export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState> {}
 
-export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S> {
+export abstract class TaflRules<M extends TaflMove> extends Rules<M, TaflState> {
 
-    public static VERBOSE: boolean = false;
-
-    protected constructor(stateType: Type<S>,
-                          public readonly config: TaflConfig,
+    protected constructor(public readonly config: TaflConfig,
                           public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(stateType);
+        super();
     }
-    public isLegal(move: TaflMove, state: S): MGPValidation {
-        display(TaflRules.VERBOSE, { tablutRules_isLegal: { move, state } });
-
+    public isLegal(move: TaflMove, state: TaflState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
         if (validity.isFailure()) {
@@ -39,13 +33,13 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPValidation.SUCCESS;
     }
-    private getMoveValidity(player: Player, move: TaflMove, state: S): MGPValidation {
+    private getMoveValidity(player: Player, move: TaflMove, state: TaflState): MGPValidation {
         const owner: RelativePlayer = state.getRelativeOwner(player, move.getStart());
         if (owner === RelativePlayer.NONE) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (owner === RelativePlayer.OPPONENT) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const landingCoordOwner: RelativePlayer = state.getRelativeOwner(player, move.getEnd());
         if (landingCoordOwner !== RelativePlayer.NONE) {
@@ -71,7 +65,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPValidation.SUCCESS;
     }
-    public isThrone(state: S, coord: Coord): boolean {
+    public isThrone(state: TaflState, coord: Coord): boolean {
         if (this.isExternalThrone(coord)) {
             return true;
         } else {
@@ -87,7 +81,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return false;
     }
-    public tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, state: S): MGPOptional<Coord> {
+    public tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, state: TaflState): MGPOptional<Coord> {
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
          * return the captured coord, or null if no capture possible
@@ -97,7 +91,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
          * 4: the threatened square is a pawn          -> delegate calculation
          */
         const threatened: Coord = landingPawn.getNext(d);
-        if (!threatened.isInRange(this.config.WIDTH, this.config.WIDTH)) {
+        if (threatened.isNotInRange(this.config.WIDTH, this.config.WIDTH)) {
             return MGPOptional.empty(); // 1: the threatened square dont exist, no capture
         }
         const threatenedPawnOwner: RelativePlayer = state.getRelativeOwner(player, threatened);
@@ -109,7 +103,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return this.capturePawn(player, landingPawn, d, state);
     }
-    private captureKing(player: Player, landingPiece: Coord, d: Orthogonal, state: S): MGPOptional<Coord> {
+    private captureKing(player: Player, landingPiece: Coord, d: Orthogonal, state: TaflState): MGPOptional<Coord> {
         const kingCoord: Coord = landingPiece.getNext(d);
 
         const {
@@ -129,7 +123,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
-    public getSurroundings(c: Coord, d: Orthogonal, player: Player, state: S)
+    public getSurroundings(c: Coord, d: Orthogonal, player: Player, state: TaflState)
     : { backCoord: Coord, back: RelativePlayer, backInRange: boolean,
         leftCoord: Coord, left: RelativePlayer,
         rightCoord: Coord, right: RelativePlayer }
@@ -163,12 +157,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                                       kingCoord: Coord)
     : MGPOptional<Coord>
     {
-        const LOCAL_VERBOSE: boolean = false;
         let nbInvaders: number = (left === RelativePlayer.PLAYER ? 1 : 0);
         nbInvaders += (right === RelativePlayer.PLAYER ? 1 : 0);
         if (nbInvaders === 2 && this.config.BORDER_CAN_SURROUND_KING) { // 2
             // king captured by 3 invaders against 1 border
-            display(TaflRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 3 invaders against 1 border');
             return MGPOptional.of(kingCoord);
         }
         // those were the only two way to capture against the border
@@ -194,7 +186,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
-    private capturePawn(player: Player, coord: Coord, direction: Orthogonal, state: S): MGPOptional<Coord> {
+    private capturePawn(player: Player, coord: Coord, direction: Orthogonal, state: TaflState): MGPOptional<Coord> {
         /**
          * the captured pawn is on the next coord after 'coord' (in direction 'direction')
          * coord partipate in the capture
@@ -203,8 +195,6 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
          * - 2 opponents
          * - 1 opponents 1 empty-throne
          */
-        const LOCAL_VERBOSE: boolean = false;
-
         const threatenedPieceCoord: Coord = coord.getNext(direction);
 
         const backCoord: Coord = threatenedPieceCoord.getNext(direction);
@@ -215,32 +205,32 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         if (back === RelativePlayer.NONE) {
             if (this.isThrone(state, backCoord) === false) {
-                display(TaflRules.VERBOSE || LOCAL_VERBOSE,
-                        'cannot capture a pawn without an ally; ' +
-                        threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
-                        ' coming from this direction (' + direction.x + ', ' + direction.y + ')' +
-                        'cannot capture a pawn without an ally behind');
+                Debug.display('TaflRules', 'capturePawn',
+                              'cannot capture a pawn without an ally; ' +
+                              threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
+                              ' coming from this direction (' + direction.x + ', ' + direction.y + ')' +
+                              'cannot capture a pawn without an ally behind');
                 return MGPOptional.empty();
             } // here, back is an empty throne
-            display(TaflRules.VERBOSE || LOCAL_VERBOSE,
-                    'pawn captured by 1 opponent and 1 throne; ' +
-                    threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
-                    ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
+            Debug.display('TaflRules', 'capturePawn',
+                          'pawn captured by 1 opponent and 1 throne; ' +
+                          threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
+                          ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by 1 opponent and 1 throne
         }
         if (back === RelativePlayer.PLAYER) {
-            display(TaflRules.VERBOSE || LOCAL_VERBOSE,
-                    'pawn captured by 2 opponents; ' + threatenedPieceCoord +
-                    'threatened by ' + player + `'s pawn in ` + coord +
-                    ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
+            Debug.display('TaflRules', 'capturePawn',
+                          'pawn captured by 2 opponents; ' + threatenedPieceCoord +
+                          'threatened by ' + player + `'s pawn in ` + coord +
+                          ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by two opponents
         }
-        display(TaflRules.VERBOSE || LOCAL_VERBOSE,
-                'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
-                ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
+        Debug.display('TaflRules', 'capturePawn',
+                      'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
+                      ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
         return MGPOptional.empty();
     }
-    private captureKingWithAtLeastASandwich(state: S,
+    private captureKingWithAtLeastASandwich(state: TaflState,
                                             kingCoord: Coord,
                                             left: RelativePlayer,
                                             leftCoord: Coord,
@@ -248,7 +238,6 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                                             rightCoord: Coord)
     : MGPOptional<Coord>
     {
-        const LOCAL_VERBOSE: boolean = false;
         if (this.kingTouchCentralThrone(state, kingCoord) === false &&
             this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED)
         {
@@ -260,17 +249,15 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         const rightIsThrone: boolean = this.isThrone(state, rightCoord);
         const rightCanSurround: boolean = right === RelativePlayer.PLAYER || (rightIsThrone && throneCanSurrond);
         if (leftCanSurround && rightCanSurround) {
-            display(TaflRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 4 invaders');
             return MGPOptional.of(kingCoord); // king captured by 4 invaders
         }
         return MGPOptional.empty();
     }
-    private kingTouchCentralThrone(state: S, kingCoord: Coord): boolean {
+    private kingTouchCentralThrone(state: TaflState, kingCoord: Coord): boolean {
         const centralThrone: Coord = state.getCentralThrone();
         return kingCoord.getOrthogonalDistance(centralThrone) <= 1;
     }
-    public applyLegalMove(move: TaflMove, state: S, _info: void): S {
-        display(TaflRules.VERBOSE, { TablutRules_applyLegalMove: { move, state } });
+    public applyLegalMove(move: TaflMove, state: TaflState, _info: void): TaflState {
         const turn: number = state.turn;
 
         const board: TaflPawn[][] = state.getCopiedBoard();
@@ -287,8 +274,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return state.of(board, turn + 1);
     }
-    public getGameStatus(node: TaflNode): GameStatus {
-        const state: S = node.gameState as S;
+    public getGameStatus(node: TaflNode<M>): GameStatus {
+        const state: TaflState = node.gameState;
 
         const winner: MGPOptional<Player> = this.getWinner(state);
         if (winner.isPresent()) {
@@ -296,34 +283,31 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return GameStatus.ONGOING;
     }
-    public getWinner(state: S): MGPOptional<Player> {
-        const LOCAL_VERBOSE: boolean = false;
+    public getWinner(state: TaflState): MGPOptional<Player> {
         const optionalKingCoord: MGPOptional<Coord> = this.getKingCoord(state);
         if (optionalKingCoord.isAbsent()) {
-            display(LOCAL_VERBOSE, 'The king is dead, victory to invader');
+            Debug.display('TaflRules', 'getWinner', 'The king is dead, victory to invader');
             // the king is dead, long live the king
             return MGPOptional.of(this.getInvader());
         }
         const kingCoord: Coord = optionalKingCoord.get();
         if (this.isExternalThrone(kingCoord)) {
-            display(LOCAL_VERBOSE, 'The king escape, victory to defender');
+            Debug.display('TaflRules', 'getWinner', 'The king escape, victory to defender');
             // king reached one corner!
             return MGPOptional.of(this.getDefender());
         }
         if (this.isPlayerImmobilized(Player.ZERO, state)) {
-            display(LOCAL_VERBOSE, 'Zero has no move, victory to one');
+            Debug.display('TaflRules', 'getWinner', 'Zero has no move, victory to one');
             return MGPOptional.of(Player.ONE);
         }
         if (this.isPlayerImmobilized(Player.ONE, state)) {
-            display(LOCAL_VERBOSE, 'One has no move, victory to zero');
+            Debug.display('TaflRules', 'getWinner', 'One has no move, victory to zero');
             return MGPOptional.of(Player.ZERO);
         }
-        display(LOCAL_VERBOSE, 'no victory');
+        Debug.display('TaflRules', 'getWinner', 'no victory');
         return MGPOptional.empty();
     }
-    public getKingCoord(state: S): MGPOptional<Coord> {
-        display(TaflRules.VERBOSE, { TablutRules_getKingCoord: { state, con: this.config } });
-
+    public getKingCoord(state: TaflState): MGPOptional<Coord> {
         for (let y: number = 0; y < this.config.WIDTH; y++) {
             for (let x: number = 0; x < this.config.WIDTH; x++) {
                 if (state.getPieceAtXY(x, y).isKing()) {
@@ -339,14 +323,12 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     public getDefender(): Player {
         return this.config.INVADER.getOpponent();
     }
-    public isPlayerImmobilized(player: Player, state: S): boolean {
+    public isPlayerImmobilized(player: Player, state: TaflState): boolean {
         return this.getPlayerListMoves(player, state).length === 0;
     }
-    public getPlayerListMoves(player: Player, state: S): M[] {
-        const LOCAL_VERBOSE: boolean = false;
+    public getPlayerListMoves(player: Player, state: TaflState): M[] {
         const listMoves: M[] = [];
         const listPawns: Coord[] = this.getPlayerListPawns(player, state);
-        display(TaflRules.VERBOSE || LOCAL_VERBOSE, { TablutRules_getPlayerListMoves: { player, state } });
 
         for (const pawn of listPawns) {
             const pawnDestinations: Coord[] = this.getPossibleDestinations(pawn, state);
@@ -357,7 +339,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return listMoves;
     }
-    public getPlayerListPawns(player: Player, state: S): Coord[] {
+    public getPlayerListPawns(player: Player, state: TaflState): Coord[] {
         const listPawn: Coord[] = [];
         for (let y: number = 0; y < this.config.WIDTH; y++) {
             for (let x: number = 0; x < this.config.WIDTH; x++) {
@@ -371,7 +353,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return listPawn;
     }
-    public getPossibleDestinations(start: Coord, state: S): Coord[] {
+    public getPossibleDestinations(start: Coord, state: TaflState): Coord[] {
         // search the possible destinations for the pawn at "start"
         const destinations: Coord[] = [];
         let foundDestination: Coord;

@@ -4,28 +4,22 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
-import { QuixoMinimax } from '../QuixoMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 
 describe('QuixoRules', () => {
 
     let rules: QuixoRules;
-    let minimaxes: Minimax<QuixoMove, QuixoState>[];
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = QuixoRules.get();
-        minimaxes = [
-            new QuixoMinimax(rules, 'QuixoMinimax'),
-        ];
     });
     it('should forbid player to start a move with opponents piece', () => {
         const board: Table<PlayerOrNone> = [
@@ -37,7 +31,7 @@ describe('QuixoRules', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
-        const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should always put moved piece to currentPlayer symbol', () => {
@@ -80,7 +74,7 @@ describe('QuixoRules', () => {
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should declare winner player one when he create a line of his symbol', () => {
         const board: Table<PlayerOrNone> = [
@@ -102,7 +96,7 @@ describe('QuixoRules', () => {
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should declare loser player zero who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
         const board: Table<PlayerOrNone> = [
@@ -124,7 +118,7 @@ describe('QuixoRules', () => {
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should declare loser player one who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
         const board: Table<PlayerOrNone> = [
@@ -146,7 +140,7 @@ describe('QuixoRules', () => {
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     describe('getVictoriousCoords', () => {
         it('should return victorious column', () => {

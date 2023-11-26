@@ -8,9 +8,9 @@ import { Vector } from './Vector';
 
 export abstract class BaseDirection extends Vector {
 
-    public override readonly x: 0|1|-1;
+    public declare readonly x: 0|1|-1;
 
-    public override readonly y: 0|1|-1;
+    public declare readonly y: 0|1|-1;
 
     public isDown(): boolean {
         return this.y === 1;
@@ -147,9 +147,6 @@ export class Direction extends BaseDirection {
     );
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);
-    }
-    public isDiagonal(): boolean {
-        return (this.x !== 0) && (this.y !== 0);
     }
     public getOpposite(): Direction {
         const opposite: MGPFallible<Direction> = Direction.factory.from(-this.x, -this.y);

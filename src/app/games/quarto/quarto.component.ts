@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
 import { QuartoState } from './QuartoState';
 import { QuartoRules } from './QuartoRules';
-import { QuartoMinimax } from './QuartoMinimax';
 import { QuartoPiece } from './QuartoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -11,6 +10,10 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoTutorial } from './QuartoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { QuartoHeuristic } from './QuartoHeuristic';
+import { QuartoMoveGenerator } from './QuartoMoveGenerator';
 
 @Component({
     selector: 'app-quarto',
@@ -38,17 +41,17 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.rules = QuartoRules.get();
         this.node = this.rules.getInitialNode();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new QuartoMinimax(this.rules, 'QuartoMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new QuartoHeuristic(), new QuartoMoveGenerator()),
+            new MCTS($localize`MCTS`, new QuartoMoveGenerator(), this.rules),
         ];
         this.encoder = QuartoMove.encoder;
         this.tutorial = new QuartoTutorial().tutorial;
         this.pieceInHand = this.getState().pieceInHand;
-        this.updateBoard();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
-        const move: MGPOptional<QuartoMove> = this.node.move;
+        const move: MGPOptional<QuartoMove> = this.node.previousMove;
         this.board = state.getCopiedBoard();
         this.chosen = MGPOptional.empty();
         this.pieceInHand = state.pieceInHand;
@@ -57,7 +60,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
-        const clickValidity: MGPValidation = this.canUserPlay('#chooseCoord_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#chooseCoord_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -85,7 +88,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#choosePiece_' + givenPiece);
+        const clickValidity: MGPValidation = await this.canUserPlay('#choosePiece_' + givenPiece);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -106,7 +109,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             return this.chooseMove(chosenMove);
         }
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
     public override cancelMoveAttempt(): void {
@@ -114,11 +117,11 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.pieceToGive = MGPOptional.empty();
         this.chosen = MGPOptional.empty();
     }
-    public deselectDroppedPiece(): MGPValidation {
+    public async deselectDroppedPiece(): Promise<MGPValidation> {
         // So it does not throw when there is no dese chosen piece (used in clickValidity test)
         const chosen: Coord = this.chosen.getOrElse(new Coord(404, 404));
         const droppedPieceName: string = '#droppedPiece_' + chosen.x + '_' + chosen.y;
-        const clickValidity: MGPValidation = this.canUserPlay(droppedPieceName);
+        const clickValidity: MGPValidation = await this.canUserPlay(droppedPieceName);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

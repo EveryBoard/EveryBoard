@@ -3,15 +3,16 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
+import { TrexoRules } from '../TrexoRules';
 
 describe('TrexoState', () => {
     it('should refuse creating a board of which width is not 10', () => {
         const error: string = 'Invalid board dimensions';
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a 11x10 board
-        const board: TrexoPieceStack[][] = ArrayUtils.createTable(11, 10, TrexoPieceStack.EMPTY);
+        const board: TrexoPieceStack[][] = TableUtils.create(11, 10, TrexoPieceStack.EMPTY);
 
         // When passing it as an argument
         // Then it should fail
@@ -22,7 +23,7 @@ describe('TrexoState', () => {
         const error: string = 'Invalid board dimensions';
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a 10x11 board
-        const board: TrexoPieceStack[][] = ArrayUtils.createTable(10, 11, TrexoPieceStack.EMPTY);
+        const board: TrexoPieceStack[][] = TableUtils.create(10, 11, TrexoPieceStack.EMPTY);
 
         // When passing it as an argument
         // Then it should fail
@@ -31,7 +32,7 @@ describe('TrexoState', () => {
     });
     it('should drop piece at the lowest level possible', () => {
         // Given an empty board
-        const state: TrexoState = TrexoState.getInitialState();
+        const state: TrexoState = TrexoRules.get().getInitialState();
 
         // When trying to add piece
         const owner: Player = Player.ZERO;

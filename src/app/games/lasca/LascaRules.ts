@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -11,8 +11,9 @@ import { LascaMove } from './LascaMove';
 import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table } from 'src/app/utils/ArrayUtils';
 
-export class LascaNode extends MGPNode<Rules<LascaMove, LascaState>, LascaMove, LascaState> {}
+export class LascaNode extends GameNode<LascaMove, LascaState> {}
 
 export class LascaRules extends Rules<LascaMove, LascaState> {
 
@@ -24,9 +25,23 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return LascaRules.singleton.get();
     }
-    private constructor() {
-        super(LascaState);
+
+    public getInitialState(): LascaState {
+        const O: LascaStack = new LascaStack([LascaPiece.ZERO]);
+        const X: LascaStack = new LascaStack([LascaPiece.ONE]);
+        const _: LascaStack = LascaStack.EMPTY;
+        const board: Table<LascaStack> = [
+            [X, _, X, _, X, _, X],
+            [_, X, _, X, _, X, _],
+            [X, _, X, _, X, _, X],
+            [_, _, _, _, _, _, _],
+            [O, _, O, _, O, _, O],
+            [_, O, _, O, _, O, _],
+            [O, _, O, _, O, _, O],
+        ];
+        return new LascaState(board, 0);
     }
+
     public getCaptures(state: LascaState): LascaMove[] {
         const player: Player = state.getCurrentPlayer();
         return this.getCapturesOf(state, player);
@@ -136,7 +151,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         const movedStack: LascaStack = state.getPieceAt(moveStart);
         const opponent: Player = state.getCurrentOpponent();
         if (movedStack.isCommandedBy(opponent)) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const secondCoord: Coord = move.coords.get(1);
         if (movedStack.getCommander().isOfficer === false) {

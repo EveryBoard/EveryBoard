@@ -3,17 +3,17 @@ import { Rules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
-import { Utils } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { GameNode } from 'src/app/jscaip/GameNode';
+import { AI, AIOptions } from 'src/app/jscaip/AI';
+import { Coord } from 'src/app/jscaip/Coord';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -47,11 +47,11 @@ export abstract class BaseGameComponent {
     template: '',
     styleUrls: ['./game-component.scss'],
 })
-export abstract class GameComponent<R extends Rules<M, S, L, B>,
+@Debug.log
+export abstract class GameComponent<R extends Rules<M, S, L>,
                                     M extends Move,
                                     S extends GameState,
-                                    L = void,
-                                    B extends BoardValue = BoardValue>
+                                    L = void>
     extends BaseGameComponent
 {
     public encoder: Encoder<M>;
@@ -66,9 +66,9 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public rules: R;
 
-    public node: MGPNode<R, M, S, L, B>;
+    public node: GameNode<M, S>;
 
-    public availableMinimaxes: Minimax<M, S, L>[];
+    public availableAIs: AI<M, S, AIOptions>[];
 
     public canPass: boolean = false;
 
@@ -87,27 +87,40 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
 
     public chooseMove: (move: M) => Promise<MGPValidation>;
 
-    public canUserPlay: (element: string) => MGPValidation;
+    public canUserPlay: (element: string) => Promise<MGPValidation>;
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 
-    public role: PlayerOrNone;
+    // This is where the player is seeing the board from.
+    private pointOfView: Player = Player.ZERO;
 
-    /* all game rules should be able to call the game-wrapper
-     * the aim is that the game-wrapper will take care of manage what follow
-     * ie: - if it's online, he'll tell the game-component when the remote opponent has played
-     *     - if it's offline, he'll tell the game-component what the bot have done
-     */
+    // This is true when the view is interactive, e.g., to display clickable pieces
+    protected isInteractive: boolean = false;
 
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
     }
+    public getPointOfView(): Player {
+        return this.pointOfView;
+    }
+    public setPointOfView(pointOfView: Player): void {
+        this.pointOfView = pointOfView;
+        if (this.hasAsymmetricBoard) {
+            this.rotation = 'rotate(' + (pointOfView.value * 180) + ')';
+        }
+    }
+    public setInteractive(interactive: boolean): void {
+        this.isInteractive = interactive;
+    }
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
+        if (this.node.previousMove.isPresent()) {
+            await this.showLastMove(this.node.previousMove.get());
+        }
         if (reason == null) {
             return MGPValidation.SUCCESS;
         } else {
@@ -118,7 +131,7 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public cancelMoveAttempt(): void {
         // Override if need be
     }
-    public abstract updateBoard(): void;
+    public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {
         const gameName: string = this.constructor.name;
@@ -131,14 +144,34 @@ export abstract class GameComponent<R extends Rules<M, S, L, B>,
     public getCurrentPlayer(): Player {
         return this.node.gameState.getCurrentPlayer();
     }
+    public getCurrentOpponent(): Player {
+        return this.node.gameState.getCurrentOpponent();
+    }
     public getState(): S {
         return this.node.gameState;
     }
     public getPreviousState(): S {
-        return this.node.mother.get().gameState;
+        return this.node.parent.get().gameState;
     }
-    public showLastMove(move: M): void {
+    public async showLastMove(move: M): Promise<void> {
         // Not needed by default
+        return;
+    }
+    public hideLastMove(): void {
+        // Not needed by default
+        return;
+    }
+
+    /**
+     * Gives the translation transform for coordinate x, y, based on SPACE_SIZE
+     */
+    public getTranslation(coord: Coord): string {
+        return this.getTranslationXY(coord.x, coord.y);
+    }
+    public getTranslationXY(coordX: number, coordY: number): string {
+        const svgX: number = coordX * this.SPACE_SIZE;
+        const svgY: number = coordY * this.SPACE_SIZE;
+        return `translate(${svgX} ${svgY})`;
     }
 }
 

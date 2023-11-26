@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -10,8 +10,9 @@ import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
-export class PentagoNode extends MGPNode<PentagoRules, PentagoMove, PentagoState> {}
+export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 
 export class PentagoRules extends Rules<PentagoMove, PentagoState> {
 
@@ -23,9 +24,14 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return PentagoRules.singleton.get();
     }
-    private constructor() {
-        super(PentagoState);
+
+    public getInitialState(): PentagoState {
+        const initialBoard: Table<PlayerOrNone> = TableUtils.create(PentagoState.SIZE,
+                                                                    PentagoState.SIZE,
+                                                                    PlayerOrNone.NONE);
+        return new PentagoState(initialBoard, 0);
     }
+
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
         // [ firstCoordToTest, directionToTest, shouldLookTheSpaceBeforeAsWellAsSpaceAfter]
         [new Coord(1, 0), new Vector(1, 1), false], // 4 short diagonals
@@ -123,7 +129,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         if (victoryFound[1] === true) {
             return GameStatus.ONE_WON;
         }
-        if (state.turn === 36) {
+        if (state.turn === PentagoState.SIZE * PentagoState.SIZE) {
             return GameStatus.DRAW;
         } else {
             return GameStatus.ONGOING;

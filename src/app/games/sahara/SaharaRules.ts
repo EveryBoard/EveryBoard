@@ -1,12 +1,12 @@
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
@@ -16,11 +16,10 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
-export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaState> {}
+export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
+@Debug.log
 export class SaharaRules extends Rules<SaharaMove, SaharaState> {
-
-    public static VERBOSE: boolean = false;
 
     private static singleton: MGPOptional<SaharaRules> = MGPOptional.empty();
 
@@ -30,9 +29,23 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return SaharaRules.singleton.get();
     }
-    private constructor() {
-        super(SaharaState);
+
+    public getInitialState(): SaharaState {
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const board: FourStatePiece[][] = [
+            [N, N, O, X, _, _, _, O, X, N, N],
+            [N, _, _, _, _, _, _, _, _, _, N],
+            [X, _, _, _, _, _, _, _, _, _, O],
+            [O, _, _, _, _, _, _, _, _, _, X],
+            [N, _, _, _, _, _, _, _, _, _, N],
+            [N, N, X, O, _, _, _, X, O, N, N],
+        ];
+        return new SaharaState(board, 0);
     }
+
     public static getStartingCoords(board: Table<FourStatePiece>, player: Player): Coord[] {
         const startingCoords: Coord[] = [];
         for (let y: number = 0; y < SaharaState.HEIGHT; y++) {
@@ -58,7 +71,6 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return playerFreedoms.sort((a: number, b: number) => a - b);
     }
     public applyLegalMove(move: SaharaMove, state: SaharaState, _info: void): SaharaState {
-        display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
         const board: FourStatePiece[][] = state.getCopiedBoard();
         board[move.getEnd().y][move.getEnd().x] = board[move.getStart().y][move.getStart().x];
         board[move.getStart().y][move.getStart().x] = FourStatePiece.EMPTY;
@@ -68,7 +80,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     public isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
         const movedPawn: FourStatePiece = state.getPieceAt(move.getStart());
         if (movedPawn.value !== state.getCurrentPlayer().value) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const landingSpace: FourStatePiece = state.getPieceAt(move.getEnd());
         if (landingSpace !== FourStatePiece.EMPTY) {
@@ -94,7 +106,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     }
     public getLandingCoords(board: Table<FourStatePiece>, coord: Coord): Coord[] {
         const isOnBoardAndEmpty: (coord: Coord) => boolean = (coord: Coord) => {
-            return coord.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT) &&
+            return SaharaState.isOnBoard(coord) &&
                    board[coord.y][coord.x] === FourStatePiece.EMPTY;
         };
         const landings: MGPSet<Coord> =

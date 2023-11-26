@@ -10,7 +10,9 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
-import { ConnectSixMinimax } from './ConnectSixMinimax';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
+import { ConnectSixAlignmentMinimax } from './ConnectSixAlignmentMinimax';
 
 @Component({
     selector: 'app-connect-six',
@@ -32,19 +34,20 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         super(messageDisplayer);
         this.rules = ConnectSixRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new ConnectSixMinimax(this.rules, 'Minimax'),
+        this.availableAIs = [
+            new ConnectSixAlignmentMinimax(),
+            new MCTS($localize`MCTS`, new ConnectSixMoveGenerator(), this.rules),
         ];
         this.encoder = ConnectSixMove.encoder;
         this.tutorial = new ConnectSixTutorial().tutorial;
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
         this.createHoshis();
     }
-    public override showLastMove(move: ConnectSixMove): void {
+    public override async showLastMove(move: ConnectSixMove): Promise<void> {
         if (move instanceof ConnectSixFirstMove) {
             this.lastMoved = [move.coord];
         } else {
@@ -52,7 +55,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

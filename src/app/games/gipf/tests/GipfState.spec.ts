@@ -4,6 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { GipfState } from '../GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { GipfRules } from '../GipfRules';
 
 describe('GipfState', () => {
 
@@ -12,7 +13,7 @@ describe('GipfState', () => {
     const B: FourStatePiece = FourStatePiece.ONE;
 
     describe('initial state', () => {
-        const state: GipfState = GipfState.getInitialState();
+        const state: GipfState = GipfRules.get().getInitialState();
 
         it('should have 12 pieces to place for each player', () => {
             expect(state.getNumberOfPiecesToPlace(Player.ZERO)).toBe(12);

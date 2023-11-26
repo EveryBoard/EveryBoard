@@ -87,11 +87,11 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
 
             // When clicking on one
             // Then the move should be illegal
-            await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should cancel move when clicking on a supporting piece', fakeAsync(async() => {
             // Given a board where there is supporting piece
@@ -113,15 +113,15 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
 
             // When clicking on the supporting piece
-            // Then the move should be cancelled
+            // Then the move should be canceled
             await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }));
         it('should select coord when clicking on it', fakeAsync(async() => {
             // Given a board on which there is pieces
-            testUtils.setupState(climbableState);
+            await testUtils.setupState(climbableState);
 
             // When clicking on a space
             await testUtils.expectClickSuccess('#piece_0_0_0');
@@ -151,7 +151,7 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#piece_0_0_1');
 
             // When choosing a piece that support selected piece
@@ -161,7 +161,7 @@ describe('PylosComponent', () => {
         }));
         it('should cancel piece selection when clicking on it again', fakeAsync(async() => {
             // Given a board on which a piece is selected
-            testUtils.setupState(climbableState);
+            await testUtils.setupState(climbableState);
             await testUtils.expectClickSuccess('#piece_0_0_0');
 
             // When clicking on it again
@@ -192,7 +192,7 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
 
             // When the climb is done, and the capture is awaited
             await testUtils.expectClickSuccess('#piece_3_3_0');
@@ -225,7 +225,7 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
 
             // When selecting the piece and making it climg on itsef
             await testUtils.expectClickSuccess('#piece_2_2_0');
@@ -235,7 +235,7 @@ describe('PylosComponent', () => {
         }));
         it('should allow climbing', fakeAsync(async() => {
             // Given an board where climbing is possible
-            testUtils.setupState(climbableState);
+            await testUtils.setupState(climbableState);
 
             // When clicking the first piece then its landing place
             await testUtils.expectClickSuccess('#piece_3_3_0');
@@ -264,7 +264,7 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             testUtils.expectElementToExist('#drop_3_3_0');
 
             // When selecting the climbing piece
@@ -279,7 +279,7 @@ describe('PylosComponent', () => {
         it('should display a disabled capture-validation button when capture start to be possible', fakeAsync(async() => {
             // Given a board where a capture is about to be possible
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
 
             // When doing the drop just before the capture
             await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
@@ -291,7 +291,7 @@ describe('PylosComponent', () => {
         it('should show capturable piece when capture start to be possible', fakeAsync(async() => {
             // Given a board where a capture is about to be possible
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
 
             // When doing the drop just before the capture
             await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
@@ -305,7 +305,7 @@ describe('PylosComponent', () => {
         it('should nor cancelMove nor chooseMove when clicking on disabled capture-validation button', fakeAsync(async() => {
             // Given a board where a capture has started
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
 
             // When doing clicking on the capture-validation button
@@ -315,7 +315,7 @@ describe('PylosComponent', () => {
         it('should highlight selected first capture when clicking on it', fakeAsync(async() => {
             // Given a board on which a capture can be done
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
 
             // When clicking on the first captured piece
@@ -328,7 +328,7 @@ describe('PylosComponent', () => {
         it('should highlight selected second capture when clicking on it', fakeAsync(async() => {
             // Given a board on which a capture has started
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
             await testUtils.expectClickSuccess('#piece_0_1_0'); // first capture
 
@@ -343,7 +343,7 @@ describe('PylosComponent', () => {
         it('should enable capture-validation button when one captured piece has been selected', fakeAsync(async() => {
             // Given a board on which a capture can be done
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
 
             // When clicking on the first captured piece
@@ -355,7 +355,7 @@ describe('PylosComponent', () => {
         it('should deselect pre-captured (first) piece when clicking on it again', fakeAsync(async() => {
             // Given a board where capture has started
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
             await testUtils.expectClickSuccess('#piece_0_0_0'); // capture
 
@@ -369,7 +369,7 @@ describe('PylosComponent', () => {
         it('should deselect pre-captured (second) piece when clicking on it again', fakeAsync(async() => {
             // Given a board where capture has started (with two capture)
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0'); // drop
             await testUtils.expectClickSuccess('#piece_0_0_0'); // first capture
             await testUtils.expectClickSuccess('#piece_0_1_0'); // first capture
@@ -384,7 +384,7 @@ describe('PylosComponent', () => {
         it('should allow to capture two pieces, and show capture during move and after', fakeAsync(async() => {
             // Given a board where two captures has been selected
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0');
             await testUtils.expectClickSuccess('#piece_0_0_0');
             await testUtils.expectClickSuccess('#piece_0_1_0');
@@ -401,7 +401,7 @@ describe('PylosComponent', () => {
         it('should allow to capture first piece', fakeAsync(async() => {
             // Given a board where one capture has been selected
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0');
             await testUtils.expectClickSuccess('#piece_0_0_0'); // selecting first
 
@@ -416,7 +416,7 @@ describe('PylosComponent', () => {
         it('should allow to capture second piece', fakeAsync(async() => {
             // Given a board where two captures has been selected then the first deselected
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0');
             await testUtils.expectClickSuccess('#piece_0_0_0'); // selecting first
             await testUtils.expectClickSuccess('#piece_0_1_0'); // selecting second
@@ -434,7 +434,7 @@ describe('PylosComponent', () => {
         it('should fail when clicking on a third capturable piece', fakeAsync(async() => {
             // Given a board on which two captured piece has been selected but the capture not finalised
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#drop_1_1_0');
             await testUtils.expectClickSuccess('#piece_0_0_0');
             await testUtils.expectClickSuccess('#piece_0_1_0');
@@ -463,7 +463,7 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
 
             // When dropping a piece then clicking on two pieces to capture
             await testUtils.expectClickSuccess('#drop_2_2_0');
@@ -496,7 +496,7 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#piece_3_3_0');
             await testUtils.expectClickSuccess('#drop_1_1_1');
 
@@ -525,7 +525,7 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
             await testUtils.expectClickSuccess('#piece_3_3_0');
             await testUtils.expectClickSuccess('#drop_1_1_1');
             await testUtils.expectClickSuccess('#piece_0_0_1');
@@ -557,7 +557,7 @@ describe('PylosComponent', () => {
                 ],
             ];
             const initialState: PylosState = new PylosState(initialBoard, 0);
-            testUtils.setupState(initialState);
+            await testUtils.setupState(initialState);
 
             // When passing in capture phase
             await testUtils.expectClickSuccess('#drop_1_1_1');

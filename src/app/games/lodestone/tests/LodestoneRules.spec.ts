@@ -1,17 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { LodestoneDummyMinimax } from '../LodestoneDummyMinimax';
 import { LodestoneFailure } from '../LodestoneFailure';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
-import { LodestoneInfos, LodestoneNode, LodestoneRules } from '../LodestoneRules';
+import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
 describe('LodestoneRules', () => {
@@ -30,18 +28,14 @@ describe('LodestoneRules', () => {
     const noLodestones: LodestonePositions = new MGPMap();
 
     let rules: LodestoneRules;
-    let minimaxes: Minimax<LodestoneMove, LodestoneState, LodestoneInfos>[];
 
     beforeEach(() => {
         rules = LodestoneRules.get();
-        minimaxes = [
-            new LodestoneDummyMinimax(rules, 'LodestoneDummyMinimax'),
-        ];
     });
 
     it('should allow placing a lodestone on an empty square', () => {
         // Given any state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone on an empty square
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
                                                       'pull',
@@ -52,7 +46,7 @@ describe('LodestoneRules', () => {
     });
     it('should forbid placing a lodestone on a square occupied by a piece', () => {
         // Given any state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone on an occupied square
         const move: LodestoneMove = new LodestoneMove(new Coord(2, 2), 'pull', 'orthogonal');
         // Then the move should be illegal
@@ -165,7 +159,7 @@ describe('LodestoneRules', () => {
     });
     it('should allow choosing freely the side of the lodestone when it is in the hands', () => {
         // Given the initial state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone in 'pull' or 'push' direction
         const pull: LodestoneMove = new LodestoneMove(new Coord(4, 4),
                                                       'pull',
@@ -229,7 +223,7 @@ describe('LodestoneRules', () => {
     });
     it('should pull the player pieces when making a pull move, capturing opponent pieces on the way', () => {
         // Given any state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone in a position to pull our own pieces
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
                                                       'pull',
@@ -300,7 +294,7 @@ describe('LodestoneRules', () => {
     });
     it('should forbid placing more pieces than there have been captures', () => {
         // Given any state
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone to pull, such that we try to place more captures than what we actually captured
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 4),
                                                       'pull',
@@ -928,10 +922,10 @@ describe('LodestoneRules', () => {
     });
     it('should not consider victory if there are pieces left', () => {
         // Given a state with pieces of both players
-        const state: LodestoneState = LodestoneState.getInitialState();
+        const state: LodestoneState = LodestoneRules.get().getInitialState();
         const node: LodestoneNode = new LodestoneNode(state);
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('should consider player victory when they have no more piece', () => {
         for (const player of Player.PLAYERS) {
@@ -951,7 +945,7 @@ describe('LodestoneRules', () => {
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
             const node: LodestoneNode = new LodestoneNode(state);
             // Then it should be a victory for that player
-            RulesUtils.expectToBeVictoryFor(rules, node, player, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, player);
         }
     });
     it('should be a draw if there are no pieces at all left', () => {
@@ -969,6 +963,6 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
         const node: LodestoneNode = new LodestoneNode(state);
         // Then it should be a a draw
-        RulesUtils.expectToBeDraw(rules, node, minimaxes);
+        RulesUtils.expectToBeDraw(rules, node);
     });
 });

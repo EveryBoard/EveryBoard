@@ -33,12 +33,12 @@ describe('ReversiComponent', () => {
             [_, _, _, O, _, _, _, _],
         ];
         const initialState: ReversiState = new ReversiState(board, 0);
-        testUtils.setupState(initialState);
+        await testUtils.setupState(initialState);
 
         const move: ReversiMove = new ReversiMove(0, 4);
         await testUtils.expectMoveSuccess('#click_0_4', move);
 
-        const tablutGameComponent: ReversiComponent = testUtils.getComponent();
+        const tablutGameComponent: ReversiComponent = testUtils.getGameComponent();
         expect(tablutGameComponent.getRectClasses(1, 3)).not.toContain('captured-fill');
         expect(tablutGameComponent.getRectClasses(2, 2)).not.toContain('captured-fill');
         expect(tablutGameComponent.getRectClasses(3, 1)).not.toContain('captured-fill');
@@ -65,7 +65,7 @@ describe('ReversiComponent', () => {
         ], 1);
 
         // When displaying the board
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Then the player can pass
         await testUtils.expectPassSuccess(ReversiMove.PASS);

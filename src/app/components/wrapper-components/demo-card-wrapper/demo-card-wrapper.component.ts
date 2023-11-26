@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, ViewChild, ViewContainerRef } from '@angular/core';
-import { AbstractNode } from 'src/app/jscaip/MGPNode';
+import { AbstractNode } from 'src/app/jscaip/GameNode';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameWrapper } from '../../wrapper-components/GameWrapper';
@@ -39,11 +39,13 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         return this.demoNodeInfo.name;
     }
     public async ngAfterViewInit(): Promise<void> {
-        setTimeout(async() => {
+        window.setTimeout(async() => {
             await this.afterViewInit();
             this.gameComponent.node = this.demoNodeInfo.node;
+            // The component needs to be interactive in order to show all possible stylistic elements
+            this.gameComponent.setInteractive(true);
             // The board needs to be updated to render the changed node, setRole will do it
-            this.setRole(this.gameComponent.getCurrentPlayer());
+            await this.setRole(this.gameComponent.getCurrentPlayer());
             // Need to detect changes before potentially clicking,
             // and otherwise we'll get an angular exception in our tests
             this.cdr.detectChanges();
@@ -62,7 +64,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public getPlayer(): string {
         return 'no-player';
     }
-    public onCancelMove(_reason?: string | undefined): void {
+    public async onCancelMove(_reason?: string | undefined): Promise<void> {
         return;
     }
 }

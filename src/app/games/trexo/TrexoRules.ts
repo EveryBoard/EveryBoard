@@ -1,17 +1,18 @@
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { SCORE } from 'src/app/jscaip/SCORE';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
-export class TrexoNode extends MGPNode<Rules<TrexoMove, TrexoState>, TrexoMove, TrexoState> {}
+export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 
 export class TrexoRules extends Rules<TrexoMove, TrexoState> {
 
@@ -26,15 +27,14 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     private static getOwner(piece: TrexoPieceStack): PlayerOrNone {
         return piece.getOwner();
     }
-    private static isInRange(coord: Coord): boolean {
-        return coord.isInRange(TrexoState.SIZE, TrexoState.SIZE);
-    }
     public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
-        new NInARowHelper(TrexoRules.isInRange, TrexoRules.getOwner, 5);
+        new NInARowHelper(TrexoState.isOnBoard, TrexoRules.getOwner, 5);
 
-    private constructor() {
-        super(TrexoState);
+    public getInitialState(): TrexoState {
+        const board: TrexoPieceStack[][] = TableUtils.create(TrexoState.SIZE, TrexoState.SIZE, TrexoPieceStack.EMPTY);
+        return new TrexoState(board, 0);
     }
+
     public applyLegalMove(move: TrexoMove, state: TrexoState, _info: void): TrexoState {
         return state
             .drop(move.getZero(), Player.ZERO)
@@ -77,7 +77,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                if (BoardValue.isVictory(squareScore)) {
                     if (pieceOwner === lastPlayer) {
                         victoryOfLastPlayer.push(coord);
                     } else {
@@ -103,7 +103,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
-                if (MGPNode.getScoreStatus(squareScore) === SCORE.VICTORY) {
+                if (BoardValue.isVictory(squareScore)) {
                     if (pieceOwner === lastPlayer) {
                         // Cannot return right away
                         // because the last player only wins if the other does not get an alignment

@@ -36,9 +36,9 @@ describe('NewGameComponent', () => {
      *   - `testUtils.expectElementNotToExist` to check the absence of an HTML element on the component, given its id
      *   - `testUtils.expectElementToHaveClass` to check that an existing HTML element has a given CSS class
      */
-    it('this test is only there to cover new-game remaining functions', () => {
-        testUtils.getComponent().showLastMove(new NewGameMove());
-        testUtils.getComponent().cancelMoveAttempt();
+    it('this test is only there to cover new-game remaining functions', fakeAsync(async() => {
+        await testUtils.getGameComponent().showLastMove(new NewGameMove());
+        testUtils.getGameComponent().cancelMoveAttempt();
         expect(42).toBeGreaterThan(37);
-    });
+    }));
 });

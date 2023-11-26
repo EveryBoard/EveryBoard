@@ -6,14 +6,12 @@ import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { MartianChessRules } from './MartianChessRules';
 
 const _: MartianChessPiece = MartianChessPiece.EMPTY;
 const A: MartianChessPiece = MartianChessPiece.PAWN;
 const B: MartianChessPiece = MartianChessPiece.DRONE;
 const C: MartianChessPiece = MartianChessPiece.QUEEN;
-
-export const NOT_A_FIELD_PROMOTION: Localized = () => $localize`This is not a field promotion!`;
 
 export class MartianChessTutorial extends Tutorial {
 
@@ -21,17 +19,17 @@ export class MartianChessTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`At Martian Chess, the goal is to have the most points at the end of the game. Each piece is assigned a value, you win this value when capturing the piece. The board is divided in two by a line called the canal. There is one side for each player. You do not own pieces, but you control the ones on your side of the canal. Pieces are colored to help you: they will change color when crossing the canal.`,
-            MartianChessState.getInitialState(),
+            MartianChessRules.get().getInitialState(),
         ),
         TutorialStep.informational(
             $localize`The pieces`,
             $localize`The pieces are dark on the side of the first player, the light ones on the side of the second one. There are 3 kind of pieces: <ul><li>The Queens: represented as circles with 3 dots.</li><li>The Drones: represented as circles with 2 dots.</li><li>The Pawns: represented as circles with one dot.</li></ul>`,
-            MartianChessState.getInitialState(),
+            MartianChessRules.get().getInitialState(),
         ),
         TutorialStep.fromPredicate(
             $localize`Moving pawns`,
             $localize`Pawns are worth one point. They can move one step diagonally.<br/><br/>You're playing Dark, move a pawn.`,
-            MartianChessState.getInitialState(),
+            MartianChessRules.get().getInitialState(),
             MartianChessMove.from(new Coord(2, 5), new Coord(1, 4)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
                 if (result.getPieceAt(move.getEnd()) === MartianChessPiece.PAWN) {
@@ -45,7 +43,7 @@ export class MartianChessTutorial extends Tutorial {
         TutorialStep.fromPredicate(
             $localize`Moving drones`,
             $localize`Drones are worth two points. They can move one or two steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Dark, move a drone.`,
-            MartianChessState.getInitialState(),
+            MartianChessRules.get().getInitialState(),
             MartianChessMove.from(new Coord(1, 7), new Coord(0, 7)).get(),
             (move: MartianChessMove, _previous: MartianChessState, result: MartianChessState) => {
                 if (result.getPieceAt(move.getEnd()) === MartianChessPiece.DRONE) {
@@ -114,7 +112,7 @@ export class MartianChessTutorial extends Tutorial {
                 MartianChessMove.from(new Coord(2, 2), new Coord(1, 1)).get(),
             ],
             $localize`Congratulations!`,
-            NOT_A_FIELD_PROMOTION(),
+            $localize`This is not a field promotion!`,
         ),
         TutorialStep.fromPredicate(
             $localize`Field Promotion (2/2)`,
@@ -135,7 +133,7 @@ export class MartianChessTutorial extends Tutorial {
                 if (landed === MartianChessPiece.QUEEN) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure(NOT_A_FIELD_PROMOTION());
+                    return MGPValidation.failure($localize`This is not a field promotion!`);
                 }
             },
             $localize`Congratulations!`,
@@ -143,7 +141,7 @@ export class MartianChessTutorial extends Tutorial {
         TutorialStep.fromPredicate(
             $localize`Call the clock`,
             $localize`When the game seems to be going nowhere, you can "call the clock" during your turn. To do so, click on the clock symbol on the right, then perform your move. Once the clock is called, seven more turn will be played.<br/><br/>You're playing Dark. Call the clock and perform a move.`,
-            MartianChessState.getInitialState(),
+            MartianChessRules.get().getInitialState(),
             MartianChessMove.from(new Coord(1, 5), new Coord(0, 4), true).get(),
             (move: MartianChessMove, _previous: MartianChessState, _result: MartianChessState) => {
                 if (move.calledTheClock) {

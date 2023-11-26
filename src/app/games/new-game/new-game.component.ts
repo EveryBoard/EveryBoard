@@ -4,8 +4,10 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { NewGameDummyMinimax } from './NewGameDummyMinimax';
 import { NewGameTutorial } from './NewGameTutorial';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { NewGameMoveGenerator } from './NewGameMoveGenerator';
+import { NewGameMinimax } from './NewGameMinimax';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.
@@ -34,26 +36,28 @@ export class NewGameComponent extends GameComponent<NewGameRules,
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         // If the board you draw must be rotated of 180° when you play the second player, enable the following:
-        // this.hasAsymetricBoard = true;
+        // this.hasAsymmetricBoard = true;
         // If your game has scores in-game, enable the following:
         // this.scores = MGPOptional.of([0, 0]);
         this.rules = NewGameRules.get();
         this.node = this.rules.getInitialNode();
         this.encoder = NewGameMove.encoder;
         this.tutorial = new NewGameTutorial().tutorial;
-        this.availableMinimaxes = [
-            new NewGameDummyMinimax(this.rules, 'New Game Dummy Minimax'),
+        this.availableAIs = [
+            new NewGameMinimax(),
+            new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),
         ];
     }
     /**
      * This method updates the displayed board.
      */
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
     }
     /**
      * This method should display the last move in the component
      */
-    public override showLastMove(move: NewGameMove): void {
+    public override async showLastMove(move: NewGameMove): Promise<void> {
+        return;
     }
     /**
      * This method should clear out any data coming from a move attempt
@@ -66,7 +70,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * In the component's HTML, you will likely set onClick elements.
      * You can call back to the component, and call `this.chooseMove` to apply a move.
      * In case you want to cancel a move, you can call `this.cancelMove`.
-     * It takes an optional parameter, being a toast to show to the user upon the move cancellation.
+     * It takes an optional parameter, being a toast to show to the user upon the move cancelation.
      */
 
 }

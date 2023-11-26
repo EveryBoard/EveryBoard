@@ -21,12 +21,12 @@ describe('EpaminondasComponent', () => {
 
     function expectClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);
-        expect(testUtils.getComponent()
+        expect(testUtils.getGameComponent()
             .getHighlightedCoords().some((c: Coord) => c.equals(coord))).toBeTrue();
     }
     function expectNotClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);
-        expect(testUtils.getComponent()
+        expect(testUtils.getGameComponent()
             .getHighlightedCoords().some((c: Coord) => c.equals(coord))).toBeFalse();
     }
 
@@ -46,7 +46,7 @@ describe('EpaminondasComponent', () => {
         // Given a board
         // When clicking on a piece of the opponent
         // Then it should fail
-        await testUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
     it('should show possible next click (after first click)', fakeAsync(async() => {
         // Given a board
@@ -65,7 +65,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When the user clicks on one of its pieces
         await testUtils.expectClickSuccess('#click_0_11');
@@ -115,7 +115,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When moving a single piece onto the opponent's group
         // Then it should fail
@@ -139,7 +139,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_0_11'); // select a piece
 
         // When clicking on the same piece again
@@ -167,7 +167,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_0_11');
         // When clicking on another piece that would create a line with holes
         // Then it should fail
@@ -190,7 +190,7 @@ describe('EpaminondasComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When clicking on the first and last soldier of the line
         await testUtils.expectClickSuccess('#click_0_7');
@@ -224,7 +224,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_11'); // select first piece
         await testUtils.expectClickSuccess('#click_0_10'); // select last piece neighbor
@@ -232,7 +232,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_11'); // deselect first piece
 
         // Then it should change the first piece
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece.isAbsent()).toBeTrue();
         expectClickable(0, 9);
@@ -258,7 +258,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_11'); // select first piece
         await testUtils.expectClickSuccess('#click_0_9'); // select last piece neighbor
@@ -266,7 +266,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_11'); // deselect first piece
 
         // Then it should change the first piece
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(0, 9));
         expectNotClickable(0, 8);
@@ -290,7 +290,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_11'); // select first piece
         await testUtils.expectClickSuccess('#click_0_10'); // select last piece neighbor
@@ -299,7 +299,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_10'); // deselect last piece
 
         // Then it should change the last piece
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 11));
         expect(epaminondasComponent.lastPiece.isAbsent()).toBeTrue();
         expectClickable(0, 9);
@@ -324,7 +324,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_11'); // select first piece
         await testUtils.expectClickSuccess('#click_0_8'); // select last piece neighbor
@@ -333,7 +333,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_8'); // deselect last piece
 
         // Then it should change the last piece
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 11));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(0, 9));
         expect(epaminondasComponent.getPieceClasses(0, 7)).not.toContain('selected-stroke');
@@ -360,7 +360,7 @@ describe('EpaminondasComponent', () => {
                 [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
             const state: EpaminondasState = new EpaminondasState(board, 0);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click_0_11');
             await testUtils.expectClickSuccess('#click_0_9');
@@ -385,7 +385,7 @@ describe('EpaminondasComponent', () => {
         // Given a board where a phalanx has already been selected
         await testUtils.expectClickSuccess('#click_1_10');
         await testUtils.expectClickSuccess('#click_2_10');
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(1, 10));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(2, 10));
 
@@ -400,7 +400,7 @@ describe('EpaminondasComponent', () => {
         // Given a board where a phalanx has already been selected
         await testUtils.expectClickSuccess('#click_0_10');
         await testUtils.expectClickSuccess('#click_1_10');
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(1, 10));
 
@@ -428,13 +428,13 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When performing a capturing move
         await testUtils.expectClickSuccess('#click_0_11');
         await testUtils.expectClickSuccess('#click_0_9');
 
-        const epaminondasComponent: EpaminondasComponent = testUtils.getComponent();
+        const epaminondasComponent: EpaminondasComponent = testUtils.getGameComponent();
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Direction.UP);
         await testUtils.expectMoveSuccess('#click_0_8', move);
 
@@ -444,5 +444,13 @@ describe('EpaminondasComponent', () => {
         expect(epaminondasComponent.getRectClasses(0, 9)).toEqual(['moved-fill']);
         expect(epaminondasComponent.getRectClasses(0, 10)).toEqual(['moved-fill']);
         expect(epaminondasComponent.getRectClasses(0, 11)).toEqual(['moved-fill']);
+    }));
+    it('should not highlight any piece when observing', fakeAsync(async() => {
+        // Given a state with clickable pieces and an observer, i.e., when it is not interactive
+        testUtils.expectElementToExist('.clickable-stroke');
+        testUtils.getGameComponent().setInteractive(false);
+        // When displaying the state
+        // Then no coordinate should be clickable
+        testUtils.expectElementNotToExist('.clickable-stroke');
     }));
 });

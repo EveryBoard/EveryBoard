@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
@@ -24,12 +23,10 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
             new Coord(ConspirateursState.WIDTH-1, xOrY),
         ])).toList();
 
-    public static getInitialState(): ConspirateursState {
-        const board: PlayerOrNone[][] = ArrayUtils.createTable(ConspirateursState.WIDTH,
-                                                               ConspirateursState.HEIGHT,
-                                                               PlayerOrNone.NONE);
-        return new ConspirateursState(board, 0);
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
     }
+
     public isShelter(coord: Coord): boolean {
         if (coord.x === 0 || coord.x === ConspirateursState.WIDTH-1) {
             return ConspirateursState.SHELTERS_INDICES.some((y: number) => coord.y === y);
@@ -39,12 +36,14 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
             return false;
         }
     }
+
     public isCentralZone(coord: Coord): boolean {
         return coord.x >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x &&
             coord.x <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x &&
             coord.y >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y &&
             coord.y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y;
     }
+
     public isDropPhase(): boolean {
         return this.turn < 40;
     }

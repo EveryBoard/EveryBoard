@@ -18,7 +18,7 @@ export class ConspirateursMoveDrop extends MoveCoord {
     public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getEncoder(ConspirateursMoveDrop.of);
 
     public static of(coord: Coord): ConspirateursMoveDrop {
-        Utils.assert(coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT), 'Move out of board');
+        Utils.assert(ConspirateursState.isOnBoard(coord), 'Move out of board');
         return new ConspirateursMoveDrop(coord);
     }
     private constructor(coord: Coord) {
@@ -42,8 +42,8 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
-        const startInRange: boolean = start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
-        const endInRange: boolean = end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
+        const startInRange: boolean = ConspirateursState.isOnBoard(start);
+        const endInRange: boolean = ConspirateursState.isOnBoard(end);
         Utils.assert(startInRange && endInRange, 'Move out of board');
         if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
             return MGPFallible.success(new ConspirateursMoveSimple(start, end));
@@ -55,7 +55,7 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
-    public toString(): string {
+    public override toString(): string {
         return `ConspirateursMoveSimple(${this.getStart().toString()} -> ${this.getEnd().toString()})`;
     }
     public override equals(other: ConspirateursMove): boolean {
@@ -71,7 +71,7 @@ export class ConspirateursMoveJump extends Move {
 
     public static encoder: Encoder<ConspirateursMoveJump> = Encoder.tuple(
         [Encoder.list<Coord>(Coord.encoder)],
-        (move: ConspirateursMoveJump): [Coord[]] => [ArrayUtils.copyImmutableArray(move.coords)],
+        (move: ConspirateursMoveJump): [Coord[]] => [ArrayUtils.copy(move.coords)],
         (fields: [Coord[]]): ConspirateursMoveJump => ConspirateursMoveJump.from(fields[0]).get(),
     );
     public static from(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
@@ -79,7 +79,7 @@ export class ConspirateursMoveJump extends Move {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
         for (const coord of coords) {
-            if (coord.isNotInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
+            if (ConspirateursState.isOnBoard(coord) === false) {
                 return MGPFallible.failure('Move out of board');
             }
         }
@@ -104,7 +104,7 @@ export class ConspirateursMoveJump extends Move {
         super();
     }
     public addJump(target: Coord): MGPFallible<ConspirateursMoveJump> {
-        const coords: Coord[] = ArrayUtils.copyImmutableArray(this.coords);
+        const coords: Coord[] = ArrayUtils.copy(this.coords);
         coords.push(target);
         return ConspirateursMoveJump.from(coords);
     }

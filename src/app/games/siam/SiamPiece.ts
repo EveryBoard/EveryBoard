@@ -41,7 +41,7 @@ export class SiamPiece {
             case 9: return SiamPiece.MOUNTAIN;
         }
     }
-    public belongTo(player: Player): boolean {
+    public belongsTo(player: Player): boolean {
         if (player === Player.ZERO) {
             return (1 <= this.value && this.value <= 4);
         } else {
@@ -52,7 +52,7 @@ export class SiamPiece {
         return this.value === 0 || this.value === 9;
     }
     public isPiece(): boolean {
-        return !this.isEmptyOrMountain();
+        return this.isEmptyOrMountain() === false;
     }
     public getOwner(): PlayerOrNone {
         if (1 <= this.value && this.value <= 4) return Player.ZERO;

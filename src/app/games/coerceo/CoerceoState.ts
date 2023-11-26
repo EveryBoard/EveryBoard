@@ -3,16 +3,15 @@ import { Vector } from 'src/app/jscaip/Vector';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { display } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Utils } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { CoerceoRegularMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
+@Debug.log
 export class CoerceoState extends TriangularGameState<FourStatePiece> {
-
-    public static VERBOSE: boolean = false;
 
     public static readonly NEIGHBORS_TILES_DIRECTIONS: ReadonlyArray<Vector> = [
         new Vector(+0, -2), // UP
@@ -22,6 +21,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         new Vector(-3, +1), // DOWN_LEFT
         new Vector(-3, -1), // UP_LEFT
     ];
+
     public static getTilesUpperLeftCoord(tile: Coord): Coord {
         const x: number = tile.x - (tile.x % 3);
         let y: number = tile.y;
@@ -32,9 +32,11 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return new Coord(x, y);
     }
-    public static isInRange: (c: Coord) => boolean = (coord: Coord) => {
+
+    public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(15, 10);
-    };
+    }
+
     public static getPresentNeighborEntrances(tileUpperLeft: Coord): Coord[] {
         return [
             new Coord(tileUpperLeft.x + 1, tileUpperLeft.y - 1), // UP
@@ -43,27 +45,9 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             new Coord(tileUpperLeft.x + 1, tileUpperLeft.y + 2), // DOWN
             new Coord(tileUpperLeft.x - 1, tileUpperLeft.y + 1), // DOWN-LEFT
             new Coord(tileUpperLeft.x - 1, tileUpperLeft.y + 0), // UP-LEFT
-        ].filter(CoerceoState.isInRange);
+        ].filter(CoerceoState.isOnBoard);
     }
-    public static getInitialState(): CoerceoState {
-        const _: FourStatePiece = FourStatePiece.EMPTY;
-        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
-        const O: FourStatePiece = FourStatePiece.ZERO;
-        const X: FourStatePiece = FourStatePiece.ONE;
-        const board: Table<FourStatePiece> = [
-            [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],
-            [N, N, N, _, _, O, _, _, _, O, _, _, N, N, N],
-            [_, X, _, X, _, _, O, _, O, _, _, X, _, X, _],
-            [X, _, _, _, X, _, _, _, _, _, X, _, _, _, X],
-            [_, X, _, X, _, _, _, _, _, _, _, X, _, X, _],
-            [_, O, _, O, _, _, _, _, _, _, _, O, _, O, _],
-            [O, _, _, _, O, _, _, _, _, _, O, _, _, _, O],
-            [_, O, _, O, _, _, X, _, X, _, _, O, _, O, _],
-            [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
-            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
-        ];
-        return new CoerceoState(board, 0, [0, 0], [0, 0]);
-    }
+
     public constructor(board: Table<FourStatePiece>,
                        turn: number,
                        public readonly tiles: readonly [number, number],
@@ -71,8 +55,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     {
         super(board, turn);
     }
+
     public applyLegalMovement(move: CoerceoRegularMove): CoerceoState {
-        display(CoerceoState.VERBOSE, { coerceoState_applyLegalMovement: { object: this, move } });
         const start: Coord = move.getStart();
         const landing: Coord = move.getEnd();
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
@@ -81,8 +65,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
         return new CoerceoState(newBoard, this.turn, this.tiles, this.captures);
     }
+
     public doMovementCaptures(move: CoerceoRegularMove): CoerceoState {
-        display(CoerceoState.VERBOSE, { coerceoState_doMovementCaptures: { object: this, move } });
         const capturedCoords: Coord[] = this.getCapturedNeighbors(move.getEnd());
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
@@ -91,6 +75,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return resultingState;
     }
+
     public getCapturedNeighbors(coord: Coord): Coord[] {
         const opponent: Player = this.getCurrentOpponent();
         const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord);
@@ -104,22 +89,21 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             return false;
         });
     }
+
     public isSurrounded(coord: Coord): boolean {
         const remainingFreedom: Coord[] = this.getEmptyNeighbors(coord, FourStatePiece.EMPTY);
         return remainingFreedom.length === 0;
     }
+
     public capture(coord: Coord): CoerceoState {
-        display(CoerceoState.VERBOSE, { coerceoState_captureIfNeeded: { object: this, coord } });
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
         const newCaptures: [number, number] = [this.captures[0], this.captures[1]];
-        display(CoerceoState.VERBOSE, coord.toString() + ' has been captured');
         newBoard[coord.y][coord.x] = FourStatePiece.EMPTY;
         newCaptures[this.getCurrentPlayer().value] += 1;
         return new CoerceoState(newBoard, this.turn, this.tiles, newCaptures);
     }
+
     public removeTilesIfNeeded(piece: Coord, countTiles: boolean): CoerceoState {
-        display(CoerceoState.VERBOSE,
-                { coerceoState_removeTilesIfNeeded: { object: this, piece, countTiles } });
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
         const currentTile: Coord = CoerceoState.getTilesUpperLeftCoord(piece);
@@ -141,9 +125,10 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return resultingState;
     }
+
     public isTileEmpty(tileUpperLeft: Coord): boolean {
-        assert(this.getPieceAt(tileUpperLeft) !== FourStatePiece.UNREACHABLE,
-               'Should not call isTileEmpty on removed tile');
+        Utils.assert(this.getPieceAt(tileUpperLeft) !== FourStatePiece.UNREACHABLE,
+                     'Should not call isTileEmpty on removed tile');
         for (let y: number = 0; y < 2; y++) {
             for (let x: number = 0; x < 3; x++) {
                 const coord: Coord = tileUpperLeft.getNext(new Vector(x, y), 1);
@@ -154,6 +139,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return true;
     }
+
     public isDeconnectable(tile: Coord): boolean {
         const neighborsIndex: number[] = this.getPresentNeighborTilesRelativeIndexes(tile);
         if (neighborsIndex.length > 3) {
@@ -170,17 +156,19 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return holeCount <= 1;
     }
+
     private areNeighbor(smallTileIndex: number, bigTileIndex: number): boolean {
         return smallTileIndex + 1 === bigTileIndex ||
                (smallTileIndex === 0 && bigTileIndex === 5);
     }
+
     public getPresentNeighborTilesRelativeIndexes(tile: Coord): number[] {
         const neighborsIndexes: number[] = [];
         let firstIndex: MGPOptional<number> = MGPOptional.empty();
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoState.NEIGHBORS_TILES_DIRECTIONS[i];
             const neighborTile: Coord = tile.getNext(vector, 1);
-            if (neighborTile.isInRange(15, 10) &&
+            if (CoerceoState.isOnBoard(neighborTile) &&
                 this.getPieceAt(neighborTile) !== FourStatePiece.UNREACHABLE)
             {
                 if (firstIndex.isAbsent()) {
@@ -191,9 +179,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return neighborsIndexes;
     }
+
     public deconnectTile(tileUpperLeft: Coord, countTiles: boolean): CoerceoState {
-        display(CoerceoState.VERBOSE,
-                { coerceoState_deconnectTile: { object: this, tileUpperLeft, countTiles } });
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
         const x0: number = tileUpperLeft.x;
         const y0: number = tileUpperLeft.y;
@@ -206,11 +193,9 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         if (countTiles) {
             newTiles[this.getCurrentPlayer().value] += 1;
         }
-        return new CoerceoState(newBoard,
-                                this.turn,
-                                newTiles,
-                                this.captures);
+        return new CoerceoState(newBoard, this.turn, newTiles, this.captures);
     }
+
     public getLegalLandings(coord: Coord): Coord[] {
         const legalLandings: Coord[] = [];
         for (const step of CoerceoStep.STEPS) {
@@ -221,6 +206,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         }
         return legalLandings;
     }
+
     public getPiecesByFreedom(): number[][] {
         const playersScores: number[][] = [
             [0, 0, 0, 0],

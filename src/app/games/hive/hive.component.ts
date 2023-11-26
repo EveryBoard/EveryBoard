@@ -5,10 +5,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ArrayUtils, Table2DWithPossibleNegativeIndices } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, TableWithPossibleNegativeIndices } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -16,8 +18,9 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveFailure } from './HiveFailure';
-import { HiveMinimax } from './HiveMinimax';
+import { HiveHeuristic } from './HiveHeuristic';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
+import { HiveMoveGenerator } from './HiveMoveGenerator';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
@@ -30,7 +33,7 @@ interface GroundInfo {
     selected: boolean;
 }
 
-class Ground extends Table2DWithPossibleNegativeIndices<GroundInfo> {
+class Ground extends TableWithPossibleNegativeIndices<GroundInfo> {
     private highlighted: Coord[] = [];
 
     public initialize(coord: Coord): void {
@@ -66,7 +69,7 @@ interface SpaceInLayerInfo {
     strokeClasses: string[];
 }
 
-class Layer extends Table2DWithPossibleNegativeIndices<SpaceInLayerInfo> {
+class Layer extends TableWithPossibleNegativeIndices<SpaceInLayerInfo> {
     private highlighted: Coord[] = [];
 
     public initialize(coord: Coord, piece: HivePiece): void {
@@ -111,12 +114,14 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    constructor(messageDisplayer: MessageDisplayer)
+    {
         super(messageDisplayer);
         this.rules = HiveRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new HiveMinimax(this.rules, 'HiveMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator()),
+            new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),
         ];
         this.encoder = HiveMove.encoder;
         this.tutorial = new HiveTutorial().tutorial;
@@ -126,10 +131,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
         this.canPass = false;
-        this.updateBoard();
     }
-    public updateBoard(): void {
-        this.cancelMoveAttempt();
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.layers = [];
         for (const coord of this.getState().occupiedSpaces()) {
             const stack: HivePieceStack = this.getState().getAt(coord);
@@ -242,7 +245,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.inspectedStack = MGPOptional.empty();
         this.computeViewBox();
     }
-    public override showLastMove(move: HiveMove): void {
+    public override async showLastMove(move: HiveMove): Promise<void> {
         for (const coord of this.getLastMoveCoords(move)) {
             this.highlight(coord, 'last-move-stroke');
             this.ground.highlightStroke(coord, 'last-move-stroke');
@@ -262,7 +265,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         const shift: number = this.getRemainingPieceShift(piece);
         const x: number = this.boardViewBox.center().x + shift * this.SPACE_SIZE * 4;
         let y: number;
-        if (piece.owner === this.role) {
+        if (piece.owner === this.getPointOfView()) {
             // Current player is below
             y = this.boardViewBox.bottom() + (this.SPACE_SIZE * 3);
         } else {
@@ -291,12 +294,12 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
     public async selectRemaining(piece: HivePiece): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay(`#remainingPiece_${piece.toString() }`);
+        const clickValidity: MGPValidation = await this.canUserPlay(`#remainingPiece_${piece.toString() }`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (piece.owner === this.getCurrentPlayer().getOpponent()) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        if (piece.owner === this.getCurrentOpponent()) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (piece.kind !== 'QueenBee' && HiveRules.get().mustPlaceQueenBee(this.getState())) {
             return this.cancelMove(HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN());
@@ -315,14 +318,16 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         return MGPValidation.SUCCESS;
     }
-    public selectStack(x: number, y: number): Promise<MGPValidation> {
-        return this.select(new Coord(x, y), 'piece');
+    public async selectStack(x: number, y: number): Promise<MGPValidation> {
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'piece');
+        return selectionValidity;
     }
-    public selectSpace(x: number, y: number): Promise<MGPValidation> {
-        return this.select(new Coord(x, y), 'space');
+    public async selectSpace(x: number, y: number): Promise<MGPValidation> {
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'space');
+        return selectionValidity;
     }
     private async select(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);
+        const clickValidity: MGPValidation = await this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -360,11 +365,11 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     private async selectStart(coord: Coord, stack: HivePieceStack): Promise<MGPValidation> {
         const state: HiveState = this.getState();
         const piece: HivePiece = stack.topPiece();
-        if (piece.owner === state.getCurrentPlayer().getOpponent()) {
+        if (piece.owner === state.getCurrentOpponent()) {
             // If the stack clicked is not owned by the player,
             // the player can still select it in order to inspect it
             if (stack.size() === 1) {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (this.inspectedStack.isPresent()) {
                 this.cancelMoveAttempt();
                 this.clearHighlights();

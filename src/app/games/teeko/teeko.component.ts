@@ -3,7 +3,6 @@ import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TeekoMinimax } from './TeekoMinimax';
 import { TeekoTutorial } from './TeekoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -11,6 +10,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TeekoHeuristic } from './TeekoHeuristic';
+import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 
 @Component({
     selector: 'app-teeko',
@@ -23,7 +26,6 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
                                                              TeekoState,
                                                              PlayerOrNone>
 {
-
     public selected: MGPOptional<Coord> = MGPOptional.empty();
     public last: MGPOptional<Coord> = MGPOptional.empty();
     public moved: Coord[] = [];
@@ -35,15 +37,15 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.node = this.rules.getInitialNode();
         this.encoder = TeekoMove.encoder;
         this.tutorial = new TeekoTutorial().tutorial;
-        this.availableMinimaxes = [
-            new TeekoMinimax(),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new TeekoHeuristic(), new TeekoMoveGenerator()),
+            new MCTS($localize`MCTS`, new TeekoMoveGenerator(), this.rules),
         ];
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.node.gameState.board;
     }
-    public override showLastMove(move: TeekoMove): void {
-        this.hideLastMove();
+    public override async showLastMove(move: TeekoMove): Promise<void> {
         this.last = MGPOptional.of(this.rules.getLastCoord(move));
         if (move instanceof TeekoTranslationMove) {
             this.moved = [move.getStart(), move.getEnd()];
@@ -52,7 +54,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         }
         this.victory = this.rules.getVictoryCoord(this.getState());
     }
-    public hideLastMove(): void {
+    public override async hideLastMove(): Promise<void> {
         this.last = MGPOptional.empty();
         this.moved = [];
         this.victory = [];
@@ -61,7 +63,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.selected = MGPOptional.empty();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -88,7 +90,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
                 } else if (clickedPiece === PlayerOrNone.NONE) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
                 } else {
-                    return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+                    return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
                 }
             }
         }

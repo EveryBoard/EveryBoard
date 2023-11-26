@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoRules } from './TrexoRules';
-import { TrexoMinimax } from './TrexoMinimax';
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -10,10 +9,14 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TrexoTutorial } from './TrexoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { Table3DUtils, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 
 interface PieceOnBoard {
 
@@ -33,7 +36,6 @@ type ModeType = '2D' | '3D';
 })
 export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
 
-    public static VERBOSE: boolean = false;
     public static STROKE_WIDTH: number;
     private static readonly INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
         isDroppedPiece: false,
@@ -79,14 +81,14 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         super(messageDisplayer);
         this.rules = TrexoRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new TrexoMinimax(this.rules, 'TrexoMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
+            new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
         this.tutorial = new TrexoTutorial().tutorial;
         TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
-        this.updateBoard();
     }
     public switchToMode(mode: ModeType): void {
         this.chosenMode = mode;
@@ -131,7 +133,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         const pieceBonus: number = maxZ * mode.pieceHeightRatio * this.SPACE_SIZE;
         return pieceBonus;
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TrexoState = this.getState();
         this.board = state.getCopiedBoard();
         this.currentOpponentClass = this.getPlayerClass(state.getCurrentOpponent());
@@ -144,7 +146,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
     private get3DBoard(): PieceOnBoard[][][] {
         const moveByCoord: PieceOnBoard[][][] =
-            ArrayUtils.create3DTable(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
+            Table3DUtils.create(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
         let maxZ: number = 1;
         for (let z: number = 0; z <= maxZ; z++) {
             for (const stack of this.getState().toMap()) {
@@ -165,7 +167,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         let otherCoord: Coord = new Coord(-2, -2); // Will get erased
         for (const dir of Direction.ORTHOGONALS) {
             const neighborCoord: Coord = pieceCoord.getNext(dir);
-            if (neighborCoord.isInRange(TrexoState.SIZE, TrexoState.SIZE)) {
+            if (TrexoState.isOnBoard(neighborCoord)) {
                 const neighborStack: TrexoPieceStack = this.getState().getPieceAt(neighborCoord);
                 if (neighborStack.getHeight() > z) {
                     const neighborPiece: TrexoPiece = neighborStack.getPieceAt(z);
@@ -183,9 +185,9 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
     private addMoveToArray(height: number, move: TrexoMove, moveByCoord: PieceOnBoard[][][]): void {
         while (moveByCoord.length <= height) {
-            moveByCoord.push(ArrayUtils.createTable(TrexoState.SIZE,
-                                                    TrexoState.SIZE,
-                                                    TrexoComponent.INITIAL_PIECE_ON_BOARD));
+            moveByCoord.push(TableUtils.create(TrexoState.SIZE,
+                                               TrexoState.SIZE,
+                                               TrexoComponent.INITIAL_PIECE_ON_BOARD));
         }
         moveByCoord[height][move.getZero().y][move.getZero().x] = {
             isDroppedPiece: false,
@@ -199,7 +201,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         };
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#space_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -207,7 +209,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         if (this.droppedPiece.isPresent()) {
             const dropped: Coord = this.droppedPiece.get();
             if (this.droppedPiece.equalsValue(clicked)) {
-                this.cancelMoveAttempt();
+                await this.cancelMoveAttempt();
                 return MGPValidation.SUCCESS;
             }
             if (this.possibleNextClicks.some((c: Coord) => c.equals(clicked))) {
@@ -231,13 +233,13 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             this.pieceOnBoard[z][nextClick.y][nextClick.x].isPossibleClick = false;
         }
     }
-    private selectPiece(clicked: Coord): MGPValidation {
+    private async selectPiece(clicked: Coord): Promise<MGPValidation> {
         if (this.possibleMoves.some((move: TrexoMove) => move.getZero().equals(clicked))) {
             const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
             if (pieceHeight >= this.pieceOnBoard.length) {
-                this.pieceOnBoard.push(ArrayUtils.createTable(TrexoState.SIZE,
-                                                              TrexoState.SIZE,
-                                                              TrexoComponent.INITIAL_PIECE_ON_BOARD));
+                this.pieceOnBoard.push(TableUtils.create(TrexoState.SIZE,
+                                                         TrexoState.SIZE,
+                                                         TrexoComponent.INITIAL_PIECE_ON_BOARD));
             }
             this.showDroppedPieceAndIndicators(clicked, pieceHeight);
             return MGPValidation.SUCCESS;
@@ -267,10 +269,10 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         });
         return potentiallyStartedMove.map((move: TrexoMove) => move.getOne());
     }
-    public override cancelMoveAttempt(): void {
+    public override async cancelMoveAttempt(): Promise<void> {
         this.droppedPiece = MGPOptional.empty();
         this.possibleNextClicks = [];
-        this.updateBoard();
+        await this.updateBoard(false);
     }
     public getPieceClasses(x: number, y: number, z: number): string[] {
         const piece: Coord = new Coord(x, y);
@@ -283,8 +285,8 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
                 break;
             }
         }
-        if (this.node.move.isPresent()) {
-            const lastMove: TrexoMove = this.node.move.get();
+        if (this.node.previousMove.isPresent()) {
+            const lastMove: TrexoMove = this.node.previousMove.get();
             if (lastMove.getZero().equals(piece) || lastMove.getOne().equals(piece)) {
                 classes.push('last-move-stroke');
             }

@@ -1,6 +1,6 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
@@ -12,8 +12,9 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPFallible } from '../../utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
-export class PylosNode extends MGPNode<PylosRules, PylosMove, PylosState> {}
+export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
 export class PylosRules extends Rules<PylosMove, PylosState> {
 
@@ -25,9 +26,16 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return PylosRules.singleton.get();
     }
-    private constructor() {
-        super(PylosState);
+
+    public getInitialState(): PylosState {
+        const board0: PlayerOrNone[][] = TableUtils.create(4, 4, PlayerOrNone.NONE);
+        const board1: PlayerOrNone[][] = TableUtils.create(3, 3, PlayerOrNone.NONE);
+        const board2: PlayerOrNone[][] = TableUtils.create(2, 2, PlayerOrNone.NONE);
+        const board3: PlayerOrNone[][] = [[PlayerOrNone.NONE]];
+        const turn: number = 0;
+        return new PylosState([board0, board1, board2, board3], turn);
     }
+
     public static getStateInfo(state: PylosState): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
         const freeToMove: PylosCoord[] = [];
         const landable: PylosCoord[] = [];
@@ -111,7 +119,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     }
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
-        if (!capture.equals(move.landingCoord) &&
+        if (capture.equals(move.landingCoord) === false &&
             state.getPieceAt(capture) !== currentPlayer)
         {
             return false;
@@ -159,7 +167,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             const startingCoord: PylosCoord = move.startingCoord.get();
             const startingPiece: PlayerOrNone = initialState.getPieceAt(startingCoord);
             if (startingPiece === opponent) {
-                return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (startingPiece === PlayerOrNone.NONE) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }

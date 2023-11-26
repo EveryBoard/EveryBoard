@@ -6,23 +6,7 @@ export class LinesOfActionState extends GameStateWithTable<PlayerOrNone> {
 
     public static SIZE: number = 8; // board size
 
-    public static getInitialState(): LinesOfActionState {
-        const _: PlayerOrNone = PlayerOrNone.NONE;
-        const O: PlayerOrNone = PlayerOrNone.ZERO;
-        const X: PlayerOrNone = PlayerOrNone.ONE;
-        const board: PlayerOrNone[][] = [
-            [_, O, O, O, O, O, O, _],
-            [X, _, _, _, _, _, _, X],
-            [X, _, _, _, _, _, _, X],
-            [X, _, _, _, _, _, _, X],
-            [X, _, _, _, _, _, _, X],
-            [X, _, _, _, _, _, _, X],
-            [X, _, _, _, _, _, _, X],
-            [_, O, O, O, O, O, O, _],
-        ];
-        return new LinesOfActionState(board, 0);
-    }
-    public static isOnBoard(c: Coord): boolean {
-        return c.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE);
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE);
     }
 }

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { DvonnPieceStack } from './DvonnPieceStack';
 
 export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
@@ -30,15 +30,14 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
             [W, D, W, B, B, W, W, W, B, _, _],
         ];
     }
+
     public static isOnBoard(coord: Coord): boolean {
         if (coord.isNotInRange(DvonnState.WIDTH, DvonnState.HEIGHT)) {
             return false;
         }
         return DvonnState.balancedBoard()[coord.y][coord.x] !== DvonnPieceStack.UNREACHABLE;
     }
-    public static getInitialState(): DvonnState {
-        return new DvonnState(DvonnState.balancedBoard(), 0, false);
-    }
+
     public constructor(board: Table<DvonnPieceStack>,
                        turn: number,
                        // Did a PASS move have been performed on the last turn?
@@ -46,6 +45,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
     {
         super(turn, board, DvonnState.WIDTH, DvonnState.HEIGHT, DvonnState.EXCLUDED_SPACES, DvonnPieceStack.EMPTY);
     }
+
     public getAllPieces(): Coord[] {
         const pieces: Coord[] = [];
         for (let y: number = 0; y < DvonnState.HEIGHT; y++) {
@@ -58,17 +58,20 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         }
         return pieces;
     }
+
     public numberOfNeighbors(coord: Coord): number {
         const neighbors: Coord[] = HexagonalUtils.getNeighbors(coord, 1);
         const occupiedNeighbors: Coord[] = neighbors.filter((c: Coord): boolean =>
             this.isOnBoard(c) && this.getPieceAt(c).hasPieces());
         return occupiedNeighbors.length;
     }
+
     public setAtUnsafe(coord: Coord, value: DvonnPieceStack): this {
-        const newBoard: DvonnPieceStack[][] = ArrayUtils.copyBiArray(this.board);
+        const newBoard: DvonnPieceStack[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = value;
         return new DvonnState(newBoard, this.turn, this.alreadyPassed) as this;
     }
+
     public override isOnBoard(coord: Coord): boolean {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;

@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -11,6 +10,7 @@ import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MartianChessRules } from '../MartianChessRules';
 
 describe('MartianChessComponent', () => {
 
@@ -45,7 +45,7 @@ describe('MartianChessComponent', () => {
             [_, _, _, _],
         ];
         const state: MartianChessState = new MartianChessState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When selecting a piece able to do capture/promotion/displacement
         await testUtils.expectClickSuccess('#click_2_4');
@@ -109,7 +109,7 @@ describe('MartianChessComponent', () => {
         // When cliking on one of your other piece that cannot be your landing coord
         await testUtils.expectClickSuccess('#click_2_6');
 
-        // Then the move should not have been cancelled but the first piece selected changed
+        // Then the move should not have been canceled but the first piece selected changed
         testUtils.expectElementToHaveClass('#drone_2_6', 'selected-stroke');
     }));
     it('should propose illegal move so that a toast is given to explain', fakeAsync(async() => {
@@ -166,7 +166,7 @@ describe('MartianChessComponent', () => {
             [_, A, _, _],
         ];
         const state: MartianChessState = new MartianChessState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_1_4');
 
         // When capturing
@@ -191,7 +191,7 @@ describe('MartianChessComponent', () => {
             [_, A, _, _],
         ];
         const state: MartianChessState = new MartianChessState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_1_7');
 
         // When finalizing the move
@@ -245,14 +245,13 @@ describe('MartianChessComponent', () => {
             await testUtils.expectMoveSuccess('#click_0_6', move);
 
             // Then the clock should be replace by the count down (7 turn remaining)
-            const countDownText: DebugElement = testUtils.findElement('#countDownText');
-            expect(countDownText.nativeNode.innerHTML).toEqual('7');
+            testUtils.expectTextToBe('#countDownText', '7');
         }));
         it('should not select the circle when clock was called in previous turns', fakeAsync(async() => {
             // Given a board where the clock has been called in the past
-            const board: Table<MartianChessPiece> = MartianChessState.getInitialState().board;
+            const board: Table<MartianChessPiece> = MartianChessRules.get().getInitialState().board;
             const state: MartianChessState = new MartianChessState(board, 4, MGPOptional.empty(), MGPOptional.of(3));
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on the circle
             await testUtils.expectClickSuccess('#clockOrCountDownView');
@@ -281,7 +280,7 @@ describe('MartianChessComponent', () => {
             testUtils.expectElementNotToExist('#modePanel');
         }));
         it('should test all view mode', fakeAsync(async() => {
-            for (const styleAndName of testUtils.getComponent().listOfStyles) {
+            for (const styleAndName of testUtils.getGameComponent().listOfStyles) {
                 // Given a board in the initial mode with panel mode displayed
                 await testUtils.clickElement('#modeCog');
 
@@ -289,7 +288,7 @@ describe('MartianChessComponent', () => {
                 await testUtils.clickElement('#' + styleAndName.name);
 
                 // Then the mode should have been chosen
-                const currentStyle: MartianChessFace = testUtils.getComponent().style;
+                const currentStyle: MartianChessFace = testUtils.getGameComponent().style;
                 expect(currentStyle).toBe(styleAndName.style);
             }
         }));

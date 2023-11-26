@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { QuixoState } from './QuixoState';
@@ -12,8 +12,9 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
-export class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
+export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
 export class QuixoRules extends Rules<QuixoMove, QuixoState> {
 
@@ -25,21 +26,24 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         }
         return QuixoRules.singleton.get();
     }
-    private constructor() {
-        super(QuixoState);
+
+    public getInitialState(): QuixoState {
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(QuixoState.SIZE, QuixoState.SIZE, PlayerOrNone.NONE);
+        return new QuixoState(initialBoard, 0);
     }
+
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(QuixoMove.isInRange, Utils.identity, 5);
+        new NInARowHelper(QuixoState.isOnBoard, Utils.identity, QuixoState.SIZE);
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();
         const verticalCoords: Coord[] = [];
-        for (let y: number = 0; y < 5; y++) {
+        for (let y: number = 0; y < QuixoState.SIZE; y++) {
             if (node.gameState.getPieceAtXY(0, y) !== currentOpponent) {
                 verticalCoords.push(new Coord(0, y));
             }
-            if (node.gameState.getPieceAtXY(4, y) !== currentOpponent) {
-                verticalCoords.push(new Coord(4, y));
+            if (node.gameState.getPieceAtXY(QuixoState.SIZE - 1, y) !== currentOpponent) {
+                verticalCoords.push(new Coord(QuixoState.SIZE - 1, y));
             }
         }
         return verticalCoords;
@@ -47,12 +51,12 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     public static getHorizontalCenterCoords(node: QuixoNode): Coord[] {
         const currentOpponent: Player = node.gameState.getCurrentOpponent();
         const horizontalCenterCoords: Coord[] = [];
-        for (let x: number = 1; x < 4; x++) {
+        for (let x: number = 1; x < QuixoState.SIZE - 1; x++) {
             if (node.gameState.getPieceAtXY(x, 0) !== currentOpponent) {
                 horizontalCenterCoords.push(new Coord(x, 0));
             }
-            if (node.gameState.getPieceAtXY(x, 4) !== currentOpponent) {
-                horizontalCenterCoords.push(new Coord(x, 4));
+            if (node.gameState.getPieceAtXY(x, QuixoState.SIZE - 1) !== currentOpponent) {
+                horizontalCenterCoords.push(new Coord(x, QuixoState.SIZE - 1));
             }
         }
         return horizontalCenterCoords;
@@ -61,8 +65,8 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         const possibleDirections: Orthogonal[] = [];
         if (coord.x !== 0) possibleDirections.push(Orthogonal.LEFT);
         if (coord.y !== 0) possibleDirections.push(Orthogonal.UP);
-        if (coord.x !== 4) possibleDirections.push(Orthogonal.RIGHT);
-        if (coord.y !== 4) possibleDirections.push(Orthogonal.DOWN);
+        if (coord.x !== (QuixoState.SIZE - 1)) possibleDirections.push(Orthogonal.RIGHT);
+        if (coord.y !== (QuixoState.SIZE - 1)) possibleDirections.push(Orthogonal.DOWN);
         return possibleDirections;
     }
     public static getLinesSums(state: QuixoState): {[player: number]: {[lineType: string]: number[]}} {
@@ -77,16 +81,16 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
             rows: [0, 0, 0, 0, 0],
             diagonals: [0, 0],
         };
-        for (let y: number = 0; y < 5; y++) {
-            for (let x: number = 0; x < 5; x++) {
-                const content: PlayerOrNone = state.getPieceAtXY(x, y);
-                if (content.isPlayer()) {
-                    const c: number = content.value;
-                    sums[c].columns[x] = sums[c].columns[x] + 1;
-                    sums[c].rows[y] = sums[c].rows[y] + 1;
-                    if (x === y) sums[c].diagonals[0] = sums[c].diagonals[0] + 1;
-                    if (x + y === 4) sums[c].diagonals[1] = sums[c].diagonals[1] + 1;
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const content: PlayerOrNone = coordAndContent.content;
+            const x: number = coordAndContent.coord.x;
+            const y: number = coordAndContent.coord.y;
+            if (content.isPlayer()) {
+                const c: number = content.value;
+                sums[c].columns[x] = sums[c].columns[x] + 1;
+                sums[c].rows[y] = sums[c].rows[y] + 1;
+                if (x === y) sums[c].diagonals[0] = sums[c].diagonals[0] + 1;
+                if (x + y === (QuixoState.SIZE - 1)) sums[c].diagonals[1] = sums[c].diagonals[1] + 1;
             }
         }
         return sums;
@@ -105,7 +109,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
     public isLegal(move: QuixoMove, state: QuixoState): MGPValidation {
         if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             return MGPValidation.SUCCESS;
         }

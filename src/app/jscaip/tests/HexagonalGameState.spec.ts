@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
+import { NumberTable, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
 import { HexaLine } from '../HexaLine';
@@ -17,7 +17,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
                         empty: number)
     : TestingHexagonalState
     {
-        const newBoard: number[][] = ArrayUtils.createTable(width, height, empty);
+        const newBoard: number[][] = TableUtils.create(width, height, empty);
         let y: number = 0;
         for (const excluded of excludedSpaces) {
             for (let i: number = 0; i < excluded; i++) {
@@ -54,7 +54,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
         }
     }
     public setAtUnsafe(coord: Coord, value: number): this {
-        const newBoard: number[][] = ArrayUtils.copyBiArray(this.board);
+        const newBoard: number[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = value;
         return new TestingHexagonalState(this.turn,
                                          newBoard,
@@ -123,11 +123,11 @@ describe('HexagonalGameState', () => {
     describe('getPieceAt', () => {
         it('should fail when accessing coords not on board', () => {
             spyOn(state, 'isOnBoard').and.returnValue(false);
-            expect(() => state.getPieceAt(new Coord(0, 0))).toThrow();
+            expect(() => state.getPieceAtXY(0, 0)).toThrow();
         });
         it('should return the right content', () => {
             const state: TestingHexagonalState = TestingHexagonalState.fromTable(1, [[0, 1, 0]], [], 0);
-            expect(state.getPieceAt(new Coord(1, 0))).toBe(1);
+            expect(state.getPieceAtXY(1, 0)).toBe(1);
         });
     });
     describe('setAt', () => {

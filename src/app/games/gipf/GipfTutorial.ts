@@ -1,10 +1,12 @@
-import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
+import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { GipfRules } from './GipfRules';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -21,7 +23,7 @@ export class GipfTutorial extends Tutorial {
         Each player has 12 pieces on the side and 3 pieces on the board.
         When, at its turn, a player has no more pieces on the side, that player cannot play anymore and loses the game.
         The first player plays with the dark pieces, the second player plays with the light pieces.`,
-            GipfState.getInitialState(),
+            GipfRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Pushing`,
@@ -32,7 +34,7 @@ export class GipfTutorial extends Tutorial {
         </ol>
         You cannot push when a line is full.<br/><br/>
         You're playing Dark, insert a piece.`,
-            GipfState.getInitialState(),
+            GipfRules.get().getInitialState(),
             new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
             $localize`Congratulations!`,
         ),

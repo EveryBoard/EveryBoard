@@ -8,14 +8,20 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display } from 'src/app/utils/utils';
 import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
+import { TaflMoveGenerator } from './TaflMoveGenerator';
+import { AI, AIOptions } from 'src/app/jscaip/AI';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
+import { TaflPieceMinimax } from './TaflPieceMinimax';
+import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
 
-export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
-    extends RectangularGameComponent<R, M, S, TaflPawn>
+export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
+    extends RectangularGameComponent<R, M, TaflState, TaflPawn>
 {
 
     public viewInfo: { pieceClasses: string[][][] } = { pieceClasses: [] };
@@ -24,33 +30,25 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
     protected capturedCoords: Coord[] = [];
 
+    protected passedByCoords: Coord[] = [];
+
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
-    public lastMove: MGPOptional<M> = MGPOptional.empty();
-
     public constructor(messageDisplayer: MessageDisplayer,
-                       public VERBOSE: boolean,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
         super(messageDisplayer);
     }
-    public override getViewBox(): string {
-        const begin: number = - this.STROKE_WIDTH;
-        const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
-        return begin + ' ' + begin + ' ' + width + ' ' + width;
-    }
-    public updateBoard(): void {
-        display(this.VERBOSE, 'taflComponent.updateBoard');
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.capturedCoords = [];
         this.updateViewInfo();
-        this.lastMove = this.node.move;
     }
-    public override showLastMove(move: M): void {
-        const previousState: S = this.getPreviousState();
+    public override async showLastMove(move: M): Promise<void> {
+        const previousState: TaflState = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
-            const captured: Coord = this.lastMove.get().getEnd().getNext(orthogonal, 1);
+            const captured: Coord = move.getEnd().getNext(orthogonal, 1);
             if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
                 const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
@@ -61,6 +59,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
                 }
             }
         }
+        this.passedByCoords = this.node.previousMove.get().getMovedOverCoords();
     }
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
@@ -81,8 +80,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.viewInfo = { pieceClasses };
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        display(this.VERBOSE, 'TaflComponent.onClick(' + x + ', ' + y + ')');
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -92,7 +90,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
             return MGPValidation.SUCCESS;
         }
         if (this.chosen.isAbsent() ||
-            this.pieceBelongToCurrentPlayer(clicked))
+            this.pieceBelongsToCurrentPlayer(clicked))
         {
             return this.choosePiece(clicked);
         } else {
@@ -100,8 +98,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         }
     }
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
-        display(this.VERBOSE, 'TaflComponent.chooseDestination');
-
         const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: MGPFallible<M> = this.generateMove(chosenPiece, chosenDestination);
@@ -111,23 +107,20 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
             return this.cancelMove(move.getReason());
         }
     }
-    private choosePiece(coord: Coord): MGPValidation {
-        display(this.VERBOSE, 'TaflComponent.choosePiece');
-
+    private async choosePiece(coord: Coord): Promise<MGPValidation> {
         if (this.board[coord.y][coord.x] === TaflPawn.UNOCCUPIED) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
-        if (!this.pieceBelongToCurrentPlayer(coord)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        if (this.pieceBelongsToCurrentPlayer(coord) === false) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
 
         this.chosen = MGPOptional.of(coord);
         this.updateViewInfo();
-        display(this.VERBOSE, 'selected piece = (' + coord.x + ', ' + coord.y + ')');
         return MGPValidation.SUCCESS;
     }
-    private pieceBelongToCurrentPlayer(coord: Coord): boolean {
-        const state: S = this.getState();
+    private pieceBelongsToCurrentPlayer(coord: Coord): boolean {
+        const state: TaflState = this.getState();
         const player: Player = state.getCurrentPlayer();
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
@@ -136,7 +129,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         this.updateViewInfo();
     }
     public isThrone(x: number, y: number): boolean {
-        const state: S = this.getState();
+        const state: TaflState = this.getState();
         return this.rules.isThrone(state, new Coord(x, y));
     }
     public isCentralThrone(x: number, y: number): boolean {
@@ -161,14 +154,11 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const coord: Coord = new Coord(x, y);
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
-        } else if (this.lastMove.isPresent()) {
-            const lastStart: Coord = this.lastMove.get().getStart();
-            const lastEnd: Coord = this.lastMove.get().getEnd();
-            if (coord.equals(lastStart) || coord.equals(lastEnd)) {
+        } else if (this.node.previousMove.isPresent()) {
+            if (this.passedByCoords.some((c: Coord) => c.equals(coord))) {
                 classes.push('moved-fill');
             }
         }
-
         return classes;
     }
     public getClickables(): Coord[] {
@@ -185,12 +175,22 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     private isClickable(coord: Coord): boolean {
         // Show if the piece can be clicked
-        return this.pieceBelongToCurrentPlayer(coord);
+        return this.isInteractive && this.pieceBelongsToCurrentPlayer(coord);
     }
     public isInvader(x: number, y: number): boolean {
         return this.board[y][x] === TaflPawn.INVADERS;
     }
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
+    }
+    protected createAIs(): AI<TaflMove, TaflState, AIOptions>[] {
+        const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(this.rules);
+        return [
+            new TaflPieceMinimax(this.rules),
+            new TaflPieceAndInfluenceMinimax(this.rules),
+            new TaflPieceAndControlMinimax(this.rules),
+            new TaflEscapeThenPieceThenControlMinimax(this.rules),
+            new MCTS($localize`MCTS`, moveGenerator, this.rules),
+        ];
     }
 }

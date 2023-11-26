@@ -1,13 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
-import { PenteAlignmentMinimax } from '../PenteAlignmentMinimax';
 
 describe('PenteRules', () => {
 
@@ -16,17 +14,13 @@ describe('PenteRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: PenteRules;
-    let minimaxes: Minimax<PenteMove, PenteState>[];
 
     beforeEach(() => {
         rules = PenteRules.get();
-        minimaxes = [
-            new PenteAlignmentMinimax(rules, 'Alignment'),
-        ];
     });
     it('should allow a drop on an empty space', () => {
         // Given a state
-        const state: PenteState = PenteState.getInitialState();
+        const state: PenteState = PenteRules.get().getInitialState();
 
         // When doing a drop on an empty space
         const move: PenteMove = PenteMove.of(new Coord(9, 8));
@@ -57,13 +51,14 @@ describe('PenteRules', () => {
     });
     it('should forbid a drop on an occupied space', () => {
         // Given a state
-        const state: PenteState = PenteState.getInitialState();
+        const state: PenteState = PenteRules.get().getInitialState();
 
         // When doing a drop on an occupied space
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+        const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should capture pieces when two opponent pieces are sandwiched', () => {
         // Given a state almost at a sandwich point
@@ -169,10 +164,10 @@ describe('PenteRules', () => {
     });
     it('should be ongoing if there are still available spaces and no victory', () => {
         // Given a state with available spaces and no victory
-        const state: PenteState = PenteState.getInitialState();
+        const state: PenteState = PenteRules.get().getInitialState();
         const node: PenteNode = new PenteNode(state);
         // Then it should be ongoing
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('should be a draw if there are no 5-alignments', () => {
         // Given a drawn state
@@ -199,7 +194,7 @@ describe('PenteRules', () => {
         ], [8, 8], 1337);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a draw
-        RulesUtils.expectToBeDraw(rules, node, minimaxes);
+        RulesUtils.expectToBeDraw(rules, node);
     });
     it('should detect 10 captures victory', () => {
         // Given a state with 10 captures from a player
@@ -226,7 +221,7 @@ describe('PenteRules', () => {
         ], [10, 0], 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for this player
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should detect alignment victory', () => {
         // Given a state where zero has aligned 5
@@ -253,6 +248,6 @@ describe('PenteRules', () => {
         ], [0, 0], 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for zero
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 });

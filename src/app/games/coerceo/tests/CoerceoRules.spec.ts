@@ -5,18 +5,14 @@ import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove }
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
-import { CoerceoMinimax } from '../CoerceoMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { CoerceoPiecesThreatTilesMinimax } from '../CoerceoPiecesThreatTilesMinimax';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('CoerceoRules', () => {
 
     let rules: CoerceoRules;
-
-    let minimaxes: Minimax<CoerceoMove, CoerceoState>[];
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -29,12 +25,8 @@ describe('CoerceoRules', () => {
 
     beforeEach(() => {
         rules = CoerceoRules.get();
-        minimaxes = [
-            new CoerceoMinimax(rules, 'CoerceoMinimax'),
-            new CoerceoPiecesThreatTilesMinimax(rules, 'CoerceoPiecesThreatTilesMinimax'),
-        ];
     });
-    describe('Deplacement', () => {
+    describe('movement', () => {
         it('should forbid to start move from outside the board', () => {
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -53,7 +45,7 @@ describe('CoerceoRules', () => {
             function tryAStartingCoordOutOfRange(): void {
                 rules.isLegal(move, state);
             }
-            RulesUtils.expectToThrowAndLog(tryAStartingCoordOutOfRange, 'Cannot start with a coord outside the board (0, 0).');
+            TestUtils.expectToThrowAndLog(tryAStartingCoordOutOfRange, 'Cannot start with a coord outside the board (0, 0).');
         });
         it('should forbid to end move outside the board', () => {
             const board: FourStatePiece[][] = [
@@ -73,7 +65,7 @@ describe('CoerceoRules', () => {
             function tryALandingingCoordOutOfRange(): void {
                 rules.isLegal(move, state);
             }
-            RulesUtils.expectToThrowAndLog(tryALandingingCoordOutOfRange, 'Cannot end with a coord outside the board (4, 6).');
+            TestUtils.expectToThrowAndLog(tryALandingingCoordOutOfRange, 'Cannot end with a coord outside the board (4, 6).');
         });
         it('should forbid to move ppponent pieces', () => {
             const board: FourStatePiece[][] = [
@@ -90,7 +82,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.RIGHT);
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid to move empty pieces', () => {
@@ -370,7 +362,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [18, 17]);
             const node: CoerceoNode = new CoerceoNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should set minimal value to victory of Player.ONE', () => {
             const board: FourStatePiece[][] = [
@@ -387,7 +379,7 @@ describe('CoerceoRules', () => {
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [17, 18]);
             const node: CoerceoNode = new CoerceoNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });
 });

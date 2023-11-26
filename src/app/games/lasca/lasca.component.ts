@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -11,15 +10,20 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
-import { LascaControlAndDominationMinimax } from './LascaControlAndDomination';
-import { LascaControlMinimax } from './LascaControlMinimax';
 import { LascaFailure } from './LascaFailure';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { LascaTutorial } from './LascaTutorial';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { LascaControlHeuristic } from './LascaControlHeuristic';
+import { LascaMoveGenerator } from './LascaMoveGenerator';
+import { LascaControlAndDominationHeuristic } from './LascaControlAndDominationHeuristic';
 
 interface SpaceInfo {
+    x: number;
+    y: number;
     squareClasses: string[];
     pieceInfos: LascaPieceInfo[];
 }
@@ -62,26 +66,30 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private currentMoveClicks: Coord[] = [];
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
     private legalMoves: LascaMove[] = [];
+    private moveGenerator: LascaMoveGenerator = new LascaMoveGenerator();
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
         this.rules = LascaRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new LascaControlMinimax('Lasca Control Minimax'),
-            new LascaControlAndDominationMinimax(),
+        this.availableAIs = [
+            new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),
+            new Minimax($localize`Control and Domination`,
+                        this.rules,
+                        new LascaControlAndDominationHeuristic(),
+                        this.moveGenerator),
+            new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];
         this.encoder = LascaMove.encoder;
         this.tutorial = new LascaTutorial().tutorial;
         this.canPass = false;
-        this.updateBoard();
     }
-    public updateBoard(): void {
-        this.lastMove = this.node.move;
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.lastMove = this.node.previousMove;
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
-        this.legalMoves = LascaControlMinimax.getListMoves(this.node);
+        this.legalMoves = this.moveGenerator.getListMoves(this.node);
         this.createAdaptedBoardFrom(state);
         this.showPossibleMoves();
         this.rotateAdaptedBoardIfNeeded();
@@ -128,10 +136,12 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
         return {
             pieceInfos,
+            x,
+            y,
             squareClasses: [],
         };
     }
-    public override showLastMove(move: LascaMove): void {
+    public override async showLastMove(move: LascaMove): Promise<void> {
         this.showLastCapture(move);
         this.showSteppedOnCoord(move);
     }
@@ -150,14 +160,16 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
     private showPossibleMoves(): void {
-        for (const validMove of this.legalMoves) {
-            const startingCoord: Coord = validMove.getStartingCoord();
-            this.getSpaceInfoAt(startingCoord).squareClasses.push('selectable-fill');
+        if (this.isInteractive) {
+            for (const validMove of this.legalMoves) {
+                const startingCoord: Coord = validMove.getStartingCoord();
+                this.getSpaceInfoAt(startingCoord).squareClasses.push('selectable-fill');
+            }
         }
     }
     private getSpaceInfoAt(unadapedCoord: Coord): SpaceInfo {
         // Adapt the coord if needed so we don't affect the "centrally symmetrical" coord to this one
-        if (this.role === Player.ONE && this.adaptedBoard.isAlreadySwitched) {
+        if (this.getPointOfView() === Player.ONE && this.adaptedBoard.isAlreadySwitched) {
             const max: number = LascaState.SIZE - 1;
             const adaptedCoord: Coord = new Coord(max - unadapedCoord.x, max - unadapedCoord.y);
             return this.adaptedBoard.spaceInfo[adaptedCoord.y][adaptedCoord.x];
@@ -166,7 +178,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
     private rotateAdaptedBoardIfNeeded(): void {
-        if (this.role === Player.ONE) {
+        if (this.getPointOfView() === Player.ONE) {
             const rotatedAdaptedBoard: SpaceInfo[][] = [];
             for (let y: number = 0; y < LascaState.SIZE; y++) {
                 rotatedAdaptedBoard[(LascaState.SIZE - 1) - y] = [];
@@ -182,16 +194,12 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             };
         }
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.createAdaptedBoardFrom(this.getState());
         this.rotateAdaptedBoardIfNeeded();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        if (this.role === Player.ONE) {
-            x = (LascaState.SIZE - 1) - x;
-            y = (LascaState.SIZE - 1) - y;
-        }
-        const clickValidity: MGPValidation = this.canUserPlay('#coord_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#coord_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -199,7 +207,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const clickedSpace: LascaStack = this.getState().getPieceAt(clickedCoord);
         const opponent: Player = this.getState().getCurrentOpponent();
         if (clickedSpace.isCommandedBy(opponent)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (this.currentMoveClicks.length === 0) {
             return this.trySelectingPiece(clickedCoord);
@@ -279,7 +287,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             return this.selectPiece(clicked);
         }
     }
-    private selectPiece(coord: Coord): MGPValidation {
+    private async selectPiece(coord: Coord): Promise<MGPValidation> {
         this.capturedCoords = [];
         if (this.legalMoves.some((move: LascaMove) => move.getStartingCoord().equals(coord))) {
             this.currentMoveClicks = [coord];

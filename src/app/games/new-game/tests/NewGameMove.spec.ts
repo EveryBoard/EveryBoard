@@ -5,7 +5,7 @@ describe('NewGameMove', () => {
     describe('toString', () => {
         it('should be defined', () => {
             const move: NewGameMove = new NewGameMove();
-            expect(() => move.toString()).toThrow();
+            expect(move.toString()).toBe('This method is really more debug oriented');
         });
     });
     describe('equals', () => {

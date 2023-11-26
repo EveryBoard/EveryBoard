@@ -1,10 +1,10 @@
-import { GipfCapture } from 'src/app/games/gipf/GipfMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder } from 'src/app/utils/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 
 // A capture at Yinsh is just like a capture at Gipf, with the only difference
 // that it needs to be of length 5 rather than 4, and it contains a ring taken
@@ -72,8 +72,8 @@ export class YinshMove extends Move {
         if (this === other) return true;
         if (this.start.equals(other.start) === false) return false;
         if (this.end.equals(other.end) === false) return false;
-        if (ArrayUtils.compareArray(this.initialCaptures, other.initialCaptures) === false) return false;
-        if (ArrayUtils.compareArray(this.finalCaptures, other.finalCaptures) === false) return false;
+        if (ArrayUtils.compare(this.initialCaptures, other.initialCaptures) === false) return false;
+        if (ArrayUtils.compare(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
     public override toString(): string {

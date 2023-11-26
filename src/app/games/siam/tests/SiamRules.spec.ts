@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { SiamLegalityInformation, SiamNode, SiamRules } from '../SiamRules';
-import { SiamMinimax } from '../SiamMinimax';
+import { SiamNode, SiamRules } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
@@ -10,15 +9,12 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SiamFailure } from '../SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
 
 describe('SiamRules', () => {
 
     let rules: SiamRules;
-
-    let minimaxes: Minimax<SiamMove, SiamState, SiamLegalityInformation>[];
 
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -35,13 +31,10 @@ describe('SiamRules', () => {
 
     beforeEach(() => {
         rules = SiamRules.get();
-        minimaxes = [
-            new SiamMinimax(rules, 'SiamMinimax'),
-        ];
     });
     it('should allow insertions', () => {
         // Given the initial board
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
         // When performing an insertion
         const move: SiamMove = SiamMove.from(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
         // Then it should succeed
@@ -93,7 +86,18 @@ describe('SiamRules', () => {
         const move: SiamMove = SiamMove.from(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
 
         // Then it should fail
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
+    it('should forbid moving the empty piece', () => {
+        // Given a state
+        const state: SiamState = SiamRules.get().getInitialState();
+
+        // When trying to move an empty piece
+        const move: SiamMove = SiamMove.from(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+
+        // Then it should fail
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should allow pushing', () => {
@@ -407,7 +411,7 @@ describe('SiamRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         // and victory should be for player zero
         const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should assign victory to the player closest to and aligned with the fallen mountain', () => {
         // Given a board where 0 can push 1 that pushes the mountain
@@ -433,7 +437,7 @@ describe('SiamRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         // and victory should be for player zero
         const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should assign victory to player closest to and aligned with the fallen mountain (and not to the non-aligned pieces)', () => {
         // Given a board where the piece next to the mountain is not aligned vertically
@@ -459,11 +463,11 @@ describe('SiamRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         // and victory should be for player zero, whose pieces are aligned with the push
         const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should compute empty list of moves between two impossible squares', () => {
         // Given two coordinatess that are not neighbors
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 2);
         // When computing the list of moves between these coords
@@ -473,7 +477,7 @@ describe('SiamRules', () => {
     });
     it('should compute empty list of moves between aligned squares that are too far away', () => {
         // Given two coordinatess that are aligned but of a distance greater than one
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
         // When computing the list of moves between these coords

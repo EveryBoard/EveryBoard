@@ -6,33 +6,33 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
-import { LinesOfActionMinimax } from '../LinesOfActionMinimax';
 import { LinesOfActionState } from '../LinesOfActionState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('LinesOfActionRules', () => {
 
     let rules: LinesOfActionRules;
-    let minimaxes: Minimax<LinesOfActionMove, LinesOfActionState>[];
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     beforeEach(() => {
         rules = LinesOfActionRules.get();
-        minimaxes = [
-            new LinesOfActionMinimax(rules, 'LinesOfActionMinimax'),
-        ];
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
     });
+    it('should forbid moving an empty piece', () => {
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
+        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(3, 2), new Coord(2, 2)).get();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
     it('should forbid moving a piece of the opponent', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(0, 2), new Coord(2, 2)).get();
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going down', () => {
@@ -46,7 +46,7 @@ describe('LinesOfActionRules', () => {
             [X, _, _, _, _, _, _, X],
             [_, O, O, O, O, O, O, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -62,7 +62,7 @@ describe('LinesOfActionRules', () => {
             [X, _, _, _, _, _, _, X],
             [_, O, _, O, O, O, O, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 7), new Coord(2, 5)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -104,7 +104,7 @@ describe('LinesOfActionRules', () => {
             [X, _, _, _, _, _, _, X],
             [_, O, O, O, O, O, O, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(1, 0), new Coord(3, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -120,7 +120,7 @@ describe('LinesOfActionRules', () => {
             [X, _, _, _, _, _, _, X],
             [_, _, O, O, O, O, O, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(1, 7), new Coord(3, 5)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -152,7 +152,7 @@ describe('LinesOfActionRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should forbid to move a piece by a different number of spaces than the number of pieces on the same line', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         const reason: string = LinesOfActionFailure.INVALID_MOVE_LENGTH();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
@@ -200,7 +200,7 @@ describe('LinesOfActionRules', () => {
             [X, _, _, _, _, _, _, X],
             [_, O, O, O, O, O, O, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(1, 0), new Coord(7, 0)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -258,7 +258,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it(`should win when all the player's pieces are connected, in any direction`, () => {
         const board: Table<PlayerOrNone> = [
@@ -273,7 +273,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should draw on simultaneous connections', () => {
         const board: Table<PlayerOrNone> = [
@@ -301,11 +301,11 @@ describe('LinesOfActionRules', () => {
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: LinesOfActionNode = new LinesOfActionNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node);
         expect(LinesOfActionRules.getVictory(expectedState)).toEqual(MGPOptional.of(PlayerOrNone.NONE));
     });
     it('should list all possible targets', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const targets: Coord[] = LinesOfActionRules.possibleTargets(state, new Coord(4, 7));
         expect(targets).toEqual([new Coord(4, 5), new Coord(6, 5), new Coord(2, 5)]);
     });

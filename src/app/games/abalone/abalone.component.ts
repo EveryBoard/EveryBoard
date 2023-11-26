@@ -12,13 +12,16 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
+import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -51,8 +54,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         super(messageDisplayer);
         this.rules = AbaloneRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new AbaloneDummyMinimax(this.rules, 'Dummy'),
+        this.availableAIs = [
+            new Minimax($localize`Score`, this.rules, new AbaloneScoreHeuristic(), new AbaloneMoveGenerator()),
+            new MCTS($localize`MCTS`, new AbaloneMoveGenerator(), this.rules),
         ];
         this.encoder = AbaloneMove.encoder;
         this.tutorial = new AbaloneTutorial().tutorial;
@@ -61,23 +65,19 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
                                          new Coord(- 8 * this.SPACE_SIZE, 2 * this.SPACE_SIZE),
                                          PointyHexaOrientation.INSTANCE);
-
-        this.updateBoard();
     }
-    public updateBoard(): void {
-        this.cancelMoveAttempt();
-        this.hidePreviousMove();
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.hexaBoard = this.getState().getCopiedBoard();
         this.scores = MGPOptional.of(this.getState().getScores());
     }
-    private hidePreviousMove(): void {
+    public override hideLastMove(): void {
         this.moveds = [];
     }
     public override cancelMoveAttempt(): void {
         this.directions = [];
         this.selecteds = [];
     }
-    public override showLastMove(move: AbaloneMove): void {
+    public override async showLastMove(move: AbaloneMove): Promise<void> {
         if (move.isSingleCoord()) {
             this.showPushingMove(move);
         } else {
@@ -89,11 +89,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);
-        while (moved.isInRange(9, 9) && previousState.isPiece(moved)) {
+        while (AbaloneState.isOnBoard(moved) && previousState.isPiece(moved)) {
             this.moveds.push(moved);
             moved = moved.getNext(move.dir);
         }
-        if (moved.isInRange(9, 9)) {
+        if (AbaloneState.isOnBoard(moved)) {
             this.moveds.push(moved);
         }
     }
@@ -109,7 +109,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
     public async onPieceClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#piece_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -130,7 +130,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (directionValidity.isSuccess()) {
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
@@ -165,9 +165,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             }
             let theoritical: AbaloneMove;
             if (single) {
-                theoritical = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
+                theoritical = AbaloneMove.ofSingleCoord(firstPiece, dir);
             } else {
-                theoritical = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
+                theoritical = AbaloneMove.ofDoubleCoord(firstPiece, lastPiece, dir);
             }
             const isLegal: MGPFallible<AbaloneLegalityInformation> = this.rules.isLegal(theoritical, state);
             if (isLegal.isSuccess()) {
@@ -254,8 +254,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private async tryExtension(clicked: Coord, firstPiece: Coord, lastPiece: Coord): Promise<MGPValidation> {
         const alignement: MGPFallible<Direction> = Direction.factory.fromMove(firstPiece, clicked);
         if (alignement.isSuccess()) {
-            const secondAlignement: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
-            if (alignement.equals(secondAlignement)) {
+            const secondAlignment: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
+            if (alignement.equals(secondAlignment)) {
                 // Then it's an extension of the line
                 const firstDistance: number = firstPiece.getDistance(clicked);
                 const secondDistance: number = lastPiece.getDistance(clicked);
@@ -269,7 +269,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                 }
             }
         }
-        const legality: MGPValidation = this.cancelMove(AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
+        const legality: MGPValidation = await this.cancelMove(AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         await this.firstClick(clicked.x, clicked.y);
         return legality;
     }
@@ -281,7 +281,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return MGPValidation.SUCCESS;
     }
     public async chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#direction_' + dir.toString());
+        const clickValidity: MGPValidation = await this.canUserPlay('#direction_' + dir.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -290,16 +290,16 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private async _chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
         const firstPiece: Coord = this.selecteds[0];
         if (this.selecteds.length === 1) {
-            const move: AbaloneMove = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
+            const move: AbaloneMove = AbaloneMove.ofSingleCoord(firstPiece, dir);
             return this.chooseMove(move);
         } else {
             const lastPiece: Coord = this.selecteds[this.selecteds.length - 1];
-            const move: AbaloneMove = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
+            const move: AbaloneMove = AbaloneMove.ofDoubleCoord(firstPiece, lastPiece, dir);
             return this.chooseMove(move);
         }
     }
     public async onSpaceClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#space_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#space_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

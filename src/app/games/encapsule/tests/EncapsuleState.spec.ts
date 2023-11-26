@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
@@ -10,7 +9,7 @@ describe('EncapsuleState', () => {
 
     const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 
-    const emptyBoard: EncapsuleSpace[][] = ArrayUtils.createTable(3, 3, _);
+    const emptyBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
 
     describe('getPieceAt', () => {
         it('should return the expected space', () => {
@@ -20,7 +19,7 @@ describe('EncapsuleState', () => {
                 [someSpace, _, _],
                 [_, _, _]];
             const state: EncapsuleState = new EncapsuleState(board, 0, []);
-            expect(state.getPieceAt(new Coord(0, 1))).toBe(someSpace);
+            expect(state.getPieceAtXY(0, 1)).toBe(someSpace);
         });
     });
     describe('isDroppable', () => {

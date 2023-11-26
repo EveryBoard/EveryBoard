@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -8,12 +8,14 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ConspirateursMinimax } from './ConspirateursMinimax';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { ConspirateursTutorial } from './ConspirateursTutorial';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
+import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
@@ -38,10 +40,8 @@ interface SquareInfo {
     templateUrl: './conspirateurs.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class ConspirateursComponent
-    extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState>
-    implements OnInit
-{
+export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
+
     public PIECE_RADIUS: number;
     public ALL_SHELTERS: Coord[] = ConspirateursState.ALL_SHELTERS;
     public CENTRAL_ZONE_START: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
@@ -65,16 +65,14 @@ export class ConspirateursComponent
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
         this.rules = ConspirateursRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new ConspirateursMinimax(this.rules, 'ConspirateursMinimax'),
+        this.availableAIs = [
+            new ConspirateursJumpMinimax(),
+            new MCTS($localize`MCTS`, new ConspirateursMoveGenerator(), this.rules),
         ];
         this.encoder = ConspirateursMove.encoder;
         this.tutorial = new ConspirateursTutorial().tutorial;
     }
-    public ngOnInit(): void {
-        this.updateBoard();
-    }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
     }
     private updateViewInfo(): void {
@@ -90,7 +88,7 @@ export class ConspirateursComponent
                 const squareInfo: SquareInfo = {
                     coord,
                     squareClasses: [],
-                    shelterClasses: [],
+                    shelterClasses: ['no-fill'],
                     pieceClasses: [this.getPlayerClass(piece)],
                     hasPiece: piece.isPlayer(),
                     isShelter: false,
@@ -100,18 +98,8 @@ export class ConspirateursComponent
             }
         }
         this.viewInfo.sidePieces = state.getSidePieces();
-        this.updateOccupiedShelters();
         this.updateSelected();
-        this.updateVictory();
-    }
-    private updateOccupiedShelters(): void {
-        for (const shelter of ConspirateursState.ALL_SHELTERS) {
-            const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
-            squareInfo.isShelter = true;
-            if (squareInfo.hasPiece) {
-                squareInfo.shelterClasses.push('selectable-stroke');
-            }
-        }
+        this.updateShelterHighlights();
     }
     private updateSelected(): void {
         if (this.selected.isPresent()) {
@@ -132,18 +120,24 @@ export class ConspirateursComponent
             }
         }
     }
-    private updateVictory(): void {
+    private updateShelterHighlights(): void {
         const state: ConspirateursState = this.getState();
         const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.node);
-        if (gameStatus.isEndGame === true) {
-            for (const shelter of ConspirateursState.ALL_SHELTERS) {
-                if (state.getPieceAt(shelter) === gameStatus.winner) {
-                    this.viewInfo.boardInfo[shelter.y][shelter.x].squareClasses.push('victory-fill');
-                }
+        const gameFinished: boolean = gameStatus.isEndGame === true;
+        for (const shelter of ConspirateursState.ALL_SHELTERS) {
+            const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
+            const owner: PlayerOrNone = state.getPieceAt(shelter);
+            const spaceIsOccupiedButNobodyWon: boolean = gameFinished === false && owner.isPlayer();
+            const shelterBelongToWinner: boolean = gameFinished && owner === gameStatus.winner;
+            if (shelterBelongToWinner || spaceIsOccupiedButNobodyWon)
+            {
+                squareInfo.shelterClasses.push('selectable-stroke');
+                squareInfo.pieceClasses.push('victory-stroke');
+                squareInfo.squareClasses.push('victory-fill');
             }
         }
     }
-    public override showLastMove(move: ConspirateursMove): void {
+    public override async showLastMove(move: ConspirateursMove): Promise<void> {
         if (ConspirateursMove.isDrop(move)) {
             this.viewInfo.boardInfo[move.coord.y][move.coord.x].squareClasses.push('moved-fill');
         } else if (ConspirateursMove.isSimple(move)) {
@@ -160,21 +154,22 @@ export class ConspirateursComponent
             }
         }
     }
-    public override cancelMoveAttempt(): void {
+    public override async cancelMoveAttempt(): Promise<void> {
         this.jumpInConstruction = MGPOptional.empty();
         this.selected = MGPOptional.empty();
-        this.updateBoard();
+        await this.updateBoard(false);
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
 
         const state: ConspirateursState = this.getState();
+        const piece: PlayerOrNone = state.getPieceAt(coord);
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             if (this.selected.equalsValue(coord)) {
-                this.cancelMoveAttempt();
+                await this.cancelMoveAttempt();
             } else {
                 this.selected = MGPOptional.of(coord);
                 this.jumpInConstruction = MGPOptional.empty();
@@ -188,9 +183,12 @@ export class ConspirateursComponent
         } else if (state.isDropPhase()) {
             const move: ConspirateursMove = ConspirateursMoveDrop.of(coord);
             return this.chooseMove(move);
+        } else if (piece === PlayerOrNone.NONE) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
+
     }
     private async constructJump(nextTarget: Coord): Promise<MGPValidation> {
         const jump: ConspirateursMoveJump = this.jumpInConstruction.get();

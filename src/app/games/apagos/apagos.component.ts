@@ -1,14 +1,17 @@
 import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ApagosCoord } from './ApagosCoord';
-import { ApagosDummyMinimax } from './ApagosDummyMinimax';
 import { ApagosFailure } from './ApagosFailure';
+import { ApagosHeuristic } from './ApagosHeuristic';
 import { ApagosMove } from './ApagosMove';
+import { ApagosMoveGenerator } from './ApagosMoveGenerator';
 import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
@@ -31,10 +34,7 @@ interface DropArrow {
     templateUrl: './apagos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class ApagosComponent extends GameComponent<ApagosRules,
-                                                   ApagosMove,
-                                                   ApagosState>
-{
+export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState> {
     public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
 
     public readonly BOARD_WIDTH: number = 4 * this.SPACE_SIZE;
@@ -46,7 +46,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
 
     public ARROW_COORD: string = ApagosComponent.getArrowCoord();
 
-    public PIECES_PER_PLAYER: number = ApagosState.PIECES_PER_PLAYER;
+    public PIECES_PER_PLAYER: number = ApagosRules.PIECES_PER_PLAYER;
 
     public PIECE_RADIUS: number;
 
@@ -77,19 +77,19 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.rules = ApagosRules.get();
         this.node = this.rules.getInitialNode();
         this.hasAsymmetricBoard = true;
-        this.availableMinimaxes = [
-            new ApagosDummyMinimax(this.rules, 'ApagosDummyMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new ApagosHeuristic(), new ApagosMoveGenerator()),
+            new MCTS($localize`MCTS`, new ApagosMoveGenerator(), this.rules),
         ];
         this.encoder = ApagosMove.encoder;
         this.tutorial = new ApagosTutorial().tutorial;
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
-        this.updateBoard();
     }
     public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.showPossibleDrops();
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
         this.remainingZero = state.remaining.get(Player.ZERO).get();
@@ -98,13 +98,13 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.hideLastMove();
         this.showPossibleDrops();
     }
-    public hideLastMove(): void {
+    public override hideLastMove(): void {
         this.movedSquare = [];
         this.droppedPiece = MGPOptional.empty();
         this.leftPiece = MGPOptional.empty();
         this.selectedPiece = MGPOptional.empty();
     }
-    public override showLastMove(move: ApagosMove): void {
+    public override async showLastMove(move: ApagosMove): Promise<void> {
         if (move.isDrop()) {
             this.showLastDrop(move);
         } else {
@@ -204,7 +204,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     }
     public async onArrowClick(x: number, player: Player): Promise<MGPValidation> {
         const playerString: string = (player === Player.ZERO) ? 'zero' : 'one';
-        const clickValidity: MGPValidation = this.canUserPlay('#dropArrow_' + playerString + '_' + x);
+        const clickValidity: MGPValidation = await this.canUserPlay('#dropArrow_' + playerString + '_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -254,7 +254,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
 
     }
     public async onSquareClick(x: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#square_' + x);
+        const clickValidity: MGPValidation = await this.canUserPlay('#square_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

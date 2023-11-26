@@ -7,15 +7,6 @@ import { ApagosSquare } from './ApagosSquare';
 
 export class ApagosState extends GameState {
 
-    public static PIECES_PER_PLAYER: number = 10;
-
-    public static getInitialState(): ApagosState {
-        return ApagosState.fromRepresentation(0, [
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [7, 5, 3, 1],
-        ], this.PIECES_PER_PLAYER, this.PIECES_PER_PLAYER);
-    }
     public static fromRepresentation(turn: number, board: NumberTable, nbZero: number, nbOne: number): ApagosState {
         const squares: ApagosSquare[] = [];
         for (let x: number = 0; x < 4; x++) {
@@ -30,6 +21,7 @@ export class ApagosState extends GameState {
         remaining.set(Player.ONE, nbOne);
         return new ApagosState(turn, squares, remaining);
     }
+
     public constructor(turn: number,
                        public readonly board: ReadonlyArray<ApagosSquare>,
                        public readonly remaining: MGPMap<Player, number>)
@@ -37,9 +29,11 @@ export class ApagosState extends GameState {
         super(turn);
         this.remaining.makeImmutable();
     }
+
     public getPieceAt(coord: ApagosCoord): ApagosSquare {
         return this.board[coord.x];
     }
+
     public updateAt(coord: ApagosCoord, newSquare: ApagosSquare): ApagosState {
         const newBoard: ApagosSquare[] = [];
         for (let x: number = 0; x < 4; x++) {
@@ -52,15 +46,18 @@ export class ApagosState extends GameState {
         const remaining: MGPMap<Player, number> = this.getRemainingCopy();
         return new ApagosState(this.turn, newBoard, remaining);
     }
+
     public getRemainingCopy(): MGPMap<Player, number> {
         return this.remaining.getCopy();
     }
+
     public getRemaining(piece: Player): number {
         return this.remaining.get(piece).get();
     }
+
     public equals(other: ApagosState): boolean {
         return this.turn === other.turn &&
-               ArrayUtils.compareArray(other.board, this.board) &&
+               ArrayUtils.compare(other.board, this.board) &&
                this.remaining.equals(other.remaining);
     }
 }

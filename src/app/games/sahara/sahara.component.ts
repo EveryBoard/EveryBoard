@@ -6,7 +6,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
-import { SaharaMinimax } from 'src/app/games/sahara/SaharaMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
@@ -15,6 +14,10 @@ import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaTutorial } from './SaharaTutorial';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { SaharaHeuristic } from './SaharaHeuristic';
+import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 
 @Component({
     selector: 'app-sahara',
@@ -26,8 +29,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              SaharaState,
                                                              FourStatePiece>
 {
-    public static VERBOSE: boolean = false;
-
     public lastCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
@@ -40,19 +41,19 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         super(messageDisplayer);
         this.rules = SaharaRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new SaharaMinimax(this.rules, 'SaharaMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new SaharaHeuristic(), new SaharaMoveGenerator()),
+            new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];
         this.encoder = SaharaMove.encoder;
         this.tutorial = new SaharaTutorial().tutorial;
-        this.updateBoard();
     }
     public override cancelMoveAttempt(): void {
         this.possibleLandings = [];
         this.chosenCoord = MGPOptional.empty();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -69,7 +70,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
             return this.chooseLandingCoord(x, y);
         }
     }
-    private choosePiece(x: number, y: number): MGPValidation {
+    private async choosePiece(x: number, y: number): Promise<MGPValidation> {
         if (this.board[y][x] === FourStatePiece.EMPTY) { // Did not select pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
         } else if (this.board[y][x].is(Player.ofTurn(this.getTurn()))) { // selected player's pyramid
@@ -92,8 +93,8 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         }
         return await this.chooseMove(newMove.get());
     }
-    public updateBoard(): void {
-        const move: MGPOptional<SaharaMove> = this.node.move;
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        const move: MGPOptional<SaharaMove> = this.node.previousMove;
         this.lastCoord = move.map((move: SaharaMove) => move.getStart());
         this.lastMoved = move.map((move: SaharaMove) => move.getEnd());
         this.board = this.getState().board;

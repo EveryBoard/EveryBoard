@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
-import { EpaminondasMinimax } from '../EpaminondasMinimax';
+import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('EpaminondasMove: ', () => {
 
@@ -12,34 +12,30 @@ describe('EpaminondasMove: ', () => {
         function createLeftOfBoardCoord(): void {
             new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT);
         }
-        RulesUtils.expectToThrowAndLog(createLeftOfBoardCoord, 'Illegal coord outside of board (-1, 0).');
+        TestUtils.expectToThrowAndLog(createLeftOfBoardCoord, 'Illegal coord outside of board (-1, 0).');
     });
     it('should forbid creation of a move that moves too much', () => {
         function movingAPhalanxTooMuch(): void {
             new EpaminondasMove(0, 0, 2, 3, Direction.UP);
         }
-        RulesUtils.expectToThrowAndLog(movingAPhalanxTooMuch, 'Cannot move a phalanx further than its size (got step size 3 for 2 pieces).');
+        TestUtils.expectToThrowAndLog(movingAPhalanxTooMuch, 'Cannot move a phalanx further than its size (got step size 3 for 2 pieces).');
     });
     it('should forbid creation of a move with with negative or null number of selected piece', () => {
         function selectingNegativeNumberOfPiece(): void {
             new EpaminondasMove(0, 0, -1, 0, Direction.UP);
         }
-        RulesUtils.expectToThrowAndLog(selectingNegativeNumberOfPiece, 'Must select minimum one piece (got -1).');
+        TestUtils.expectToThrowAndLog(selectingNegativeNumberOfPiece, 'Must select minimum one piece (got -1).');
     });
     it('should forbid creation of move of null step', () => {
         function movingOfZeroStep(): void {
             new EpaminondasMove(2, 2, 1, 0, Direction.UP);
         }
-        RulesUtils.expectToThrowAndLog(movingOfZeroStep, 'Step size must be minimum one (got 0).');
+        TestUtils.expectToThrowAndLog(movingOfZeroStep, 'Step size must be minimum one (got 0).');
     });
     it('should have a bijective encoder', () => {
         const rules: EpaminondasRules = EpaminondasRules.get();
-        const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
-        const node: EpaminondasNode = rules.getInitialNode();
-        const moves: EpaminondasMove[] = minimax.getListMoves(node);
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(EpaminondasMove.encoder, move);
-        }
+        const moveGenerator: EpaminondasMoveGenerator = new EpaminondasMoveGenerator();
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, EpaminondasMove.encoder);
     });
     it('should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);

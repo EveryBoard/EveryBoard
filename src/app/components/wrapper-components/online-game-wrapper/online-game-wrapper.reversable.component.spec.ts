@@ -2,7 +2,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
-import { AwaleComponent } from 'src/app/games/awale/awale.component';
+import { AwaleComponent } from 'src/app/games/mancala/awale/awale.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
@@ -23,7 +23,7 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         testUtils.detectChanges();
 
         // Then the svg component should have no rotation
-        const wrapper: OnlineGameWrapperComponent = testUtils.wrapper as OnlineGameWrapperComponent;
+        const wrapper: OnlineGameWrapperComponent = testUtils.getWrapper() as OnlineGameWrapperComponent;
         expect(wrapper.gameComponent.rotation).toBe('rotate(0)');
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
@@ -36,7 +36,7 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         testUtils.detectChanges();
 
         // Then the svg component should have a rotation of 180°
-        const wrapper: OnlineGameWrapperComponent = testUtils.wrapper as OnlineGameWrapperComponent;
+        const wrapper: OnlineGameWrapperComponent = testUtils.getWrapper() as OnlineGameWrapperComponent;
         expect(wrapper.gameComponent.rotation).toBe('rotate(180)');
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));

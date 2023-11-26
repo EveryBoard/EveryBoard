@@ -53,9 +53,9 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When clicking on them
-            // Then the move should be cancelled
+            // Then the move should be canceled
             await testUtils.expectClickFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }));
         it('should drop the first of two pieces when clicking empty coord', fakeAsync(async() => {
@@ -81,7 +81,7 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on an empty square
             await testUtils.expectClickSuccess('#click_8_8');
@@ -114,7 +114,7 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_8_8');
 
             // When clicking again on this piece
@@ -146,7 +146,7 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_8_8');
 
             // When clicking on a second empty square
@@ -180,7 +180,7 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 7);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_6_8');
 
             // When finishing your move
@@ -220,7 +220,7 @@ describe('ConnectSixComponent', () => {
             ], 1);
 
             // When displaying it
-            testUtils.setupState(state, undefined, ConnectSixFirstMove.of(new Coord(9, 9)));
+            await testUtils.setupState(state, undefined, ConnectSixFirstMove.of(new Coord(9, 9)));
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece_9_9', 'last-move-stroke');
@@ -248,9 +248,10 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
+            const lastMove: ConnectSixMove = ConnectSixDrops.of(new Coord(10, 9), new Coord(11, 9));
 
             // When displaying it
-            testUtils.setupState(state, undefined, ConnectSixDrops.of(new Coord(10, 9), new Coord(11, 9)));
+            await testUtils.setupState(state, undefined, lastMove);
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece_10_9', 'last-move-stroke');

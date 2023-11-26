@@ -1,9 +1,9 @@
 import { Rules } from '../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -15,6 +15,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -114,7 +115,7 @@ class QuartoLine {
         return coords;
     }
 }
-export class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
+export class QuartoNode extends GameNode<QuartoMove, QuartoState> {}
 
 interface LineInfos {
 
@@ -127,8 +128,6 @@ interface LineInfos {
 
 export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 
-    public static VERBOSE: boolean = false;
-
     private static singleton: MGPOptional<QuartoRules> = MGPOptional.empty();
 
     public static get(): QuartoRules {
@@ -137,9 +136,16 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         return QuartoRules.singleton.get();
     }
+
     private constructor() {
-        super(QuartoState);
+        super();
     }
+
+    public getInitialState(): QuartoState {
+        const board: QuartoPiece[][] = TableUtils.create(4, 4, QuartoPiece.EMPTY);
+        return new QuartoState(board, 0, QuartoPiece.AAAA);
+    }
+
     public static readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals
         new QuartoLine(new Coord(0, 0), Direction.DOWN),
@@ -231,7 +237,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             c = state.getPieceAt(coord);
             commonCrit.mergeWithQuartoPiece(c);
         }
-        if (QuartoRules.isOccupied(c) && !commonCrit.areAllAbsent()) {
+        if (QuartoRules.isOccupied(c) && commonCrit.areAllAbsent() === false) {
             /**
              * the last square was occupied, and there was some common criterion on all the four pieces
              * that's what victory is like in Quarto
@@ -295,10 +301,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                 // if c is occupied
                 if (commonCriterion.isAbsent()) {
                     commonCriterion = MGPOptional.of(new QuartoCriterion(c));
-                    display(QuartoRules.VERBOSE, 'set commonCrit to ' + commonCriterion.toString());
+                    Debug.display('QuartoRules', 'getLineInfos', 'set commonCrit to ' + commonCriterion.toString());
                 } else {
                     commonCriterion.get().mergeWithQuartoPiece(c);
-                    display(QuartoRules.VERBOSE, 'update commonCrit: ' + commonCriterion.toString());
+                    Debug.display('QuartoRules', 'getLineInfos', 'update commonCrit: ' + commonCriterion.toString());
                 }
             }
             coord = coord.getNext(line.direction, 1);

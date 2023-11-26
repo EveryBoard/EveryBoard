@@ -34,9 +34,9 @@ describe('QuixoComponent', () => {
                 [_, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 3);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
-            await testUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should cancel move when trying to select center coord', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
@@ -47,7 +47,7 @@ describe('QuixoComponent', () => {
                 [_, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 3);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK());
         }));
@@ -107,13 +107,13 @@ describe('QuixoComponent', () => {
                 [_, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 3);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
-            expect(testUtils.getComponent().getPieceClasses(0, 0)).toContain('victory-stroke');
-            expect(testUtils.getComponent().getPieceClasses(1, 0)).toContain('victory-stroke');
-            expect(testUtils.getComponent().getPieceClasses(2, 0)).toContain('victory-stroke');
-            expect(testUtils.getComponent().getPieceClasses(3, 0)).toContain('victory-stroke');
-            expect(testUtils.getComponent().getPieceClasses(4, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(0, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(1, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(2, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(3, 0)).toContain('victory-stroke');
+            expect(testUtils.getGameComponent().getPieceClasses(4, 0)).toContain('victory-stroke');
         }));
     });
 });

@@ -18,10 +18,11 @@ export class NewGameMove extends Move {
      *   - `MoveEncoder.tuple` to get an encoder for a move that has multiple fields
      *   - `MoveEncoder.disjunction` to get an encoder for a move that may be of different types
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public static encoder: Encoder<NewGameMove> = undefined as any;
 
     public toString(): string {
-        throw new Error('This method is really more debug oriented');
+        return 'This method is really more debug oriented';
     }
     public equals(other: this): boolean {
         throw new Error('This method helps the minimaxes avoid creating two times the same move, which would slow its calculations');

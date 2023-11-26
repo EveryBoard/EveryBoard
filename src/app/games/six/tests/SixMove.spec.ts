@@ -2,7 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { SixMove } from '../SixMove';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('SixMove', () => {
 
@@ -18,7 +18,7 @@ describe('SixMove', () => {
         function creatingStaticMovement(): void {
             SixMove.ofMovement(new Coord(0, 0), new Coord(0, 0));
         }
-        RulesUtils.expectToThrowAndLog(creatingStaticMovement, 'Deplacement cannot be static!');
+        TestUtils.expectToThrowAndLog(creatingStaticMovement, 'Deplacement cannot be static!');
     });
     it('should allow move with mentionned "keep"', () => {
         const move: SixMove = SixMove.ofCut(new Coord(0, 0), new Coord(2, 2), new Coord(1, 1));
@@ -28,8 +28,8 @@ describe('SixMove', () => {
         function creatingMovementKeepingStartingCoord(): void {
             SixMove.ofCut(new Coord(0, 0), new Coord(1, 1), new Coord(0, 0));
         }
-        RulesUtils.expectToThrowAndLog(creatingMovementKeepingStartingCoord,
-                                       'Cannot keep starting coord, since it will always be empty after move!');
+        TestUtils.expectToThrowAndLog(creatingMovementKeepingStartingCoord,
+                                      'Cannot keep starting coord, since it will always be empty after move!');
     });
     describe('Overrides', () => {
 

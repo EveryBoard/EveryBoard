@@ -3,16 +3,19 @@ import { GameComponent } from '../../components/game-components/game-component/G
 import { PylosMove, PylosMoveFailure } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
-import { PylosMinimax } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { PylosOrderedMoveGenerator } from './PylosOrderedMoveGenerator';
+import { PylosMoveGenerator } from './PylosMoveGenerator';
+import { PylosHeuristic } from './PylosHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-pylos',
@@ -20,8 +23,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
-
-    public static VERBOSE: boolean = false;
 
     // 4*100 for each pieces at z=0 level + 2*4 for each direction there is stroke
     public boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
@@ -52,13 +53,12 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.hasAsymmetricBoard = true;
         this.rules = PylosRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new PylosMinimax(this.rules, 'PylosMinimax'),
-            new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, this.rules, new PylosHeuristic(), new PylosOrderedMoveGenerator()),
+            new MCTS($localize`MCTS`, new PylosMoveGenerator(), this.rules),
         ];
         this.encoder = PylosMove.encoder;
         this.tutorial = new PylosTutorial().tutorial;
-        this.updateBoard();
     }
     public getPiecesCyForPlayer(player: Player): number {
         if (player === Player.ONE) {
@@ -88,7 +88,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
                this.chosenSecondCapture.equalsValue(coord);
     }
     public async onPieceClick(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
+        const clickValidity: MGPValidation = await this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -96,7 +96,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         const clickedPiece: PlayerOrNone = this.state.getPieceAt(clickedCoord);
         const pieceBelongToOpponent: boolean = clickedPiece === this.state.getCurrentOpponent();
         if (pieceBelongToOpponent) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (this.chosenStartingCoord.equalsValue(clickedCoord)) {
             this.cancelMoveAttempt();
@@ -162,7 +162,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
     public async validateCapture(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#capture_validation');
+        const clickValidity: MGPValidation = await this.canUserPlay('#capture_validation');
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -197,7 +197,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.capturables = [];
     }
     public async onDrop(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#drop_' + x + '_' + y + '_' + z);
+        const clickValidity: MGPValidation = await this.canUserPlay('#drop_' + x + '_' + y + '_' + z);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -292,17 +292,17 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
         return pieces;
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.constructedState = this.state;
-        this.lastMove = this.node.move;
+        this.lastMove = this.node.previousMove;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
         this.highCapture = MGPOptional.empty();
         this.cancelMoveAttempt();
         this.hideLastMove();
     }
-    public override showLastMove(move: PylosMove): void {
+    public override async showLastMove(move: PylosMove): Promise<void> {
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastStartingCoord = move.startingCoord;
         this.lastFirstCapture = move.firstCapture;
@@ -313,7 +313,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             this.highCapture = this.lastFirstCapture;
         }
     }
-    private hideLastMove(): void {
+    public override hideLastMove(): void {
         this.lastStartingCoord = MGPOptional.empty();
         this.lastLandingCoord = MGPOptional.empty();
         this.lastFirstCapture = MGPOptional.empty();

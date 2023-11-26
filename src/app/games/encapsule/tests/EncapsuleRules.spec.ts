@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
-import { EncapsuleMinimax } from '../EncapsuleMinimax';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
@@ -9,14 +8,12 @@ import { EncapsulePiece } from '../EncapsulePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
-
-    let minimaxes: Minimax<EncapsuleMove, EncapsuleState, EncapsuleSpace>[];
 
     let node: EncapsuleNode;
 
@@ -37,9 +34,6 @@ describe('EncapsuleRules', () => {
 
     beforeEach(() => {
         rules = EncapsuleRules.get();
-        minimaxes = [
-            new EncapsuleMinimax(rules, 'EncapsuleMinimax'),
-        ];
         node = rules.getInitialNode();
     });
     it('should be created', () => {
@@ -59,7 +53,7 @@ describe('EncapsuleRules', () => {
         node = new EncapsuleNode(state);
         // When evaluating it
         // Then it should be a victory
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
     it('should not consider a non-victory as a victory', () => {
         // Given a board that is an ongoing part
@@ -76,7 +70,7 @@ describe('EncapsuleRules', () => {
 
         // When evaluating it
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+        RulesUtils.expectToBeOngoing(rules, node);
     });
     it('should know winner even when he was not playing', () => {
         // Given a board on which active player could lose by acting
@@ -106,7 +100,7 @@ describe('EncapsuleRules', () => {
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: EncapsuleNode = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should allow moving pieces on empty coord', () => {
         // Given a board with piece on it
@@ -224,37 +218,56 @@ describe('EncapsuleRules', () => {
         const reason: string = EncapsuleFailure.INVALID_PLACEMENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('should refuse to move opponent piece on the board', () => {
+    it('should refuse to drop opponent piece on the board', () => {
         // Given any board
-        const state: EncapsuleState = EncapsuleState.getInitialState();
+        const state: EncapsuleState = EncapsuleRules.get().getInitialState();
 
         // When trying to drop a piece of the opponent
         const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_LIGHT, new Coord(2, 2));
 
         // Then it should be illegal
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
+    it('should refuse to move opponent piece', () => {
+        // Given a board with at least a piece of the opponent
+        const board: Table<EncapsuleSpace> = [
+            [O__, ___, ___],
+            [___, _X_, ___],
+            [___, ___, ___],
+        ];
+        const state: EncapsuleState = new EncapsuleState(board, 2, [
+            O0, O1, O1, O2, O2,
+            X0, X0, X1, X2,
+        ]);
+
+        // When trying to move the opponent's piece
+        const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 2));
+
+        // Then it should be illegal
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should refuse to drop nothing', () => {
         // Given any board
-        const state: EncapsuleState = EncapsuleState.getInitialState();
+        const state: EncapsuleState = EncapsuleRules.get().getInitialState();
 
         // When trying to drop "nothing"
         const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.NONE, new Coord(2, 2));
 
         // Then it should be illegal
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('should refuse to move empty space', () => {
+    it('should refuse to move from an empty space', () => {
         // Given any board
-        const state: EncapsuleState = EncapsuleState.getInitialState();
+        const state: EncapsuleState = EncapsuleRules.get().getInitialState();
 
         // When trying to drop "nothing"
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 2));
 
         // Then it should be illegal
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
 });

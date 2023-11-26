@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Utils, display } from 'src/app/utils/utils';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoFailure } from './CoerceoFailure';
@@ -10,12 +10,12 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/utils/ArrayUtils';
 
-export class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
+export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
+@Debug.log
 export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
-
-    public static VERBOSE: boolean = false;
 
     private static singleton: MGPOptional<CoerceoRules> = MGPOptional.empty();
 
@@ -25,9 +25,27 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         }
         return CoerceoRules.singleton.get();
     }
-    private constructor() {
-        super(CoerceoState);
+
+    public getInitialState(): CoerceoState {
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],
+            [N, N, N, _, _, O, _, _, _, O, _, _, N, N, N],
+            [_, X, _, X, _, _, O, _, O, _, _, X, _, X, _],
+            [X, _, _, _, X, _, _, _, _, _, X, _, _, _, X],
+            [_, X, _, X, _, _, _, _, _, _, _, X, _, X, _],
+            [_, O, _, O, _, _, _, _, _, _, _, O, _, O, _],
+            [O, _, _, _, O, _, _, _, _, _, O, _, _, _, O],
+            [_, O, _, O, _, _, X, _, X, _, _, O, _, O, _],
+            [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
+            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
+        ];
+        return new CoerceoState(board, 0, [0, 0], [0, 0]);
     }
+
     public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState {
         if (CoerceoMove.isTileExchange(move)) {
             return this.applyLegalTileExchange(move, state);
@@ -52,9 +70,6 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                                                               afterTileRemoval.turn + 1,
                                                               afterTileRemoval.tiles,
                                                               afterTileRemoval.captures);
-        display(CoerceoRules.VERBOSE,
-                { coerceoRules_applyLegalTileExchange:
-                    { a_initialState: state, afterCapture, afterTileRemoval, resultingState } });
         return resultingState;
     }
     public applyLegalMovement(move: CoerceoRegularMove, state: CoerceoState): CoerceoState {
@@ -68,12 +83,6 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                                                               state.turn + 1,
                                                               afterCaptures.tiles,
                                                               afterCaptures.captures);
-        display(CoerceoRules.VERBOSE, {
-            ab_state: state,
-            afterMovement,
-            afterTilesRemoved,
-            afterCaptures,
-            resultingState });
         return resultingState;
     }
     public isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
@@ -108,7 +117,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (starter.is(state.getCurrentOpponent())) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const lander: FourStatePiece = state.getPieceAt(move.getEnd());
         if (lander.is(state.getCurrentPlayer())) {

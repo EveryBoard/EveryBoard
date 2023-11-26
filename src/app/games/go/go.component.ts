@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
-import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { display } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -12,15 +11,18 @@ import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { GoHeuristic } from './GoHeuristic';
+import { GoMoveGenerator } from './GoMoveGenerator';
 
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
+@Debug.log
 export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityInformation> {
-
-    public static VERBOSE: boolean = false;
 
     public boardInfo: GroupDatas<GoPiece>;
 
@@ -40,18 +42,18 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         this.scores = MGPOptional.of([0, 0]);
         this.rules = GoRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new GoMinimax(this.rules, 'GoMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, GoRules.get(), new GoHeuristic(), new GoMoveGenerator()),
+            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
         this.boardHeight = this.getState().board.length;
         this.boardWidth = this.getState().board[0].length;
-        this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -60,11 +62,9 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         const resultlessMove: GoMove = new GoMove(x, y);
         return this.chooseMove(resultlessMove);
     }
-    public updateBoard(): void {
-        display(GoComponent.VERBOSE, 'updateBoard');
-
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: GoState = this.getState();
-        const move: MGPOptional<GoMove> = this.node.move;
+        const move: MGPOptional<GoMove> = this.node.previousMove;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();
@@ -110,7 +110,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
     }
     public spaceIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.getState().getPieceAtXY(x, y);
-        return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
+        return piece !== GoPiece.EMPTY && this.isTerritory(x, y) === false;
     }
     public isLastSpace(x: number, y: number): boolean {
         if (this.last.isPresent()) {

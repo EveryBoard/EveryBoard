@@ -10,6 +10,7 @@ import { LinesOfActionState } from '../LinesOfActionState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
+import { LinesOfActionRules } from '../LinesOfActionRules';
 
 describe('LinesOfActionComponent', () => {
 
@@ -37,12 +38,15 @@ describe('LinesOfActionComponent', () => {
                 [_, O, _, O, O, O, O, _],
             ];
             const state: LinesOfActionState = new LinesOfActionState(board, 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }));
+        it('should forbid selecting an empty piece', fakeAsync(async() => {
+            await testUtils.expectClickFailure('#click_2_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }));
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
-            await testUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            await testUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
         it('should show selected piece', fakeAsync(async() => {
             // Given any board
@@ -68,7 +72,7 @@ describe('LinesOfActionComponent', () => {
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
             await testUtils.expectMoveSuccess('#click_2_2', move);
 
-            const component: LinesOfActionComponent = testUtils.getComponent();
+            const component: LinesOfActionComponent = testUtils.getGameComponent();
             expect(component.getSquareClasses(2, 2)).toEqual(['moved-fill']);
             expect(component.getSquareClasses(2, 0)).toEqual(['moved-fill']);
         }));
@@ -84,13 +88,13 @@ describe('LinesOfActionComponent', () => {
                 [_, O, _, O, O, O, O, _],
             ];
             const state: LinesOfActionState = new LinesOfActionState(board, 0);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click_2_0');
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
             await testUtils.expectMoveSuccess('#click_2_2', move);
 
-            const component: LinesOfActionComponent = testUtils.getComponent();
+            const component: LinesOfActionComponent = testUtils.getGameComponent();
             expect(component.getSquareClasses(2, 2)).toEqual(['captured-fill']);
         }));
         it('should change selected piece when clicking another piece', fakeAsync(async() => {
@@ -130,7 +134,7 @@ describe('LinesOfActionComponent', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
-        testUtils.setupState(state, LinesOfActionState.getInitialState(), move);
+        await testUtils.setupState(state, LinesOfActionRules.get().getInitialState(), move);
 
         // When taking it back
         await testUtils.expectInterfaceClickSuccess('#takeBack');

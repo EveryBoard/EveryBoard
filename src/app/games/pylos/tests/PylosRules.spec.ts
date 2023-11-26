@@ -4,19 +4,15 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
-import { PylosMinimax } from '../PylosMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from '../PylosFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { PylosOrderedMinimax } from '../PylosOrderedMinimax';
 
 describe('PylosRules', () => {
 
     let rules: PylosRules;
-    let minimaxes: Minimax<PylosMove, PylosState>[];
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -24,10 +20,6 @@ describe('PylosRules', () => {
 
     beforeEach(() => {
         rules = PylosRules.get();
-        minimaxes = [
-            new PylosMinimax(rules, 'Pylos Minimax'),
-            new PylosOrderedMinimax(rules, 'Pylos Ordered Minimax'),
-        ];
     });
     it(`should forbid move who'se landing coord is not empty`, () => {
         const board: PlayerOrNone[][][] = [
@@ -98,7 +90,7 @@ describe('PylosRules', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
-        const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it(`should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {
@@ -346,7 +338,7 @@ describe('PylosRules', () => {
         const expectedState: PylosState = new PylosState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
     it('should declare loser Player.ONE when he put his 15th ball', () => {
         const board: PlayerOrNone[][][] = [
@@ -389,6 +381,6 @@ describe('PylosRules', () => {
         const expectedState: PylosState = new PylosState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 });

@@ -5,9 +5,8 @@ import { ConnectSixState } from '../ConnectSixState';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ConnectSixMinimax } from '../ConnectSixMinimax';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConnectSixRules', () => {
     /**
@@ -23,18 +22,13 @@ describe('ConnectSixRules', () => {
 
     let rules: ConnectSixRules;
 
-    let minimaxes: Minimax<ConnectSixMove, ConnectSixState>[];
-
     beforeEach(() => {
         rules = ConnectSixRules.get();
-        minimaxes = [
-            new ConnectSixMinimax(rules, 'minimax'),
-        ];
     });
     describe('first turn', () => {
-        it('shoud allow the first player play only one piece', () => {
+        it('should allow the first player play only one piece', () => {
             // Given the initial state
-            const state: ConnectSixState = ConnectSixState.getInitialState();
+            const state: ConnectSixState = ConnectSixRules.get().getInitialState();
 
             // When dropping one piece
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
@@ -65,14 +59,14 @@ describe('ConnectSixRules', () => {
         });
         it('should refuse move that drop two pieces on first turn', () => {
             // Given the first turn
-            const state: ConnectSixState = ConnectSixState.getInitialState();
+            const state: ConnectSixState = ConnectSixRules.get().getInitialState();
             // When dropping two pieces
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(11, 11), new Coord(10, 10));
             // Then the attempt would have throw
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            RulesUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'First move should be instance of ConnectSixFirstMove');
+            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'First move should be instance of ConnectSixFirstMove');
         });
     });
     describe('next turns', () => {
@@ -220,7 +214,7 @@ describe('ConnectSixRules', () => {
             function trySingleDropAfterFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            RulesUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'non-firsts moves should be instance of ConnectSixDrops');
+            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'non-firsts moves should be instance of ConnectSixDrops');
         });
         it('should notify victory when aligning 6 stones of your color', () => {
             const state: ConnectSixState = new ConnectSixState([
@@ -245,7 +239,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const node: ConnectSixNode = new ConnectSixNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
         it('should draw when no one can play anymore', () => {
             // Given the wildly unlikely case in which in 180 turn no one win
@@ -298,7 +292,7 @@ describe('ConnectSixRules', () => {
             // Then the board should be a draw
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: ConnectSixNode = new ConnectSixNode(expectedState);
-            RulesUtils.expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node);
         });
     });
 });

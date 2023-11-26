@@ -1,12 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
 import { Player } from 'src/app/jscaip/Player';
-import { DiamDummyMinimax } from '../DiamDummyMinimax';
 import { DiamFailure } from '../DiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -20,13 +18,8 @@ describe('DiamRules', () => {
 
     let rules: DiamRules;
 
-    let minimaxes: Minimax<DiamMove, DiamState>[];
-
     beforeEach(() => {
         rules = DiamRules.get();
-        minimaxes = [
-            new DiamDummyMinimax(rules, 'DiamDummyMinimax'),
-        ];
     });
     function drop(target: number, piece: DiamPiece): DiamMove {
         return new DiamMoveDrop(target, piece);
@@ -37,7 +30,7 @@ describe('DiamRules', () => {
     describe('drop moves', () => {
         it('should allow a simple drop on the empty board', () => {
             // Given the initial state
-            const state: DiamState = DiamState.getInitialState();
+            const state: DiamState = DiamRules.get().getInitialState();
             // When dropping a Player.ZERO piece in a valid space
             const move: DiamMove = drop(0, A1);
             // Then the piece goes to the bottom of that space
@@ -52,13 +45,13 @@ describe('DiamRules', () => {
         });
         it('should forbid dropping a piece from the opponent', () => {
             // Given the initial state
-            const state: DiamState = DiamState.getInitialState();
+            const state: DiamState = DiamRules.get().getInitialState();
 
             // When dropping a Player.ONE piece in a valid space
             const move: DiamMove = drop(0, B1);
 
             // Then the move should be illegal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid dropping on a space that is full', () => {
@@ -160,7 +153,7 @@ describe('DiamRules', () => {
             const move: DiamMove = shift(new Coord(7, 2), 'clockwise');
 
             // Then the move should be not legal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid moving a stack if the receiving space will become too high', () => {
@@ -179,13 +172,13 @@ describe('DiamRules', () => {
         });
         it('should forbid moving a stack if it does not exist', () => {
             // Given a state where no shifts are possible
-            const state: DiamState = DiamState.getInitialState();
+            const state: DiamState = DiamRules.get().getInitialState();
 
             // When moving a non-existing stack
             const move: DiamMove = shift(new Coord(0, 1), 'clockwise');
 
             // Then the move should be not legal
-            const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
     });
@@ -200,7 +193,7 @@ describe('DiamRules', () => {
             ], 3);
             const node: DiamNode = new DiamNode(state);
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+            RulesUtils.expectToBeOngoing(rules, node);
         });
         it('should not consider non-facing alignment as win', () => {
             // Given a state where there is an alignment but not face-to-face
@@ -212,7 +205,7 @@ describe('DiamRules', () => {
             ], 4);
             const node: DiamNode = new DiamNode(state);
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
+            RulesUtils.expectToBeOngoing(rules, node);
         });
         it('should detect player 0 win with face-to-face alignment', () => {
             // Given a state where player zero has a face-to-face alignment
@@ -224,7 +217,7 @@ describe('DiamRules', () => {
             ], 4);
             const node: DiamNode = new DiamNode(state);
             // Then it is detected as a v ictory for player zero
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
         it('should detect win when two alignments happen at the same turn', () => {
             // Given a board where two alignment exist, but player one has a higher alignment
@@ -236,7 +229,7 @@ describe('DiamRules', () => {
             ], 4);
             const node: DiamNode = new DiamNode(state);
             // Then the winner is the one with the highest alignment
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
     });
 });

@@ -43,6 +43,10 @@ import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
 import { HiveRules } from 'src/app/games/hive/HiveRules';
 import { HiveMove } from 'src/app/games/hive/HiveMove';
 
+import { KalahRules } from 'src/app/games/mancala/kalah/KalahRules';
+import { KalahTutorial } from 'src/app/games/mancala/kalah/KalahTutorial';
+import { KalahMove } from 'src/app/games/mancala/kalah/KalahMove';
+
 import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
 import { LinesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
 import { LinesOfActionMove } from 'src/app/games/lines-of-action/LinesOfActionMove';
@@ -51,7 +55,9 @@ import { LodestoneTutorial } from 'src/app/games/lodestone/LodestoneTutorial';
 import { LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
 import { LodestoneMove } from 'src/app/games/lodestone/LodestoneMove';
 
-import { MartianChessTutorial, NOT_A_FIELD_PROMOTION } from 'src/app/games/martian-chess/MartianChessTutorial';
+import { MancalaDistribution } from 'src/app/games/mancala/common/MancalaMove';
+
+import { MartianChessTutorial } from 'src/app/games/martian-chess/MartianChessTutorial';
 import { MartianChessRules } from 'src/app/games/martian-chess/MartianChessRules';
 import { MartianChessMove } from 'src/app/games/martian-chess/MartianChessMove';
 
@@ -90,7 +96,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             it(game.urlName, fakeAsync(async() => {
                 const wrapper: GameWrapper<Comparable> =
                     (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
-                        .wrapper;
+                        .getWrapper();
                 expect(wrapper).toBeTruthy();
             }));
         }
@@ -102,6 +108,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
+            const kalahTutorial: TutorialStep[] = new KalahTutorial().tutorial;
             const hiveTutorial: TutorialStep[] = new HiveTutorial().tutorial;
             const linesOfActionTutorial: TutorialStep[] = new LinesOfActionTutorial().tutorial;
             const lodestoneTutorial: TutorialStep[] = new LodestoneTutorial().tutorial;
@@ -177,7 +184,17 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     HiveRules.get(),
                     hiveTutorial[8],
                     HiveMove.move(new Coord(1, 0), new Coord(0, 1)).get(),
-                    MGPValidation.failure($localize`You have not freed your queen, try again!`),
+                    MGPValidation.failure('You have not freed your queen, try again!'),
+                ], [
+                    KalahRules.get(),
+                    kalahTutorial[4],
+                    KalahMove.of(MancalaDistribution.ZERO),
+                    MGPValidation.failure('This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!'),
+                ], [
+                    KalahRules.get(),
+                    kalahTutorial[5],
+                    KalahMove.of(MancalaDistribution.FOUR),
+                    MGPValidation.failure('You did not capture, try again!'),
                 ], [
                     LinesOfActionRules.get(),
                     linesOfActionTutorial[4],
@@ -217,7 +234,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     MartianChessRules.get(),
                     martianChessTutorial[7],
                     MartianChessMove.from(new Coord(1, 7), new Coord(0, 6)).get(),
-                    MGPValidation.failure(NOT_A_FIELD_PROMOTION()),
+                    MGPValidation.failure(`This is not a field promotion!`),
                 ], [
                     MartianChessRules.get(),
                     martianChessTutorial[8],

@@ -119,12 +119,12 @@ describe('SaharaComponent', () => {
             [N, N, X, O, _, _, _, _, O, N, N],
         ];
         const initialState: SaharaState = new SaharaState(board, 2);
-        testUtils.setupState(initialState);
+        await testUtils.setupState(initialState);
 
         await testUtils.expectClickSuccess('#click_2_1'); // select first piece
         const move: SaharaMove = SaharaMove.from(new Coord(2, 1), new Coord(1, 2)).get();
         await testUtils.expectMoveSuccess('#click_1_2', move); // select landing
 
-        expect(testUtils.wrapper.endGame).toBeTrue();
+        expect(testUtils.getWrapper().endGame).toBeTrue();
     }));
 });

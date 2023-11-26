@@ -9,9 +9,10 @@ import { SiamState } from 'src/app/games/siam/SiamState';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SiamFailure } from '../SiamFailure';
+import { DebugElement } from '@angular/core';
 
 describe('SiamComponent', () => {
 
@@ -56,7 +57,7 @@ describe('SiamComponent', () => {
         // Given the initial state
         // When trying to select an opponent's piece for insertion
         // Then it should fail
-        await testUtils.expectClickFailure('#remainingPieces_1', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#remainingPieces_1', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
     it('should select piece when clicking first time', fakeAsync(async() => {
         // Given a component
@@ -83,11 +84,11 @@ describe('SiamComponent', () => {
             [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When trying to select the opponent's piece
         // Then it should fail
-        await testUtils.expectClickFailure('#square_4_4', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#square_4_4', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
     it('should allow rotation', fakeAsync(async() => {
         // Given a state with one piece
@@ -99,7 +100,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When performing a rotation
         // Then it should succeed
@@ -116,7 +117,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When moving forward
         // Then it should succeed
@@ -133,7 +134,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When performing a move
         const move: SiamMove = SiamMove.from(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
@@ -154,7 +155,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When making the piece exit the board
         // Then the orientation of the piece does not have to be chosen
@@ -166,7 +167,7 @@ describe('SiamComponent', () => {
         // Given the initial board
         // When clicking on an empty piece
         // Then a toast should say it's forbidden
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         await testUtils.expectClickFailure('#square_2_1', reason);
     }));
     it('should fail when player clicks on the board instead of an orientation arrow', fakeAsync(async() => {
@@ -204,7 +205,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#remainingPieces_0');
 
         // When the player clicks on the piece on the board
@@ -225,15 +226,15 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
         await testUtils.expectClickSuccess('#square_4_3');
 
         // When the player clicks on a square instead of an orientation arrow
-        spyOn(testUtils.getComponent(), 'cancelMoveAttempt').and.callThrough();
+        spyOn(testUtils.getGameComponent(), 'cancelMoveAttempt').and.callThrough();
         await testUtils.expectClickSuccess('#square_2_2');
-        // Then the move should be cancelled
-        expect(testUtils.getComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
+        // Then the move should be canceled
+        expect(testUtils.getGameComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
     }));
     it('should cancel the move when clicking on invalid target for move', fakeAsync(async() => {
         // Given a state with a piece already on board, which has been selected by the player
@@ -245,16 +246,15 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
 
         // When the player clicks on a mountain
-        // Then the move should be cancelled and an error should be toasted
+        // Then the move should be canceled and an error should be toasted
         await testUtils.expectClickFailure('#square_2_2', SiamFailure.MUST_SELECT_VALID_DESTINATION());
     }));
     it('should directly insert the piece in the desired direction when clicking on an indicator arrow', fakeAsync(async() => {
         // Given a state with a piece in a corner
-        // Given a state with a piece already on board, which has been selected by the player
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -263,7 +263,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // When the player inserts a piece in the same corner by selecting an arrow
         await testUtils.expectClickSuccess('#remainingPieces_0');
@@ -271,5 +271,51 @@ describe('SiamComponent', () => {
         // Then the corresponding move should be done directly
         const move: SiamMove = SiamMove.from(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
         await testUtils.expectMoveSuccess('#indicator_4_4_LEFT', move);
+    }));
+
+    function expectTranslationYToBe(elementSelector: string, y: number): void {
+        const element: DebugElement = testUtils.findElement(elementSelector);
+        const transform: SVGTransform = element.nativeElement.transform.baseVal.getItem(0);
+        expect(transform.type).toBe(SVGTransform.SVG_TRANSFORM_TRANSLATE);
+        // In a SVG transform, f is the y coordinate
+        expect(transform.matrix.f).toBe(y);
+    }
+    it('should display current player pieces on the bottom (Player.ONE)', fakeAsync(async() => {
+        // Given a state
+        const board: Table<SiamPiece> = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [_, _, _, _, U],
+        ];
+        const state: SiamState = new SiamState(board, 1);
+
+        // When the game is displayed from the point of view of Player.ONE
+        await testUtils.setupState(state);
+        testUtils.getGameComponent().setPointOfView(Player.ONE);
+
+        // Then Player.ONE's pieces should be on the bottom
+        expectTranslationYToBe('#remainingPieces_0_0', -100);
+        expectTranslationYToBe('#remainingPieces_1_0', 700);
+    }));
+    it('should display player zero pieces on the bottom (observer)', fakeAsync(async() => {
+        // Given a state
+        const board: Table<SiamPiece> = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [_, _, _, _, U],
+        ];
+        const state: SiamState = new SiamState(board, 0);
+
+        // When the game is displayed for an observer
+        await testUtils.setupState(state);
+        await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
+
+        // Then player 0's pieces should be on the bottom
+        expectTranslationYToBe('#remainingPieces_0_0', 700);
+        expectTranslationYToBe('#remainingPieces_1_0', -100);
     }));
 });

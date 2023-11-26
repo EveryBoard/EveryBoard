@@ -1,18 +1,18 @@
 import { Rules } from '../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Utils } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export type ReversiLegalityInformation = Coord[];
 
@@ -23,11 +23,10 @@ export class ReversiMoveWithSwitched {
     }
 }
 
-export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiState, ReversiLegalityInformation> {}
+export class ReversiNode extends GameNode<ReversiMove, ReversiState> {}
 
+@Debug.log
 export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegalityInformation> {
-
-    public static VERBOSE: boolean = false;
 
     private static singleton: MGPOptional<ReversiRules> = MGPOptional.empty();
 
@@ -37,9 +36,18 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         }
         return ReversiRules.singleton.get();
     }
-    private constructor() {
-        super(ReversiState);
+
+    public getInitialState(): ReversiState {
+        const board: PlayerOrNone[][] = TableUtils.create(ReversiState.BOARD_WIDTH,
+                                                          ReversiState.BOARD_HEIGHT,
+                                                          PlayerOrNone.NONE);
+        board[3][3] = Player.ZERO;
+        board[4][4] = Player.ZERO;
+        board[3][4] = Player.ONE;
+        board[4][3] = Player.ONE;
+        return new ReversiState(board, 0);
     }
+
     public static getGameStatus(node: ReversiNode): GameStatus {
         const state: ReversiState = node.gameState;
         const gameIsEnded: boolean = ReversiRules.isGameEnded(state);
@@ -79,7 +87,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
 
         for (const direction of Direction.DIRECTIONS) {
             const firstSpace: Coord = move.coord.getNext(direction);
-            if (firstSpace.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT)) {
+            if (ReversiState.isOnBoard(firstSpace)) {
                 if (board[firstSpace.y][firstSpace.x] === opponent) {
                     // let's test this direction
                     const switchedInDir: Coord[] = ReversiRules.getSandwicheds(player, direction, firstSpace, board);
@@ -104,7 +112,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
 
         const sandwichedsCoord: Coord[] = [start]; // here we know it in range and captured
         let testedCoord: Coord = start.getNext(direction);
-        while (testedCoord.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT)) {
+        while (ReversiState.isOnBoard(testedCoord)) {
             const testedCoordContent: PlayerOrNone = board[testedCoord.y][testedCoord.x];
             if (testedCoordContent === capturer) {
                 // we found a sandwicher, in range, in this direction
@@ -160,7 +168,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                         if (result.length > 0) {
                             // there was switched piece and hence, a legal move
                             for (const switched of result) {
-                                assert(player !== state.getPieceAt(switched), switched + 'was already switched!');
+                                Utils.assert(player !== state.getPieceAt(switched), switched + 'was already switched!');
                                 nextBoard[switched.y][switched.x] = player;
                             }
                             nextBoard[y][x] = player;
@@ -189,12 +197,10 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
             }
         }
         if (state.getPieceAt(move.coord).isPlayer()) {
-            display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: you cannot play on a busy space');
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, state.getCurrentPlayer(), board);
-        display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: '+ switched.length + ' element(s) switched');
         if (switched.length === 0) {
             return MGPFallible.failure(ReversiFailure.NO_ELEMENT_SWITCHED());
         } else {

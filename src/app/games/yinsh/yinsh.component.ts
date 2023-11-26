@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
@@ -10,7 +9,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
-import { YinshMinimax } from './YinshMinimax';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
@@ -18,6 +16,10 @@ import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { YinshScoreHeuristic } from './YinshScoreHeuristic';
+import { YinshMoveGenerator } from './YinshMoveGenerator';
 
 interface SpaceInfo {
     coord: Coord,
@@ -98,8 +100,9 @@ export class YinshComponent
         this.scores = MGPOptional.of([0, 0]);
         this.rules = YinshRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new YinshMinimax(this.rules, 'YinshMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Score`, this.rules, new YinshScoreHeuristic(), new YinshMoveGenerator()),
+            new MCTS($localize`MCTS`, new YinshMoveGenerator(), this.rules),
         ];
         this.encoder = YinshMove.encoder;
         this.tutorial = new YinshTutorial().tutorial;
@@ -124,7 +127,7 @@ export class YinshComponent
             };
         });
     }
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         const state: YinshState = this.getState();
         this.scores = MGPOptional.of(state.countScores());
@@ -204,7 +207,7 @@ export class YinshComponent
         this.viewInfo.spaceInfo[coord.y][coord.x].isMarker = false;
         this.viewInfo.spaceInfo[coord.y][coord.x].markerClasses = [];
         if (piece !== YinshPiece.EMPTY) {
-            const containsMarker: boolean = !piece.isRing || this.moveStart.equalsValue(coord);
+            const containsMarker: boolean = piece.isRing === false || this.moveStart.equalsValue(coord);
             if (containsMarker) {
                 const playerClass: string = this.getPlayerClass(piece.player);
                 this.viewInfo.spaceInfo[coord.y][coord.x].isMarker = true;
@@ -224,7 +227,7 @@ export class YinshComponent
         this.currentlyMoved = [];
         this.moveToInitialCaptureOrMovePhase();
     }
-    public override showLastMove(move: YinshMove): void {
+    public override async showLastMove(move: YinshMove): Promise<void> {
         if (move.isInitialPlacement()) {
             this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved-fill'];
         } else {
@@ -240,26 +243,18 @@ export class YinshComponent
         }
     }
     private coordsBetween(start: Coord, end: Coord): Coord[] {
-        const coords: Coord[] = [];
-        const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
-        for (let cur: Coord = start; !cur.equals(end); cur = cur.getNext(dir)) {
-            if (this.constructedState.getPieceAt(cur) !== YinshPiece.EMPTY) {
-                coords.push(cur);
-            }
-            coords.push(end);
-        }
-        return coords;
+        return start.getAllCoordsToward(end);
     }
     private showLastMoveCapture(capture: YinshCapture, alsoShowPiece: boolean): void {
         for (const coord of capture.capturedSpaces) {
             this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['captured-fill'];
             if (alsoShowPiece) {
-                this.markRemovedMarker(coord, this.getState().getCurrentPlayer().getOpponent());
+                this.markRemovedMarker(coord, this.getState().getCurrentOpponent());
             }
         }
         this.viewInfo.spaceInfo[capture.ringTaken.get().y][capture.ringTaken.get().x].spaceClasses = ['captured-fill'];
         if (alsoShowPiece) {
-            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentPlayer().getOpponent());
+            this.markRemovedRing(capture.ringTaken.get(), this.getState().getCurrentOpponent());
         }
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
@@ -273,7 +268,7 @@ export class YinshComponent
         return MGPValidation.SUCCESS;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

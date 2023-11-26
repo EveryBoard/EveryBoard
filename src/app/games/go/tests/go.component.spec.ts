@@ -2,7 +2,7 @@
 import { GoComponent } from '../go.component';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -38,11 +38,11 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
         ];
         const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
         await testUtils.expectMoveSuccess('#click_0_1', move);
-        const goComponent: GoComponent = testUtils.getComponent();
+        const goComponent: GoComponent = testUtils.getGameComponent();
         expect(goComponent.captures).toEqual([new Coord(0, 0)]);
     }));
     it('should allow simple clicks', fakeAsync(async() => {
@@ -52,15 +52,15 @@ describe('GoComponent', () => {
         await testUtils.expectMoveSuccess('#click_2_2', secondMove);
     }));
     describe('hoshi', () => {
-        it('shoud be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
+        it('should be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
             GoState.HEIGHT = 19;
             GoState.WIDTH = 19;
-            const board: Table<GoPiece> = ArrayUtils.createTable(19, 19, GoPiece.EMPTY);
+            const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then it should have hoshi in the middle (9, 9)
             testUtils.expectElementToExist('#hoshi_9_9'); // Middle Middle
@@ -74,15 +74,15 @@ describe('GoComponent', () => {
             testUtils.expectElementToExist('#hoshi_3_15'); // Left Down
             testUtils.expectElementToExist('#hoshi_3_9'); // Left Middle
         }));
-        it('shoud be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
+        it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
             GoState.HEIGHT = 13;
             GoState.WIDTH = 13;
-            const board: Table<GoPiece> = ArrayUtils.createTable(13, 13, GoPiece.EMPTY);
+            const board: Table<GoPiece> = TableUtils.create(13, 13, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // Then it should have hoshi in the middle (6, 6)
             testUtils.expectElementToExist('#hoshi_6_6'); // Middle Middle
 
@@ -97,15 +97,15 @@ describe('GoComponent', () => {
             testUtils.expectElementNotToExist('#hoshi_6_9'); // Middle Down
             testUtils.expectElementNotToExist('#hoshi_3_6'); // Left Middle
         }));
-        it('shoud be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
+        it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
             GoState.HEIGHT = 9;
             GoState.WIDTH = 9;
-            const board: Table<GoPiece> = ArrayUtils.createTable(9, 9, GoPiece.EMPTY);
+            const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // Then it should have hoshi in the middle (4, 4)
             testUtils.expectElementToExist('#blank_board');

@@ -15,10 +15,4 @@ import { GameState } from 'src/app/jscaip/GameState';
  */
 export class NewGameState extends GameState {
 
-    /**
-     * This static method should create the initial state of the game.
-     */
-    public static getInitialState(): NewGameState {
-        return new NewGameState(0);
-    }
 }

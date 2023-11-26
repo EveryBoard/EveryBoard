@@ -2,22 +2,24 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
+import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export type GipfLegalityInformation = GipfState
 
-export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, GipfLegalityInformation> {}
+export class GipfNode extends GameNode<GipfMove, GipfState> {}
 
 export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformation> {
 
@@ -29,9 +31,24 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
         return GipfRules.singleton.get();
     }
-    private constructor() {
-        super(GipfState);
+
+    public getInitialState(): GipfState {
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const board: Table<FourStatePiece> = [
+            [N, N, N, X, _, _, O],
+            [N, N, _, _, _, _, _],
+            [N, _, _, _, _, _, _],
+            [O, _, _, _, _, _, X],
+            [_, _, _, _, _, _, N],
+            [_, _, _, _, _, N, N],
+            [X, _, _, O, N, N, N],
+        ];
+        return new GipfState(board, 0, [12, 12], [0, 0]);
     }
+
     public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
         return new GipfState(computedState.board,
                              computedState.turn + 1,
@@ -320,7 +337,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             capturable.push(cur);
             cur = cur.getNext(oppositeDir);
         }
-        for (let cur: Coord = start; !cur.equals(end); cur = cur.getNext(dir)) {
+        for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
             // The 4 pieces are capturable
             capturable.push(cur);
         }

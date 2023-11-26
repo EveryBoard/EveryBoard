@@ -1,27 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { ArrayUtils, NumberTable, Table2DWithPossibleNegativeIndices } from '../ArrayUtils';
+import { ArrayUtils, NumberTable, TableUtils, TableWithPossibleNegativeIndices } from '../ArrayUtils';
 import { MGPOptional } from '../MGPOptional';
 
 describe('ArrayUtils', () => {
-
-    describe('compareTable', () => {
-        it('should notice different size board', () => {
-            const shortBoard: NumberTable = [[1]];
-            const longBoard: NumberTable = [[1], [2]];
-            expect(ArrayUtils.compareTable(shortBoard, longBoard)).toBeFalse();
-        });
-        it('should deletage sub-list comparaison to ArrayUtils and return false if it does', () => {
-            spyOn(ArrayUtils, 'compareArray').and.returnValue(false);
-            const table: NumberTable = [[1], [2]];
-            expect(ArrayUtils.compareTable(table, table)).toBeFalse();
-        });
-        it('should deletage sub-list comparaison to ArrayUtils and return true if compareArray does always', () => {
-            spyOn(ArrayUtils, 'compareArray').and.returnValue(true);
-            const table: NumberTable = [[1], [2]];
-            expect(ArrayUtils.compareTable(table, table)).toBeTrue();
-        });
-    });
     describe('isPrefix', () => {
         it('should be false when the prefix is longer than the list', () => {
             const prefix: number[] = [1, 2, 3];
@@ -41,10 +23,31 @@ describe('ArrayUtils', () => {
     });
 });
 
+describe('TableUtils', () => {
+    describe('compare', () => {
+        it('should notice different table sizes', () => {
+            const shortBoard: NumberTable = [[1]];
+            const longBoard: NumberTable = [[1], [2]];
+            expect(TableUtils.compare(shortBoard, longBoard)).toBeFalse();
+        });
+        it('should delegate sub-list comparaison to ArrayUtils and return false if it does', () => {
+            spyOn(ArrayUtils, 'compare').and.returnValue(false);
+            const table: NumberTable = [[1], [2]];
+            expect(TableUtils.compare(table, table)).toBeFalse();
+        });
+        it('should delegate sub-list comparaison to ArrayUtils and return true if ArrayUtils.compare always does', () => {
+            spyOn(ArrayUtils, 'compare').and.returnValue(true);
+            const table: NumberTable = [[1], [2]];
+            expect(TableUtils.compare(table, table)).toBeTrue();
+        });
+    });
+});
+
+
 describe('Table2DWithPossibleNegativeIndices', () => {
     it('should return empty when accessing a non existing element', () => {
         // Given a table
-        const table: Table2DWithPossibleNegativeIndices<number> = new Table2DWithPossibleNegativeIndices();
+        const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
         // When getting an element that does not exist
         const element: MGPOptional<number> = table.get(new Coord(0, 0));
         // Then it should be empty
@@ -52,7 +55,7 @@ describe('Table2DWithPossibleNegativeIndices', () => {
     });
     it('should return the accessed element after it has been set', () => {
         // Given a table with a set element
-        const table: Table2DWithPossibleNegativeIndices<number> = new Table2DWithPossibleNegativeIndices();
+        const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
         const somePiece: number = 42; // dummy value to represent something stored in the table
         table.set(new Coord(1, 2), somePiece);
         // When getting the element
@@ -63,7 +66,7 @@ describe('Table2DWithPossibleNegativeIndices', () => {
     });
     it('should iterate over elements in order', () => {
         // Given a table with multiple elements
-        const table: Table2DWithPossibleNegativeIndices<number> = new Table2DWithPossibleNegativeIndices();
+        const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
         table.set(new Coord(0, 0), 1);
         table.set(new Coord(0, 1), 2);
         table.set(new Coord(1, 1), 3);
