@@ -1,4 +1,4 @@
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { MancalaState } from '../../common/MancalaState';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';

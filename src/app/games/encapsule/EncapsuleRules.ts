@@ -3,15 +3,14 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Debug } from 'src/app/utils/utils';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { Debug } from 'src/app/utils/Debug';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 

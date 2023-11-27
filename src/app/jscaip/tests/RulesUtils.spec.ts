@@ -4,10 +4,10 @@ import { Move } from '../Move';
 import { Player } from '../Player';
 import { Rules } from '../Rules';
 import { GameState } from '../GameState';
-import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { comparableEquals, isComparableObject } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 import { GameStatus } from '../GameStatus';
-import { JSONValue, Utils } from 'src/app/utils/utils';
+import { JSONValue, Utils } from '@everyboard/lib';
 
 export class RulesUtils {
 

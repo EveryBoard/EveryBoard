@@ -4,9 +4,9 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TaflMove } from './TaflMove';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlHeuristicMetrics } from './TaflPieceAndControlHeuristic';
 import { TaflNode } from './TaflRules';
 

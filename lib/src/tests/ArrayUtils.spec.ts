@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { ArrayUtils } from '../ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 
-describe('ArrayUtils', () => {
+describe('@everyboard/lib', () => {
     describe('isPrefix', () => {
         it('should be false when the prefix is longer than the list', () => {
             const prefix: number[] = [1, 2, 3];

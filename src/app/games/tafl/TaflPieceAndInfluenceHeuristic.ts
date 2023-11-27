@@ -2,17 +2,15 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPMap, MGPSet, Utils } from '@everyboard/lib';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflPawn } from './TaflPawn';
 import { TaflNode, TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TaflPieceHeuristic } from './TaflPieceHeuristic';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPieceHeuristic<M> {
 
@@ -105,7 +103,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
     }
     private getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
         const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
-        assert(owner.isPlayer(), 'TaflPieceAndInfluenceMinimax.getThreats should be called with an occupied coordinate');
+        Utils.assert(owner.isPlayer(), 'TaflPieceAndInfluenceMinimax.getThreats should be called with an occupied coordinate');
         const threatenerPlayer: Player = (owner as Player).getOpponent();
         const threats: SandwichThreat[] = [];
         for (const dir of Orthogonal.ORTHOGONALS) {

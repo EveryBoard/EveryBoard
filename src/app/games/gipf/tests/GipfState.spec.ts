@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { GipfState } from '../GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { GipfRules } from '../GipfRules';
 
 describe('GipfState', () => {

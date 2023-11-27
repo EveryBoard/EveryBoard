@@ -2,10 +2,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { assert } from 'src/app/utils/assert';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from '../../utils/MGPValidation';
+import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
@@ -99,7 +96,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
             }
         }
         const winner: PlayerOrNone = state.getPieceAt(ApagosCoord.THREE).getDominatingPlayer();
-        assert(winner.isPlayer(), 'winner can only be a player if the game is finished');
+        Utils.assert(winner.isPlayer(), 'winner can only be a player if the game is finished');
         return GameStatus.getVictory(winner as Player);
     }
 }

@@ -1,5 +1,5 @@
-import { Encoder } from 'src/app/utils/Encoder';
-import { Utils } from 'src/app/utils/utils';
+import { Encoder } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 
 export class AwaleMove extends MancalaMove {

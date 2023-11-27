@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoRules } from '../CoerceoRules';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';

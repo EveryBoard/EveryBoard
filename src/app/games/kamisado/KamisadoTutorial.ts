@@ -3,7 +3,7 @@ import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { KamisadoRules } from './KamisadoRules';
 

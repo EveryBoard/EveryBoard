@@ -1,18 +1,18 @@
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPSet } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
-import { Utils } from 'src/app/utils/utils';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Utils } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { CoordFailure } from '../../jscaip/Coord';
 
 export class VictoryOrDefeatCoords {

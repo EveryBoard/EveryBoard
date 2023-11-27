@@ -1,18 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPMap } from '@everyboard/lib';
+import { MGPSet } from '@everyboard/lib';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { TaflPawn } from '../TaflPawn';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { MGPOptional } from '@everyboard/lib';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
 import { TaflState } from '../TaflState';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('TablutPieceAndInfluenceHeuristic', () => {
 

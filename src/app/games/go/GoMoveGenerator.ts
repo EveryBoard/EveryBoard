@@ -1,11 +1,11 @@
 import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
-import { Debug } from 'src/app/utils/utils';
 import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { Debug } from 'src/app/utils/Debug';
 
 @Debug.log
 export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {

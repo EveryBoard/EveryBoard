@@ -1,10 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPMap } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPSet } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessPiece } from './MartianChessPiece';
 

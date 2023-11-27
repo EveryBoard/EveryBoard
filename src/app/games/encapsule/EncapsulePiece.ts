@@ -1,7 +1,7 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { Encoder } from 'src/app/utils/Encoder';
-import { Utils } from 'src/app/utils/utils';
+import { ComparableObject } from '@everyboard/lib';
+import { Encoder } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 
 export enum Size {
     NONE = 0,

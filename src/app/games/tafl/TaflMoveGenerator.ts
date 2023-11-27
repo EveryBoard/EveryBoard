@@ -2,10 +2,10 @@ import { TaflNode, TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
-import { Debug } from 'src/app/utils/utils';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { Debug } from 'src/app/utils/Debug';
 
 @Debug.log
 export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, TaflState> {

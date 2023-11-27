@@ -8,21 +8,18 @@ import { FirstPlayer, IFirstPlayer, ConfigRoom, IPartType, PartStatus, PartType,
 import { GameService } from '../../../services/GameService';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
 import { ChatService } from '../../../services/ChatService';
-import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { getMillisecondsElapsed, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserService } from 'src/app/services/UserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { Debug } from 'src/app/utils/Debug';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -130,9 +127,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private checkInputs(): void {
         const user: MGPOptional<AuthUser> = this.connectedUserService.user;
-        assert(user.isPresent(), 'PartCreationComponent should not be called without connected user');
-        assert(user.get() !== AuthUser.NOT_CONNECTED, 'PartCreationComponent should not be created with an empty userName');
-        assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
+        Utils.assert(user.isPresent(), 'PartCreationComponent should not be called without connected user');
+        Utils.assert(user.get() !== AuthUser.NOT_CONNECTED, 'PartCreationComponent should not be created with an empty userName');
+        Utils.assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
     }
     private createForms(): void {
         this.configFormGroup = this.formBuilder.group({
@@ -352,7 +349,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
             this.currentConfigRoom = configRoom;
             if (this.allUserInterval.isAbsent()) { // Only do it once
-                assert(currentGameUpdated === false, 'Expected currentGameUpdate to be false at first call of onCurrentConfigRoomUpdate');
+                Utils.assert(currentGameUpdated === false, 'Expected currentGameUpdate to be false at first call of onCurrentConfigRoomUpdate');
                 await this.updateUserDocWithCurrentGame(this.currentConfigRoom);
                 await this.observeNeededPlayers();
             }
@@ -386,7 +383,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         await this.router.navigate(['/lobby']);
     }
     private isGameStarted(configRoom: ConfigRoom | null): boolean {
-        assert(configRoom != null, 'configRoom should not be null (isGameStarted)');
+        Utils.assert(configRoom != null, 'configRoom should not be null (isGameStarted)');
         return Utils.getNonNullable(configRoom).partStatus === PartStatus.PART_STARTED.value;
     }
     private onGameStarted(): void {
@@ -397,7 +394,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private async observeNeededPlayers(): Promise<void> {
         const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
-        assert(this.allUserInterval.isAbsent(), 'Cannot observe players multiple times');
+        Utils.assert(this.allUserInterval.isAbsent(), 'Cannot observe players multiple times');
         this.allUserInterval = MGPOptional.of(window.setInterval(async() => {
             const currentTime: Timestamp = this.lastToken;
             if (this.userIsCreator(configRoom)) {
@@ -419,8 +416,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private async destroyDocIfPartDidNotStart(): Promise<void> {
         const partStarted: boolean = this.isGameStarted(this.currentConfigRoom);
-        assert(partStarted === false, 'Should not try to cancelGameCreation when part started!');
-        assert(this.allDocDeleted === false, 'Should not delete doc twice');
+        Utils.assert(partStarted === false, 'Should not try to cancelGameCreation when part started!');
+        Utils.assert(this.allDocDeleted === false, 'Should not delete doc twice');
         await this.cancelGameCreation();
     }
     private async checkCandidatesTokensFreshness(currentTime: Timestamp): Promise<void> {
@@ -452,14 +449,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     public async startSendingPresenceTokens(): Promise<void> {
         await this.connectedUserService.sendPresenceToken();
-        assert(this.ownTokenInterval.isAbsent(), 'should not start sending presence tokens twice');
+        Utils.assert(this.ownTokenInterval.isAbsent(), 'should not start sending presence tokens twice');
         this.ownTokenInterval = MGPOptional.of(window.setInterval(() => {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             this.connectedUserService.sendPresenceToken();
         }, PartCreationComponent.TOKEN_INTERVAL));
         const userId: string = this.connectedUserService.user.get().id;
         this.selfSubscription = this.userService.observeUserOnServer(userId, (user: MGPOptional<User>) => {
-            assert(user.isPresent(), 'connected user should exist');
+            Utils.assert(user.isPresent(), 'connected user should exist');
             this.lastToken = Utils.getNonNullable(user.get().lastUpdateTime) as Timestamp;
         });
     }

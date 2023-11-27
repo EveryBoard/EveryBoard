@@ -2,8 +2,8 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPFallible } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RegisterComponent } from './register.component';
 import { VerifyAccountComponent } from '../verify-account/verify-account.component';

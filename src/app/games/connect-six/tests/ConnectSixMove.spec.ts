@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConnectSixMove', () => {

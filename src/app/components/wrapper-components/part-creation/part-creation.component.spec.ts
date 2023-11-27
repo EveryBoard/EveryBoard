@@ -20,10 +20,9 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { UserDAO } from 'src/app/dao/UserDAO';
 
-import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
-import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { Utils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
 
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { FirstPlayer, PartStatus, PartType, ConfigRoom } from 'src/app/domain/ConfigRoom';

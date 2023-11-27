@@ -1,5 +1,5 @@
-import { ComparableObject } from '../utils/Comparable';
-import { MathUtils } from '../utils/MathUtils';
+import { ComparableObject } from '@everyboard/lib';
+import { MathUtils } from '@everyboard/lib';
 
 export class Vector implements ComparableObject {
 

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { P4State } from '../P4State';
 import { P4Node } from '../P4Rules';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4MoveGenerator } from '../P4MoveGenerator';
 

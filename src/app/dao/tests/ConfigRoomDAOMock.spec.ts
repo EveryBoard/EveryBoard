@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { ConfigRoom, ConfigRoomDocument } from 'src/app/domain/ConfigRoom';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { Debug } from 'src/app/utils/utils';
+import { MGPMap } from '@everyboard/lib';
+import { ObservableSubject } from '@everyboard/lib';
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
+import { Debug } from 'src/app/utils/Debug';
 
 type ConfigRoomOS = ObservableSubject<MGPOptional<ConfigRoomDocument>>
 

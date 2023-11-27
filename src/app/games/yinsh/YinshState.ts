@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { Player } from 'src/app/jscaip/Player';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { YinshPiece } from './YinshPiece';
 
 export class YinshState extends HexagonalGameState<YinshPiece> {

@@ -1,7 +1,7 @@
 import { MancalaState } from '../common/MancalaState';
 import { AwaleMove } from './AwaleMove';
 import { AwaleNode, AwaleRules } from './AwaleRules';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';

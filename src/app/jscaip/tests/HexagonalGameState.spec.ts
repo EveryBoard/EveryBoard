@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { NumberTable, TableUtils } from 'src/app/utils/ArrayUtils';
+import { NumberTable, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
 import { HexaLine } from '../HexaLine';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue } from '@everyboard/lib';
 
 export class TestingHexagonalState extends HexagonalGameState<number> {
 

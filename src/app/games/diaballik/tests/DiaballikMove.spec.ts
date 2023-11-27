@@ -1,8 +1,8 @@
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 

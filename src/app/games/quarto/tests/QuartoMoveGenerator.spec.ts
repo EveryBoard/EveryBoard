@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { QuartoPiece } from '../QuartoPiece';

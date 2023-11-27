@@ -2,7 +2,7 @@ import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { Direction } from 'src/app/jscaip/Direction';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { EpaminondasRules } from './EpaminondasRules';
 

@@ -4,8 +4,8 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoNode } from '../QuixoRules';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { QuixoHeuristic } from '../QuixoHeuristic';
 
 describe('QuixoHeuristic', () => {

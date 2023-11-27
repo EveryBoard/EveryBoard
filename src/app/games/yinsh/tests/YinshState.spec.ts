@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { YinshState } from '../YinshState';
 import { YinshPiece } from '../YinshPiece';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { YinshRules } from '../YinshRules';
 
 describe('YinshState', () => {

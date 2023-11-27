@@ -1,6 +1,6 @@
 import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { QuartoPiece } from './QuartoPiece';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 export class QuartoState extends GameStateWithTable<QuartoPiece> {
 

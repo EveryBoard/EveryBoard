@@ -2,8 +2,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { MGPFallible } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';

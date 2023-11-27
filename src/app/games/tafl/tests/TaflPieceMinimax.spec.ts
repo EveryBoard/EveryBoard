@@ -2,7 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { TaflPawn } from '../TaflPawn';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TablutMove } from '../tablut/TablutMove';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { TaflPieceMinimax } from '../TaflPieceMinimax';

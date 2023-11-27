@@ -1,4 +1,4 @@
-import { Localized } from '../utils/LocaleUtils';
+import { Localized } from "../utils/LocaleUtils";
 
 export class RulesFailure {
 

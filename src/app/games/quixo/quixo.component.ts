@@ -5,17 +5,16 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
-import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { QuixoTutorial } from './QuixoTutorial';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { QuixoHeuristic } from './QuixoHeuristic';
+import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
     selector: 'app-quixo',

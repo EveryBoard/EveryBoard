@@ -1,9 +1,7 @@
-import { JSONValue, Utils } from 'src/app/utils/utils';
-import { assert } from '../utils/assert';
+import { JSONValue, MGPOptional, Utils } from '@everyboard/lib';
 import { FirestoreTime } from './Time';
 import { MinimalUser } from './MinimalUser';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { MGPOptional } from '../utils/MGPOptional';
 
 export type Part = {
     readonly typeGame: string; // the type of game
@@ -97,7 +95,7 @@ export class PartDocument implements FirestoreDocument<Part> {
         if (this.data.result === MGPResult.AGREED_DRAW_BY_ZERO.value) {
             return this.data.playerZero;
         } else {
-            assert(this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not access getDrawAccepter when no draw accepted!');
+            Utils.assert(this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not access getDrawAccepter when no draw accepted!');
             return Utils.getNonNullable(this.data.playerOne);
         }
     }

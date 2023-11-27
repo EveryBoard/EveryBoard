@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from './Coord';
-import { CoordSet } from './CoordSet';
+import { Coord } from '../Coord';
+import { CoordSet } from '../CoordSet';
 
 describe('CoordSet', () => {
     it('should build the empty set if no value is provided', () => {

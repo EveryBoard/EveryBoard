@@ -1,10 +1,9 @@
-import { JSONValue } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from '../utils/MGPFallible';
+import { JSONValue, Utils } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 import { Coord } from './Coord';
-import { Localized } from '../utils/LocaleUtils';
-import { Encoder } from '../utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { Vector } from './Vector';
+import { Localized } from '../utils/LocaleUtils';
 
 export abstract class BaseDirection extends Vector {
 
@@ -140,7 +139,7 @@ export class Direction extends BaseDirection {
             return dir.toString();
         },
         (encoded: JSONValue): Direction => {
-            assert(typeof encoded === 'string', 'Invalid encoded direction');
+            Utils.assert(typeof encoded === 'string', 'Invalid encoded direction');
             const fromString: MGPFallible<Direction> = Direction.factory.fromString(encoded as string);
             return fromString.get();
         },
@@ -184,7 +183,7 @@ export class Orthogonal extends BaseDirection {
             return dir.toString();
         },
         (encoded: JSONValue): Orthogonal => {
-            assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
+            Utils.assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
             const fromString: MGPFallible<Orthogonal> = Orthogonal.factory.fromString(encoded as string);
             return fromString.get();
         },

@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
 import { LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPMap } from '@everyboard/lib';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 

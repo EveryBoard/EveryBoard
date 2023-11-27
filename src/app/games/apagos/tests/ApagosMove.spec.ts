@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { EncoderTestUtils } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 import { ApagosCoord } from '../ApagosCoord';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';

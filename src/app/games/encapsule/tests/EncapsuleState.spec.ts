@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 

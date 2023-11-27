@@ -6,10 +6,10 @@ import { QuixoMove } from '../QuixoMove';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPSet } from '@everyboard/lib';
 
 describe('QuixoRules', () => {
 

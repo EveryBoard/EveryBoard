@@ -3,7 +3,7 @@ import { SiamNode, SiamRules } from '../SiamRules';
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 
 const _: SiamPiece = SiamPiece.EMPTY;

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { CoerceoState } from '../CoerceoState';
 
 describe('CoerceoState', () => {

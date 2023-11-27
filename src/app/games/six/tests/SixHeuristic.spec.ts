@@ -5,8 +5,8 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixNode } from '../SixRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { SixHeuristic } from '../SixHeuristic';
 

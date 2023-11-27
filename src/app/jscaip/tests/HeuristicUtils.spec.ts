@@ -1,5 +1,5 @@
 import { BoardValue } from '../BoardValue';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { GameState } from '../GameState';
 import { Move } from '../Move';
 import { Heuristic } from '../Minimax';

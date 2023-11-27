@@ -3,8 +3,7 @@ import { DvonnNode } from './DvonnRules';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnMove } from './DvonnMove';
-import { assert } from 'src/app/utils/assert';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Utils } from '@everyboard/lib';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
 
 export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
@@ -17,7 +16,7 @@ export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
         const opponent: Player = state.getCurrentOpponent();
         ArrayUtils.sortByDescending(moves, (move: DvonnMove): number => {
             // We can't have DvonnMove.PASS here, because it would be the single move of the list
-            assert(move !== DvonnMove.PASS, 'Cannot sort with DvonnMove.PASS');
+            Utils.assert(move !== DvonnMove.PASS, 'Cannot sort with DvonnMove.PASS');
 
             const stack: DvonnPieceStack = state.getPieceAt(move.getEnd());
             const opponentPieces: number = stack.belongsTo(opponent) ? stack.getSize() : 0;

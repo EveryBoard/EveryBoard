@@ -1,12 +1,12 @@
 import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Sets } from 'src/app/utils/Sets';
+import { Sets } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, EncapsuleState> {

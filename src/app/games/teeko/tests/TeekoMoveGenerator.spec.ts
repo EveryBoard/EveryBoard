@@ -3,7 +3,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TeekoMove } from '../TeekoMove';
 import { TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TeekoMoveGenerator } from '../TeekoMoveGenerator';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

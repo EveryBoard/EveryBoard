@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { KalahMove } from '../KalahMove';
 import { MancalaDistribution } from '../../common/MancalaMove';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 
 describe('KalahMove', () => {
 

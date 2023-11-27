@@ -1,11 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 import { SixVictorySource, SixNode } from './SixRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { AlignmentHeuristic, BoardInfo } from 'src/app/jscaip/AlignmentHeuristic';

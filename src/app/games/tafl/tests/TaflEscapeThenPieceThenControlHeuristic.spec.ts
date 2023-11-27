@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TaflPawn } from '../TaflPawn';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlHeuristic';

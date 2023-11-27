@@ -2,11 +2,11 @@ import { MancalaState } from '../common/MancalaState';
 import { AwaleMove } from './AwaleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MancalaFailure } from './../common/MancalaFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/GameNode';
 
 export class AwaleNode extends GameNode<AwaleMove, MancalaState> {}

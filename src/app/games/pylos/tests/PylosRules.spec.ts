@@ -6,9 +6,9 @@ import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from '../PylosFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 
 describe('PylosRules', () => {
 

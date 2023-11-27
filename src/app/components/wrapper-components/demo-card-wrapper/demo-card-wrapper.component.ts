@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { AbstractNode } from 'src/app/jscaip/GameNode';
-import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Utils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
 import { GameWrapper } from '../../wrapper-components/GameWrapper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';

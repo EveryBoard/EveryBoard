@@ -4,7 +4,7 @@ import { QuartoMoveGenerator } from 'src/app/games/quarto/QuartoMoveGenerator';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoNode, QuartoRules } from 'src/app/games/quarto/QuartoRules';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { AITimeLimitOptions } from '../AI';
 import { Coord } from '../Coord';
 import { MCTS } from '../MCTS';

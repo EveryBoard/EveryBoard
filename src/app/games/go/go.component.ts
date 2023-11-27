@@ -3,10 +3,7 @@ import { GoMove } from 'src/app/games/go/GoMove';
 import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Debug } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
@@ -15,6 +12,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
+import { Debug } from 'src/app/utils/Debug';
 
 @Component({
     selector: 'app-go',
@@ -100,8 +98,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
         if (phase === Phase.PLAYING || phase === Phase.PASSED) {
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
         }
-        assert(phase === Phase.COUNTING || phase === Phase.ACCEPT,
-               'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+        Utils.assert(phase === Phase.COUNTING || phase === Phase.ACCEPT, 'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
     }
     public getSpaceClass(x: number, y: number): string {

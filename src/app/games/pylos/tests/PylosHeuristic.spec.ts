@@ -5,7 +5,7 @@ import { PylosState } from '../PylosState';
 import { PylosNode } from '../PylosRules';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosHeuristic } from '../PylosHeuristic';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

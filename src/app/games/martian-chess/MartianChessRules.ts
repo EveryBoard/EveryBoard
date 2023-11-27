@@ -2,17 +2,13 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MartianChessMove, MartianChessMoveFailure } from './MartianChessMove';
 import { MartianChessCapture, MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessFailure } from './MartianChessFailure';
-import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 export interface MartianChessMoveResult {
 
@@ -112,7 +108,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         const clockHadAlreadyBeenCalled: boolean = state.countDown.isPresent();
         const clockCalledThisTurn: boolean = move.calledTheClock;
         const doubleClockCall: boolean = clockHadAlreadyBeenCalled && clockCalledThisTurn;
-        assert(doubleClockCall === false, 'Should not call the clock twice');
+        Utils.assert(doubleClockCall === false, 'Should not call the clock twice');
     }
     private isCapture(move: MartianChessMove, state: MartianChessState): boolean {
         const moveEndsInOpponentTerritory: boolean = state.isInOpponentTerritory(move.getEnd());

@@ -4,10 +4,10 @@ import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamPiece } from '../SiamPiece';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPFallible } from '@everyboard/lib';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 
 describe('SiamMove', () => {

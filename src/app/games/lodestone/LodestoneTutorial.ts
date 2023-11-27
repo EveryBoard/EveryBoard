@@ -1,9 +1,9 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPMap } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 import { LodestoneMove } from './LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from './LodestoneState';

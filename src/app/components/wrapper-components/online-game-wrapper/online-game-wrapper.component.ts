@@ -12,12 +12,9 @@ import { CurrentGame, User } from '../../../domain/User';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Debug, JSONValue, Utils } from 'src/app/utils/utils';
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -29,6 +26,7 @@ import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
+import { Debug } from 'src/app/utils/Debug';
 
 export class OnlineGameWrapperMessages {
 

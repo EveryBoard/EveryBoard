@@ -2,7 +2,7 @@ import { DvonnMove } from './DvonnMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {

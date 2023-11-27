@@ -6,8 +6,8 @@ import { PentagoMove } from '../PentagoMove';
 import { PentagoNode, PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('PentagoRules', () => {
 

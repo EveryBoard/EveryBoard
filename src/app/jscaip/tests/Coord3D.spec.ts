@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Coord3D } from '../Coord3D';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { Encoder } from 'src/app/utils/Encoder';
+import { EncoderTestUtils } from '@everyboard/lib';
+import { Encoder } from '@everyboard/lib';
 
 describe('Coord3D', () => {
 

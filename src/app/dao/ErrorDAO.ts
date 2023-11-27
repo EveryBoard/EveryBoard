@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FirestoreTime } from '../domain/Time';
-import { JSONValue } from '../utils/utils';
+import { JSONValue } from '@everyboard/lib';
 import { FirestoreDocument, FirestoreDAO } from './FirestoreDAO';
 
 export type MGPError = {

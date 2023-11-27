@@ -1,10 +1,11 @@
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Move } from './Move';
-import { Debug, Utils } from '../utils/utils';
+import { Utils } from '@everyboard/lib';
 import { GameState } from './GameState';
-import { MGPOptional } from '../utils/MGPOptional';
-import { MGPFallible } from '../utils/MGPFallible';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 import { GameStatus } from './GameStatus';
+import { Debug } from '../utils/Debug';
 
 export abstract class Rules<M extends Move, S extends GameState, L = void> {
 

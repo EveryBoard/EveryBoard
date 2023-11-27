@@ -2,7 +2,7 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 import { MancalaState } from '../common/MancalaState';
 import { KalahMove } from './KalahMove';
 import { MancalaDistribution } from '../common/MancalaMove';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 import { KalahRules } from './KalahRules';
 

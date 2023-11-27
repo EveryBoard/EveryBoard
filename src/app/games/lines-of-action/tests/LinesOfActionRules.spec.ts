@@ -2,12 +2,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('LinesOfActionRules', () => {

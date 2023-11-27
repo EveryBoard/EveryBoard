@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { AbaloneState } from '../AbaloneState';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { AbaloneScoreHeuristic } from '../AbaloneScoreHeuristic';
 

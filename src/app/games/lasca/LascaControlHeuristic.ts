@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPSet } from '@everyboard/lib';
 import { LascaMove } from './LascaMove';
 import { LascaNode, LascaRules } from './LascaRules';
 import { LascaState } from './LascaState';

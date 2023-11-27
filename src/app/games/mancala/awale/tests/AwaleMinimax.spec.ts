@@ -2,7 +2,7 @@
 import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMove } from '../AwaleMove';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';

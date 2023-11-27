@@ -1,8 +1,7 @@
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { ComparableObject } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 
 export class YinshPiece implements ComparableObject {
 
@@ -41,8 +40,8 @@ export class YinshPiece implements ComparableObject {
         return this === piece;
     }
     public flip(): YinshPiece {
-        assert(this.isRing === false, 'cannot flip a ring (it should never happen)');
-        assert(this.player.isPlayer(), 'cannot flip a non-player piece');
+        Utils.assert(this.isRing === false, 'cannot flip a ring (it should never happen)');
+        Utils.assert(this.player.isPlayer(), 'cannot flip a non-player piece');
         const player: Player = this.player as Player;
         return YinshPiece.of(player.getOpponent(), this.isRing);
     }

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { PylosCoord } from '../PylosCoord';
 import { PylosFailure } from '../PylosFailure';
 import { PylosMove, PylosMoveFailure } from '../PylosMove';

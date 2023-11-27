@@ -3,9 +3,9 @@ import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/f
 import { GameEventReply, GameEventRequest, RequestType } from 'src/app/domain/Part';
 import { Player } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPSet } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 
 export interface RequestInfo {
     requestType: RequestType,

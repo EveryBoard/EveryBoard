@@ -1,5 +1,6 @@
+import { ArrayUtils } from 'lib/dist';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class MancalaState extends GameStateWithTable<number> {
 

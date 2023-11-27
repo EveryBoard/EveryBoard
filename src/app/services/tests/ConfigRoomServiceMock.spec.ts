@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { FirstPlayer, ConfigRoom, ConfigRoomDocument, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
-import { Debug } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/Debug';
 
 @Debug.log
 export class ConfigRoomServiceMock {

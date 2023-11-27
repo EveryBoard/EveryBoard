@@ -16,14 +16,14 @@ import { WelcomeComponent } from './components/normal-component/welcome/welcome.
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { MGPOptional } from './utils/MGPOptional';
-import { Utils } from './utils/utils';
+import { MGPOptional } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 
 import * as Firestore from '@angular/fire/firestore';
 import * as FireAuth from '@angular/fire/auth';
 import { TestBed } from '@angular/core/testing';
-import { setupEmulators } from './utils/tests/TestUtils.spec';
 import { AccountComponent } from './components/normal-component/account/account.component';
+import { setupEmulators } from './utils/tests/TestUtils.spec';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const routingSpecification: [string, Type<any>][] = [

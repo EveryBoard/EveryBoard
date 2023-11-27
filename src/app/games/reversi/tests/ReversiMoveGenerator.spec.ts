@@ -3,7 +3,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { ReversiNode, ReversiRules } from '../ReversiRules';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

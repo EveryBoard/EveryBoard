@@ -3,7 +3,7 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MancalaMove } from '../common/MancalaMove';
 import { MancalaScoreHeuristic } from '../common/MancalaScoreHeurisic';
 import { MancalaState } from '../common/MancalaState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 
 describe('MancalaScoreHeuristic', () => {

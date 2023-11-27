@@ -5,9 +5,9 @@ import { QuixoState } from '../QuixoState';
 import { QuixoNode } from '../QuixoRules';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EncoderTestUtils } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
 
 describe('QuixoMove', () => {

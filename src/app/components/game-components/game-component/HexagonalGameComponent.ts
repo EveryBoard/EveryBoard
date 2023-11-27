@@ -4,7 +4,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { Move } from 'src/app/jscaip/Move';
 import { Rules } from 'src/app/jscaip/Rules';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { GameComponent } from './GameComponent';
 
 @Component({ template: '' })

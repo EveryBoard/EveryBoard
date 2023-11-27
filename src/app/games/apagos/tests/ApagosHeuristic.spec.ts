@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { ApagosHeuristic } from '../ApagosHeuristic';
 import { ApagosState } from '../ApagosState';
 

@@ -1,10 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/assert';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { ComparableObject, MGPOptional, Utils } from '@everyboard/lib';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 export class GoPiece implements ComparableObject {
@@ -43,7 +41,7 @@ export class GoPiece implements ComparableObject {
             case GoPiece.DARK_TERRITORY:
                 return 'GoPiece.DARK_TERRITORY';
             default:
-                assert(this === GoPiece.LIGHT_TERRITORY, 'Unexisting GoPiece');
+                Utils.assert(this === GoPiece.LIGHT_TERRITORY, 'Unexisting GoPiece');
                 return 'GoPiece.LIGHT_TERRITORY';
         }
     }
@@ -70,7 +68,7 @@ export class GoPiece implements ComparableObject {
         return this.player;
     }
     public nonTerritory(): GoPiece {
-        assert(this.isEmpty(), 'Usually not false, if false, cover by test and return "this"');
+        Utils.assert(this.isEmpty(), 'Usually not false, if false, cover by test and return "this"');
         return GoPiece.EMPTY;
     }
 }

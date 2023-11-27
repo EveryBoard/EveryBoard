@@ -1,6 +1,6 @@
-import { JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { Encoder } from '../utils/Encoder';
+import { JSONValueWithoutArray, Utils } from '@everyboard/lib';
+import { ComparableObject } from '@everyboard/lib';
+import { Encoder } from '@everyboard/lib';
 
 class PlayerNone implements ComparableObject {
 

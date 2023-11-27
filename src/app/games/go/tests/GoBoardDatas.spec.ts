@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { BoardDatas, GroupInfos } from '../../../jscaip/BoardDatas';
 import { GoState, GoPiece } from '../GoState';
-import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
+import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from '../GoGroupDatasFactory';
 

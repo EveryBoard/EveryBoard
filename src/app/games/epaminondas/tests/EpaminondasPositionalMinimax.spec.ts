@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';

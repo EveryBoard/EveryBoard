@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FirestoreDAO } from './FirestoreDAO';
-import { Debug } from 'src/app/utils/utils';
 import { User } from '../domain/User';
 import { Firestore } from '@angular/fire/firestore';
+import { Debug } from '../utils/Debug';
 
 @Injectable({
     providedIn: 'root',

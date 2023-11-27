@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { LocaleUtils } from '../LocaleUtils';
 
-describe('LocaleUtils', () => {
+describe('@everyboard/lib', () => {
     describe('getLocale', () => {
         it('should use locale stored in localStorage', () => {
             // Given a localStage that defines a locale

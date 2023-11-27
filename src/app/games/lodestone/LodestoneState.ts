@@ -2,11 +2,10 @@ import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestoneP
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { ArrayUtils, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { LodestoneCaptures } from './LodestoneMove';
+
 export class LodestonePressurePlate {
     public static POSITIONS: LodestonePressurePlatePosition[] = ['top', 'bottom', 'left', 'right'];
     public static EMPTY_5: LodestonePressurePlate = new LodestonePressurePlate(5, []);
@@ -33,7 +32,7 @@ export class LodestonePressurePlate {
                 return LodestonePressurePlate.EMPTY_3.addCaptured(player, quantity + this.pieces.length - 5);
             } else {
                 // This was the last plate level
-                assert(this.pieces.length + quantity === 3, 'should never put more pieces than the plate can support');
+                Utils.assert(this.pieces.length + quantity === 3, 'should never put more pieces than the plate can support');
                 return MGPOptional.empty();
             }
         } else {
@@ -113,7 +112,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         const lodestonePosition: MGPOptional<Coord> = this.lodestones.get(currentPlayer);
         if (lodestonePosition.isPresent()) {
             const piece: LodestonePiece = this.getPieceAt(lodestonePosition.get());
-            assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)' + lodestonePosition.get());
+            Utils.assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)' + lodestonePosition.get());
             const lodestone: LodestonePieceLodestone = piece as LodestonePieceLodestone;
             const currentDirection: LodestoneDirection = lodestone.direction;
             switch (currentDirection) {

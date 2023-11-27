@@ -4,7 +4,7 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
 import { P4State } from 'src/app/games/p4/P4State';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 import { AIDepthLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';

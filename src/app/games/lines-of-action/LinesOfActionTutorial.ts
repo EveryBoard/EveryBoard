@@ -1,7 +1,7 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { LinesOfActionRules } from './LinesOfActionRules';

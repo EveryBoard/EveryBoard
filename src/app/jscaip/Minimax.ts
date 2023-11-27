@@ -3,12 +3,12 @@ import { Move } from './Move';
 import { BoardValue } from './BoardValue';
 import { Rules } from './Rules';
 import { GameState } from './GameState';
-import { MGPSet } from '../utils/MGPSet';
-import { MGPOptional } from '../utils/MGPOptional';
+import { MGPSet } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from './Player';
-import { MGPFallible } from '../utils/MGPFallible';
-import { Utils } from '../utils/utils';
-import { ArrayUtils } from '../utils/ArrayUtils';
+import { MGPFallible } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
+import { ArrayUtils } from '@everyboard/lib';
 import { GameStatus } from './GameStatus';
 import { GameNode } from './GameNode';
 

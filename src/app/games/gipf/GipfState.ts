@@ -1,5 +1,5 @@
 import { Player } from 'src/app/jscaip/Player';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';

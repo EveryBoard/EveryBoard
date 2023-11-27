@@ -4,16 +4,13 @@ import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { assert } from 'src/app/utils/assert';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}
 
@@ -89,7 +86,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return [p0Score, p1Score];
     }
     public isMovablePiece(state: DvonnState, coord: Coord): MGPValidation {
-        assert(state.isOnBoard(coord), 'piece is not on the board');
+        Utils.assert(state.isOnBoard(coord), 'piece is not on the board');
         const stack: DvonnPieceStack = state.getPieceAt(coord);
         if (stack.getSize() < 1) {
             return MGPValidation.failure(DvonnFailure.EMPTY_STACK());

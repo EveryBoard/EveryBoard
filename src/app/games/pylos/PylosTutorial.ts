@@ -3,7 +3,7 @@ import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PylosRules } from './PylosRules';
 

@@ -5,17 +5,17 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { GameWrapper } from '../GameWrapper';
 import { Click, TutorialStep } from './TutorialStep';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/GameState';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 
 import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
 import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
@@ -87,7 +87,7 @@ import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshT
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
 import { TutorialStepFailure } from './TutorialStepFailure';
-import { Comparable } from 'src/app/utils/Comparable';
+import { Comparable } from '@everyboard/lib';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 

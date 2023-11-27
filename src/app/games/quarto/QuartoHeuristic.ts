@@ -5,8 +5,8 @@ import { Heuristic } from 'src/app/jscaip/Minimax';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
 

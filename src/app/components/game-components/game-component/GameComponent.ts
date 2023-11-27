@@ -1,19 +1,16 @@
 import { Move } from '../../../jscaip/Move';
 import { Rules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Encoder } from 'src/app/utils/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
-import { Debug, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ArrayUtils, Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
 import { Coord } from 'src/app/jscaip/Coord';
+import { Debug } from 'src/app/utils/Debug';
 
 /**
  * Define some methods that are useful to have in game components.

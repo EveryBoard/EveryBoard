@@ -1,5 +1,5 @@
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { JSONValue } from 'src/app/utils/utils';
+import { MGPValidation } from '@everyboard/lib';
+import { JSONValue } from '@everyboard/lib';
 
 export class ErrorLoggerServiceMock {
 

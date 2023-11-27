@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasNode } from './EpaminondasRules';

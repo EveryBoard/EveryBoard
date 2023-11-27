@@ -1,7 +1,7 @@
-import { Table, TableUtils } from '../utils/ArrayUtils';
-import { MGPOptional } from '../utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
+import { Table, TableUtils } from './TableUtils';
 
 export abstract class GameStateWithTable<P> extends GameState {
 

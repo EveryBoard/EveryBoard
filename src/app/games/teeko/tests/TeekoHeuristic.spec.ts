@@ -2,7 +2,7 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TeekoNode } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TeekoHeuristic } from '../TeekoHeuristic';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

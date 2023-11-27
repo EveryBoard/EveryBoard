@@ -3,17 +3,14 @@ import * as FireAuth from '@angular/fire/auth';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
-import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPValidation } from '../utils/MGPValidation';
-import { MGPFallible } from '../utils/MGPFallible';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
-import { MGPOptional } from '../utils/MGPOptional';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
-import { Localized } from '../utils/LocaleUtils';
 import { UserService } from './UserService';
+import { Debug } from '../utils/Debug';
+import { Localized } from '../utils/LocaleUtils';
 
 export class GameActionFailure {
 
@@ -128,7 +125,7 @@ export class ConnectedUserService implements OnDestroy {
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
                 } else { // new user logged in
-                    assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
+                    Utils.assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
                     this.userSubscription =
                         this.userDAO.subscribeToChanges(user.uid, (docOpt: MGPOptional<User>) => {
                             if (docOpt.isPresent()) {
@@ -335,7 +332,7 @@ export class ConnectedUserService implements OnDestroy {
         await currentUser.reload();
     }
     public sendPresenceToken(): Promise<void> {
-        assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
+        Utils.assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
         return this.userService.updatePresenceToken(this.user.get().id);
     }
     public ngOnDestroy(): void {

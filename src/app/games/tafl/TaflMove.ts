@@ -2,9 +2,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { TaflFailure } from './TaflFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
+import { MGPFallible } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 
 export abstract class TaflMove extends MoveCoordToCoord {
 

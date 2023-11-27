@@ -4,18 +4,15 @@ import { AbstractNode, GameNodeStats } from 'src/app/jscaip/GameNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { AbstractAI, AIOptions, AIStats } from 'src/app/jscaip/AI';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Debug } from 'src/app/utils/Debug';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -158,7 +155,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
-        assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
+        Utils.assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
         const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options);
         const nextNode: MGPFallible<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
         if (nextNode.isSuccess()) {

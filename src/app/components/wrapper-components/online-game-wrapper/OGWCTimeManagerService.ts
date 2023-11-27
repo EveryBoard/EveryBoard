@@ -3,9 +3,9 @@ import { GameEventMove, GameEventAction } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Timestamp } from 'firebase/firestore';
-import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
+import { getMillisecondsElapsed } from '@everyboard/lib';
 
 /**
  * The time manager manages clocks of each player.

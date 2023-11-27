@@ -4,7 +4,7 @@ import { ConnectSixDrops, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixNode } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { ConnectSixAlignmentMinimax } from '../ConnectSixAlignmentMinimax';

@@ -1,17 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { ArrayUtils } from '../ArrayUtils';
-import { ComparableObject, comparableEquals } from '../Comparable';
+import { ArrayUtils } from '@everyboard/lib';
+import { ComparableObject } from '../Comparable';
 import { Encoder } from '../Encoder';
-import { JSONValue } from '../JSON';
 import { Pair } from './Pair.spec';
-
-export class EncoderTestUtils {
-    public static expectToBeBijective<T>(encoder: Encoder<T>, value: T): void {
-        const encoded: JSONValue = encoder.encode(value);
-        const decoded: T = encoder.decode(encoded);
-        expect(comparableEquals(decoded, value)).withContext(`Expected decoded value (${decoded}) to be ${value}`).toBeTrue();
-    }
-}
 
 class Triplet implements ComparableObject {
     public constructor(public elements: [number, number, number]) {

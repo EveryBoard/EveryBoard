@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { QuixoFailure } from './QuixoFailure';
 import { QuixoState } from './QuixoState';
 

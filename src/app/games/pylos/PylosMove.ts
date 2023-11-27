@@ -1,10 +1,10 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Move } from 'src/app/jscaip/Move';
 import { PylosCoord } from './PylosCoord';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { PylosFailure } from './PylosFailure';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 
 export class PylosMoveFailure {
     public static readonly MUST_CAPTURE_MAXIMUM_TWO_PIECES: Localized = () => $localize`You must capture one or two pieces, not more.`;

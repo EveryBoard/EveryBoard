@@ -4,16 +4,13 @@ import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { DvonnTutorial } from './DvonnTutorial';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
@@ -90,7 +87,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.chosen = MGPOptional.empty();
     }
     public override async pass(): Promise<MGPValidation> {
-        assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
+        Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(DvonnMove.PASS);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

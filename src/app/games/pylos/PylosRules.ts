@@ -1,4 +1,4 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -8,11 +8,11 @@ import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPFallible } from '../../utils/MGPFallible';
+import { MGPValidation } from '@everyboard/lib';
+import { MGPSet } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class PylosNode extends GameNode<PylosMove, PylosState> {}
 

@@ -3,15 +3,13 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
 import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { Vector } from 'src/app/jscaip/Vector';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
 

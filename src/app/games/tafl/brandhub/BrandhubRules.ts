@@ -2,9 +2,9 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { brandhubConfig } from './brandhubConfig';
 import { TaflRules } from '../TaflRules';
 import { BrandhubMove } from './BrandhubMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TaflPawn } from '../TaflPawn';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TaflState } from '../TaflState';
 
 export class BrandhubNode extends GameNode<BrandhubMove, TaflState> {}

@@ -1,4 +1,4 @@
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 
 export class KamisadoColor {
     public static readonly ANY: KamisadoColor = new KamisadoColor(0, 'any', '#000');

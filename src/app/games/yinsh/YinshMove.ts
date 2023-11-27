@@ -1,9 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ArrayUtils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 
 // A capture at Yinsh is just like a capture at Gipf, with the only difference

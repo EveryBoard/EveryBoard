@@ -4,9 +4,9 @@ import { ConnectSixMove } from './ConnectSixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixFirstMove } from './ConnectSixMove';
 import { ConnectSixDrops } from './ConnectSixMove';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPSet } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, ConnectSixState> {

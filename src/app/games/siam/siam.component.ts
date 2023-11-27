@@ -7,18 +7,16 @@ import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { SiamTutorial } from './SiamTutorial';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
-import { Debug } from 'src/app/utils/utils';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPSet } from '@everyboard/lib';
 import { SiamFailure } from './SiamFailure';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamMinimax } from './SiamMinimax';
+import { Debug } from 'src/app/utils/Debug';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,

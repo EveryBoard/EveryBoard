@@ -5,14 +5,12 @@ import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Utils } from 'src/app/utils/utils';
-import { Debug } from 'src/app/utils/utils';
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { Debug } from 'src/app/utils/Debug';
 
 export type ReversiLegalityInformation = Coord[];
 

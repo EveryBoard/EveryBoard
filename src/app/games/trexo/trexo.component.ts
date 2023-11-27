@@ -5,11 +5,11 @@ import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-
 import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { TrexoTutorial } from './TrexoTutorial';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table3DUtils, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table3DUtils, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';

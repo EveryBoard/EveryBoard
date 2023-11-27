@@ -1,11 +1,11 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPSet } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 
 describe('DiaballikMoveInConstruction', () => {
 

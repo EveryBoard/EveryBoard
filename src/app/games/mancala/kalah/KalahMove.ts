@@ -1,6 +1,6 @@
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 
 export class KalahMove extends MancalaMove {
 

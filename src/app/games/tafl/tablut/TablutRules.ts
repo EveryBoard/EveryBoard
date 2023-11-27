@@ -2,9 +2,9 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { tablutConfig } from './tablutConfig';
 import { TablutMove } from './TablutMove';
 import { TaflRules } from '../TaflRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TaflPawn } from '../TaflPawn';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TaflState } from '../TaflState';
 
 export class TablutNode extends GameNode<TablutMove, TaflState> {}

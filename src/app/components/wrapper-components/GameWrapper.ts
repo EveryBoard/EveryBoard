@@ -2,17 +2,12 @@ import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Comparable } from 'src/app/utils/Comparable';
 
 export class GameWrapperMessages {
 
@@ -80,7 +75,7 @@ export abstract class GameWrapper<P extends Comparable> {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true });
             return false;
         }
-        assert(this.boardRef != null, 'Board element should be present');
+        Utils.assert(this.boardRef != null, 'Board element should be present');
 
         const componentRef: ComponentRef<AbstractGameComponent> =
             Utils.getNonNullable(this.boardRef).createComponent(component.get());

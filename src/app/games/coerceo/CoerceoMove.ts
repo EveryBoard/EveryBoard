@@ -1,9 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Vector } from 'src/app/jscaip/Vector';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { CoerceoFailure } from './CoerceoFailure';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { CoerceoState } from './CoerceoState';

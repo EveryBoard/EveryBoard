@@ -6,7 +6,7 @@ import { GameEventService } from '../GameEventService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { Player } from 'src/app/jscaip/Player';
 import { GameEvent, Reply, RequestType, Action } from 'src/app/domain/Part';
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue } from '@everyboard/lib';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 

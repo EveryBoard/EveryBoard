@@ -2,7 +2,7 @@ import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 
 export class ReversiOrderedMoveGenerator extends MoveGenerator<ReversiMove, ReversiState> {

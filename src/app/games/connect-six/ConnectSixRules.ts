@@ -1,16 +1,16 @@
 import { Rules } from 'src/app/jscaip/Rules';
 import { ConnectSixState } from './ConnectSixState';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 

@@ -1,6 +1,6 @@
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasNode } from './EpaminondasRules';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
 
 export class EpaminondasOrderedMoveGenerator extends EpaminondasMoveGenerator {

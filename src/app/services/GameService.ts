@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
+import { MGPValidation, MGPOptional, JSONValue, Utils } from '@everyboard/lib';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirstPlayer, ConfigRoom, PartStatus } from '../domain/ConfigRoom';
 import { ConfigRoomService } from './ConfigRoomService';
 import { ChatService } from './ChatService';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Debug, JSONValue, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
 import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../domain/MinimalUser';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreTime } from '../domain/Time';
 import { GameEventService } from './GameEventService';
+import { Debug } from '../utils/Debug';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,

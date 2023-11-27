@@ -2,8 +2,13 @@
   "name": "@everyboard/lib",
   "version": "1.0.0",
   "description": "EveryBoard's library",
-  "main": "index.js",
   "private": "true",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+      "dist"
+   ],
   "scripts": {
     "build": "tsc --build",
     "watch": "tsc --watch",
@@ -11,8 +16,8 @@
     "coverage": "nyc --branches 100 --lines 100 --statements 100 --functions 100 check-coverage"
   },
   "devDependencies": {
-    "istanbul": "^0.4.5",
     "jasmine": "^5.1.0",
+    "nyc": "^15.1.0",
     "ts-node": "^10.9.1"
   }
 }

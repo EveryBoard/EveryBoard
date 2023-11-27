@@ -3,7 +3,7 @@ import { ApagosState } from 'src/app/games/apagos/ApagosState';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ApagosCoord } from './ApagosCoord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { ApagosRules } from './ApagosRules';
 
 export class ApagosTutorial extends Tutorial {

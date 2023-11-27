@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ChatDAO } from '../dao/ChatDAO';
 import { Message, MessageDocument } from '../domain/Message';
-import { Debug } from 'src/app/utils/utils';
-import { MGPValidation } from '../utils/MGPValidation';
-import { Localized } from '../utils/LocaleUtils';
+import { MGPValidation } from '@everyboard/lib';
 import { Subscription } from 'rxjs';
 import { serverTimestamp } from 'firebase/firestore';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { MinimalUser } from '../domain/MinimalUser';
+import { Localized } from '../utils/LocaleUtils';
+import { Debug } from '../utils/Debug';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;

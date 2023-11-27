@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { JSONValue } from 'src/app/utils/utils';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
+import { JSONValue } from '@everyboard/lib';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -31,7 +31,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {

@@ -5,12 +5,12 @@ import { DiaballikNode, DiaballikRules } from './DiaballikRules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { ComparableObject } from 'src/app/utils/Comparable';
+import { MGPOptional } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
+import { MGPSet } from '@everyboard/lib';
+import { ArrayUtils } from '@everyboard/lib';
+import { ComparableObject } from '@everyboard/lib';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
 

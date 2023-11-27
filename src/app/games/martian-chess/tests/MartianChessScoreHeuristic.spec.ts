@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPMap } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';

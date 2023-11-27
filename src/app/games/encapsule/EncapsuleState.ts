@@ -1,10 +1,9 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
+import { ArrayUtils, Utils } from '@everyboard/lib';
 
 export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
 
@@ -114,12 +113,12 @@ export class EncapsuleSpace {
             case Size.BIG:
                 return new EncapsuleSpace(this.small, this.medium, piecePlayer);
             case Size.MEDIUM:
-                assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleSpace(this.small, piecePlayer, this.big);
             default:
                 Utils.expectToBe(size, Size.SMALL);
-                assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
-                assert(this.medium === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.medium === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleSpace(piecePlayer, this.medium, this.big);
         }
     }

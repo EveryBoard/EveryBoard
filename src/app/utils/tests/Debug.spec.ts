@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Utils } from '../Utils';
+import { Utils } from '@everyboard/lib';
 import { Debug } from '../Debug';
 
 @Debug.log

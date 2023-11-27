@@ -1,8 +1,8 @@
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TaflPawn } from '../TaflPawn';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';

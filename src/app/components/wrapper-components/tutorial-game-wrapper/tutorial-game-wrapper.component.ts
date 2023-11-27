@@ -6,15 +6,13 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
 import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { Debug, Utils } from 'src/app/utils/utils';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/GameState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Debug } from 'src/app/utils/Debug';
 
 type TutorialPlayer = 'tutorial-player';
 @Component({

@@ -1,6 +1,6 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { ConspirateursState } from '../ConspirateursState';
 

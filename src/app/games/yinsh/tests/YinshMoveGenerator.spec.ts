@@ -3,7 +3,7 @@ import { YinshState } from '../YinshState';
 import { YinshCapture } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { YinshMoveGenerator } from '../YinshMoveGenerator';
 
 describe('YinshMoveGenerator', () => {

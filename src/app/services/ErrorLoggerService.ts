@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { serverTimestamp } from 'firebase/firestore';
 import { ErrorDAO, ErrorDocument, MGPError } from '../dao/ErrorDAO';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { MGPOptional } from '../utils/MGPOptional';
-import { MGPValidation } from '../utils/MGPValidation';
-import { JSONValue } from '../utils/utils';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
+import { JSONValue } from '@everyboard/lib';
 import { MessageDisplayer } from './MessageDisplayer';
 
 @Injectable({

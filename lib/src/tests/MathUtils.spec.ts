@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MathUtils } from '../MathUtils';
+import { MathUtils } from '@everyboard/lib';
 
-describe('MathUtils', () => {
+describe('@everyboard/lib', () => {
 
     describe('gcd', () => {
         it('should compute the expected gcd', () => {

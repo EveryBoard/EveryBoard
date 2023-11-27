@@ -2,19 +2,16 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { MGPFallible, MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Debug } from 'src/app/utils/utils';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { Debug } from 'src/app/utils/Debug';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 

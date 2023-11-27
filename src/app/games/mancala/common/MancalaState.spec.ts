@@ -1,4 +1,4 @@
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { MancalaState } from './MancalaState';
 
 describe('MancalaState', () => {

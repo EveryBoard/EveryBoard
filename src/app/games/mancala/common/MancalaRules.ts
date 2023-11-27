@@ -2,13 +2,13 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaState } from './MancalaState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Move } from 'src/app/jscaip/Move';
 import { Rules } from 'src/app/jscaip/Rules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ReversibleMap } from 'src/app/utils/MGPMap';
+import { MGPFallible } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { ReversibleMap } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/GameNode';
 
 export interface MancalaCaptureResult {

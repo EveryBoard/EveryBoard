@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { GoNode, GoRules } from '../GoRules';
 import { GoMove } from '../GoMove';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { GoMoveGenerator } from '../GoMoveGenerator';
 
 describe('GoMove', () => {

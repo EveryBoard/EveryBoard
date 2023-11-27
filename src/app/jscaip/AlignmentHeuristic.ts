@@ -1,4 +1,4 @@
-import { MGPOptional } from '../utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { Move } from './Move';
 import { SCORE } from './SCORE';

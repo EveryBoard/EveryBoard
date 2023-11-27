@@ -5,12 +5,12 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from '../../utils/MGPValidation';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 

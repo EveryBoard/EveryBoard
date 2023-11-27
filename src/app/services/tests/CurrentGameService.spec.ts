@@ -4,8 +4,8 @@ import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CurrentGame } from 'src/app/domain/User';
 import { CurrentGameService } from '../CurrentGameService';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 import { AuthUser, ConnectedUserService, GameActionFailure } from '../ConnectedUserService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
@@ -14,8 +14,8 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
-import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { UserService } from '../UserService';
+import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 
 export class CurrentGameServiceMock {
 

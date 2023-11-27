@@ -3,7 +3,7 @@ import { SixMove } from 'src/app/games/six/SixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SixRules } from './SixRules';
 

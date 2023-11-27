@@ -1,8 +1,8 @@
 import { Coord } from '../Coord';
-import { MGPOptional } from '../MGPOptional';
-import { NumberTable, TableUtils, TableWithPossibleNegativeIndices } from '../TableUtils';
+import { NumberTable, TableUtils, TableWithPossibleNegativeIndices } from 'src/app/jscaip/TableUtils';
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 
-describe('TableUtils', () => {
+describe('@everyboard/lib', () => {
     describe('compare', () => {
         it('should notice different table sizes', () => {
             const shortBoard: NumberTable = [[1]];

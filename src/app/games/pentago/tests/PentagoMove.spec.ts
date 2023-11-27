@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PentagoMove } from '../PentagoMove';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 
 describe('PentagoMove', () => {
 

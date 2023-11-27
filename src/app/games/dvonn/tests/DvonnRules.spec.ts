@@ -8,7 +8,7 @@ import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnFailure } from '../DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';

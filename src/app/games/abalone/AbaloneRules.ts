@@ -4,14 +4,14 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPFallible } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 

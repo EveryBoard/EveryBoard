@@ -2,13 +2,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { Utils } from 'src/app/utils/utils';
-import { Debug } from 'src/app/utils/utils';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional, Utils } from '@everyboard/lib';
 import { CoerceoRegularMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Debug } from 'src/app/utils/Debug';
 
 @Debug.log
 export class CoerceoState extends TriangularGameState<FourStatePiece> {

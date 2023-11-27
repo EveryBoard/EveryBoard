@@ -1,6 +1,6 @@
-import { Comparable } from '../utils/Comparable';
-import { ReversibleMap } from '../utils/MGPMap';
-import { MGPSet } from '../utils/MGPSet';
+import { Comparable } from '@everyboard/lib';
+import { ReversibleMap } from '@everyboard/lib';
+import { MGPSet } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
 import { HexagonalUtils } from './HexagonalUtils';

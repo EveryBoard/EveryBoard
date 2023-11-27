@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode } from '../DvonnRules';
 import { DvonnScoreHeuristic } from '../DvonnScoreHeuristic';

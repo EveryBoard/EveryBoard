@@ -2,7 +2,7 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { LinesOfActionHeuristic } from '../LinesOfActionHeuristic';
 import { LinesOfActionState } from '../LinesOfActionState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 
 describe('LinesOfActionHeuristic', () => {

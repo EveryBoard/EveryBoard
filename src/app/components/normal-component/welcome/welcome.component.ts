@@ -3,11 +3,9 @@ import { Router } from '@angular/router';
 import { ThemeService } from 'src/app/services/ThemeService';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { isEven } from '@everyboard/lib';
 
 @Component({
     selector: 'app-welcome',
@@ -28,7 +26,6 @@ export class WelcomeComponent {
                        public readonly currentGameService: CurrentGameService,
                        themeService: ThemeService)
     {
-        console.log(isEven(42))
         this.theme = themeService.getTheme();
         const allGames: GameInfo[] = GameInfo.ALL_GAMES();
         let column: number = 0;

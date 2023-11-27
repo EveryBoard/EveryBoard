@@ -1,5 +1,5 @@
-import { Encoder } from 'src/app/utils/Encoder';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { Encoder } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { GameState } from '../GameState';
 import { GameNode } from '../GameNode';
 import { Move } from '../Move';

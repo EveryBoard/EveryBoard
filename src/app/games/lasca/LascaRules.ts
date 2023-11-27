@@ -4,14 +4,14 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPValidation } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPSet } from '@everyboard/lib';
 import { LascaMove } from './LascaMove';
 import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 export class LascaNode extends GameNode<LascaMove, LascaState> {}
 

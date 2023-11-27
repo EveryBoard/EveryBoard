@@ -6,12 +6,12 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 

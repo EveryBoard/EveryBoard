@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -10,13 +9,8 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ArrayUtils, TableWithPossibleNegativeIndices } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
+import { TableWithPossibleNegativeIndices } from 'src/app/jscaip/TableUtils';
+import { ArrayUtils, MGPFallible, MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveHeuristic } from './HiveHeuristic';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
@@ -26,6 +20,7 @@ import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { HiveTutorial } from './HiveTutorial';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 interface GroundInfo {
     spaceClasses: string[];
@@ -358,7 +353,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         } else {
             const move: MGPFallible<HiveMove> = HiveMove.move(this.selectedStart.get(), coord);
             // static moves are prevented in selectSpace
-            assert(move.isSuccess(), 'Hive: the only forbidden moves are static moves');
+            Utils.assert(move.isSuccess(), 'Hive: the only forbidden moves are static moves');
             return this.chooseMove(move.get());
         }
     }

@@ -1,4 +1,4 @@
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { MancalaState } from '../common/MancalaState';
 import { AwaleMove } from './AwaleMove';
 import { AwaleNode, AwaleRules } from './AwaleRules';

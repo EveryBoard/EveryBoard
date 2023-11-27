@@ -4,7 +4,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AbaloneComponent } from '../abalone.component';
 import { AbaloneFailure } from '../AbaloneFailure';

@@ -5,11 +5,11 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 describe('EncapsuleRules', () => {
 

@@ -5,8 +5,8 @@ import { MancalaState } from '../../common/MancalaState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { MancalaFailure } from '../../common/MancalaFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { DoMancalaRulesTests } from '../../common/GenericMancalaRulesTest.spec';
 

@@ -2,7 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules } from '../TrexoRules';

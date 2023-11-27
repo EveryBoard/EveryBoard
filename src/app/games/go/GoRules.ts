@@ -4,16 +4,14 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
 import { Player } from 'src/app/jscaip/Player';
 import { GoGroupDatas } from './GoGroupsDatas';
-import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Debug } from 'src/app/utils/Debug';
 
 export type GoLegalityInformation = Coord[];
 
@@ -108,7 +106,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
                     resultingBoard[territory.y][territory.x] = GoPiece.LIGHT_TERRITORY;
                 }
             } else {
-                assert(pointMaker === GoPiece.DARK, 'territory should be wrapped by dark or light, not by ' + pointMaker.toString());
+                Utils.assert(pointMaker === GoPiece.DARK, 'territory should be wrapped by dark or light, not by ' + pointMaker.toString());
                 // dark territory
                 captured[0] += emptyZone.emptyCoords.length;
                 for (const territory of emptyZone.getCoords()) {
@@ -179,7 +177,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
     public static switchAliveness(groupCoord: Coord, switchedState: GoState): GoState {
         const switchedBoard: GoPiece[][] = switchedState.getCopiedBoard();
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
-        assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
+        Utils.assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
 
         const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
         const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;
@@ -335,7 +333,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             resultingState = new GoState(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
             resultingState = GoRules.markTerritoryAndCount(resultingState);
         } else {
-            assert(state.phase === Phase.PLAYING, 'Cannot pass in counting phase!');
+            Utils.assert(state.phase === Phase.PLAYING, 'Cannot pass in counting phase!');
             newPhase = Phase.PASSED;
             resultingState = new GoState(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
         }

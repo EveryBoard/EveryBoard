@@ -4,8 +4,8 @@ import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from '../ReversiFailure';
 

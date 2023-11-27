@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasLegalityInformation, EpaminondasNode } from '../EpaminondasRules';

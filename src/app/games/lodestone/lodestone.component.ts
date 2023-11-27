@@ -5,12 +5,8 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
@@ -175,7 +171,7 @@ export class LodestoneComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        assert(this.capturesToPlace === 0, 'should not be able to click on a lodestone when captures need to be placed');
+        Utils.assert(this.capturesToPlace === 0, 'should not be able to click on a lodestone when captures need to be placed');
         const player: Player = this.getCurrentPlayer();
         const playerLodestone: LodestonePieceLodestone = LodestonePieceLodestone.of(player, lodestone);
         if (this.selectedLodestone.equalsValue(playerLodestone)) {
@@ -191,13 +187,13 @@ export class LodestoneComponent
         }
     }
     private async putLodestone(): Promise<MGPValidation> {
-        assert(this.selectedCoord.isPresent(), 'coord should have been selected');
-        assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
+        Utils.assert(this.selectedCoord.isPresent(), 'coord should have been selected');
+        Utils.assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
         const coord: Coord = this.selectedCoord.get();
         const lodestone: LodestoneDescription = this.selectedLodestone.get();
         const state: LodestoneState = this.getState();
         const validity: MGPValidation = LodestoneRules.get().isLegalWithoutCaptures(state, coord, lodestone.direction);
-        assert(validity.isSuccess(), 'Lodestone component should only allow creation of legal moves');
+        Utils.assert(validity.isSuccess(), 'Lodestone component should only allow creation of legal moves');
         const infos: LodestoneInfos = LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, lodestone);
         this.lastInfos = MGPOptional.of(infos);
         this.capturesToPlace = Math.min(infos.captures.length, state.remainingSpaces());
@@ -211,8 +207,8 @@ export class LodestoneComponent
         }
     }
     private async applyMove(): Promise<MGPValidation> {
-        assert(this.selectedCoord.isPresent(), 'coord should have been selected');
-        assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
+        Utils.assert(this.selectedCoord.isPresent(), 'coord should have been selected');
+        Utils.assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
         const coord: Coord = this.selectedCoord.get();
         const lodestone: LodestoneDescription = this.selectedLodestone.get();
         const move: LodestoneMove = new LodestoneMove(coord, lodestone.direction, lodestone.orientation, this.captures);

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
@@ -11,8 +11,8 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
-import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Utils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
 import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { MancalaMove } from './MancalaMove';
 import { MancalaRules } from './MancalaRules';
 import { MancalaComponent } from './MancalaComponent';

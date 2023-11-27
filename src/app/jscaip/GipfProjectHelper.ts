@@ -1,9 +1,10 @@
-import { ArrayUtils, Table } from '../utils/ArrayUtils';
-import { Encoder } from '../utils/Encoder';
-import { MGPOptional } from '../utils/MGPOptional';
-import { Utils } from '../utils/utils';
+import { ArrayUtils } from '@everyboard/lib';
+import { Encoder } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { HexaLine } from './HexaLine';
+import { Table } from './TableUtils';
 
 /**
  * This represents a capture in Gipf-like games.

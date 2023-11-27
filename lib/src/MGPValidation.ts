@@ -19,3 +19,18 @@ export namespace MGPValidation {
         return MGPFallible.failure(reason);
     }
 }
+
+/**
+ * This is a helper class to test MGPValidation values
+ */
+export class MGPValidationTestUtils {
+
+    public static expectToBeSuccess(fallible: MGPValidation): void {
+        expect(fallible.isSuccess()).toBeTrue();
+    }
+
+    public static expectToBeFailure(fallible: MGPValidation, reason: string): void {
+        expect(fallible.isFailure()).toBeTrue();
+        expect(fallible.getReason()).toBe(reason);
+    }
+}

@@ -1,7 +1,7 @@
 import { GameState } from 'src/app/jscaip/GameState';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { NumberTable } from 'src/app/jscaip/TableUtils';
+import { ArrayUtils, MGPMap } from '@everyboard/lib';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosSquare } from './ApagosSquare';
 

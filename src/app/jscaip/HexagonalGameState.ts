@@ -1,11 +1,10 @@
 import { ErrorLoggerService } from '../services/ErrorLoggerService';
-import { Table } from '../utils/ArrayUtils';
-import { MGPValidation } from '../utils/MGPValidation';
-import { assert } from '../utils/assert';
+import { MGPValidation, Utils } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';
 import { HexaDirection } from './HexaDirection';
 import { HexaLine } from './HexaLine';
+import { Table } from './TableUtils';
 
 export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
 
@@ -17,7 +16,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
                        public readonly empty: P)
     {
         super(board, turn);
-        assert(this.excludedSpaces.length < (this.height / 2) + 1, 'Invalid excluded spaces specification for HexagonalGameState.');
+        Utils.assert(this.excludedSpaces.length < (this.height / 2) + 1, 'Invalid excluded spaces specification for HexagonalGameState.');
     }
     public abstract setAtUnsafe(coord: Coord, v: P): this
     public setAt(coord: Coord, v: P): this {

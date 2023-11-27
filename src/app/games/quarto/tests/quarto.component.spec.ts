@@ -4,7 +4,7 @@ import { QuartoComponent } from '../quarto.component';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 

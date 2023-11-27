@@ -5,17 +5,16 @@ import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConfigRoomService', () => {
 

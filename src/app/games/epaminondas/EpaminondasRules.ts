@@ -1,4 +1,4 @@
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -7,10 +7,10 @@ import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { MGPFallible } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 

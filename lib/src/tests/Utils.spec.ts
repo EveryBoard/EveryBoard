@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Utils } from '../Utils';
+import { Utils } from '@everyboard/lib';
 
-describe('Utils', () => {
+describe('@everyboard/lib', () => {
 
     describe('expectToBe', () => {
         it('should fail when the default case has a different value than expected', () => {

@@ -2,7 +2,7 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './DiaballikMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { DiaballikRules } from './DiaballikRules';
 
 const O: DiaballikPiece = DiaballikPiece.ZERO;

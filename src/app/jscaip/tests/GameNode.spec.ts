@@ -1,5 +1,5 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 import { GameState } from '../GameState';
 import { GameStatus } from '../GameStatus';
 import { GameNode } from '../GameNode';

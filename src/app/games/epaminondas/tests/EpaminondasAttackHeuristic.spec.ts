@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { EpaminondasState } from '../EpaminondasState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { EpaminondasAttackHeuristic } from '../EpaminondasAttackHeuristic';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

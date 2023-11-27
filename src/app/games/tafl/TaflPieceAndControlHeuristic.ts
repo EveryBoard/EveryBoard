@@ -2,16 +2,14 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPMap, MGPSet, Utils } from '@everyboard/lib';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { assert } from 'src/app/utils/assert';
 import { TaflMove } from './TaflMove';
 import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
 import { TaflNode } from './TaflRules';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export type TaflPieceAndControlHeuristicMetrics = {
     controlScore: number,
@@ -31,9 +29,9 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove>
         scoreValue += metrics.safeScore * this.getScoreBySafePiece(state);
         const maxControl: number = this.getScoreByThreatenedPiece(state);
         scoreValue += metrics.threatenedScore * maxControl;
-        assert(metrics.controlScore <= maxControl, 'Control Score should be below ' + maxControl + ', got ' + metrics.controlScore);
-        assert(metrics.threatenedScore <= 16, 'Threatened Score should be below 16, got ' + metrics.threatenedScore);
-        assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
+        Utils.assert(metrics.controlScore <= maxControl, 'Control Score should be below ' + maxControl + ', got ' + metrics.controlScore);
+        Utils.assert(metrics.threatenedScore <= 16, 'Threatened Score should be below 16, got ' + metrics.threatenedScore);
+        Utils.assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
         return new BoardValue(scoreValue);
     }
     protected getControlScoreAndPieceScores(state: TaflState): TaflPieceAndControlHeuristicMetrics {

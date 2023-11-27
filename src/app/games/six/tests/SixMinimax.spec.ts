@@ -4,7 +4,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixLegalityInformation, SixNode } from '../SixRules';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { SixMinimax } from '../SixMinimax';

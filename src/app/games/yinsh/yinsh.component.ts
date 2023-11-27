@@ -5,17 +5,13 @@ import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { YinshTutorial } from './YinshTutorial';
-import { Utils } from 'src/app/utils/utils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { assert } from 'src/app/utils/assert';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { YinshScoreHeuristic } from './YinshScoreHeuristic';
@@ -348,7 +344,7 @@ export class YinshComponent
             this.movePhase = 'INITIAL_CAPTURE_SELECT_RING';
         } else {
             const message: string = 'selectCapture did not expect to be called in movePhase ' + this.movePhase;
-            assert(this.movePhase === 'FINAL_CAPTURE_SELECT_FIRST' || this.movePhase === 'FINAL_CAPTURE_SELECT_LAST', message);
+            Utils.assert(this.movePhase === 'FINAL_CAPTURE_SELECT_FIRST' || this.movePhase === 'FINAL_CAPTURE_SELECT_LAST', message);
             this.movePhase = 'FINAL_CAPTURE_SELECT_RING';
         }
         this.updateViewInfo();

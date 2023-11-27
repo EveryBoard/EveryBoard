@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPOptional } from '@everyboard/lib';
+import { MGPSet } from '@everyboard/lib';
 import { HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
