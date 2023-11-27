@@ -76,7 +76,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     @Input() partId: string;
 
-    @Input() rulesConfigDescription: RulesConfigDescription;
+    @Input() rulesConfigDescription: MGPOptional<RulesConfigDescription>;
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();

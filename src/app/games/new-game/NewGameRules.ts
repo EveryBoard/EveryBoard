@@ -80,8 +80,8 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, EmptyRulesCon
     /**
      * If you do create a configuration for the game, you must have this function, otherwise remove it
      */
-    public override getRulesConfigDescription(): RulesConfigDescription {
-        return NewGameRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription> {
+        return MGPOptional.of(NewGameRules.RULES_CONFIG_DESCRIPTION);
     }
 
     /**

@@ -17,20 +17,9 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
+import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 
-/**
- * Define some methods that are useful to have in game components.
- * We can't define these in GameComponent itself, as they are required
- * by sub components which themselves are not GameComponent subclasses
- */
-export abstract class BaseGameComponent {
-
-    public SPACE_SIZE: number = 100;
-
-    public constructor(public readonly activatedRoute: ActivatedRoute) {}
-
-    // Make ArrayUtils available in game components
-    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
+abstract class BaseComponent {
 
     /**
      * Gets the CSS class for a player color
@@ -45,9 +34,31 @@ export abstract class BaseGameComponent {
         }
     }
 
+}
+
+/**
+ * Define some methods that are useful to have in game components.
+ * We can't define these in GameComponent itself, as they are required
+ * by sub components which themselves are not GameComponent subclasses
+ */
+export abstract class BaseGameComponent extends BaseComponent {
+
+    public SPACE_SIZE: number = 100;
+
+    // Make ArrayUtils available in game components
+    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
+}
+
+export abstract class BaseWrapperComponent extends BaseComponent {
+
+    public constructor(public readonly activatedRoute: ActivatedRoute) {
+        super();
+    }
+
     protected getGameName(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
+
 }
 
 /**
@@ -108,8 +119,8 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
     // This is true when the view is interactive, e.g., to display clickable pieces
     protected isInteractive: boolean = false;
 
-    public constructor(public readonly messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(activatedRoute);
+    public constructor(public readonly messageDisplayer: MessageDisplayer) {
+        super();
     }
 
     public getPointOfView(): Player {
@@ -189,11 +200,20 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
 
     protected setRulesAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName)[0];
-        const defaultConfig: RulesConfig = gameInfo.getRulesConfigDescription().getDefaultConfig().config;
+        const defaultConfig: RulesConfig = this.getConfigurationOf(gameInfo);
 
         this.rules = gameInfo.rules as R;
         this.node = this.rules.getInitialNode(defaultConfig as C);
         this.tutorial = gameInfo.tutorial.tutorial;
+    }
+
+    private getConfigurationOf(gameInfo: GameInfo): RulesConfig {
+        const configuration: MGPOptional<RulesConfigDescription> = gameInfo.getRulesConfigDescription();
+        if (configuration.isPresent()) {
+            return configuration.get().getDefaultConfig().config;
+        } else {
+            return {};
+        }
     }
 
     protected getConfig(): C {

@@ -18,7 +18,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
     describe(entries.gameName + ' rules generic tests', () => {
 
-        const defaultConfig: MancalaConfig = entries.rules.getRulesConfigDescription().defaultConfig.config;
+        const defaultConfig: MancalaConfig = entries.rules.getRulesConfigDescription().get().defaultConfig.config;
 
         it('should allow simple move', () => {
             // Given any board

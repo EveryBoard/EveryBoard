@@ -60,12 +60,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     // Will set the default rules config
-    // Will set it to {} if the game don't exist, but an error will be handled by some other function
+    // Will set it to {} if the game doesn't exist, but an error will be handled by some other function
     // Because rules that don't override their rules have DEFAULT_RULES value, hence {}
     private setDefaultRulesConfig(): void {
         const gameName: string = this.getGameName();
-        const defaultConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);
-        this.rulesConfig = MGPOptional.of(defaultConfig);
+        this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);
     }
 
     public getCreatedNodes(): number {
@@ -256,8 +255,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async restartGame(): Promise<void> {
-        const config: RulesConfig = await this.getConfig();
-        this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        this.gameComponent.node = this.gameComponent.rules.getInitialNode(config.getOrElse({}));
         this.gameComponent.hideLastMove();
         await this.gameComponent.updateBoard(false);
         this.endGame = false;
@@ -276,7 +275,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    public override async getConfig(): Promise<RulesConfig> {
+    public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
         // Linter seem to think that the unsubscription line can be reached before the subscription
         // yet this is false, so this explain the weird instanciation
         let subcription: MGPOptional<Subscription> = MGPOptional.empty();
@@ -292,7 +291,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             });
         const rulesConfig: RulesConfig = await rulesConfigPromise;
         subcription.get().unsubscribe();
-        return rulesConfig;
+        return MGPOptional.of(rulesConfig);
     }
 
     public updateConfig(rulesConfig: MGPOptional<RulesConfig>): void {

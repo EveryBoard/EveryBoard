@@ -5,7 +5,7 @@ import { TaflState } from '../../TaflState';
 
 describe('TaflState', () => {
 
-    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().defaultConfig.config;
+    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().get().defaultConfig.config;
 
     describe('getInitialState', () => {
         it('should make invader Player.ZERO when invaders start', () => {

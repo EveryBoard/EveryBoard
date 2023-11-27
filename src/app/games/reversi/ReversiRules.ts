@@ -62,8 +62,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
                 height: MGPValidators.range(4, 99),
             });
 
-    public override getRulesConfigDescription(): RulesConfigDescription<ReversiConfig> {
-        return ReversiRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<ReversiConfig>> {
+        return MGPOptional.of(ReversiRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public getInitialState(config: ReversiConfig): ReversiState {

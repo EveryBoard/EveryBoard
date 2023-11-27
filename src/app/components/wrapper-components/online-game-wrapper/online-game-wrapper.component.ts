@@ -267,8 +267,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const rules: Rules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
         const legality: MGPFallible<unknown> =
-            rules.isLegal(chosenMove, this.gameComponent.getState(), await this.getConfig());
+            rules.isLegal(chosenMove, this.gameComponent.getState(), config.getOrElse({}));
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
@@ -570,7 +571,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.gameEventsSubscription.unsubscribe();
         }
     }
-    public override async getConfig(): Promise<RulesConfig> {
-        return this.configRoom.rulesConfig;
+    public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
+        return MGPOptional.of(this.configRoom.rulesConfig);
     }
 }

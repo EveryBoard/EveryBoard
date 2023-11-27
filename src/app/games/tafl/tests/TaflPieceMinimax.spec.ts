@@ -16,7 +16,7 @@ describe('TaflPieceMinimax', () => {
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().defaultConfig.config;
+    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().get().defaultConfig.config;
 
     it('should try to make the king escape when it can', () => {
         const board: Table<TaflPawn> = [

@@ -12,7 +12,6 @@ import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
-import { ActivatedRoute } from '@angular/router';
 import { TaflConfig } from './TaflConfig';
 import { TaflMoveGenerator } from './TaflMoveGenerator';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
@@ -35,10 +34,9 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       activatedRoute: ActivatedRoute,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(messageDisplayer, activatedRoute);
+        super(messageDisplayer);
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();

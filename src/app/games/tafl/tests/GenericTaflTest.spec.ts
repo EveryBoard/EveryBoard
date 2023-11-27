@@ -160,7 +160,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             const encoder: Encoder<M> = testUtils.getGameComponent().encoder;
             const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(rules);
             const rulesConfig: TaflConfig =
-                RulesConfigUtils.getGameDefaultConfig(entries.gameName);
+                RulesConfigUtils.getGameDefaultConfig(entries.gameName).get() as TaflConfig;
             const firstTurnMoves: M[] = moveGenerator
                 .getListMoves(rules.getInitialNode(rulesConfig))
                 .map((move: TaflMove) => {

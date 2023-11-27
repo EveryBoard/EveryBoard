@@ -82,7 +82,7 @@ describe('MCTS', () => {
     it('should transmit config to its children', () => {
         // Given a mother node with a specific config
         const customConfig: MancalaConfig = {
-            ...AwaleRules.get().getRulesConfigDescription().defaultConfig.config,
+            ...AwaleRules.get().getRulesConfigDescription().get().defaultConfig.config,
             width: 3,
         };
         const configurableMcts: MCTS<MancalaMove, MancalaState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());

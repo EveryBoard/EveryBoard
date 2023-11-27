@@ -49,8 +49,8 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState, TeekoConfig> {
     public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 4);
 
-    public override getRulesConfigDescription(): RulesConfigDescription<TeekoConfig> {
-        return TeekoRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TeekoConfig>> {
+        return MGPOptional.of(TeekoRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public getInitialState(): TeekoState {

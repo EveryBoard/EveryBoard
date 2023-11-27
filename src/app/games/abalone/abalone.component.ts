@@ -18,7 +18,6 @@ import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
@@ -51,8 +50,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public selecteds: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('Abalone');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new AbaloneScoreHeuristic(), new AbaloneMoveGenerator()),

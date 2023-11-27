@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
@@ -51,8 +50,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('Epaminondas');
         this.availableAIs = [
             new EpaminondasMinimax(),

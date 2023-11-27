@@ -166,8 +166,8 @@ export class EpaminondasRules
         return new EpaminondasState(board, 0);
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<EpaminondasConfig> {
-        return EpaminondasRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<EpaminondasConfig>> {
+        return MGPOptional.of(EpaminondasRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {

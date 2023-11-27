@@ -15,7 +15,6 @@ import { ApagosMoveGenerator } from './ApagosMoveGenerator';
 import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { ActivatedRoute } from '@angular/router';
 
 interface PieceLocation {
 
@@ -72,8 +71,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         return upLeft + ' ' + upRight + ' ' + middleMiddleRight + ' ' + middleExtremeRight + ' ' +
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('Apagos');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new ApagosHeuristic(), new ApagosMoveGenerator()),

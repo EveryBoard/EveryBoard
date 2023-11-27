@@ -1,4 +1,3 @@
-import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoRules } from './TrexoRules';
@@ -77,8 +76,8 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public currentOpponentClass: string = 'player1';
     public currentPlayerClass: string = 'player0';
 
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('Trexo');
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),

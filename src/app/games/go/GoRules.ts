@@ -520,8 +520,8 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         return GoRules.getGameStatus(node);
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<GoConfig> {
-        return GoRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GoConfig>> {
+        return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
     }
 }
 class CaptureState {

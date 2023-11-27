@@ -77,7 +77,7 @@ describe('ConfigRoomService', () => {
             spyOn(configRoomDAO, 'set').and.resolveTo();
             TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
             const configurableGame: string = 'P4'; // Amongst others
-            const defaultConfig: RulesConfig = { mais_quelles_belles_chaussettes: 88 };
+            const defaultConfig: MGPOptional<RulesConfig> = MGPOptional.of({ mais_quelles_belles_chaussettes: 88 });
             spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultConfig);
 
             // When creating part of this type
@@ -86,7 +86,7 @@ describe('ConfigRoomService', () => {
             // Then it should be created with the initial config rules
             const roomConfig: ConfigRoom = {
                 ...ConfigRoomMocks.getInitialRandom({}),
-                rulesConfig: defaultConfig,
+                rulesConfig: defaultConfig.get(),
             };
             expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', roomConfig);
         }));

@@ -7,7 +7,7 @@ import { Utils } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { AbstractGameComponent, BaseGameComponent } from '../game-components/game-component/GameComponent';
+import { AbstractGameComponent, BaseWrapperComponent } from '../game-components/game-component/GameComponent';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -32,7 +32,7 @@ export class GameWrapperMessages {
 }
 
 @Component({ template: '' })
-export abstract class GameWrapper<P extends Comparable> extends BaseGameComponent {
+export abstract class GameWrapper<P extends Comparable> extends BaseWrapperComponent {
 
     // This holds the #board html element
     @ViewChild('board', { read: ViewContainerRef })
@@ -71,9 +71,9 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
-            const rulesConfig: RulesConfig = await this.getConfig();
+            const rulesConfig: MGPOptional<RulesConfig> = await this.getConfig();
             await this.createGameComponent(componentType.get());
-            this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig);
+            this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig.getOrElse({}));
             await this.gameComponent.updateBoard(false);
             return true;
         } else {
@@ -151,7 +151,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
 
     public abstract getPlayer(): P;
 
-    public async getConfig(): Promise<RulesConfig> {
+    public async getConfig(): Promise<MGPOptional<RulesConfig>> {
         const gameName: string = this.getGameName();
         return RulesConfigUtils.getGameDefaultConfig(gameName);
     }
@@ -209,15 +209,15 @@ export abstract class GameWrapper<P extends Comparable> extends BaseGameComponen
         }
     }
 
-    public getRulesConfigDescription(): RulesConfigDescription {
+    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription> {
         const gameName: string = this.getGameName();
         return this.getRulesConfigDescriptionByName(gameName);
     }
 
-    public getRulesConfigDescriptionByName(gameName: string): RulesConfigDescription {
+    public getRulesConfigDescriptionByName(gameName: string): MGPOptional<RulesConfigDescription> {
         const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
         if (gameInfos.length === 0) {
-            return RulesConfigDescription.DEFAULT;
+            return MGPOptional.empty(); // TODO RulesConfigDescription.DEFAULT;
         } else {
             return gameInfos[0].getRulesConfigDescription();
         }

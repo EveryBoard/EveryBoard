@@ -80,7 +80,7 @@ describe('RulesConfigurationComponent', () => {
 
         beforeEach(() => {
             component.userIsCreator = true;
-            component.rulesConfigDescription = rulesConfigDescriptionWithNumber;
+            component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
         });
 
         it('should  display enabled rules select', fakeAsync(async() => {
@@ -125,7 +125,7 @@ describe('RulesConfigurationComponent', () => {
 
         it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
             // Given a rules config component provided with an empty configuration
-            component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
+            component.rulesConfigDescriptionOptional = MGPOptional.empty();
             spyOn(component.updateCallback, 'emit').and.callThrough();
 
             // When initializing
@@ -172,7 +172,7 @@ describe('RulesConfigurationComponent', () => {
             describe('number config', () => {
 
                 beforeEach(fakeAsync(async() => {
-                    component.rulesConfigDescription = rulesConfigDescriptionWithNumber;
+                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
                     await chooseConfig(2); // Choosing the customisable config
                 }));
 
@@ -274,7 +274,7 @@ describe('RulesConfigurationComponent', () => {
             describe('boolean config', () => {
 
                 beforeEach(fakeAsync(async() => {
-                    component.rulesConfigDescription = rulesConfigDescriptionWithBooleans;
+                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithBooleans);
                     await chooseConfig(1); // Choosing the customisable config
                 }));
 
@@ -323,8 +323,9 @@ describe('RulesConfigurationComponent', () => {
 
         beforeEach(() => {
             component.userIsCreator = false;
-            component.rulesConfigDescription = RulesConfigDescription.DEFAULT;
-            component.rulesConfigToDisplay = {}; // Mandatory even if it's a configless game
+            component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+            // Mandatory even if it's a configless game
+            component.rulesConfigToDisplay = rulesConfigDescriptionWithNumber.defaultConfig.config;
         });
 
         it('should display disabled rules select', fakeAsync(async() => {
@@ -339,6 +340,8 @@ describe('RulesConfigurationComponent', () => {
 
         it('should immediately emit on initialisation when no config to fill', fakeAsync(async() => {
             // Given a rules config component provided with an empty configuration
+            component.rulesConfigDescriptionOptional = MGPOptional.empty();
+            component.rulesConfigToDisplay = {};
             spyOn(component.updateCallback, 'emit').and.callThrough();
 
             // When initializing
@@ -369,7 +372,7 @@ describe('RulesConfigurationComponent', () => {
                         nombre: 5,
                         canailleDeBoule: 12,
                     };
-                    component.rulesConfigDescription = rulesConfigDescriptionWithNumber;
+                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
                 });
 
                 it('should propose a disabled number input when given a config of type number', fakeAsync(async() => {
@@ -407,14 +410,15 @@ describe('RulesConfigurationComponent', () => {
                         booleen: true,
                         truth: true,
                     };
-                    component.rulesConfigDescription = rulesConfigDescriptionWithBooleans;
+                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithBooleans);
                 });
 
                 it('should display value of the rulesConfigToDisplay, not of the default config', fakeAsync(async() => {
                     // Given a board board on which the config 'booleen' is by default checked
                     // but has been changed and is hence unchecked in the config to display
                     // Also testing the opposite for the config 'truth()
-                    const defaultConfig: RulesConfig = component.rulesConfigDescription.getDefaultConfig().config;
+                    const defaultConfig: RulesConfig =
+                        component.rulesConfigDescriptionOptional.get().getDefaultConfig().config;
                     const configToDisplay: RulesConfig = Utils.getNonNullable(component.rulesConfigToDisplay);
                     // eslint-disable-next-line dot-notation
                     expect(configToDisplay['booleen']).toBeTrue();

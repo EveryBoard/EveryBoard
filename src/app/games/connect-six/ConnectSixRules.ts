@@ -38,8 +38,8 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         return ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<GobanConfig> {
-        return ConnectSixRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GobanConfig>> {
+        return MGPOptional.of(ConnectSixRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public getInitialState(config: GobanConfig): ConnectSixState {

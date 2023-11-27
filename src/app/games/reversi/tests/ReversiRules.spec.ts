@@ -21,7 +21,7 @@ describe('ReversiRules', () => {
 
     beforeEach(() => {
         rules = ReversiRules.get();
-        defaultConfig = rules.getRulesConfigDescription().defaultConfig.config;
+        defaultConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
         node = rules.getInitialNode(defaultConfig);
     });
     it('should be created', () => {

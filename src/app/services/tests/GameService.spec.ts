@@ -33,7 +33,7 @@ describe('GameService', () => {
 
     let gameEventService: GameEventService;
 
-    const rulesConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig('Quarto');
+    const rulesConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig('Quarto').get();
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({

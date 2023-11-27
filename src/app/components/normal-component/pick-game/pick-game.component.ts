@@ -132,6 +132,8 @@ import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 class GameDescription {
 
@@ -275,8 +277,24 @@ export class GameInfo {
     {
     }
 
-    public getRulesConfigDescription(): RulesConfigDescription {
+    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription> {
         return this.rules.getRulesConfigDescription();
+    }
+    public getRulesConfigOrEmpty(): RulesConfig {
+        const description: MGPOptional<RulesConfigDescription> = this.getRulesConfigDescription();
+        if (description.isPresent()) {
+            return description.get().defaultConfig.config;
+        } else {
+            return {};
+        }
+    }
+    public getOptionalRulesConfig(): MGPOptional<RulesConfig> {
+        const description: MGPOptional<RulesConfigDescription> = this.getRulesConfigDescription();
+        if (description.isPresent()) {
+            return MGPOptional.of(description.get().defaultConfig.config);
+        } else {
+            return MGPOptional.empty();
+        }
     }
 }
 

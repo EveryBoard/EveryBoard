@@ -13,7 +13,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
@@ -34,8 +33,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public disconnecteds: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('Dvonn');
         this.availableAIs = [
             new Minimax($localize`Stacks`, this.rules, new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator()),

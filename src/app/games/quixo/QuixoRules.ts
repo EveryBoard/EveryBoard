@@ -127,8 +127,8 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
         return QuixoRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<QuixoConfig> {
-        return QuixoRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<QuixoConfig>> {
+        return MGPOptional.of(QuixoRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public getInitialState(config: QuixoConfig): QuixoState {

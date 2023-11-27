@@ -3,7 +3,6 @@ import { BaseGameComponent } from 'src/app/components/game-components/game-compo
 import { SiamMove } from './SiamMove';
 import { Player } from 'src/app/jscaip/Player';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
-import { ActivatedRoute } from '@angular/router';
 import { SiamConfig } from './SiamRules';
 import { Coord } from 'src/app/jscaip/Coord';
 
@@ -18,10 +17,6 @@ export class SiamOrientationArrowComponent extends BaseGameComponent {
     @Input() currentPlayer: Player;
     @Input() config: SiamConfig;
     @Output() moveEmitter: EventEmitter<SiamMove> = new EventEmitter<SiamMove>();
-
-    public constructor(activatedRoute: ActivatedRoute) {
-        super(activatedRoute);
-    }
 
     public getCurrentPlayerClass(): string {
         return this.getPlayerClass(this.currentPlayer);

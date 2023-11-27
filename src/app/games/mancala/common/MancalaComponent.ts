@@ -50,7 +50,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                        activatedRoute: ActivatedRoute,
                        public readonly cdr: ChangeDetectorRef)
     {
-        super(messageDisplayer, activatedRoute);
+        super(messageDisplayer);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of([0, 0]);
     }

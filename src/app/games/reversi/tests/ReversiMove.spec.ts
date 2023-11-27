@@ -9,7 +9,7 @@ describe('ReversiMove', () => {
 
     it('should have a bijective encoder', () => {
         const rules: ReversiRules = ReversiRules.get();
-        const defaultConfig: ReversiConfig = rules.getRulesConfigDescription().defaultConfig.config;
+        const defaultConfig: ReversiConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
         const moveGenerator: ReversiMoveGenerator = new ReversiMoveGenerator();
         MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, ReversiMove.encoder, defaultConfig);
         EncoderTestUtils.expectToBeBijective(ReversiMove.encoder, ReversiMove.PASS);

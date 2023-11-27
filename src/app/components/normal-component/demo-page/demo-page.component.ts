@@ -40,7 +40,7 @@ export class DemoPageComponent {
             const demoNodes: { node: AbstractNode, click: MGPOptional<string> }[] = [];
             const rules: AbstractRules = gameInfo.rules;
             const steps: TutorialStep[] = gameInfo.tutorial.tutorial;
-            const config: RulesConfig = gameInfo.getRulesConfigDescription().defaultConfig.config;
+            const config: RulesConfig = gameInfo.getRulesConfigOrEmpty();
             for (const step of steps) {
                 const nodeFromStep: { node: AbstractNode, click: MGPOptional<string>} =
                     this.getNodeFromStep(step, rules, config);

@@ -20,7 +20,7 @@ describe('SiamMoveGenerator', () => {
 
     let moveGenerator: SiamMoveGenerator;
     const rules: SiamRules = SiamRules.get();
-    const defaultConfig: SiamConfig = rules.getRulesConfigDescription().defaultConfig.config;
+    const defaultConfig: SiamConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
 
     beforeEach(() => {
         moveGenerator = new SiamMoveGenerator();

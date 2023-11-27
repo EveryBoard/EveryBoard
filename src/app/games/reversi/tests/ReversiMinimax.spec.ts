@@ -15,7 +15,7 @@ describe('ReversiMinimax', () => {
 
     beforeEach(() => {
         rules = ReversiRules.get();
-        defaultConfig = rules.getRulesConfigDescription().defaultConfig.config;
+        defaultConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
         minimax = new ReversiMinimax();
     });
     it('should not throw at first choice', () => {

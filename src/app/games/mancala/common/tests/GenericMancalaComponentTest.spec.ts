@@ -158,7 +158,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
     let mancalaTestUtils: MancalaComponentTestUtils<C, R>;
 
     const defaultConfig: MancalaConfig =
-        RulesConfigUtils.getGameDefaultConfig(entries.gameName);
+        RulesConfigUtils.getGameDefaultConfig(entries.gameName).get() as MancalaConfig;
 
     describe(entries.gameName + ' component generic tests', () => {
         beforeEach(fakeAsync(async() => {

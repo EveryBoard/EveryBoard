@@ -5,7 +5,6 @@ import { NewGameState } from './NewGameState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameMinimax } from './NewGameMinimax';
@@ -35,8 +34,8 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * It must set up the `rules`, `node`, `encoder`, `encoder`, and `availableMinimaxes` fields.
      * The minimax list can remain empty.
      */
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('NewGame');
         this.availableAIs = [
             new NewGameMinimax(),

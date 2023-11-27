@@ -8,7 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
-const defaultConfig: TeekoConfig = TeekoRules.get().getRulesConfigDescription().defaultConfig.config;
+const defaultConfig: TeekoConfig = TeekoRules.get().getRulesConfigDescription().get().defaultConfig.config;
 
 describe('TeekoHeuristic', () => {
 

@@ -105,7 +105,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     preparationOptions: PreparationOptions = PreparationOptions.def)
 : Promise<PreparationResult<T>>
 {
-    const rulesConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(game);
+    const rulesConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(game).getOrElse({});
     const testUtils: ComponentTestUtils<T, MinimalUser> = await ComponentTestUtils.basic(game);
     await prepareMockDBContent(ConfigRoomMocks.getInitial(rulesConfig));
     ConnectedUserServiceMock.setUser(user);

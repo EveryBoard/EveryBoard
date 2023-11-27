@@ -21,6 +21,7 @@ import { Comparable } from 'src/app/utils/Comparable';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { QuartoRules } from 'src/app/games/quarto/QuartoRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -1096,11 +1097,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
         it('should provide initial default config to game component', fakeAsync(async() => {
             // Given any tutorial for a game that has a specific default config
-            const defaultRulesConfig: RulesConfig = { mais_quelles_belles_chaussettes: 42 };
+            const defaultRulesConfig: MGPOptional<RulesConfig> =
+                MGPOptional.of({ mais_quelles_belles_chaussettes: 42 });
             spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
 
             // When calling getConfig
-            const actualDefaultRulesConfig: RulesConfig = await testUtils.getComponent().getConfig();
+            const actualDefaultRulesConfig: MGPOptional<RulesConfig> = await testUtils.getComponent().getConfig();
 
             // Then the return should be the default game config
             expect(actualDefaultRulesConfig).toBe(defaultRulesConfig);

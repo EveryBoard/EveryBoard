@@ -58,8 +58,8 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         this.P4_HELPER = new NInARowHelper(Utils.identity, 4);
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<P4Config> {
-        return P4Rules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<P4Config>> {
+        return MGPOptional.of(P4Rules.RULES_CONFIG_DESCRIPTION);
     }
 
     public getInitialState(config: P4Config): P4State {

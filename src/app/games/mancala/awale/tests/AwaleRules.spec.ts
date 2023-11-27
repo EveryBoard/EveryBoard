@@ -14,7 +14,7 @@ import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 describe('AwaleRules', () => {
 
     const rules: MancalaRules = AwaleRules.get();
-    const config: MancalaConfig = rules.getRulesConfigDescription().getDefaultConfig().config;
+    const config: MancalaConfig = rules.getRulesConfigDescription().get().getDefaultConfig().config;
 
     describe('generic tests', () => {
 

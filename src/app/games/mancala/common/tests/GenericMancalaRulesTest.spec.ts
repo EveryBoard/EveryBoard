@@ -21,7 +21,7 @@ export class MancalaRulesTestEntries {
 export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
     const defaultConfig: MancalaConfig =
-        RulesConfigUtils.getGameDefaultConfig(entries.gameName);
+        RulesConfigUtils.getGameDefaultConfig(entries.gameName).get() as MancalaConfig;
 
     describe(entries.gameName + 'Rules generic tests', () => {
 

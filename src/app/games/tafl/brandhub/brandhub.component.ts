@@ -3,7 +3,6 @@ import { BrandhubMove } from 'src/app/games/tafl/brandhub/BrandhubMove';
 import { BrandhubRules } from './BrandhubRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-brandhub',
@@ -12,8 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute, BrandhubMove.from);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer, BrandhubMove.from);
         this.setRulesAndNode('Brandhub');
         this.availableAIs = this.createAIs();
         this.encoder = BrandhubMove.encoder;

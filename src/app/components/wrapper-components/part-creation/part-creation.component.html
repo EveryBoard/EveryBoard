@@ -144,7 +144,7 @@
                 </div>
                 <app-rules-configuration id="rulesConfigurationComponent"
                                          [stateProvider]="getStateProvider()"
-                                         [rulesConfigDescription]="rulesConfigDescription"
+                                         [rulesConfigDescriptionOptional]="rulesConfigDescription"
                                          [userIsCreator]="true"
                                          (updateCallback)="saveRulesConfig($event)">
                 </app-rules-configuration>
@@ -198,7 +198,7 @@
                             <li i18n>a turn lasts at most <strong>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }} </strong></li>
                             <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
                         </ul>
-                        <app-rules-configuration [rulesConfigDescription]="rulesConfigDescription"
+                        <app-rules-configuration [rulesConfigDescriptionOptional]="rulesConfigDescription"
                                                  [stateProvider]="getStateProvider()"
                                                  [userIsCreator]="false"
                                                  [rulesConfigToDisplay]="currentConfigRoom?.rulesConfig">

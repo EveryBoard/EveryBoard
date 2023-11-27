@@ -68,8 +68,8 @@ export class HnefataflRules extends TaflRules<HnefataflMove> {
         return new TaflState(board, 0);
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
-        return HnefataflRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TaflConfig>> {
+        return MGPOptional.of(HnefataflRules.RULES_CONFIG_DESCRIPTION);
     }
 
 }

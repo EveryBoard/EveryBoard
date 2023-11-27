@@ -67,8 +67,8 @@ export class TablutRules extends TaflRules<TablutMove> {
         return new TaflState(board, 0);
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
-        return TablutRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TaflConfig>> {
+        return MGPOptional.of(TablutRules.RULES_CONFIG_DESCRIPTION);
     }
 
 }

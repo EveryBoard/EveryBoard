@@ -13,7 +13,6 @@ import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { Direction } from 'src/app/jscaip/Direction';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ActivatedRoute } from '@angular/router';
 import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
@@ -155,8 +154,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public static getRadius(circle: number): number {
         return this.SPACE_SIZE * circle / 10;
     }
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('MartianChess');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new MartianChessScoreHeuristic(), new MartianChessMoveGenerator()),

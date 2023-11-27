@@ -29,7 +29,7 @@ describe('TeekoRules', () => {
 
     beforeEach(() => {
         rules = TeekoRules.get();
-        defaultConfig = rules.getRulesConfigDescription().defaultConfig.config;
+        defaultConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
     });
 
     describe('dropping phase', () => {

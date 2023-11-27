@@ -14,7 +14,7 @@ describe('SiamMove', () => {
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
     const D: SiamPiece = SiamPiece.LIGHT_DOWN;
-    const defaultConfig: SiamConfig = SiamRules.get().getRulesConfigDescription().getDefaultConfig().config;
+    const defaultConfig: SiamConfig = SiamRules.get().getRulesConfigDescription().get().getDefaultConfig().config;
 
     it('should have a bijective encoder', () => {
         const board: Table<SiamPiece> = [

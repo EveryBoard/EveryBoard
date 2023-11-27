@@ -83,8 +83,8 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegali
                 numberOfBonusMountain: MGPValidators.range(0, 98), // -1 on two ends because there will only be one
             });
 
-    public override getRulesConfigDescription(): RulesConfigDescription<SiamConfig> {
-        return SiamRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<SiamConfig>> {
+        return MGPOptional.of(SiamRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public getInitialState(config: SiamConfig): SiamState {

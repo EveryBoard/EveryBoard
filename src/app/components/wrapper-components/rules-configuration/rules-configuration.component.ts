@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ConfigDescriptionType, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
-import { BaseGameComponent } from '../../game-components/game-component/GameComponent';
+import { BaseWrapperComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
@@ -20,11 +20,12 @@ type ConfigFormJSON = {
     selector: 'app-rules-configuration',
     templateUrl: './rules-configuration.component.html',
 })
-export class RulesConfigurationComponent extends BaseGameComponent implements OnInit {
+export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
 
     @Input() stateProvider: MGPOptional<(config: RulesConfig) => GameState>;
 
-    @Input() rulesConfigDescription: RulesConfigDescription;
+    @Input() rulesConfigDescriptionOptional: MGPOptional<RulesConfigDescription>;
+    public rulesConfigDescription: RulesConfigDescription;
 
     // Only needed for the non-creator
     @Input() rulesConfigToDisplay?: RulesConfig;
@@ -207,7 +208,13 @@ export class RulesConfigurationComponent extends BaseGameComponent implements On
     }
 
     public isCustomisable(): boolean {
-        return this.rulesConfigDescription.getFields().length > 0;
+        if (this.rulesConfigDescriptionOptional.isAbsent()) {
+            return false;
+        } else {
+            Utils.assert(this.rulesConfigDescriptionOptional.get().getFields().length > 0, 'wtf lo ?');
+            this.rulesConfigDescription = this.rulesConfigDescriptionOptional.get();
+            return true;
+        }
     }
 
 }

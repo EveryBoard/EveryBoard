@@ -64,8 +64,8 @@ export class BrandhubRules extends TaflRules<BrandhubMove> {
         return new TaflState(board, 0);
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
-        return BrandhubRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TaflConfig>> {
+        return MGPOptional.of(BrandhubRules.RULES_CONFIG_DESCRIPTION);
     }
 
 }

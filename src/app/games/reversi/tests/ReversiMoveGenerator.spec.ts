@@ -19,7 +19,7 @@ describe('ReversiMoveGenerator', () => {
 
     beforeEach(() => {
         rules = ReversiRules.get();
-        defaultConfig = rules.getRulesConfigDescription().defaultConfig.config;
+        defaultConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
         moveGenerator = new ReversiMoveGenerator();
     });
     it('should have 4 choices at first turn', () => {

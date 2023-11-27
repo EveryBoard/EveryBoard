@@ -13,7 +13,7 @@ import { TaflState } from '../TaflState';
 describe('TaflPieceAndInfluenceMinimax', () => {
 
     let minimax: Minimax<TablutMove, TaflState>;
-    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().defaultConfig.config;
+    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().get().defaultConfig.config;
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;

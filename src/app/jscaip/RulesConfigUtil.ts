@@ -1,7 +1,7 @@
 /* eslint-disable no-multi-spaces */
 import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
-import { RulesConfigDescription } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Localized } from '../utils/LocaleUtils';
+import { MGPOptional } from '../utils/MGPOptional';
 
 export type ConfigDescriptionType = number | boolean;
 
@@ -19,13 +19,14 @@ export interface EmptyRulesConfig extends RulesConfig {
 
 export class RulesConfigUtils {
 
-    public static getGameDefaultConfig<C extends RulesConfig>(gameName: string): C {
+    public static getGameDefaultConfig<C extends RulesConfig>(gameName: string): MGPOptional<C> {
         const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
-        let rulesConfigDescription: RulesConfigDescription = RulesConfigDescription.DEFAULT;
         if (gameInfos.length > 0) {
-            rulesConfigDescription = gameInfos[0].getRulesConfigDescription();
+            return gameInfos[0].getOptionalRulesConfig() as MGPOptional<C>;
+            // return MGPOptional.of(gameInfos[0].getRulesConfigDescription().get().defaultConfig.config as C);
+        } else {
+            return MGPOptional.empty();
         }
-        return rulesConfigDescription.getDefaultConfig().config as C;
     }
 
 }

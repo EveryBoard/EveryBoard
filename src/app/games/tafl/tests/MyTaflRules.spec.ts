@@ -44,8 +44,8 @@ export class MyTaflRules extends TaflRules<MyTaflMove> {
         super(MyTaflMove.from);
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
-        return MyTaflRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TaflConfig>> {
+        return MGPOptional.of(MyTaflRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public getInitialState(config: TaflConfig): TaflState {

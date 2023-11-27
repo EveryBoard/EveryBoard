@@ -45,8 +45,8 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         return new PenteState(board, [0, 0], 0);
     }
 
-    public override getRulesConfigDescription(): RulesConfigDescription<GobanConfig> {
-        return PenteRules.RULES_CONFIG_DESCRIPTION;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GobanConfig>> {
+        return MGPOptional.of(PenteRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public isLegal(move: PenteMove, state: PenteState): MGPValidation {

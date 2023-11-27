@@ -1,4 +1,3 @@
-import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -35,8 +34,8 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private lastMove: MGPOptional<LinesOfActionMove> = MGPOptional.empty();
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('LinesOfAction');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),

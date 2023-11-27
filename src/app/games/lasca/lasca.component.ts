@@ -14,7 +14,6 @@ import { LascaFailure } from './LascaFailure';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
-import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { LascaControlHeuristic } from './LascaControlHeuristic';
@@ -67,8 +66,8 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private legalMoves: LascaMove[] = [];
     private readonly moveGenerator: LascaMoveGenerator = new LascaMoveGenerator();
 
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('Lasca');
         this.availableAIs = [
             new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),

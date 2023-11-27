@@ -109,7 +109,7 @@ describe('DemoCardComponent', () => {
         });
         await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
 
-        // Then we should see that the component has indeed been change
+        // Then we should see that the component has indeed been changed
         testUtils.expectElementToExist('.player0-fill');
     }));
 
@@ -125,11 +125,11 @@ describe('DemoCardComponent', () => {
             });
 
             // When calling getConfig
-            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
-            const actualDefaultRulesConfig: RulesConfig = await testUtils.getComponent().getConfig();
+            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(MGPOptional.of(defaultRulesConfig));
+            const actualDefaultRulesConfig: MGPOptional<RulesConfig> = await testUtils.getComponent().getConfig();
 
             // Then the return should be the default game config
-            expect(actualDefaultRulesConfig).toBe(defaultRulesConfig);
+            expect(actualDefaultRulesConfig).toEqual(MGPOptional.of(defaultRulesConfig));
         }));
 
     });

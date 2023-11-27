@@ -13,7 +13,6 @@ import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { ActivatedRoute } from '@angular/router';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { DiamMoveGenerator } from './DiamMoveGenerator';
@@ -94,8 +93,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
             { key: Player.ONE, value: [] },
         ]),
     };
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.setRulesAndNode('Diam');
         this.availableAIs = [
             new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new DiamMoveGenerator()),

@@ -3,7 +3,6 @@ import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { TablutRules } from './TablutRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-tablut',
@@ -12,8 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TablutComponent extends TaflComponent<TablutRules, TablutMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute, TablutMove.from);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer, TablutMove.from);
         this.setRulesAndNode('Tablut');
         this.availableAIs = this.createAIs();
         this.encoder = TablutMove.encoder;

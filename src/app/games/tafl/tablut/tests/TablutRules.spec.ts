@@ -18,7 +18,7 @@ describe('TablutRules', () => {
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().defaultConfig.config;
+    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().get().defaultConfig.config;
 
     beforeEach(() => {
         rules = TablutRules.get();

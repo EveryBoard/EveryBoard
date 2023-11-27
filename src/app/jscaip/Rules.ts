@@ -68,8 +68,8 @@ export abstract class Rules<M extends Move,
         return new GameNode(initialState, undefined, undefined, MGPOptional.ofNullable(config));
     }
 
-    public getRulesConfigDescription(): RulesConfigDescription<C> {
-        return RulesConfigDescription.DEFAULT as RulesConfigDescription<C>;
+    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<C>> {
+        return MGPOptional.empty(); // TODO is RulesConfigDescription.DEFAULT used then ?
     }
 
     public abstract getGameStatus(node: GameNode<M, S, C>): GameStatus;

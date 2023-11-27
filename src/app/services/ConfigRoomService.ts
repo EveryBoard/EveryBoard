@@ -80,7 +80,7 @@ export class ConfigRoomService {
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator,
-            rulesConfig: RulesConfigUtils.getGameDefaultConfig(gameName),
+            rulesConfig: RulesConfigUtils.getGameDefaultConfig(gameName).getOrElse({}),
         };
         return this.configRoomDAO.set(configRoomId, newConfigRoom);
     }

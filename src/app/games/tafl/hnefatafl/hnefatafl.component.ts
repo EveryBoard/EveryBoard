@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import { HnefataflMove } from 'src/app/games/tafl/hnefatafl/HnefataflMove';
 import { HnefataflRules } from './HnefataflRules';
@@ -13,8 +12,8 @@ import { TaflComponent } from '../tafl.component';
 })
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer, activatedRoute: ActivatedRoute) {
-        super(messageDisplayer, activatedRoute, HnefataflMove.from);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer, HnefataflMove.from);
         this.setRulesAndNode('Hnefatafl');
         this.availableAIs = this.createAIs();
         this.encoder = HnefataflMove.encoder;

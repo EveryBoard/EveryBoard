@@ -29,7 +29,7 @@ describe('SiamRules', () => {
     const r: SiamPiece = SiamPiece.DARK_RIGHT;
     const d: SiamPiece = SiamPiece.DARK_DOWN;
 
-    const defaultConfig: SiamConfig = rules.getRulesConfigDescription().getDefaultConfig().config;
+    const defaultConfig: SiamConfig = rules.getRulesConfigDescription().get().getDefaultConfig().config;
 
     beforeEach(() => {
         rules = SiamRules.get();

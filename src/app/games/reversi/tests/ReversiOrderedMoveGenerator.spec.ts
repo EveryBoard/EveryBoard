@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: ReversiConfig = ReversiRules.get().getRulesConfigDescription().defaultConfig.config;
+const defaultConfig: ReversiConfig = ReversiRules.get().getRulesConfigDescription().get().defaultConfig.config;
 
 describe('ReversiOrderedMoveGenerator', () => {
 

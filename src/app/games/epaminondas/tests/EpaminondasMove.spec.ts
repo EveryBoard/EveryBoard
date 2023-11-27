@@ -31,7 +31,7 @@ describe('EpaminondasMove: ', () => {
 
     it('should have a bijective encoder', () => {
         const rules: EpaminondasRules = EpaminondasRules.get();
-        const defaultConfig: EpaminondasConfig = rules.getRulesConfigDescription().defaultConfig.config;
+        const defaultConfig: EpaminondasConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
         const moveGenerator: EpaminondasMoveGenerator = new EpaminondasMoveGenerator();
         MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, EpaminondasMove.encoder, defaultConfig);
     });

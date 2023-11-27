@@ -37,7 +37,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         testUtils.expectElementToBeDisabled('#startGameWithConfig');
     }));
 
-    it('game component should be created once you click on the button', fakeAsync(async() => {
+    it('should create game component once you click on the button', fakeAsync(async() => {
         // Given any game needing a config, like P4
         // When clicking on startGameWithConfig
         testUtils.expectElementNotToExist('#board');

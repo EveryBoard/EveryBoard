@@ -89,6 +89,7 @@ import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { TutorialStepFailure } from './TutorialStepFailure';
 import { Comparable } from 'src/app/utils/Comparable';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -322,7 +323,8 @@ describe('TutorialGameWrapperComponent (games)', () => {
             ];
             for (const stepExpectation of stepExpectations) {
                 const rules: Rules<Move, GameState, RulesConfig, unknown> = stepExpectation[0];
-                const config: RulesConfig = rules.getRulesConfigDescription().defaultConfig.config;
+                const config: RulesConfig =
+                    rules.getRulesConfigDescription().getOrElse(RulesConfigDescription.DEFAULT).defaultConfig.config;
                 const step: TutorialStep = stepExpectation[1];
                 if (step.isPredicate()) {
                     const move: Move = stepExpectation[2];
@@ -350,7 +352,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                         .getGameComponent();
                 const rules: Rules<Move, GameState, RulesConfig, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
-                const config: RulesConfig = gameInfo.getRulesConfigDescription().defaultConfig.config;
+                const config: RulesConfig = gameInfo.getRulesConfigOrEmpty();
                 for (const step of steps) {
                     if (step.hasSolution()) {
                         const solution: Move | Click = step.getSolution();

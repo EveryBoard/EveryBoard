@@ -25,7 +25,7 @@ const d: SiamPiece = SiamPiece.DARK_DOWN;
 describe('SiamHeuristic', () => {
 
     let heuristic: SiamHeuristic;
-    const defaultConfig: SiamConfig = SiamRules.get().getRulesConfigDescription().defaultConfig.config;
+    const defaultConfig: SiamConfig = SiamRules.get().getRulesConfigDescription().get().defaultConfig.config;
 
     beforeEach(() => {
         heuristic = new SiamHeuristic();
