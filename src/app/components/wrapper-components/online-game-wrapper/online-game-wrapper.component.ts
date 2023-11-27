@@ -412,7 +412,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const oldNode: AbstractNode = this.gameComponent.node;
             const rules: AbstractRules = this.gameComponent.rules;
             const state: GameState = oldNode.gameState;
-            const config: RulesConfig = oldNode.getConfig();
+            const config: RulesConfig = oldNode.config.getOrElse({});
             const legality: MGPFallible<unknown> = rules.isLegal(move, state, config);
             Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
             const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());

@@ -216,8 +216,8 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
         }
     }
 
-    protected getConfig(): C {
-        return this.node.getConfig();
+    protected getConfig(): MGPOptional<C> {
+        return this.node.config;
     }
 
     /**

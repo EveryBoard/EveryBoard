@@ -19,7 +19,7 @@ export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamCo
                                                                   coordAndContent.coord.y));
             }
         }
-        const config: SiamConfig = node.getConfig();
+        const config: SiamConfig = node.config.get();
         if (node.gameState.countCurrentPlayerPawn() < config.numberOfPiece) {
             // up to 44 insertions
             // we remove some legal but useless insertions as explained below

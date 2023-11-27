@@ -90,7 +90,7 @@
     <g app-siam-orientation-arrow
        [orientations]="orientations"
        [currentPlayer]="getCurrentPlayer()"
-       [config]="getConfig()"
+       [config]="getConfig().get()"
        (moveEmitter)="selectOrientation($event)"
     />
 </svg>

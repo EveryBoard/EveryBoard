@@ -9,7 +9,7 @@ export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, Reversi
 
     public getMetrics(node: ReversiNode): [number, number] {
         const state: ReversiState = node.gameState;
-        const config: ReversiConfig = node.getConfig();
+        const config: ReversiConfig = node.config.get();
         let player0Count: number = 0;
         let player1Count: number = 0;
         for (const coordAndContent of state.getCoordsAndContents()) {

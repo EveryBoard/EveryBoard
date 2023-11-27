@@ -12,7 +12,7 @@ export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState> {
         if (node.gameState.isInDropPhase()) {
             return this.getListDrops(node.gameState);
         } else {
-            return this.getListTranslations(node.gameState, node.getConfig());
+            return this.getListTranslations(node.gameState, node.config.get());
         }
     }
 

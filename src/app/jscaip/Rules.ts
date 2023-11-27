@@ -29,7 +29,7 @@ export abstract class Rules<M extends Move,
          * return false otherwise
          */
         Debug.display('Rules', 'choose', move.toString() + ' was proposed');
-        const legality: MGPFallible<L> = this.isLegal(move, node.gameState, node.getConfig());
+        const legality: MGPFallible<L> = this.isLegal(move, node.gameState, node.config.get());
         if (legality.isFailure()) {
             Debug.display('Rules', 'choose', 'Move is illegal: ' + legality.getReason());
             return MGPFallible.failure(legality.getReason());
@@ -41,7 +41,7 @@ export abstract class Rules<M extends Move,
             Debug.display('Rules', 'choose', 'and this proposed move is found in the list, so it is legal');
             return MGPFallible.success(choice.get());
         }
-        const config: C = node.getConfig();
+        const config: C = node.config.getOrElse({} as C);
         const resultingState: S = this.applyLegalMove(move, node.gameState, config, legality.get());
         const child: GameNode<M, S, C> = new GameNode(resultingState,
                                                       MGPOptional.of(node),

@@ -75,7 +75,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public override async showLastMove(move: SiamMove): Promise<void> {
         this.lastMove = MGPOptional.of(move);
         const previousGameState: SiamState = this.getPreviousState();
-        const config: SiamConfig = this.getConfig();
+        const config: SiamConfig = this.getConfig().get();
         this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState, config).get().moved;
     }
 
@@ -102,7 +102,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             return MGPValidation.SUCCESS;
         }
         this.cancelMoveAttempt();
-        const config: SiamConfig = this.getConfig();
+        const config: SiamConfig = this.getConfig().get();
         for (const move of SiamRules.get().getInsertions(this.getState(), config)) {
             const target: Coord = move.coord.getNext(move.direction.get());
             // For every pushing insertion, we draw an arrow in case it will push a piece
@@ -181,7 +181,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
         // Inserting a new piece, the player just clicked on the landing
         this.selectedLanding = MGPOptional.of(clickedCoord);
-        const config: SiamConfig = this.getConfig();
+        const config: SiamConfig = this.getConfig().get();
         const insertions: SiamMove[] =
             SiamRules.get().getInsertionsAt(this.getState(), clickedCoord.x, clickedCoord.y, config);
         if (insertions.length === 0) {
@@ -288,7 +288,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
 
     public getRemainingPieceTransform(piece: number, player: Player): string {
-        const config: SiamConfig = this.getConfig();
+        const config: SiamConfig = this.getConfig().get();
         const cx: number = config.width / 2;
         const offset: number = 1 / 2;
         const pieceOnBoard: number = this.getState().countPlayersPawn()[player.value];
@@ -337,7 +337,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
 
     public playerPieces(player: Player): number {
-        const maxPiece: number = this.getConfig().numberOfPiece;
+        const maxPiece: number = this.getConfig().get().numberOfPiece;
         const pieceOnBoard: number = this.getState().countPlayersPawn()[player.value];
         return maxPiece - pieceOnBoard;
     }

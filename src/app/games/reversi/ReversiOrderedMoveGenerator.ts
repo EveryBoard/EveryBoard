@@ -19,7 +19,7 @@ export class ReversiOrderedMoveGenerator extends MoveGenerator<ReversiMove, Reve
     public getListMoves(node: ReversiNode): ReversiMove[] {
         const moves: ReversiMoveWithSwitched[] = ReversiRules.get().getListMoves(node.gameState);
         // Best moves are on the corner, otherwise moves are sorted by number of pieces switched
-        const config: ReversiConfig = node.getConfig();
+        const config: ReversiConfig = node.config.get();
         ArrayUtils.sortByDescending(moves, (moveWithSwitched: ReversiMoveWithSwitched): number => {
             if (this.getBestCoords(config).some((coord: Coord): boolean => moveWithSwitched.move.coord.equals(coord))) {
                 return 100;

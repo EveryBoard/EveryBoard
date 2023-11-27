@@ -97,7 +97,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        const config: RulesConfig = this.gameComponent.node.getConfig();
+        const config: RulesConfig = this.gameComponent.node.config.getOrElse({});
         this.gameComponent.node = new GameNode(currentStep.state,
                                                undefined,
                                                currentStep.previousMove,

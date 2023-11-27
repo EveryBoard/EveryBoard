@@ -67,7 +67,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public override async showLastMove(move: MancalaMove): Promise<void> {
         this.droppedInStore = [0, 0];
         const previousState: MancalaState = this.getPreviousState();
-        const config: MancalaConfig = this.getConfig();
+        const config: MancalaConfig = this.getConfig().get();
         const distributionResult: MancalaDistributionResult =
             this.rules.distributeMove(move, previousState, config);
         this.filledCoords = distributionResult.filledCoords;
@@ -134,7 +134,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
         const distributionResult: MancalaDistributionResult =
             await this.showSimpleDistribution(MancalaDistribution.of(x));
-        const config: MancalaConfig = this.getConfig();
+        const config: MancalaConfig = this.getConfig().get();
         if (distributionResult.endsUpInStore &&
             config.mustContinueDistributionAfterStore)
         {
@@ -155,7 +155,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const playerY: number = state.getCurrentPlayerY();
         const coord: Coord = new Coord(distribution.x, playerY);
         this.lastDistributedHouses.push(coord);
-        const config: MancalaConfig = this.getConfig();
+        const config: MancalaConfig = this.getConfig().get();
         await this.showSeedBySeed(coord, state, config);
         const distributionResult: MancalaDistributionResult =
             this.rules.distributeHouse(distribution.x, playerY, state, config);

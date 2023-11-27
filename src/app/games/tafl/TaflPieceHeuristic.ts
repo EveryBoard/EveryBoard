@@ -13,7 +13,7 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
 
     public getMetrics(node: TaflNode<M>): [number, number] {
         const state: TaflState = node.gameState;
-        const config: TaflConfig = node.getConfig();
+        const config: TaflConfig = node.config.get();
         // We just count the pawns
         const nbPlayerZeroPawns: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.rules.getPlayerListPawns(Player.ONE, state).length;

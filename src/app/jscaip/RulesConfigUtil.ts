@@ -23,7 +23,6 @@ export class RulesConfigUtils {
         const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
         if (gameInfos.length > 0) {
             return gameInfos[0].getOptionalRulesConfig() as MGPOptional<C>;
-            // return MGPOptional.of(gameInfos[0].getRulesConfigDescription().get().defaultConfig.config as C);
         } else {
             return MGPOptional.empty();
         }

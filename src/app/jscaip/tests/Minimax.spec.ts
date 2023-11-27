@@ -9,6 +9,7 @@ import { AIDepthLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';
 import { DummyHeuristic, Minimax } from '../Minimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const config: P4Config = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
 
@@ -97,7 +98,7 @@ describe('Minimax', () => {
         const child: P4Node = node.getChild(nextMove).get();
 
         // Then the children should have the same config
-        expect(child.getConfig()).toBe(customConfig);
+        expect(child.config).toEqual(MGPOptional.of(customConfig));
 
     });
 

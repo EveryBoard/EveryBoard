@@ -14,6 +14,7 @@ import { AwaleRules } from 'src/app/games/mancala/awale/AwaleRules';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { MancalaConfig } from 'src/app/games/mancala/common/MancalaConfig';
 import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('MCTS', () => {
 
@@ -93,7 +94,7 @@ describe('MCTS', () => {
         const child: MancalaNode = node.getChild(nextMove).get();
 
         // Then the children should have the same config
-        expect(child.getConfig()).toBe(customConfig);
+        expect(child.config).toEqual(MGPOptional.of(customConfig));
 
     });
 

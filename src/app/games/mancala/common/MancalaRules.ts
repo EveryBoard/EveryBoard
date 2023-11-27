@@ -177,7 +177,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
     public getGameStatus(node: MancalaNode): GameStatus {
         const state: MancalaState = node.gameState;
         const width: number = node.gameState.getWidth();
-        const seedsByHouse: number = node.getConfig().seedsByHouse;
+        const seedsByHouse: number = node.config.get().seedsByHouse;
         const halfOfTotalSeeds: number = width * seedsByHouse;
         if (state.scores[0] > halfOfTotalSeeds) {
             return GameStatus.ZERO_WON;

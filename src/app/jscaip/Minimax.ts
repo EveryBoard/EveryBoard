@@ -165,7 +165,7 @@ export class Minimax<M extends Move,
     private getOrCreateChild(node: GameNode<M, S, C>, move: M): GameNode<M, S, C> {
         const child: MGPOptional<GameNode<M, S, C>> = node.getChild(move);
         if (child.isAbsent()) {
-            const config: C = node.getConfig();
+            const config: C = node.config.getOrElse({} as C);
             const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
             const moveString: string = move.toString();
             Utils.assert(legality.isSuccess(), 'The minimax "' + this.name + '" has proposed an illegal move (' + moveString + '), refusal reason: ' + legality.getReasonOr('') + ' this should not happen.');

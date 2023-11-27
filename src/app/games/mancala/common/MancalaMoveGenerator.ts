@@ -14,7 +14,7 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
     public getListMoves(node: MancalaNode): MancalaMove[] {
         const moves: MancalaMove[] = [];
         const state: MancalaState = node.gameState;
-        const config: MancalaConfig = node.getConfig();
+        const config: MancalaConfig = node.config.get();
         const playerY: number = state.getCurrentPlayerY();
         for (let x: number = 0; x < state.getWidth(); x++) {
             if (state.getPieceAtXY(x, playerY) > 0) {

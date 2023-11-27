@@ -17,7 +17,7 @@ export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, Tafl
 
     public getListMoves(node: TaflNode<M>): M[] {
         const state: TaflState = node.gameState;
-        const config: TaflConfig = node.getConfig();
+        const config: TaflConfig = node.config.get();
         const currentPlayer: Player = state.getCurrentPlayer();
         const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state, config);
         return this.orderMoves(state, listMoves, config);

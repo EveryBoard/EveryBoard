@@ -112,7 +112,7 @@ describe('Rules', () => {
             // When choosing the children
             const child: AbstractNode = rules.choose(node, P4Move.of(9)).get();
             // Then the children should have the same config
-            expect(child.getConfig()).toBe(customConfig);
+            expect(child.config).toEqual(MGPOptional.of(customConfig));
         });
 
     });
