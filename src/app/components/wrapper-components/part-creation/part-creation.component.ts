@@ -503,10 +503,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
 
-    public getStateProvider(): MGPOptional<(config: RulesConfig) => GameState> {
+    public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
         const urlName: string = this.getGameUrlName();
         const rules: AbstractRules = GameInfo.getByUrlName(urlName)[0].rules;
-        const stateProvider: (config: RulesConfig) => GameState = (config: RulesConfig) => {
+        const stateProvider: (config: MGPOptional<RulesConfig> ) => GameState = (config: MGPOptional<RulesConfig>) => {
             // eslint-disable-next-line dot-notation
             return rules.getInitialState(config);
         };

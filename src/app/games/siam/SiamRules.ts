@@ -13,7 +13,6 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
@@ -87,11 +86,13 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegali
         return MGPOptional.of(SiamRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(config: SiamConfig): SiamState {
+    public getInitialState(optionalConfig: MGPOptional<SiamConfig>): SiamState {
+        const config: SiamConfig = optionalConfig.get();
         const board: SiamPiece[][] = TableUtils.create(config.width, config.height, SiamPiece.EMPTY);
         const cy: number = Math.floor(config.height / 2);
         const cx: number = Math.floor(config.width / 2);
         board[cy][cx] = SiamPiece.MOUNTAIN;
+        config.numberOfBonusMountain = Math.min(config.numberOfBonusMountain, config.width - 1);
         let numberOfBonusMountainDropped: number = 0;
         while (numberOfBonusMountainDropped < config.numberOfBonusMountain) {
             const mountainExcentricity: number = Math.ceil((numberOfBonusMountainDropped + 1) / 2);
@@ -250,7 +251,10 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegali
         return MGPFallible.success(new SiamLegalityInformation(resultingBoard, [coord]));
     }
 
-    public applyLegalMove(_move: SiamMove, state: SiamState, _config: RulesConfig, info: SiamLegalityInformation)
+    public applyLegalMove(_move: SiamMove,
+                          state: SiamState,
+                          _config: MGPOptional<SiamConfig>,
+                          info: SiamLegalityInformation)
     : SiamState
     {
         const newBoard: Table<SiamPiece> = TableUtils.copy(info.resultingBoard);

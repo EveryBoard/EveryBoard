@@ -17,12 +17,13 @@ export class HeuristicUtils {
         weakMove: MGPOptional<M>,
         strongState: S,
         strongMove: MGPOptional<M>,
-        player: Player)
+        player: Player,
+        config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        const weakNode: GameNode<M, S, C> = new GameNode(weakState, MGPOptional.empty(), weakMove);
+        const weakNode: GameNode<M, S, C> = new GameNode(weakState, undefined, weakMove, config);
         const weakValue: number = heuristic.getBoardValue(weakNode).value;
-        const strongNode: GameNode<M, S, C> = new GameNode(strongState, MGPOptional.empty(), strongMove);
+        const strongNode: GameNode<M, S, C> = new GameNode(strongState, undefined, strongMove, config);
         const strongValue: number = heuristic.getBoardValue(strongNode).value;
         if (player === Player.ZERO) {
             expect(weakValue).toBeGreaterThan(strongValue);

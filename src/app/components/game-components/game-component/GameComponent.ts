@@ -17,7 +17,6 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
-import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 
 abstract class BaseComponent {
 
@@ -200,20 +199,11 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
 
     protected setRulesAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName)[0];
-        const defaultConfig: RulesConfig = this.getConfigurationOf(gameInfo);
+        const defaultConfig: MGPOptional<C> = gameInfo.getOptionalRulesConfig() as MGPOptional<C>;
 
         this.rules = gameInfo.rules as R;
-        this.node = this.rules.getInitialNode(defaultConfig as C);
+        this.node = this.rules.getInitialNode(defaultConfig);
         this.tutorial = gameInfo.tutorial.tutorial;
-    }
-
-    private getConfigurationOf(gameInfo: GameInfo): RulesConfig {
-        const configuration: MGPOptional<RulesConfigDescription> = gameInfo.getRulesConfigDescription();
-        if (configuration.isPresent()) {
-            return configuration.get().getDefaultConfig().config;
-        } else {
-            return {};
-        }
     }
 
     protected getConfig(): MGPOptional<C> {

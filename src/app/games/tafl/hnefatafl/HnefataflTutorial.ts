@@ -5,13 +5,14 @@ import { Tutorial, TutorialStep } from '../../../components/wrapper-components/t
 import { HnefataflRules } from './HnefataflRules';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: TaflConfig = HnefataflRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+const defaultConfig: MGPOptional<TaflConfig> = HnefataflRules.get().getDefaultRulesConfig();
 
 export class HnefataflTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

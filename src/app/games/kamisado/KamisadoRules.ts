@@ -168,7 +168,9 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         }));
     }
     // Apply the move by only relying on tryMove
-    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _config: RulesConfig, _info: void): KamisadoState {
+    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _config: MGPOptional<RulesConfig>, _info: void)
+    : KamisadoState
+    {
         if (KamisadoMove.isPiece(move)) {
             const start: Coord = move.getStart();
             const end: Coord = move.getEnd();

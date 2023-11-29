@@ -207,7 +207,8 @@ describe('GipfRules', () => {
             const firstLegality: MGPFallible<GipfLegalityInformation> = rules.isLegal(move, state);
             expect(firstLegality.isSuccess()).toBeTrue();
 
-            const resultingState: GipfState = rules.applyLegalMove(move, state, {}, firstLegality.get());
+            const resultingState: GipfState =
+                rules.applyLegalMove(move, state, MGPOptional.empty(), firstLegality.get());
             const placement: GipfPlacement = new GipfPlacement(new Coord(2, 6),
                                                                MGPOptional.of(HexaDirection.UP_RIGHT));
 
@@ -287,7 +288,7 @@ describe('GipfRules', () => {
             const legalityA: MGPFallible<GipfLegalityInformation> = rules.isLegal(moveA, state);
             expect(legalityA.isSuccess()).toBeTrue();
 
-            const resultingState: GipfState = rules.applyLegalMove(moveA, state, {}, legalityA.get());
+            const resultingState: GipfState = rules.applyLegalMove(moveA, state, MGPOptional.empty(), legalityA.get());
 
             const placementB: GipfPlacement = new GipfPlacement(new Coord(3, 0),
                                                                 MGPOptional.of(HexaDirection.RIGHT));

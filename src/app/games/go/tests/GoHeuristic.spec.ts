@@ -2,7 +2,7 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoState, GoPiece, Phase } from '../GoState';
-import { GoNode } from '../GoRules';
+import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoHeuristic } from '../GoHeuristic';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
@@ -14,10 +14,12 @@ const _: GoPiece = GoPiece.EMPTY;
 describe('GoHeuristic', () => {
 
     let heuristic: GoHeuristic;
+    const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new GoHeuristic();
     });
+
     xit('should getBoardValue according considering alive group who control alone one territory and not considering alive the others', () => {
         const board: Table<GoPiece> = [
             [_, X, _, _, _],
@@ -31,6 +33,7 @@ describe('GoHeuristic', () => {
         const boardValue: number = heuristic.getBoardValue(initialNode).value;
         expect(boardValue).toBe(3);
     });
+
     it('should prefer a larger territory', () => {
         // Given a board with more territory for ZERO than another
         const strongBoard: Table<GoPiece> = [
@@ -54,8 +57,10 @@ describe('GoHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
+
     it('should not care about kills in territory', () => {
         const u: GoPiece = GoPiece.DEAD_DARK;
         // Given two boards with the same territory, but one with a dead opponent piece
@@ -79,4 +84,5 @@ describe('GoHeuristic', () => {
         // Then it should assign the same value for both
         HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState);
     });
+
 });

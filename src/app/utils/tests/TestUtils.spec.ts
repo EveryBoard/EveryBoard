@@ -353,16 +353,18 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     public async setupState(state: GameState,
                             previousState?: GameState,
                             previousMove?: Move,
-                            config?: RulesConfig)
+                            config: MGPOptional<RulesConfig> = MGPOptional.empty())
     : Promise<void>
     {
-        const optionalConfig: MGPOptional<RulesConfig> = MGPOptional.ofNullable(config);
+        if (config.isAbsent()) {
+            config = this.gameComponent.rules.getDefaultRulesConfig();
+        }
         this.gameComponent.node = new GameNode(
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
-                new GameNode(previousState, undefined, undefined, optionalConfig)),
+                new GameNode(previousState, undefined, undefined, config)),
             MGPOptional.ofNullable(previousMove),
-            optionalConfig,
+            config,
         );
         await this.gameComponent.updateBoard(false);
         if (previousMove !== undefined) {

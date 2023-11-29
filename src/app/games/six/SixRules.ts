@@ -46,7 +46,10 @@ export class SixRules extends Rules<SixMove, SixState, EmptyRulesConfig, SixLega
         return SixState.ofRepresentation(board, 0);
     }
 
-    public applyLegalMove(move: SixMove, state: SixState, _config: RulesConfig, kept: SixLegalityInformation)
+    public applyLegalMove(move: SixMove,
+                          state: SixState,
+                          _config: MGPOptional<RulesConfig>,
+                          kept: SixLegalityInformation)
     : SixState
     {
         if (state.turn < 40) {
@@ -55,6 +58,7 @@ export class SixRules extends Rules<SixMove, SixState, EmptyRulesConfig, SixLega
             return state.applyLegalDeplacement(move, kept);
         }
     }
+
     public isLegal(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start);
         if (landingLegality.isFailure()) {

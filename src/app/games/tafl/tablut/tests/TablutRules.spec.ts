@@ -18,7 +18,7 @@ describe('TablutRules', () => {
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().get().defaultConfig.config;
+    const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = TablutRules.get();
@@ -114,7 +114,7 @@ describe('TablutRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 
@@ -146,7 +146,7 @@ describe('TablutRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 
@@ -178,7 +178,7 @@ describe('TablutRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node);
     });
@@ -215,7 +215,7 @@ describe('TablutRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeOngoing(rules, node);
     });
@@ -252,7 +252,7 @@ describe('TablutRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 13);
         const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeOngoing(rules, node);
     });

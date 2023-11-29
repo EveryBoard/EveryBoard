@@ -6,8 +6,9 @@ import { P4Move } from '../P4Move';
 import { P4Failure } from '../P4Failure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-const config: P4Config = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
 describe('P4Rules', () => {
 
@@ -26,7 +27,7 @@ describe('P4Rules', () => {
 
     it('should drop piece on the lowest space of the column', () => {
         // Given the initial board
-        const state: P4State = P4Rules.get().getInitialState(config);
+        const state: P4State = P4Rules.get().getInitialState(defaultConfig);
 
         // When playing in column 3
         const move: P4Move = P4Move.of(3);

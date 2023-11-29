@@ -29,7 +29,7 @@ describe('SiamRules', () => {
     const r: SiamPiece = SiamPiece.DARK_RIGHT;
     const d: SiamPiece = SiamPiece.DARK_DOWN;
 
-    const defaultConfig: SiamConfig = rules.getRulesConfigDescription().get().getDefaultConfig().config;
+    const defaultConfig: MGPOptional<SiamConfig> = rules.getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = SiamRules.get();
@@ -474,7 +474,7 @@ describe('SiamRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             // and victory should be for player zero
             const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new SiamNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
 
@@ -502,7 +502,7 @@ describe('SiamRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             // and victory should be for player zero
             const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new SiamNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
 
@@ -530,7 +530,7 @@ describe('SiamRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             // and victory should be for player zero, whose pieces are aligned with the push
             const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new SiamNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
 
@@ -580,10 +580,10 @@ describe('SiamRules', () => {
 
         it('should allow inserting a 6th piece when config announce there is as much pieces', () => {
             // Given a state with a higher number of piece
-            const customConfig: SiamConfig = {
-                ...defaultConfig,
+            const customConfig: MGPOptional<SiamConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 numberOfPiece: 6,
-            };
+            });
             const board: Table<SiamPiece> = [
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -610,10 +610,10 @@ describe('SiamRules', () => {
 
         it('should notice victory with lower amount of mountain', () => {
             // Given a board with at start only two mountains
-            const customConfig: SiamConfig = {
-                ...defaultConfig,
+            const customConfig: MGPOptional<SiamConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 numberOfBonusMountain: 1,
-            };
+            });
             const board: Table<SiamPiece> = [
                 [_, _, M, _, _],
                 [_, _, l, _, _],
@@ -637,7 +637,7 @@ describe('SiamRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
             // and victory should be for player zero, whose pieces are aligned with the push
             const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(customConfig));
+            new SiamNode(expectedState, undefined, MGPOptional.of(move), customConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
     });

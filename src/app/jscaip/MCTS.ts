@@ -194,14 +194,14 @@ export class MCTS<M extends Move,
      * @returns the state after the move
      */
     private play(node: GameNode<M, S, C>, move: M): GameNode<M, S, C> {
-        const config: C = node.config.get();
-        const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
+        const config: MGPOptional<C> = node.config;
+        const legality: MGPFallible<L> = this.rules.getLegality(move, node.gameState, config);
         Utils.assert(legality.isSuccess(), 'heuristic returned illegal move');
         const childState: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());
         const childNode: GameNode<M, S, C> = new GameNode(childState,
                                                           MGPOptional.of(node),
                                                           MGPOptional.of(move),
-                                                          MGPOptional.of(config));
+                                                          config);
         return childNode;
     }
     /**

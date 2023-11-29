@@ -110,7 +110,10 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, EmptyRulesCon
      * @param info the info that had been returned by `isLegal`
      * @returns the resulting state, i.e., the state on which move has been applied
      */
-    public applyLegalMove(_move: NewGameMove, state: NewGameState, _config: RulesConfig, _info: NewGameLegalityInfo)
+    public applyLegalMove(_move: NewGameMove,
+                          state: NewGameState,
+                          _config: MGPOptional<RulesConfig>,
+                          _info: NewGameLegalityInfo)
     : NewGameState
     {
         return new NewGameState(state.turn + 1);

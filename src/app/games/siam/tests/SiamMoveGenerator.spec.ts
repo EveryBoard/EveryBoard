@@ -20,7 +20,7 @@ describe('SiamMoveGenerator', () => {
 
     let moveGenerator: SiamMoveGenerator;
     const rules: SiamRules = SiamRules.get();
-    const defaultConfig: SiamConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
+    const defaultConfig: MGPOptional<SiamConfig> = rules.getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new SiamMoveGenerator();
@@ -29,7 +29,7 @@ describe('SiamMoveGenerator', () => {
     it('should provide 44 possible moves on initial board', () => {
         // Given the initial board
         const node: SiamNode =
-            new SiamNode(rules.getInitialState(defaultConfig), undefined, undefined, MGPOptional.of(defaultConfig));
+            new SiamNode(rules.getInitialState(defaultConfig), undefined, undefined, defaultConfig);
 
         // When listing the moves
         const firstTurnMoves: SiamMove[] = moveGenerator.getListMoves(node);
@@ -48,7 +48,7 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, U, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new SiamNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: SiamNode = new SiamNode(state, undefined, undefined, defaultConfig);
 
         // When listing the moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node);
@@ -85,7 +85,7 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, M, _],
         ];
         const state: SiamState = new SiamState(board, 1);
-        const node: SiamNode = new SiamNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: SiamNode = new SiamNode(state, undefined, undefined, defaultConfig);
 
         // When listing the moves
         const moves: SiamMove[] = moveGenerator.getListMoves(node);

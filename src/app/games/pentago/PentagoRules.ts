@@ -57,7 +57,12 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         [new Coord(1, 4), new Vector(1, 0), true],
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
-    public applyLegalMove(move: PentagoMove, state: PentagoState, _config: RulesConfig, _info: void): PentagoState {
+    public applyLegalMove(move: PentagoMove,
+                          state: PentagoState,
+                          _config: MGPOptional<RulesConfig>,
+                          _info: void)
+    : PentagoState
+    {
         return state.applyLegalMove(move);
     }
     public isLegal(move: PentagoMove, state: PentagoState): MGPValidation {

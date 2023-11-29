@@ -5,6 +5,7 @@ import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -14,14 +15,14 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
 
     let rules: EpaminondasRules;
     let moveGenerator: EpaminondasPhalanxSizeAndFilterMoveGenerator;
-    const config: EpaminondasConfig = EpaminondasRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = EpaminondasRules.get();
         moveGenerator = new EpaminondasPhalanxSizeAndFilterMoveGenerator();
     });
     it('should filter number of choices', () => {
-        const node: EpaminondasNode = rules.getInitialNode(config);
+        const node: EpaminondasNode = rules.getInitialNode(defaultConfig);
         expect(moveGenerator.getListMoves(node).length).toBeLessThan(114);
     });
     it('should not filter number of choices if it is below 40', () => {

@@ -17,7 +17,7 @@ describe('TeekoRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: TeekoRules;
-    let defaultConfig: TeekoConfig;
+    let defaultConfig: MGPOptional<TeekoConfig>;
 
     function translate(start: Coord, end: Coord): TeekoMove {
         return TeekoTranslationMove.from(start, end).get();
@@ -29,7 +29,7 @@ describe('TeekoRules', () => {
 
     beforeEach(() => {
         rules = TeekoRules.get();
-        defaultConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
+        defaultConfig = rules.getDefaultRulesConfig();
     });
 
     describe('dropping phase', () => {
@@ -109,7 +109,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: TeekoNode = new TeekoNode(expectedState, undefined, undefined, defaultConfig);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
@@ -137,7 +137,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: TeekoNode = new TeekoNode(expectedState, undefined, undefined, defaultConfig);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
@@ -165,7 +165,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: TeekoNode = new TeekoNode(expectedState, undefined, undefined, defaultConfig);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
@@ -194,7 +194,7 @@ describe('TeekoRules', () => {
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
             const node: TeekoNode =
-                new TeekoNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+                new TeekoNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
@@ -336,9 +336,9 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 8);
-            const customConfig: TeekoConfig = {
+            const customConfig: MGPOptional<TeekoConfig> = MGPOptional.of({
                 teleport: true,
-            };
+            });
 
             // When doing a teleportation
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(2, 1));
@@ -365,7 +365,7 @@ describe('TeekoRules', () => {
                 [_, _, _, X, O],
             ];
             const state: TeekoState = new TeekoState(board, 9);
-            const node: TeekoNode = new TeekoNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
 
             // When checking game status
             // Then it should be a victory
@@ -382,7 +382,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 9);
-            const node: TeekoNode = new TeekoNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
 
             // When checking game status
             // Then it should be a victory
@@ -399,7 +399,7 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 9);
-            const node: TeekoNode = new TeekoNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
 
             // When checking game status
             // Then it should be a victory
@@ -416,7 +416,7 @@ describe('TeekoRules', () => {
                 [_, _, _, O, X],
             ];
             const state: TeekoState = new TeekoState(board, 10);
-            const node: TeekoNode = new TeekoNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
 
             // When checking game status
             // Then it should be a victory

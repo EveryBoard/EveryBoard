@@ -17,12 +17,16 @@ export class RulesUtils {
                                     M extends Move,
                                     S extends GameState,
                                     L,
-                                    C extends RulesConfig>(rules: R, state: S, move: M, expectedState: S, config?: C)
+                                    C extends RulesConfig>(rules: R,
+                                                           state: S,
+                                                           move: M,
+                                                           expectedState: S,
+                                                           config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        const legality: MGPFallible<L> = rules.isLegal(move, state, config as C);
+        const legality: MGPFallible<L> = rules.getLegality(move, state, config);
         if (legality.isSuccess()) {
-            const resultingState: S = rules.applyLegalMove(move, state, config as C, legality.get());
+            const resultingState: S = rules.applyLegalMove(move, state, config, legality.get());
             if (isComparableObject(resultingState)) {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
                 if (equals === false) {
@@ -41,14 +45,15 @@ export class RulesUtils {
                                     M extends Move,
                                     S extends GameState,
                                     L,
-                                    C extends RulesConfig = EmptyRulesConfig>(rules: R,
-                                                                              state: S,
-                                                                              move: M,
-                                                                              reason: string,
-                                                                              config?: C)
+                                    C extends RulesConfig = EmptyRulesConfig>(
+        rules: R,
+        state: S,
+        move: M,
+        reason: string,
+        config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        const legality: MGPFallible<L> = rules.isLegal(move, state, config as C);
+        const legality: MGPFallible<L> = rules.getLegality(move, state, config);
         expect(legality.isFailure()).withContext('move should have failed but it succeeded').toBeTrue();
         expect(legality.getReason()).toBe(reason);
     }
@@ -111,15 +116,9 @@ export class RulesUtils {
         let i: number = 0;
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);
-            if (config.isPresent()) {
-                const legality: MGPFallible<L> = ruler.isLegal(move, state, config.get());
-                Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
-                state = ruler.applyLegalMove(move, state, config.get(), legality.get());
-            } else {
-                const legality: MGPFallible<L> = ruler.isLegal(move, state, {} as C);
-                Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
-                state = ruler.applyLegalMove(move, state, {} as C, legality.get());
-            }
+            const legality: MGPFallible<L> = ruler.getLegality(move, state, config);
+            Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
+            state = ruler.applyLegalMove(move, state, config, legality.get());
             i++;
         }
         return state;

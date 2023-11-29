@@ -97,11 +97,12 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        const config: RulesConfig = this.gameComponent.node.config.getOrElse({});
+        const config: MGPOptional<RulesConfig> = this.gameComponent.node.config;
+        // TODO config.getOrElse({});
         this.gameComponent.node = new GameNode(currentStep.state,
                                                undefined,
                                                currentStep.previousMove,
-                                               MGPOptional.of(config));
+                                               config);
         // Set role will update view with updateBoardAndShowLastMove
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive

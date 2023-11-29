@@ -62,14 +62,14 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         return MGPOptional.of(P4Rules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(config: P4Config): P4State {
-        const board: PlayerOrNone[][] = TableUtils.create(config.width,
-                                                          config.height,
+    public getInitialState(config: MGPOptional<P4Config>): P4State {
+        const board: PlayerOrNone[][] = TableUtils.create(config.get().width,
+                                                          config.get().height,
                                                           PlayerOrNone.NONE);
         return new P4State(board, 0);
     }
 
-    public applyLegalMove(move: P4Move, state: P4State, _config: P4Config, _info: void): P4State {
+    public applyLegalMove(move: P4Move, state: P4State, _config: MGPOptional<P4Config>, _info: void): P4State {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         const y: number = P4Rules.get().getLowestUnoccupiedSpace(board, x);

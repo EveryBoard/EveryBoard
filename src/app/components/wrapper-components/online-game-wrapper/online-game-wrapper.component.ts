@@ -267,9 +267,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const rules: Rules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
-        const legality: MGPFallible<unknown> =
-            rules.isLegal(chosenMove, this.gameComponent.getState(), config.getOrElse({}));
+        const state: GameState = this.gameComponent.node.gameState;
+        const config: MGPOptional<RulesConfig> = this.gameComponent.node.config;
+        const legality: MGPFallible<unknown> = this.gameComponent.rules.getLegality(chosenMove, state, config);
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
@@ -412,14 +412,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const oldNode: AbstractNode = this.gameComponent.node;
             const rules: AbstractRules = this.gameComponent.rules;
             const state: GameState = oldNode.gameState;
-            const config: RulesConfig = oldNode.config.getOrElse({});
-            const legality: MGPFallible<unknown> = rules.isLegal(move, state, config);
+            const config: MGPOptional<RulesConfig> = oldNode.config;
+            const legality: MGPFallible<unknown> = this.gameComponent.rules.getLegality(move, state, config);
             Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
             const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
             const newNode: AbstractNode = new GameNode(stateAfterMove,
                                                        MGPOptional.of(oldNode),
                                                        MGPOptional.of(move),
-                                                       MGPOptional.of(config));
+                                                       config);
             const gameStatus: GameStatus = rules.getGameStatus(newNode);
 
             // To adhere to security rules, we must add the move before updating the part

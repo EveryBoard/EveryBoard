@@ -9,6 +9,8 @@ import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 describe('AwaleScoreMinimax', () => {
 
@@ -16,17 +18,22 @@ describe('AwaleScoreMinimax', () => {
     let minimax: Minimax<MancalaMove, MancalaState>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
-    const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AwaleRules.get();
         minimax = new MancalaScoreMinimax(rules, new AwaleMoveGenerator());
     });
+
     it('should not throw at first choice', () => {
-        const node: MancalaNode = rules.getInitialNode(config);
+        const node: MancalaNode = rules.getInitialNode(defaultConfig);
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2);
-        expect(rules.isLegal(bestMove, AwaleRules.get().getInitialState(config), config).isSuccess()).toBeTrue();
+        const legality: MGPValidation = rules.isLegal(bestMove,
+                                                      AwaleRules.get().getInitialState(defaultConfig),
+                                                      defaultConfig.get());
+        expect(legality.isSuccess()).toBeTrue();
     });
+
     it('should choose capture when possible (at depth 1)', () => {
         // Given a state with a possible capture
         const board: Table<number> = [
@@ -34,12 +41,13 @@ describe('AwaleScoreMinimax', () => {
             [4, 4, 4, 4, 4, 1],
         ];
         const state: MancalaState = new MancalaState(board, 1, [0, 0]);
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = new MancalaNode(state, undefined, undefined, defaultConfig);
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1);
         // Then the best move should be the capture
         expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(2)));
     });
+
     it('should choose capture when possible (at depth 2)', () => {
         // Given a state with a possible capture
         const board: Table<number> = [
@@ -47,12 +55,13 @@ describe('AwaleScoreMinimax', () => {
             [0, 0, 0, 0, 1, 0],
         ];
         const state: MancalaState = new MancalaState(board, 1, [0, 0]);
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = new MancalaNode(state, undefined, undefined, defaultConfig);
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2);
         // Then the best move should be the capture
         expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(4)));
     });
+
     it('should prioritize moves in the same territory when no captures are possible', () => {
         // Given a state with only one move that distributes only in the player's territory
         const board: Table<number> = [
@@ -60,10 +69,11 @@ describe('AwaleScoreMinimax', () => {
             [0, 1, 0, 0, 0, 0],
         ];
         const state: MancalaState = new MancalaState(board, 1, [0, 0]);
-        const node: MancalaNode = new MancalaNode(state);
+        const node: MancalaNode = new MancalaNode(state, undefined, undefined, defaultConfig);
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1);
         // Then the best move should be the capture
         expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(0)));
     });
+
 });

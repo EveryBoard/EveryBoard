@@ -46,7 +46,9 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         ];
         return new CoerceoState(board, 0, [0, 0], [0, 0]);
     }
-    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: RulesConfig, _info: void): CoerceoState {
+    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: MGPOptional<RulesConfig>, _info: void)
+    : CoerceoState
+    {
         if (CoerceoMove.isTileExchange(move)) {
             return this.applyLegalTileExchange(move, state);
         } else {

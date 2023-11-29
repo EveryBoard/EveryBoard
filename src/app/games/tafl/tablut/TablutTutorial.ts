@@ -5,13 +5,14 @@ import { Tutorial, TutorialStep } from '../../../components/wrapper-components/t
 import { TablutRules } from './TablutRules';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: TaflConfig = TablutRules.RULES_CONFIG_DESCRIPTION.defaultConfig.config;
+const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
 
 export class TablutTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

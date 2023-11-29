@@ -80,7 +80,10 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             }
         }
     }
-    public applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _config: RulesConfig, _info: void)
+    public applyLegalMove(move: LinesOfActionMove,
+                          state: LinesOfActionState,
+                          _config: MGPOptional<RulesConfig>,
+                          _info: void)
     : LinesOfActionState
     {
         const board: PlayerOrNone[][] = state.getCopiedBoard();

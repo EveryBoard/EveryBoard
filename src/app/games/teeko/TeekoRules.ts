@@ -93,7 +93,9 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState, TeekoConfig> {
         return MGPValidation.SUCCESS;
     }
 
-    public applyLegalMove(move: TeekoMove, state: TeekoState): TeekoState {
+    public applyLegalMove(move: TeekoMove, state: TeekoState, _config: MGPOptional<TeekoConfig>, _info: void)
+    : TeekoState
+    {
         if (move instanceof TeekoDropMove) {
             return this.applyLegalDrop(move, state);
         } else {

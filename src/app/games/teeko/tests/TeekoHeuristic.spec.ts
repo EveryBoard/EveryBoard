@@ -8,7 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
-const defaultConfig: TeekoConfig = TeekoRules.get().getRulesConfigDescription().get().defaultConfig.config;
+const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
 
 describe('TeekoHeuristic', () => {
 
@@ -27,7 +27,7 @@ describe('TeekoHeuristic', () => {
             [_, _, _, _, _],
         ];
         const state: TeekoState = new TeekoState(board, 6);
-        const node: TeekoNode = new TeekoNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
 
         // When calculating the board value
         const boardValue: number = heuristic.getBoardValue(node).value;

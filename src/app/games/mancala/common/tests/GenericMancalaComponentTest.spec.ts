@@ -71,7 +71,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
     }
 
     public expectToBeFed(actionAndResult: MancalaActionAndResult, config: MancalaConfig): void {
-        for (const coordAndContent of MancalaRules.getInitialState(config).getCoordsAndContents()) {
+        for (const coordAndContent of MancalaRules.getInitialState(MGPOptional.of(config)).getCoordsAndContents()) {
             const suffix: string = coordAndContent.coord.x + '_' + coordAndContent.coord.y;
             const optionalCell: MGPOptional<MancalaHouseContents> =
                 this.getCellAt(coordAndContent.coord, actionAndResult);
@@ -157,8 +157,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 {
     let mancalaTestUtils: MancalaComponentTestUtils<C, R>;
 
-    const defaultConfig: MancalaConfig =
-        RulesConfigUtils.getGameDefaultConfig(entries.gameName).get() as MancalaConfig;
+    const defaultConfig: MGPOptional<MancalaConfig> = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
     describe(entries.gameName + ' component generic tests', () => {
         beforeEach(fakeAsync(async() => {
@@ -182,7 +181,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move);
 
             // Then it should be a success
-            mancalaTestUtils.expectToBeFed(entries.distribution, defaultConfig);
+            mancalaTestUtils.expectToBeFed(entries.distribution, defaultConfig.get());
         }));
 
         it('should display score of players on the board (after point are won)', fakeAsync(async() => {
@@ -220,7 +219,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move);
 
             // Then it should be a success
-            mancalaTestUtils.expectToBeFed(entries.secondDistribution, defaultConfig);
+            mancalaTestUtils.expectToBeFed(entries.secondDistribution, defaultConfig.get());
         }));
         it('should display last move after basic move', fakeAsync(async() => {
             // Given any state (initial here by default)
@@ -443,7 +442,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const rules: R = mancalaTestUtils.testUtils.getGameComponent().rules;
             const encoder: Encoder<MancalaMove> = mancalaTestUtils.testUtils.getGameComponent().encoder;
             const moveGenerator: MoveGenerator<MancalaMove, MancalaState> = mancalaTestUtils.moveGenerator;
-            MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, encoder, defaultConfig);
+            MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, encoder);
         });
     });
 }

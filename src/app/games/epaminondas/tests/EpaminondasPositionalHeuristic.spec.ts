@@ -5,6 +5,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EpaminondasState } from '../EpaminondasState';
+import { EpaminondasConfig, EpaminondasRules } from '../EpaminondasRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -13,10 +14,12 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('EpaminondasPositionalHeuristic', () => {
 
     let heuristic: EpaminondasPositionalHeuristic;
+    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new EpaminondasPositionalHeuristic();
     });
+
     it('should prefer to get near the opponent line', () => {
         const greaterBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -51,8 +54,10 @@ describe('EpaminondasPositionalHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                lesserState, MGPOptional.empty(),
                                                                greaterState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
+
     it('should prefer to have aligned piece than higher piece', () => {
         const greaterBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, _, X],
@@ -87,6 +92,8 @@ describe('EpaminondasPositionalHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                lesserState, MGPOptional.empty(),
                                                                greaterState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
+
 });

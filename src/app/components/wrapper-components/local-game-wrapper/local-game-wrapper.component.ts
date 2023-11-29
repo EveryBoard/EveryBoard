@@ -60,8 +60,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     // Will set the default rules config
-    // Will set it to {} if the game doesn't exist, but an error will be handled by some other function
-    // Because rules that don't override their rules have DEFAULT_RULES value, hence {}
+    // Will set it to MGPOptional.empty() if the game doesn't exist, but an error will be handled by some other function
+    // Because rules that don't override their rules have MGPOptional.empty() value
     private setDefaultRulesConfig(): void {
         const gameName: string = this.getGameName();
         this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);
@@ -187,14 +187,15 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }));
     }
 
-    public getStateProvider(): MGPOptional<(config: RulesConfig) => GameState> {
+    public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
         const gameName: string = this.getGameName();
         const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
         if (gameInfos.length > 0) {
-            const stateProvider: (config: RulesConfig) => GameState = (config: RulesConfig) => {
-                // eslint-disable-next-line dot-notation
-                return gameInfos[0].rules.getInitialState(config);
-            };
+            const stateProvider: (config: MGPOptional<RulesConfig>) => GameState =
+                (config: MGPOptional<RulesConfig>) => {
+                    // eslint-disable-next-line dot-notation
+                    return gameInfos[0].rules.getInitialState(config);
+                };
             return MGPOptional.of(stateProvider);
         } else {
             // TODO FOR REVIEW: je crois que ce n'est reached que quand on visite /local/jeanDelJaaaj
@@ -256,7 +257,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public async restartGame(): Promise<void> {
         const config: MGPOptional<RulesConfig> = await this.getConfig();
-        this.gameComponent.node = this.gameComponent.rules.getInitialNode(config.getOrElse({}));
+        this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.hideLastMove();
         await this.gameComponent.updateBoard(false);
         this.endGame = false;
@@ -296,7 +297,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public updateConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
-        // If there is no config for this game, then this value will be MGPOptional.of({});
+        // If there is no config for this game, then this value will be MGPOptional.of(emptyConfigDelPetosse);
+        // TODO no this com is false, check different between invalid config and "game has no config"
         if (rulesConfig.isPresent() && Object.keys(rulesConfig.get()).length === 0) {
             this.markConfigAsFilled();
         }

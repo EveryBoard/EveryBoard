@@ -15,11 +15,11 @@ describe('ReversiMoveGenerator', () => {
 
     let rules: ReversiRules;
     let moveGenerator: ReversiMoveGenerator;
-    let defaultConfig: ReversiConfig;
+    let defaultConfig: MGPOptional<ReversiConfig>;
 
     beforeEach(() => {
         rules = ReversiRules.get();
-        defaultConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
+        defaultConfig = rules.getDefaultRulesConfig();
         moveGenerator = new ReversiMoveGenerator();
     });
     it('should have 4 choices at first turn', () => {
@@ -39,7 +39,7 @@ describe('ReversiMoveGenerator', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: ReversiNode = new ReversiNode(state, undefined, undefined, defaultConfig);
         const moves: ReversiMove[] = moveGenerator.getListMoves(node);
         expect(moves.length).toBe(1);
         expect(moves[0]).toBe(ReversiMove.PASS);

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
-import { EpaminondasConfig, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
@@ -31,9 +31,8 @@ describe('EpaminondasMove: ', () => {
 
     it('should have a bijective encoder', () => {
         const rules: EpaminondasRules = EpaminondasRules.get();
-        const defaultConfig: EpaminondasConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
         const moveGenerator: EpaminondasMoveGenerator = new EpaminondasMoveGenerator();
-        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, EpaminondasMove.encoder, defaultConfig);
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, EpaminondasMove.encoder);
     });
 
     it('should override correctly equals and toString', () => {

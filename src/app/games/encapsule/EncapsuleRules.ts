@@ -53,6 +53,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EmptyRu
         [new Coord(0, 0), new Coord(1, 1), new Coord(2, 2)],
         [new Coord(0, 2), new Coord(1, 1), new Coord(2, 0)],
     ];
+
     public static isVictory(state: EncapsuleState): MGPOptional<Player> {
         const board: EncapsuleSpace[][] = state.getCopiedBoard();
         for (const line of EncapsuleRules.LINES) {
@@ -66,6 +67,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EmptyRu
         }
         return MGPOptional.empty();
     }
+
     public static isVictoriousLine(spaces: EncapsuleSpace[]): MGPOptional<Player> {
         const pieces: EncapsulePiece[] = spaces.map((c: EncapsuleSpace) => c.getBiggest());
         const owner: PlayerOrNone[] = pieces.map((piece: EncapsulePiece) => piece.getPlayer());
@@ -79,6 +81,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EmptyRu
             }
         }
     }
+
     public static isLegal(move: EncapsuleMove, state: EncapsuleState): MGPFallible<EncapsuleLegalityInformation> {
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
@@ -112,12 +115,14 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EmptyRu
         }
         return MGPFallible.failure(EncapsuleFailure.INVALID_PLACEMENT());
     }
+
     public isLegal(move: EncapsuleMove, state: EncapsuleState): MGPFallible<EncapsuleLegalityInformation> {
         return EncapsuleRules.isLegal(move, state);
     }
+
     public applyLegalMove(move: EncapsuleMove,
                           state: EncapsuleState,
-                          _config: RulesConfig,
+                          _config: MGPOptional<RulesConfig>,
                           newLandingSpace: EncapsuleLegalityInformation)
     : EncapsuleState
     {
@@ -143,6 +148,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EmptyRu
         const resultingState: EncapsuleState = new EncapsuleState(newBoard, newTurn, newRemainingPiece);
         return resultingState;
     }
+
     public static getGameStatus(node: EncapsuleNode): GameStatus {
         const state: EncapsuleState = node.gameState;
         const winner: MGPOptional<Player> = EncapsuleRules.isVictory(state);
@@ -152,6 +158,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EmptyRu
             return GameStatus.ONGOING;
         }
     }
+
     public getGameStatus(node: EncapsuleNode): GameStatus {
         return EncapsuleRules.getGameStatus(node);
     }

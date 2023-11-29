@@ -57,6 +57,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return { freeToMove, landable };
     }
+
     public static getClimbingMoves(stateInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] }): PylosMove[] {
         const moves: PylosMove[] = [];
         for (const startingCoord of stateInfo.freeToMove) {
@@ -70,6 +71,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return moves;
     }
+
     public static getDropMoves(stateInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] }): PylosMove[] {
         const drops: PylosMove[] = [];
         for (const landableCoord of stateInfo.landable) {
@@ -78,6 +80,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return drops;
     }
+
     public static canCapture(state: PylosState, landingCoord: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
         for (const vertical of [Orthogonal.UP, Orthogonal.DOWN]) {
@@ -99,6 +102,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return false;
     }
+
     public static getPossibleCaptures(state: PylosState): MGPSet<MGPSet<PylosCoord>> {
         const possiblesCapturesSet: MGPSet<MGPSet<PylosCoord>> = new MGPSet();
 
@@ -115,9 +119,13 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return possiblesCapturesSet;
     }
-    public static applyLegalMove(move: PylosMove, state: PylosState, _config: RulesConfig, _info: void): PylosState {
+
+    public static applyLegalMove(move: PylosMove, state: PylosState, _config: MGPOptional<RulesConfig>, _info: void)
+    : PylosState
+    {
         return state.applyLegalMove(move);
     }
+
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
         if (capture.equals(move.landingCoord) === false &&
@@ -130,6 +138,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
                                            coord.equals(move.firstCapture.get()) === false);
         return supportedPieces.length === 0;
     }
+
     public static getGameStatus(node: PylosNode): GameStatus {
         const state: PylosState = node.gameState;
         const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
@@ -141,7 +150,10 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return GameStatus.ONGOING;
         }
     }
-    public applyLegalMove(move: PylosMove, state: PylosState, config: RulesConfig, status: void): PylosState {
+
+    public applyLegalMove(move: PylosMove, state: PylosState, config: MGPOptional<RulesConfig>, status: void)
+    : PylosState
+    {
         return PylosRules.applyLegalMove(move, state, config, status);
     }
     public isLegal(move: PylosMove, state: PylosState): MGPValidation {

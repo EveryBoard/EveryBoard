@@ -21,7 +21,7 @@ describe('SiamMinimax', () => {
 
     let minimax: Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: SiamConfig = SiamRules.get().getRulesConfigDescription().get().defaultConfig.config;
+    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new SiamMinimax();
@@ -37,7 +37,7 @@ describe('SiamMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const node: SiamNode = new SiamNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: SiamNode = new SiamNode(state, undefined, undefined, defaultConfig);
             // When computing the best move
             const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions);
             // Then it should go for victory
@@ -54,7 +54,7 @@ describe('SiamMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const node: SiamNode = new SiamNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: SiamNode = new SiamNode(state, undefined, undefined, defaultConfig);
             // When computing the best move
             const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions);
             // Then it should push
@@ -71,7 +71,7 @@ describe('SiamMinimax', () => {
                 [_, _, _, U, _],
             ];
             const state: SiamState = new SiamState(board, 0);
-            const node: SiamNode = new SiamNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+            const node: SiamNode = new SiamNode(state, undefined, undefined, defaultConfig);
             // When computing the best move
             const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions);
             // Then the best move should push from outside

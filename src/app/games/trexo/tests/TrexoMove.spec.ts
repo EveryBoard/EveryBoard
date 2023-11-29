@@ -8,6 +8,7 @@ import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TrexoMove', () => {
 
@@ -60,7 +61,7 @@ describe('TrexoMove', () => {
     it('should have a bijective encoder', () => {
         const rules: TrexoRules = TrexoRules.get();
         const moveGenerator: TrexoMoveGenerator = new TrexoMoveGenerator();
-        const node: TrexoNode = rules.getInitialNode();
+        const node: TrexoNode = rules.getInitialNode(MGPOptional.empty());
         const firstTurnMoves: TrexoMove[] = moveGenerator.getListMoves(node);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(TrexoMove.encoder, move);

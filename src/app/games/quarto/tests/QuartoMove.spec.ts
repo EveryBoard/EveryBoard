@@ -4,13 +4,14 @@ import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('QuartoMove', () => {
 
     it('should have a bijective encoder', () => {
         const rules: QuartoRules = QuartoRules.get();
         const moveGenerator: QuartoMoveGenerator = new QuartoMoveGenerator();
-        const node: QuartoNode = rules.getInitialNode();
+        const node: QuartoNode = rules.getInitialNode(MGPOptional.empty());
         const firstTurnMoves: QuartoMove[] = moveGenerator.getListMoves(node);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(QuartoMove.encoder, move);

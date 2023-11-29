@@ -277,7 +277,10 @@ export abstract class TaflRules<M extends TaflMove> extends Rules<M, TaflState, 
         return kingCoord.getOrthogonalDistance(centralThrone) <= 1;
     }
 
-    public applyLegalMove(move: TaflMove, state: TaflState, config: TaflConfig, _info: void): TaflState {
+    public applyLegalMove(move: TaflMove,
+                          state: TaflState,
+                          config: MGPOptional<TaflConfig>,
+                          _info: void): TaflState {
         const turn: number = state.turn;
 
         const board: TaflPawn[][] = state.getCopiedBoard();
@@ -287,7 +290,7 @@ export abstract class TaflRules<M extends TaflMove> extends Rules<M, TaflState, 
         board[end.y][end.x] = board[start.y][start.x]; // move the piece to the new position
         board[start.y][start.x] = TaflPawn.UNOCCUPIED; // remove it from the previous position
         for (const d of Orthogonal.ORTHOGONALS) {
-            const captured: MGPOptional<Coord> = this.tryCapture(player, move.getEnd(), d, state, config);
+            const captured: MGPOptional<Coord> = this.tryCapture(player, move.getEnd(), d, state, config.get());
             if (captured.isPresent()) {
                 board[captured.get().y][captured.get().x] = TaflPawn.UNOCCUPIED;
             }

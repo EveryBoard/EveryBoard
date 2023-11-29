@@ -50,7 +50,9 @@ export class YinshRules extends Rules<YinshMove, YinshState, EmptyRulesConfig, Y
         return new YinshState(board, [5, 5], 0);
     }
 
-    public applyLegalMove(_move: YinshMove, _state: YinshState, _config: RulesConfig, info: YinshState): YinshState {
+    public applyLegalMove(_move: YinshMove, _state: YinshState, _config: MGPOptional<RulesConfig>, info: YinshState)
+    : YinshState
+    {
         const stateWithoutTurn: YinshState = info;
         return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn + 1);
     }

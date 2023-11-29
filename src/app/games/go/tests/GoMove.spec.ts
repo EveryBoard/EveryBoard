@@ -3,15 +3,16 @@ import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoMove } from '../GoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { GoMoveGenerator } from '../GoMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-const config: GoConfig = { width: 5, height: 5, handicap: 0 };
+const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 
 describe('GoMove', () => {
 
     it('should have a bijective encoder', () => {
         const rules: GoRules = GoRules.get();
         const moveGenerator: GoMoveGenerator = new GoMoveGenerator();
-        const node: GoNode = rules.getInitialNode(config);
+        const node: GoNode = rules.getInitialNode(defaultConfig);
         const firstTurnMoves: GoMove[] = moveGenerator.getListMoves(node);
         firstTurnMoves.push(GoMove.PASS);
         firstTurnMoves.push(GoMove.ACCEPT);

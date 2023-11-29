@@ -280,14 +280,7 @@ export class GameInfo {
     public getRulesConfigDescription(): MGPOptional<RulesConfigDescription> {
         return this.rules.getRulesConfigDescription();
     }
-    public getRulesConfigOrEmpty(): RulesConfig {
-        const description: MGPOptional<RulesConfigDescription> = this.getRulesConfigDescription();
-        if (description.isPresent()) {
-            return description.get().defaultConfig.config;
-        } else {
-            return {};
-        }
-    }
+
     public getOptionalRulesConfig(): MGPOptional<RulesConfig> {
         const description: MGPOptional<RulesConfigDescription> = this.getRulesConfigDescription();
         if (description.isPresent()) {

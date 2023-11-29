@@ -13,7 +13,7 @@ import { TaflState } from '../TaflState';
 describe('TaflPieceAndInfluenceMinimax', () => {
 
     let minimax: Minimax<TablutMove, TaflState>;
-    const defaultConfig: TaflConfig = TablutRules.get().getRulesConfigDescription().get().defaultConfig.config;
+    const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -36,7 +36,7 @@ describe('TaflPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TaflState = new TaflState(board, 1);
-        const node: TablutNode = new TablutNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: TablutNode = new TablutNode(state, undefined, undefined, defaultConfig);
         const expectedMove: TablutMove = TablutMove.from(new Coord(1, 0), new Coord(0, 0)).get();
         for (let depth: number = 1; depth < 4; depth++) {
             const chosenMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level', maxDepth: depth });

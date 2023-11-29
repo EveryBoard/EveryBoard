@@ -140,7 +140,9 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         });
         return newState;
     }
-    public applyLegalMove(move: DvonnMove, state: DvonnState, _config: RulesConfig, _info: void): DvonnState {
+    public applyLegalMove(move: DvonnMove, state: DvonnState, _config: MGPOptional<RulesConfig>, _info: void)
+    : DvonnState
+    {
         if (move === DvonnMove.PASS) {
             return new DvonnState(state.board, state.turn + 1, true);
         } else {

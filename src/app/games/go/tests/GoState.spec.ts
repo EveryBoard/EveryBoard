@@ -33,10 +33,10 @@ describe('GoState', () => {
 
         it('should put the first two  handicaps in opposite corner', () => {
             // Given a config with a 19x19 board and a handicap of two
-            const config: GoConfig = { width: 19, height: 19, handicap: 2 };
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 2 });
 
             // When creating an initialState with it
-            const state: GoState = GoRules.get().getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -65,11 +65,11 @@ describe('GoState', () => {
         });
 
         it('should put the first four handicaps in corner', () => {
-            // Given a config with a 19x19 board and a handicap of four
-            const config: GoConfig = { width: 19, height: 19, handicap: 4 };
+            // Given a custom with a 19x19 board and a handicap of four
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 4 });
 
             // When creating an initialState with it
-            const state: GoState = GoRules.get().getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -98,11 +98,11 @@ describe('GoState', () => {
         });
 
         it('should put the fifth handicap in tengen', () => {
-            // Given a config with a 19x19 board and a handicap of five
-            const config: GoConfig = { width: 19, height: 19, handicap: 5 };
+            // Given a custom with a 19x19 board and a handicap of five
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 5 });
 
             // When creating an initialState with it
-            const state: GoState = GoRules.get().getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -131,11 +131,11 @@ describe('GoState', () => {
         });
 
         it('should put the sixth to ninth handicaps in "edge hoshis"', () => {
-            // Given a config with a 19x19 board and a handicap of 9
-            const config: GoConfig = { width: 19, height: 19, handicap: 9 };
+            // Given a custom with a 19x19 board and a handicap of 9
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 9 });
 
             // When creating an initialState with it
-            const state: GoState = GoRules.get().getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [

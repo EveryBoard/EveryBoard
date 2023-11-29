@@ -35,7 +35,9 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         const board: TrexoPieceStack[][] = TableUtils.create(TrexoState.SIZE, TrexoState.SIZE, TrexoPieceStack.EMPTY);
         return new TrexoState(board, 0);
     }
-    public applyLegalMove(move: TrexoMove, state: TrexoState, _config: RulesConfig, _info: void): TrexoState {
+    public applyLegalMove(move: TrexoMove, state: TrexoState, _config: MGPOptional<RulesConfig>, _info: void)
+    : TrexoState
+    {
         return state
             .drop(move.getZero(), Player.ZERO)
             .drop(move.getOne(), Player.ONE)

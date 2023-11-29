@@ -20,8 +20,7 @@ export class MancalaRulesTestEntries {
 
 export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
-    const defaultConfig: MancalaConfig =
-        RulesConfigUtils.getGameDefaultConfig(entries.gameName).get() as MancalaConfig;
+    const defaultConfig: MGPOptional<MancalaConfig> = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
     describe(entries.gameName + 'Rules generic tests', () => {
 
@@ -53,11 +52,11 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
         it('should refuse starving when custom config refuse starvation', () => {
             // Given a state where you have to feed and pass by store
-            const customConfig: MancalaConfig = {
-                ...defaultConfig,
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 passByPlayerStore: true,
                 mustFeed: true,
-            };
+            });
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [2, 0, 0, 0, 2, 0],
@@ -73,11 +72,11 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
         it('should allow starving when custom config allows it', () => {
             // Given a state where you don't have to feed and pass by store
-            const customConfig: MancalaConfig = {
-                ...defaultConfig,
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 passByPlayerStore: true,
                 mustFeed: false,
-            };
+            });
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [2, 0, 0, 0, 2, 0],
@@ -96,11 +95,11 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
         it('should know when to mansoon', () => {
             // Given a state where player is about to cede his last stone, and won't be feedable
-            const customConfig: MancalaConfig = {
-                ...defaultConfig,
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 passByPlayerStore: true,
                 mustFeed: true,
-            };
+            });
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 2, 0],
@@ -119,11 +118,11 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
         it('should refuse ending move in store when config requires to continue', () => {
             // Given a mancala state with a config with passByPlayerStore set to true
-            const customConfig: MancalaConfig = {
-                ...defaultConfig,
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
-            };
+            });
             const state: MancalaState = MancalaRules.getInitialState(customConfig);
 
             // When attempting a store-ending single distribution
@@ -138,9 +137,12 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
         });
 
         describe('getGameStatus', () => {
-            const smallerConfig: MancalaConfig = { ...defaultConfig, seedsByHouse: 2 };
-            const biggerConfig: MancalaConfig = { ...defaultConfig, seedsByHouse: 6 };
-            for (const config of [smallerConfig, defaultConfig, biggerConfig]) {
+            const smallerConfig: MGPOptional<MancalaConfig> =
+                MGPOptional.of({ ...defaultConfig.get(), seedsByHouse: 2 });
+            const biggerConfig: MGPOptional<MancalaConfig> =
+                MGPOptional.of({ ...defaultConfig.get(), seedsByHouse: 6 });
+            for (const optionalConfig of [smallerConfig, defaultConfig, biggerConfig]) {
+                const config: MancalaConfig = optionalConfig.get();
                 const halfOfTotalSeeds: number = config.width * config.seedsByHouse;
                 describe(`Config with ${ config.seedsByHouse } seeds by house`, () => {
                     it(`should identify victory for player 0`, () => {

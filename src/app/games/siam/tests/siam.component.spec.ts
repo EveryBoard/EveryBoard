@@ -24,7 +24,7 @@ describe('SiamComponent', () => {
     const U: SiamPiece = SiamPiece.LIGHT_UP;
     const u: SiamPiece = SiamPiece.DARK_UP;
     const rules: SiamRules = SiamRules.get();
-    const defaultConfig: SiamConfig = rules.getRulesConfigDescription().get().defaultConfig.config;
+    const defaultConfig: MGPOptional<SiamConfig> = rules.getDefaultRulesConfig();
 
     async function expectMoveToBeLegal(player: Player, move: SiamMove, state: SiamState): Promise<void> {
         if (rules.isInsertion(move, state)) {

@@ -17,7 +17,7 @@ describe('EpaminondasRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
-    const config: EpaminondasConfig = EpaminondasRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = EpaminondasRules.get();
@@ -123,7 +123,7 @@ describe('EpaminondasRules', () => {
 
     it('should forbid out of range move', () => {
         // Given any state
-        const state: EpaminondasState = EpaminondasRules.get().getInitialState(config);
+        const state: EpaminondasState = EpaminondasRules.get().getInitialState(defaultConfig);
 
         // When doing a move starting out of range
         const move: EpaminondasMove = new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT);

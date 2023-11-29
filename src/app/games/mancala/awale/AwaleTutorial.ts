@@ -4,8 +4,9 @@ import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { AwaleRules } from './AwaleRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
 export class AwaleTutorial extends Tutorial {
 
@@ -15,15 +16,15 @@ export class AwaleTutorial extends Tutorial {
         TutorialStep.informational(
             this.gameName,
             $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.`,
-            AwaleRules.get().getInitialState(config),
+            AwaleRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
             $localize`Awalé`,
             $localize`Bonus fact: Awalé is the most common of all Mancalas.`,
-            AwaleRules.get().getInitialState(config),
+            AwaleRules.get().getInitialState(defaultConfig),
         ),
         MancalaTutorial.sowing(
-            AwaleRules.get().getInitialState(config),
+            AwaleRules.get().getInitialState(defaultConfig),
             MancalaMove.of(MancalaDistribution.of(5)),
         ),
 

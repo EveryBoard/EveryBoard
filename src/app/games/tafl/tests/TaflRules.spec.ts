@@ -29,7 +29,7 @@ export const myTaflConfig: TaflConfig = {
 describe('TaflRules', () => {
 
     let rules: MyTaflRules;
-    const defaultConfig: TaflConfig = MyTaflRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: MGPOptional<TaflConfig> = MyTaflRules.get().getDefaultRulesConfig();
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -131,7 +131,7 @@ describe('TaflRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 24);
         const node: MyTaflNode =
-            new MyTaflNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new MyTaflNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
     });
@@ -168,7 +168,7 @@ describe('TaflRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 25);
         const node: MyTaflNode =
-            new MyTaflNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new MyTaflNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
@@ -177,13 +177,13 @@ describe('TaflRules', () => {
 
         it('should return Player.ZERO when invader starts', () => {
             // Given a rules instance configured with a starting invader
-            const customConfig: TaflConfig = {
-                ...defaultConfig,
+            const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 invaderStarts: true,
-            };
+            });
 
             // When calling getInvader
-            const invader: Player = rules.getInvader(customConfig);
+            const invader: Player = rules.getInvader(customConfig.get());
 
             // Then the response should be Player.ZERO
             expect(invader).toEqual(Player.ZERO);
@@ -191,13 +191,13 @@ describe('TaflRules', () => {
 
         it(`should return Player.ONE when invader don't start`, () => {
             // Given a state instance configured with a starting defender
-            const customConfig: TaflConfig = {
-                ...defaultConfig,
+            const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 invaderStarts: false,
-            };
+            });
 
             // When calling getInvader
-            const invader: Player = rules.getInvader(customConfig);
+            const invader: Player = rules.getInvader(customConfig.get());
 
             // Then the response should be Player.ONE
             expect(invader).toEqual(Player.ONE);

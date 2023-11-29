@@ -86,14 +86,16 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, EmptyRulesCon
             return GameStatus.ONGOING;
         }
     }
+
     public applyLegalMove(_move: AbaloneMove,
                           state: AbaloneState,
-                          _config: RulesConfig,
+                          _config: MGPOptional<RulesConfig>,
                           newBoard: AbaloneLegalityInformation)
     : AbaloneState
     {
         return new AbaloneState(newBoard, state.turn + 1);
     }
+
     public isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         const firstPieceValidity: MGPValidation = this.getFirstPieceValidity(move, state);
         if (firstPieceValidity.isFailure()) {

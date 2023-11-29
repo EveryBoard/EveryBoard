@@ -18,7 +18,7 @@ describe('GoMoveGenerator', () => {
 
     let moveGenerator: GoMoveGenerator;
 
-    const config: GoConfig = { width: 5, height: 5, handicap: 0 };
+    const config: MGPOptional<GoConfig> = MGPOptional.of({ width: 5, height: 5, handicap: 0 });
 
     beforeEach(() => {
         moveGenerator = new GoMoveGenerator();

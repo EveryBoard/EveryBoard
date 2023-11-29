@@ -33,7 +33,10 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         return new ConspirateursState(board, 0);
     }
 
-    public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _config: RulesConfig, _info: void)
+    public applyLegalMove(move: ConspirateursMove,
+                          state: ConspirateursState,
+                          _config: MGPOptional<RulesConfig>,
+                          _info: void)
     : ConspirateursState
     {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
@@ -50,6 +53,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return new ConspirateursState(updatedBoard, state.turn + 1);
     }
+
     public isLegal(move: ConspirateursMove, state: ConspirateursState): MGPValidation {
         if (ConspirateursMove.isDrop(move)) {
             return this.dropLegality(move, state);

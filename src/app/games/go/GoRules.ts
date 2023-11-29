@@ -16,7 +16,6 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 
 export type GoLegalityInformation = Coord[];
@@ -73,7 +72,8 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         return GoRules.singleton.get();
     }
 
-    public getInitialState(config: GoConfig): GoState {
+    public getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {
+        const config: GoConfig = optionalConfig.get();
         const board: GoPiece[][] = GoState.getStartingBoard(config);
         let turn: number = 0;
         // TODO FOR REVIEW: quoi la baise on fait de l'import de "GobanGameComponent" dans une rules
@@ -498,7 +498,10 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         return GoRules.isLegal(move, state);
     }
 
-    public applyLegalMove(legalMove: GoMove, state: GoState, _config: RulesConfig, infos: GoLegalityInformation)
+    public applyLegalMove(legalMove: GoMove,
+                          state: GoState,
+                          _config: MGPOptional<GoConfig>,
+                          infos: GoLegalityInformation)
     : GoState
     {
         if (GoRules.isPass(legalMove)) {
@@ -525,6 +528,7 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
     }
 }
 class CaptureState {
+
     public capturedCoords: Coord[] = [];
 
     public static isCapturing(captureState: CaptureState): boolean {

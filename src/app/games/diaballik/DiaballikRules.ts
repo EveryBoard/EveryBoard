@@ -168,7 +168,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, EmptyRu
 
     public applyLegalMove(_move: DiaballikMove,
                           state: DiaballikState,
-                          _config: EmptyRulesConfig,
+                          _config: MGPOptional<EmptyRulesConfig>, // TODO, prefer this to MGPOptional<RulesConfig> or even create type NoConfig = MGPOptional<whatever we choose, for readability ?
                           stateAfterSubMoves: DiaballikState)
     : DiaballikState
     {

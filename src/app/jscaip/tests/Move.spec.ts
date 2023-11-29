@@ -6,6 +6,7 @@ import { Move } from '../Move';
 import { Rules } from '../Rules';
 import { MoveGenerator } from '../AI';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class MoveTestUtils {
 
@@ -16,9 +17,13 @@ export class MoveTestUtils {
         rules: Rules<M, S, C, L>,
         generator: MoveGenerator<M, S>,
         encoder: Encoder<M>,
-        config: C,
+        nullableConfig?: MGPOptional<C>,
     ): void
     {
+        let config: MGPOptional<C> = rules.getDefaultRulesConfig();
+        if (nullableConfig !== undefined) {
+            config = nullableConfig;
+        }
         const node: GameNode<M, S, C> = rules.getInitialNode(config);
         const moves: M[] = generator.getListMoves(node);
         for (const move of moves) {

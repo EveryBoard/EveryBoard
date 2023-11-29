@@ -20,7 +20,7 @@ describe('PentagoMoveGenerator', () => {
         moveGenerator = new PentagoMoveGenerator();
     });
     it('should propose 6 moves at first turn', () => {
-        const node: PentagoNode = rules.getInitialNode();
+        const node: PentagoNode = rules.getInitialNode(MGPOptional.empty());
         expect(moveGenerator.getListMoves(node).length).toBe(6);
     });
     it('should propose to click on empty square afterward', () => {
@@ -35,7 +35,7 @@ describe('PentagoMoveGenerator', () => {
         ];
         const state: PentagoState = new PentagoState(board, 1);
         const node: PentagoNode = new PentagoNode(state,
-                                                  MGPOptional.of(rules.getInitialNode()),
+                                                  MGPOptional.of(rules.getInitialNode(MGPOptional.empty())),
                                                   MGPOptional.of(PentagoMove.rotationless(0, 0)));
         /*
          * when calculating the list of moves, then there should be 105
@@ -60,7 +60,9 @@ describe('PentagoMoveGenerator', () => {
             [_, _, X, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 8);
-        const node: PentagoNode = new PentagoNode(state, MGPOptional.of(rules.getInitialNode()), MGPOptional.empty());
+        const node: PentagoNode = new PentagoNode(state,
+                                                  MGPOptional.of(rules.getInitialNode(MGPOptional.empty())),
+                                                  MGPOptional.empty());
         /*
          * when calculating the list of moves
          * there should be 28 drop tilmes 8 rotations
@@ -82,7 +84,9 @@ describe('PentagoMoveGenerator', () => {
             [_, _, O, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 4);
-        const node: PentagoNode = new PentagoNode(state, MGPOptional.of(rules.getInitialNode()), MGPOptional.empty());
+        const node: PentagoNode = new PentagoNode(state,
+                                                  MGPOptional.of(rules.getInitialNode(MGPOptional.empty())),
+                                                  MGPOptional.empty());
 
         /*
          * when calculating the list of moves

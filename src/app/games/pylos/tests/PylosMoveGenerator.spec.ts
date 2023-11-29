@@ -5,6 +5,7 @@ import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
 import { PylosMoveGenerator } from '../PylosMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -20,7 +21,7 @@ describe('PylosMoveGenerator', () => {
         moveGenerator = new PylosMoveGenerator();
     });
     it('should provide 16 drops at first turn', () => {
-        const node: PylosNode = rules.getInitialNode();
+        const node: PylosNode = rules.getInitialNode(MGPOptional.empty());
         expect(moveGenerator.getListMoves(node).length).toBe(16);
     });
     it('should provide drops without capture, drops with one capture, drops with two captures and climbings', () => {

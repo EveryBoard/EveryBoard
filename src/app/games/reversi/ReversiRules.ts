@@ -12,7 +12,6 @@ import { ReversiFailure } from './ReversiFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
@@ -66,7 +65,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
         return MGPOptional.of(ReversiRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(config: ReversiConfig): ReversiState {
+    public getInitialState(optionalConfig: MGPOptional<ReversiConfig>): ReversiState {
+        const config: ReversiConfig = optionalConfig.get();
         const board: PlayerOrNone[][] = TableUtils.create(config.width, config.height, PlayerOrNone.NONE);
         const downRightCenter: Coord = new Coord(Math.floor(config.width / 2), Math.floor(config.height / 2));
         board[downRightCenter.y - 1][downRightCenter.x - 1] = Player.ZERO;
@@ -78,7 +78,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
 
     public applyLegalMove(move: ReversiMove,
                           state: ReversiState,
-                          _config: RulesConfig,
+                          _config: MGPOptional<ReversiConfig>,
                           info: ReversiLegalityInformation)
     : ReversiState
     {

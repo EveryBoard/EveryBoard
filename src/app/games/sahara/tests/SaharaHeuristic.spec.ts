@@ -6,7 +6,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { SaharaHeuristic } from '../SaharaHeuristic';
 
-describe('SaharaTeuristic', () => {
+describe('SaharaHeuristic', () => {
 
     let heuristic: SaharaHeuristic;
 
@@ -18,6 +18,7 @@ describe('SaharaTeuristic', () => {
     beforeEach(() => {
         heuristic = new SaharaHeuristic();
     });
+
     it('should prefer having more freedoms', () => {
         const weakBoard: FourStatePiece[][] = [
             [N, N, O, X, _, _, _, O, X, N, N],

@@ -18,7 +18,7 @@ describe('DemoCardComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
 
-    const config: P4Config = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
     function loadNode(nodeInfo: DemoNodeInfo): void {
         testUtils.getComponent().demoNodeInfo = nodeInfo;
@@ -32,7 +32,7 @@ describe('DemoCardComponent', () => {
 
     it('should display the game interactively from the point of view the current player', fakeAsync(async() => {
         // Given a demo component
-        const board: Table<PlayerOrNone> = P4Rules.get().getInitialState(config).board; // dummy board
+        const board: Table<PlayerOrNone> = P4Rules.get().getInitialState(defaultConfig).board; // dummy board
 
         // When displaying it for a given game
         loadNode({
@@ -69,7 +69,7 @@ describe('DemoCardComponent', () => {
         // Given a demo component displayed for a game
         loadNode({
             name: 'P4',
-            node: new GameNode(P4Rules.get().getInitialState(config), undefined, undefined, MGPOptional.of(config)),
+            node: new GameNode(P4Rules.get().getInitialState(defaultConfig), undefined, undefined, defaultConfig),
             click: MGPOptional.empty(),
         });
         const rules: AbstractRules = testUtils.getComponent().gameComponent.rules;
@@ -94,7 +94,7 @@ describe('DemoCardComponent', () => {
         // Given a component already initialized with one given set of infos
         loadNode({
             name: 'P4',
-            node: new GameNode(P4Rules.get().getInitialState(config), undefined, undefined, MGPOptional.of(config)),
+            node: new GameNode(P4Rules.get().getInitialState(defaultConfig), undefined, undefined, defaultConfig),
             click: MGPOptional.empty(),
         });
         testUtils.expectElementNotToExist('.player0-fill');
@@ -104,7 +104,7 @@ describe('DemoCardComponent', () => {
         const stateWithPieces: P4State = new P4State(boardWithPiece, 42);
         loadNode({
             name: 'P4',
-            node: new GameNode(stateWithPieces, undefined, undefined, MGPOptional.of(config)),
+            node: new GameNode(stateWithPieces, undefined, undefined, defaultConfig),
             click: MGPOptional.empty(),
         });
         await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
@@ -117,19 +117,21 @@ describe('DemoCardComponent', () => {
 
         it('should provide initial default config to game component', fakeAsync(async() => {
             // Given any demo card
-            const defaultRulesConfig: RulesConfig = { mais_quelles_belles_chaussettes: 42 };
+            const defaultRulesConfig: MGPOptional<RulesConfig> = MGPOptional.of({
+                mais_quelles_belles_chaussettes: 42,
+            });
             loadNode({
                 name: 'P4',
-                node: new P4Node(P4Rules.get().getInitialState(config)),
+                node: new P4Node(P4Rules.get().getInitialState(defaultConfig)),
                 click: MGPOptional.empty(),
             });
 
             // When calling getConfig
-            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(MGPOptional.of(defaultRulesConfig));
+            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
             const actualDefaultRulesConfig: MGPOptional<RulesConfig> = await testUtils.getComponent().getConfig();
 
             // Then the return should be the default game config
-            expect(actualDefaultRulesConfig).toEqual(MGPOptional.of(defaultRulesConfig));
+            expect(actualDefaultRulesConfig).toEqual(defaultRulesConfig);
         }));
 
     });

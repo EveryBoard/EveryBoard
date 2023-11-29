@@ -9,8 +9,9 @@ import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
 describe('AwaleComponent', () => {
 
@@ -19,7 +20,7 @@ describe('AwaleComponent', () => {
         gameName: 'Awale',
         moveGenerator: new AwaleMoveGenerator(),
         distribution: {
-            state: AwaleRules.get().getInitialState(config),
+            state: AwaleRules.get().getInitialState(defaultConfig),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
@@ -78,10 +79,10 @@ describe('AwaleComponent', () => {
 
         it('should not require additionnal click when ending distribution in store', fakeAsync(async() => {
             // Given an awale state with a config with passByPlayerStore set to true
-            const customConfig: MancalaConfig = {
-                ...config,
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 passByPlayerStore: true,
-            };
+            });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, undefined, undefined, customConfig);
 
@@ -94,11 +95,11 @@ describe('AwaleComponent', () => {
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
             // Given an awale state with where multiple so would be possible, and the first sowing is done
-            const customConfig: MancalaConfig = {
-                ...config,
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
-            };
+            });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, undefined, undefined, customConfig);
             await testUtils.expectClickSuccess('#click_3_1');

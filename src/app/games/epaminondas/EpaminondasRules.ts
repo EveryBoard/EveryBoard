@@ -13,7 +13,6 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type EpaminondasConfig = {
     width: number;
@@ -155,7 +154,8 @@ export class EpaminondasRules
         return MGPFallible.success(board);
     }
 
-    public getInitialState(config: EpaminondasConfig): EpaminondasState {
+    public getInitialState(optionalConfig: MGPOptional<EpaminondasConfig>): EpaminondasState {
+        const config: EpaminondasConfig = optionalConfig.get();
         const _: PlayerOrNone = PlayerOrNone.NONE;
         const O: PlayerOrNone = PlayerOrNone.ZERO;
         const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -176,7 +176,7 @@ export class EpaminondasRules
 
     public applyLegalMove(_move: EpaminondasMove,
                           state: EpaminondasState,
-                          _config: RulesConfig,
+                          _config: MGPOptional<EpaminondasConfig>,
                           newBoard: EpaminondasLegalityInformation)
     : EpaminondasState
     {

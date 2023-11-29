@@ -71,7 +71,9 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return playerFreedoms.sort((a: number, b: number) => a - b);
     }
-    public applyLegalMove(move: SaharaMove, state: SaharaState, _config: RulesConfig, _info: void): SaharaState {
+    public applyLegalMove(move: SaharaMove, state: SaharaState, _config: MGPOptional<RulesConfig>, _info: void)
+    : SaharaState
+    {
         const board: FourStatePiece[][] = state.getCopiedBoard();
         board[move.getEnd().y][move.getEnd().x] = board[move.getStart().y][move.getStart().x];
         board[move.getStart().y][move.getStart().x] = FourStatePiece.EMPTY;

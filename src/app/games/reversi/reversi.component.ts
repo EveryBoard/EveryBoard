@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ReversiLegalityInformation, ReversiRules } from './ReversiRules';
+import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -9,7 +9,6 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
@@ -24,7 +23,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiMove,
                                                                ReversiState,
                                                                PlayerOrNone,
-                                                               RulesConfig,
+                                                               ReversiConfig,
                                                                ReversiLegalityInformation>
 {
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
@@ -43,6 +42,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.canPass = false;
         this.scores = MGPOptional.of([2, 2]);
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -51,6 +51,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         const chosenMove: ReversiMove = new ReversiMove(x, y);
         return await this.chooseMove(chosenMove);
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ReversiState = this.getState();
 
@@ -63,6 +64,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.scores = MGPOptional.of(state.countScore());
         this.canPass = this.rules.playerCanOnlyPass(state);
     }
+
     public override async showLastMove(move: ReversiMove): Promise<void> {
         this.lastMove = move.coord;
         const player: Player = this.getState().getCurrentPlayer();
@@ -78,6 +80,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             }
         }
     }
+
     public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
@@ -88,11 +91,14 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             return [];
         }
     }
+
     public getPieceClass(x: number, y: number): string {
         return this.getPlayerClass(this.board[y][x]);
     }
+
     public override async pass(): Promise<MGPValidation> {
         Utils.assert(this.canPass, 'ReversiComponent: pass() can only be called if canPass is true');
         return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
     }
+
 }

@@ -4,10 +4,11 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
 import { TaflConfig } from '../TaflConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class MyTaflState extends TaflState {
 
-    public static getInitialState(_config: TaflConfig): MyTaflState {
+    public static getInitialState(_config: MGPOptional<TaflConfig>): MyTaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;

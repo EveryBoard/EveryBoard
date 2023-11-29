@@ -3,11 +3,12 @@ import { ReversiState } from 'src/app/games/reversi/ReversiState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ReversiConfig, ReversiRules } from './ReversiRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: ReversiConfig = ReversiRules.get().getRulesConfigDescription().get().defaultConfig.config;
+const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
 
 export class ReversiTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

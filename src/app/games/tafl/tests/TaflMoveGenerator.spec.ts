@@ -15,7 +15,7 @@ describe('TaflMoveGenerator', () => {
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-    const defaultConfig: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
 
     it('should not propose to King to go back on the throne when its forbidden', () => {
         // Given a board where king could go back on his throne but the rules forbid it
@@ -30,7 +30,7 @@ describe('TaflMoveGenerator', () => {
             [_, _, _, _, _, _, _],
         ];
         const state: TaflState = new TaflState(board, 1);
-        const node: BrandhubNode = new BrandhubNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: BrandhubNode = new BrandhubNode(state, undefined, undefined, defaultConfig);
 
         // When listing the moves
         const moves: BrandhubMove[] = moveGenerator.getListMoves(node);

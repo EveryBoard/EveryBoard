@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 describe('KalahMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
-    const config: MancalaConfig = KalahRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const config: MancalaConfig = KalahRules.get().getDefaultRulesConfig().get();
 
     beforeEach(() => {
         moveGenerator = new KalahMoveGenerator();
@@ -24,9 +24,10 @@ describe('KalahMoveGenerator', () => {
             MGPOptional.of(config),
         );
     }
+
     it('should have all move options', () => {
         // Given an initial node
-        const initialState: MancalaState = KalahRules.get().getInitialState(config);
+        const initialState: MancalaState = KalahRules.get().getInitialState(MGPOptional.of(config));
         const node: MancalaNode = getMancalaNode(initialState, config);
 
         // When listing the moves

@@ -89,7 +89,6 @@ import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { TutorialStepFailure } from './TutorialStepFailure';
 import { Comparable } from 'src/app/utils/Comparable';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -323,12 +322,11 @@ describe('TutorialGameWrapperComponent (games)', () => {
             ];
             for (const stepExpectation of stepExpectations) {
                 const rules: Rules<Move, GameState, RulesConfig, unknown> = stepExpectation[0];
-                const config: RulesConfig =
-                    rules.getRulesConfigDescription().getOrElse(RulesConfigDescription.DEFAULT).defaultConfig.config;
                 const step: TutorialStep = stepExpectation[1];
                 if (step.isPredicate()) {
+                    const config: MGPOptional<RulesConfig> = rules.getDefaultRulesConfig();
                     const move: Move = stepExpectation[2];
-                    const moveResult: MGPFallible<unknown> = rules.isLegal(move, step.state, config);
+                    const moveResult: MGPFallible<unknown> = rules.getLegality(move, step.state, config);
                     if (moveResult.isSuccess()) {
                         const resultingState: GameState =
                             rules.applyLegalMove(move, step.state, config, moveResult.get());
@@ -352,12 +350,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                         .getGameComponent();
                 const rules: Rules<Move, GameState, RulesConfig, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
-                const config: RulesConfig = gameInfo.getRulesConfigOrEmpty();
+                const config: MGPOptional<RulesConfig> = gameInfo.getOptionalRulesConfig();
                 for (const step of steps) {
                     if (step.hasSolution()) {
                         const solution: Move | Click = step.getSolution();
                         if (solution instanceof Move) {
-                            const moveResult: MGPFallible<unknown> = rules.isLegal(solution, step.state, config);
+                            const moveResult: MGPFallible<unknown> = rules.getLegality(solution, step.state, config);
                             if (moveResult.isSuccess()) {
                                 if (step.isPredicate()) {
                                     const resultingState: GameState =

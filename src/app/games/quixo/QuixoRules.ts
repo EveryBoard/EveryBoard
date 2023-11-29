@@ -16,7 +16,6 @@ import { QuixoFailure } from './QuixoFailure';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState, QuixoConfig> {}
@@ -131,9 +130,9 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
         return MGPOptional.of(QuixoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(config: QuixoConfig): QuixoState {
-        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.width,
-                                                                 config.height,
+    public getInitialState(config: MGPOptional<QuixoConfig>): QuixoState {
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.get().width,
+                                                                 config.get().height,
                                                                  PlayerOrNone.NONE);
         return new QuixoState(initialBoard, 0);
     }
@@ -174,7 +173,9 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
                      `Invalid direction: pawn on the top side can't be moved up.`);
     }
 
-    public applyLegalMove(move: QuixoMove, state: QuixoState, _config: RulesConfig, _info: void): QuixoState {
+    public applyLegalMove(move: QuixoMove, state: QuixoState, _config: MGPOptional<QuixoConfig>, _info: void)
+    : QuixoState
+    {
         return state.applyLegalMove(move);
     }
 

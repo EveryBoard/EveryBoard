@@ -4,6 +4,7 @@ import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursJumpMinimax } from '../ConspirateursJumpMinimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ConspirateursJumpMinimax', () => {
 
@@ -17,7 +18,7 @@ describe('ConspirateursJumpMinimax', () => {
     });
     it('should be able to finish when playing with itself', () => {
         // Given a component where AI plays against AI
-        let node: ConspirateursNode = rules.getInitialNode();
+        let node: ConspirateursNode = rules.getInitialNode(MGPOptional.empty());
 
         // When playing 200 turns
         let turn: number = 0;

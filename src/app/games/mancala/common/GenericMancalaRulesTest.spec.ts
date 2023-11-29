@@ -8,6 +8,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaRules } from './MancalaRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class MancalaRulesTestEntries {
     gameName: string; // 'Awale', 'Kalah', etc
@@ -18,7 +19,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
     describe(entries.gameName + ' rules generic tests', () => {
 
-        const defaultConfig: MancalaConfig = entries.rules.getRulesConfigDescription().get().defaultConfig.config;
+        const defaultConfig: MGPOptional<MancalaConfig> = entries.rules.getDefaultRulesConfig();
 
         it('should allow simple move', () => {
             // Given any board

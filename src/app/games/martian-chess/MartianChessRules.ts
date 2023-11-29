@@ -59,7 +59,7 @@ export class MartianChessRules
 
     public applyLegalMove(move: MartianChessMove,
                           state: MartianChessState,
-                          _config: RulesConfig,
+                          _config: MGPOptional<RulesConfig>,
                           info: MartianChessMoveResult)
     : MartianChessState
     {

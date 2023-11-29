@@ -14,7 +14,7 @@ import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 describe('KalahRules', () => {
 
     const rules: MancalaRules = KalahRules.get();
-    const defaultConfig: MancalaConfig = KalahRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
 
     describe('generic tests', () => {
         DoMancalaRulesTests({
@@ -209,7 +209,7 @@ describe('KalahRules', () => {
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
             const node: MancalaNode =
-                new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.empty(), MGPOptional.of(defaultConfig));
+                new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.empty(), defaultConfig);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
@@ -232,7 +232,7 @@ describe('KalahRules', () => {
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [26, 22]);
             const node: MancalaNode =
-                new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.empty(), MGPOptional.of(defaultConfig));
+                new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.empty(), defaultConfig);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
@@ -258,7 +258,7 @@ describe('KalahRules', () => {
             const node: MancalaNode = new MancalaNode(expectedState,
                                                       MGPOptional.empty(),
                                                       MGPOptional.of(move),
-                                                      MGPOptional.of(defaultConfig));
+                                                      defaultConfig);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
         });
 
@@ -358,10 +358,10 @@ describe('KalahRules', () => {
 
         it('should not require additionnal distribution when not allowed by config (mustContinueDistributionAfterStore)', () => {
             // Given a mancala state with a config with mustContinueDistributionAfterStore set to false
-            const customConfig: MancalaConfig = {
-                ...defaultConfig,
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
                 mustContinueDistributionAfterStore: false,
-            };
+            });
             const state: MancalaState = KalahRules.get().getInitialState(customConfig);
 
             // When doing simple distribution ending in store

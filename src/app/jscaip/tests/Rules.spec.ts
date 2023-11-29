@@ -30,11 +30,13 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
         super();
     }
 
-    public getInitialState(_config: RulesConfig): AbstractState {
+    public getInitialState(_config: MGPOptional<RulesConfig>): AbstractState {
         return new AbstractState([[]], 0);
     }
 
-    public applyLegalMove(move: P4Move, state: AbstractState, _config: RulesConfig, _legality: void): AbstractState {
+    public applyLegalMove(move: P4Move, state: AbstractState, _config: MGPOptional<RulesConfig>, _legality: void)
+    : AbstractState
+    {
         const board: readonly number[] = state.board[0];
         return new AbstractState([board.concat([move.x])], state.turn + 1);
     }
@@ -59,7 +61,7 @@ describe('Rules', () => {
 
     it('should create child to already calculated node which did not include this legal child yet', () => {
         // Given a node with children but not the one that will be calculated
-        const node: AbstractNode = rules.getInitialNode();
+        const node: AbstractNode = rules.getInitialNode(MGPOptional.empty());
         spyOn(node, 'getChild').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
@@ -72,7 +74,7 @@ describe('Rules', () => {
 
     it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
         // Given an initial list of encoded moves and an initial state
-        const initialState: AbstractState = AbstractRules.get().getInitialState({});
+        const initialState: AbstractState = AbstractRules.get().getInitialState(MGPOptional.empty());
         const moveValues: number[] = [0, 1, 2, 3];
         const encodedMoveList: JSONValue[] = moveValues.map((n: number) => P4Move.encoder.encode(P4Move.of(n)));
 
@@ -91,7 +93,7 @@ describe('Rules', () => {
 
         it('should return MGPOptional.empty() when the move was illegal', () => {
             // Given a node and a move that will be deemed illegal
-            const node: AbstractNode = rules.getInitialNode({});
+            const node: AbstractNode = rules.getInitialNode(MGPOptional.empty());
             const illegalMove: P4Move = P4Move.of(5);
             spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure('some reason'));
 
@@ -104,15 +106,15 @@ describe('Rules', () => {
 
         it('should transmit config to its children', () => {
             // Given a mother node with a specific config
-            const customConfig: RulesConfig = {
+            const customConfig: MGPOptional<RulesConfig> = MGPOptional.of({
                 josefanne: 42,
-            };
+            });
             const node: AbstractNode = rules.getInitialNode(customConfig);
 
             // When choosing the children
             const child: AbstractNode = rules.choose(node, P4Move.of(9)).get();
             // Then the children should have the same config
-            expect(child.config).toEqual(MGPOptional.of(customConfig));
+            expect(child.config).toEqual(customConfig);
         });
 
     });

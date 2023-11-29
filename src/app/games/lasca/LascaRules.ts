@@ -129,7 +129,9 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         return pieceMoves;
     }
 
-    public applyLegalMove(move: LascaMove, state: LascaState, _config: RulesConfig, _info: void): LascaState {
+    public applyLegalMove(move: LascaMove, state: LascaState, _config: MGPOptional<RulesConfig>, _info: void)
+    : LascaState
+    {
         const moveStart: Coord = move.getStartingCoord();
         const moveEnd: Coord = move.getEndingCoord();
         let movingStack: LascaStack = state.getPieceAt(moveStart);

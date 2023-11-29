@@ -73,7 +73,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (componentType.isPresent()) {
             const rulesConfig: MGPOptional<RulesConfig> = await this.getConfig();
             await this.createGameComponent(componentType.get());
-            this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig.getOrElse({}));
+            this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig);
             await this.gameComponent.updateBoard(false);
             return true;
         } else {
@@ -135,7 +135,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         // So actually the async MyWrapper.getConfig() is (at least for (O & L)GWCs)) awaiting the user's config
         // Then put it in the node, after that we could always fetch via wrapper.component.node ?
         const legality: MGPFallible<unknown> =
-            this.gameComponent.rules.isLegal(move, this.gameComponent.getState(), config.getOrElse({}));
+            this.gameComponent.rules.getLegality(move, this.gameComponent.node.gameState, config);
         if (legality.isFailure()) {
             await this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);

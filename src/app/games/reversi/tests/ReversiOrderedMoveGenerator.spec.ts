@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: ReversiConfig = ReversiRules.get().getRulesConfigDescription().get().defaultConfig.config;
+const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
 
 describe('ReversiOrderedMoveGenerator', () => {
 
@@ -33,7 +33,7 @@ describe('ReversiOrderedMoveGenerator', () => {
             [_, _, _, _, X, O, X, _],
         ];
         const state: ReversiState = new ReversiState(board, 2);
-        const node: ReversiNode = new ReversiNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: ReversiNode = new ReversiNode(state, undefined, undefined, defaultConfig);
 
         // When listing the moves
         const moves: ReversiMove[] = moveGenerator.getListMoves(node);

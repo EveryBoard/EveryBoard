@@ -71,7 +71,7 @@ describe('MCTS', () => {
         otherMcts.maxGameLength = 10; // Limit it heavily to ensure we will exhaust the limit (for coverage)
         // When searching for the best move
         const beforeSearch: number = Date.now();
-        const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+        const config: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
         const node: MancalaNode = AwaleRules.get().getInitialNode(config);
         const move: MancalaMove = otherMcts.chooseNextMove(node, mctsOptions);
         // Then it should find one and not get stuck infinitely
@@ -82,10 +82,10 @@ describe('MCTS', () => {
 
     it('should transmit config to its children', () => {
         // Given a mother node with a specific config
-        const customConfig: MancalaConfig = {
-            ...AwaleRules.get().getRulesConfigDescription().get().defaultConfig.config,
+        const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+            ...AwaleRules.get().getDefaultRulesConfig().get(),
             width: 3,
-        };
+        });
         const configurableMcts: MCTS<MancalaMove, MancalaState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
         const node: MancalaNode = AwaleRules.get().getInitialNode(customConfig);
 
@@ -94,7 +94,7 @@ describe('MCTS', () => {
         const child: MancalaNode = node.getChild(nextMove).get();
 
         // Then the children should have the same config
-        expect(child.config).toEqual(MGPOptional.of(customConfig));
+        expect(child.config).toEqual(customConfig);
 
     });
 

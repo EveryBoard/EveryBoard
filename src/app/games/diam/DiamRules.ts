@@ -38,7 +38,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         return new DiamState(board, [4, 4, 4, 4], 0);
     }
 
-    public applyLegalMove(move: DiamMove, state: DiamState, _config: RulesConfig, _info: void): DiamState {
+    public applyLegalMove(move: DiamMove, state: DiamState, _config: MGPOptional<RulesConfig>, _info: void): DiamState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {

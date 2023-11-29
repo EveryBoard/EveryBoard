@@ -4,6 +4,7 @@ import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { EncapsuleMove } from '../EncapsuleMove';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const ___: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 const X__: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
@@ -27,7 +28,7 @@ describe('EncapsuleMoveGenerator', () => {
 
         it('should have 27 moves on first turn', () => {
             // Given an initial node
-            const node: EncapsuleNode = EncapsuleRules.get().getInitialNode();
+            const node: EncapsuleNode = EncapsuleRules.get().getInitialNode(MGPOptional.empty());
 
             // When listing the moves
             const moves: EncapsuleMove[] = moveGenerator.getListMoves(node);

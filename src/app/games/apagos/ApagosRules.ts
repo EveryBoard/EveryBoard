@@ -36,13 +36,16 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         ], ApagosRules.PIECES_PER_PLAYER, ApagosRules.PIECES_PER_PLAYER);
     }
 
-    public applyLegalMove(move: ApagosMove, state: ApagosState, _config: RulesConfig, _info: void): ApagosState {
+    public applyLegalMove(move: ApagosMove, state: ApagosState, _config: MGPOptional<RulesConfig>, _info: void)
+    : ApagosState
+    {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {
             return this.applyLegalTransfer(move, state);
         }
     }
+
     private applyLegalDrop(move: ApagosMove, state: ApagosState): ApagosState {
         const remaining: MGPMap<Player, number> = state.getRemainingCopy();
         const oldValue: number = remaining.get(move.piece.get()).get();

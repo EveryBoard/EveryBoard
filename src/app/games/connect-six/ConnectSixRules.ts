@@ -12,7 +12,6 @@ import { Utils } from 'src/app/utils/utils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState, GobanConfig> {}
@@ -42,14 +41,14 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         return MGPOptional.of(ConnectSixRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(config: GobanConfig): ConnectSixState {
-        const board: Table<PlayerOrNone> = TableUtils.create(config.width,
-                                                             config.height,
+    public getInitialState(config: MGPOptional<GobanConfig>): ConnectSixState {
+        const board: Table<PlayerOrNone> = TableUtils.create(config.get().width,
+                                                             config.get().height,
                                                              PlayerOrNone.NONE);
         return new ConnectSixState(board, 0);
     }
 
-    public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _config: RulesConfig, _info: void)
+    public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _config: MGPOptional<GobanConfig>, _info: void)
     : ConnectSixState
     {
         if (move instanceof ConnectSixDrops) {

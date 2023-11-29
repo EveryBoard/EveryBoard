@@ -5,6 +5,7 @@ import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { YinshMoveGenerator } from '../YinshMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('YinshMoveGenerator', () => {
 
@@ -24,7 +25,7 @@ describe('YinshMoveGenerator', () => {
     });
     describe('getListMoves', () => {
         it('should have 85 moves on first turn', () => {
-            const node: YinshNode = rules.getInitialNode();
+            const node: YinshNode = rules.getInitialNode(MGPOptional.empty());
             expect(moveGenerator.getListMoves(node).length).toBe(85);
         });
         it('should have 84 moves on second placement in initial phase', () => {

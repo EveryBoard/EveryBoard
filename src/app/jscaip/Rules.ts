@@ -24,12 +24,13 @@ export abstract class Rules<M extends Move,
      */
 
     public choose(node: GameNode<M, S, C>, move: M) : MGPFallible<GameNode<M, S, C>> {
-        /* used by the rules to update board
+        /**
+         * used by the rules to update board
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
         Debug.display('Rules', 'choose', move.toString() + ' was proposed');
-        const legality: MGPFallible<L> = this.isLegal(move, node.gameState, node.config.get());
+        const legality: MGPFallible<L> = this.getLegality(move, node.gameState, node.config);
         if (legality.isFailure()) {
             Debug.display('Rules', 'choose', 'Move is illegal: ' + legality.getReason());
             return MGPFallible.failure(legality.getReason());
@@ -41,35 +42,51 @@ export abstract class Rules<M extends Move,
             Debug.display('Rules', 'choose', 'and this proposed move is found in the list, so it is legal');
             return MGPFallible.success(choice.get());
         }
-        const config: C = node.config.getOrElse({} as C);
-        const resultingState: S = this.applyLegalMove(move, node.gameState, config, legality.get());
+        const resultingState: S = this.applyLegalMove(move, node.gameState, node.config, legality.get());
         const child: GameNode<M, S, C> = new GameNode(resultingState,
                                                       MGPOptional.of(node),
                                                       MGPOptional.of(move),
-                                                      MGPOptional.of(config));
+                                                      node.config);
         return MGPFallible.success(child);
+    }
+
+    public getLegality(move: M, state: S, config: MGPOptional<C>): MGPFallible<L> {
+        if (config.isPresent()) {
+            return this.isLegal(move, state, config.get());
+        } else {
+            return this.isLegal(move, state);
+        }
     }
 
     /**
      * Applies a legal move, given the precomputed information `info`
      */
-    public abstract applyLegalMove(move: M, state: S, config: C, info: L): S;
+    public abstract applyLegalMove(move: M, state: S, config: MGPOptional<C>, info: L): S;
 
     /**
      * Returns success if the move is legal, with some potentially precomputed data.
      * If the move is illegal, returns a failure with information on why it is illegal
      */
-    public abstract isLegal(move: M, state: S, config: C): MGPFallible<L>;
+    public abstract isLegal(move: M, state: S, config?: C): MGPFallible<L>;
 
-    public abstract getInitialState(config?: C): S;
+    public abstract getInitialState(config: MGPOptional<C>): S;
 
-    public getInitialNode(config?: C): GameNode<M, S, C> {
+    public getInitialNode(config: MGPOptional<C>): GameNode<M, S, C> {
         const initialState: S = this.getInitialState(config);
-        return new GameNode(initialState, undefined, undefined, MGPOptional.ofNullable(config));
+        return new GameNode(initialState, undefined, undefined, config);
     }
 
     public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<C>> {
         return MGPOptional.empty(); // TODO is RulesConfigDescription.DEFAULT used then ?
+    }
+
+    public getDefaultRulesConfig(): MGPOptional<C> {
+        const rulesConfigDescription: MGPOptional<RulesConfigDescription<C>> = this.getRulesConfigDescription();
+        if (rulesConfigDescription.isPresent()) {
+            return MGPOptional.of(rulesConfigDescription.get().defaultConfig.config);
+        } else {
+            return MGPOptional.empty();
+        }
     }
 
     public abstract getGameStatus(node: GameNode<M, S, C>): GameStatus;

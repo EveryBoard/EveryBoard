@@ -55,7 +55,8 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         return true;
     }
 
-    public static getInitialState(config: MancalaConfig): MancalaState {
+    public static getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
+        const config: MancalaConfig = optionalConfig.get();
         const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
         return new MancalaState(board, 0, [0, 0]);
     }
@@ -91,7 +92,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         return MGPValidation.SUCCESS;
     }
 
-    public getInitialState(config: MancalaConfig): MancalaState {
+    public getInitialState(config: MGPOptional<MancalaConfig>): MancalaState {
         return MancalaRules.getInitialState(config);
     }
 
@@ -191,11 +192,13 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         return GameStatus.ONGOING;
     }
 
-    public applyLegalMove(move: MancalaMove, state: MancalaState, config: MancalaConfig, _: void): MancalaState {
-        const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config);
+    public applyLegalMove(move: MancalaMove, state: MancalaState, config: MGPOptional<MancalaConfig>, _: void)
+    : MancalaState
+    {
+        const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config.get());
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult);
         let resultingState: MancalaState = captureResult.resultingState;
-        const playerToMansoon: PlayerOrNone = this.mustMansoon(resultingState, config);
+        const playerToMansoon: PlayerOrNone = this.mustMansoon(resultingState, config.get());
         if (playerToMansoon !== PlayerOrNone.NONE) {
             // if the player distributed their last seeds and the opponent could not give them seeds
             const mansoonResult: MancalaCaptureResult = this.monsoon(playerToMansoon as Player, captureResult);

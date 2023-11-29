@@ -1,15 +1,16 @@
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaConfig } from '../MancalaConfig';
 import { MancalaRules } from '../MancalaRules';
 import { MancalaState } from '../MancalaState';
 
-const myMancalaConfig: MancalaConfig = {
+const myMancalaConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
     feedOriginalHouse: true,
     mustFeed: true,
     passByPlayerStore: true,
     mustContinueDistributionAfterStore: true,
     seedsByHouse: 4,
     width: 6,
-};
+});
 
 describe('MancalaState', () => {
 

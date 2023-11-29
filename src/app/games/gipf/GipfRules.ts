@@ -52,7 +52,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, EmptyRulesConfig, Gipf
 
     public applyLegalMove(_move: GipfMove,
                           _state: GipfState,
-                          _config: RulesConfig,
+                          _config: MGPOptional<RulesConfig>,
                           computedState: GipfLegalityInformation)
     : GipfState
     {

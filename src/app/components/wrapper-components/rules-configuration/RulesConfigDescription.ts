@@ -82,7 +82,7 @@ export class RulesConfigDescriptions {
 
     public static readonly GOBAN: RulesConfigDescription<GobanConfig> = new RulesConfigDescription({
         name: (): string => $localize`Default`,
-        config: defaultGobanConfig,
+        config: defaultGobanConfig.get(),
     }, {
         width: RulesConfigDescriptionLocalizable.WIDTH,
         height: RulesConfigDescriptionLocalizable.HEIGHT,

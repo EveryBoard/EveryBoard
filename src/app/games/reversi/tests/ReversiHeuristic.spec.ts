@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: ReversiConfig = ReversiRules.get().getRulesConfigDescription().get().defaultConfig.config;
+const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
 
 describe('ReversiHeuristic', () => {
 
@@ -31,7 +31,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, X],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: ReversiNode = new ReversiNode(state, undefined, undefined, defaultConfig);
         const boardValue: number = heuristic.getBoardValue(node).value;
         expect(boardValue).toBe(16);
     });
@@ -47,7 +47,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: ReversiNode = new ReversiNode(state, undefined, undefined, defaultConfig);
         const boardValue: number = heuristic.getBoardValue(node).value;
         expect(boardValue).toBe(4);
     });
@@ -63,7 +63,7 @@ describe('ReversiHeuristic', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: ReversiNode = new ReversiNode(state, undefined, undefined, defaultConfig);
         const boardValue: number = heuristic.getBoardValue(node).value;
         expect(boardValue).toBe(1);
     });
@@ -96,6 +96,7 @@ describe('ReversiHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakerState, MGPOptional.empty(),
                                                                strongerState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 });

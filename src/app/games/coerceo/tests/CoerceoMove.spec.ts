@@ -78,7 +78,7 @@ describe('CoerceoMove', () => {
             it('should be bijective with first turn moves', () => {
                 const rules: CoerceoRules = CoerceoRules.get();
                 const moveGenerator: CoerceoMoveGenerator = new CoerceoMoveGenerator();
-                MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, CoerceoMove.encoder, {});
+                MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, CoerceoMove.encoder);
             });
             it('should be bijective with tiles exchanges', () => {
                 const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(5, 7));

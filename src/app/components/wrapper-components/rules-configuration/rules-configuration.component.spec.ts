@@ -29,7 +29,7 @@ describe('RulesConfigurationComponent', () => {
         const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
         component = testUtils.getComponent();
-        const stateProvider: (_: RulesConfig) => KamisadoState = (_: RulesConfig) => {
+        const stateProvider: (_: MGPOptional<RulesConfig>) => KamisadoState = (_: MGPOptional<RulesConfig>) => {
             return KamisadoRules.get().getInitialState();
         };
         component.stateProvider = MGPOptional.of(stateProvider); // A game needing no config

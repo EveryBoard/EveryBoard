@@ -4,6 +4,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfNode, GipfRules } from '../GipfRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GipfMoveGenerator } from '../GipfMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -22,7 +23,7 @@ describe('GipfMoveGenerator', () => {
     });
     describe('getListMoves', () => {
         it('should have 30 moves on the initial state', () => {
-            const node: GipfNode = rules.getInitialNode();
+            const node: GipfNode = rules.getInitialNode(MGPOptional.empty());
             expect(moveGenerator.getListMoves(node).length).toBe(30);
         });
         it('should have 0 moves on a victory state', () => {

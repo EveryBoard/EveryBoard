@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: TeekoConfig = TeekoRules.get().getRulesConfigDescription().get().defaultConfig.config;
+const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
 
 describe('TeekoMoveGenerator', () => {
 
@@ -22,7 +22,7 @@ describe('TeekoMoveGenerator', () => {
     it('should have all move options in drop phase', () => {
         // Given an initial node
         const initialState: TeekoState = TeekoRules.get().getInitialState();
-        const node: TeekoNode = new TeekoNode(initialState, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: TeekoNode = new TeekoNode(initialState, undefined, undefined, defaultConfig);
 
         // When listing the moves
         const moves: TeekoMove[] = moveGenerator.getListMoves(node);
@@ -40,7 +40,7 @@ describe('TeekoMoveGenerator', () => {
             [_, _, _, _, _],
         ];
         const state: TeekoState = new TeekoState(board, 8);
-        const node: TeekoNode = new TeekoNode(state, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
 
         // When listing the moves
         const moves: TeekoMove[] = moveGenerator.getListMoves(node);

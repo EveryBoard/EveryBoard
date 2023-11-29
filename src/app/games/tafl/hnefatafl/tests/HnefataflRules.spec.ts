@@ -14,7 +14,7 @@ import { TaflState } from '../../TaflState';
 describe('HnefataflRules', () => {
 
     let rules: HnefataflRules;
-    const defaultConfig: TaflConfig = HnefataflRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: MGPOptional<TaflConfig> = HnefataflRules.get().getDefaultRulesConfig();
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
@@ -122,7 +122,7 @@ describe('HnefataflRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: HnefataflNode =
-            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 
@@ -158,7 +158,7 @@ describe('HnefataflRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: HnefataflNode =
-            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
 
@@ -194,7 +194,7 @@ describe('HnefataflRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: HnefataflNode =
-            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node);
     });
@@ -235,7 +235,7 @@ describe('HnefataflRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         const node: HnefataflNode =
-            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node);
@@ -277,7 +277,7 @@ describe('HnefataflRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 13);
         const node: HnefataflNode =
-            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new HnefataflNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeOngoing(rules, node);
     });

@@ -22,7 +22,7 @@ type ConfigFormJSON = {
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
 
-    @Input() stateProvider: MGPOptional<(config: RulesConfig) => GameState>;
+    @Input() stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState>;
 
     @Input() rulesConfigDescriptionOptional: MGPOptional<RulesConfigDescription>;
     public rulesConfigDescription: RulesConfigDescription;
@@ -78,9 +78,11 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     private setConfigDemo(config: RulesConfig): void {
         if (this.stateProvider.isPresent()) {
             // eslint-disable-next-line dot-notation
-            const stateProvider: (config: RulesConfig) => GameState = this.stateProvider.get();
-            const node: AbstractNode =
-                new GameNode(stateProvider(config), undefined, undefined, MGPOptional.of(config));
+            const stateProvider: (config: MGPOptional<RulesConfig>) => GameState = this.stateProvider.get();
+            const node: AbstractNode = new GameNode(stateProvider(MGPOptional.of(config)),
+                                                    undefined,
+                                                    undefined,
+                                                    MGPOptional.of(config));
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.gameName,

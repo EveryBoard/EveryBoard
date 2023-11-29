@@ -35,7 +35,7 @@ describe('DvonnMoveGenerator', () => {
         moveGenerator = new DvonnMoveGenerator();
     });
     it('should propose 41 moves at first turn on the balanced board', () => {
-        const node: DvonnNode = rules.getInitialNode();
+        const node: DvonnNode = rules.getInitialNode(MGPOptional.empty());
         expect(moveGenerator.getListMoves(node).length).toBe(41);
     });
     it('should only propose moves to occupied spaces', () => {

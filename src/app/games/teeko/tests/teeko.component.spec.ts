@@ -115,6 +115,7 @@ describe('TeekoComponent', () => {
             }));
         });
         describe('second click', () => {
+
             it('should deselect the player piece when clicked on again', fakeAsync(async() => {
                 // Given any board in translation phase with a selected piece
                 const board: Table<PlayerOrNone> = [
@@ -134,6 +135,7 @@ describe('TeekoComponent', () => {
                 // Then it should no longer be selected
                 testUtils.expectElementNotToHaveClass('#piece_0_0', 'selected-stroke');
             }));
+
             it('should do the move when clicking on empty space', fakeAsync(async() => {
                 // Given any board in translation phase with a selected piece
                 const board: Table<PlayerOrNone> = [
@@ -153,6 +155,7 @@ describe('TeekoComponent', () => {
                 // Then it should succeed
                 await testUtils.expectMoveSuccess('#click_2_1', move);
             }));
+
             it('should fail when doing illegal move', fakeAsync(async() => {
                 // Given any board in translation phase with a selected piece
                 const board: Table<PlayerOrNone> = [

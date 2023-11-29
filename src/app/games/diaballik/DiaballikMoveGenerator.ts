@@ -194,7 +194,8 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         const rules: DiaballikRules = DiaballikRules.get();
         for (const move of moves) {
             const legalityInfo: MGPFallible<DiaballikState> = DiaballikRules.get().isLegal(move, state);
-            const stateAfterMove: DiaballikState = rules.applyLegalMove(move, state, {}, legalityInfo.get());
+            const stateAfterMove: DiaballikState =
+                rules.applyLegalMove(move, state, MGPOptional.empty(), legalityInfo.get());
             if (seenStates.contains(stateAfterMove) === false) {
                 movesToKeep.push(move);
                 seenStates.add(stateAfterMove);

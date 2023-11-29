@@ -7,13 +7,14 @@ import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { TablutComponent } from '../tablut.component';
 import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: TaflConfig = TablutRules.RULES_CONFIG_DESCRIPTION.defaultConfig.config;
+const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
 
 const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove> = {
     component: TablutComponent,

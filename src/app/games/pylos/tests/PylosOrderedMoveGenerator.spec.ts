@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';
@@ -15,7 +16,7 @@ describe('PylosOrderedMoveGenerator', () => {
         moveGenerator = new PylosOrderedMoveGenerator();
     });
     it('should generate 16 moves at first turn', () => {
-        const initialNode: PylosNode = PylosRules.get().getInitialNode();
+        const initialNode: PylosNode = PylosRules.get().getInitialNode(MGPOptional.empty());
         const moves: PylosMove[] = moveGenerator.getListMoves(initialNode);
         expect(moves.length).toEqual(16);
     });

@@ -19,7 +19,7 @@ describe('BrandhubRules', () => {
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     let rules: BrandhubRules;
-    const defaultConfig: TaflConfig = BrandhubRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = BrandhubRules.get();
@@ -149,7 +149,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
@@ -180,7 +180,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
@@ -211,7 +211,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
@@ -242,7 +242,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });
@@ -273,7 +273,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, MGPOptional.of(defaultConfig));
+        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
     });

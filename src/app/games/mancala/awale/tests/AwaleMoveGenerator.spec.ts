@@ -12,7 +12,7 @@ import { KalahMoveGenerator } from '../../kalah/KalahMoveGenerator';
 describe('AwaleMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
-    const config: MancalaConfig = AwaleRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+    const config: MancalaConfig = AwaleRules.get().getDefaultRulesConfig().get();
 
     function getMancalaNode(state: MancalaState, config: MancalaConfig): MancalaNode {
         return new MancalaNode(
@@ -47,14 +47,14 @@ describe('AwaleMoveGenerator', () => {
 
         it('should provide move with several distributions when possible by config', () => {
             // Given a state with a config allowing multiple sowing
-            const customConfig: MancalaConfig = {
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
                 ...config,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
-            };
+            });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
-            const node: MancalaNode = getMancalaNode(state, customConfig);
+            const node: MancalaNode = getMancalaNode(state, customConfig.get());
 
             // When listing the moves
             const moves: MancalaMove[] = moveGenerator.getListMoves(node);

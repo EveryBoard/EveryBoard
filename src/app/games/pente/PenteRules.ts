@@ -13,7 +13,6 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class PenteNode extends GameNode<PenteMove, PenteState, GobanConfig> {}
@@ -35,7 +34,8 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         return PenteRules.singleton.get();
     }
 
-    public getInitialState(config: GobanConfig): PenteState {
+    public getInitialState(optionalConfig: MGPOptional<GobanConfig>): PenteState {
+        const config: GobanConfig = optionalConfig.get();
         const board: PlayerOrNone[][] = TableUtils.create(config.width,
                                                           config.height,
                                                           PlayerOrNone.NONE);
@@ -59,7 +59,9 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         }
     }
 
-    public applyLegalMove(move: PenteMove, state: PenteState, _config: RulesConfig, _info: void): PenteState {
+    public applyLegalMove(move: PenteMove, state: PenteState, _config: MGPOptional<GobanConfig>, _info: void)
+    : PenteState
+    {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x]= player;

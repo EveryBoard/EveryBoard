@@ -91,7 +91,10 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, EmptyRu
                                   });
     }
 
-    public applyLegalMove(move: LodestoneMove, state: LodestoneState, _config: RulesConfig, infos: LodestoneInfos)
+    public applyLegalMove(move: LodestoneMove,
+                          state: LodestoneState,
+                          _config: MGPOptional<RulesConfig>,
+                          infos: LodestoneInfos)
     : LodestoneState
     {
         const currentPlayer: Player = state.getCurrentPlayer();

@@ -21,7 +21,7 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const config: GoConfig = { width: 5, height: 5, handicap: 0 };
+    const defaultConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 5, height: 5, handicap: 0 });
 
     beforeEach(() => {
         rules = GoRules.get();
@@ -32,7 +32,7 @@ describe('GoRules', () => {
     describe('Phase.PLAYING', () => {
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
-            const state: GoState = GoRules.get().getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(defaultConfig);
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
@@ -200,7 +200,7 @@ describe('GoRules', () => {
         });
         it('Phase.PLAYING + GoMove.PASS = Phase.PASSED', () => {
             // Given initial board (so, playing phase)
-            const state: GoState = GoRules.get().getInitialState(config);
+            const state: GoState = GoRules.get().getInitialState(defaultConfig);
             expect(state.phase).toBe(Phase.PLAYING);
 
             // When passing
