@@ -42,7 +42,7 @@ describe('MGPUniqueList', () => {
             spyOn(Utils, 'logError').and.callThrough();
             const mySet: MGPUniqueList<string> = new MGPUniqueList(['un', 'deux']);
             expect(() => mySet.get(2)).toThrowError('Assertion failure: MGPUniqueList: index out of bounds: 2');
-            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'MGPUniqueList: index out of bounds: 2');
+            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'MGPUniqueList: index out of bounds: 2', undefined);
         });
     });
 
@@ -58,7 +58,7 @@ describe('MGPUniqueList', () => {
             spyOn(Utils, 'logError').and.callThrough();
             const mySet: MGPUniqueList<string> = new MGPUniqueList(['un', 'deux']);
             expect(() => mySet.getFromEnd(2)).toThrowError('Assertion failure: MGPUniqueList: index (from end) out of bounds: 2');
-            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'MGPUniqueList: index (from end) out of bounds: 2');
+            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'MGPUniqueList: index (from end) out of bounds: 2', undefined);
         });
     });
 });

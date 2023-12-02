@@ -110,9 +110,9 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             coord = coord.getNext(dir);
         }
         const failure: MGPValidation =
-            ErrorLoggerService.logError('HexagonalGameState.findEntranceFrom',
-                                        'could not find a board entrance, board must be invalid',
-                                        { start: start.toString(), line: line.toString() });
+            Utils.logError('HexagonalGameState.findEntranceFrom',
+                           'could not find a board entrance, board must be invalid',
+                           { start: start.toString(), line: line.toString() });
         throw new Error(failure.getReason());
     }
 }

@@ -4,7 +4,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
-import { MGPOptional, MGPSet, MGPValidation, ReversibleMap } from '@everyboard/lib';
+import { MGPOptional, MGPSet, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
@@ -112,12 +112,9 @@ export class SixState extends OpenHexagonalGameState<Player> {
     public switchPiece(coord: Coord): SixState {
         const newPieces: ReversibleMap<Coord, Player> = this.pieces.getCopy();
         const oldPiece: PlayerOrNone = this.getPieceAt(coord);
-        if (oldPiece.isPlayer()) {
-            newPieces.replace(coord, oldPiece.getOpponent());
-            return new SixState(newPieces, this.turn);
-        } else {
-            ErrorLoggerService.logErrorAndFail('SixState', 'Cannot switch piece if there is no piece!', { coord: coord.toString() });
-        }
+        Utils.assert(oldPiece.isPlayer(), 'Cannot switch piece if there is no piece!', { coord: coord.toString() });
+        newPieces.replace(coord, (oldPiece as Player).getOpponent());
+        return new SixState(newPieces, this.turn);
     }
 
     public equals(other: SixState): boolean {

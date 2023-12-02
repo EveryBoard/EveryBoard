@@ -18,10 +18,6 @@ export class ErrorLoggerService {
     public static setSingletonInstance(service: ErrorLoggerService): void {
         ErrorLoggerService.singleton = MGPOptional.of(service);
     }
-    public static logErrorAndFail(component: string, message: string, data?: JSONValue): never {
-        ErrorLoggerService.logError(component, message, data);
-        throw new Error(`${component}: ${message} (extra data: ${JSON.stringify(data)})`);
-    }
     public static logError(component: string, message: string, data?: JSONValue): MGPValidation {
         if (this.singleton.isAbsent()) {
             // The error logger service has not been initialized, so we cannot log the error.

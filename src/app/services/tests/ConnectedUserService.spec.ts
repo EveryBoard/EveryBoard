@@ -286,7 +286,7 @@ describe('ConnectedUserService', () => {
         });
         it('should fail and log the error if there is no connected user', async() => {
             // Given nothing
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // When the email verification is requested
             const result: MGPValidation = await connectedUserService.sendEmailVerification();
@@ -294,12 +294,12 @@ describe('ConnectedUserService', () => {
             // Then it fails because this is not a valid user interaction
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe('ConnectedUserService: Unlogged users cannot request for email verification');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unlogged users cannot request for email verification');
+            expect(Utils.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unlogged users cannot request for email verification');
         });
         it('should fail if the user already verified its email', async() => {
             // Given a connected user that is registered and verified, for example through a google account
             await createConnectedGoogleUser('foo@bar.com');
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // When the email verification is requested
             const result: MGPValidation = await connectedUserService.sendEmailVerification();
@@ -307,7 +307,7 @@ describe('ConnectedUserService', () => {
             // Then it fails because this is not a valid user interaction
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe('ConnectedUserService: Verified users should not ask email verification after being verified');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Verified users should not ask email verification after being verified');
+            expect(Utils.logError).toHaveBeenCalledWith('ConnectedUserService', 'Verified users should not ask email verification after being verified');
         });
         it('should fail if there is a genuine error in the email verification process from firebase', async() => {
             // Given a user that just registered and hence is not verified
@@ -463,7 +463,7 @@ describe('ConnectedUserService', () => {
     });
     describe('mapFirebaseError', () => {
         it('should call logError when encountering an unsupported error', async() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // Given an unsupported error
             const error: FirebaseError = new FirebaseError('auth/unknown-error', 'Error message');
@@ -472,10 +472,10 @@ describe('ConnectedUserService', () => {
             connectedUserService.mapFirebaseError(error);
 
             // Then logError is called
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'auth/unknown-error', errorMessage: 'Error message' });
+            expect(Utils.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'auth/unknown-error', errorMessage: 'Error message' });
         });
         it('should map the errors encountered in the wild but that we cannot reproduce in a test environment', async() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const errorCodes: string[] = [
                 'auth/too-many-requests',
                 'auth/popup-closed-by-user',
@@ -490,7 +490,7 @@ describe('ConnectedUserService', () => {
                 connectedUserService.mapFirebaseError(error);
 
                 // Then it is properly handled
-                expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
+                expect(Utils.logError).not.toHaveBeenCalled();
             }
         });
     });
@@ -508,7 +508,7 @@ describe('ConnectedUserService', () => {
             expect(result.isSuccess()).toBeTrue();
         });
         it('should not throw upon failure', async() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // When the username is set but fails
             const error: FirebaseError = new FirebaseError('unknown/error', 'Error');
@@ -518,7 +518,7 @@ describe('ConnectedUserService', () => {
             // Then it fails
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
+            expect(Utils.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
         it('should reject empty usernames', async() => {
             // When the username is set to an empty username
@@ -553,7 +553,7 @@ describe('ConnectedUserService', () => {
             expect(Utils.getNonNullable(auth.currentUser).photoURL).toEqual(photoURL);
         });
         it('should not throw upon failure', async() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a registered and logged in user
             await createConnectedGoogleUser('foo@bar.com');
 
@@ -565,7 +565,7 @@ describe('ConnectedUserService', () => {
             // Then it fails and logs the error
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
+            expect(Utils.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
     });
     describe('sendPasswordResetEmail', () => {
@@ -607,7 +607,7 @@ describe('ConnectedUserService', () => {
     });
     describe('sendPresenceToken', () => {
         it('should throw when asking to send presence token while no user is logged', fakeAsync(() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const expectedError: string = 'Assertion failure: Should not call sendPresenceToken when not connected';
             expect(() => connectedUserService.sendPresenceToken()).toThrowError(expectedError);
         }));

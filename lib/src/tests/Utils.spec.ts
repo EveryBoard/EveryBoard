@@ -47,7 +47,7 @@ describe('@everyboard/lib', () => {
         it('should log error and throw when condition is false', () => {
             spyOn(Utils, 'logError').and.callThrough();
             expect(() => Utils.assert(false, 'error')).toThrowError('Assertion failure: error');
-            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'error');
+            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'error', undefined);
         });
     });
 });

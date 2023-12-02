@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { Utils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
@@ -10,25 +10,25 @@ import { TrexoRules } from '../TrexoRules';
 describe('TrexoState', () => {
     it('should refuse creating a board of which width is not 10', () => {
         const error: string = 'Invalid board dimensions';
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a 11x10 board
         const board: TrexoPieceStack[][] = TableUtils.create(11, 10, TrexoPieceStack.EMPTY);
 
         // When passing it as an argument
         // Then it should fail
         expect(() => TrexoState.of(board, 0)).toThrowError('Assertion failure: ' + error);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+        expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
     });
     it('should refuse creating a board of which height is not 10', () => {
         const error: string = 'Invalid board dimensions';
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a 10x11 board
         const board: TrexoPieceStack[][] = TableUtils.create(10, 11, TrexoPieceStack.EMPTY);
 
         // When passing it as an argument
         // Then it should fail
         expect(() => TrexoState.of(board, 0)).toThrowError('Assertion failure: ' + error);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+        expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
     });
     it('should drop piece at the lowest level possible', () => {
         // Given an empty board

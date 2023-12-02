@@ -281,7 +281,7 @@ describe('PartCreationComponent', () => {
         });
         describe('Candidate/ChosenOpponent removal', () => {
             it('should deselect candidate, remove it, and call logError when a candidate is removed from db', fakeAsync(async() => {
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 // Given a part with a candidate that has been chosen
                 awaitComponentInitialization();
                 await mockCandidateArrival();
@@ -297,7 +297,7 @@ describe('PartCreationComponent', () => {
 
                 // Then logError has been called as this is an unusual situation
                 const error: string = 'found no user while observing ' + UserMocks.OPPONENT_MINIMAL_USER.id + ' !';
-                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('PartCreationComponent', error);
+                expect(Utils.logError).toHaveBeenCalledOnceWith('PartCreationComponent', error);
                 // and the candidate has been deselected
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 // and the candidate has been removed from the lobby

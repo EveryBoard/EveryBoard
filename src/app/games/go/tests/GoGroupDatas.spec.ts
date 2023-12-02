@@ -2,7 +2,7 @@
 import { GoPiece } from '../GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatas } from 'src/app/games/go/GoGroupsDatas';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { Utils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
 
@@ -31,7 +31,7 @@ describe('GoGroupDatas', () => {
         // When adding the coord again
         // Then it should throw
         const expectedError: string = 'This group already contains (0, 0)';
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         expect(() => group.addPawn(coord, GoPiece.DARK)).toThrowError('Assertion failure: ' + expectedError);
     }));
     it('should not throw when getWrapped is called on a multi wrapped group where one is the alive opposite of the other', () => {

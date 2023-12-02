@@ -4,18 +4,15 @@ import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from '@everyboard/lib';
+import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ActivatedRouteStub, ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { AbstractGameComponent } from './GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { JSONValue } from '@everyboard/lib';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
-import { MGPOptional } from '@everyboard/lib';
 import { HivePiece } from 'src/app/games/hive/HivePiece';
 
 describe('GameComponent', () => {
@@ -35,7 +32,7 @@ describe('GameComponent', () => {
         testUtils.detectChanges();
         tick(0);
 
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
         // When the player tries to pass
         const result: MGPValidation = await component.pass();
@@ -45,7 +42,7 @@ describe('GameComponent', () => {
         const errorData: JSONValue = { gameName: 'AbaloneComponent' };
         expect(result.isFailure()).toBeTrue();
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
+        expect(Utils.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
     it('click methods should refuse when observer clicks', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {

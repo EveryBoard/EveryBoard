@@ -220,7 +220,7 @@ export class ConnectedUserService implements OnDestroy {
             case 'auth/popup-blocked':
                 return $localize`The authentication popup was blocked. Try again after disabling popup blocking.`;
             default:
-                ErrorLoggerService.logError('ConnectedUserService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
+                Utils.logError('ConnectedUserService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
                 return error.message;
         }
     }
@@ -229,7 +229,7 @@ export class ConnectedUserService implements OnDestroy {
         if (user.isPresent()) {
             if (this.emailVerified(user.get())) {
                 // This should not be reachable from a component
-                return ErrorLoggerService.logError('ConnectedUserService', 'Verified users should not ask email verification after being verified');
+                return Utils.logError('ConnectedUserService', 'Verified users should not ask email verification after being verified');
             }
             try {
                 await Auth.sendEmailVerification(user.get());
@@ -239,7 +239,7 @@ export class ConnectedUserService implements OnDestroy {
             }
         } else {
             // This should not be reachable from a component
-            return ErrorLoggerService.logError('ConnectedUserService', 'Unlogged users cannot request for email verification');
+            return Utils.logError('ConnectedUserService', 'Unlogged users cannot request for email verification');
         }
     }
     /**

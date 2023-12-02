@@ -1,9 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { MGPFallible } from '@everyboard/lib';
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils, MGPFallible, Utils } from '@everyboard/lib';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
@@ -11,9 +9,9 @@ import { TrexoNode, TrexoRules } from '../TrexoRules';
 
 describe('TrexoMove', () => {
 
-    it('should refuse to create out of board move (player.zero piece)', () => {
+    it('should refuse to create out of board move (Player.ZERO piece)', () => {
         const error: string = '(-1, 0) is out of the TrexoBoard!';
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given two coords of piece, with the zero coord being out of range
         const zero: Coord = new Coord(-1, 0);
         const one: Coord = new Coord(0, 0);
@@ -21,11 +19,11 @@ describe('TrexoMove', () => {
         // When trying to create a move with it
         // Then it should fail
         expect(() => TrexoMove.from(zero, one)).toThrowError('Assertion failure: ' + error);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+        expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
     });
-    it('should refuse to create out of board move (player.one piece)', () => {
+    it('should refuse to create out of board move (Player.ONE piece)', () => {
         const error: string = '(-1, 0) is out of the TrexoBoard!';
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given two coords of piece, with the one coord being out of range
         const zero: Coord = new Coord(0, 0);
         const one: Coord = new Coord(-1, 0);
@@ -33,7 +31,7 @@ describe('TrexoMove', () => {
         // When trying to create a move with it
         // Then it should fail
         expect(() => TrexoMove.from(zero, one)).toThrowError('Assertion failure: ' + error);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+        expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
     });
     it('should refuse to create move with two coord not neighbors', () => {
         // Given two non neighboring coords

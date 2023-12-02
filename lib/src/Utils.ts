@@ -1,3 +1,6 @@
+import { JSONValue } from './JSON';
+import { MGPValidation } from './MGPValidation';
+
 export class Utils {
 
     /**
@@ -5,7 +8,10 @@ export class Utils {
      * It should be set by the codebase relying on this, for example by doing:
      * Utils.logError = myErrorLogger;
      */
-    public static logError: (kind: string, message: string) => void = (_kind: string, _message: string) => {};
+    public static logError: (kind: string, message: string, data?: JSONValue) => MGPValidation =
+        (_kind: string, message: string, _data?: JSONValue) => {
+            return MGPValidation.failure(message);
+        };
 
     public static expectToBe<T>(value: T, expected: T, message?: string): void {
         if (value !== expected) {
@@ -37,13 +43,13 @@ export class Utils {
         }
     }
 
-    public static assert(condition: boolean, message: string): void {
+    public static assert(condition: boolean, message: string, data?: JSONValue): void {
         if (condition === false) {
             // We log the error but we also throw an exception
             // This is because if an assertion fails,
             // we don't want to execute the code after the assertion.
             // Otherwise, this could result in potentially very serious issues.
-            Utils.logError('Assertion failure', message);
+            Utils.logError('Assertion failure', message, data);
             throw new Error(`Assertion failure: ${message}`);
         }
     }

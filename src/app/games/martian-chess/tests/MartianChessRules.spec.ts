@@ -3,10 +3,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPMap } from '@everyboard/lib';
+import { MGPMap, Utils } from '@everyboard/lib';
 import { MGPOptional } from '@everyboard/lib';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
@@ -641,7 +640,7 @@ describe('MartianChessRules', () => {
                                                                        0,
                                                                        MGPOptional.empty(),
                                                                        MartianChessRules.STARTING_COUNT_DOWN);
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
                 // When calling the clock once more
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(0, 6), true).get();
@@ -661,7 +660,7 @@ describe('MartianChessRules', () => {
                 const component: string = 'Assertion failure';
                 const error: string = 'Should not call the clock twice';
                 expect(() => RulesUtils.expectMoveSuccess(rules, state, move, expectedState)).toThrowError(component + ': ' + error);
-                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith(component, error);
+                expect(Utils.logError).toHaveBeenCalledOnceWith(component, error, undefined);
             });
             it('should decrease clock-count-down each captureless-turn when clock was called', () => {
                 // Given a board with clock called

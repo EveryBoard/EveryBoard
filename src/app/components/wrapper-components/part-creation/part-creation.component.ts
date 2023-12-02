@@ -431,7 +431,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const lastChangedOpt: MGPOptional<FirestoreTime> = await this.userService.getUserLastUpdateTime(userId);
         if (lastChangedOpt.isAbsent()) {
             const error: string = 'found no user while observing ' + userId + ' !';
-            ErrorLoggerService.logError('PartCreationComponent', error);
+            Utils.logError('PartCreationComponent', error);
             return true;
         }
         const lastUpdateTime: Timestamp = lastChangedOpt.get() as Timestamp;

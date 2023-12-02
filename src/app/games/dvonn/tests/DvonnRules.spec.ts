@@ -9,7 +9,7 @@ import { DvonnFailure } from '../DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { Utils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
 
@@ -251,10 +251,10 @@ describe('DvonnRules', () => {
     });
     describe('isMovablePiece', () => {
         it('should fail if the coord is not on the board', fakeAsync(() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             expect(() => rules.isMovablePiece(DvonnRules.get().getInitialState(), new Coord(-1, -1)))
                 .toThrowError('Assertion failure: piece is not on the board');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'piece is not on the board');
+            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'piece is not on the board', undefined);
         }));
     });
 });

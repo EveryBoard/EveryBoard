@@ -482,11 +482,11 @@ export class TestUtils {
     }
 
     public static expectToThrowAndLog(func: () => void, error: string): void {
-        if (jasmine.isSpy(ErrorLoggerService.logError) === false) {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        if (jasmine.isSpy(Utils.logError) === false) {
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         }
         expect(func).toThrowError('Assertion failure: ' + error);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
+        expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', error, undefined);
     }
 
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {

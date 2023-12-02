@@ -3,9 +3,8 @@ import { NumberTable, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
 import { HexaLine } from '../HexaLine';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { JSONValue } from '@everyboard/lib';
+import { JSONValue, Utils } from '@everyboard/lib';
 
 export class TestingHexagonalState extends HexagonalGameState<number> {
 
@@ -197,7 +196,7 @@ describe('HexagonalGameState', () => {
             expect(otherEntrance.equals(new Coord(6, 2))).toBeTrue();
         });
         it('should call logError and throw when unable to find an entrance', () => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given an invalid hexagonal state, where no entrance can be found
             const invalidState: TestingHexagonalState = TestingHexagonalState.empty(0, 0, [], 0);
 
@@ -208,7 +207,7 @@ describe('HexagonalGameState', () => {
             const error: string = 'could not find a board entrance, board must be invalid';
             const data: JSONValue = { start: '(-1, 1)', line: line.toString() };
             expect(() => invalidState.getEntranceOnLine(line)).toThrowError(component + ': ' + error);
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith(component, error, data);
+            expect(Utils.logError).toHaveBeenCalledWith(component, error, data);
         });
     });
 });

@@ -24,32 +24,32 @@ describe('CountDownComponent', () => {
         it('should throw when setting chrono already started', () => {
             component.setDuration(1250);
             component.start();
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const error: string = 'Should not set a chrono that has already been started (undefined)!';
 
             expect(() => component.setDuration(1250)).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
     });
     describe('start', () => {
         it('should throw when starting without having been set', () => {
             const error: string = 'Should not start a chrono that has not been set!';
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             expect(() => component.start()).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
         it('should throw when starting twice', () => {
             component.setDuration(1250);
             component.start();
             const error: string = 'Should not start chrono that has already been started (undefined)';
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             expect(() => component.start()).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
         it('should show remaining time once set', () => {
             component.setDuration(62000);
@@ -64,11 +64,11 @@ describe('CountDownComponent', () => {
             expect(component.isStarted()).toBeTrue();
             component.stop();
             const error: string = 'Should not start a chrono that has not been set!';
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             expect(() => component.start()).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
     });
     describe('pause', () => {
@@ -77,11 +77,11 @@ describe('CountDownComponent', () => {
             component.start();
             component.pause();
             const error: string = 'Should not pause already paused chrono (undefined)';
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             expect(() => component.pause()).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
         it('should throw when pausing not started chrono', () => {
             spyOn(Utils, 'assert').and.callFake((b: boolean, s: string) => {throw new Error('prout');});

@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-import { MGPValidation } from '@everyboard/lib';
-import { JSONValue } from '@everyboard/lib';
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -31,7 +29,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
-import { MGPFallible } from '@everyboard/lib';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -304,7 +301,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
         }));
         it('Minimax proposing illegal move should log error and show it to the user', fakeAsync(async() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board and a buggy AI (that performs an illegal move)
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPFallible.failure('illegal'));
@@ -323,7 +320,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
             const errorData: JSONValue = { game: 'P4', name: 'Minimax', move: 'P4Move(0)', reason: 'illegal' };
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
+            expect(Utils.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;

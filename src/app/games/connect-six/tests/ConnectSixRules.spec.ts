@@ -57,7 +57,7 @@ describe('ConnectSixRules', () => {
             // Then the move should be a success
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should refuse move that drop two pieces on first turn', () => {
+        it('should refuse move that drops two pieces on first turn', () => {
             // Given the first turn
             const state: ConnectSixState = ConnectSixRules.get().getInitialState();
             // When dropping two pieces

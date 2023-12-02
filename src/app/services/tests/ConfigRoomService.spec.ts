@@ -5,7 +5,7 @@ import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConnectedUserService } from '../ConnectedUserService';
@@ -13,7 +13,6 @@ import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { ErrorLoggerService } from '../ErrorLoggerService';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConfigRoomService', () => {
@@ -170,7 +169,7 @@ describe('ConfigRoomService', () => {
         }));
         it('should throw when called by creator', fakeAsync(async() => {
             // Given a config room that we are observing but that we are creating
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
@@ -184,7 +183,7 @@ describe('ConfigRoomService', () => {
         }));
         it('should throw when called by user absent from the room', fakeAsync(async() => {
             // Given a config room that we are not observing or creating and that we did not joined
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
             ConnectedUserServiceMock.setUser(UserMocks.OTHER_OPPONENT_AUTH_USER);
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
