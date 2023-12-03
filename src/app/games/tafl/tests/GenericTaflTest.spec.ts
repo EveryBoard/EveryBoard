@@ -42,6 +42,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                             M extends TaflMove>(entries: TaflTestEntries<C, R, M>)
     : void
 {
+
     let testUtils: ComponentTestUtils<C>;
 
     describe(entries.gameName + ' component generic tests', () => {
@@ -91,18 +92,26 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
 
             it('should allow simple move', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
-                const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
+                const start: Coord = entries.validFirstCoord;
+                const end: Coord = entries.validSecondCoord;
+                const playersCoord: string = start.x + '_' + start.y;
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
                 // When moving your piece
-                const move: M = entries.moveProvider(entries.validFirstCoord, entries.validSecondCoord).get();
+                const move: M = entries.moveProvider(start, end).get();
 
                 // Then the move should be legal
-                const landingSpace: string = '#click_' + entries.validSecondCoord.x + '_' + entries.validSecondCoord.y;
+                const landingSpace: string = '#click_' + end.x + '_' + end.y;
                 await testUtils.expectMoveSuccess(landingSpace, move);
+                // And the square on the way should be highlighted
+                const movedOverCoords: Coord[] = move.getMovedOverCoords();
+                for (const movedOverCoord of movedOverCoords) {
+                    const elementName: string = '#space_' + movedOverCoord.x + '_' + movedOverCoord.y;
+                    testUtils.expectElementToHaveClass(elementName, 'moved-fill');
+                }
             }));
 
-            it('Diagonal move attempt should not throw', fakeAsync(async() => {
+            it('should fail but not throw during diagonal move attempt', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
@@ -210,4 +219,5 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
         }));
 
     });
+
 }

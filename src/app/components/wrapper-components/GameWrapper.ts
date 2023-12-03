@@ -119,12 +119,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         this.gameComponent.cancelMoveOnWrapper = (reason?: string): Promise<void> => {
             return this.onCancelMove(reason);
         };
-        console.log('gameWrapper.createGameComponent set', this.role.toString())
         await this.setRole(this.role);
     }
 
     public async setRole(role: PlayerOrNone): Promise<void> {
-        console.log('le setRoleDeLaRolage', role.toString())
         this.role = role;
         if (role === PlayerOrNone.NONE) {
             this.gameComponent.setPointOfView(Player.ZERO);
