@@ -66,8 +66,12 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
 
+    /**
+     * This method is to be called only after view init.
+     * It will create the game component and initialize its node.
+     * It returns true if succesful, or false if this is not a valid game.
+     */
     protected async createMatchingGameComponent(): Promise<boolean> {
-        // Method to be called only after view init
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
@@ -115,10 +119,12 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         this.gameComponent.cancelMoveOnWrapper = (reason?: string): Promise<void> => {
             return this.onCancelMove(reason);
         };
+        console.log('gameWrapper.createGameComponent set', this.role.toString())
         await this.setRole(this.role);
     }
 
     public async setRole(role: PlayerOrNone): Promise<void> {
+        console.log('le setRoleDeLaRolage', role.toString())
         this.role = role;
         if (role === PlayerOrNone.NONE) {
             this.gameComponent.setPointOfView(Player.ZERO);
@@ -215,11 +221,11 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public getRulesConfigDescriptionByName(gameName: string): MGPOptional<RulesConfigDescription> {
-        const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
-        if (gameInfos.length === 0) {
-            return MGPOptional.empty(); // TODO RulesConfigDescription.DEFAULT;
+        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
+        if (gameInfos.isAbsent()) {
+            return MGPOptional.empty();
         } else {
-            return gameInfos[0].getRulesConfigDescription();
+            return gameInfos.get().getRulesConfigDescription();
         }
     }
 }

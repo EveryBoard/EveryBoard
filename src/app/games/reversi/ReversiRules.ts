@@ -13,7 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type ReversiLegalityInformation = Coord[];
@@ -43,23 +43,14 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
         }
         return ReversiRules.singleton.get();
     }
-
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<ReversiConfig> =
-        new RulesConfigDescription(
-            {
-                name: (): string => $localize`Reversi`,
-                config: {
-                    width: 8,
-                    height: 8,
-                },
-            }, {
-                width: RulesConfigDescriptionLocalizable.WIDTH,
-                height: RulesConfigDescriptionLocalizable.HEIGHT,
-            }, [
-            ], {
-                width: MGPValidators.range(4, 99), // minimum 4 so that there is space around the central pieces
-                height: MGPValidators.range(4, 99),
-            });
+        new RulesConfigDescription<ReversiConfig>({
+            name: (): string => $localize`Reversi`,
+            config: {
+                width: new ConfigLine(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
+                height: new ConfigLine(8, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
+            },
+        });
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<ReversiConfig>> {
         return MGPOptional.of(ReversiRules.RULES_CONFIG_DESCRIPTION);

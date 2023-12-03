@@ -43,7 +43,6 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             new MCTS($localize`MCTS`, new KamisadoMoveGenerator(), this.rules),
         ];
         this.encoder = KamisadoMove.encoder;
-        this.canPass = false;
         this.hasAsymmetricBoard = true;
     }
     public backgroundColor(x: number, y: number): string {

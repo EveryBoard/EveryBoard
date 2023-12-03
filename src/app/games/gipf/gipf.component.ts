@@ -17,7 +17,7 @@ import { Arrow } from 'src/app/jscaip/Arrow';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfScoreHeuristic } from './GipfScoreHeuristic';
@@ -33,7 +33,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                                           GipfMove,
                                                           GipfState,
                                                           FourStatePiece,
-                                                          RulesConfig,
+                                                          EmptyRulesConfig,
                                                           GipfLegalityInformation>
 {
     private static readonly PHASE_INITIAL_CAPTURE: number = 0;

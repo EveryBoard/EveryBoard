@@ -11,7 +11,7 @@ import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table, TableUtils, ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export class TeekoNode extends GameNode<TeekoMove, TeekoState, TeekoConfig> {}
 
@@ -35,10 +35,8 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState, TeekoConfig> {
             {
                 name: (): string => $localize`Standard Teeko`,
                 config: {
-                    teleport: false,
+                    teleport: new ConfigLine(false, () => $localize`Can piece teleport`),
                 },
-            }, {
-                teleport: (): string => $localize`Can piece teleport`,
             }, [{
                 name: (): string => $localize`Teleport Teeko`,
                 config: {

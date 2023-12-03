@@ -42,7 +42,6 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             new MCTS($localize`MCTS`, new DvonnMoveGenerator(), this.rules),
         ];
         this.encoder = DvonnMove.encoder;
-        this.canPass = false;
         this.scores = MGPOptional.of(DvonnRules.getScores(this.getState()));
 
         this.SPACE_SIZE = 30;
@@ -67,7 +66,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.lastMove = MGPOptional.of(move);
         const previousState: DvonnState = this.getPreviousState();
         const state: DvonnState = this.getState();
-        for (let y: number = 0; y < state.board.length; y++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord) === true &&

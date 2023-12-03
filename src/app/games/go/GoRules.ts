@@ -15,8 +15,8 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
+import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 
 export type GoLegalityInformation = Coord[];
 
@@ -33,37 +33,28 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<GoConfig> =
-        new RulesConfigDescription<GoConfig>(
-            {
-                name: (): string => $localize`19 x 19`,
-                config: {
-                    width: 19,
-                    height: 19,
-                    handicap: 0,
-                },
-            }, {
-                width: RulesConfigDescriptionLocalizable.WIDTH,
-                height: RulesConfigDescriptionLocalizable.HEIGHT,
-                handicap: (): string => $localize`Handicap`,
-            }, [{
-                name: (): string => $localize`13 x 13`,
-                config: {
-                    width: 13,
-                    height: 13,
-                    handicap: 0,
-                },
-            }, {
-                name: (): string => $localize`9 x 9`,
-                config: {
-                    width: 9,
-                    height: 9,
-                    handicap: 0,
-                },
-            }], {
-                width: MGPValidators.range(1, 99),
-                height: MGPValidators.range(1, 99),
-                handicap: MGPValidators.range(0, 9),
-            });
+        new RulesConfigDescription<GoConfig>({
+            name: (): string => $localize`19 x 19`,
+            config: {
+                width: new ConfigLine(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new ConfigLine(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+                handicap: new ConfigLine(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
+            },
+        }, [{
+            name: (): string => $localize`13 x 13`,
+            config: {
+                width: 13,
+                height: 13,
+                handicap: 0,
+            },
+        }, {
+            name: (): string => $localize`9 x 9`,
+            config: {
+                width: 9,
+                height: 9,
+                handicap: 0,
+            },
+        }]);
 
     public static get(): GoRules {
         if (GoRules.singleton.isAbsent()) {
@@ -77,12 +68,12 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         const board: GoPiece[][] = GoState.getStartingBoard(config);
         let turn: number = 0;
         // TODO FOR REVIEW: quoi la baise on fait de l'import de "GobanGameComponent" dans une rules
-        const left: number = GobanGameComponent.getHorizontalLeft(config.width);
-        const right: number = GobanGameComponent.getHorizontalRight(config.width);
-        const up: number = GobanGameComponent.getVerticalUp(config.height);
-        const down: number = GobanGameComponent.getVerticalDown(config.height);
-        const horizontalCenter: number = GobanGameComponent.getHorizontalCenter(config.width);
-        const verticalCenter: number = GobanGameComponent.getVerticalCenter(config.height);
+        const left: number = GobanUtils.getHorizontalLeft(config.width);
+        const right: number = GobanUtils.getHorizontalRight(config.width);
+        const up: number = GobanUtils.getVerticalUp(config.height);
+        const down: number = GobanUtils.getVerticalDown(config.height);
+        const horizontalCenter: number = GobanUtils.getHorizontalCenter(config.width);
+        const verticalCenter: number = GobanUtils.getVerticalCenter(config.height);
         const orderedHandicaps: Coord[] = [
             new Coord(left, up),
             new Coord(right, down),

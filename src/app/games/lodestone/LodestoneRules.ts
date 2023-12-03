@@ -3,7 +3,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -14,7 +14,7 @@ import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestoneState, LodestonePositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
@@ -33,7 +33,7 @@ export interface PressurePlateViewPosition {
 export type PressurePlatePositionInformation =
     MGPMap<LodestonePressurePlatePosition, PressurePlateViewPosition>;
 
-export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos> {
+export class LodestoneRules extends ConfiglessRules<LodestoneMove, LodestoneState, LodestoneInfos> {
     public static readonly THREATENED_COORD_RANGE: PressurePlatePositionInformation = MGPMap.from({
         top: {
             startForBigPlate: new Coord(0, 0),
@@ -93,7 +93,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, EmptyRu
 
     public applyLegalMove(move: LodestoneMove,
                           state: LodestoneState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           infos: LodestoneInfos)
     : LodestoneState
     {

@@ -1,6 +1,6 @@
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -11,7 +11,7 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessFailure } from './MartianChessFailure';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 
@@ -24,9 +24,7 @@ export interface MartianChessMoveResult {
 
 export class MartianChessNode extends GameNode<MartianChessMove, MartianChessState> {}
 
-export class MartianChessRules
-    extends Rules<MartianChessMove, MartianChessState, EmptyRulesConfig, MartianChessMoveResult>
-{
+export class MartianChessRules extends ConfiglessRules<MartianChessMove, MartianChessState, MartianChessMoveResult> {
 
     public static readonly STARTING_COUNT_DOWN: MGPOptional<number> = MGPOptional.of(7);
 
@@ -59,7 +57,7 @@ export class MartianChessRules
 
     public applyLegalMove(move: MartianChessMove,
                           state: MartianChessState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           info: MartianChessMoveResult)
     : MartianChessState
     {

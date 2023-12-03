@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { MGPValidator, MGPValidators } from 'src/app/utils/MGPValidator';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { ConfigLine, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('RulesConfigUtil', () => {
@@ -13,45 +12,39 @@ describe('RulesConfigUtil', () => {
             helaRosee: number;
         };
 
-        const defaultNamedRulesConfig: NamedRulesConfig<MyConfig> = {
-            config: { helaRosee: 5 },
+        const defaultNamedRulesConfig: DefaultConfigDescription<MyConfig> = {
             name: () => 'default',
-        };
-
-        const translations: { [name in keyof MyConfig]: Localized } = { // This is the expected type of translations
-            helaRosee: () => 'yéssoui idizwitenne!',
-        };
-
-        const validators: { [name in keyof MyConfig]: MGPValidator } = {
-            helaRosee: MGPValidators.range(1, 99),
+            config: {
+                helaRosee: new ConfigLine(5, () => 'coucoute', MGPValidators.range(1, 99)),
+            },
         };
 
         it('should have at least one default standard RulesConfig', () => {
             // Given any RulesConfigDescription
             const rulesConfigDescription: RulesConfigDescription<MyConfig> =
-                new RulesConfigDescription(defaultNamedRulesConfig, translations, [], validators);
+                new RulesConfigDescription(defaultNamedRulesConfig);
 
             // When getting default config
             const namedRulesConfig: NamedRulesConfig<MyConfig> = rulesConfigDescription.getDefaultConfig();
 
             // Then it should be the one we provided
-            expect(namedRulesConfig).toEqual(defaultNamedRulesConfig);
+            expect(namedRulesConfig.config).toEqual({ helaRosee: 5 });
         });
 
         it('should be possible to have other standard RulesConfig', () => {
-            // Given any RulesConfigDescription
+            // Given any RulesConfigDescription with secondary config
             const secondaryConfig: NamedRulesConfig<MyConfig> = {
-                config: { helaRosee: 7 },
                 name: () => 'numéro dosse',
+                config: { helaRosee: 7 },
             };
             const rulesConfigDescription: RulesConfigDescription<MyConfig> =
-                new RulesConfigDescription(defaultNamedRulesConfig, translations, [secondaryConfig], validators);
+                new RulesConfigDescription(defaultNamedRulesConfig, [secondaryConfig]);
 
             // When getting default config
             const namedRulesConfig: NamedRulesConfig<MyConfig> = rulesConfigDescription.getDefaultConfig();
 
             // Then it should still be first we provided
-            expect(namedRulesConfig).toEqual(defaultNamedRulesConfig);
+            expect(namedRulesConfig.config).toEqual({ helaRosee: 5 });
         });
 
         it('should throw when standard configs are of different type', () => {
@@ -59,16 +52,13 @@ describe('RulesConfigUtil', () => {
             interface MaConfigInterface extends RulesConfig {
                 helaRosee: number;
             }
-            const defaultConfig: NamedRulesConfig<MaConfigInterface> = {
-                config: { helaRosee: 2012 },
+            const defaultConfig: DefaultConfigDescription<MaConfigInterface> = {
                 name: () => 'default',
+                config: {
+                    helaRosee: new ConfigLine(2012, () => 'biilboul eh!', MGPValidators.range(1, 99)),
+                },
             };
-            // eslint-disable-next-line dot-notation
-            defaultConfig.config['holaBanana'] = 5;
-            const bananaTranslations: Record<string, Localized> = {
-                helaRosee: () => 'yéssoui idizwitenne!',
-                holaBanana: () => 'pepeleptipu',
-            };
+            defaultConfig.config.holaBanana = new ConfigLine(5, () => 'biilboul eh!', MGPValidators.range(1, 99));
 
             const secondaryConfig: NamedRulesConfig<MaConfigInterface> = {
                 config: { helaRosee: 7 },
@@ -78,37 +68,8 @@ describe('RulesConfigUtil', () => {
             // When trying to create the element
             // Then it should throw and log
             TestUtils.expectToThrowAndLog(() => {
-                new RulesConfigDescription(defaultConfig, bananaTranslations, [secondaryConfig], validators);
+                new RulesConfigDescription(defaultConfig, [secondaryConfig]);
             }, 'Field missing in secondary config!');
-        });
-
-        it('should throw when a number validator is missing', () => {
-            // Given any RulesConfigDescription
-            const defaultConfig: NamedRulesConfig<MyConfig> = {
-                config: { helaRosee: 2012 },
-                name: () => 'default',
-            };
-            const translations: Record<string, Localized> = {
-                helaRosee: () => 'yéssoui idizwitenne!',
-            };
-
-            // When trying to create the element
-            // Then it should throw and log
-            TestUtils.expectToThrowAndLog(() => {
-                new RulesConfigDescription(defaultConfig, translations);
-            }, 'Validator missing for helaRosee!');
-        });
-
-        it('should throw if not provided with translation for one field', () => {
-            // Given any RulesConfigDescription
-            // When trying to create the element
-            // Then it should throw and log
-            const missingTranslation: { [name in keyof MyConfig]: Localized } =
-                {} as { [name in keyof MyConfig]: Localized };
-            // The casting allow to avoid the compilation error, but it is still broken
-            TestUtils.expectToThrowAndLog(() => {
-                new RulesConfigDescription(defaultNamedRulesConfig, missingTranslation, [], validators);
-            }, `Field 'helaRosee' missing in translation!`);
         });
 
     });

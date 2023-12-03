@@ -109,7 +109,7 @@ describe('DvonnComponent', () => {
     it('should forbid making non-straight-line move', fakeAsync(async() => {
         // Given that the user has selected a piece
         await testUtils.expectClickSuccess('#click_2_0');
-        // When the user selects a invalid destination that is not in a straight line
+        // When the user selects an invalid destination that is not in a straight line
         // Then it should fail
         await testUtils.expectClickFailure('#click_3_3', DvonnFailure.MUST_MOVE_IN_STRAIGHT_LINE());
     }));

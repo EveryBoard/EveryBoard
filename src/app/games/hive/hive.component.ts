@@ -121,7 +121,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),
         ];
         this.encoder = HiveMove.encoder;
-        this.canPass = false;
         this.SPACE_SIZE = 30;
         this.PIECE_HEIGHT = this.SPACE_SIZE / 3;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.5,

@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -10,12 +10,12 @@ import { MGPValidation } from '../../utils/MGPValidation';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
-export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursState> {
+export class ConspirateursRules extends ConfiglessRules<ConspirateursMove, ConspirateursState> {
 
     private static singleton: MGPOptional<ConspirateursRules> = MGPOptional.empty();
 
@@ -35,7 +35,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
 
     public applyLegalMove(move: ConspirateursMove,
                           state: ConspirateursState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           _info: void)
     : ConspirateursState
     {

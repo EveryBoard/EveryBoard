@@ -1,4 +1,4 @@
-import { Rules } from '../../jscaip/Rules';
+import { ConfiglessRules } from '../../jscaip/Rules';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
@@ -15,7 +15,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 /**
@@ -127,7 +127,7 @@ interface LineInfos {
     boardStatus: MGPOptional<BoardStatus>;
 }
 
-export class QuartoRules extends Rules<QuartoMove, QuartoState> {
+export class QuartoRules extends ConfiglessRules<QuartoMove, QuartoState> {
 
     private static singleton: MGPOptional<QuartoRules> = MGPOptional.empty();
 
@@ -197,7 +197,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     public isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
         return QuartoRules.isLegal(move, state);
     }
-    public applyLegalMove(move: QuartoMove, state: QuartoState, _config: MGPOptional<RulesConfig>, _info: void)
+    public applyLegalMove(move: QuartoMove, state: QuartoState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
     : QuartoState
     {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();

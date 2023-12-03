@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -12,11 +12,11 @@ import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Utils } from 'src/app/utils/utils';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiamNode extends GameNode<DiamMove, DiamState> {}
 
-export class DiamRules extends Rules<DiamMove, DiamState> {
+export class DiamRules extends ConfiglessRules<DiamMove, DiamState> {
 
     private static singleton: MGPOptional<DiamRules> = MGPOptional.empty();
 
@@ -38,7 +38,9 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         return new DiamState(board, [4, 4, 4, 4], 0);
     }
 
-    public applyLegalMove(move: DiamMove, state: DiamState, _config: MGPOptional<RulesConfig>, _info: void): DiamState {
+    public applyLegalMove(move: DiamMove, state: DiamState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    : DiamState
+    {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {

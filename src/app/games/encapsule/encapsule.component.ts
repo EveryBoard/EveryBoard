@@ -13,7 +13,7 @@ import { EncapsuleFailure } from './EncapsuleFailure';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
@@ -27,7 +27,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,
                                                                  EncapsuleState,
                                                                  EncapsuleSpace,
-                                                                 RulesConfig,
+                                                                 EmptyRulesConfig,
                                                                  EncapsuleLegalityInformation>
 {
     public readonly CENTER: number = this.getPieceCenter(1);

@@ -11,7 +11,7 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type EpaminondasConfig = {
@@ -30,24 +30,14 @@ export class EpaminondasRules
     private static singleton: MGPOptional<EpaminondasRules> = MGPOptional.empty();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<EpaminondasConfig> =
-        new RulesConfigDescription(
-            {
-                name: (): string => $localize`Epaminondas`,
-                config: {
-                    width: 14,
-                    emptyRows: 8,
-                    rowsOfSoldiers: 2,
-                },
-            }, {
-                width: RulesConfigDescriptionLocalizable.WIDTH,
-                emptyRows: (): string => $localize`Number of empty rows`,
-                rowsOfSoldiers: (): string => $localize`Number of soldier rows`,
-            }, [
-            ], {
-                width: MGPValidators.range(1, 99),
-                emptyRows: MGPValidators.range(1, 99),
-                rowsOfSoldiers: MGPValidators.range(1, 99),
-            });
+        new RulesConfigDescription<EpaminondasConfig>({
+            name: (): string => $localize`Epaminondas`,
+            config: {
+                width: new ConfigLine(14, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                emptyRows: new ConfigLine(8, () => $localize`Number of empty rows`, MGPValidators.range(1, 99)),
+                rowsOfSoldiers: new ConfigLine(2, () => $localize`Number of soldier rows`, MGPValidators.range(1, 99)),
+            },
+        });
 
     public static get(): EpaminondasRules {
         if (EpaminondasRules.singleton.isAbsent()) {
@@ -187,7 +177,7 @@ export class EpaminondasRules
     public getGameStatus(node: EpaminondasNode): GameStatus {
         const state: EpaminondasState = node.gameState;
         const zerosInFirstLine: number = state.count(Player.ZERO, 0);
-        const height: number = state.board.length;
+        const height: number = state.getHeight();
         const onesInLastLine: number = state.count(Player.ONE, height - 1);
         if (state.turn % 2 === 0) {
             if (zerosInFirstLine > onesInLastLine) {

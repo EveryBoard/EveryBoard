@@ -278,7 +278,7 @@ describe('LascaComponent', () => {
             await testUtils.getWrapper().setRole(Player.ONE); // changing role
             await testUtils.expectClickSuccess('#coord_0_2'); // Making the first click
 
-            // When clicking on a invalid landing piece
+            // When clicking on an invalid landing piece
             await testUtils.expectClickFailure('#coord_0_1', LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
 
             // Then the highlight should be at the expected place only, not at their symmetric point

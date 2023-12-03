@@ -3,7 +3,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflNode, TaflRules } from '../TaflRules';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { TaflConfig } from '../TaflConfig';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
@@ -13,23 +13,16 @@ export class MyTaflNode extends TaflNode<MyTaflMove> {}
 export class MyTaflRules extends TaflRules<MyTaflMove> {
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TaflConfig> =
-        new RulesConfigDescription(
-            {
-                name: (): string => $localize`Brandhub`,
-                config: {
-                    castleIsLeftForGood: true,
-                    invaderStarts: true,
-                    kingFarFromHomeCanBeSandwiched: true,
-                    centralThroneCanSurroundKing: true,
-                    edgesAreKingsEnnemy: true,
-                },
-            }, {
-                castleIsLeftForGood: (): string => $localize`Central throne is left for good`,
-                edgesAreKingsEnnemy: (): string => $localize`Edges are king's ennemy`,
-                centralThroneCanSurroundKing: (): string => $localize`Central throne can surround king`,
-                kingFarFromHomeCanBeSandwiched: (): string => $localize`King far from home can be sandwiched`,
-                invaderStarts: (): string => $localize`Invader starts`,
-            });
+        new RulesConfigDescription<TaflConfig>({
+            name: (): string => `MyTafl`,
+            config: {
+                castleIsLeftForGood: new ConfigLine(true, () => $localize`Central throne is left for good`),
+                edgesAreKingsEnnemy: new ConfigLine(true, () => $localize`Edges are king's ennemy`),
+                centralThroneCanSurroundKing: new ConfigLine(true, () => $localize`Central throne can surround king`),
+                kingFarFromHomeCanBeSandwiched: new ConfigLine(true, () => $localize`King far from home can be sandwiched`),
+                invaderStarts: new ConfigLine(true, () => $localize`Invader starts`),
+            },
+        });
 
     private static singleton: MGPOptional<MyTaflRules> = MGPOptional.empty();
 

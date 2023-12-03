@@ -43,7 +43,7 @@ export abstract class GameStateWithTable<P> extends GameState {
 
     public getCoordsAndContents(): {coord: Coord, content: P}[] {
         const coordsAndContents: {coord: Coord, content: P}[] = [];
-        for (let y: number = 0; y < this.board.length; y++) {
+        for (let y: number = 0; y < this.getHeight(); y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.isOnBoard(coord)) {
@@ -63,8 +63,8 @@ export abstract class GameStateWithTable<P> extends GameState {
 
     public toMap(): {key: Coord, value: P}[] {
         const elements: {key: Coord, value: P}[] = [];
-        for (let y: number = 0; y < this.board.length; y++) {
-            for (let x: number = 0; x < this.board[0].length; x++) {
+        for (let y: number = 0; y < this.getHeight(); y++) {
+            for (let x: number = 0; x < this.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 elements.push({
                     key: coord,

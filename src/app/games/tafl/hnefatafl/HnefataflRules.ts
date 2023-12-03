@@ -3,7 +3,7 @@ import { TaflNode, TaflRules } from '../TaflRules';
 import { HnefataflMove } from './HnefataflMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TaflPawn } from '../TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
 
@@ -13,22 +13,16 @@ export class HnefataflRules extends TaflRules<HnefataflMove> {
 
     private static singleton: MGPOptional<HnefataflRules> = MGPOptional.empty();
 
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TaflConfig> = new RulesConfigDescription(
-        {
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TaflConfig> =
+        new RulesConfigDescription<TaflConfig>({
             name: (): string => $localize`Hnefatafl`,
             config: {
-                castleIsLeftForGood: false,
-                edgesAreKingsEnnemy: true,
-                centralThroneCanSurroundKing: false,
-                kingFarFromHomeCanBeSandwiched: false,
-                invaderStarts: true,
+                castleIsLeftForGood: new ConfigLine(false, () => $localize`Central throne is left for good`),
+                edgesAreKingsEnnemy: new ConfigLine(true, () => $localize`Edges are king's ennemy`),
+                centralThroneCanSurroundKing: new ConfigLine(false, () => $localize`Central throne can surround king`),
+                kingFarFromHomeCanBeSandwiched: new ConfigLine(false, () => $localize`King far from home can be sandwiched`),
+                invaderStarts: new ConfigLine(true, () => $localize`Invader starts`),
             },
-        }, {
-            castleIsLeftForGood: (): string => $localize`Central throne is left for good`,
-            edgesAreKingsEnnemy: (): string => $localize`Edges are king's ennemy`,
-            centralThroneCanSurroundKing: (): string => $localize`Central throne can surround king`,
-            kingFarFromHomeCanBeSandwiched: (): string => $localize`King far from home can be sandwiched`,
-            invaderStarts: (): string => $localize`Invader starts`,
         });
 
     public static get(): HnefataflRules {

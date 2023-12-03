@@ -14,8 +14,8 @@ export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, Epaminondas
         return new BoardValue(boardValue);
     }
     public getPieceCountPlusRowDomination(state: EpaminondasState): number {
-        const width: number = state.board[0].length;
-        const height: number = state.board.length;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
         const SCORE_BY_PIECE: number = width * 13 * 11;
         const SCORE_BY_ROW_DOMINATION: number = 2;
         const SCORE_BY_PRESENCE: number = 1;

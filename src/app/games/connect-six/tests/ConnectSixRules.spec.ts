@@ -26,6 +26,7 @@ describe('ConnectSixRules', () => {
     beforeEach(() => {
         rules = ConnectSixRules.get();
     });
+
     describe('first turn', () => {
 
         it('should not create move when coord is out of board', () => {
@@ -70,6 +71,7 @@ describe('ConnectSixRules', () => {
             // Then the move should be a success
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should refuse move that drop two pieces on first turn', () => {
             // Given the first turn
             const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultGobanConfig);
@@ -79,8 +81,9 @@ describe('ConnectSixRules', () => {
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'First move should be instance of ConnectSixFirstMove');
+            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'Instance of ConnectSixDrops should only happend after first move');
         });
+
     });
 
     describe('next turns', () => {
@@ -181,6 +184,7 @@ describe('ConnectSixRules', () => {
             // Then the move should be forbidden
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
+
         it('should refuse dropping second coord on another piece', () => {
             // Given a board with pieces on it
             const state: ConnectSixState = new ConnectSixState([
@@ -212,6 +216,7 @@ describe('ConnectSixRules', () => {
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
+
         it('should allow move that drop two pieces on empty pieces', () => {
             // Given a board with pieces on it
             const state: ConnectSixState = new ConnectSixState([
@@ -263,6 +268,7 @@ describe('ConnectSixRules', () => {
             // Then the move should be forbidden
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should refuse dropping only one piece after first turn', () => {
             // Given a board that is not first turn
             const state: ConnectSixState = new ConnectSixState([
@@ -293,8 +299,9 @@ describe('ConnectSixRules', () => {
             function trySingleDropAfterFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'non-firsts moves should be instance of ConnectSixDrops');
+            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'Instance of ConnectSixFirstMove should only happend at first move');
         });
+
         it('should notify victory when aligning 6 stones of your color', () => {
             const state: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -320,6 +327,7 @@ describe('ConnectSixRules', () => {
             const node: ConnectSixNode = new ConnectSixNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
         });
+
         it('should draw when no one can play anymore', () => {
             // Given the wildly unlikely case in which in 180 turn no one win
             const state: ConnectSixState = new ConnectSixState([
@@ -373,5 +381,7 @@ describe('ConnectSixRules', () => {
             const node: ConnectSixNode = new ConnectSixNode(expectedState);
             RulesUtils.expectToBeDraw(rules, node);
         });
+
     });
+
 });

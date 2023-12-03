@@ -116,7 +116,7 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
     private pointOfView: Player = Player.ZERO;
 
     // This is true when the view is interactive, e.g., to display clickable pieces
-    protected isInteractive: boolean = false;
+    protected interactive: boolean = false;
 
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
@@ -134,7 +134,11 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
     }
 
     public setInteractive(interactive: boolean): void {
-        this.isInteractive = interactive;
+        this.interactive = interactive;
+    }
+
+    public isInteractive(): boolean {
+        return this.interactive;
     }
 
     public message(msg: string): void {
@@ -198,8 +202,8 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
     }
 
     protected setRulesAndNode(urlName: string): void {
-        const gameInfo: GameInfo = GameInfo.getByUrlName(urlName)[0];
-        const defaultConfig: MGPOptional<C> = gameInfo.getOptionalRulesConfig() as MGPOptional<C>;
+        const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
+        const defaultConfig: MGPOptional<C> = gameInfo.getRulesConfig() as MGPOptional<C>;
 
         this.rules = gameInfo.rules as R;
         this.node = this.rules.getInitialNode(defaultConfig);

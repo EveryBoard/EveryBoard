@@ -8,12 +8,12 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 
@@ -28,7 +28,7 @@ export interface SixVictorySource {
 }
 
 @Debug.log
-export class SixRules extends Rules<SixMove, SixState, EmptyRulesConfig, SixLegalityInformation> {
+export class SixRules extends ConfiglessRules<SixMove, SixState, SixLegalityInformation> {
 
     private static singleton: MGPOptional<SixRules> = MGPOptional.empty();
 
@@ -48,7 +48,7 @@ export class SixRules extends Rules<SixMove, SixState, EmptyRulesConfig, SixLega
 
     public applyLegalMove(move: SixMove,
                           state: SixState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           kept: SixLegalityInformation)
     : SixState
     {

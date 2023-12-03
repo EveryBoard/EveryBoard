@@ -16,7 +16,7 @@
         "noImplicitOverride": true,
         "strict": true,
         "noImplicitThis": true,
-        "useUnknownInCatchVariables": true, // TODO FOR REVIEW: wait, I skipped this one, what code snippet can this prevent ?
+        "useUnknownInCatchVariables": true,
         "strictBindCallApply": true,
         // The following options still need to be set to true (they are false by default, but we list them explicitly)
         "strictFunctionTypes": false, // requires improving genericity (quite a lot)

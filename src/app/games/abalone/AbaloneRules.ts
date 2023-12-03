@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneFailure } from './AbaloneFailure';
@@ -12,13 +12,13 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
 export class AbaloneNode extends GameNode<AbaloneMove, AbaloneState> {}
 
-export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, EmptyRulesConfig, AbaloneLegalityInformation> {
+export class AbaloneRules extends ConfiglessRules<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
 
     private static singleton: MGPOptional<AbaloneRules> = MGPOptional.empty();
 
@@ -89,7 +89,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, EmptyRulesCon
 
     public applyLegalMove(_move: AbaloneMove,
                           state: AbaloneState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           newBoard: AbaloneLegalityInformation)
     : AbaloneState
     {

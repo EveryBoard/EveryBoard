@@ -77,7 +77,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private setConfigDemo(config: RulesConfig): void {
         if (this.stateProvider.isPresent()) {
-            // eslint-disable-next-line dot-notation
             const stateProvider: (config: MGPOptional<RulesConfig>) => GameState = this.stateProvider.get();
             const node: AbstractNode = new GameNode(stateProvider(MGPOptional.of(config)),
                                                     undefined,
@@ -175,8 +174,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             return validity.isSuccess();
         } else {
             Utils.expectToBe(typeof value, 'boolean');
-            // Angular make those controls invalid when they are boolean, not sure why
-            return true; // So we return true cause they are always valid
+            // Angular makes those controls invalid when they are booleans, not sure why
+            return true; // So we return true because they are always valid
         }
     }
 
@@ -213,7 +212,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         if (this.rulesConfigDescriptionOptional.isAbsent()) {
             return false;
         } else {
-            Utils.assert(this.rulesConfigDescriptionOptional.get().getFields().length > 0, 'wtf lo ?');
+            Utils.assert(this.rulesConfigDescriptionOptional.get().getFields().length > 0,
+                         'If rulesConfigDescriptionOptional is present it should have fields !');
             this.rulesConfigDescription = this.rulesConfigDescriptionOptional.get();
             return true;
         }

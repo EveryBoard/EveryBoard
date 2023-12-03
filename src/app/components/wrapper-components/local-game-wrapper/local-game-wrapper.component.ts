@@ -77,16 +77,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public ngAfterViewInit(): void {
         window.setTimeout(async() => {
-            const createdSuccessfully: boolean = await this.createRulesConfigAndStartComponent();
+            const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             if (createdSuccessfully) {
                 await this.restartGame();
                 this.cdr.detectChanges();
             }
         }, 1);
-    }
-
-    private async createRulesConfigAndStartComponent(): Promise<boolean> {
-        return this.createMatchingGameComponent();
     }
 
     public async updatePlayer(player: Player): Promise<void> {
@@ -189,16 +185,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
         const gameName: string = this.getGameName();
-        const gameInfos: GameInfo[] = GameInfo.getByUrlName(gameName);
-        if (gameInfos.length > 0) {
+        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
+        if (gameInfos.isPresent()) {
             const stateProvider: (config: MGPOptional<RulesConfig>) => GameState =
                 (config: MGPOptional<RulesConfig>) => {
-                    // eslint-disable-next-line dot-notation
-                    return gameInfos[0].rules.getInitialState(config);
+                    return gameInfos.get().rules.getInitialState(config);
                 };
             return MGPOptional.of(stateProvider);
         } else {
-            // TODO FOR REVIEW: je crois que ce n'est reached que quand on visite /local/jeanDelJaaaj
             return MGPOptional.empty();
         }
     }
@@ -297,7 +291,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public updateConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
-        // If there is no config for this game, then this value will be MGPOptional.of(emptyConfigDelPetosse);
+        // If there is no config for this game, then rulesConfig value will be MGPOptional.empty()
         // TODO no this com is false, check different between invalid config and "game has no config"
         if (rulesConfig.isPresent() && Object.keys(rulesConfig.get()).length === 0) {
             this.markConfigAsFilled();

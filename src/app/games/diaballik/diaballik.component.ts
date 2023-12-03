@@ -280,7 +280,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     }
 
     public showDoneButton(): boolean {
-        return this.isInteractive && this.subMoves.length >= 1;
+        return this.interactive && this.subMoves.length >= 1;
     }
 
     public async done(): Promise<MGPValidation> {

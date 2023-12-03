@@ -4,35 +4,24 @@ import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '.
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class KalahRules extends MancalaRules {
 
     private static singleton: MGPOptional<KalahRules> = MGPOptional.empty();
 
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<MancalaConfig> = new RulesConfigDescription(
-        {
-            name: (): string => $localize`Kalah`,
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<MancalaConfig> =
+        new RulesConfigDescription<MancalaConfig>({
+            name: (): string => $localize`Awalé`,
             config: {
-                feedOriginalHouse: true,
-                mustFeed: false,
-                passByPlayerStore: true,
-                mustContinueDistributionAfterStore: true,
-                seedsByHouse: 4,
-                width: 6,
+                feedOriginalHouse: new ConfigLine(true, () => $localize`Feed original house`), // TODO PUT 5 localizable in common
+                mustFeed: new ConfigLine(false, () => $localize`Must feed`),
+                passByPlayerStore: new ConfigLine(true, () => $localize`Pass by player store`),
+                mustContinueDistributionAfterStore: new ConfigLine(true, () => $localize`Must continue distribution after last seed ends in store`),
+                seedsByHouse: new ConfigLine(4, () => $localize`Seeds by house`, MGPValidators.range(1, 99)),
+                width: new ConfigLine(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
             },
-        }, {
-            width: RulesConfigDescriptionLocalizable.WIDTH,
-            seedsByHouse: (): string => $localize`Seeds by house`,
-            feedOriginalHouse: (): string => $localize`Feed original house`,
-            mustFeed: (): string => $localize`Must feed`,
-            passByPlayerStore: (): string => $localize`Pass by player store`,
-            mustContinueDistributionAfterStore: (): string => $localize`Must continue distribution after last seed ends in store`,
-        }, [
-        ], {
-            width: MGPValidators.range(1, 99),
-            seedsByHouse: MGPValidators.range(1, 99),
         });
 
     public static get(): KalahRules {

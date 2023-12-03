@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -14,13 +14,13 @@ import { YinshPiece } from './YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type YinshLegalityInformation = YinshState;
 
 export class YinshNode extends GameNode<YinshMove, YinshState> {}
 
-export class YinshRules extends Rules<YinshMove, YinshState, EmptyRulesConfig, YinshLegalityInformation> {
+export class YinshRules extends ConfiglessRules<YinshMove, YinshState, YinshLegalityInformation> {
 
     private static singleton: MGPOptional<YinshRules> = MGPOptional.empty();
 
@@ -50,7 +50,10 @@ export class YinshRules extends Rules<YinshMove, YinshState, EmptyRulesConfig, Y
         return new YinshState(board, [5, 5], 0);
     }
 
-    public applyLegalMove(_move: YinshMove, _state: YinshState, _config: MGPOptional<RulesConfig>, info: YinshState)
+    public applyLegalMove(_move: YinshMove,
+                          _state: YinshState,
+                          _config: MGPOptional<EmptyRulesConfig>,
+                          info: YinshState)
     : YinshState
     {
         const stateWithoutTurn: YinshState = info;

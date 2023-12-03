@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
@@ -10,13 +10,13 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
 @Debug.log
-export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
+export class CoerceoRules extends ConfiglessRules<CoerceoMove, CoerceoState> {
 
     private static singleton: MGPOptional<CoerceoRules> = MGPOptional.empty();
 
@@ -46,7 +46,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         ];
         return new CoerceoState(board, 0, [0, 0], [0, 0]);
     }
-    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: MGPOptional<RulesConfig>, _info: void)
+    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
     : CoerceoState
     {
         if (CoerceoMove.isTileExchange(move)) {

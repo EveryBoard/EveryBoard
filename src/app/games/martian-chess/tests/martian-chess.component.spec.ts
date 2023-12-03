@@ -97,7 +97,7 @@ describe('MartianChessComponent', () => {
         // Given a board where a first click was done
         await testUtils.expectClickSuccess('#click_1_5');
 
-        // When cliking on a invalid second coord
+        // When cliking on an invalid second coord
         // Then the move should have been illegal
         const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
         await testUtils.expectClickFailure('#click_0_3', reason);
@@ -135,7 +135,7 @@ describe('MartianChessComponent', () => {
         // Given a board where a first click was done
         await testUtils.expectClickSuccess('#click_1_5');
 
-        // When cliking on a invalid second coord
+        // When cliking on an invalid second coord
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
 
         // Then the move should be legal and the board changed

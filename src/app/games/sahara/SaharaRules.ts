@@ -1,4 +1,4 @@
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -15,12 +15,12 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
 @Debug.log
-export class SaharaRules extends Rules<SaharaMove, SaharaState> {
+export class SaharaRules extends ConfiglessRules<SaharaMove, SaharaState> {
 
     private static singleton: MGPOptional<SaharaRules> = MGPOptional.empty();
 
@@ -71,7 +71,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return playerFreedoms.sort((a: number, b: number) => a - b);
     }
-    public applyLegalMove(move: SaharaMove, state: SaharaState, _config: MGPOptional<RulesConfig>, _info: void)
+
+    public applyLegalMove(move: SaharaMove, state: SaharaState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
     : SaharaState
     {
         const board: FourStatePiece[][] = state.getCopiedBoard();

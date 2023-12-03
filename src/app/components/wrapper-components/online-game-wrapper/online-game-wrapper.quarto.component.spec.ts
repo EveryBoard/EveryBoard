@@ -1832,7 +1832,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             // When displaying it
             // Then it should be interactive
-            expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
+            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should not be interactive when at the turn of the opponent', fakeAsync(async() => {
@@ -1844,7 +1844,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // Then it should not be interactive
-            expect(testUtils.getGameComponent()['isInteractive']).toBeFalse();
+            expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should not be interactive when the game is finished', fakeAsync(async() => {
@@ -1862,7 +1862,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveAction(Player.ONE, 'EndGame');
 
             // Then it should not be interactive
-            expect(testUtils.getGameComponent()['isInteractive']).toBeFalse();
+            expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });

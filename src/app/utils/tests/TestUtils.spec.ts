@@ -301,7 +301,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }
         if (chooseDefaultConfig) {
             /**
-             * If we did not choose default config, here, the local game wrapper is not yet in playing phase
+             * If we just choose default config, here, the local game wrapper is not yet in playing phase
              * so most things are not spyable
              */
             testUtils.bindGameComponent();

@@ -316,11 +316,11 @@
       </trans-unit>
       <trans-unit id="4408456168772857996" datatype="html">
         <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
-        <target><x id="PH" equiv-text="value"/> est trop bas, le minimum est <x id="PH_1" equiv-text="min"/></target>
+        <target><x id="PH" equiv-text="value"/> est trop petit, le minimum est <x id="PH_1" equiv-text="min"/></target>
       </trans-unit>
       <trans-unit id="701935636628882602" datatype="html">
         <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
-        <target><x id="PH" equiv-text="value"/> est trop haut, le maximum est <x id="PH_1" equiv-text="max"/></target>
+        <target><x id="PH" equiv-text="value"/> est trop grand, le maximum est <x id="PH_1" equiv-text="max"/></target>
       </trans-unit>
       <trans-unit id="5607669932062416162" datatype="html">
         <source>Default</source>

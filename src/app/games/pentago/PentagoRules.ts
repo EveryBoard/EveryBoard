@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -10,12 +10,12 @@ import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 
-export class PentagoRules extends Rules<PentagoMove, PentagoState> {
+export class PentagoRules extends ConfiglessRules<PentagoMove, PentagoState> {
 
     private static singleton: MGPOptional<PentagoRules> = MGPOptional.empty();
 
@@ -59,7 +59,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
     ];
     public applyLegalMove(move: PentagoMove,
                           state: PentagoState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           _info: void)
     : PentagoState
     {

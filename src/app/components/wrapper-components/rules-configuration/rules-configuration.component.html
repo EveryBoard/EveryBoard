@@ -1,4 +1,4 @@
-<div *ngIf="rulesConfigDescriptionOptional.isPresent()">
+<div *ngIf="isCustomisable()">
     <p class="title" i18n>Configuration of your {{ gameName }} game</p>
 
     <div class="select is-primary is-fullwidth">
@@ -13,8 +13,7 @@
                     [value]="standardConfig.name()">
                 {{ standardConfig.name() }}
             </option>
-            <option *ngIf="isCustomisable()"
-                    value="Custom"
+            <option value="Custom"
                     i18n>Custom</option>
         </select>
     </div>

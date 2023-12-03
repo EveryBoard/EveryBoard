@@ -19,7 +19,7 @@ export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
         // sort by captured houses
         ArrayUtils.sortByDescending(moves, (move: MancalaMove): number => {
             const board: number[][] = node.gameState.getCopiedBoard();
-            const toDistribute: number = board[playerY][move.distributions[0].x];
+            const toDistribute: number = board[playerY][move.getFirstDistribution().x];
             const mancalaDistributionResult: MancalaDistributionResult =
                 AwaleRules.get().distributeMove(move, node.gameState, node.config.get());
             const filledCoords: Coord[] = mancalaDistributionResult.filledCoords;

@@ -31,7 +31,7 @@ describe('GoState', () => {
 
     describe('getInitialState', () => {
 
-        it('should put the first two  handicaps in opposite corner', () => {
+        it('should put the first two handicaps in opposite corner', () => {
             // Given a config with a 19x19 board and a handicap of two
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 2 });
 

@@ -111,7 +111,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         // Given a game
         // When displaying it
         // Then it is interactive
-        expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
+        expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
     }));
     it('should show draw', fakeAsync(async() => {
         const board: PlayerOrNone[][] = [
@@ -225,7 +225,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
     describe('Using AI', () => {
         it('should disable interactivity when AI is selected without level', async() => {
             // Given a game which is initially interactive, with a background showing it
-            expect(testUtils.getGameComponent()['isInteractive']).toBeTrue();
+            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
             testUtils.expectElementToExist('.tile .player0-bg');
 
             // When selecting only the AI without the depth for the current player
@@ -236,7 +236,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.whenStable();
 
             // Then the game should not be interactive anymore
-            expect(testUtils.getGameComponent()['isInteractive']).toBeFalse();
+            expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
             // nor should it show the current player background
             testUtils.expectElementNotToExist('.tile .player0-bg');
         });

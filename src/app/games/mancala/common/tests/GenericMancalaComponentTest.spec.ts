@@ -85,7 +85,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                 this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
             } else {
                 const playerY: number = actionAndResult.state.getCurrentPlayerY();
-                const startingCoord: Coord = new Coord(actionAndResult.move.distributions[0].x, playerY);
+                const startingCoord: Coord = new Coord(actionAndResult.move.getFirstDistribution().x, playerY);
                 if (startingCoord.equals(coordAndContent.coord)) { // Initial house
                     const classes: string[] = ['base', 'last-move-stroke', playerFill];
                     this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
@@ -122,7 +122,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
     }
 
     public getSuffix(mancalaActionAndResult: MancalaActionAndResult): string {
-        const lastMoveX: number = mancalaActionAndResult.move.distributions[0].x;
+        const lastMoveX: number = mancalaActionAndResult.move.getFirstDistribution().x;
         const suffix: string = lastMoveX + '_' + (mancalaActionAndResult.state.turn + 1) % 2;
         return suffix;
     }

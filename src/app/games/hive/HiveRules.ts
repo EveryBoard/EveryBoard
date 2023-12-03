@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -13,12 +13,12 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 
-export class HiveRules extends Rules<HiveMove, HiveState> {
+export class HiveRules extends ConfiglessRules<HiveMove, HiveState> {
 
     private static singleton: MGPOptional<HiveRules> = MGPOptional.empty();
 
@@ -34,7 +34,9 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return HiveState.fromRepresentation(board, 0);
     }
 
-    public applyLegalMove(move: HiveMove, state: HiveState, _config: MGPOptional<RulesConfig>, _info: void): HiveState {
+    public applyLegalMove(move: HiveMove, state: HiveState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    : HiveState
+    {
         if (move instanceof HiveDropMove) {
             return this.applyLegalDrop(move, state);
         } else if (move instanceof HiveCoordToCoordMove) {

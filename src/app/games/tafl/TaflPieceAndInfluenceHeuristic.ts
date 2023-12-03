@@ -24,9 +24,8 @@ export type PointValue = {
 export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPieceHeuristic<M> {
 
     public getPointValue(node: TaflNode<M>): PointValue {
-        // eslint-disable-next-line dot-notation
         const initialState: TaflState = this.rules.getInitialState(node.config);
-        const width: number = initialState.board.length;
+        const width: number = initialState.getHeight();
         const maxInfluence: number = 16 * ((width * 2) - 2);
         const scoreByThreatenedPiece: number = (16 * maxInfluence) + 1;
         const scoreBySafePiece: number = (16 * scoreByThreatenedPiece) + 1;
@@ -76,8 +75,8 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: TaflPawn = state.getPieceAt(coord);
                 if (piece !== empty) {

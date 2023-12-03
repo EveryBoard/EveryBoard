@@ -4,7 +4,7 @@ import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GipfMove, GipfPlacement } from './GipfMove';
@@ -14,15 +14,15 @@ import { GipfFailure } from './GipfFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type GipfLegalityInformation = GipfState
 
 export class GipfNode extends GameNode<GipfMove, GipfState> {}
 
-export class GipfRules extends Rules<GipfMove, GipfState, EmptyRulesConfig, GipfLegalityInformation> {
+export class GipfRules extends ConfiglessRules<GipfMove, GipfState, GipfLegalityInformation> {
 
     private static singleton: MGPOptional<GipfRules> = MGPOptional.empty();
 
@@ -52,7 +52,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, EmptyRulesConfig, Gipf
 
     public applyLegalMove(_move: GipfMove,
                           _state: GipfState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           computedState: GipfLegalityInformation)
     : GipfState
     {

@@ -62,9 +62,9 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
         this.board = this.getState().getCopiedBoard();
-        for (let y: number = 0; y < this.board.length; y++) {
+        for (let y: number = 0; y < this.getHeight(); y++) {
             const newLine: string[][] = [];
-            for (let x: number = 0; x < this.board[0].length; x++) {
+            for (let x: number = 0; x < this.getWidth(); x++) {
                 let newSpace: string[] = [];
                 if (this.board[y][x].getOwner() === PlayerOrNone.NONE) {
                     newSpace = [''];
@@ -163,7 +163,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
     public getClickables(): Coord[] {
         const coords: Coord[] = [];
-        for (let y: number = 0; y < this.board.length; y++) {
+        for (let y: number = 0; y < this.getHeight(); y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.isClickable(coord)) {
@@ -175,7 +175,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
     private isClickable(coord: Coord): boolean {
         // Show if the piece can be clicked
-        return this.isInteractive && this.pieceBelongsToCurrentPlayer(coord);
+        return this.interactive && this.pieceBelongsToCurrentPlayer(coord);
     }
     public isInvader(x: number, y: number): boolean {
         return this.board[y][x] === TaflPawn.PLAYER_ZERO_PAWN;

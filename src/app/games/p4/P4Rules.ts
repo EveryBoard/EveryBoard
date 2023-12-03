@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type P4Config = {
@@ -27,22 +27,13 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
     private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<P4Config> =
-        new RulesConfigDescription(
-            {
-                name: (): string => $localize`Default`,
-                config: {
-                    width: 7,
-                    height: 6,
-                },
-            }, {
-                width: RulesConfigDescriptionLocalizable.WIDTH,
-                height: RulesConfigDescriptionLocalizable.HEIGHT,
-            }, [
-            ], {
-                width: MGPValidators.range(1, 99),
-                height: MGPValidators.range(1, 99),
+        new RulesConfigDescription<P4Config>({
+            name: (): string => $localize`P4`,
+            config: {
+                width: new ConfigLine(7, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new ConfigLine(6, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
             },
-        );
+        });
 
     public static get(): P4Rules {
         if (P4Rules.singleton.isAbsent()) {
@@ -95,8 +86,8 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
-        const width: number = state.board[0].length;
-        const height: number = state.board.length;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
         return state.turn === (width * height) ? GameStatus.DRAW : GameStatus.ONGOING;
     }
 

@@ -19,8 +19,8 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
         }
     }
     private getFirstMove(state: ConnectSixState): ConnectSixFirstMove[] {
-        const width: number = state.board[0].length;
-        const height: number = state.board.length;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
         const cx: number = Math.floor(width / 2);
         const cy: number = Math.floor(height / 2);
         const center: Coord = new Coord(cx, cy);
@@ -59,8 +59,8 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
      *     (x, y) is empty but has occupied neighbors
      */
     private getUsefulCoordsMap(state: ConnectSixState): boolean[][] {
-        const width: number = state.board[0].length;
-        const height: number = state.board.length;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
         const usefulCoord: boolean[][] = TableUtils.create(width, height, false);
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content.isPlayer()) {

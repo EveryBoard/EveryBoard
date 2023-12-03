@@ -69,7 +69,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         const playerY: number = state.getCurrentPlayerY();
         let canStillPlay: boolean = true;
         for (const distribution of move) {
-            Utils.assert(canStillPlay, 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE');
+            Utils.assert(canStillPlay, 'Cannot play after non kalah move');
             const distributionResult: MGPFallible<boolean> = this.isLegalDistribution(distribution, state, config);
             if (distributionResult.isFailure()) {
                 return MGPValidation.ofFallible(distributionResult);

@@ -17,7 +17,7 @@ import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
@@ -41,7 +41,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,
                                                              AbaloneState,
                                                              FourStatePiece,
-                                                             RulesConfig,
+                                                             EmptyRulesConfig,
                                                              AbaloneLegalityInformation>
 {
     public moveds: Coord[] = [];

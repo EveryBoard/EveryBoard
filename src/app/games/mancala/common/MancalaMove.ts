@@ -41,6 +41,7 @@ export class MancalaMove extends Move {
 
     protected constructor(public readonly distributions: MancalaDistribution[]) {
         super();
+        Utils.assert(distributions.length > 0, 'Move should have distribution ');
     }
 
     public add(move: MancalaDistribution): MancalaMove {
@@ -55,6 +56,10 @@ export class MancalaMove extends Move {
 
     public override equals(other: this): boolean {
         return ArrayUtils.compare(this.distributions, other.distributions);
+    }
+
+    public getFirstDistribution(): MancalaDistribution {
+        return this.distributions[0];
     }
 
     [Symbol.iterator](): IterableIterator<MancalaDistribution> {

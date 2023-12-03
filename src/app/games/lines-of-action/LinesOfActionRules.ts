@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -12,11 +12,11 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
-export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
+export class LinesOfActionRules extends ConfiglessRules<LinesOfActionMove, LinesOfActionState> {
 
     private static singleton: MGPOptional<LinesOfActionRules> = MGPOptional.empty();
 
@@ -82,7 +82,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     public applyLegalMove(move: LinesOfActionMove,
                           state: LinesOfActionState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           _info: void)
     : LinesOfActionState
     {

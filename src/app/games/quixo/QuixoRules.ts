@@ -14,7 +14,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { QuixoFailure } from './QuixoFailure';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
@@ -25,21 +25,13 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
     private static singleton: MGPOptional<QuixoRules> = MGPOptional.empty();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<QuixoConfig> =
-        new RulesConfigDescription(
-            {
-                name: (): string => $localize`Quixo`,
-                config: {
-                    width: 5,
-                    height: 5,
-                },
-            }, {
-                width: RulesConfigDescriptionLocalizable.WIDTH,
-                height: RulesConfigDescriptionLocalizable.HEIGHT,
-            }, [
-            ], {
-                width: MGPValidators.range(1, 99),
-                height: MGPValidators.range(1, 99),
-            });
+        new RulesConfigDescription<QuixoConfig>({
+            name: (): string => $localize`Quixo`,
+            config: {
+                width: new ConfigLine(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new ConfigLine(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+            },
+        });
 
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 5);

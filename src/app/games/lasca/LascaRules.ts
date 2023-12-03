@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -11,12 +11,12 @@ import { LascaMove } from './LascaMove';
 import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LascaNode extends GameNode<LascaMove, LascaState> {}
 
-export class LascaRules extends Rules<LascaMove, LascaState> {
+export class LascaRules extends ConfiglessRules<LascaMove, LascaState> {
 
     private static singleton: MGPOptional<LascaRules> = MGPOptional.empty();
 
@@ -129,7 +129,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         return pieceMoves;
     }
 
-    public applyLegalMove(move: LascaMove, state: LascaState, _config: MGPOptional<RulesConfig>, _info: void)
+    public applyLegalMove(move: LascaMove, state: LascaState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
     : LascaState
     {
         const moveStart: Coord = move.getStartingCoord();

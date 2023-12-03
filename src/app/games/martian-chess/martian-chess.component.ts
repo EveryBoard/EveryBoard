@@ -12,7 +12,7 @@ import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './M
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { Direction } from 'src/app/jscaip/Direction';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
@@ -54,7 +54,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                                                                     MartianChessMove,
                                                                     MartianChessState,
                                                                     MartianChessPiece,
-                                                                    RulesConfig,
+                                                                    EmptyRulesConfig,
                                                                     MartianChessMoveResult>
 {
     public static SPACE_SIZE: number = 100;

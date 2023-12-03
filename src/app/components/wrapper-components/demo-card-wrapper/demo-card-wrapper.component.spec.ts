@@ -13,6 +13,7 @@ import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.comp
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { GameWrapperMessages } from '../GameWrapper';
 
 describe('DemoCardComponent', () => {
 
@@ -45,12 +46,12 @@ describe('DemoCardComponent', () => {
         // Then it should display the game
         const game: DebugElement = testUtils.findElement('app-p4');
         expect(game).withContext('game component should be displayed').toBeTruthy();
-        // from the point of view of the current player, with interactivity on
+        // from the point of view of the current player, with interactivity off
         const gameComponent: AbstractGameComponent = testUtils.getComponent().gameComponent;
-        expect(gameComponent.getPointOfView()).toBe(Player.ONE);
-        expect(gameComponent.isPlayerTurn()).toBeTrue();
-        // eslint-disable-next-line dot-notation
-        expect(gameComponent['isInteractive']).toBeTrue();
+        // TODO FOR REVIEW: on fait quoi là, le point de vue doit être zero si c'est personne mais que ferions nous proporement pour dire "inactif mais pour un?"
+        expect(gameComponent.getPointOfView()).toBe(Player.ZERO);
+        expect(gameComponent.isPlayerTurn()).withContext('Player should not be a player but an observer').toBeFalse();
+        expect(gameComponent.isInteractive()).withContext('Interactivity should still be turned on').toBeTrue();
     }));
 
     it('should simulate clicks', fakeAsync(async() => {
@@ -75,8 +76,13 @@ describe('DemoCardComponent', () => {
         const rules: AbstractRules = testUtils.getComponent().gameComponent.rules;
         spyOn(rules, 'choose').and.callThrough();
 
-        // When trying to perform a move
-        await testUtils.clickElement('#click_2');
+        // When trying to perform a click
+        await testUtils.expectToDisplayGameMessage(
+            GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER(),
+            async() => {
+                await testUtils.clickElement('#click_2');
+            },
+        );
 
         // Then it should not call rules.choose
         expect(testUtils.getComponent().gameComponent.rules.choose).not.toHaveBeenCalled();
@@ -90,7 +96,7 @@ describe('DemoCardComponent', () => {
         expect(result).withContext('should be null').toBe();
     }));
 
-    it('should reload node when input are updated by parents', fakeAsync(async() => {
+    it('should reload node when inputs are updated by parents', fakeAsync(async() => {
         // Given a component already initialized with one given set of infos
         loadNode({
             name: 'P4',

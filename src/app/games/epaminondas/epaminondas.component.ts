@@ -393,7 +393,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         return [];
     }
     public getHighlightedCoords(): Coord[] {
-        if (this.isInteractive === false) {
+        if (this.interactive === false) {
             return [];
         }
         if (this.firstPiece.isPresent()) {
@@ -406,8 +406,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const pieces: Coord[] = [];
         const state: EpaminondasState = this.getState();
         const player: Player = state.getCurrentPlayer();
-        for (let y: number = 0; y < this.board.length; y++) {
-            for (let x: number = 0; x < this.board[y].length; x++) {
+        for (let y: number = 0; y < this.getHeight(); y++) {
+            for (let x: number = 0; x < this.getWidth(); x++) {
                 if (this.board[y][x] === player) {
                     pieces.push(new Coord(x, y));
                 }

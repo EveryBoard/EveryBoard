@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Move } from 'src/app/jscaip/Move';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 
 export type DemoNodeInfo = {
     name: string, // The name of the game
@@ -41,6 +42,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             // The component needs to be interactive in order to show all possible stylistic elements
             this.gameComponent.setInteractive(true);
             // The board needs to be updated to render the changed node, setRole will do it
+            console.log('ngAfterViewInit du demo-card set', this.gameComponent.getCurrentPlayer().toString())
             await this.setRole(this.gameComponent.getCurrentPlayer());
             // Need to detect changes before potentially clicking,
             // and otherwise we'll get an angular exception in our tests
@@ -52,6 +54,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
                 // Update the view after the click
                 this.cdr.detectChanges();
             }
+            console.log('ngAfterViewInit du demo-card set NO ONE')
+            await this.setRole(PlayerOrNone.NONE);
         }, 1);
     }
 

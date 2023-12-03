@@ -8,10 +8,10 @@ import { GameStatus } from './GameStatus';
 import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 import { RulesConfigDescription } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
 
-export abstract class Rules<M extends Move,
-                            S extends GameState,
-                            C extends RulesConfig = EmptyRulesConfig,
-                            L = void>
+abstract class SuperRules<M extends Move,
+                          S extends GameState,
+                          C extends RulesConfig,
+                          L = void>
 {
 
     protected constructor() {}
@@ -76,20 +76,38 @@ export abstract class Rules<M extends Move,
         return new GameNode(initialState, undefined, undefined, config);
     }
 
-    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<C>> {
-        return MGPOptional.empty(); // TODO is RulesConfigDescription.DEFAULT used then ?
-    }
+    public abstract getRulesConfigDescription(): MGPOptional<RulesConfigDescription<C>>;
 
     public getDefaultRulesConfig(): MGPOptional<C> {
         const rulesConfigDescription: MGPOptional<RulesConfigDescription<C>> = this.getRulesConfigDescription();
         if (rulesConfigDescription.isPresent()) {
-            return MGPOptional.of(rulesConfigDescription.get().defaultConfig.config);
+            return MGPOptional.of(rulesConfigDescription.get().getDefaultConfig().config);
         } else {
             return MGPOptional.empty();
         }
     }
 
     public abstract getGameStatus(node: GameNode<M, S, C>): GameStatus;
+}
+
+export abstract class Rules<M extends Move,
+                            S extends GameState,
+                            C extends RulesConfig,
+                            L = void>
+    extends SuperRules<M, S, C, L>
+{
+}
+
+export abstract class ConfiglessRules<M extends Move,
+                                      S extends GameState,
+                                      L = void>
+    extends SuperRules<M, S, EmptyRulesConfig, L>
+{
+
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription> {
+        return MGPOptional.empty();
+    }
+
 }
 
 export abstract class AbstractRules extends Rules<Move, GameState, RulesConfig, unknown> {

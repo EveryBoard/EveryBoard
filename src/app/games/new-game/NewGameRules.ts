@@ -1,12 +1,12 @@
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfigDescription, ConfigLine } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 
@@ -33,7 +33,7 @@ export class NewGameNode extends GameNode<NewGameMove, NewGameState> {}
  * It should be a singleton class.
  * It is used by the wrappers to check the legality of a move, and to apply the move on a state.
  */
-export class NewGameRules extends Rules<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo> {
+export class NewGameRules extends ConfiglessRules<NewGameMove, NewGameState, NewGameLegalityInfo> {
 
     /**
      * This is the singleton instance. You should keep this as is, except for adapting the class name.
@@ -42,7 +42,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, EmptyRulesCon
 
     /**
      * If you want your game to be configurable (different board sizes for example)
-     * Here should be the default config
+     * then here should be the default config.
      * You have the option to create a type NewRulesConfig for more type safety.
      * It is FULLY optional, if you don't want to make your game configurable just yet, ignore this!
      */
@@ -50,22 +50,23 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, EmptyRulesCon
         new RulesConfigDescription({
             name: (): string => 'the internationalisable name of that standard config',
             config: {
-                the_name_you_will_use_in_your_rules_and_states: 5,
+                the_name_you_will_use_in_your_rules_and_states:
+                    new ConfigLine(
+                        5,
+                        () => `the translatable and writable name of this parameter`,
+                        (value: number | null): MGPValidation => {
+                            if (value == null) {
+                                return MGPValidation.failure('Return a localizable message for the user saying why this config choice is unacceptable');
+                            } else {
+                                return MGPValidation.SUCCESS;
+                            }
+                        },
+                    ),
             },
-        }, {
-            the_name_you_will_use_in_your_rules_and_states: (): string => `the translatable and writable name of this parameter`,
         }, [
             // Here, if you have other "standard" configuration, add a list
             // There are of the same type as the default one in first parameter !
-        ], {
-            the_name_you_will_use_in_your_rules_and_states: (value: number | null): MGPValidation => {
-                if (value == null) {
-                    return MGPValidation.failure('Return a localizable message for the user saying why this config choice is unacceptable');
-                } else {
-                    return MGPValidation.SUCCESS;
-                }
-            },
-        });
+        ]);
 
     /**
      * This gets the singleton instance. Similarly, keep this as is.
@@ -112,7 +113,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, EmptyRulesCon
      */
     public applyLegalMove(_move: NewGameMove,
                           state: NewGameState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           _info: NewGameLegalityInfo)
     : NewGameState
     {
@@ -135,5 +136,5 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, EmptyRulesCon
 }
 
 // For coverage
-// eslint-disable-next-line dot-notation
-Utils.getNonNullable(NewGameRules.RULES_CONFIG_DESCRIPTION.validator['the_name_you_will_use_in_your_rules_and_states'])(null);
+// eslint-disable-next-line max-len
+Utils.getNonNullable(NewGameRules.RULES_CONFIG_DESCRIPTION.defaultConfigDescription.config.the_name_you_will_use_in_your_rules_and_states.validator)(null);

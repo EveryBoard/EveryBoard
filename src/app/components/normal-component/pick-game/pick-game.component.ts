@@ -262,8 +262,13 @@ export class GameInfo {
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
     }
 
-    public static getByUrlName(urlName: string): GameInfo[] {
-        return GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === urlName);
+    public static getByUrlName(urlName: string): MGPOptional<GameInfo> {
+        const games: GameInfo[] = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === urlName);
+        if (games.length === 0) {
+            return MGPOptional.empty();
+        } else {
+            return MGPOptional.of(games[0]);
+        }
     }
 
     public constructor(public readonly name: string,
@@ -281,10 +286,10 @@ export class GameInfo {
         return this.rules.getRulesConfigDescription();
     }
 
-    public getOptionalRulesConfig(): MGPOptional<RulesConfig> {
+    public getRulesConfig(): MGPOptional<RulesConfig> {
         const description: MGPOptional<RulesConfigDescription> = this.getRulesConfigDescription();
         if (description.isPresent()) {
-            return MGPOptional.of(description.get().defaultConfig.config);
+            return MGPOptional.of(description.get().getDefaultConfig().config);
         } else {
             return MGPOptional.empty();
         }

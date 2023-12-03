@@ -76,22 +76,20 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
     }
 
     public isLegal(move: ConnectSixMove, state: ConnectSixState): MGPValidation {
-        if (state.turn === 0) {
-            Utils.assert(move instanceof ConnectSixFirstMove, 'First move should be instance of ConnectSixFirstMove');
-            const firstMove: ConnectSixFirstMove = move as ConnectSixFirstMove;
-            if (state.isOnBoard(firstMove.coord) === false) {
-                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(firstMove.coord));
+        if (move instanceof ConnectSixFirstMove) {
+            Utils.assert(state.turn === 0, 'Instance of ConnectSixFirstMove should only happend at first move');
+            if (state.isOnBoard(move.coord) === false) {
+                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.coord));
             }
             return MGPValidation.SUCCESS;
         } else {
-            Utils.assert(move instanceof ConnectSixDrops, 'non-firsts moves should be instance of ConnectSixDrops');
-            const nextMove: ConnectSixDrops = move as ConnectSixDrops;
-            if (state.isOnBoard(nextMove.getFirst()) === false) {
-                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(nextMove.getFirst()));
-            } else if (state.isOnBoard(nextMove.getSecond()) === false) {
-                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(nextMove.getSecond()));
+            Utils.assert(state.turn > 0, 'Instance of ConnectSixDrops should only happend after first move');
+            if (state.isOnBoard(move.getFirst()) === false) {
+                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.getFirst()));
+            } else if (state.isOnBoard(move.getSecond()) === false) {
+                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.getSecond()));
             } else {
-                return this.isLegalDrops(move as ConnectSixDrops, state);
+                return this.isLegalDrops(move, state);
             }
         }
     }

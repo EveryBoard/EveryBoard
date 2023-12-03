@@ -1,4 +1,4 @@
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
@@ -41,7 +41,7 @@ export type DefeatCoordsIncomplete = {
 
 export class DiaballikNode extends GameNode<DiaballikMove, DiaballikState> {}
 
-export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, EmptyRulesConfig, DiaballikState> {
+export class DiaballikRules extends ConfiglessRules<DiaballikMove, DiaballikState, DiaballikState> {
 
     private static singleton: MGPOptional<DiaballikRules> = MGPOptional.empty();
 
@@ -204,7 +204,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, EmptyRu
     }
 
     private getBallCoordInRow(state: DiaballikState, y: number, player: Player): MGPOptional<Coord> {
-        for (let x: number = 0; x < state.board.length; x++) {
+        for (let x: number = 0; x < state.getHeight(); x++) {
             const piece: DiaballikPiece = state.getPieceAtXY(x, y);
             if (piece.holdsBall === true && piece.owner === player) {
                 return MGPOptional.of(new Coord(x, y));

@@ -39,7 +39,6 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             new MCTS($localize`MCTS`, new ReversiMoveGenerator(), this.rules),
         ];
         this.encoder = ReversiMove.encoder;
-        this.canPass = false;
         this.scores = MGPOptional.of([2, 2]);
     }
 

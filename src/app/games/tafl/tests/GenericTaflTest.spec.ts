@@ -47,7 +47,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
     describe(entries.gameName + ' component generic tests', () => {
 
         const defaultConfig: MGPOptional<TaflConfig> =
-            GameInfo.getByUrlName(entries.gameName)[0].rules.getDefaultRulesConfig() as MGPOptional<TaflConfig>;
+            GameInfo.getByUrlName(entries.gameName).get().rules.getDefaultRulesConfig() as MGPOptional<TaflConfig>;
 
         beforeEach(fakeAsync(async() => {
             testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);

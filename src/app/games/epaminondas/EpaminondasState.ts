@@ -5,7 +5,7 @@ export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
     public count(piece: Player, row: number): number {
         let result: number = 0;
-        const width: number = this.board[0].length;
+        const width: number = this.getWidth();
         for (let x: number = 0; x < width; x++) {
             if (this.board[row][x] === piece) {
                 result++;

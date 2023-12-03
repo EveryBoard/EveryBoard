@@ -350,7 +350,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                         .getGameComponent();
                 const rules: Rules<Move, GameState, RulesConfig, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
-                const config: MGPOptional<RulesConfig> = gameInfo.getOptionalRulesConfig();
+                const config: MGPOptional<RulesConfig> = gameInfo.getRulesConfig();
                 for (const step of steps) {
                     if (step.hasSolution()) {
                         const solution: Move | Click = step.getSolution();

@@ -8,7 +8,7 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { RulesConfigDescription } from './RulesConfigDescription';
+import { RulesConfigDescription, ConfigLine } from './RulesConfigDescription';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 
 describe('RulesConfigurationComponent', () => {
@@ -46,33 +46,22 @@ describe('RulesConfigurationComponent', () => {
             {
                 name: (): string => 'the_default_config_name',
                 config: {
-                    nombre: 5,
-                    canailleDeBoule: 12,
+                    nombre: new ConfigLine(5, () => 'nombre', MGPValidators.range(1, 99)),
+                    canailleDeBoule: new ConfigLine(12, () => 'canaille', MGPValidators.range(1, 99)),
                 },
-            },
-            {
-                nombre: (): string => 'nombre',
-                canailleDeBoule: (): string => 'canaille',
             }, [{
                 name: (): string => 'the_other_config_name',
                 config: secondConfig,
-            }], {
-                nombre: MGPValidators.range(1, 99),
-                canailleDeBoule: MGPValidators.range(1, 99),
-            },
+            }],
         );
 
     const rulesConfigDescriptionWithBooleans: RulesConfigDescription = new RulesConfigDescription(
         {
             name: (): string => 'config name',
             config: {
-                booleen: false,
-                truth: false,
+                booleen: new ConfigLine(false, () => 'booleen'),
+                truth: new ConfigLine(false, () => 'veritasserum'),
             },
-        },
-        {
-            booleen: (): string => 'booleen',
-            truth: (): string => 'veritasserum',
         },
     );
 
@@ -83,7 +72,7 @@ describe('RulesConfigurationComponent', () => {
             component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
         });
 
-        it('should  display enabled rules select', fakeAsync(async() => {
+        it('should display enabled rules select', fakeAsync(async() => {
             // Given a component created for non-creator
             // When displaying it
             // Then rulesSelect should not be present
@@ -155,12 +144,12 @@ describe('RulesConfigurationComponent', () => {
 
             it('should throw when editing non-custom config', fakeAsync(async() => {
                 // Given a component for creator where we're not editing "Custom"
-                const error: string = 'Only Customifiable config should be modified!';
                 testUtils.detectChanges();
                 spyOn(component.updateCallback, 'emit').and.callThrough();
 
                 // When modifying a value
                 // Then it should throw
+                const error: string = 'Only Customifiable config should be modified!';
                 TestUtils.expectToThrowAndLog(() => {
                     component.rulesConfigForm.get('nombre')?.setValue(80);
                     tick(0);
@@ -325,7 +314,7 @@ describe('RulesConfigurationComponent', () => {
             component.userIsCreator = false;
             component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
             // Mandatory even if it's a configless game
-            component.rulesConfigToDisplay = rulesConfigDescriptionWithNumber.defaultConfig.config;
+            component.rulesConfigToDisplay = rulesConfigDescriptionWithNumber.getDefaultConfig().config;
         });
 
         it('should display disabled rules select', fakeAsync(async() => {
@@ -355,7 +344,7 @@ describe('RulesConfigurationComponent', () => {
         describe('modifying custom configuration', () => {
 
             it('should throw at creation if rulesConfigToDisplay is missing', fakeAsync(async() => {
-                // Given a component intended for passive user with no config to display
+                // Given a component intended for non-creator user with no config to display
                 component.rulesConfigToDisplay = undefined;
 
                 TestUtils.expectToThrowAndLog(() => {
@@ -386,13 +375,13 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should not trigger update callback when changing value and throw', fakeAsync(async() => {
                     // Given a component loaded with a config description having a number filled
-                    const error: string = 'Only creator should be able to modify rules config';
                     testUtils.detectChanges();
                     spyOn(component.updateCallback, 'emit').and.callThrough();
 
                     // When modifying config
-                    // (technically impossible but setValue don't need the HTML possibility to do it)
-                    // And unit testing that this should not be doable is actually more future proof)
+                    // (not expected to happen in practice,
+                    // and unit testing that this should not be doable is actually more future proof)
+                    const error: string = 'Only creator should be able to modify rules config';
                     TestUtils.expectToThrowAndLog(() => {
                         component.rulesConfigForm.get('nombre')?.setValue(80);
                         tick(0);
@@ -416,7 +405,7 @@ describe('RulesConfigurationComponent', () => {
                 it('should display value of the rulesConfigToDisplay, not of the default config', fakeAsync(async() => {
                     // Given a board board on which the config 'booleen' is by default checked
                     // but has been changed and is hence unchecked in the config to display
-                    // Also testing the opposite for the config 'truth()
+                    // Also testing the opposite for the config 'truth'
                     const defaultConfig: RulesConfig =
                         component.rulesConfigDescriptionOptional.get().getDefaultConfig().config;
                     const configToDisplay: RulesConfig = Utils.getNonNullable(component.rulesConfigToDisplay);
@@ -450,13 +439,13 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should not trigger update callback when changing value and throw', fakeAsync(async() => {
                     // Given a component loaded with a config description having a number filled
-                    const error: string = 'Only creator should be able to modify rules config';
                     testUtils.detectChanges();
                     spyOn(component.updateCallback, 'emit').and.callThrough();
 
                     // When modifying config
-                    // (technically impossible but setValue don't need the HTML possibility to do it)
-                    // And unit testing that this should not be doable is actually more future proof)
+                    // (not expected to happen in practice,
+                    // and unit testing that this should not be doable is actually more future proof)
+                    const error: string = 'Only creator should be able to modify rules config';
                     TestUtils.expectToThrowAndLog(() => {
                         component.rulesConfigForm.get('booleen')?.setValue(false);
                         tick(0);

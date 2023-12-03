@@ -2,7 +2,7 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { DvonnState } from './DvonnState';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
@@ -14,11 +14,11 @@ import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}
 
-export class DvonnRules extends Rules<DvonnMove, DvonnState> {
+export class DvonnRules extends ConfiglessRules<DvonnMove, DvonnState> {
 
     private static singleton: MGPOptional<DvonnRules> = MGPOptional.empty();
 
@@ -140,7 +140,8 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         });
         return newState;
     }
-    public applyLegalMove(move: DvonnMove, state: DvonnState, _config: MGPOptional<RulesConfig>, _info: void)
+
+    public applyLegalMove(move: DvonnMove, state: DvonnState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
     : DvonnState
     {
         if (move === DvonnMove.PASS) {
@@ -158,6 +159,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return resultingState;
         }
     }
+
     public isLegal(move: DvonnMove, state: DvonnState): MGPValidation {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass

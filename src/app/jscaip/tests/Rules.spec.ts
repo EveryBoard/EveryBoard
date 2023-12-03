@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { GameNode } from '../GameNode';
-import { Rules } from '../Rules';
+import { ConfiglessRules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
@@ -15,7 +15,7 @@ class AbstractState extends GameStateWithTable<number> {}
 
 class AbstractNode extends GameNode<P4Move, AbstractState> {}
 
-class AbstractRules extends Rules<P4Move, AbstractState> {
+class AbstractRules extends ConfiglessRules<P4Move, AbstractState> {
 
     private static singleton: MGPOptional<AbstractRules> = MGPOptional.empty();
 

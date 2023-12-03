@@ -1,7 +1,7 @@
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
@@ -11,11 +11,11 @@ import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 import { Utils } from 'src/app/utils/utils';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
-export class ApagosRules extends Rules<ApagosMove, ApagosState> {
+export class ApagosRules extends ConfiglessRules<ApagosMove, ApagosState> {
 
     public static PIECES_PER_PLAYER: number = 10;
 
@@ -36,7 +36,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         ], ApagosRules.PIECES_PER_PLAYER, ApagosRules.PIECES_PER_PLAYER);
     }
 
-    public applyLegalMove(move: ApagosMove, state: ApagosState, _config: MGPOptional<RulesConfig>, _info: void)
+    public applyLegalMove(move: ApagosMove, state: ApagosState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
     : ApagosState
     {
         if (move.isDrop()) {

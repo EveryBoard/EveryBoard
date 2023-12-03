@@ -2,7 +2,7 @@ import { TablutMove } from './TablutMove';
 import { TaflNode, TaflRules } from '../TaflRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
-import { RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TaflPawn } from '../TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflState } from '../TaflState';
@@ -14,23 +14,16 @@ export class TablutRules extends TaflRules<TablutMove> {
     private static singleton: MGPOptional<TablutRules> = MGPOptional.empty();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TaflConfig> =
-        new RulesConfigDescription(
-            {
-                name: (): string => $localize`Tablut`,
-                config: {
-                    castleIsLeftForGood: false,
-                    edgesAreKingsEnnemy: true,
-                    centralThroneCanSurroundKing: false,
-                    kingFarFromHomeCanBeSandwiched: false,
-                    invaderStarts: true,
-                },
-            }, {
-                castleIsLeftForGood: (): string => $localize`Central throne is left for good`,
-                edgesAreKingsEnnemy: (): string => $localize`Edges are king's ennemy`,
-                centralThroneCanSurroundKing: (): string => $localize`Central throne can surround king`,
-                kingFarFromHomeCanBeSandwiched: (): string => $localize`King far from home can be sandwiched`,
-                invaderStarts: (): string => $localize`Invader starts`,
-            });
+        new RulesConfigDescription<TaflConfig>({
+            name: (): string => $localize`Tablut`,
+            config: {
+                castleIsLeftForGood: new ConfigLine(false, () => $localize`Central throne is left for good`),
+                edgesAreKingsEnnemy: new ConfigLine(true, () => $localize`Edges are king's ennemy`),
+                centralThroneCanSurroundKing: new ConfigLine(false, () => $localize`Central throne can surround king`),
+                kingFarFromHomeCanBeSandwiched: new ConfigLine(false, () => $localize`King far from home can be sandwiched`),
+                invaderStarts: new ConfigLine(true, () => $localize`Invader starts`),
+            },
+        });
 
     public static get(): TablutRules {
         if (TablutRules.singleton.isAbsent()) {

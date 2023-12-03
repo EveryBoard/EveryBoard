@@ -37,8 +37,8 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     }
     public getDefense(state: EpaminondasState): number {
         let score: number = 0;
-        const width: number = state.board[0].length;
-        const height: number = state.board.length;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
         for (let x: number = 0; x < width; x++) {
             if (state.getPieceAtXY(x, height - 1) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
@@ -74,8 +74,8 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     }
     public getOffense(state: EpaminondasState): number {
         let score: number = 0;
-        const width: number = state.board[0].length;
-        const height: number = state.board.length;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
         for (let x: number = 0; x < width; x++) {
             if (state.getPieceAtXY(x, 0) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
@@ -88,7 +88,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     }
     public getCenter(state: EpaminondasState): number {
         let score: number = 0;
-        const width: number = state.board[0].length;
+        const width: number = state.getWidth();
         const cx: number = (width - 1) / 2;
         for (const coordAndContent of state.getCoordsAndContents()) {
             const owner: PlayerOrNone = coordAndContent.content;

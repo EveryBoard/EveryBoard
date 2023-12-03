@@ -110,8 +110,8 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
     }
 
     private stillHaveEmptySquare(state: PenteState): boolean {
-        const width: number = state.board[0].length;
-        const height: number = state.board.length;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
         for (let y: number = 0; y < height; y++) {
             for (let x: number = 0; x < width; x++) {
                 if (state.board[y][x] === PlayerOrNone.NONE) {

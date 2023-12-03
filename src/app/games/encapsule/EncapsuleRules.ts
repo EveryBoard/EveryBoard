@@ -1,4 +1,4 @@
-import { Rules } from '../../jscaip/Rules';
+import { ConfiglessRules } from '../../jscaip/Rules';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -10,9 +10,9 @@ import { EncapsuleFailure } from './EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 
@@ -20,7 +20,7 @@ export class EncapsuleNode extends GameNode<EncapsuleMove, EncapsuleState> {}
 
 @Debug.log
 // eslint-disable-next-line max-len
-export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EmptyRulesConfig, EncapsuleLegalityInformation> {
+export class EncapsuleRules extends ConfiglessRules<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
 
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
 
@@ -122,7 +122,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EmptyRu
 
     public applyLegalMove(move: EncapsuleMove,
                           state: EncapsuleState,
-                          _config: MGPOptional<RulesConfig>,
+                          _config: MGPOptional<EmptyRulesConfig>,
                           newLandingSpace: EncapsuleLegalityInformation)
     : EncapsuleState
     {

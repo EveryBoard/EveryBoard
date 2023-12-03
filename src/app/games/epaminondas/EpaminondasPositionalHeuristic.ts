@@ -13,8 +13,8 @@ export class EpaminondasPositionalHeuristic extends Heuristic<EpaminondasMove, E
         return new BoardValue(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
     private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {
-        const width: number = state.board[0].length;
-        const height: number = state.board.length;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
         const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * width;
         const SCORE_BY_ALIGNEMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13
         const MAX_NUMBER_OF_ALIGNEMENT: number = (24*16) + (4*15);

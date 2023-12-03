@@ -16,11 +16,11 @@ import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/assert';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { YinshScoreHeuristic } from './YinshScoreHeuristic';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 interface SpaceInfo {
     coord: Coord,
@@ -57,7 +57,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            YinshMove,
                                                            YinshState,
                                                            YinshPiece,
-                                                           RulesConfig,
+                                                           EmptyRulesConfig,
                                                            YinshLegalityInformation>
 {
     private static readonly RING_OUTER_SIZE: number = 40;

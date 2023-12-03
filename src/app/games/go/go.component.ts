@@ -80,8 +80,8 @@ export class GoComponent
     private showCaptures(): void {
         const previousState: GoState = this.getPreviousState();
         this.captures = [];
-        for (let y: number = 0; y < this.board.length; y++) {
-            for (let x: number = 0; x < this.board[0].length; x++) {
+        for (let y: number = 0; y < this.getHeight(); y++) {
+            for (let x: number = 0; x < this.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
                 const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;

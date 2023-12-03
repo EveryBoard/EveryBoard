@@ -464,7 +464,7 @@ describe('GipfComponent', () => {
         await testUtils.expectMoveSuccess('#click_3_0', move); // Final capture 2
     }));
     it('should select clicked coord when clicking on another piece to push', fakeAsync(async() => {
-        // Given any board where a insertion coord has been chosen
+        // Given any board where an insertion coord has been chosen
         await testUtils.expectClickSuccess('#click_6_3');
 
         // When clicking on an occupied border space

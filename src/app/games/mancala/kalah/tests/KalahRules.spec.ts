@@ -85,7 +85,7 @@ describe('KalahRules', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(2)]);
 
             // Then the move should be wildly considered as illegal, you scumbag hacker !
-            const reason: string = 'CANNOT_PLAY_AFTER_NON_KALAH_MOVE';
+            const reason: string = 'Cannot play after non kalah move';
             TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }, reason);

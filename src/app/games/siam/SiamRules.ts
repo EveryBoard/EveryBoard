@@ -14,7 +14,7 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class SiamLegalityInformation {
@@ -60,27 +60,17 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegali
     }
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<SiamConfig> =
-        new RulesConfigDescription(
-            {
-                name: (): string => $localize`Siam`,
-                config: {
-                    width: 5,
-                    height: 5,
-                    numberOfPiece: 5,
-                    numberOfBonusMountain: 2,
-                },
-            }, {
-                width: RulesConfigDescriptionLocalizable.WIDTH,
-                height: RulesConfigDescriptionLocalizable.HEIGHT,
-                numberOfPiece: (): string => $localize`Number of piece by player`,
-                numberOfBonusMountain: (): string => $localize`Number of bonus mountains`,
-            }, [
-            ], {
-                width: MGPValidators.range(3, 99), // minimum 3 so that there is space around the mountain
-                height: MGPValidators.range(3, 99),
-                numberOfPiece: MGPValidators.range(1, 99),
-                numberOfBonusMountain: MGPValidators.range(0, 98), // -1 on two ends because there will only be one
-            });
+        new RulesConfigDescription<SiamConfig>({
+            name: (): string => $localize`Siam`,
+            config: {
+                // minimum 3 so that there is space around the mountain
+                width: new ConfigLine(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
+                height: new ConfigLine(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
+                numberOfPiece: new ConfigLine(5, () => $localize`Number of piece by player`, MGPValidators.range(1, 99)),
+                // -1 on two ends because there will always be the first mountain
+                numberOfBonusMountain: new ConfigLine(2, () => $localize`Number of bonus mountains`, MGPValidators.range(0, 98)),
+            },
+        });
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<SiamConfig>> {
         return MGPOptional.of(SiamRules.RULES_CONFIG_DESCRIPTION);

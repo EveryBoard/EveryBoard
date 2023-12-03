@@ -78,7 +78,6 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];
         this.encoder = LascaMove.encoder;
-        this.canPass = false;
         this.hasAsymmetricBoard = true;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -155,7 +154,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
     private showPossibleMoves(): void {
-        if (this.isInteractive) {
+        if (this.interactive) {
             for (const validMove of this.legalMoves) {
                 const startingCoord: Coord = validMove.getStartingCoord();
                 this.getSpaceInfoAt(startingCoord).squareClasses.push('selectable-fill');
