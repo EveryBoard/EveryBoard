@@ -13,7 +13,7 @@ describe('RulesConfigUtil', () => {
         };
 
         const defaultNamedRulesConfig: DefaultConfigDescription<MyConfig> = {
-            name: () => 'default',
+            name: () => 'My Default Config',
             config: {
                 helaRosee: new ConfigLine(5, () => 'coucoute', MGPValidators.range(1, 99)),
             },
@@ -34,7 +34,7 @@ describe('RulesConfigUtil', () => {
         it('should be possible to have other standard RulesConfig', () => {
             // Given any RulesConfigDescription with secondary config
             const secondaryConfig: NamedRulesConfig<MyConfig> = {
-                name: () => 'numéro dosse',
+                name: () => 'My Secondary Config',
                 config: { helaRosee: 7 },
             };
             const rulesConfigDescription: RulesConfigDescription<MyConfig> =
@@ -53,7 +53,7 @@ describe('RulesConfigUtil', () => {
                 helaRosee: number;
             }
             const defaultConfig: DefaultConfigDescription<MaConfigInterface> = {
-                name: () => 'default',
+                name: () => 'My Default Config',
                 config: {
                     helaRosee: new ConfigLine(2012, () => 'biilboul eh!', MGPValidators.range(1, 99)),
                 },
@@ -62,7 +62,7 @@ describe('RulesConfigUtil', () => {
 
             const secondaryConfig: NamedRulesConfig<MaConfigInterface> = {
                 config: { helaRosee: 7 },
-                name: () => 'secondary',
+                name: () => 'My Secondary Config',
             };
 
             // When trying to create the element

@@ -115,9 +115,9 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
     }
 
     /**
-     * Apply the distribution part of the move MancalaMove
-     * Apply the capture that happend due to distribution (for example the passage in the store)
-     * Should NOT increment the turn of the state
+     * Apply the distribution part of the move.
+     * Apply the capture that happend due to distribution (for example the passage in the store).
+     * Should not increment the turn of the state.
      */
     public distributeMove(move: MancalaMove, state: MancalaState, config: MancalaConfig): MancalaDistributionResult {
         const playerValue: number = state.getCurrentPlayer().value;
