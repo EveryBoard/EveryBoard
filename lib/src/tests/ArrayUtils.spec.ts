@@ -92,9 +92,9 @@ describe('ArrayUtils', () => {
     });
 
     describe('maximumsBy', () => {
-        fit('should extract the maximums', () => {
+        it('should extract the maximums', () => {
             // Given an array and a metric
-            const array: number[] = [0, 1, 2, 3, 3];
+            const array: number[] = [0, 3, 1, 2, 3];
             const metric: (value: number) => number = Utils.identity
             // When extracting the maximums
             const maximums: number[] = ArrayUtils.maximumsBy(array, metric);
