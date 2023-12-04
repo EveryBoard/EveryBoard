@@ -9,7 +9,6 @@ import { serverTimestamp } from 'firebase/firestore';
 import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserDAO } from 'src/app/dao/UserDAO';
-import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { UserService } from '../UserService';

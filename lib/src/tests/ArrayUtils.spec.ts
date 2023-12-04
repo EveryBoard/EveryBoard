@@ -23,7 +23,7 @@ describe('ArrayUtils', () => {
             copy[1] = 42;
             // Then it should not have modified the original array
             expect(array[1]).toBe(0);
-        })
+        });
     });
 
     describe('sortByDescending', () => {
@@ -70,7 +70,7 @@ describe('ArrayUtils', () => {
 
     describe('range', () => {
         it('should produce a range up to the argument (non inclusive)', () => {
-            expect(ArrayUtils.range(5)).toEqual([0,1,2,3,4]);
+            expect(ArrayUtils.range(5)).toEqual([0, 1, 2, 3, 4]);
         });
     });
 
@@ -95,7 +95,7 @@ describe('ArrayUtils', () => {
         it('should extract the maximums', () => {
             // Given an array and a metric
             const array: number[] = [0, 3, 1, 2, 3];
-            const metric: (value: number) => number = Utils.identity
+            const metric: (value: number) => number = Utils.identity;
             // When extracting the maximums
             const maximums: number[] = ArrayUtils.maximumsBy(array, metric);
             // Then it should return all the maximum elements

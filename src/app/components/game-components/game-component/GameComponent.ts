@@ -6,7 +6,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
 import { ArrayUtils, Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -150,7 +149,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getPreviousState(): S {
         return this.node.parent.get().gameState;
     }
-    public async showLastMove(move: M): Promise<void> {
+    public async showLastMove(_move: M): Promise<void> {
         // Not needed by default
         return;
     }

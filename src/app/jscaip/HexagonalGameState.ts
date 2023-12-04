@@ -1,4 +1,3 @@
-import { ErrorLoggerService } from '../services/ErrorLoggerService';
 import { MGPValidation, Utils } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';

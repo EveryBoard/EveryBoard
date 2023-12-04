@@ -78,15 +78,14 @@ export class ArrayUtils {
     public static maximumsBy<T>(array: T[], metric: (value: T) => number): T[] {
         let maximums: T[] = [];
         let maxMetricValue: number = -Infinity;
-        for (let i: number = 0; i < array.length; i++) {
-            const currentMetricValue: number = metric(array[i]);
-            console.log({maxMetricValue, currentMetricValue, maximums})
+        for (const element of array) {
+            const currentMetricValue: number = metric(element);
             if (currentMetricValue >= maxMetricValue) {
                 if (currentMetricValue > maxMetricValue) {
                     maximums = [];
                 }
                 maxMetricValue = currentMetricValue;
-                maximums.push(array[i]);
+                maximums.push(element);
             }
         }
         return maximums;

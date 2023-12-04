@@ -14,7 +14,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { FirestoreTime } from 'src/app/domain/Time';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';

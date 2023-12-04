@@ -6,7 +6,6 @@ import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
-import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
 import { UserService } from './UserService';
 import { Debug } from '../utils/Debug';

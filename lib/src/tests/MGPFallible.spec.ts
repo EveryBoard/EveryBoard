@@ -88,6 +88,6 @@ describe('MGPFallibleTestUtils', () => {
     });
 
     it('should detect failure', () => {
-        MGPFallibleTestUtils.expectToBeFailure(MGPFallible.failure("error"), "error");
+        MGPFallibleTestUtils.expectToBeFailure(MGPFallible.failure('error'), 'error');
     });
 });

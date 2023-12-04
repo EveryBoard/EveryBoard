@@ -1,4 +1,3 @@
-import { comparableEquals } from './Comparable';
 import { JSONValue, JSONValueWithoutArray } from './JSON';
 import { Utils } from './Utils';
 

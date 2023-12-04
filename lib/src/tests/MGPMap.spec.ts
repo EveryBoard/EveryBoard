@@ -7,7 +7,7 @@ describe('MGPMap', () => {
 
     describe('from', () => {
         it('should construct a map from a record with string keys', () => {
-            const map: MGPMap<string, number> = MGPMap.from({a: 1, b: 2});
+            const map: MGPMap<string, number> = MGPMap.from({ a: 1, b: 2 });
             expect(map.size()).toBe(2);
             expect(map.get('a').get()).toBe(1);
             expect(map.get('b').get()).toBe(2);
@@ -16,7 +16,7 @@ describe('MGPMap', () => {
 
     describe('getAnyPair', () => {
         it('should return an element from the map', () => {
-            const map: MGPMap<string, number> = MGPMap.from({salut: 5});
+            const map: MGPMap<string, number> = MGPMap.from({ salut: 5 });
             const element: number = map.getAnyPair().get().value;
             expect(element).toBe(5);
         });
@@ -30,7 +30,7 @@ describe('MGPMap', () => {
     describe('forEach', () => {
         it('should iterate over all elements of the map', () => {
             // Given a map with elements
-            const map: MGPMap<string, number> = MGPMap.from({first: 1, second: 2});
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
 
             // When calling forEach
             let sum: number = 0;
@@ -43,19 +43,19 @@ describe('MGPMap', () => {
 
     describe('putAll', () => {
         it('should concatenate two maps, erasing the overlapping content on the receiver', () => {
-            const receiver: MGPMap<string, number> = MGPMap.from({first: 0, second: 1});
+            const receiver: MGPMap<string, number> = MGPMap.from({ first: 0, second: 1 });
 
-            const giver: MGPMap<string, number> = MGPMap.from({first: 1, third: 3});
+            const giver: MGPMap<string, number> = MGPMap.from({ first: 1, third: 3 });
             receiver.putAll(giver);
 
-            const expectedSum: MGPMap<string, number> = MGPMap.from({first: 1, second: 1, third: 3});
+            const expectedSum: MGPMap<string, number> = MGPMap.from({ first: 1, second: 1, third: 3 });
             expect(receiver).toEqual(expectedSum);
         });
     });
 
     describe('put', () => {
         it('should replace value if key value was already present', () => {
-            const map: MGPMap<string, string> = MGPMap.from({oui: 'yes'});
+            const map: MGPMap<string, string> = MGPMap.from({ oui: 'yes' });
             expect(() => map.put('oui', 'DA')).not.toThrow();
             expect(map.get('oui')).toEqual(MGPOptional.of('DA'));
         });
@@ -63,7 +63,7 @@ describe('MGPMap', () => {
 
     describe('containsKey', () => {
         it('should return true if there is a matching key', () => {
-            const map: MGPMap<string, number> = MGPMap.from({a: 1 });
+            const map: MGPMap<string, number> = MGPMap.from({ a: 1 });
             expect(map.containsKey('a')).toBeTrue();
         });
 
@@ -75,53 +75,53 @@ describe('MGPMap', () => {
 
     describe('size', () => {
         it('should return the size of the set', () => {
-            const map: MGPMap<string, number> = MGPMap.from({a: 1, b: 2});
+            const map: MGPMap<string, number> = MGPMap.from({ a: 1, b: 2 });
             expect(map.size()).toBe(2);
         });
     });
 
     describe('listKeys', () => {
         it('should return all the keys', () => {
-            const map: MGPMap<string, number> = MGPMap.from({first: 1, second: 2});
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
             expect(map.listKeys()).toEqual(['first', 'second']);
         });
     });
 
     describe('listValues', () => {
         it('should return all the values', () => {
-            const map: MGPMap<string, number> = MGPMap.from({first: 1, second: 2});
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
             expect(map.listValues()).toEqual([1, 2]);
         });
     });
 
     describe('getKeySet', () => {
         it('should return all the keys in a set', () => {
-            const map: MGPMap<string, number> = MGPMap.from({first: 1, second: 2});
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
             expect(map.getKeySet()).toEqual(new MGPSet(['first', 'second']));
         });
     });
 
     describe('filter', () => {
         it('should keep only elements for which the predicate returns true', () => {
-            function pred(key: string, value: number): boolean {
+            function pred(_key: string, value: number): boolean {
                 return value >= 2;
             }
-            const map: MGPMap<string, number> = MGPMap.from({first: 1, second: 2});
-            const expectedMap: MGPMap<string, number> = MGPMap.from({second: 2});
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
+            const expectedMap: MGPMap<string, number> = MGPMap.from({ second: 2 });
             expect(map.filter(pred)).toEqual(expectedMap);
         });
     });
 
     describe('replace', () => {
         it('should replace existing value', () => {
-            const map: MGPMap<string, number> = MGPMap.from({first: 1});
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1 });
             map.replace('first', 0);
 
             expect(map.get('first')).toEqual(MGPOptional.of(0));
         });
 
         it('should throw when value not found', () => {
-            const map: MGPMap<string, number> = MGPMap.from({first: 1});
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1 });
 
             expect(() => map.replace('firstZUUU', 0)).toThrowError('No Value to replace for key firstZUUU!');
         });
@@ -129,7 +129,7 @@ describe('MGPMap', () => {
 
     describe('set', () => {
         let map: MGPMap<string, string>;
-        beforeEach(() => map = MGPMap.from({oui: 'yes'}));
+        beforeEach(() => map = MGPMap.from({ oui: 'yes' }));
 
         it('should add the value to the set', () => {
             expect(() => map.set('non', 'no')).not.toThrow();
@@ -148,7 +148,7 @@ describe('MGPMap', () => {
 
     describe('delete', () => {
         let map: MGPMap<string, number>;
-        beforeEach(() => map = MGPMap.from({first: 0}));
+        beforeEach(() => map = MGPMap.from({ first: 0 }));
 
         it('should delete element with the corresponding key', () => {
             map.delete('first');
@@ -167,7 +167,7 @@ describe('MGPMap', () => {
 
     describe('getCopy', () => {
         let map: MGPMap<string, number>;
-        beforeEach(() => map = MGPMap.from({first: 0, second: 0}));
+        beforeEach(() => map = MGPMap.from({ first: 0, second: 0 }));
 
         it('should make equal copy when mutable', () => {
             const copy: MGPMap<string, number> = map.getCopy();
@@ -192,19 +192,19 @@ describe('MGPMap', () => {
 
     describe('equals', () => {
         it('should detect maps with distinct keys as different', () => {
-            const map1: MGPMap<string, number> = MGPMap.from({first: 0});
-            const map2: MGPMap<string, number> = MGPMap.from({second: 1});
+            const map1: MGPMap<string, number> = MGPMap.from({ first: 0 });
+            const map2: MGPMap<string, number> = MGPMap.from({ second: 1 });
             expect(map1.equals(map2)).toBeFalse();
         });
 
         it('should detect map with same keys but distinct values as different', () => {
-            const map1: MGPMap<string, number> = MGPMap.from({first: 0});
-            const map2: MGPMap<string, number> = MGPMap.from({first: 1});
+            const map1: MGPMap<string, number> = MGPMap.from({ first: 0 });
+            const map2: MGPMap<string, number> = MGPMap.from({ first: 1 });
             expect(map1.equals(map2)).toBeFalse();
         });
 
         it('should detect the same map as equal', () => {
-            const map: MGPMap<string, number> = MGPMap.from({first: 0});
+            const map: MGPMap<string, number> = MGPMap.from({ first: 0 });
             expect(map.equals(map)).toBeTrue();
         });
     });

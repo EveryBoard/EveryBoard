@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Utils } from '@everyboard/lib';

@@ -10,7 +10,6 @@ import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';

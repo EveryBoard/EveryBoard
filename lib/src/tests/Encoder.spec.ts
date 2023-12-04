@@ -18,8 +18,12 @@ describe('Encoder', () => {
 
     describe('fromFunction', () => {
         it('should provide a bijective encoder', () => {
-            function encode(v: number): JSONValueWithoutArray { return v; }
-            function decode(v: JSONValueWithoutArray): number { return v as number; }
+            function encode(v: number): JSONValueWithoutArray {
+                return v;
+            }
+            function decode(v: JSONValueWithoutArray): number {
+                return v as number;
+            }
             const encoder: Encoder<number> = Encoder.fromFunctions(encode, decode);
             EncoderTestUtils.expectToBeBijective(encoder, 42);
         });

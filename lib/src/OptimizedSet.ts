@@ -3,7 +3,8 @@ import { MGPSet } from './MGPSet';
 
 /**
  * This is an optimized representation of sets.
- * It performs multi-level hashing and is suitable for types that can be decomposed into multiple fields represented by numbers.
+ * It performs multi-level hashing and is suitable for types
+ * that can be decomposed into multiple fields represented by numbers.
  */
 export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,7 +12,8 @@ export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
 
     /**
      * This should be defined for each specialization of OptimizedSet.
-     * It transforms a value into a list of fields. There should be at least one field, which is the second element returned.
+     * It transforms a value into a list of fields.
+     * There should be at least one field, which is the second element returned.
      * The first element returned is the list of other fields.
      */
     protected abstract toFields(value: T): [[number], number];

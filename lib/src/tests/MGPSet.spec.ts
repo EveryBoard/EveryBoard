@@ -164,7 +164,7 @@ describe('MGPSet', () => {
                 return x+1;
             }
             expect(set.map(increment).equals(new MGPSet([2, 3]))).toBeTrue();
-       });
+        });
     });
 
     describe('flatMap', () => {
@@ -199,7 +199,7 @@ describe('MGPSet', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);
             const otherSet: MGPSet<number> = new MGPSet([3, 4]);
             expect(set.findAnyCommonElement(otherSet)).toEqual(MGPOptional.empty());
-        })
+        });
     });
 
     describe('intersection', () => {
