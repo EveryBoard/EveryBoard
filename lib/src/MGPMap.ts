@@ -5,7 +5,7 @@ import { Utils } from './Utils';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
 
-    public static from<K extends string | number, V extends NonNullable<unknown>>(record: Record<K, V>)
+    public static from<K extends string, V extends NonNullable<unknown>>(record: Record<K, V>)
     : MGPMap<K, V>
     {
         const keys: K[] = Object.keys(record) as K[];
@@ -24,6 +24,13 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     public makeImmutable(): void {
         this.isImmutable = true;
     }
+
+    private checkImmutability(methodCalled: string): void {
+        if (this.isImmutable) {
+            throw new Error('Cannot call ' + methodCalled + ' on immutable map!');
+        }
+    }
+
 
     public get(key: K): MGPOptional<V> {
         for (const keymap of this.map) {
@@ -52,12 +59,6 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         this.checkImmutability('putAll');
         for (const entry of m.map) {
             this.put(entry.key, entry.value);
-        }
-    }
-
-    public checkImmutability(methodCalled: string): void {
-        if (this.isImmutable) {
-            throw new Error('Cannot call ' + methodCalled + ' on immutable map!');
         }
     }
 
@@ -118,7 +119,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     public set(key: K, firstValue: V): void {
         this.checkImmutability('set');
         if (this.containsKey(key)) {
-            throw new Error('Key ' + key.toString() + ' already exist in Map!');
+            throw new Error('Key ' + key.toString() + ' already exists in map!');
         } else {
             this.map.push({ key, value: firstValue });
         }
@@ -136,7 +137,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
                 return oldValue;
             }
         }
-        throw new Error('No Value to delete for key "'+ key.toString() +'"!');
+        throw new Error('No value to delete for key "'+ key.toString() +'"!');
     }
 
     public getCopy(): this {

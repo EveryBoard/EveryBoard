@@ -1,5 +1,5 @@
 import { MGPUniqueList } from '../MGPUniqueList';
-import { Utils } from '@everyboard/lib';
+import { Utils } from '../Utils';
 
 describe('MGPUniqueList', () => {
 

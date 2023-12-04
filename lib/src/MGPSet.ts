@@ -13,6 +13,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             this.values = Sets.toComparableSet(values);
         }
     }
+
     public equals(other: MGPSet<T>): boolean {
         if (other.size() !== this.size()) {
             return false;
@@ -24,6 +25,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return true;
     }
+
     public toString(): string {
         let result: string = '';
         for (const element of this) {
@@ -35,6 +37,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return '[' + result.slice(0, -2) + ']';
     }
+
     public add(element: T): boolean {
         if (this.contains(element)) {
             return false;
@@ -43,6 +46,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             return true;
         }
     }
+
     /**
      * Remove an element from the set.
      * Returns true if something was actually removed, false otherwise.
@@ -56,16 +60,19 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return false;
     }
+
     public addAll(otherSet: MGPSet<T>): void {
         for (const element of otherSet) {
             this.add(element);
         }
     }
+
     public union(otherSet: MGPSet<T>): MGPSet<T> {
         const result: MGPSet<T> = new MGPSet(this.toList());
         result.addAll(otherSet);
         return result;
     }
+
     public contains(element: T): boolean {
         for (const value of this.values) {
             if (comparableEquals(value, element)) {
@@ -74,9 +81,11 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return false;
     }
+
     public size(): number {
         return this.values.length;
     }
+
     public toList(): T[] {
         const result: T[] = [];
         for (const value of this) {
@@ -84,6 +93,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return result;
     }
+
     public getAnyElement(): MGPOptional<T> {
         if (this.size() > 0) {
             return MGPOptional.of(this.values[0]);
@@ -91,12 +101,15 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             return MGPOptional.empty();
         }
     }
+
     public isEmpty(): boolean {
         return this.values.length === 0;
     }
+
     public hasElements(): boolean {
         return this.isEmpty() === false;
     }
+
     public map<V extends Comparable>(mapper: (element: T) => V): MGPSet<V> {
         const result: V[] = [];
         for (const element of this.values) {
@@ -104,6 +117,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return new MGPSet(result);
     }
+
     public flatMap<U extends Comparable>(f: (element: T) => MGPSet<U>): MGPSet<U> {
         const result: MGPSet<U> = new MGPSet();
         for (const element of this) {
@@ -111,6 +125,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return result;
     }
+
     public filter(f: (element: T) => boolean): MGPSet<T> {
         const result: MGPSet<T> = new MGPSet();
         for (const element of this) {
@@ -120,6 +135,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return result;
     }
+
     public findAnyCommonElement(other: MGPSet<T>): MGPOptional<T> {
         for (const element of other) {
             if (this.contains(element)) {
@@ -128,6 +144,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return MGPOptional.empty();
     }
+
     public intersection(other: MGPSet<T>): MGPSet<T> {
         const result: MGPSet<T> = new MGPSet();
         for (const element of other) {
@@ -137,6 +154,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return result;
     }
+
     [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
     }

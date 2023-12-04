@@ -76,18 +76,25 @@ export class ArrayUtils {
      * Returns an array containing all the maximal values
      */
     public static maximumsBy<T>(array: T[], metric: (value: T) => number): T[] {
-        const maximums: T[] = [];
+        let maximums: T[] = [];
         let maxMetricValue: number = Number.MIN_SAFE_INTEGER;
         for (let i: number = 0; i < array.length; i++) {
             const currentMetricValue: number = metric(array[i]);
-            if (currentMetricValue > maxMetricValue) {
+            if (currentMetricValue >= maxMetricValue) {
                 maxMetricValue = currentMetricValue;
+                if (currentMetricValue > maxMetricValue) {
+                    // TODO
+                    maximums = [];
+                }
                 maximums.push(array[i]);
             }
         }
         return maximums;
     }
 
+    /**
+     * Counts the number of element in an array that have the provided value
+     */
     public static count<T>(array: T[], value: T): number {
         let total: number = 0;
         for (const element of array) {

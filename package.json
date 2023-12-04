@@ -11,6 +11,8 @@
     "build:test": "ng build --configuration=test",
     "test": "bash ./scripts/test.sh",
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
+    "libtest": "cd lib && npm test",
+    "libtest:ci": "cd lib && npm test && npm run coverage",
     "lint": "eslint --ext ts ./ --quiet",
     "e2e": "bash ./e2e/e2e.sh"
   },

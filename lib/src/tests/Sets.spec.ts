@@ -12,6 +12,7 @@ describe('Sets', () => {
 
         expect(asSet).toEqual([new Pair(0, 0), new Pair(1, 1)]);
     });
+
     it('should remove duplicate (with Comparable)', () => {
         const withDuplicate: Comparable[] = [1, 2, 1];
 

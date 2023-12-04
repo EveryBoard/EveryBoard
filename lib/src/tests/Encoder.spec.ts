@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { ArrayUtils } from '@everyboard/lib';
+import { ArrayUtils } from '../ArrayUtils';
 import { ComparableObject } from '../Comparable';
-import { Encoder } from '../Encoder';
+import { Encoder, EncoderTestUtils } from '../Encoder';
+import { JSONValueWithoutArray } from '../JSON';
 import { Pair } from './Pair.spec';
 
 class Triplet implements ComparableObject {
@@ -14,6 +15,30 @@ class Triplet implements ComparableObject {
 }
 
 describe('Encoder', () => {
+
+    describe('fromFunction', () => {
+        it('should provide a bijective encoder', () => {
+            function encode(v: number): JSONValueWithoutArray { return v; }
+            function decode(v: JSONValueWithoutArray): number { return v as number; }
+            const encoder: Encoder<number> = Encoder.fromFunctions(encode, decode);
+            EncoderTestUtils.expectToBeBijective(encoder, 42);
+        });
+    });
+
+    describe('identity', () => {
+        it('should provide a bijective encoder', () => {
+            const encoder: Encoder<number> = Encoder.identity();
+            EncoderTestUtils.expectToBeBijective(encoder, 42);
+        });
+    });
+
+    describe('constant', () => {
+        it('should provide a bijective encoder', () => {
+            const encoder: Encoder<number> = Encoder.constant(42, 42);
+            EncoderTestUtils.expectToBeBijective(encoder, 42);
+        });
+    });
+
     describe('tuple', () => {
         const numberEncoder: Encoder<number> = Encoder.identity<number>();
 
@@ -29,7 +54,7 @@ describe('Encoder', () => {
                 (move: Triplet): [number, number, number] => move.elements,
                 (fields: [number, number, number]): Triplet => new Triplet(fields));
 
-        it('should successfully encode and decode', () => {
+        it('should provide a bijective encoder', () => {
             EncoderTestUtils.expectToBeBijective(pairEncoder, new Pair(0, 2));
             EncoderTestUtils.expectToBeBijective(tripletEncoder, new Triplet([0, 3, 4]));
         });
@@ -46,12 +71,20 @@ describe('Encoder', () => {
         }
         const encoder: Encoder<number | boolean> = Encoder.disjunction([is1, is2], [encoder1, encoder2]);
 
-        it('should have a bijective encoder', () => {
+        it('should provide a bijective encoder', () => {
             const disjunctedValues: (number | boolean)[] = [0, 1, 3, true, false];
 
             for (const disjunctedValue of disjunctedValues) {
                 EncoderTestUtils.expectToBeBijective(encoder, disjunctedValue);
             }
+        });
+    });
+
+    describe('list', () => {
+        it('should provide a bijective encoder', () => {
+            const baseEncoder: Encoder<number> = Encoder.identity();
+            const encoder: Encoder<Array<number>> = Encoder.list(baseEncoder);
+            EncoderTestUtils.expectToBeBijective(encoder, [1, 2, 3]);
         });
     });
 });

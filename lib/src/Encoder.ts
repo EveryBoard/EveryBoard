@@ -20,12 +20,14 @@ export abstract class Encoder<T> {
             }
         };
     }
+
     public static identity<U extends JSONValueWithoutArray>(): Encoder<U> {
         function identity(x: U): U {
             return x;
         }
         return Encoder.fromFunctions(identity, identity);
     }
+
     public static constant<U>(constant: JSONValueWithoutArray, onlyValue: U): Encoder<U> {
         return new class extends Encoder<U> {
             public encode(_value: U): JSONValueWithoutArray {
@@ -36,6 +38,7 @@ export abstract class Encoder<T> {
             }
         };
     }
+
     public static tuple<T, Fields extends object>(encoders: EncoderArray<Fields>,
                                                   encode: (t: T) => Fields,
                                                   decode: (fields: Fields) => T): Encoder<T> {
@@ -58,6 +61,7 @@ export abstract class Encoder<T> {
             }
         };
     }
+
     /**
      * This creates a "sum" encoder, i.e., it encodes values of either type T and U and V and ...
      */
@@ -88,6 +92,7 @@ export abstract class Encoder<T> {
             }
         };
     }
+
     public static list<T>(encoder: Encoder<T>): Encoder<Array<T>> {
         return new class extends Encoder<Array<T>> {
             public encode(list: T[]): JSONValue {
@@ -104,6 +109,7 @@ export abstract class Encoder<T> {
             }
         };
     }
+
     public abstract encode(move: T): JSONValue;
 
     public abstract decode(encodedMove: JSONValue): T;
@@ -117,6 +123,6 @@ export class EncoderTestUtils {
     public static expectToBeBijective<T>(encoder: Encoder<T>, value: T): void {
         const encoded: JSONValue = encoder.encode(value);
         const decoded: T = encoder.decode(encoded);
-        expect(comparableEquals(decoded, value)).withContext(`Expected decoded value (${decoded}) to be ${value}`).toBeTrue();
+        expect(decoded).withContext(`Expected decoded value (${decoded}) to be ${value}`).toEqual(value);
     }
 }

@@ -23,16 +23,13 @@ export class Utils {
     }
 
     public static expectToBeMultiple<T>(value: T, expectedValues: T[]): void {
-        let found: boolean = false;
         for (const expected of expectedValues) {
             if (value === expected) {
-                found = true;
-                break;
+                return;
             }
         }
-        if (found === false) {
-            throw new Error(`A default switch case did not observe the correct value, expected a value among ${expectedValues}, but got ${value} instead.`);
-        }
+        // No value found!
+        throw new Error(`A default switch case did not observe the correct value, expected a value among ${expectedValues}, but got ${value} instead.`);
     }
 
     public static getNonNullable<T>(value : T | null | undefined): T {
