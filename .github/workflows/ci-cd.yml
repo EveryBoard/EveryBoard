@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: 16
       - name: Setup dependencies (install dependencies)
-        run: npm install @everyboard/lib && npm ci
+        run: npm install ./lib && npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Build
@@ -56,7 +56,7 @@ jobs:
         with:
           node-version: 16
       - name: Setup dependencies (install dependencies)
-        run: npm install @everyboard/lib && npm ci
+        run: npm install ./lib && npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
 
@@ -98,7 +98,7 @@ jobs:
         with:
           node-version: 16
       - name: Setup dependencies (install dependencies)
-        run: npm install @everyboard/lib && npm ci
+        run: npm install ./lib && npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Setup python
@@ -132,7 +132,7 @@ jobs:
         with:
           node-version: 16
       - name: Setup dependencies (install dependencies)
-        run: npm install @everyboard/lib && npm ci
+        run: npm install ./lib && npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
 
@@ -170,7 +170,7 @@ jobs:
         with:
           node-version: 16
       - name: Setup dependencies (install dependencies)
-        run: npm install @everyboard/lib && npm ci
+        run: npm install ./lib && npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
 
@@ -206,7 +206,7 @@ jobs:
         with:
           node-version: 16
       - name: Setup dependencies (install dependencies)
-        run: npm install @everyboard/lib && npm ci
+        run: npm install ./lib && npm ci
       - name: Setup dependencies (setup Firebase secret, master)
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
@@ -266,7 +266,7 @@ jobs:
         with:
           node-version: 16
       - name: Setup dependencies (install dependencies)
-        run: npm install @everyboard/lib && npm ci
+        run: npm install ./lib && npm ci
       - name: Setup dependencies (setup Firebase secret, others)
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
