@@ -17,7 +17,6 @@
   },
   "devDependencies": {
     "jasmine": "^5.1.0",
-    "nyc": "^15.1.0",
-    "ts-node": "^10.9.1"
+    "nyc": "^15.1.0"
   }
 }
