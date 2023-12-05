@@ -65,7 +65,7 @@ jobs:
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
 
       - name: Run test suites
-        run: nyc --version && npm run libtest:ci && npm run test:ci
+        run: npx nyc --version && npm run libtest:ci && npm run test:ci
       - name: Setup python
         uses: actions/setup-python@v4
         with:
