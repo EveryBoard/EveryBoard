@@ -14,7 +14,7 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class SiamLegalityInformation {
@@ -64,11 +64,11 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegali
             name: (): string => $localize`Siam`,
             config: {
                 // minimum 3 so that there is space around the mountain
-                width: new ConfigLine(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
-                height: new ConfigLine(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
-                numberOfPiece: new ConfigLine(5, () => $localize`Number of piece by player`, MGPValidators.range(1, 99)),
+                width: new NumberConfigLine(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
+                height: new NumberConfigLine(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
+                numberOfPiece: new NumberConfigLine(5, () => $localize`Number of piece by player`, MGPValidators.range(1, 99)),
                 // -1 on two ends because there will always be the first mountain
-                numberOfBonusMountain: new ConfigLine(2, () => $localize`Number of bonus mountains`, MGPValidators.range(0, 98)),
+                numberOfBonusMountain: new NumberConfigLine(2, () => $localize`Number of bonus mountains`, MGPValidators.range(0, 98)),
             },
         });
 

@@ -16,10 +16,28 @@ export class RulesConfigDescriptionLocalizable {
 
 export class ConfigLine {
 
-    public constructor(public readonly value: ConfigDescriptionType,
+    protected constructor(public readonly value: ConfigDescriptionType,
                        public readonly title: Localized,
                        public readonly validator?: MGPValidator)
     {
+    }
+}
+
+export class NumberConfigLine extends ConfigLine {
+
+    public constructor(value: number,
+                       title: Localized,
+                       validator: MGPValidator)
+    {
+        super(value, title, validator);
+    }
+}
+
+export class BooleanConfig extends ConfigLine {
+
+    public constructor(value: boolean, title: Localized)
+    {
+        super(value, title);
     }
 }
 
@@ -43,8 +61,6 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
             const key: MGPSet<string> = new MGPSet(Object.keys(otherStandardConfig.config));
             Utils.assert(key.equals(defaultKeys), `Field missing in ${ otherStandardConfig.name() } config!`);
         }
-        // TODO CHECK validator is present for number
-        // Utils.assert(key in validator, `Validator missing for ${ key }!`);
     }
 
     public getStandardConfigs(): NamedRulesConfig<R>[] {
@@ -85,8 +101,8 @@ export class RulesConfigDescriptions {
     public static readonly GOBAN: RulesConfigDescription<GobanConfig> = new RulesConfigDescription<GobanConfig>({
         name: (): string => $localize`Default`,
         config: {
-            width: new ConfigLine(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
-            height: new ConfigLine(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+            width: new NumberConfigLine(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+            height: new NumberConfigLine(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
         },
     });
 }

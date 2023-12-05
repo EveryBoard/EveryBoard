@@ -14,7 +14,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { QuixoFailure } from './QuixoFailure';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
@@ -28,8 +28,8 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
         new RulesConfigDescription<QuixoConfig>({
             name: (): string => $localize`Quixo`,
             config: {
-                width: new ConfigLine(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
-                height: new ConfigLine(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+                width: new NumberConfigLine(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new NumberConfigLine(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
             },
         });
 

@@ -15,10 +15,17 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState, TaflConfig> {}
 
 export abstract class TaflRules<M extends TaflMove> extends Rules<M, TaflState, TaflConfig> {
+
+    public static readonly CASTLE_IS_LEFT_FOR_GOOD: Localized = () => $localize`Central throne is left for good`;
+    public static readonly EDGE_ARE_KING_S_ENNEMY: Localized = () => $localize`Edges are king's ennemy`;
+    public static readonly CENTRAL_THRONE_CAN_SURROUND_KING: Localized = () => $localize`Central throne can surround king`;
+    public static readonly KING_FAR_FROM_HOME_CAN_BE_SANDWICHED: Localized = () => $localize`King far from home can be sandwiched`;
+    public static readonly INVADER_STARTS: Localized = () => $localize`Invader starts`;
 
     protected constructor(public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {

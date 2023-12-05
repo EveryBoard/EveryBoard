@@ -13,7 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type ReversiLegalityInformation = Coord[];
@@ -47,8 +47,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
         new RulesConfigDescription<ReversiConfig>({
             name: (): string => $localize`Reversi`,
             config: {
-                width: new ConfigLine(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
-                height: new ConfigLine(8, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
+                width: new NumberConfigLine(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
+                height: new NumberConfigLine(8, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
             },
         });
 

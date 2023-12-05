@@ -295,7 +295,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public updateConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
         // If there is no config for this game, then rulesConfig value will be MGPOptional.empty()
-        // TODO no this com is false, check different between invalid config and "game has no config"
         if (rulesConfig.isPresent() && Object.keys(rulesConfig.get()).length === 0) {
             this.markConfigAsFilled();
         }

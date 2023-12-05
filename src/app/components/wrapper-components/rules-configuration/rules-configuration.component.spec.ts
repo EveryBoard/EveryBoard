@@ -8,7 +8,7 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { RulesConfigDescription, ConfigLine } from './RulesConfigDescription';
+import { RulesConfigDescription, NumberConfigLine, BooleanConfig } from './RulesConfigDescription';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 
 describe('RulesConfigurationComponent', () => {
@@ -46,8 +46,8 @@ describe('RulesConfigurationComponent', () => {
             {
                 name: (): string => 'the_default_config_name',
                 config: {
-                    nombre: new ConfigLine(5, () => 'nombre', MGPValidators.range(1, 99)),
-                    canailleDeBoule: new ConfigLine(12, () => 'canaille', MGPValidators.range(1, 99)),
+                    nombre: new NumberConfigLine(5, () => 'nombre', MGPValidators.range(1, 99)),
+                    canailleDeBoule: new NumberConfigLine(12, () => 'canaille', MGPValidators.range(1, 99)),
                 },
             }, [{
                 name: (): string => 'the_other_config_name',
@@ -59,8 +59,8 @@ describe('RulesConfigurationComponent', () => {
         {
             name: (): string => 'config name',
             config: {
-                booleen: new ConfigLine(false, () => 'booleen'),
-                truth: new ConfigLine(false, () => 'veritasserum'),
+                booleen: new BooleanConfig(false, () => 'booleen'),
+                truth: new BooleanConfig(false, () => 'veritasserum'),
             },
         },
     );

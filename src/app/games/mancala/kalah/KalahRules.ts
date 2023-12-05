@@ -4,7 +4,7 @@ import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '.
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig, NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class KalahRules extends MancalaRules {
@@ -15,12 +15,12 @@ export class KalahRules extends MancalaRules {
         new RulesConfigDescription<MancalaConfig>({
             name: (): string => $localize`Awalé`,
             config: {
-                feedOriginalHouse: new ConfigLine(true, () => $localize`Feed original house`), // TODO PUT 5 localizable in common
-                mustFeed: new ConfigLine(false, () => $localize`Must feed`),
-                passByPlayerStore: new ConfigLine(true, () => $localize`Pass by player store`),
-                mustContinueDistributionAfterStore: new ConfigLine(true, () => $localize`Must continue distribution after last seed ends in store`),
-                seedsByHouse: new ConfigLine(4, () => $localize`Seeds by house`, MGPValidators.range(1, 99)),
-                width: new ConfigLine(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                feedOriginalHouse: new BooleanConfig(true, MancalaRules.FEED_ORIGINAL_HOUSE),
+                mustFeed: new BooleanConfig(false, MancalaRules.MUST_FEED),
+                passByPlayerStore: new BooleanConfig(true, MancalaRules.PASS_BY_PLAYER_STORE),
+                mustContinueDistributionAfterStore: new BooleanConfig(true, MancalaRules.MULTIPLE_SOW),
+                seedsByHouse: new NumberConfigLine(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
+                width: new NumberConfigLine(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
             },
         });
 

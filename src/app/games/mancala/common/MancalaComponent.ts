@@ -139,7 +139,6 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const distributionResult: MancalaDistributionResult =
             await this.showSimpleDistribution(MancalaDistribution.of(x));
         const config: MancalaConfig = this.getConfig().get();
-        console.log('continueMoveConstruction:: passByPlayerStore', config.passByPlayerStore)
         if (distributionResult.endsUpInStore &&
             config.mustContinueDistributionAfterStore)
         {

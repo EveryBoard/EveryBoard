@@ -104,14 +104,12 @@ export class GoComponent
 
     public getSpaceClass(x: number, y: number): string {
         const state: GoState = this.getState();
-        console.log(state.getWidth(), state.getHeight(), 'now, asking for', x, y)
         const piece: GoPiece = state.getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getOwner());
     }
 
     public spaceIsFull(x: number, y: number): boolean {
         const state: GoState = this.getState();
-        console.log(state.getWidth(), state.getHeight(), 'or', this.board.length, this.board[0].length, 'now, asking for', x, y)
         const piece: GoPiece = state.getPieceAtXY(x, y);
         return piece !== GoPiece.EMPTY && this.isTerritory(x, y) === false;
     }

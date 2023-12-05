@@ -13,6 +13,7 @@ import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { MancalaFailure } from './MancalaFailure';
+import { Localized } from 'src/app/utils/LocaleUtils';
 
 export interface MancalaCaptureResult {
 
@@ -37,6 +38,12 @@ export type MancalaDistributionResult = {
 export class MancalaNode extends GameNode<MancalaMove, MancalaState, MancalaConfig> {}
 
 export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, MancalaConfig> {
+
+    public static readonly FEED_ORIGINAL_HOUSE: Localized = () => $localize`Feed original house`;
+    public static readonly MUST_FEED: Localized = () => $localize`Must feed`;
+    public static readonly PASS_BY_PLAYER_STORE: Localized = () => $localize`Pass by player store`;
+    public static readonly MULTIPLE_SOW: Localized = () => $localize`Must continue distribution after last seed ends in store`
+    public static readonly SEEDS_BY_HOUSE: Localized = () => $localize`Seeds by house`;
 
     // These are the coordinates of the store. These are fake coordinates since the stores are not on the board
     public static FAKE_STORE_COORD: ReversibleMap<Player, Coord> = new ReversibleMap([

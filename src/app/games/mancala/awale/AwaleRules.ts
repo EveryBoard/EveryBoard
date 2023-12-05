@@ -6,7 +6,7 @@ import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '.
 import { Utils } from 'src/app/utils/utils';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig, NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export class AwaleRules extends MancalaRules {
 
@@ -16,12 +16,12 @@ export class AwaleRules extends MancalaRules {
         new RulesConfigDescription<MancalaConfig>({
             name: (): string => $localize`Awalé`,
             config: {
-                feedOriginalHouse: new ConfigLine(false, () => $localize`Feed original house`),
-                mustFeed: new ConfigLine(true, () => $localize`Must feed`),
-                passByPlayerStore: new ConfigLine(false, () => $localize`Pass by player store`),
-                mustContinueDistributionAfterStore: new ConfigLine(false, () => $localize`Must continue distribution after last seed ends in store`),
-                seedsByHouse: new ConfigLine(4, () => $localize`Seeds by house`, MGPValidators.range(1, 99)),
-                width: new ConfigLine(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                feedOriginalHouse: new BooleanConfig(false, MancalaRules.FEED_ORIGINAL_HOUSE),
+                mustFeed: new BooleanConfig(true, MancalaRules.MUST_FEED),
+                passByPlayerStore: new BooleanConfig(false, MancalaRules.PASS_BY_PLAYER_STORE),
+                mustContinueDistributionAfterStore: new BooleanConfig(false, MancalaRules.MULTIPLE_SOW),
+                seedsByHouse: new NumberConfigLine(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
+                width: new NumberConfigLine(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
             },
         });
 

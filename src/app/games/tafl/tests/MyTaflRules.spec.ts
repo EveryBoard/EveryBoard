@@ -3,7 +3,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflNode, TaflRules } from '../TaflRules';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { TaflConfig } from '../TaflConfig';
-import { ConfigLine, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
@@ -16,11 +16,11 @@ export class MyTaflRules extends TaflRules<MyTaflMove> {
         new RulesConfigDescription<TaflConfig>({
             name: (): string => `MyTafl`,
             config: {
-                castleIsLeftForGood: new ConfigLine(true, () => $localize`Central throne is left for good`),
-                edgesAreKingsEnnemy: new ConfigLine(true, () => $localize`Edges are king's ennemy`),
-                centralThroneCanSurroundKing: new ConfigLine(true, () => $localize`Central throne can surround king`),
-                kingFarFromHomeCanBeSandwiched: new ConfigLine(true, () => $localize`King far from home can be sandwiched`),
-                invaderStarts: new ConfigLine(true, () => $localize`Invader starts`),
+                castleIsLeftForGood: new BooleanConfig(true, () => $localize`Central throne is left for good`),
+                edgesAreKingsEnnemy: new BooleanConfig(true, () => $localize`Edges are king's ennemy`),
+                centralThroneCanSurroundKing: new BooleanConfig(true, () => $localize`Central throne can surround king`),
+                kingFarFromHomeCanBeSandwiched: new BooleanConfig(true, () => $localize`King far from home can be sandwiched`),
+                invaderStarts: new BooleanConfig(true, () => $localize`Invader starts`),
             },
         });
 

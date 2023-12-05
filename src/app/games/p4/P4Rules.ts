@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type P4Config = {
@@ -30,8 +30,8 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         new RulesConfigDescription<P4Config>({
             name: (): string => $localize`P4`,
             config: {
-                width: new ConfigLine(7, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
-                height: new ConfigLine(6, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+                width: new NumberConfigLine(7, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new NumberConfigLine(6, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
             },
         });
 

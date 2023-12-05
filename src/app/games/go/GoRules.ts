@@ -15,7 +15,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { ConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 
 export type GoLegalityInformation = Coord[];
@@ -36,9 +36,9 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         new RulesConfigDescription<GoConfig>({
             name: (): string => $localize`19 x 19`,
             config: {
-                width: new ConfigLine(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
-                height: new ConfigLine(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
-                handicap: new ConfigLine(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
+                width: new NumberConfigLine(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new NumberConfigLine(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+                handicap: new NumberConfigLine(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
             },
         }, [{
             name: (): string => $localize`13 x 13`,
