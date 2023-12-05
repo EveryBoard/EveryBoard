@@ -23,6 +23,7 @@ describe('CoerceoMove', () => {
             }
             TestUtils.expectToThrowAndLog(createMoveWithInvalidDistance, CoerceoFailure.INVALID_DISTANCE());
         });
+
         it('should not allow out of range starting coord', () => {
             function createOutOfRangeStartingCoord(): void {
                 CoerceoRegularMove.ofMovement(new Coord(-1, 0), CoerceoStep.LEFT);
@@ -30,6 +31,7 @@ describe('CoerceoMove', () => {
             TestUtils.expectToThrowAndLog(createOutOfRangeStartingCoord,
                                           'Starting coord cannot be out of range (width: 15, height: 10).');
         });
+
         it('should not allow out of range landing coord', () => {
             function allowOutOfRangeLandingCoord(): void {
                 CoerceoRegularMove.ofMovement(new Coord(0, 0), CoerceoStep.LEFT);
@@ -68,6 +70,7 @@ describe('CoerceoMove', () => {
             expect(movement.equals(tileExchange)).toBeFalse();
             expect(movement.equals(movement)).toBeTrue();
         });
+
         it('should stringify nicely', () => {
             const tileExchange: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(5, 5));
             const movement: CoerceoMove = CoerceoRegularMove.of(new Coord(5, 5), new Coord(7, 5));
@@ -80,6 +83,7 @@ describe('CoerceoMove', () => {
                 const moveGenerator: CoerceoMoveGenerator = new CoerceoMoveGenerator();
                 MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, CoerceoMove.encoder);
             });
+
             it('should be bijective with tiles exchanges', () => {
                 const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(5, 7));
                 EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);

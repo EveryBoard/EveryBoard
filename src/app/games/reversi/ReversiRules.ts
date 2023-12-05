@@ -138,14 +138,14 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
         return []; // we found the end of the board before we found     the newt pawn like 'searchedPawn'
     }
 
-    public isGameEnded(state: ReversiState): boolean {
-        return this.playerCanOnlyPass(state) &&
-               this.nextPlayerCantOnlyPass(state);
+    public isGameEnded(state: ReversiState, config: MGPOptional<ReversiConfig>): boolean {
+        return this.playerCanOnlyPass(state, config) &&
+               this.nextPlayerCantOnlyPass(state, config);
     }
 
-    public getGameStatus(node: ReversiNode): GameStatus {
+    public getGameStatus(node: ReversiNode, config: MGPOptional<ReversiConfig>): GameStatus {
         const state: ReversiState = node.gameState;
-        const gameIsEnded: boolean = this.isGameEnded(state);
+        const gameIsEnded: boolean = this.isGameEnded(state, config);
         if (gameIsEnded === false) {
             return GameStatus.ONGOING;
         }
@@ -160,21 +160,21 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
         return GameStatus.DRAW;
     }
 
-    public playerCanOnlyPass(reversiState: ReversiState): boolean {
-        const currentPlayerChoices: ReversiMoveWithSwitched[] = this.getListMoves(reversiState);
+    public playerCanOnlyPass(state: ReversiState, config: MGPOptional<ReversiConfig>): boolean {
+        const currentPlayerChoices: ReversiMoveWithSwitched[] = this.getListMoves(state, config);
         // if the current player cannot start, then the part is ended
         return (currentPlayerChoices.length === 1) &&
                 currentPlayerChoices[0].move.equals(ReversiMove.PASS);
     }
 
-    public nextPlayerCantOnlyPass(reversiState: ReversiState): boolean {
+    public nextPlayerCantOnlyPass(reversiState: ReversiState, config: MGPOptional<ReversiConfig>): boolean {
         const nextBoard: PlayerOrNone[][] = reversiState.getCopiedBoard();
         const nextTurn: number = reversiState.turn + 1;
         const nextState: ReversiState = new ReversiState(nextBoard, nextTurn);
-        return this.playerCanOnlyPass(nextState);
+        return this.playerCanOnlyPass(nextState, config);
     }
 
-    public getListMoves(state: ReversiState): ReversiMoveWithSwitched[] {
+    public getListMoves(state: ReversiState, _config: MGPOptional<ReversiConfig>): ReversiMoveWithSwitched[] {
         const moves: ReversiMoveWithSwitched[] = [];
 
         let nextBoard: PlayerOrNone[][];
@@ -212,12 +212,14 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
         return moves;
     }
 
-    public isLegal(move: ReversiMove, state: ReversiState): MGPFallible<ReversiLegalityInformation> {
+    public isLegal(move: ReversiMove, state: ReversiState, config?: ReversiConfig)
+    : MGPFallible<ReversiLegalityInformation>
+    {
         if (move.equals(ReversiMove.PASS)) { // if the player passes
             // let's check that pass is a legal move right now
             // if there was no choice but to pass, then passing is legal!
             // else, passing was illegal
-            if (this.playerCanOnlyPass(state)) {
+            if (this.playerCanOnlyPass(state, MGPOptional.ofNullable(config))) {
                 return MGPFallible.success([]);
             } else {
                 return MGPFallible.failure(RulesFailure.CANNOT_PASS());

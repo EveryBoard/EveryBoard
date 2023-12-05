@@ -164,7 +164,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.layers[stackSize-1].highlight(coord, stroke);
     }
     public override async pass(): Promise<MGPValidation> {
-        Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
+        Utils.assert(this.canPass, 'HiveComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(HiveMove.PASS);
     }
     private computeViewBox(): void {

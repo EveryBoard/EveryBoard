@@ -74,7 +74,7 @@ describe('P4Rules', () => {
             const expectedState: P4State = new P4State(expectedBoard, 7);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: P4Node = new P4Node(expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('Second player should win vertically', () => {
@@ -104,7 +104,7 @@ describe('P4Rules', () => {
             const expectedState: P4State = new P4State(expectedBoard, 8);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: P4Node = new P4Node(expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
         it('should be a draw', () => {
@@ -134,7 +134,7 @@ describe('P4Rules', () => {
             const expectedState: P4State = new P4State(expectedBoard, 42);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: P4Node = new P4Node(expectedState);
-            RulesUtils.expectToBeDraw(rules, node);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
         it('should be a draw once the board is full (smaller board config)', () => {
@@ -155,7 +155,7 @@ describe('P4Rules', () => {
             const expectedState: P4State = new P4State(expectedBoard, finalTurn);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: P4Node = new P4Node(expectedState);
-            RulesUtils.expectToBeDraw(rules, node);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
         it('should be a draw once the board is full (bigger board config)', () => {
@@ -176,7 +176,7 @@ describe('P4Rules', () => {
             const expectedState: P4State = new P4State(expectedBoard, finalTurn);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: P4Node = new P4Node(expectedState);
-            RulesUtils.expectToBeDraw(rules, node);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
     });
@@ -198,7 +198,7 @@ describe('P4Rules', () => {
 
         // Then the move should be deemed illegal
         const reason: string = P4Failure.COLUMN_IS_FULL();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should know where the lowest space is', () => {

@@ -5,18 +5,22 @@ import { QuartoPiece } from '../QuartoPiece';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('QuartoMove', () => {
+
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = QuartoRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const rules: QuartoRules = QuartoRules.get();
         const moveGenerator: QuartoMoveGenerator = new QuartoMoveGenerator();
         const node: QuartoNode = rules.getInitialNode(MGPOptional.empty());
-        const firstTurnMoves: QuartoMove[] = moveGenerator.getListMoves(node);
+        const firstTurnMoves: QuartoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(QuartoMove.encoder, move);
         }
     });
+
     it('should override toString and equals correctly', () => {
         const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.AAAB);
         const secondMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
@@ -26,4 +30,5 @@ describe('QuartoMove', () => {
         expect(move.equals(thirdMove)).toBeFalse();
         expect(move.toString()).toEqual('QuartoMove(1, 1, 1)');
     });
+
 });

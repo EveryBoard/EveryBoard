@@ -22,6 +22,7 @@ describe('DvonnPieceStack', () => {
         it('should properly concatenate stacks', () => {
             expect(DvonnPieceStack.append(stack4, stack4)).toEqual(stack8);
         });
+
         it('should preserve owner of the first stack', () => {
             expect(DvonnPieceStack.append(stack1, stack2).getOwner()).toEqual(Player.ZERO);
         });

@@ -80,14 +80,16 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.encoder = LascaMove.encoder;
         this.hasAsymmetricBoard = true;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
-        this.legalMoves = this.moveGenerator.getListMoves(this.node);
+        this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
         this.createAdaptedBoardFrom(state);
         this.showPossibleMoves();
         this.rotateAdaptedBoardIfNeeded();
     }
+
     private createAdaptedBoardFrom(state: LascaState): void {
         this.adaptedBoard = {
             isAlreadySwitched: false,
@@ -117,6 +119,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             this.getSpaceInfoAt(moved).squareClasses.push('moved-fill');
         }
     }
+
     private getSpaceInfo(state: LascaState, x: number, y: number): SpaceInfo {
         const square: LascaStack = state.getPieceAtXY(x, y);
         const pieceInfos: LascaPieceInfo[] = [];
@@ -135,10 +138,12 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             squareClasses: [],
         };
     }
+
     public override async showLastMove(move: LascaMove): Promise<void> {
         this.showLastCapture(move);
         this.showSteppedOnCoord(move);
     }
+
     private showLastCapture(move: LascaMove): void {
         if (move.isStep === false) {
             const jumpedOverCoord: MGPFallible<MGPSet<Coord>> = move.getCapturedCoords();
@@ -148,11 +153,13 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             }
         }
     }
+
     private showSteppedOnCoord(move: LascaMove): void {
         for (const steppedCoord of move.coords) {
             this.getSpaceInfoAt(steppedCoord).squareClasses.push('moved-fill');
         }
     }
+
     private showPossibleMoves(): void {
         if (this.interactive) {
             for (const validMove of this.legalMoves) {
@@ -161,6 +168,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             }
         }
     }
+
     private getSpaceInfoAt(unadapedCoord: Coord): SpaceInfo {
         // Adapt the coord if needed so we don't affect the "centrally symmetrical" coord to this one
         if (this.getPointOfView() === Player.ONE && this.adaptedBoard.isAlreadySwitched) {
@@ -171,6 +179,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             return this.adaptedBoard.spaceInfo[unadapedCoord.y][unadapedCoord.x];
         }
     }
+
     private rotateAdaptedBoardIfNeeded(): void {
         if (this.getPointOfView() === Player.ONE) {
             const rotatedAdaptedBoard: SpaceInfo[][] = [];
@@ -188,10 +197,12 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             };
         }
     }
+
     public override hideLastMove(): void {
         this.createAdaptedBoardFrom(this.getState());
         this.rotateAdaptedBoardIfNeeded();
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#coord_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -209,6 +220,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             return this.moveClick(clickedCoord);
         }
     }
+
     public override cancelMoveAttempt(): void {
         this.currentMoveClicks = [];
         this.capturedCoords = [];
@@ -216,6 +228,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.showPossibleMoves();
         this.rotateAdaptedBoardIfNeeded();
     }
+
     public async moveClick(clicked: Coord): Promise<MGPValidation> {
         if (clicked.equals(this.currentMoveClicks[0])) {
             this.cancelMoveAttempt();
@@ -239,6 +252,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         // Continuing to capture
         return this.capture(clicked);
     }
+
     private async capture(clicked: Coord): Promise<MGPValidation> {
         const numberOfClicks: number = this.currentMoveClicks.length;
         const lastCoord: Coord = this.currentMoveClicks[numberOfClicks - 1];
@@ -257,6 +271,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             return this.cancelMove(LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
         }
     }
+
     private applyPartialCapture(): MGPValidation {
         let partialState: LascaState = this.getState().remove(this.currentMoveClicks[0]);
         let movingStack: LascaStack = this.getState().getPieceAt(this.currentMoveClicks[0]);
@@ -273,6 +288,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         this.rotateAdaptedBoardIfNeeded();
         return MGPValidation.SUCCESS;
     }
+
     private async trySelectingPiece(clicked: Coord): Promise<MGPValidation> {
         const clickedSpace: LascaStack = this.getState().getPieceAt(clicked);
         if (clickedSpace.isEmpty()) {
@@ -281,6 +297,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             return this.selectPiece(clicked);
         }
     }
+
     private async selectPiece(coord: Coord): Promise<MGPValidation> {
         this.capturedCoords = [];
         if (this.legalMoves.some((move: LascaMove) => move.getStartingCoord().equals(coord))) {
@@ -291,6 +308,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             return this.cancelMove(LascaFailure.THIS_PIECE_CANNOT_MOVE());
         }
     }
+
     private showPossibleLandings(coord: Coord, state: LascaState): void {
         const possibleCaptures: LascaMove[] = this.rules.getPieceCaptures(state, coord);
         if (possibleCaptures.length === 0) {
@@ -306,20 +324,24 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             }
         }
     }
+
     public getTranslate(x: number, y: number, z: number): string {
         const coordTransform: Coord = this.getCoordTranslate(x, y, z, this.mode);
         const translate: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
         return translate;
     }
+
     public getParallelogramPoints(): string {
         const parallelogramCoords: Coord[] = this.getParallelogramCoordsForLasca();
         return parallelogramCoords
             .map((coord: Coord) => coord.x + ', ' + coord.y)
             .join(' ');
     }
+
     public getParallelogramCoordsForLasca(): Coord[] {
         return this.getParallelogramCoords(this.mode);
     }
+
     public getParallelogramCenter(): Coord {
         const parallelogramCoords: Coord[] = this.getParallelogramCoordsForLasca();
         return this.getParallelogramCenterOf(
@@ -329,6 +351,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             parallelogramCoords[3],
         );
     }
+
     /**
      * @param a coord of the parallelogram opposite to c
      * @param b coord of the parallelogram opposite to d
@@ -345,6 +368,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const y: number = (maxY - minY) / 2;
         return new Coord(x, y);
     }
+
     public getRightEdge(): string {
         const WIDTH: number = this.basicWidth * this.mode.horizontalWidthRatio;
         const OFFSET: number = this.basicWidth * this.mode.offsetRatio;
@@ -358,6 +382,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const y3: number = this.basicWidth;
         return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
     }
+
     public getPieceTranslate(z: number): string {
         // We want the piece to be in the center of the parallelogram, here are its coords
         const parallelogramCenter: Coord = this.getParallelogramCenter();
@@ -372,4 +397,5 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const pieceHeight: number = this.SPACE_SIZE * 0.15;
         return 'translate(' + 0 + ' ' + (offsetY - (z * pieceHeight)) + ')';
     }
+
 }

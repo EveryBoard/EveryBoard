@@ -1,6 +1,8 @@
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 function expectNoBackAndForth(move: DiaballikMove): void {
     const subMoves: DiaballikSubMove[] = move.getSubMoves();
@@ -26,6 +28,8 @@ function hasNSteps(n: number): (move: DiaballikMove) => boolean {
     };
 }
 
+const defaultConfig: MGPOptional<EmptyRulesConfig> = DiaballikRules.get().getDefaultRulesConfig();
+
 describe('DiaballikFilteredMoveGenerator of length 3', () => {
 
     let moveGenerator: DiaballikFilteredMoveGenerator;
@@ -39,7 +43,7 @@ describe('DiaballikFilteredMoveGenerator of length 3', () => {
         const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
         // When computing the list of moves
-        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+        const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should have all interesting move options, which is 138 moves
         expect(moves.length).toBe(138);
@@ -60,7 +64,7 @@ describe('DiaballikFilteredMoveGenerator', () => {
             const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
             // When computing the list of moves
-            const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+            const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
             // Then it should have only n-step moves
             expect(moves.every(hasNSteps(moveLength))).toBeTrue();

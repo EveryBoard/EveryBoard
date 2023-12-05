@@ -14,12 +14,14 @@ describe('AbaloneMove', () => {
             () => AbaloneMove.ofDoubleCoord(new Coord(0, 0), new Coord(3, 0), HexaDirection.DOWN),
             'Distance between first coord and last coord is too big');
     });
+
     it('should not construct when created with an out of range coord', () => {
         const coord: Coord = new Coord(9, 9);
         TestUtils.expectToThrowAndLog(
             () => AbaloneMove.ofSingleCoord(coord, HexaDirection.DOWN),
             CoordFailure.OUT_OF_RANGE(coord));
     });
+
     it('should map false double coord to single coord', () => {
         const up: Coord = new Coord(0, 0);
         const down: Coord = new Coord(0, 2);
@@ -33,6 +35,7 @@ describe('AbaloneMove', () => {
         const simpleMove2: AbaloneMove = AbaloneMove.ofSingleCoord(down, HexaDirection.UP);
         expect(simpleMove2.equals(distortedMove2)).toBeTrue();
     });
+
     it('should spot identical translations and map them', () => {
         const up: Coord = new Coord(0, 0);
         const down: Coord = new Coord(0, 2);
@@ -40,6 +43,7 @@ describe('AbaloneMove', () => {
         const distoredMove: AbaloneMove = AbaloneMove.ofDoubleCoord(down, up, HexaDirection.LEFT);
         expect(distoredMove.equals(normalMove)).toBeTrue();
     });
+
     it('should stringify nicely', () => {
         const singleCoord: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 0), HexaDirection.DOWN_LEFT);
         const doubleCoord: AbaloneMove =
@@ -47,17 +51,20 @@ describe('AbaloneMove', () => {
         expect(singleCoord.toString()).toEqual('AbaloneMove(0, 0, DOWN_LEFT)');
         expect(doubleCoord.toString()).toEqual('AbaloneMove((0, 0) > (2, 0), DOWN)');
     });
+
     it('should equal correctly', () => {
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 0), HexaDirection.DOWN);
         const otherMove: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 0), HexaDirection.DOWN_LEFT);
         expect(move.equals(move)).toBeTrue();
         expect(move.equals(otherMove)).toBeFalse();
     });
+
     it('should not construct when creating move with no HexaDirectionnal alignement', () => {
         TestUtils.expectToThrowAndLog(
             () => AbaloneMove.ofDoubleCoord(new Coord(0, 0), new Coord(1, 1), HexaDirection.UP),
             'Invalid direction');
     });
+
     it('should have a bijective encoder', () => {
         const rules: AbaloneRules = AbaloneRules.get();
         const moveGenerator: AbaloneMoveGenerator = new AbaloneMoveGenerator();

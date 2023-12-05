@@ -6,8 +6,9 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../Connect
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ConnectSixRules', () => {
     /**
@@ -22,6 +23,7 @@ describe('ConnectSixRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ConnectSixRules;
+    const defaultConfig: MGPOptional<GobanConfig> = ConnectSixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = ConnectSixRules.get();
@@ -38,7 +40,7 @@ describe('ConnectSixRules', () => {
 
             // Then it should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should allow the first player play only one piece', () => {
@@ -117,7 +119,7 @@ describe('ConnectSixRules', () => {
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should forbid move where first coord is out of range', () => {
@@ -149,7 +151,7 @@ describe('ConnectSixRules', () => {
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-2, -2));
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should refuse dropping first coord on another piece', () => {
@@ -182,7 +184,7 @@ describe('ConnectSixRules', () => {
 
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
             // Then the move should be forbidden
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should refuse dropping second coord on another piece', () => {
@@ -214,7 +216,7 @@ describe('ConnectSixRules', () => {
 
             // Then the move should be forbidden
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should allow move that drop two pieces on empty pieces', () => {
@@ -325,7 +327,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const node: ConnectSixNode = new ConnectSixNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
         it('should draw when no one can play anymore', () => {
@@ -379,7 +381,7 @@ describe('ConnectSixRules', () => {
             // Then the board should be a draw
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: ConnectSixNode = new ConnectSixNode(expectedState);
-            RulesUtils.expectToBeDraw(rules, node);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
     });

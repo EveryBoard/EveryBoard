@@ -5,14 +5,15 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 import { Direction } from 'src/app/jscaip/Direction';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState> {
+export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, TeekoConfig> {
 
-    public getListMoves(node: TeekoNode): TeekoMove[] {
+    public getListMoves(node: TeekoNode, config: MGPOptional<TeekoConfig>): TeekoMove[] {
         if (node.gameState.isInDropPhase()) {
             return this.getListDrops(node.gameState);
         } else {
-            return this.getListTranslations(node.gameState, node.config.get());
+            return this.getListTranslations(node.gameState, config.get());
         }
     }
 

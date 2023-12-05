@@ -1,3 +1,4 @@
+import { MGPOptional } from '../utils/MGPOptional';
 import { GameNode } from './GameNode';
 import { GameState } from './GameState';
 import { Move } from './Move';
@@ -15,7 +16,7 @@ export abstract class MoveGenerator<M extends Move, S extends GameState, C exten
      * This function could give an incomplete set of data if some of them are redundant
      * or if some of them are too bad to be interesting to count, as a matter of performance.
      */
-    public abstract getListMoves(node: GameNode<M, S, C>): M[];
+    public abstract getListMoves(node: GameNode<M, S, C>, config: MGPOptional<C>): M[];
 }
 
 /**
@@ -54,12 +55,12 @@ export abstract class AI<M extends Move,
     public abstract readonly availableOptions: O[];
 
     // This lets the AI choose the next move to play, given a game node and some options
-    public abstract chooseNextMove(node: GameNode<M, S, C>, options: O): M;
+    public abstract chooseNextMove(node: GameNode<M, S, C>, options: O, config: MGPOptional<C>): M;
 
     // This returns useful information to display on the local game page for developers
-    public abstract getInfo(node: GameNode<M, S, C>): string;
+    public abstract getInfo(node: GameNode<M, S, C>, config: MGPOptional<C>): string;
 
 }
 
-export abstract class AbstractAI extends AI<Move, GameState, AIOptions> {
+export abstract class AbstractAI extends AI<Move, GameState, AIOptions, RulesConfig> {
 }

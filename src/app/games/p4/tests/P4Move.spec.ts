@@ -24,12 +24,14 @@ describe('P4Move', () => {
             const move: P4Move = P4Move.of(5);
             expect(move.equals(move)).toBeTrue();
         });
+
         it('should consider different moves non equal', () => {
             const move1: P4Move = P4Move.of(5);
             const move2: P4Move = P4Move.of(6);
             expect(move1.equals(move2)).toBeFalse();
         });
     });
+
     it('should have a bijective encoder', () => {
         const move: P4Move = P4Move.of(3);
         EncoderTestUtils.expectToBeBijective(P4Move.encoder, move);

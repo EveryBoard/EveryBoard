@@ -30,6 +30,7 @@ describe('GoBoardDatas', () => {
         expect(groupInfos.coords.length).toBe(width * height);
         expect(groupInfos.neighborsEntryPoints.length).toBe(0);
     });
+
     it('should create three neighbor group', () => {
         const board: Table<GoPiece> = [
             [_, _, _, _, _],

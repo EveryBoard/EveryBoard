@@ -4,15 +4,17 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { Heuristic } from 'src/app/jscaip/Minimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
+export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, EpaminondasState, BoardValue, EpaminondasConfig> {
 
-    public getBoardValue(node: EpaminondasNode): BoardValue {
+    public getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
         const boardValue: number = this.getPieceCountPlusRowDomination(node.gameState);
         return new BoardValue(boardValue);
     }
+
     public getPieceCountPlusRowDomination(state: EpaminondasState): number {
         const width: number = state.getWidth();
         const height: number = state.getHeight();
@@ -50,4 +52,5 @@ export class EpaminondasHeuristic extends Heuristic<EpaminondasMove, Epaminondas
         }
         return total;
     }
+
 }

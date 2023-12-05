@@ -7,6 +7,7 @@ import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessMoveGenerator', () => {
 
@@ -16,23 +17,27 @@ describe('MartianChessMoveGenerator', () => {
     const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
     let moveGenerator: MartianChessMoveGenerator;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = MartianChessRules.get().getDefaultRulesConfig();
 
     function isPawnMove(move: MartianChessMove, state: MartianChessState): boolean {
         return state.getPieceAt(move.getStart()) === MartianChessPiece.PAWN;
     }
+
     function isDroneMove(move: MartianChessMove, state: MartianChessState): boolean {
         return state.getPieceAt(move.getStart()) === MartianChessPiece.DRONE;
     }
+
     beforeEach(() => {
         moveGenerator = new MartianChessMoveGenerator();
     });
+
     it('should includes all moves at first turn (but no call the clock)', () => {
         // Given the initial state
         const state: MartianChessState = MartianChessRules.get().getInitialState();
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When listing the moves
-        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be a total of 13 moves, all, not calling the clock
         const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock === false);
@@ -47,6 +52,7 @@ describe('MartianChessMoveGenerator', () => {
         const droneWithoutClock: MartianChessMove[] = notCalled.filter((m: MartianChessMove) => isDroneMove(m, state));
         expect(droneWithoutClock.length).toBe(6);
     });
+
     it('should include drone promotions and capture', () => {
         // Given a state with pawn on the edge and another
         const board: Table<MartianChessPiece> = [
@@ -63,7 +69,7 @@ describe('MartianChessMoveGenerator', () => {
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When listing the moves
-        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then 6 moves should be included
         const notCalled: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.calledTheClock === false);
@@ -71,6 +77,7 @@ describe('MartianChessMoveGenerator', () => {
         expect(pawnWithoutClock.length).toBe(6);
         expect(moves.length).toBe(6);
     });
+
     it('should include queen promotions', () => {
         // Given a state with pawn on the edge a drone
         const board: Table<MartianChessPiece> = [
@@ -87,7 +94,7 @@ describe('MartianChessMoveGenerator', () => {
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When listing the moves
-        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then the 15 moves should be included, 2 for the pawn and 13 for the drone
         const pawn: MartianChessMove[] = moves.filter((m: MartianChessMove) => isPawnMove(m, state));
@@ -96,6 +103,7 @@ describe('MartianChessMoveGenerator', () => {
         expect(drone.length).toBe(13);
         expect(moves.length).toBe(15);
     });
+
     it('should exclude illegal "move cancelation"', () => {
         // Given a state in which last move could be canceled
         const board: Table<MartianChessPiece> = [
@@ -114,12 +122,13 @@ describe('MartianChessMoveGenerator', () => {
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When listing the moves
-        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then the reverse last move should not be in it
         const reverse: MartianChessMove[] = moves.filter((m: MartianChessMove) => m.isUndoneBy(optLast));
         expect(reverse.length).toBe(0);
     });
+
     it('should count all queen move', () => {
         // Given a state with a queen
         const board: Table<MartianChessPiece> = [
@@ -136,9 +145,10 @@ describe('MartianChessMoveGenerator', () => {
         const node: MartianChessNode = new MartianChessNode(state);
 
         // When listing the moves
-        const moves: MartianChessMove[] = moveGenerator.getListMoves(node);
+        const moves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then the 13 moves should be included, but only once (not with clock called)
         expect(moves.length).toBe(13);
     });
+
 });

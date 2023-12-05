@@ -31,11 +31,11 @@ describe('TaflPieceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TaflState = new TaflState(board, 1);
-        const node: TablutNode = new TablutNode(state, undefined, undefined, defaultConfig);
+        const node: TablutNode = new TablutNode(state);
         const winnerMove: TablutMove = TablutMove.from(new Coord(3, 0), new Coord(8, 0)).get();
 
-        const minimax: Minimax<TablutMove, TaflState> = new TaflPieceMinimax(TablutRules.get());
-        const bestMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 });
+        const minimax: Minimax<TablutMove, TaflState, TaflConfig> = new TaflPieceMinimax(TablutRules.get());
+        const bestMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 }, defaultConfig);
         expect(bestMove).toEqual(winnerMove);
     });
 });

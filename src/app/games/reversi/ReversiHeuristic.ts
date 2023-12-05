@@ -4,12 +4,13 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { ReversiConfig, ReversiNode } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState, ReversiConfig> {
 
-    public getMetrics(node: ReversiNode): [number, number] {
+    public getMetrics(node: ReversiNode, optionalConfig: MGPOptional<ReversiConfig>): [number, number] {
         const state: ReversiState = node.gameState;
-        const config: ReversiConfig = node.config.get();
+        const config: ReversiConfig = optionalConfig.get();
         let player0Count: number = 0;
         let player1Count: number = 0;
         for (const coordAndContent of state.getCoordsAndContents()) {

@@ -28,11 +28,10 @@ describe('SiamMoveGenerator', () => {
 
     it('should provide 44 possible moves on initial board', () => {
         // Given the initial board
-        const node: SiamNode =
-            new SiamNode(rules.getInitialState(defaultConfig), undefined, undefined, defaultConfig);
+        const node: SiamNode = new SiamNode(rules.getInitialState(defaultConfig));
 
         // When listing the moves
-        const firstTurnMoves: SiamMove[] = moveGenerator.getListMoves(node);
+        const firstTurnMoves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be exactly 44 moves
         expect(firstTurnMoves.length).toEqual(44);
@@ -48,10 +47,10 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, U, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new SiamNode(state, undefined, undefined, defaultConfig);
+        const node: SiamNode = new SiamNode(state);
 
         // When listing the moves
-        const moves: SiamMove[] = moveGenerator.getListMoves(node);
+        const moves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then all expected moves are returned
         const moveType: { [moveTYpe: string]: number} = {
@@ -75,6 +74,7 @@ describe('SiamMoveGenerator', () => {
         }
         expect(moveType).toEqual({ moving: 35, rotation: 12, pushingInsertion: 18, slidingInsertion: 16 });
     });
+
     it('should not propose inserting a piece when 5 pieces of the player are already on the board', () => {
         // Given a board with 5 pieces of the player
         const board: Table<SiamPiece> = [
@@ -85,10 +85,10 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, M, _],
         ];
         const state: SiamState = new SiamState(board, 1);
-        const node: SiamNode = new SiamNode(state, undefined, undefined, defaultConfig);
+        const node: SiamNode = new SiamNode(state);
 
         // When listing the moves
-        const moves: SiamMove[] = moveGenerator.getListMoves(node);
+        const moves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
 
             // Then no move should insert a new piece

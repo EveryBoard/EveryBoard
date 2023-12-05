@@ -9,7 +9,7 @@ import { GameStatus } from '../GameStatus';
 import { JSONValue } from 'src/app/utils/utils';
 import { RulesUtils } from './RulesUtils.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { RulesConfig } from '../RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 
 class AbstractState extends GameStateWithTable<number> {}
 
@@ -54,6 +54,7 @@ class AbstractRules extends ConfiglessRules<P4Move, AbstractState> {
 describe('Rules', () => {
 
     let rules: AbstractRules;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = AbstractRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AbstractRules.get();
@@ -65,7 +66,7 @@ describe('Rules', () => {
         spyOn(node, 'getChild').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
-        const resultingNode: MGPFallible<AbstractNode> = rules.choose(node, P4Move.of(0));
+        const resultingNode: MGPFallible<AbstractNode> = rules.choose(node, P4Move.of(0), defaultConfig);
 
         // Then the node should be created and chosen
         expect(resultingNode.isSuccess()).toBeTrue();
@@ -98,23 +99,10 @@ describe('Rules', () => {
             spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure('some reason'));
 
             // When checking if the move is legal
-            const legality: MGPFallible<AbstractNode> = rules.choose(node, illegalMove);
+            const legality: MGPFallible<AbstractNode> = rules.choose(node, illegalMove, defaultConfig);
             // Then it should be a failure with the expected reason
             expect(legality.isFailure()).toBeTrue();
             expect(legality.getReason()).toEqual('some reason');
-        });
-
-        it('should transmit config to its children', () => {
-            // Given a mother node with a specific config
-            const customConfig: MGPOptional<RulesConfig> = MGPOptional.of({
-                josefanne: 42,
-            });
-            const node: AbstractNode = rules.getInitialNode(customConfig);
-
-            // When choosing the children
-            const child: AbstractNode = rules.choose(node, P4Move.of(9)).get();
-            // Then the children should have the same config
-            expect(child.config).toEqual(customConfig);
         });
 
     });

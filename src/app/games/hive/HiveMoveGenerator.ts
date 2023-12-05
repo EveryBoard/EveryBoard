@@ -4,10 +4,12 @@ import { HiveMove } from './HiveMove';
 import { HivePiece } from './HivePiece';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class HiveMoveGenerator extends MoveGenerator<HiveMove, HiveState> {
 
-    public getListMoves(node: HiveNode): HiveMove[] {
+    public getListMoves(node: HiveNode, _config: MGPOptional<EmptyRulesConfig>): HiveMove[] {
         const dropMoves: HiveMove[] = this.getListDrops(node.gameState);
         const movesOnBoard: HiveMove[] = this.getListOfOnBoardMoves(node.gameState);
         const moves: HiveMove[] = dropMoves.concat(movesOnBoard);
@@ -16,6 +18,7 @@ export class HiveMoveGenerator extends MoveGenerator<HiveMove, HiveState> {
         }
         return moves;
     }
+
     private getListOfOnBoardMoves(state: HiveState): HiveMove[] {
         return HiveRules.get().getPossibleMovesOnBoard(state).toList();
     }

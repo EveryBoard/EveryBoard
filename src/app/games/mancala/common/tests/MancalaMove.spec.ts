@@ -46,11 +46,13 @@ describe('MancalaMove', () => {
             const twin: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
             expect(move.equals(twin)).toBeTrue();
         });
+
         it('should return false for another move', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
             const other: MancalaMove = MancalaMove.of(MancalaDistribution.of(1));
             expect(move.equals(other)).toBeFalse();
         });
+
         it('should return false for a longer move', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
             const other: MancalaMove = MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(1)]);

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { P4State } from './P4State';
-import { P4Rules } from './P4Rules';
+import { P4Config, P4Rules } from './P4Rules';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
@@ -17,7 +17,7 @@ import { P4Minimax } from './P4Minimax';
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone> {
+export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone, P4Config> {
 
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public last: MGPOptional<Coord>;

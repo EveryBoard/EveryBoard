@@ -46,6 +46,7 @@ describe('HiveComponent', () => {
                 // Then it should be selected
                 testUtils.expectElementToExist('#remaining_highlight');
             }));
+
             it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveRules.get().getInitialState();
@@ -56,6 +57,7 @@ describe('HiveComponent', () => {
                 const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
                 await testUtils.expectClickFailure('#remainingPiece_QueenBee_PLAYER_ONE', reason);
             }));
+
             it('should show valid landings after selection', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveRules.get().getInitialState();
@@ -67,6 +69,7 @@ describe('HiveComponent', () => {
                 // Then it should show valid landings
                 testUtils.expectElementToHaveClass('#stroke_0_0', 'clickable-stroke');
             }));
+
             it('should forbid selecting another piece than the queen bee if the queen bee must be placed at this turn', fakeAsync(async() => {
                 // Given a state without queen bee at the 4th turn of the current player
                 const state: HiveState = HiveState.fromRepresentation([
@@ -92,6 +95,7 @@ describe('HiveComponent', () => {
                 const move: HiveMove = HiveMove.drop(Q, new Coord(0, 0));
                 await testUtils.expectMoveSuccess('#space_0_0', move);
             }));
+
             it('should fail dropping if the move is illegal', fakeAsync(async() => {
                 // Given a state
                 const state: HiveState = HiveState.fromRepresentation([
@@ -107,6 +111,7 @@ describe('HiveComponent', () => {
                 const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
                 await testUtils.expectMoveFailure('#space_2_0', reason, move);
             }));
+
             it('should show one less remaining piece after dropping', fakeAsync(async() => {
                 // Given a state
                 const state: HiveState = HiveRules.get().getInitialState();
@@ -120,6 +125,7 @@ describe('HiveComponent', () => {
                 // Then the dropped piece should not be in the remaining pieces anymore
                 testUtils.expectElementNotToExist('#remainingPiece_QueenBee_PLAYER_ZERO');
             }));
+
             it('should show the last move after dropping', fakeAsync(async() => {
                 // Given a state
                 const state: HiveState = HiveRules.get().getInitialState();
@@ -134,6 +140,7 @@ describe('HiveComponent', () => {
                 testUtils.expectElementToHaveClass('#stroke_0_0', 'last-move-stroke');
             }));
         });
+
         it('should deselect the piece at second click on it', fakeAsync(async() => {
             // Given a state with remaining pieces and a selected one
             const state: HiveState = HiveRules.get().getInitialState();
@@ -162,6 +169,7 @@ describe('HiveComponent', () => {
                 // Then it should be selected
                 testUtils.expectElementToHaveClass('#stroke_0_0', 'selected-stroke');
             }));
+
             it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
                 // Given a state with pieces on the board
                 const state: HiveState = HiveState.fromRepresentation([
@@ -174,6 +182,7 @@ describe('HiveComponent', () => {
                 const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
                 await testUtils.expectClickFailure('#piece_1_0', reason);
             }));
+
             it('should show valid landings after selection', fakeAsync(async() => {
                 // Given a state with pieces on the board
                 const state: HiveState = HiveState.fromRepresentation([
@@ -193,6 +202,7 @@ describe('HiveComponent', () => {
                 testUtils.expectElementNotToExist('#stroke_-1_1');
                 testUtils.expectElementNotToExist('#stroke_1_0');
             }));
+
             it('should not allow selecting piece if the queen bee must be dropped at this turn', fakeAsync(async() => {
                 // Given a state without queen bee at the 4th turn of the current player
                 const state: HiveState = HiveState.fromRepresentation([
@@ -205,6 +215,7 @@ describe('HiveComponent', () => {
                 const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
                 await testUtils.expectClickFailure('#piece_0_0', reason);
             }));
+
             it('should deselect if the piece is clicked a second time', fakeAsync(async() => {
                 // Given a state with pieces on the board and a piece already selected
                 const state: HiveState = HiveState.fromRepresentation([
@@ -233,6 +244,7 @@ describe('HiveComponent', () => {
                 const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(1, 1)).get();
                 await testUtils.expectMoveSuccess('#space_1_1', move);
             }));
+
             it('should fail moving when the move is illegal', fakeAsync(async() => {
                 // Given a state with pieces on the board and a selected piece
                 const state: HiveState = HiveState.fromRepresentation([
@@ -272,6 +284,7 @@ describe('HiveComponent', () => {
                     ]);
                     await testUtils.expectMoveSuccess('#space_2_0', move);
                 }));
+
                 it('should show valid intermediary spaces and the selected path', fakeAsync(async() => {
                     // Given a state with a spider on the board
                     const state: HiveState = HiveState.fromRepresentation([
@@ -290,6 +303,7 @@ describe('HiveComponent', () => {
                     testUtils.expectElementToHaveClass('#stroke_0_2', 'selected-stroke');
                     testUtils.expectElementToHaveClass('#stroke_1_2', 'selected-stroke');
                 }));
+
                 it('should fail as soon as an invalid space is selected', fakeAsync(async() => {
                     // Given a state with a spider on the board and some path already selected
                     const state: HiveState = HiveState.fromRepresentation([
@@ -307,6 +321,7 @@ describe('HiveComponent', () => {
                     await testUtils.expectClickFailure('#space_1_0', reason);
                 }));
             });
+
             it('should show the last move', fakeAsync(async() => {
                 // Given a state with a possible move
                 const state: HiveState = HiveState.fromRepresentation([
@@ -341,6 +356,7 @@ describe('HiveComponent', () => {
             // Then the stack should be displayed next to the board
             testUtils.expectElementToExist('#inspectedStack_0');
         }));
+
         it('should hide the stack when clicking a second time on it', fakeAsync(async() => {
             // Given a state with a stack of pieces displayed
             const state: HiveState = HiveState.fromRepresentation([
@@ -353,6 +369,7 @@ describe('HiveComponent', () => {
             // Then it should cancel the move
             await testUtils.expectClickFailure('#piece_0_0');
         }));
+
         it('should allow clicking on a stack with a beetle to inspect it, even if controlled by the opponent', fakeAsync(async() => {
             // Given a state with a stack of pieces with a beetle of the player on top
             const state: HiveState = HiveState.fromRepresentation([
@@ -366,6 +383,7 @@ describe('HiveComponent', () => {
             // Then the stack should be displayed next to the board
             testUtils.expectElementToExist('#inspectedStack_0');
         }));
+
         it('should forbid clicking on a single beetle of the opponent', fakeAsync(async() => {
             // Given a state with a beetle of the opponent
             const state: HiveState = HiveState.fromRepresentation([
@@ -377,6 +395,7 @@ describe('HiveComponent', () => {
             // Then it should fail as there is no stack beneath it
             await testUtils.expectClickFailure('#piece_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
+
         it('should hide the stack of the opponent when clicking a second time on it', fakeAsync(async() => {
             // Given a state with a stack of pieces displayed
             const state: HiveState = HiveState.fromRepresentation([
@@ -392,6 +411,7 @@ describe('HiveComponent', () => {
             testUtils.expectElementNotToExist('#inspectedStack_0');
         }));
     });
+
     it('should cancel move when clicking on an empty space', fakeAsync(async() => {
         // Given any state without a move in progress
         const state: HiveState = HiveState.fromRepresentation([
@@ -403,6 +423,7 @@ describe('HiveComponent', () => {
         // Then the move should be canceled
         await testUtils.expectClickFailure('#space_2_0');
     }));
+
     it('should allow to pass when player must pass', fakeAsync(async() => {
         // Given a stuck state
         const state: HiveState = HiveState.fromRepresentation([
@@ -416,6 +437,7 @@ describe('HiveComponent', () => {
         const move: HiveMove = HiveMove.PASS;
         await testUtils.expectPassSuccess(move);
     }));
+
     it('should display victorious coord', fakeAsync(async() => {
         // Given a victorious state
         const state: HiveState = HiveState.fromRepresentation([
@@ -430,6 +452,7 @@ describe('HiveComponent', () => {
         // Then the victory should be shown
         testUtils.expectElementToHaveClass('#stroke_1_1', 'victory-stroke');
     }));
+
     it('should display draw coords', fakeAsync(async() => {
         // Given a draw state
 
@@ -446,6 +469,7 @@ describe('HiveComponent', () => {
         testUtils.expectElementToHaveClass('#stroke_1_1', 'victory-stroke');
         testUtils.expectElementToHaveClass('#stroke_2_1', 'victory-stroke');
     }));
+
     it('should show the last move when canceling a move', fakeAsync(async() => {
         // Given a state with a last move displayed
         const previousState: HiveState = HiveState.fromRepresentation([

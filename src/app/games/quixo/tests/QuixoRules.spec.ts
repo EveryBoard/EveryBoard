@@ -36,7 +36,7 @@ describe('QuixoRules', () => {
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid move creation from coord not on the side', () => {
@@ -48,7 +48,7 @@ describe('QuixoRules', () => {
 
         // Then it should be illegal
         const reason: string = QuixoFailure.NO_INSIDE_CLICK();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should throw when suggesting move for out of range', () => {
@@ -59,7 +59,7 @@ describe('QuixoRules', () => {
         const move: QuixoMove = new QuixoMove(-1, 0, Orthogonal.DOWN);
         TestUtils.expectToThrowAndLog(() => {
             const reason: string = `won't reach the return of isLegal`;
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         }, 'Invalid coord for QuixoMove: (-1, 0) is outside the board.');
     });
 
@@ -88,7 +88,7 @@ describe('QuixoRules', () => {
             const reason: string = errorByDirection[i];
             TestUtils.expectToThrowAndLog(() => {
                 const reason: string = `won't reach the return of isLegal`;
-                RulesUtils.expectMoveFailure(rules, state, move, reason);
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }, reason);
         });
     }
@@ -134,7 +134,7 @@ describe('QuixoRules', () => {
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
     it('should declare winner player one when he create a line of his symbol', () => {
@@ -157,7 +157,7 @@ describe('QuixoRules', () => {
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
     it('should declare loser player zero who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
@@ -180,7 +180,7 @@ describe('QuixoRules', () => {
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
     it('should declare loser player one who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
@@ -203,7 +203,7 @@ describe('QuixoRules', () => {
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new QuixoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
     describe('getVictoriousCoords', () => {

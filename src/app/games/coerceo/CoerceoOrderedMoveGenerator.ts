@@ -4,13 +4,16 @@ import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class CoerceoOrderedMoveGenerator extends CoerceoMoveGenerator {
 
-    override getListMoves(node: CoerceoNode): CoerceoMove[] {
-        const moves: CoerceoMove[] = super.getListMoves(node);
+    override getListMoves(node: CoerceoNode, config: MGPOptional<EmptyRulesConfig>): CoerceoMove[] {
+        const moves: CoerceoMove[] = super.getListMoves(node, config);
         return this.putCaptureFirst(node, moves);
     }
+
     public putCaptureFirst(node: CoerceoNode, moves: CoerceoMove[]): CoerceoMove[] {
         ArrayUtils.sortByDescending(moves, (move: CoerceoMove) => {
             return this.moveCapturesList(node, move).length;

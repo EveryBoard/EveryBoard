@@ -69,7 +69,7 @@ export class DemoPageComponent {
             const solution: Move | string = step.getSolution();
             if (typeof solution === 'string') {
                 return {
-                    node: new GameNode(step.state, undefined, undefined, config),
+                    node: new GameNode(step.state),
                     click: MGPOptional.of(solution),
                 };
             } else {
@@ -77,14 +77,14 @@ export class DemoPageComponent {
                 const legalityStatus: MGPFallible<unknown> = rules.getLegality(move, step.state, config);
                 const state: GameState = rules.applyLegalMove(move, step.state, config, legalityStatus.get());
                 const parent: AbstractNode =
-                    new GameNode(step.state, undefined, undefined, config);
+                    new GameNode(step.state);
                 const node: AbstractNode =
-                    new GameNode(state, MGPOptional.of(parent), MGPOptional.of(move), config);
+                    new GameNode(state, MGPOptional.of(parent), MGPOptional.of(move));
                 return { node, click: MGPOptional.empty() };
             }
         } else {
             return {
-                node: new GameNode(step.state, undefined, undefined, config),
+                node: new GameNode(step.state),
                 click: MGPOptional.empty(),
             };
         }

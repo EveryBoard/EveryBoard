@@ -30,7 +30,7 @@ describe('GoHeuristic', () => {
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
         const initialNode: GoNode = new GoNode(state);
-        const boardValue: number = heuristic.getBoardValue(initialNode).value;
+        const boardValue: number = heuristic.getBoardValue(initialNode, defaultConfig).value;
         expect(boardValue).toBe(3);
     });
 
@@ -82,7 +82,7 @@ describe('GoHeuristic', () => {
         const weakState: GoState = new GoState(weakBoard, [10, 1], 0, MGPOptional.empty(), Phase.PLAYING);
         // When computing their value
         // Then it should assign the same value for both
-        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState);
+        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState, defaultConfig);
     });
 
 });

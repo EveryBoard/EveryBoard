@@ -60,7 +60,7 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be -3
         expect(boardValue).toBe(-3);
@@ -80,7 +80,7 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be -4
         expect(boardValue).toBe(-4);
@@ -100,7 +100,7 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be -5
         expect(boardValue).toBe(-5);
@@ -120,7 +120,7 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value;
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be -7
         expect(boardValue).toBe(-7);

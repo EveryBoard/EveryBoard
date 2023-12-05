@@ -21,6 +21,7 @@ describe('DiamComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<DiamComponent>('Diam');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
@@ -31,6 +32,7 @@ describe('DiamComponent', () => {
             // Then the corresponding error is shown
             await testUtils.expectClickFailure('#piece_PLAYER_ONE_1_7', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
+
         it('should forbid transferring from a piece not owned by the player', fakeAsync(async() => {
             // Given a state with opponent piece on it
             const state: DiamState = DiamState.ofRepresentation([
@@ -44,12 +46,14 @@ describe('DiamComponent', () => {
             // Then this is not a legal selection for a shift
             await testUtils.expectClickFailure('#click_7_1', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
+
         it('should forbid clicking on a space without selecting a piece first', fakeAsync(async() => {
             // Given the initial state
             // When clicking any space
             // Then it should let the user know that a piece must be selected first
             await testUtils.expectClickFailure('#click_0', DiamFailure.MUST_SELECT_PIECE_FIRST());
         }));
+
         it('should mark remaining piece as selected when clicked on', fakeAsync(async() => {
             // Given any board with remainingPiece
             // When clicking one of them
@@ -58,6 +62,7 @@ describe('DiamComponent', () => {
             // Then the piece should be selected
             testUtils.expectElementToHaveClass('#piece_PLAYER_ZERO_1_7', 'selected-stroke');
         }));
+
         it('should mark piece on board as selected when clicked on', fakeAsync(async() => {
             // Given a board with piece on
             const state: DiamState = DiamState.ofRepresentation([
@@ -86,6 +91,7 @@ describe('DiamComponent', () => {
             // Then the move should be made
             await testUtils.expectMoveSuccess('#click_2', move);
         }));
+
         it('should allow dropping piece on an opponent piece', fakeAsync(async() => {
             // Given a state where there are already pieces in game and a player's piece selected
             const state: DiamState = DiamState.ofRepresentation([
@@ -103,6 +109,7 @@ describe('DiamComponent', () => {
             // Then the move should be a success and drop player's piece
             await testUtils.expectMoveSuccess('#click_0_1', move);
         }));
+
         it('should forbid dropping on a full stack', fakeAsync(async() => {
             // Given a state where one stack is already full and a remaining piece is selected
             const state: DiamState = DiamState.ofRepresentation([
@@ -121,6 +128,7 @@ describe('DiamComponent', () => {
             const reason: string = DiamFailure.SPACE_IS_FULL();
             await testUtils.expectMoveFailure('#click_0', reason, move);
         }));
+
         it('should allow shift by clicking the piece and then the target', fakeAsync(async() => {
             // Given a state where a shift can be made
             const state: DiamState = DiamState.ofRepresentation([
@@ -136,6 +144,7 @@ describe('DiamComponent', () => {
             // Then the move should be legal
             await testUtils.expectMoveSuccess('#click_0', move);
         }));
+
         it('should allow shift from a piece in the middle of a stack', fakeAsync(async() => {
             // Given a state where a shift can be made
             const state: DiamState = DiamState.ofRepresentation([
@@ -151,6 +160,7 @@ describe('DiamComponent', () => {
             const move: DiamMove = DiamMoveShift.ofRepresentation(new Coord(0, 2), 'counterclockwise');
             await testUtils.expectMoveSuccess('#click_7', move);
         }));
+
         it('should forbid shift of more than one space', fakeAsync(async() => {
             // Given a state
             const state: DiamState = DiamState.ofRepresentation([
@@ -165,6 +175,7 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#click_7_0');
             await testUtils.expectClickFailure('#click_2', DiamFailure.MUST_SHIFT_TO_NEIGHBOR());
         }));
+
         it('should forbid transferring if the stack would become too high', fakeAsync(async() => {
             // Given a state
             const state: DiamState = DiamState.ofRepresentation([
@@ -183,6 +194,7 @@ describe('DiamComponent', () => {
             const reason: string = DiamFailure.TARGET_STACK_TOO_HIGH();
             await testUtils.expectMoveFailure('#click_0', reason, move);
         }));
+
         it('should consider a piece in game click on a player piece as a regular piece click', fakeAsync(async() => {
             // Given a state where there are already pieces in game and a remaining piece is selected
             const state: DiamState = DiamState.ofRepresentation([
@@ -200,6 +212,7 @@ describe('DiamComponent', () => {
             // Then no move is made and the new piece is selected
             testUtils.expectElementToHaveClass('#click_0_0', 'selected-stroke');
         }));
+
         it('should deselect remaining piece when clicking on it again', fakeAsync(async() => {
             // Given a board on which a remaining piece is selected
             await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_1_7');
@@ -210,6 +223,7 @@ describe('DiamComponent', () => {
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_PLAYER_ZERO_1_7', 'selected-stroke');
         }));
+
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a board with piece on, one of them selected
             const state: DiamState = DiamState.ofRepresentation([
@@ -244,6 +258,7 @@ describe('DiamComponent', () => {
             // Then this piece should not rendered
             testUtils.expectElementNotToExist('#piece_PLAYER_ZERO_0');
         }));
+
         it('should display the right number of remainig pieces', fakeAsync(async() => {
             // Given a state
             const state: DiamState = DiamState.ofRepresentation([
@@ -267,6 +282,7 @@ describe('DiamComponent', () => {
             testUtils.expectElementToExist('#piece_PLAYER_ZERO_1_1'); // O2 first piece
             testUtils.expectElementToExist('#piece_PLAYER_ZERO_0_0'); // O1 remains (one of them)
         }));
+
         it('should show winning configuration clearly', fakeAsync(async() => {
             // Given a winning state
             const state: DiamState = DiamState.ofRepresentation([

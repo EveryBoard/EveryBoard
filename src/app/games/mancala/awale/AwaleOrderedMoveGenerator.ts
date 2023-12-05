@@ -5,14 +5,17 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';
 import { MancalaDistributionResult, MancalaNode } from '../common/MancalaRules';
+import { MancalaConfig } from '../common/MancalaConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
 
-    public override getListMoves(node: MancalaNode): MancalaMove[] {
-        const moves: MancalaMove[] = super.getListMoves(node);
-        return this.orderMoves(node, moves);
+    public override getListMoves(node: MancalaNode, config: MGPOptional<MancalaConfig>): MancalaMove[] {
+        const moves: MancalaMove[] = super.getListMoves(node, config);
+        return this.orderMoves(node, moves, config.get());
     }
-    private orderMoves(node: MancalaNode, moves: MancalaMove[]): MancalaMove[] {
+
+    private orderMoves(node: MancalaNode, moves: MancalaMove[], config: MancalaConfig): MancalaMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const playerY: number = node.gameState.getOpponentY();
         const opponentY: number = player.value;
@@ -21,7 +24,7 @@ export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
             const board: number[][] = node.gameState.getCopiedBoard();
             const toDistribute: number = board[playerY][move.getFirstDistribution().x];
             const mancalaDistributionResult: MancalaDistributionResult =
-                AwaleRules.get().distributeMove(move, node.gameState, node.config.get());
+                AwaleRules.get().distributeMove(move, node.gameState, config);
             const filledCoords: Coord[] = mancalaDistributionResult.filledCoords;
             const endHouse: Coord = filledCoords[filledCoords.length - 1];
             let captured: number;
@@ -39,4 +42,5 @@ export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
         });
         return moves;
     }
+
 }

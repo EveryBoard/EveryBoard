@@ -3,7 +3,7 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
-import { QuixoState } from 'src/app/games/quixo/QuixoState';
+import { QuixoConfig, QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -21,7 +21,12 @@ import { QuixoHeuristic } from './QuixoHeuristic';
     templateUrl: './quixo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMove, QuixoState, PlayerOrNone> {
+export class QuixoComponent extends RectangularGameComponent<QuixoRules,
+                                                             QuixoMove,
+                                                             QuixoState,
+                                                             PlayerOrNone,
+                                                             QuixoConfig>
+{
 
     public QuixoState: typeof QuixoState = QuixoState;
 

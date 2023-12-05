@@ -9,6 +9,7 @@ describe('EncapsulePiece', () => {
                 expect(EncapsulePiece.of(i)).toBeTruthy();
             }
         });
+
         it('should fail on invalid piece values', () => {
             expect(() => EncapsulePiece.of(42)).toThrow();
         });
@@ -17,6 +18,7 @@ describe('EncapsulePiece', () => {
         it('should construct the expected piece', () => {
             expect(EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ONE)).toBe(EncapsulePiece.BIG_LIGHT);
         });
+
         it('should return the none piece if player or size is none', () => {
             expect(EncapsulePiece.ofSizeAndPlayer(Size.NONE, Player.ONE)).toBe(EncapsulePiece.NONE);
             expect(EncapsulePiece.ofSizeAndPlayer(Size.BIG, PlayerOrNone.NONE)).toBe(EncapsulePiece.NONE);

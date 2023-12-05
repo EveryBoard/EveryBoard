@@ -3,13 +3,14 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules, EpaminondasConfig } from './EpaminondasRules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState> {
+export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState, EpaminondasConfig> {
 
-    public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
+    public getListMoves(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): EpaminondasMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const opponent: Player = node.gameState.getCurrentOpponent();
         const empty: PlayerOrNone = PlayerOrNone.NONE;

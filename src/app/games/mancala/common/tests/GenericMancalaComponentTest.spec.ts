@@ -24,7 +24,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
 {
 
     public constructor(public readonly testUtils: ComponentTestUtils<C>,
-                       public readonly moveGenerator: MoveGenerator<MancalaMove, MancalaState>) {
+                       public readonly moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>) {
     }
 
     public async expectMancalaMoveSuccess(click: string, move: MancalaMove): Promise<void> {
@@ -143,7 +143,7 @@ export class MancalaTestEntries<C extends MancalaComponent<R>,
 {
     component: Type<C>; // KalahComponent, AwaleComponent, etc
     gameName: string; // 'Kalah', 'Awale', etc
-    moveGenerator: MoveGenerator<MancalaMove, MancalaState>;
+    moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>;
 
     distribution: MancalaActionAndResult;
     secondDistribution: MancalaActionAndResult;
@@ -164,6 +164,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const testUtils: ComponentTestUtils<C> = await ComponentTestUtils.forGame<C>(entries.gameName);
             mancalaTestUtils = new MancalaComponentTestUtils(testUtils, entries.moveGenerator);
         }));
+
         it('should create', () => {
             mancalaTestUtils.testUtils.expectToBeCreated();
         });
@@ -201,6 +202,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const difference: number = newScore - initialScore;
             mancalaTestUtils.expectStoreContentToBe(currentPlayer, ' ' + newScore + ' ', ' +' + difference + ' ');
         }));
+
         it('should allow two move in a row', fakeAsync(async() => {
             // Given a board where a first move has been done
             await mancalaTestUtils.testUtils.setupState(entries.distribution.state,
@@ -221,6 +223,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // Then it should be a success
             mancalaTestUtils.expectToBeFed(entries.secondDistribution, defaultConfig.get());
         }));
+
         it('should display last move after basic move', fakeAsync(async() => {
             // Given any state (initial here by default)
 
@@ -237,6 +240,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_2_1', ['base', 'moved-stroke', 'player0-fill']);
             mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_1_1', ['base', 'moved-stroke', 'player0-fill']);
         }));
+
         it('should forbid moving empty house', fakeAsync(async() => {
             // Given a state with an empty house
             const board: Table<number> = [
@@ -251,6 +255,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const reason: string = MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
             await mancalaTestUtils.testUtils.expectClickFailure('#click_0_0', reason);
         }));
+
         it(`should forbid moving opponent's house`, fakeAsync(async() => {
             // Given a state
             const board: Table<number> = [
@@ -264,6 +269,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // Then it should fail
             await mancalaTestUtils.testUtils.expectClickFailure('#click_0_0', MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }));
+
         it('should hide last move when taking move back', fakeAsync(async() => {
             // Given a board with a last move
             const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5);
@@ -280,6 +286,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_2_1', ['base', 'player0-fill']);
             mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_1_1', ['base', 'player0-fill']);
         }));
+
         it('should display score of players on the board (first turn)', fakeAsync(async() => {
             // Given a starting board
             // When rendering it
@@ -288,6 +295,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // And player one's captures should be displayed too
             mancalaTestUtils.expectStoreContentToBe(Player.ONE, ' 0 ');
         }));
+
         it('should display monsoon capture', fakeAsync(async() => {
             // Given a board where the player is about to give their last seed to the opponent
             await mancalaTestUtils.testUtils.setupState(entries.monsoon.state, undefined, undefined, defaultConfig);
@@ -299,6 +307,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // Then the space in question should be marked as "captured"
             mancalaTestUtils.expectToBeCaptured(entries.monsoon.result);
         }));
+
         it('should display capture', fakeAsync(async() => {
             // Given a state where player zero can capture
             await mancalaTestUtils.testUtils.setupState(entries.capture.state, undefined, undefined, defaultConfig);
@@ -313,6 +322,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // as well as the captured spaces
             mancalaTestUtils.expectToBeCaptured(entries.capture.result);
         }));
+
         it('should display filled-then-captured capture', fakeAsync(async() => {
             // Given a board where some empty space could filled then captured
             await mancalaTestUtils.testUtils.setupState(entries.fillThenCapture.state,
@@ -326,6 +336,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // Then the space in question should be marked as "captured"
             mancalaTestUtils.expectToBeCaptured(entries.fillThenCapture.result);
         }));
+
         it('should explain why clicking on store is stupid', fakeAsync(async() => {
             // Given any board
             // When clicking on any store
@@ -394,6 +405,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 // Finish the distribution
                 tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
             }));
+
             it('should make click possible when no distribution are ongoing', fakeAsync(async() => {
                 // Given a space where no click have been done yet
                 spyOn(mancalaTestUtils.testUtils.getGameComponent() as MancalaComponent<R>, 'onLegalClick').and.callThrough();
@@ -406,6 +418,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 expect(mancalaTestUtils.testUtils.getGameComponent().onLegalClick).toHaveBeenCalledOnceWith(2, 1);
                 tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
             }));
+
             it('should make click impossible during opponent move animation', fakeAsync(async() => {
                 // Given a move triggered by the opponent
                 const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
@@ -423,6 +436,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 expect(mancalaTestUtils.testUtils.getGameComponent().onLegalClick).not.toHaveBeenCalled();
                 tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
             }));
+
             it('should make click impossible during player distribution animation', fakeAsync(async() => {
                 // Given a move where a first click has been done but is not finished
                 await mancalaTestUtils.testUtils.expectClickSuccess('#click_2_1');
@@ -438,10 +452,12 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
             }));
         });
+
         it('should have a bijective encoder', () => {
             const rules: R = mancalaTestUtils.testUtils.getGameComponent().rules;
             const encoder: Encoder<MancalaMove> = mancalaTestUtils.testUtils.getGameComponent().encoder;
-            const moveGenerator: MoveGenerator<MancalaMove, MancalaState> = mancalaTestUtils.moveGenerator;
+            const moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig> =
+                mancalaTestUtils.moveGenerator;
             MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, encoder);
         });
     });

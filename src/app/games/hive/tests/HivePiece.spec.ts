@@ -11,6 +11,7 @@ describe('HivePiece', () => {
     it('should define toString', () => {
         expect(Q.toString()).toEqual('QueenBee_PLAYER_ZERO');
     });
+
     it('should define equality', () => {
         expect(Q.equals(Q)).toBeTrue();
         expect(Q.equals(q)).toBeFalse();

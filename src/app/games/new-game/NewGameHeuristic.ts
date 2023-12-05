@@ -1,11 +1,12 @@
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Heuristic } from 'src/app/jscaip/Minimax';
 import { NewGameMove } from './NewGameMove';
-import { NewGameNode } from './NewGameRules';
+import { NewGameConfig, NewGameNode } from './NewGameRules';
 import { NewGameState } from './NewGameState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 // A heuristic assigns values to game states
-export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
+export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState, BoardValue, NewGameConfig> {
     /**
      * This function assigns a score to a state, in the form of a `BoardValue`.
      * Most of the time, you want to use `BoardValue` directly. It is simply a number wrapper.
@@ -18,7 +19,8 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
      * You may want to use `PlayerMetricHeuristic` to define a score for each player instead, which
      * is often what you want.
      */
-    public getBoardValue(node: NewGameNode): BoardValue {
+    public getBoardValue(node: NewGameNode, _config: MGPOptional<NewGameConfig>): BoardValue {
         return new BoardValue(node.gameState.turn);
     }
+
 }

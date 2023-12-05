@@ -68,7 +68,9 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
     }
 
     public getConfig(configName: string): R {
-        return this.getStandardConfigs().filter((v: NamedRulesConfig) => v.name() === configName)[0].config;
+        const rulesConfig: NamedRulesConfig<R> =
+            this.getStandardConfigs().filter((v: NamedRulesConfig<R>) => v.name() === configName)[0];
+        return rulesConfig.config;
     }
 
     public getValidator(fieldName: string): MGPValidator {

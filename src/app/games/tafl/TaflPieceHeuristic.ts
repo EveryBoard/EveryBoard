@@ -4,16 +4,22 @@ import { TaflState } from './TaflState';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { TaflConfig } from './TaflConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { BoardValue } from 'src/app/jscaip/BoardValue';
 
-export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristic<M, TaflState> {
+export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristic<M, TaflState, TaflConfig> {
 
     public constructor(public readonly rules: TaflRules<M>) {
         super();
     }
 
-    public getMetrics(node: TaflNode<M>): [number, number] {
+    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
+        return super.getBoardValue(node, config);
+    }
+
+    public getMetrics(node: TaflNode<M>, optionalConfig: MGPOptional<TaflConfig>): [number, number] {
         const state: TaflState = node.gameState;
-        const config: TaflConfig = node.config.get();
+        const config: TaflConfig = optionalConfig.get();
         // We just count the pawns
         const nbPlayerZeroPawns: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
@@ -24,4 +30,5 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
         const scoreOne: number = nbPlayerOnePawns * oneMult;
         return [scoreZero, scoreOne];
     }
+
 }

@@ -3,8 +3,9 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
 
@@ -15,7 +16,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     private readonly CENTER_FACTOR: number = 5;
     private readonly MOBILITY_FACTOR: number = 0.12;
 
-    public override getBoardValue(node: EpaminondasNode): BoardValue {
+    public override getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
         const state: EpaminondasState = node.gameState;
         const dominance: number = this.getDominance(state);
         const defense: number = this.getDefense(state);

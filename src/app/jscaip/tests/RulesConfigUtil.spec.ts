@@ -69,7 +69,7 @@ describe('RulesConfigUtil', () => {
             // Then it should throw and log
             TestUtils.expectToThrowAndLog(() => {
                 new RulesConfigDescription(defaultConfig, [secondaryConfig]);
-            }, 'Field missing in secondary config!');
+            }, 'Field missing in My Secondary Config config!');
         });
 
     });

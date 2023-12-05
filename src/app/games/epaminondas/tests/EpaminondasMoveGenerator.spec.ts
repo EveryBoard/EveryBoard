@@ -13,8 +13,10 @@ describe('EpaminondasMoveGenerator', () => {
         rules = EpaminondasRules.get();
         moveGenerator = new EpaminondasMoveGenerator();
     });
+
     it('should propose 114 moves at first turn', () => {
         const node: EpaminondasNode = rules.getInitialNode(defaultConfig);
-        expect(moveGenerator.getListMoves(node).length).toBe(114);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(114);
     });
+
 });

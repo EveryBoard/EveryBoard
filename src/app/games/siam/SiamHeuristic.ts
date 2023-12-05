@@ -6,14 +6,16 @@ import { SiamState } from './SiamState';
 import { Player } from 'src/app/jscaip/Player';
 import { SiamPiece } from './SiamPiece';
 import { Coord } from 'src/app/jscaip/Coord';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class SiamHeuristic extends Heuristic<SiamMove, SiamState> {
+export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, SiamConfig> {
 
-    public getBoardValue(node: SiamNode): BoardValue {
+    public getBoardValue(node: SiamNode, config: MGPOptional<SiamConfig>): BoardValue {
         const boardValueInfo: { shortestZero: number, shortestOne: number, boardValue: number } =
-            this.getBoardValueInfo(node.gameState, node.config.get());
+            this.getBoardValueInfo(node.gameState, config.get());
         return new BoardValue(boardValueInfo.boardValue);
     }
+
     private getBoardValueInfo(state: SiamState, config: SiamConfig)
     : { shortestZero: number, shortestOne: number, boardValue: number }
     {

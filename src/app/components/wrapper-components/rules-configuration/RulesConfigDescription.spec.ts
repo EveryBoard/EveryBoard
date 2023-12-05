@@ -1,13 +1,14 @@
 import { RulesConfigDescription } from './RulesConfigDescription';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DefaultConfigDescription } from 'src/app/jscaip/RulesConfigUtil';
+import { DefaultConfigDescription, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe(`RulesConfigDescriptions`, () => {
 
     for (const gameInfo of GameInfo.ALL_GAMES()) {
 
-        const rulesConfigDescription: MGPOptional<RulesConfigDescription> = gameInfo.rules.getRulesConfigDescription();
+        const rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>> =
+            gameInfo.rules.getRulesConfigDescription();
 
         if (rulesConfigDescription.isPresent()) {
 

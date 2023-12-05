@@ -8,17 +8,18 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('P4Minimax', () => {
 
-    let minimax: Minimax<P4Move, P4State>;
+    let minimax: Minimax<P4Move, P4State, P4Config>;
     const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new P4Minimax();
     });
+
     it('First choice should be center at all AI depths', () => {
         const initialState: P4State = P4Rules.get().getInitialState(defaultConfig);
         for (let depth: number = 1; depth < 6; depth ++) {
             const node: P4Node = new P4Node(initialState);
-            expect(minimax.chooseNextMove(node, { name: `Level ${depth}`, maxDepth: depth }))
+            expect(minimax.chooseNextMove(node, { name: `Level ${depth}`, maxDepth: depth }, defaultConfig))
                 .withContext('depth ' + depth + ' should still think center is better')
                 .toEqual(P4Move.of(3));
         }

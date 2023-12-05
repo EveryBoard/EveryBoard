@@ -125,8 +125,8 @@ describe('AwaleRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: MancalaNode =
-                new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.of(move), defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+                new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
     });

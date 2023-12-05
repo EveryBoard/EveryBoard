@@ -47,8 +47,8 @@ describe('SiamHeuristic', () => {
             // When computing the value of the board
             // Then it should consider player zero as closer to victory
             const node: SiamNode =
-                new SiamNode(state, undefined, MGPOptional.of(move), defaultConfig);
-            expect(heuristic.getBoardValue(node).value)
+                new SiamNode(state, undefined, MGPOptional.of(move));
+            expect(heuristic.getBoardValue(node, defaultConfig).value)
                 .withContext('First player should be considered as closer to victory')
                 .toBeLessThan(0);
         });
@@ -66,9 +66,8 @@ describe('SiamHeuristic', () => {
             const move: SiamMove = SiamMove.of(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
             // When computing the value of the board
             // Then it should consider player zero as closer to victory
-            const node: SiamNode =
-                new SiamNode(state, undefined, MGPOptional.of(move), defaultConfig);
-            expect(heuristic.getBoardValue(node).value)
+            const node: SiamNode = new SiamNode(state, undefined, MGPOptional.of(move));
+            expect(heuristic.getBoardValue(node, defaultConfig).value)
                 .withContext('First player should be considered as closer to victory')
                 .toBeLessThan(0);
         });
@@ -84,11 +83,10 @@ describe('SiamHeuristic', () => {
             ];
             const state: SiamState = new SiamState(board, 0);
             const move: SiamMove = SiamMove.of(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-            const node: SiamNode =
-                new SiamNode(state, undefined, MGPOptional.of(move), defaultConfig);
+            const node: SiamNode = new SiamNode(state, undefined, MGPOptional.of(move));
             // When computing the board value
             // Then player zero should have a higher score because it is their turn
-            expect(heuristic.getBoardValue(node).value).toBeLessThan(0);
+            expect(heuristic.getBoardValue(node, defaultConfig).value).toBeLessThan(0);
         });
 
         it('should assign same absolute value to states that only differ in turn', () => {
@@ -102,14 +100,13 @@ describe('SiamHeuristic', () => {
             ];
             const state: SiamState = new SiamState(board, 0);
             const move: SiamMove = SiamMove.of(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-            const node: SiamNode =
-                new SiamNode(state, undefined, MGPOptional.of(move), defaultConfig);
-            const boardValue: number = heuristic.getBoardValue(node).value;
+            const node: SiamNode = new SiamNode(state, undefined, MGPOptional.of(move));
+            const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value;
 
             const turnOneState: SiamState = new SiamState(board, 1);
             const turnOneNode: SiamNode =
-                new SiamNode(turnOneState, undefined, MGPOptional.of(move), defaultConfig);
-            const turnOneBoardValue: number = heuristic.getBoardValue(turnOneNode).value;
+                new SiamNode(turnOneState, undefined, MGPOptional.of(move));
+            const turnOneBoardValue: number = heuristic.getBoardValue(turnOneNode, defaultConfig).value;
             expect(turnOneBoardValue).withContext('Both board value should have same absolute value').toEqual(-1 * boardValue);
         });
 

@@ -184,7 +184,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
     }
-    protected createAIs(): AI<TaflMove, TaflState, AIOptions>[] {
+    protected createAIs(): AI<TaflMove, TaflState, AIOptions, TaflConfig>[] {
         const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(this.rules);
         return [
             new TaflPieceMinimax(this.rules),

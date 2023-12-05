@@ -298,9 +298,9 @@ export abstract class TaflRules<M extends TaflMove> extends Rules<M, TaflState, 
         return new TaflState(board, turn + 1);
     }
 
-    public getGameStatus(node: TaflNode<M>): GameStatus {
+    public getGameStatus(node: TaflNode<M>, optionalConfig: MGPOptional<TaflConfig>): GameStatus {
         const state: TaflState = node.gameState;
-        const config: TaflConfig = node.config.get();
+        const config: TaflConfig = optionalConfig.get();
 
         const winner: MGPOptional<Player> = this.getWinner(state, config);
         if (winner.isPresent()) {

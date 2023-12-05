@@ -3,8 +3,7 @@ import { GoMove } from 'src/app/games/go/GoMove';
 import { GoConfig, GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Debug } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
@@ -98,18 +97,22 @@ export class GoComponent
         if (phase === Phase.PLAYING || phase === Phase.PASSED) {
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
         }
-        assert(phase === Phase.COUNTING || phase === Phase.ACCEPT,
-               'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+        Utils.assert(phase === Phase.COUNTING || phase === Phase.ACCEPT,
+                     'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
     }
 
     public getSpaceClass(x: number, y: number): string {
-        const piece: GoPiece = this.getState().getPieceAtXY(x, y);
+        const state: GoState = this.getState();
+        console.log(state.getWidth(), state.getHeight(), 'now, asking for', x, y)
+        const piece: GoPiece = state.getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getOwner());
     }
 
     public spaceIsFull(x: number, y: number): boolean {
-        const piece: GoPiece = this.getState().getPieceAtXY(x, y);
+        const state: GoState = this.getState();
+        console.log(state.getWidth(), state.getHeight(), 'or', this.board.length, this.board[0].length, 'now, asking for', x, y)
+        const piece: GoPiece = state.getPieceAtXY(x, y);
         return piece !== GoPiece.EMPTY && this.isTerritory(x, y) === false;
     }
 

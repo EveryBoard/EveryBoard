@@ -18,6 +18,7 @@ describe('QuartoComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<QuartoComponent>('Quarto');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
@@ -36,6 +37,7 @@ describe('QuartoComponent', () => {
             // Then the move should be rejected
             await testUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }));
+
         it('should select "piece to give" when clicking on it', fakeAsync(async() => {
             // Given any board with remaining piece
             // When clicking on a piece
@@ -44,6 +46,7 @@ describe('QuartoComponent', () => {
             // Then it should be selected
             testUtils.expectElementToExist('#chosenPiece_1');
         }));
+
         it('should select landing coord when clicking on it', fakeAsync(async() => {
             // Given a board with remaining space
             // When clicking on one space of the board
@@ -63,6 +66,7 @@ describe('QuartoComponent', () => {
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
             await testUtils.expectMoveSuccess('#chooseCoord_0_0', move);
         }));
+
         it('should accept move when choosing coord then choosing piece', fakeAsync(async() => {
             // Given any state where the user has selected a coord
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
@@ -72,6 +76,7 @@ describe('QuartoComponent', () => {
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
             await testUtils.expectMoveSuccess('#choosePiece_1', move);
         }));
+
         it('should allow to make last move', fakeAsync(async() => {
             // Given a state at the last turn
             const board: QuartoPiece[][] = [
@@ -89,6 +94,7 @@ describe('QuartoComponent', () => {
             const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
             await testUtils.expectMoveSuccess('#chooseCoord_3_3', move);
         }));
+
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given any board with remaining piece selected
             await testUtils.expectClickSuccess('#choosePiece_1');
@@ -99,6 +105,7 @@ describe('QuartoComponent', () => {
             // Then it should no longer be selected
             testUtils.expectElementNotToExist('#chosenPiece_1');
         }));
+
         it('should deselect landing coord when clicking on it again', fakeAsync(async() => {
             // Given a board with remaining space and one of them already contain the droppedPiece
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
@@ -110,6 +117,7 @@ describe('QuartoComponent', () => {
             testUtils.expectElementNotToExist('#droppedPiece_0_0');
         }));
     });
+
     it('should not show a piece in hand at the very last turn when all pieces are on the board', fakeAsync(async() => {
         // Given a state of a part finished at the last turn
         const board: QuartoPiece[][] = [

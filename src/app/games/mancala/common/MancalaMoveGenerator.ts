@@ -4,26 +4,26 @@ import { MoveGenerator } from 'src/app/jscaip/AI';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaDistributionResult, MancalaNode, MancalaRules } from '../common/MancalaRules';
 import { MancalaConfig } from './MancalaConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaState> {
+export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaState, MancalaConfig> {
 
     public constructor(private readonly rules: MancalaRules) {
         super();
     }
 
-    public getListMoves(node: MancalaNode): MancalaMove[] {
+    public getListMoves(node: MancalaNode, config: MGPOptional<MancalaConfig>): MancalaMove[] {
         const moves: MancalaMove[] = [];
         const state: MancalaState = node.gameState;
-        const config: MancalaConfig = node.config.get();
         const playerY: number = state.getCurrentPlayerY();
         for (let x: number = 0; x < state.getWidth(); x++) {
             if (state.getPieceAtXY(x, playerY) > 0) {
                 // if the house is not empty
                 const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(x));
-                if (config.mustContinueDistributionAfterStore) {
-                    moves.push(...this.getPossibleMoveContinuations(state, x, playerY, move, config));
+                if (config.get().mustContinueDistributionAfterStore) {
+                    moves.push(...this.getPossibleMoveContinuations(state, x, playerY, move, config.get()));
                 } else {
-                    const legality: MGPValidation = this.rules.isLegal(move, state, config);
+                    const legality: MGPValidation = this.rules.isLegal(move, state, config.get());
                     if (legality.isSuccess()) {
                         moves.push(move);
                     }

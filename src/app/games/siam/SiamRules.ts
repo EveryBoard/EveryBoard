@@ -583,12 +583,12 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegali
         return moves;
     }
 
-    public getGameStatus(node: SiamNode): GameStatus {
+    public getGameStatus(node: SiamNode, config: MGPOptional<SiamConfig>): GameStatus {
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
             this.getMountainsRowsAndColumns(node.gameState);
 
         const winner: PlayerOrNone =
-            this.getWinner(node.gameState, node.previousMove, mountainsInfo.nbMountain, node.config.get());
+            this.getWinner(node.gameState, node.previousMove, mountainsInfo.nbMountain, config.get());
         if (winner.isPlayer()) {
             return GameStatus.getVictory(winner);
         } else {

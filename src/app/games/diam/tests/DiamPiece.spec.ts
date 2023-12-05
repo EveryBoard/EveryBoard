@@ -9,6 +9,7 @@ describe('DiamPiece', () => {
             EncoderTestUtils.expectToBeBijective(DiamPiece.encoder, piece);
         }
     });
+
     it('should have redefined toString', () => {
         expect(DiamPiece.ZERO_FIRST.toString()).toBe('DiamPiece(PLAYER_ZERO, false)');
     });

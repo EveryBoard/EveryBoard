@@ -20,8 +20,7 @@ export type RulesConfig = {
     [member: string]: ConfigDescriptionType;
 }
 
-export interface EmptyRulesConfig extends RulesConfig {
-}
+export type EmptyRulesConfig = Record<string, never>;
 
 export class RulesConfigUtils {
 

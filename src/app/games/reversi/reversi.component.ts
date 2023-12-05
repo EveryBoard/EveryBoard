@@ -61,7 +61,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.lastMove = new Coord(-2, -2);
 
         this.scores = MGPOptional.of(state.countScore());
-        this.canPass = this.rules.playerCanOnlyPass(state);
+        this.canPass = this.rules.playerCanOnlyPass(state, this.config);
     }
 
     public override async showLastMove(move: ReversiMove): Promise<void> {

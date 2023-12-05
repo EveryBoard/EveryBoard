@@ -33,13 +33,14 @@ describe('ReversiOrderedMoveGenerator', () => {
             [_, _, _, _, X, O, X, _],
         ];
         const state: ReversiState = new ReversiState(board, 2);
-        const node: ReversiNode = new ReversiNode(state, undefined, undefined, defaultConfig);
+        const node: ReversiNode = new ReversiNode(state);
 
         // When listing the moves
-        const moves: ReversiMove[] = moveGenerator.getListMoves(node);
+        const moves: ReversiMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should contain the move in the corner first
         expect(moves.length).toBe(2);
         expect(moves[0]).toEqual(new ReversiMove(7, 7));
     });
+
 });

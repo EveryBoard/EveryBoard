@@ -22,6 +22,7 @@ describe('EpaminondasRules', () => {
     beforeEach(() => {
         rules = EpaminondasRules.get();
     });
+
     it('should forbid phalanx to go outside the board (body)', () => {
         // Given a board
         const board: Table<PlayerOrNone> = [
@@ -45,8 +46,9 @@ describe('EpaminondasRules', () => {
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_IS_LEAVING_BOARD();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid phalanx to go outside the board (head)', () => {
         // Given a board
         const board: Table<PlayerOrNone> = [
@@ -70,8 +72,9 @@ describe('EpaminondasRules', () => {
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_IS_LEAVING_BOARD();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid invalid phalanx (phalanx containing coord outside the board)', () => {
         // Given a board
         const board: Table<PlayerOrNone> = [
@@ -95,8 +98,9 @@ describe('EpaminondasRules', () => {
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid phalanx to pass through other pieces', () => {
         // Given a board with a phalanx next to an opponent's piece
         const board: Table<PlayerOrNone> = [
@@ -118,7 +122,7 @@ describe('EpaminondasRules', () => {
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 3, Direction.UP);
         // Then it should fail
         const reason: string = EpaminondasFailure.SOMETHING_IN_PHALANX_WAY();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid out of range move', () => {
@@ -130,7 +134,7 @@ describe('EpaminondasRules', () => {
 
         // Then it should be illegal
         const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid to capture greater phalanx', () => {
@@ -156,8 +160,9 @@ describe('EpaminondasRules', () => {
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid to capture same sized phalanx', () => {
         // Given a board with two phalanx of the same size
         const board: Table<PlayerOrNone> = [
@@ -181,8 +186,9 @@ describe('EpaminondasRules', () => {
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid to capture your own pieces phalanx', () => {
         // Given a board
         const board: Table<PlayerOrNone> = [
@@ -206,8 +212,9 @@ describe('EpaminondasRules', () => {
 
         // Then it should fail
         const reason: string = RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid moving opponent pieces', () => {
         // Given a board
         const board: Table<PlayerOrNone> = [
@@ -231,8 +238,9 @@ describe('EpaminondasRules', () => {
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should allow legal move', () => {
         // Given a board
         const board: Table<PlayerOrNone> = [
@@ -270,6 +278,7 @@ describe('EpaminondasRules', () => {
         const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should allow legal capture', () => {
         // Given a board with a possible capture
         const board: Table<PlayerOrNone> = [
@@ -328,8 +337,9 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Direction.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a victory for 0
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
         it('should declare second player winner if their pawn survive one turn on first line', () => {
             // Given a board where second player wins
             const board: Table<PlayerOrNone> = [
@@ -350,8 +360,9 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Direction.UP);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a victory for player 1
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
         it('should not consider first player winner if both players have one piece on their landing line', () => {
             // Given a board where both players have a piece on the landing line
             const board: Table<PlayerOrNone> = [
@@ -372,8 +383,9 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node);
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
+
         it('should declare player zero winner when last soldier of opponent has been captured', () => {
             // Given a board with only pieces from player zero
             const board: Table<PlayerOrNone> = [
@@ -394,8 +406,9 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a win for player zero
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
         it('should declare player one winner when last soldier of opponent has been captured', () => {
             // Given a board with only pieces from player one
             const board: Table<PlayerOrNone> = [
@@ -416,7 +429,7 @@ describe('EpaminondasRules', () => {
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a win for player one
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
     });
 });

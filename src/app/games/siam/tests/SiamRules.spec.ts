@@ -135,6 +135,7 @@ describe('SiamRules', () => {
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid moving the empty piece', () => {
         // Given a state
         const state: SiamState = SiamRules.get().getInitialState(defaultConfig);
@@ -474,8 +475,8 @@ describe('SiamRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             // and victory should be for player zero
             const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            new SiamNode(expectedState, undefined, MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should assign victory to the player closest to and aligned with the fallen mountain', () => {
@@ -502,8 +503,8 @@ describe('SiamRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             // and victory should be for player zero
             const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            new SiamNode(expectedState, undefined, MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
         it('should assign victory to player closest to and aligned with the fallen mountain (and not to the non-aligned pieces)', () => {
@@ -530,8 +531,8 @@ describe('SiamRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             // and victory should be for player zero, whose pieces are aligned with the push
             const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            new SiamNode(expectedState, undefined, MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
     });
@@ -636,9 +637,8 @@ describe('SiamRules', () => {
             const expectedState: SiamState = new SiamState(expectedBoard, 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
             // and victory should be for player zero, whose pieces are aligned with the push
-            const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move), customConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            const node: SiamNode = new SiamNode(expectedState, undefined, MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, customConfig);
         });
     });
 

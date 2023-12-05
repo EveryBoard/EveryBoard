@@ -21,6 +21,7 @@ describe('ConnectSixMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new ConnectSixMoveGenerator();
     });
+
     it('should propose only one move at first turns', () => {
         // Given the initial node
         const width: number = defaultConfig.get().width;
@@ -29,7 +30,7 @@ describe('ConnectSixMoveGenerator', () => {
         const node: ConnectSixNode = new ConnectSixNode(state);
 
         // When listing the moves
-        const moves: ConnectSixMove[] = moveGenerator.getListMoves(node);
+        const moves: ConnectSixMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should only include the center of the board
         const cx: number = Math.floor(width/2);
@@ -37,6 +38,7 @@ describe('ConnectSixMoveGenerator', () => {
         expect(moves.length).toBe(1);
         expect(moves[0]).toEqual(ConnectSixFirstMove.of(new Coord(cx, cy)));
     });
+
     it('should count all possible moves including only neighboring-coord', () => {
         // Given a board with 60 possibles combinations of two coords
         // With the firsts being neighbors of a piece on board
@@ -66,7 +68,7 @@ describe('ConnectSixMoveGenerator', () => {
         const node: ConnectSixNode = new ConnectSixNode(state);
 
         // When listing the moves
-        const moves: ConnectSixMove[] = moveGenerator.getListMoves(node);
+        const moves: ConnectSixMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then the answer should be 65
         expect(moves.length).toBe(65);

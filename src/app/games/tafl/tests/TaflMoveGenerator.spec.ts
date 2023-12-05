@@ -30,10 +30,10 @@ describe('TaflMoveGenerator', () => {
             [_, _, _, _, _, _, _],
         ];
         const state: TaflState = new TaflState(board, 1);
-        const node: BrandhubNode = new BrandhubNode(state, undefined, undefined, defaultConfig);
+        const node: BrandhubNode = new BrandhubNode(state);
 
         // When listing the moves
-        const moves: BrandhubMove[] = moveGenerator.getListMoves(node);
+        const moves: BrandhubMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then going back on throne should not be part of it
         const kingBackOnThrone: BrandhubMove = BrandhubMove.from(new Coord(3, 2), new Coord(3, 3)).get();

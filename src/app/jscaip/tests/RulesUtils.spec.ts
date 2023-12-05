@@ -50,7 +50,7 @@ export class RulesUtils {
         state: S,
         move: M,
         reason: string,
-        config: MGPOptional<C> = MGPOptional.empty())
+        config: MGPOptional<C>)
     : void
     {
         const legality: MGPFallible<L> = rules.getLegality(move, state, config);
@@ -65,10 +65,11 @@ export class RulesUtils {
                                        C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S, C>,
-        player: Player)
+        player: Player,
+        config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        expect(rules.getGameStatus(node))
+        expect(rules.getGameStatus(node, config))
             .withContext('Rules should consider gameStatus a victory for player ' + player.value)
             .toEqual(GameStatus.getVictory(player));
     }
@@ -79,10 +80,11 @@ export class RulesUtils {
                                     L,
                                     C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
-        node: GameNode<M, S, C>)
+        node: GameNode<M, S, C>,
+        config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        expect(rules.getGameStatus(node)).toEqual(GameStatus.ONGOING);
+        expect(rules.getGameStatus(node, config)).toEqual(GameStatus.ONGOING);
     }
 
     public static expectToBeDraw<R extends Rules<M, S, C, L>,
@@ -91,11 +93,13 @@ export class RulesUtils {
                                  L,
                                  C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
-        node: GameNode<M, S, C>)
+        node: GameNode<M, S, C>,
+        config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
+        expect(rules.getGameStatus(node, config)).toBe(GameStatus.DRAW);
     }
+
     /**
      * @param ruler the rules of the game you need to debug
      * @param encodedMoves the encoded moves that caused the bug

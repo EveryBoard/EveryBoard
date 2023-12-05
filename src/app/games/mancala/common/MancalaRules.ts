@@ -79,7 +79,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
             }
         }
         if (config.mustContinueDistributionAfterStore) {
-            Utils.assert(canStillPlay === false, 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE');
+            Utils.assert(canStillPlay === false, 'Must continue playing after kalah move');
         }
         if (config.mustFeed) {
             const opponent: Player = state.getCurrentOpponent();
@@ -175,10 +175,10 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         return PlayerOrNone.NONE;
     }
 
-    public getGameStatus(node: MancalaNode): GameStatus {
+    public getGameStatus(node: MancalaNode, config: MGPOptional<MancalaConfig>): GameStatus {
         const state: MancalaState = node.gameState;
         const width: number = node.gameState.getWidth();
-        const seedsByHouse: number = node.config.get().seedsByHouse;
+        const seedsByHouse: number = config.get().seedsByHouse;
         const halfOfTotalSeeds: number = width * seedsByHouse;
         if (state.scores[0] > halfOfTotalSeeds) {
             return GameStatus.ZERO_WON;

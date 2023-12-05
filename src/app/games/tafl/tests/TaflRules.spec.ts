@@ -131,9 +131,9 @@ describe('TaflRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 24);
         const node: MyTaflNode =
-            new MyTaflNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
+            new MyTaflNode(expectedState, undefined, MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
     it('should consider invader winner when all defender are immobilized', () => {
@@ -168,9 +168,9 @@ describe('TaflRules', () => {
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 25);
         const node: MyTaflNode =
-            new MyTaflNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
+            new MyTaflNode(expectedState, undefined, MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
     describe('getInvader', () => {

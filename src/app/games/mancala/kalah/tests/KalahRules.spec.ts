@@ -136,7 +136,7 @@ describe('KalahRules', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
             // Then it should be refused
-            const reason: string = 'MUST_CONTINUE_PLAYING_AFTER_KALAH_MOVE';
+            const reason: string = 'Must continue playing after kalah move';
             TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }, reason);
@@ -208,10 +208,9 @@ describe('KalahRules', () => {
                 [0, 0, 0, 0, 0, 0],
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
-            const node: MancalaNode =
-                new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.empty(), defaultConfig);
+            const node: MancalaNode = new MancalaNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it(`should monsoon player after player captured opponent's last seeds`, () => {
@@ -231,10 +230,9 @@ describe('KalahRules', () => {
                 [0, 0, 0, 0, 0, 0],
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [26, 22]);
-            const node: MancalaNode =
-                new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.empty(), defaultConfig);
+            const node: MancalaNode = new MancalaNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should monsoon if next player will not be able to feed current player', () => {
@@ -257,9 +255,8 @@ describe('KalahRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: MancalaNode = new MancalaNode(expectedState,
                                                       MGPOptional.empty(),
-                                                      MGPOptional.of(move),
-                                                      defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+                                                      MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
     });

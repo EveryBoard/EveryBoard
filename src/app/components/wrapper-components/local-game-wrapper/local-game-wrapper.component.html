@@ -102,7 +102,7 @@
                 <div *ngIf="gameComponent.node.previousMove.isPresent() && displayAIInfo()"
                      id="AIInfo">
                     <ng-container *ngFor="let ai of gameComponent.availableAIs">
-                        {{ ai.name + ': ' + ai.getInfo(gameComponent.node) }} <br/>
+                        {{ ai.name + ': ' + ai.getInfo(gameComponent.node, gameComponent.config) }} <br/>
                     </ng-container>
                     Created {{ getCreatedNodes() }} nodes.<br/>
                     Minimax time: {{ getMinimaxTime() }}ms.<br/>

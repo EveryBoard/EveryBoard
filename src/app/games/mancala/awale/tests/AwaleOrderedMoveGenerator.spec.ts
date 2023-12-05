@@ -24,10 +24,10 @@ describe('AwaleOrderedMoveGenerator', () => {
             [0, 0, 0, 0, 0, 2],
         ];
         const state: MancalaState = new MancalaState(board, 1, [0, 0]);
-        const node: MancalaNode = new MancalaNode(state, undefined, undefined, defaultConfig);
+        const node: MancalaNode = new MancalaNode(state);
 
         // When listing the moves
-        const moves: MancalaMove[] = moveGenerator.getListMoves(node);
+        const moves: MancalaMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then the first move should be the capture
         expect(moves.length).toBe(2);

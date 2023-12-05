@@ -21,10 +21,12 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
         rules = EpaminondasRules.get();
         moveGenerator = new EpaminondasPhalanxSizeAndFilterMoveGenerator();
     });
+
     it('should filter number of choices', () => {
         const node: EpaminondasNode = rules.getInitialNode(defaultConfig);
-        expect(moveGenerator.getListMoves(node).length).toBeLessThan(114);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBeLessThan(114);
     });
+
     it('should not filter number of choices if it is below 40', () => {
         // Given a board with less than 40 choice in total
         const board: Table<PlayerOrNone> = [
@@ -45,9 +47,10 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
         const node: EpaminondasNode = new EpaminondasNode(state);
 
         // When listing the moves
-        const moves: EpaminondasMove[] = moveGenerator.getListMoves(node);
+        const moves: EpaminondasMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then we should have all of them (8)
         expect(moves.length).toBe(8);
     });
+
 });

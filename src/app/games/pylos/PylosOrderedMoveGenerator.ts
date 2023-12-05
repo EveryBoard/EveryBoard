@@ -1,11 +1,13 @@
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PylosMove } from './PylosMove';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosNode } from './PylosRules';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class PylosOrderedMoveGenerator extends PylosMoveGenerator {
 
-    public override getListMoves(node: PylosNode): PylosMove[] {
-        const moves: PylosMove[] = super.getListMoves(node);
+    public override getListMoves(node: PylosNode, config: MGPOptional<EmptyRulesConfig>): PylosMove[] {
+        const moves: PylosMove[] = super.getListMoves(node, config);
         return this.orderMoves(moves);
     }
     private orderMoves(moves: PylosMove[]): PylosMove[] {

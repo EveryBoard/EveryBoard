@@ -4,6 +4,7 @@ import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiConfig } fro
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class ReversiOrderedMoveGenerator extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig> {
 
@@ -16,10 +17,10 @@ export class ReversiOrderedMoveGenerator extends MoveGenerator<ReversiMove, Reve
         ];
     }
 
-    public getListMoves(node: ReversiNode): ReversiMove[] {
-        const moves: ReversiMoveWithSwitched[] = ReversiRules.get().getListMoves(node.gameState);
+    public getListMoves(node: ReversiNode, optionalConfig: MGPOptional<ReversiConfig>): ReversiMove[] {
+        const moves: ReversiMoveWithSwitched[] = ReversiRules.get().getListMoves(node.gameState, optionalConfig);
         // Best moves are on the corner, otherwise moves are sorted by number of pieces switched
-        const config: ReversiConfig = node.config.get();
+        const config: ReversiConfig = optionalConfig.get();
         ArrayUtils.sortByDescending(moves, (moveWithSwitched: ReversiMoveWithSwitched): number => {
             if (this.getBestCoords(config).some((coord: Coord): boolean => moveWithSwitched.move.coord.equals(coord))) {
                 return 100;

@@ -15,6 +15,7 @@ describe('LascaMove', () => {
             // Then it should fail
             expect(move).toEqual(MGPFallible.failure(LascaFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
         });
+
         it('should forbid to start out of the board', () => {
             // When trying to create a move that goes outside of the board
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(-1, 1), new Coord(0, 0));
@@ -22,6 +23,7 @@ describe('LascaMove', () => {
             // Then it should fail
             expect(move).toEqual(MGPFallible.failure(CoordFailure.OUT_OF_RANGE(new Coord(-1, 1))));
         });
+
         it('should forbid to get out of the board', () => {
             // When trying to create a move that goes outside of the board
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(-1, 1));
@@ -29,6 +31,7 @@ describe('LascaMove', () => {
             // Then it should fail
             expect(move).toEqual(MGPFallible.failure(CoordFailure.OUT_OF_RANGE(new Coord(-1, 1))));
         });
+
         it('should forbid too long move', () => {
             // When trying to create a move that does too long step
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(2, 2));
@@ -36,6 +39,7 @@ describe('LascaMove', () => {
             // Then it should fail
             expect(move).toEqual(MGPFallible.failure(LascaFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL()));
         });
+
         it('should allow simple move', () => {
             // When trying to create a simple move
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(1, 1));
@@ -52,6 +56,7 @@ describe('LascaMove', () => {
             // Then it should fail
             expect(move).toEqual(MGPFallible.failure(LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL()));
         });
+
         it('should forbid to get out of the board', () => {
             // When trying to create a capture that goes outside of the board
             const move: MGPFallible<LascaMove> = LascaMove.fromCapture([new Coord(0, 0), new Coord(-2, 2)]);
@@ -59,6 +64,7 @@ describe('LascaMove', () => {
             // Then it should fail
             expect(move).toEqual(MGPFallible.failure(CoordFailure.OUT_OF_RANGE(new Coord(-2, 2))));
         });
+
         it('should forbid too long move', () => {
             // When trying to create a capture that does too long step
             const move: MGPFallible<LascaMove> = LascaMove.fromCapture([new Coord(0, 0), new Coord(3, 3)]);
@@ -66,6 +72,7 @@ describe('LascaMove', () => {
             // Then it should fail
             expect(move).toEqual(MGPFallible.failure(LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL()));
         });
+
         it('should forbid to pass over the same coord several times', () => {
             // When trying to create a capture that passes twice over the same Coord
             const coords: Coord[] = [new Coord(0, 0), new Coord(2, 2), new Coord(0, 0)];
@@ -74,6 +81,7 @@ describe('LascaMove', () => {
             // Then it should fail
             expect(move).toEqual(MGPFallible.failure(LascaFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD()));
         });
+
         it('should allow simple capture', () => {
             // When trying to create a simple move
             const move: MGPFallible<LascaMove> = LascaMove.fromCapture([new Coord(0, 0), new Coord(2, 2)]);
@@ -94,6 +102,7 @@ describe('LascaMove', () => {
             // Then the decoded value should be the original value
             expect(decoded).toEqual(move);
         });
+
         it('should encode captures', () => {
             // Given a capture
             const steppedCoords: Coord[] = [new Coord(0, 0), new Coord(2, 2), new Coord(0, 4)];
@@ -117,6 +126,7 @@ describe('LascaMove', () => {
             // Then the result should be true
             expect(first.equals(second)).toBeTrue();
         });
+
         it('should see as unequal different moves', () => {
             // Given two different moves
             const first: LascaMove = LascaMove.fromStep(new Coord(2, 2), new Coord(3, 3)).get();
@@ -138,6 +148,7 @@ describe('LascaMove', () => {
             expect(long.isPrefix(short)).toBeTrue();
             expect(short.isPrefix(long)).toBeTrue();
         });
+
         it('should not consider equal move as prefix to each others', () => {
             // Given two different moves
             const first: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4)]).get();

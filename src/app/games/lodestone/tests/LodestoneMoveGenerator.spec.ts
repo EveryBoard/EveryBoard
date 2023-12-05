@@ -9,10 +9,12 @@ import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneP
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 import { LodestoneMove } from '../LodestoneMove';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LodestoneMoveGenerator', () => {
 
     let moveGenerator: LodestoneMoveGenerator;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = LodestoneRules.get().getDefaultRulesConfig();
 
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
     const _: LodestonePiece = LodestonePieceNone.EMPTY;
@@ -28,7 +30,7 @@ describe('LodestoneMoveGenerator', () => {
         const node: LodestoneNode = new LodestoneNode(LodestoneRules.get().getInitialState());
 
         // When listing the moves
-        const moves: LodestoneMove[] = moveGenerator.getListMoves(node);
+        const moves: LodestoneMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be 618 possible moves
         // For each empty coord, each lodestone can be placed in 4 different position
@@ -67,7 +69,7 @@ describe('LodestoneMoveGenerator', () => {
         const node: LodestoneNode = new LodestoneNode(state);
 
         // When listing the moves
-        const moves: LodestoneMove[] = moveGenerator.getListMoves(node);
+        const moves: LodestoneMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be 4*2 possible moves
         expect(moves.length).toBe(8);
@@ -97,7 +99,7 @@ describe('LodestoneMoveGenerator', () => {
         const node: LodestoneNode = new LodestoneNode(state);
 
         // When listing the moves
-        const moves: LodestoneMove[] = moveGenerator.getListMoves(node);
+        const moves: LodestoneMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
 
             // Then all moves should be legal

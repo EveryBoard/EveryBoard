@@ -9,6 +9,7 @@ import { Utils } from 'src/app/utils/utils';
 import { SixVictorySource, SixNode } from './SixRules';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { AlignmentHeuristic, BoardInfo } from 'src/app/jscaip/AlignmentHeuristic';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVictorySource> {
 
@@ -16,7 +17,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
 
     public currentVictorySource: SixVictorySource;
 
-    public getBoardValue(node: SixNode): BoardValue {
+    public getBoardValue(node: SixNode, _config: MGPOptional<EmptyRulesConfig>): BoardValue {
         const move: MGPOptional<SixMove> = node.previousMove;
         const state: SixState = node.gameState;
         const LAST_PLAYER: Player = state.getCurrentOpponent();

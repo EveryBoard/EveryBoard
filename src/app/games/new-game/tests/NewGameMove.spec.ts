@@ -16,6 +16,7 @@ describe('NewGameMove', () => {
             // expect(move.equals(identical)).toBeTrue();
             expect(() => move.equals(identical)).toThrow();
         });
+
         it('should return false for another move', () => {
             const move: NewGameMove = new NewGameMove();
             const different: NewGameMove = new NewGameMove();

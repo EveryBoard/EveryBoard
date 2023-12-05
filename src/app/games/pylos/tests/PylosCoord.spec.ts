@@ -17,24 +17,28 @@ describe('PylosCoord', () => {
             EncoderTestUtils.expectToBeBijective(PylosCoord.optionalEncoder, value);
         }
     });
+
     it('should forbid invalid X in coord creation', () => {
         function createCoordWithInvalidX(): void {
             new PylosCoord(-1, 0, 0);
         }
         TestUtils.expectToThrowAndLog(createCoordWithInvalidX, 'PylosCoord: Invalid X: -1.');
     });
+
     it('should forbid invalid Y in coord creation', () => {
         function createCoordWithInvalidY(): void {
             new PylosCoord( 0, -1, 0);
         }
         TestUtils.expectToThrowAndLog(createCoordWithInvalidY, 'PylosCoord: Invalid Y: -1.');
     });
+
     it('should forbid invalid Z in coord creation', () => {
         function createCoordWithInvalidZ(): void {
             new PylosCoord( 0, 0, -1);
         }
         TestUtils.expectToThrowAndLog(createCoordWithInvalidZ, 'PylosCoord: Invalid Z: -1.');
     });
+
     it('should forbid invalid out of range coord creation', () => {
         function createCoordWithInvalidOutOfRangeCoord(): void {
             new PylosCoord( 3, 3, 3);

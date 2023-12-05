@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { QuixoState } from '../QuixoState';
-import { QuixoNode } from '../QuixoRules';
+import { QuixoConfig, QuixoState } from '../QuixoState';
+import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMove } from '../QuixoMove';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -13,6 +13,7 @@ describe('QuixoMove', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: PlayerOrNone = PlayerOrNone.ONE;
+    const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const board: Table<PlayerOrNone> = [
@@ -26,7 +27,7 @@ describe('QuixoMove', () => {
         const state: QuixoState = new QuixoState(board, 0);
         const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move));
         const moveGenerator: QuixoMoveGenerator = new QuixoMoveGenerator();
-        const moves: QuixoMove[] = moveGenerator.getListMoves(node);
+        const moves: QuixoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(QuixoMove.encoder, move);
         }

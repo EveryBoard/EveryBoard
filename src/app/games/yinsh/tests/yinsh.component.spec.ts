@@ -25,6 +25,7 @@ describe('YinshComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<YinshComponent>('Yinsh');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
@@ -37,6 +38,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_3_2', move);
             testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'moved-fill']);
         }));
+
         it('should forbid placing a ring on an occupied space', fakeAsync(async() => {
             // Given a state in placement phase with at least one occupied space
             const board: Table<YinshPiece> = [
@@ -58,6 +60,7 @@ describe('YinshComponent', () => {
             // Then it should fail
             await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }));
+
         it('should decrease the number of rings shown on the side when a ring is placed', fakeAsync(async() => {
             // Given a state in placement phase, with all rings available
             testUtils.expectElementToExist('#player_0_sideRing_5');

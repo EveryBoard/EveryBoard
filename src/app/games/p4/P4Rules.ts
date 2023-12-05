@@ -104,7 +104,7 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         return y - 1;
     }
 
-    public getListMoves(node: P4Node): P4Move[] {
+    public getListMoves(node: P4Node, _config: MGPOptional<P4Config>): P4Move[] {
         // should be called only if the game is not over
         const state: P4State = node.gameState;
         const moves: P4Move[] = [];

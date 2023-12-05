@@ -56,6 +56,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         it('should create', () => {
             testUtils.expectToBeCreated();
         });
+
         it('should show informations below/beside the board', fakeAsync(async() => {
             // Given a certain TutorialStep
             const state: QuartoState = new QuartoState([
@@ -84,6 +85,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const actualState: QuartoState = testUtils.getGameComponent().getState();
             expect(actualState).toEqual(state);
         }));
+
         it('should show previousMove when set', fakeAsync(async() => {
             // Given a certain TutorialStep with previousMove set and no previousState
             const tutorialPreviousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
@@ -112,6 +114,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(componentPreviousMove).toEqual(tutorialPreviousMove);
             expect(wrapper.gameComponent.node.parent.isAbsent()).toBeTrue();
         }));
+
         it('should show title of the steps, the selected one in bold', fakeAsync(async() => {
             // Given a TutorialStep with 3 steps
             const tutorial: TutorialStep[] = [
@@ -142,6 +145,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             currentTitle = testUtils.findElement('#step_1').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
         }));
+
         it('should call setRole according to the current player (player zero)', fakeAsync(async() => {
             // Given a tutorial a step for player zero
             const statePlayerZero: QuartoState = QuartoRules.get().getInitialState();
@@ -160,6 +164,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // Then it should call setRole with playerZero
             expect(wrapper.setRole).toHaveBeenCalledOnceWith(Player.ZERO);
         }));
+
         it('should call setRole according to the current player (player one)', fakeAsync(async() => {
             // Given a tutorial a step for player one
             const statePlayerOne: QuartoState = new QuartoState([
@@ -245,6 +250,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(testUtils.getGameComponent().getState())
                 .toEqual(QuartoRules.get().getInitialState());
         }));
+
         it('should start step again after clicking "retry" on step success', fakeAsync(async() => {
             // Given any TutorialStep
             const tutorial: TutorialStep[] = [
@@ -271,6 +277,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(testUtils.getGameComponent().getState())
                 .toEqual(QuartoRules.get().getInitialState());
         }));
+
         it('should forbid clicking again on the board after success', fakeAsync(async() => {
             // Given a TutorialStep on which a valid move has been done.
             const tutorial: TutorialStep[] = [
@@ -303,6 +310,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         it('should allow clicking again after restarting succeeded steps', fakeAsync(async() => {
             // Given any TutorialStep whose step has been succeeded and restarted
             wrapper.steps = [
@@ -359,6 +367,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
             expect(wrapper.stepFinished[0]).toBeFalse();
         }));
+
         it('should move to the next unfinished step when next step is finished', fakeAsync(async() => {
             // Given a tutorial on which the two first steps have been skipped
             const tutorial: TutorialStep[] = [
@@ -401,6 +410,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         it('should move to the first unfinished step when all next steps are finished', fakeAsync(async() => {
             // Given a tutorial on which the middle steps have been skipped
             const tutorial: TutorialStep[] = [
@@ -444,6 +454,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         it('should show congratulation and play buttons at the end of the tutorial, hide next button', fakeAsync(async() => {
             // Given a TutorialStep whose last step has been done
             const tutorial: TutorialStep[] = [
@@ -476,6 +487,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#restartButton');
             expect(wrapper.successfulSteps).toBe(0);
         }));
+
         it('should allow to restart the whole tutorial when finished', fakeAsync(async() => {
             // Given a finished tutorial
             await wrapper.startTutorial([
@@ -497,6 +509,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(wrapper.stepFinished.every((v: boolean) => v === false)).toBeTrue();
             expect(wrapper.stepIndex).toEqual(0);
         }));
+
         it('should redirect to local game when asking for it when finished', fakeAsync(async() => {
             const router: Router = TestBed.inject(Router);
             // Given a finish tutorial
@@ -517,6 +530,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // expect navigator to have been called
             expectValidRouting(router, ['/local', 'Quarto'], LocalGameWrapperComponent);
         }));
+
         it('should redirect to online game when asking for it when finished and user is online', fakeAsync(async() => {
             // Given a finish tutorial
             await wrapper.startTutorial([
@@ -566,6 +580,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // expect highlight to be present
             testUtils.expectElementToExist('#selected');
         }));
+
         it('should show success message after step success', fakeAsync(async() => {
             // Given a TutorialStep with several moves
             const tutorial: TutorialStep[] = [
@@ -596,6 +611,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         it('should show failure message after step failure', fakeAsync(async() => {
             // Given a TutorialStep with several move
             const tutorial: TutorialStep[] = [
@@ -626,6 +642,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(expectedReason);
         }));
+
         it('When illegal move is done, toast message should be shown and restart not needed', fakeAsync(async() => {
             // Given tutorial awaiting any move, but mocking rules to make it mark a move illegal
             const tutorial: TutorialStep[] = [
@@ -652,6 +669,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(expectedReason);
         }));
+
         it('When illegal click is tried, toast message should be shown and restart not needed', fakeAsync(async() => {
             // Given a TutorialStep on which illegal move has been tried
             const tutorial: TutorialStep[] = [
@@ -684,6 +702,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const chooseCoordLegality: MGPValidation = await testUtils.getComponent().canUserPlay('#chooseCoord_0_0');
             expect(chooseCoordLegality.isSuccess()).toBeTrue();
         }));
+
         it('should not show error if cancelMove is called with no specified reason', fakeAsync(async() => {
             // Given a tutorial awaiting a move
             const tutorial: TutorialStep[] = [
@@ -703,6 +722,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // Then no error is shown
             testUtils.expectElementNotToExist('#currentReason');
         }));
+
         it('should propose to see the solution when move attempt done', fakeAsync(async() => {
             // Given a tutorial awaiting a specific move
             const awaitedMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BBAA);
@@ -736,6 +756,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // And we shoud now have the option to see solution
             testUtils.expectElementToExist('#showSolutionButton');
         }));
+
         it('should show solution when asking for it after failure', fakeAsync(async() => {
             // Given a tutorial on which a non-awaited move has been done
             const awaitedMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BBAA);
@@ -828,6 +849,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         it('should show failure message after step failure (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
@@ -851,6 +873,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         it('should show restart button (with possibility of seeing solution) when unwanted click with no move is done', fakeAsync(async() => {
             // Given a TutorialStep with possible invalid clicks
             const tutorial: TutorialStep[] = [
@@ -884,6 +907,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // And then solution button should be shown too
             testUtils.expectElementToExist('#showSolutionButton');
         }));
+
         it('should show solution when asking for it', fakeAsync(async() => {
             // Given a TutorialStep for clicks, for which the user clicked wrongly
             const tutorial: TutorialStep[] = [
@@ -911,6 +935,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         it('should not throw for click leading to move', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [

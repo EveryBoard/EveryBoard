@@ -1,14 +1,13 @@
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigDescription, ConfigLine } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
+import { Rules } from 'src/app/jscaip/Rules';
 
 /**
  * This class is optional.
@@ -26,14 +25,20 @@ export class NewGameLegalityInfo {
 /**
  * Defining the game node class is only for cosmetic purposes. It reduces the length of the argument to `getGameStatus`.
  */
-export class NewGameNode extends GameNode<NewGameMove, NewGameState> {}
+export class NewGameNode extends GameNode<NewGameMove, NewGameState, NewGameConfig> {}
+
+export type NewGameConfig = {
+
+    the_name_you_will_use_in_your_rules_and_states: number;
+
+};
 
 /**
  * This is where you define the rules of the game.
  * It should be a singleton class.
  * It is used by the wrappers to check the legality of a move, and to apply the move on a state.
  */
-export class NewGameRules extends ConfiglessRules<NewGameMove, NewGameState, NewGameLegalityInfo> {
+export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameConfig, NewGameLegalityInfo> {
 
     /**
      * This is the singleton instance. You should keep this as is, except for adapting the class name.
@@ -46,8 +51,8 @@ export class NewGameRules extends ConfiglessRules<NewGameMove, NewGameState, New
      * You have the option to create a type NewRulesConfig for more type safety.
      * It is FULLY optional, if you don't want to make your game configurable just yet, ignore this!
      */
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription =
-        new RulesConfigDescription({
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<NewGameConfig> =
+        new RulesConfigDescription<NewGameConfig>({
             name: (): string => 'the internationalisable name of that standard config',
             config: {
                 the_name_you_will_use_in_your_rules_and_states:
@@ -81,7 +86,7 @@ export class NewGameRules extends ConfiglessRules<NewGameMove, NewGameState, New
     /**
      * If you do create a configuration for the game, you must have this function, otherwise remove it
      */
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription> {
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<NewGameConfig>> {
         return MGPOptional.of(NewGameRules.RULES_CONFIG_DESCRIPTION);
     }
 
@@ -113,7 +118,7 @@ export class NewGameRules extends ConfiglessRules<NewGameMove, NewGameState, New
      */
     public applyLegalMove(_move: NewGameMove,
                           state: NewGameState,
-                          _config: MGPOptional<EmptyRulesConfig>,
+                          _config: MGPOptional<NewGameConfig>,
                           _info: NewGameLegalityInfo)
     : NewGameState
     {
@@ -125,7 +130,7 @@ export class NewGameRules extends ConfiglessRules<NewGameMove, NewGameState, New
      * @param node the node for which we check the game status
      * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
      */
-    public getGameStatus(node: NewGameNode): GameStatus {
+    public getGameStatus(node: NewGameNode, _config: MGPOptional<NewGameConfig>): GameStatus {
         if (node.gameState.turn < 42) {
             return GameStatus.ONGOING;
         } else {

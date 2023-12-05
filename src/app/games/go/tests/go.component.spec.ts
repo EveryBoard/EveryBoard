@@ -7,10 +7,12 @@ import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { GoConfig, GoRules } from '../GoRules';
 
 describe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
+    const defaultConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 5, width: 5 });
 
     const _: GoPiece = GoPiece.EMPTY;
     const O: GoPiece = GoPiece.DARK;
@@ -19,9 +21,11 @@ describe('GoComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<GoComponent>('Go');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     it('should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
         await testUtils.expectPassSuccess(GoMove.PASS); // Passed
         await testUtils.expectPassSuccess(GoMove.PASS); // Counting
@@ -29,6 +33,7 @@ describe('GoComponent', () => {
         await testUtils.expectPassSuccess(GoMove.ACCEPT); // Finished
         testUtils.expectPassToBeForbidden();
     }));
+
     it('should show captures', fakeAsync(async() => {
         const board: Table<GoPiece> = [
             [O, X, _, _, _],
@@ -38,19 +43,21 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
         ];
         const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
-        await testUtils.setupState(state);
+        await testUtils.setupState(state, undefined, undefined, defaultConfig);
 
         const move: GoMove = new GoMove(0, 1);
         await testUtils.expectMoveSuccess('#click_0_1', move);
         const goComponent: GoComponent = testUtils.getGameComponent();
         expect(goComponent.captures).toEqual([new Coord(0, 0)]);
     }));
+
     it('should allow simple clicks', fakeAsync(async() => {
         const move: GoMove = new GoMove(1, 1);
         await testUtils.expectMoveSuccess('#click_1_1', move);
         const secondMove: GoMove = new GoMove(2, 2);
         await testUtils.expectMoveSuccess('#click_2_2', secondMove);
     }));
+
     describe('hoshi', () => {
 
         it('should be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
@@ -59,7 +66,7 @@ describe('GoComponent', () => {
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
-            await testUtils.setupState(state);
+            await testUtils.setupState(state, undefined, undefined, defaultConfig);
 
             // Then it should have hoshi in (3, 3) and (cx, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
@@ -74,11 +81,13 @@ describe('GoComponent', () => {
 
         it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
-            const board: Table<GoPiece> = TableUtils.create(13, 13, GoPiece.EMPTY);
-            const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            // const board: Table<GoPiece> = TableUtils.create(13, 13, GoPiece.EMPTY);
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 13, width: 13 });
+            const state: GoState = GoRules.get().getInitialState(customConfig);
+            // new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
-            await testUtils.setupState(state);
+            await testUtils.setupState(state, undefined, undefined, customConfig);
 
             // Then it should have hoshi in (3, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
@@ -94,11 +103,13 @@ describe('GoComponent', () => {
 
         it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
-            const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
-            const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            // const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
+            // const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 9, width: 9 });
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // When displaying it
-            await testUtils.setupState(state);
+            await testUtils.setupState(state, undefined, undefined, customConfig);
 
             // Then it should have hoshi in (2, 2) and (cx, 2) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_2_2'); // Left Up
@@ -114,11 +125,13 @@ describe('GoComponent', () => {
 
         it('should have a tengen when board has an odd width and height', fakeAsync(async() => {
             // Given a (odd x odd) board
-            const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
-            const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            // const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
+            // const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 9, width: 9 });
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // When displaying it
-            await testUtils.setupState(state);
+            await testUtils.setupState(state, undefined, undefined, defaultConfig);
 
             // Then it should have a tengen in (4, 4)
             testUtils.expectElementToExist('#hoshi_4_4'); // middle middle
@@ -126,11 +139,13 @@ describe('GoComponent', () => {
 
         it('should not have a tengen when board has an even width and height', fakeAsync(async() => {
             // Given a (even x even) board
-            const board: Table<GoPiece> = TableUtils.create(10, 10, GoPiece.EMPTY);
-            const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            // const board: Table<GoPiece> = TableUtils.create(10, 10, GoPiece.EMPTY);
+            // const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 10, width: 10 });
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // When displaying it
-            await testUtils.setupState(state);
+            await testUtils.setupState(state, undefined, undefined, defaultConfig);
 
             // Then it should not have a tengen
             testUtils.expectElementNotToExist('#hoshi_4_4'); // upper left potential tengen

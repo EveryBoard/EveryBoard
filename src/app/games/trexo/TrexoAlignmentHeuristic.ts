@@ -4,10 +4,12 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';
 import { TrexoState } from './TrexoState';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class TrexoAlignmentHeuristic extends Heuristic<TrexoMove, TrexoState> {
 
-    public getBoardValue(node: TrexoNode): BoardValue {
+    public getBoardValue(node: TrexoNode, _config: MGPOptional<EmptyRulesConfig>): BoardValue {
         let score: number = 0;
         const state: TrexoState = node.gameState;
         for (const coordPiece of state.toMap()) {
@@ -21,4 +23,5 @@ export class TrexoAlignmentHeuristic extends Heuristic<TrexoMove, TrexoState> {
         }
         return new BoardValue(score);
     }
+
 }

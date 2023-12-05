@@ -5,13 +5,17 @@ import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class EpaminondasPositionalHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
+export class EpaminondasPositionalHeuristic
+    extends Heuristic<EpaminondasMove, EpaminondasState, BoardValue, EpaminondasConfig>
+{
 
-    public getBoardValue(node: EpaminondasNode): BoardValue {
+    public getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
         return new BoardValue(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
+
     private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {
         const width: number = state.getWidth();
         const height: number = state.getHeight();
@@ -49,4 +53,5 @@ export class EpaminondasPositionalHeuristic extends Heuristic<EpaminondasMove, E
         }
         return total;
     }
+
 }

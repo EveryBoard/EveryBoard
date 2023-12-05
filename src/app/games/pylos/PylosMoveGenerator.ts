@@ -4,10 +4,12 @@ import { PylosState } from './PylosState';
 import { PylosNode, PylosRules } from './PylosRules';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class PylosMoveGenerator extends MoveGenerator<PylosMove, PylosState> {
 
-    public getListMoves(node: PylosNode): PylosMove[] {
+    public getListMoves(node: PylosNode, _config: MGPOptional<EmptyRulesConfig>): PylosMove[] {
         const state: PylosState = node.gameState;
         const result: PylosMove[] = [];
         const stateInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[]; } = PylosRules.getStateInfo(state);

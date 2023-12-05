@@ -4,10 +4,13 @@ import { LinesOfActionHeuristic } from '../LinesOfActionHeuristic';
 import { LinesOfActionState } from '../LinesOfActionState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { LinesOfActionRules } from '../LinesOfActionRules';
 
 describe('LinesOfActionHeuristic', () => {
 
     let heuristic: LinesOfActionHeuristic;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = LinesOfActionRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -16,6 +19,7 @@ describe('LinesOfActionHeuristic', () => {
     beforeEach(() => {
         heuristic = new LinesOfActionHeuristic();
     });
+
     it('should prefer fewer groups', () => {
         // Given a state with fewer groups than another
         const strongState: LinesOfActionState = new LinesOfActionState([
@@ -43,6 +47,7 @@ describe('LinesOfActionHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 });

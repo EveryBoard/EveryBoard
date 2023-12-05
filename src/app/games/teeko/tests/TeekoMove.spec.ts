@@ -18,6 +18,7 @@ describe('TeekoMove', () => {
                 // Then it should fail because it is out of range
                 expect(fallible).toEqual(MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord)));
             });
+
             it('should fail for static move', () => {
                 // Given a static move created with the same start and end coord
                 const coord: Coord = new Coord(3, 4);
@@ -40,11 +41,13 @@ describe('TeekoMove', () => {
                 const move: TeekoDropMove = TeekoDropMove.from(new Coord(3, 4)).get();
                 expect(move.equals(move)).toBeTrue();
             });
+
             it('should return false for another move', () => {
                 const move: TeekoDropMove = TeekoDropMove.from(new Coord(3, 4)).get();
                 const otherMove: TeekoDropMove = TeekoDropMove.from(new Coord(2, 2)).get();
                 expect(move.equals(otherMove)).toBeFalse();
             });
+
             it('should return false for a translation move', () => {
                 const coord: Coord = new Coord(3, 4);
                 const move: TeekoDropMove = TeekoDropMove.from(coord).get();
@@ -66,6 +69,7 @@ describe('TeekoMove', () => {
                 // Then it should fail because it is out of range
                 expect(fallible).toEqual(MGPFallible.failure(CoordFailure.OUT_OF_RANGE(badCoord)));
             });
+
             it('should fail when end not in range', () => {
                 // Given an out of range coord
                 const goodCoord: Coord = new Coord(3, 3);
@@ -89,6 +93,7 @@ describe('TeekoMove', () => {
                 const move: TeekoTranslationMove = TeekoTranslationMove.from(new Coord(1, 2), new Coord(3, 4)).get();
                 expect(move.equals(move)).toBeTrue();
             });
+
             it('should return false for another move', () => {
                 const move: TeekoTranslationMove =
                     TeekoTranslationMove.from(new Coord(1, 2), new Coord(3, 4)).get();
@@ -96,6 +101,7 @@ describe('TeekoMove', () => {
                     TeekoTranslationMove.from(new Coord(2, 2), new Coord(3, 4)).get();
                 expect(move.equals(otherMove)).toBeFalse();
             });
+
             it('should return false for a drop move', () => {
                 const coord: Coord = new Coord(3, 4);
                 const move: TeekoTranslationMove = TeekoTranslationMove.from(coord, new Coord(4, 4)).get();

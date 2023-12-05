@@ -1,4 +1,4 @@
-import { TeekoRules } from './TeekoRules';
+import { TeekoConfig, TeekoRules } from './TeekoRules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
 import { Component } from '@angular/core';
@@ -23,7 +23,8 @@ import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 export class TeekoComponent extends RectangularGameComponent<TeekoRules,
                                                              TeekoMove,
                                                              TeekoState,
-                                                             PlayerOrNone>
+                                                             PlayerOrNone,
+                                                             TeekoConfig>
 {
     public selected: MGPOptional<Coord> = MGPOptional.empty();
     public last: MGPOptional<Coord> = MGPOptional.empty();

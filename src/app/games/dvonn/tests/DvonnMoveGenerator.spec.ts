@@ -8,6 +8,7 @@ import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnState } from '../DvonnState';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
 const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
@@ -29,15 +30,18 @@ describe('DvonnMoveGenerator', () => {
 
     let rules: DvonnRules;
     let moveGenerator: DvonnMoveGenerator;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = DvonnRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = DvonnRules.get();
         moveGenerator = new DvonnMoveGenerator();
     });
+
     it('should propose 41 moves at first turn on the balanced board', () => {
         const node: DvonnNode = rules.getInitialNode(MGPOptional.empty());
-        expect(moveGenerator.getListMoves(node).length).toBe(41);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(41);
     });
+
     it('should only propose moves to occupied spaces', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, O, X, _, X, O, _, X, S, X],
@@ -47,11 +51,13 @@ describe('DvonnMoveGenerator', () => {
             [O, S, O, X, X, O, O, O, X, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = moveGenerator.getListMoves(new DvonnNode(state));
+        const node: DvonnNode = new DvonnNode(state);
+        const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             expect(state.getPieceAt(move.getEnd()).isEmpty()).toBeFalse();
         }
     });
+
     it('should only propose moves to occupied spaces, variant', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, X, _, _, _, _, _, _, _],
@@ -61,11 +67,13 @@ describe('DvonnMoveGenerator', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = moveGenerator.getListMoves(new DvonnNode(state));
+        const node: DvonnNode = new DvonnNode(state);
+        const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             expect(state.getPieceAt(move.getEnd()).isEmpty()).toBeFalse();
         }
     });
+
     it('should move stacks as a whole, by as many spaces as there are pieces in the stack', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, X, _, _, _, _, _, _, _],
@@ -75,11 +83,13 @@ describe('DvonnMoveGenerator', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = moveGenerator.getListMoves(new DvonnNode(state));
+        const node: DvonnNode = new DvonnNode(state);
+        const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             expect(move.length()).toEqual(state.getPieceAt(move.getStart()).getSize());
         }
     });
+
     it('should not allow generate moves of a single red piece, but move stacks with red pieces within it', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, X, _, _, _, _, _, _, _],
@@ -89,13 +99,15 @@ describe('DvonnMoveGenerator', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = moveGenerator.getListMoves(new DvonnNode( state));
+        const node: DvonnNode = new DvonnNode(state);
+        const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             const stack: DvonnPieceStack = state.getPieceAt(move.getStart());
             // every movable piece should belong to the current player
             expect(stack.belongsTo(state.getCurrentPlayer())).toBeTrue();
         }
     });
+
     it('should generate PASS when it is the only possible move', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, _, _, _, _, _, _, _, _],
@@ -105,10 +117,12 @@ describe('DvonnMoveGenerator', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = moveGenerator.getListMoves(new DvonnNode(state));
+        const node: DvonnNode = new DvonnNode(state);
+        const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         expect(moves.length).toEqual(1);
         expect(moves[0]).toEqual(DvonnMove.PASS);
     });
+
     it('should not generate any move when the game is finished', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, _, _, _, _, _, _, _, _],
@@ -119,8 +133,9 @@ describe('DvonnMoveGenerator', () => {
         ];
         const state: DvonnState = new DvonnState(board, 10, true);
         const node: DvonnNode = new DvonnNode(state, MGPOptional.empty(), MGPOptional.of(DvonnMove.PASS));
-        expect(moveGenerator.getListMoves(node).length).toEqual(0);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toEqual(0);
     });
+
     it('should still generate moves when possible', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, _, _, _, _, _, _, _, XS6, _],
@@ -134,6 +149,7 @@ describe('DvonnMoveGenerator', () => {
         const node: DvonnNode = new DvonnNode(state,
                                               MGPOptional.empty(),
                                               MGPOptional.of(move));
-        expect(moveGenerator.getListMoves(node).length).toEqual(1);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toEqual(1);
     });
+
 });

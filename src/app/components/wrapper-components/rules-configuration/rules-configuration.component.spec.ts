@@ -41,7 +41,7 @@ describe('RulesConfigurationComponent', () => {
 
     const secondConfig: RulesConfig = { nombre: 42, canailleDeBoule: 42 };
 
-    const rulesConfigDescriptionWithNumber: RulesConfigDescription =
+    const rulesConfigDescriptionWithNumber: RulesConfigDescription<RulesConfig> =
         new RulesConfigDescription(
             {
                 name: (): string => 'the_default_config_name',
@@ -55,7 +55,7 @@ describe('RulesConfigurationComponent', () => {
             }],
         );
 
-    const rulesConfigDescriptionWithBooleans: RulesConfigDescription = new RulesConfigDescription(
+    const rulesConfigDescriptionWithBooleans: RulesConfigDescription<RulesConfig> = new RulesConfigDescription(
         {
             name: (): string => 'config name',
             config: {

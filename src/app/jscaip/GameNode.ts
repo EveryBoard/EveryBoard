@@ -39,8 +39,7 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
 
     public constructor(public readonly gameState: S,
                        public readonly parent: MGPOptional<GameNode<M, S, C>> = MGPOptional.empty(),
-                       public readonly previousMove: MGPOptional<M> = MGPOptional.empty(),
-                       public readonly config: MGPOptional<C> = MGPOptional.empty())
+                       public readonly previousMove: MGPOptional<M> = MGPOptional.empty())
     {
         this.id = GameNode.ID++;
         GameNodeStats.createdNodes++;
@@ -85,13 +84,14 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
                        labelFn?: (node: GameNode<M, S, C>) => string,
                        max?: number,
                        level: number = 0,
-                       id: number = 0)
+                       id: number = 0,
+                       config: MGPOptional<C> = MGPOptional.empty())
     : number
     {
         if (level === 0) {
             console.log('digraph G {');
         }
-        const gameStatus: GameStatus = rules.getGameStatus(this);
+        const gameStatus: GameStatus = rules.getGameStatus(this, config);
         let color: string = 'white';
         if (gameStatus.isEndGame) {
             switch (gameStatus.winner) {
@@ -145,4 +145,4 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
 
 }
 
-export class AbstractNode extends GameNode<Move, GameState> {}
+export class AbstractNode extends GameNode<Move, GameState, RulesConfig> {}

@@ -282,6 +282,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                                                      configureTestingModule,
                                                      chooseDefaultConfig);
     }
+
     public static async forGameWithWrapper<T extends AbstractGameComponent, P extends Comparable>(
         game: string,
         wrapperKind: Type<GameWrapper<P>>,
@@ -309,6 +310,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }
         return testUtils;
     }
+
     public static async basic<T extends AbstractGameComponent, P extends Comparable>(
         game: string,
         configureTestingModule: boolean = true)
@@ -329,27 +331,33 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
             tick(1);
         }
     }
+
     public bindGameComponent(): void {
         expect(this.component.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
         this.gameComponent = this.component.gameComponent;
     }
+
     public prepareSpies(): void {
         this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
         this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
         this.onLegalUserMoveSpy = spyOn(this.component, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
     }
+
     public expectToBeCreated(): void {
         expect(this.getWrapper()).withContext('Wrapper should be created').toBeTruthy();
         expect(this.getGameComponent()).withContext('Component should be created').toBeTruthy();
     }
+
     public override forceChangeDetection(): void {
         this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
         this.detectChanges();
     }
+
     public setRoute(id: string, value: string): void {
         TestBed.inject(ActivatedRouteStub).setRoute(id, value);
     }
+
     public async setupState(state: GameState,
                             previousState?: GameState,
                             previousMove?: Move,
@@ -359,25 +367,34 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         if (config.isAbsent()) {
             config = this.gameComponent.rules.getDefaultRulesConfig();
         }
+        if (config.isPresent()) {
+            const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
+            wrapper.updateConfig(config);
+            this.gameComponent.config = config;
+            wrapper.markConfigAsFilled();
+            tick(0);
+        }
         this.gameComponent.node = new GameNode(
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
-                new GameNode(previousState, undefined, undefined, config)),
+                new GameNode(previousState)),
             MGPOptional.ofNullable(previousMove),
-            config,
         );
         await this.gameComponent.updateBoard(false);
         if (previousMove !== undefined) {
-            await this.gameComponent.showLastMove(previousMove);
+            await this.gameComponent.showLastMove(previousMove, config);
         }
         this.forceChangeDetection();
     }
+
     public getWrapper(): GameWrapper<P> {
         return this.component;
     }
+
     public getGameComponent(): T {
         return (this.gameComponent as unknown) as T;
     }
+
     /**
      * @param nameInHtml The real name (id) of the element in the XML
      * @param nameInFunction Its name inside the code
@@ -387,9 +404,11 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
     }
+
     public async expectClickSuccess(elementName: string): Promise<void> {
         return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
     }
+
     public async expectInterfaceClickSuccess(elementName: string, waitInMs?: number): Promise<void> {
         const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
         await this.clickElement(elementName, false, waitInMs);
@@ -398,6 +417,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.chooseMoveSpy).withContext(context).not.toHaveBeenCalledWith();
         expect(this.onLegalUserMoveSpy).withContext(context).not.toHaveBeenCalledWith();
     }
+
     public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
                                                         nameInFunction: string,
                                                         reason?: string)
@@ -421,9 +441,11 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }
         this.cancelMoveSpy.calls.reset();
     }
+
     public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
         return this.expectClickFailureWithAsymmetricNaming(elementName, elementName, reason);
     }
+
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const clickValidity: MGPValidation = await this.gameComponent.canUserPlay(elementName);
         expect(clickValidity.getReason()).toBe(reason);
@@ -438,6 +460,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
         this.cancelMoveSpy.calls.reset();
     }
+
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
                                    clickAnimationDuration?: number)
@@ -456,6 +479,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
         this.onLegalUserMoveSpy.calls.reset();
     }
+
     public async expectMoveFailure(elementName: string, reason: string, move: Move) : Promise<void> {
         await this.expectToDisplayGameMessage(reason, async() => {
             await this.clickElement(elementName);
@@ -468,20 +492,24 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.cancelMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
     }
+
     public expectPassToBeForbidden(): void {
         this.expectElementNotToExist('#passButton');
     }
+
     public async expectPassSuccess(move: Move): Promise<void> {
-        await this.clickElement('#passButton');
+        await this.clickElement('#passButton', true, 0);
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
         this.chooseMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
         this.onLegalUserMoveSpy.calls.reset();
     }
+
     public async selectAIPlayer(player: Player): Promise<void> {
         await this.choosingAIOrHuman(player, 'AI');
         await this.choosingAILevel(player);
     }
+
     public async choosingAIOrHuman(player: Player, aiOrHuman: 'AI' | 'human'): Promise<void> {
         const playerSelect: string = player === Player.ZERO ? '#playerZeroSelect' : '#playerOneSelect';
         const selectAI: HTMLSelectElement = this.findElement(playerSelect).nativeElement;
@@ -490,6 +518,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.detectChanges();
         await this.whenStable();
     }
+
     public async choosingAILevel(player: Player): Promise<void> {
         const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroLevelSelect' : '#aiOneLevelSelect';
         const selectDepth: HTMLSelectElement = this.findElement(aiDepthSelect).nativeElement;
@@ -500,6 +529,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(aiDepth).toBe('Level 1');
         this.detectChanges();
     }
+
 }
 
 export class TestUtils {

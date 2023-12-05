@@ -27,10 +27,12 @@ describe('EncapsuleState', () => {
             const state: EncapsuleState = new EncapsuleState(emptyBoard, 0, [EncapsulePiece.SMALL_LIGHT]);
             expect(state.isDroppable(EncapsulePiece.SMALL_LIGHT)).toBeFalse();
         });
+
         it('should not consider pieces not remaining as droppable', () => {
             const state: EncapsuleState = new EncapsuleState(emptyBoard, 0, []);
             expect(state.isDroppable(EncapsulePiece.SMALL_DARK)).toBeFalse();
         });
+
         it('should only consider a piece that is remaining and of the current player as droppable', () => {
             const state: EncapsuleState = new EncapsuleState(emptyBoard, 0, [EncapsulePiece.SMALL_DARK]);
             expect(state.isDroppable(EncapsulePiece.SMALL_DARK)).toBeTrue();
@@ -45,6 +47,7 @@ describe('EncapsuleSpace', () => {
             const empty: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(empty.isEmpty()).toBeTrue();
         });
+
         it('should consider other spaces non empty', () => {
             const someSpace: EncapsuleSpace = new EncapsuleSpace(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(someSpace.isEmpty()).toBeFalse();
@@ -59,6 +62,7 @@ describe('EncapsuleSpace', () => {
             expect(list[1]).toBe(EncapsulePiece.MEDIUM_DARK);
             expect(list[2]).toBe(EncapsulePiece.BIG_DARK);
         });
+
         it('should not include empty pieces in the list', () => {
             const someSpace: EncapsuleSpace = new EncapsuleSpace(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(someSpace.toList().length).toBe(1);
@@ -75,10 +79,12 @@ describe('EncapsuleSpace', () => {
             const c: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
             expect(() => c.tryToSuperposePiece(EncapsulePiece.NONE)).toThrow();
         });
+
         it('should forbid superposing a smaller piece', () => {
             const c: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
             expect(c.tryToSuperposePiece(EncapsulePiece.MEDIUM_DARK).isPresent()).toBeFalse();
         });
+
         it('should allow superposing a bigger piece', () => {
             const c: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, Player.ONE, PlayerOrNone.NONE);
             const expected: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, Player.ONE, Player.ZERO);
@@ -94,6 +100,7 @@ describe('EncapsuleSpace', () => {
             const c: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(() => c.removeBiggest()).toThrow();
         });
+
         it('should remove the biggest piece of the space', () => {
             const c: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, Player.ONE, Player.ZERO);
 
@@ -110,6 +117,7 @@ describe('EncapsuleSpace', () => {
             const c: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
             expect(() => c.put(EncapsulePiece.NONE)).toThrow();
         });
+
         it('should put on top of smaller pieces', () => {
             const c: EncapsuleSpace = new EncapsuleSpace(Player.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 

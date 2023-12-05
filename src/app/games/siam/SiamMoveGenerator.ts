@@ -4,10 +4,11 @@ import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
 import { SiamRules, SiamNode, SiamConfig } from './SiamRules';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamConfig> {
 
-    public getListMoves(node: SiamNode): SiamMove[] {
+    public getListMoves(node: SiamNode, config: MGPOptional<SiamConfig>): SiamMove[] {
         let moves: SiamMove[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         for (const coordAndContent of node.gameState.getCoordsAndContents()) {
@@ -19,16 +20,15 @@ export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamCo
                                                                   coordAndContent.coord.y));
             }
         }
-        const config: SiamConfig = node.config.get();
-        if (node.gameState.countCurrentPlayerPawn() < config.numberOfPiece) {
+        if (node.gameState.countCurrentPlayerPawn() < config.get().numberOfPiece) {
             // up to 44 insertions
             // we remove some legal but useless insertions as explained below
-            for (const insertion of SiamRules.get().getInsertions(node.gameState, config)) {
+            for (const insertion of SiamRules.get().getInsertions(node.gameState, config.get())) {
                 if (insertion.direction.get().getOpposite() === insertion.landingOrientation) {
                     // this is an insertion with an orientation opposite to its direction,
                     // these are always a useless move and we don't want to take them into account here
                     continue;
-                } else if (this.isOnBorder(insertion, config) &&
+                } else if (this.isOnBorder(insertion, config.get()) &&
                            insertion.direction.get() !== insertion.landingOrientation)
                 {
                     // this insertion is made in the corner but is not forward, so it cannot push

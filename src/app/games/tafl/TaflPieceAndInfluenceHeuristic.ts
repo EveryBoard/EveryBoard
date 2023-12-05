@@ -13,6 +13,8 @@ import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TaflPieceHeuristic } from './TaflPieceHeuristic';
 import { Utils } from 'src/app/utils/utils';
+import { TaflConfig } from './TaflConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export type PointValue = {
     width: number;
@@ -23,8 +25,8 @@ export type PointValue = {
 
 export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPieceHeuristic<M> {
 
-    public getPointValue(node: TaflNode<M>): PointValue {
-        const initialState: TaflState = this.rules.getInitialState(node.config);
+    public getPointValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): PointValue {
+        const initialState: TaflState = this.rules.getInitialState(config);
         const width: number = initialState.getHeight();
         const maxInfluence: number = 16 * ((width * 2) - 2);
         const scoreByThreatenedPiece: number = (16 * maxInfluence) + 1;
@@ -37,12 +39,12 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         };
     }
 
-    public override getBoardValue(node: TaflNode<M>): BoardValue {
-        const gameStatus: GameStatus = this.rules.getGameStatus(node);
+    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
+        const gameStatus: GameStatus = this.rules.getGameStatus(node, config);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
-        const pointValue: PointValue = this.getPointValue(node);
+        const pointValue: PointValue = this.getPointValue(node, config);
         const state: TaflState = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 

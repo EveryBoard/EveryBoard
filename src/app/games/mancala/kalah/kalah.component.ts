@@ -15,10 +15,9 @@ import { MancalaComponent } from '../common/MancalaComponent';
 export class KalahComponent extends MancalaComponent<KalahRules> {
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       activatedRoute: ActivatedRoute,
                        cdr: ChangeDetectorRef)
     {
-        super(messageDisplayer, activatedRoute, cdr);
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Kalah');
         this.availableAIs = this.createAIs(new KalahMoveGenerator());
         this.encoder = MancalaMove.encoder;

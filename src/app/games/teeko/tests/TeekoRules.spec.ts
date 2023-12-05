@@ -109,9 +109,9 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState, undefined, undefined, defaultConfig);
+            const node: TeekoNode = new TeekoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should notice diagonal victory', () => {
@@ -137,9 +137,9 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState, undefined, undefined, defaultConfig);
+            const node: TeekoNode = new TeekoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should notice vertical victory', () => {
@@ -165,9 +165,9 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode = new TeekoNode(expectedState, undefined, undefined, defaultConfig);
+            const node: TeekoNode = new TeekoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should notice square victory', () => {
@@ -193,10 +193,9 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const expectedState: TeekoState = new TeekoState(expectedBoard, 7);
-            const node: TeekoNode =
-                new TeekoNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
+            const node: TeekoNode = new TeekoNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
     });
@@ -365,11 +364,11 @@ describe('TeekoRules', () => {
                 [_, _, _, X, O],
             ];
             const state: TeekoState = new TeekoState(board, 9);
-            const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
+            const node: TeekoNode = new TeekoNode(state);
 
             // When checking game status
             // Then it should be a victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should notice diagonal victory', () => {
@@ -382,11 +381,11 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 9);
-            const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
+            const node: TeekoNode = new TeekoNode(state);
 
             // When checking game status
             // Then it should be a victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should notice vertical victory', () => {
@@ -399,11 +398,11 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 9);
-            const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
+            const node: TeekoNode = new TeekoNode(state);
 
             // When checking game status
             // Then it should be a victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should notice square victory', () => {
@@ -416,11 +415,11 @@ describe('TeekoRules', () => {
                 [_, _, _, O, X],
             ];
             const state: TeekoState = new TeekoState(board, 10);
-            const node: TeekoNode = new TeekoNode(state, undefined, undefined, defaultConfig);
+            const node: TeekoNode = new TeekoNode(state);
 
             // When checking game status
             // Then it should be a victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
     });

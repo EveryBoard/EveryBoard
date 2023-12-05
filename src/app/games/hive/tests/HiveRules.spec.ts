@@ -13,10 +13,12 @@ import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('HiveRules', () => {
 
     let rules: HiveRules;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = HiveRules.get().getDefaultRulesConfig();
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
     const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');
@@ -48,6 +50,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow second player to drop a piece next to the first piece', () => {
             // Given a state with a piece already on the board
             const board: Table<HivePiece[]> = [
@@ -66,6 +69,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should forbid second player to drop a piece somewhere else than next to the first piece', () => {
             // Given a state with a piece already on the board
             const board: Table<HivePiece[]> = [
@@ -78,9 +82,10 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_BE_CONNECTED_TO_HIVE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
         });
+
         it('should allow dropping a piece adjacent to another one of your pieces', () => {
             // Given a state with a piece of the current player already on the board
             const board: Table<HivePiece[]> = [
@@ -99,6 +104,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should forbid dropping a piece adjacent to a piece of the opponent', () => {
             // Given a state with a piece of the opponent already on the board
             const board: Table<HivePiece[]> = [
@@ -111,8 +117,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow dropping a piece adjacent to a player-controlled stack containing a piece of the opponent', () => {
             // Given a state with a piece of the opponent already on the board, but under another piece of ours
             const board: Table<HivePiece[]> = [
@@ -130,6 +137,7 @@ describe('HiveRules', () => {
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 3);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow dropping the queen bee at the fourth turn of a player', () => {
             // Given a state in the fourth turn of player zero, without queen bee
             const board: Table<HivePiece[]> = [
@@ -148,6 +156,7 @@ describe('HiveRules', () => {
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 7);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should force dropping the queen bee at turn 6 for Player.ZERO', () => {
             // Given a state in the fourth turn of player zero, without queen bee
             const board: Table<HivePiece[]> = [
@@ -160,8 +169,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should force dropping the queen bee at turn 7 for Player.ONE', () => {
             // Given a state in the fourth turn of player one, without queen bee
             const board: Table<HivePiece[]> = [
@@ -174,8 +184,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid dropping the beetle on top of another piece', () => {
             // Given a state
             const board: Table<HivePiece[]> = [
@@ -188,8 +199,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_DROP_ON_EMPTY_SPACE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid to drop a piece that the player does not have anymore', () => {
             // Given a state where the player has placed all of its beetles
             const board: Table<HivePiece[]> = [
@@ -202,8 +214,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DROP_PIECE_YOU_DONT_HAVE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid dropping a piece of the opponent', () => {
             // Given any state
             const board: Table<HivePiece[]> = [
@@ -216,7 +229,7 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
     });
     describe('moving', () => {
@@ -232,8 +245,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.QUEEN_BEE_MUST_BE_ON_BOARD_BEFORE_MOVE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to move from an empty space', () => {
             // Given a state
             const board: Table<HivePiece[]> = [
@@ -246,8 +260,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to move a piece of the opponent', () => {
             // Given a state
             const board: Table<HivePiece[]> = [
@@ -260,8 +275,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to move a piece under a beetle of the opponent', () => {
             // Given a state where the opponent has a beetle on top of one of the player's piece
             const board: Table<HivePiece[]> = [
@@ -274,8 +290,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to move on top of another piece for non-beetles (queen bee)', () => {
             // Given a state
             const board: Table<HivePiece[]> = [
@@ -288,8 +305,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to move on top of another piece for non-beetles (grasshopper)', () => {
             // Given a state
             const board: Table<HivePiece[]> = [
@@ -302,8 +320,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to move on top of another piece for non-beetles (ant)', () => {
             // Given a state
             const board: Table<HivePiece[]> = [
@@ -316,8 +335,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to move on top of another piece for non-beetles (spider)', () => {
             // Given a state
             const board: Table<HivePiece[]> = [
@@ -335,8 +355,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow moving queen bee by one space', () => {
             // Given a state with the player's queen bee on the board
             const board: Table<HivePiece[]> = [
@@ -356,6 +377,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should forbid moving queen bee by more than one space', () => {
             // Given a state with the player's queen bee on the board
             const board: Table<HivePiece[]> = [
@@ -368,8 +390,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.QUEEN_BEE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow moving beetle by one space', () => {
             // Given a state with the player's beetle on the board
             const board: Table<HivePiece[]> = [
@@ -389,6 +412,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should forbid moving beetle by more than one space', () => {
             // Given a state with the player's beetle on the board
             const board: Table<HivePiece[]> = [
@@ -401,8 +425,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.BEETLE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow moving beetle on top of another piece', () => {
             // Given a state with the player's beetle on the board
             const board: Table<HivePiece[]> = [
@@ -421,6 +446,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow moving the beetle when it is on top of another piece', () => {
             // Given a state with the player's beetle on top of another piece
             const board: Table<HivePiece[]> = [
@@ -439,6 +465,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should support having the 4 beetles on top of a piece', () => {
             // Given a state with 3 beetles on top of each other, on top of another piece
             const board: Table<HivePiece[]> = [
@@ -457,6 +484,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow the grasshopper to jump above other adjacent pieces', () => {
             // Given a state with one grasshopper ready to jump
             const board: Table<HivePiece[]> = [
@@ -478,6 +506,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should forbid the grasshopper to move without jumping', () => {
             // Given a state with one grasshopper
             const board: Table<HivePiece[]> = [
@@ -491,8 +520,9 @@ describe('HiveRules', () => {
 
             // Then it should fail
             const reason: string = HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow the grasshopper to jump over more than one piece', () => {
             // Given a state with one grasshopper ready to jump over multiple pieces
             const board: Table<HivePiece[]> = [
@@ -513,6 +543,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should forbid the grasshopper to jump if there are empty spaces before the piece jumped above', () => {
             // Given a state with one grasshopper next to an empty space followed by a piece
             const board: Table<HivePiece[]> = [
@@ -526,8 +557,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid the grasshopper of moving by one space', () => {
             // Given a state with one grasshopper next to an empty space
             const board: Table<HivePiece[]> = [
@@ -541,8 +573,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid the grasshopper of jumping over nothing', () => {
             // Given a state with one grasshopper next to an empty space
             const board: Table<HivePiece[]> = [
@@ -556,8 +589,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid the grasshopper of moving not in a straight line', () => {
             // Given a state with one grasshopper
             const board: Table<HivePiece[]> = [
@@ -571,8 +605,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.GRASSHOPPER_MUST_MOVE_IN_STRAIGHT_LINE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid moving the spider by a regular move instead of a spider move', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board with a spider
@@ -589,6 +624,7 @@ describe('HiveRules', () => {
             expect(() => rules.isLegal(move, state)).toThrow();
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'HiveSpiderRules: move should be a spider move');
         });
+
         it('should allow the spider to move by 3 spaces', () => {
             // Given a board with a spider
             const board: Table<HivePiece[]> = [
@@ -614,6 +650,7 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should forbid the spider to move through non-consecutive spaces', () => {
             // Given a board with a spider
             const board: Table<HivePiece[]> = [
@@ -632,8 +669,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid the spider to move through another piece', () => {
             // Given a board with a spider
             const board: Table<HivePiece[]> = [
@@ -652,8 +690,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid the spider to backtrack', () => {
             // Given a board with a spider
             const board: Table<HivePiece[]> = [
@@ -672,8 +711,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.SPIDER_CANNOT_BACKTRACK();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid the spider to move along pieces with which it is not in direct contact', () => {
             // Given a board with a spider
             const board: Table<HivePiece[]> = [
@@ -693,8 +733,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow the soldier ant to move anywhere (as long as it does not break the restrictions)', () => {
             // Given a board with a soldier ant
             const board: Table<HivePiece[]> = [
@@ -732,8 +773,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to have a piece escape from the hive', () => {
             // Given a board
             const board: Table<HivePiece[]> = [
@@ -746,8 +788,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to split the hive in two, even in the middle of a turn', () => {
             // Given a board
             const board: Table<HivePiece[]> = [
@@ -763,9 +806,10 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
         });
+
         it('should be forbidden to move in a non-sliding movement (moving out)', () => {
             // Given a board with a piece surrounded by 5 others
             const board: Table<HivePiece[]> = [
@@ -780,9 +824,10 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
         });
+
         it('should be forbidden to move in a non-sliding movement (moving in)', () => {
             // Given a board
             const board: Table<HivePiece[]> = [
@@ -797,8 +842,9 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to move in a non-sliding movement (with only 3 neighbors)', () => {
             // Given a board where a piece is surrounded by 3 pieces, each separated between each other by one space
             const board: Table<HivePiece[]> = [
@@ -814,8 +860,9 @@ describe('HiveRules', () => {
 
             // Then it should fail
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be forbidden to move in a non-sliding movement (into a closed space)', () => {
             // Given a board where there is a closed space and a spider outside of the closed space
             const board: Table<HivePiece[]> = [
@@ -831,8 +878,9 @@ describe('HiveRules', () => {
 
             // Then it should fail
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should be able to move in a non-sliding movement (for a spider)', () => {
             // Given a board
             const board: Table<HivePiece[]> = [
@@ -852,10 +900,11 @@ describe('HiveRules', () => {
 
             // Then the move should fail
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
         });
     });
+
     it('should allow passing if a player cannot perform any action', () => {
         // Given a board in a stuck position for a player: here, the player cannot
         // drop a piece nor move one as its only pieces are below an opponent
@@ -871,6 +920,7 @@ describe('HiveRules', () => {
         const expectedState: HiveState = HiveState.fromRepresentation(board, 6);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should forbid passing if a player can perform any action', () => {
         // Given a board where the player can do something
         const board: Table<HivePiece[]> = [
@@ -883,8 +933,9 @@ describe('HiveRules', () => {
 
         // Then the move should fail
         const reason: string = RulesFailure.CANNOT_PASS();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should not have drop locations if all pieces are already on the board', () => {
         // Given a board containing all pieces
         const board: Table<HivePiece[]> = [
@@ -901,6 +952,7 @@ describe('HiveRules', () => {
         // Then there should be none
         expect(dropLocations.size()).toBe(0);
     });
+
     it('should compute the expected spider moves for a specific board', () => {
         // Given a specific state with 4 possible spider moves
         const board: Table<HivePiece[]> = [
@@ -930,8 +982,9 @@ describe('HiveRules', () => {
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
             // Then player zero wins
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
         it('should consider winning player the one who has fully surrounded the queen bee of the opponent (Player.ONE)', () => {
             // Given a board where the queen of player zero is surrounded
             const board: Table<HivePiece[]> = [
@@ -943,8 +996,9 @@ describe('HiveRules', () => {
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
             // Then player one wins
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
         it('should be a draw if both players have their queen bee surrounded', () => {
             // Given a board where both queens are surrounded
             const board: Table<HivePiece[]> = [
@@ -956,8 +1010,9 @@ describe('HiveRules', () => {
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
             // Then player it is a draw
-            RulesUtils.expectToBeDraw(rules, node);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
+
         it('should be ongoing if no queen bee is surrounded', () => {
             // Given a board where no queen is surrounded
             const board: Table<HivePiece[]> = [
@@ -967,7 +1022,7 @@ describe('HiveRules', () => {
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node);
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
     });
 });

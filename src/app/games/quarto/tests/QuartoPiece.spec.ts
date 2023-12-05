@@ -14,6 +14,7 @@ describe('QuartoPiece', () => {
             // Then the result should be true
             expect(equality).toBeTrue();
         });
+
         it('should see different element', () => {
             // Given two different piece
             const first: QuartoPiece = QuartoPiece.AAAA;
@@ -34,6 +35,7 @@ describe('QuartoPiece', () => {
             // Then it should throw
             expect(() => QuartoPiece.ofInt(piece)).toThrowError('Invalid piece (' + piece + ')');
         });
+
         it('should succeed for all valid pieces', () => {
             // Given any valid piece number
             for (let piece: number = 0; piece <= 16; piece++) {

@@ -6,6 +6,7 @@ import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
 import { PylosMoveGenerator } from '../PylosMoveGenerator';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -15,15 +16,18 @@ describe('PylosMoveGenerator', () => {
 
     let rules: PylosRules;
     let moveGenerator: PylosMoveGenerator;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = PylosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = PylosRules.get();
         moveGenerator = new PylosMoveGenerator();
     });
+
     it('should provide 16 drops at first turn', () => {
         const node: PylosNode = rules.getInitialNode(MGPOptional.empty());
-        expect(moveGenerator.getListMoves(node).length).toBe(16);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(16);
     });
+
     it('should provide drops without capture, drops with one capture, drops with two captures and climbings', () => {
         // Given a board on which all kind of moves are possible
         const board: PlayerOrNone[][][] = [
@@ -47,7 +51,7 @@ describe('PylosMoveGenerator', () => {
         const node: PylosNode = new PylosNode(state);
 
         // When listing the moves
-        const choices: PylosMove[] = moveGenerator.getListMoves(node);
+        const choices: PylosMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then the minimax should provide them all
         const climbing: number = choices.filter((move: PylosMove) => move.isClimb()).length;
@@ -62,6 +66,7 @@ describe('PylosMoveGenerator', () => {
         expect(dualCapture).toBe(12);
         expect(choices.length).toBe(climbing + dropWithoutCapture + monoCapture + dualCapture);
     });
+
     it('should not include uncapturable pieces in captures', () => {
         // Given a node of a board with a climbing as last move
         const board: PlayerOrNone[][][] = [
@@ -85,7 +90,7 @@ describe('PylosMoveGenerator', () => {
         const node: PylosNode = new PylosNode(state);
 
         // When listing the moves
-        const choices: PylosMove[] = moveGenerator.getListMoves(node);
+        const choices: PylosMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then the minimax should not provide one that capture the startingCoord
         const climbs: PylosMove[] = choices.filter((move: PylosMove) => move.isClimb());
@@ -98,4 +103,5 @@ describe('PylosMoveGenerator', () => {
         });
         expect(wrongChoices.length).toBe(0);
     });
+
 });

@@ -409,6 +409,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(true);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it(`should not trigger animation when receiving your own move`, fakeAsync(async() => {
             // Given a board where it's player's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -421,6 +422,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(false);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it(`should not trigger animation when receiving several moves`, fakeAsync(async() => {
             // Given a board where you arrive late
             const encodedMoves: JSONValue[] = [
@@ -479,6 +481,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(2);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should allow user to arrive late on the game (not on their turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)
             await prepareStartedGameWithMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED], false);
@@ -513,6 +516,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(update);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should mark chosen opponent as Player when arriving', fakeAsync(async() => {
             // Given a component that is not initialized yet
             await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.dontWait);
@@ -533,6 +537,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(update);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should show player names', fakeAsync(async() => {
             // Given a started game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
@@ -680,6 +685,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#youWonIndicator');
             expectGameToBeOver();
         }));
+
         it('should notifyVictory when active player loses', fakeAsync(async() => {
             // Given a board on which user can lose on their turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -708,6 +714,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#youLostIndicator');
             expectGameToBeOver();
         }));
+
         it('should removeCurrentGame when one player wins', fakeAsync(async() => {
             // Given a board on which user can win
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -727,6 +734,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
+
         it('should notifyDraw when a draw move from player is done', fakeAsync(async() => {
             // Given a board on which user can draw
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -751,6 +759,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#hardDrawIndicator');
             expectGameToBeOver();
         }));
+
         it('should removeCurrentGame when players draw', fakeAsync(async() => {
             // Given a board on which user can draw
             await prepareBoard([new QuartoMove(0, 0, QuartoPiece.AAAB)], Player.ONE);
@@ -1064,6 +1073,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
+
         it('should call cancelMoveAttempt', fakeAsync(async() => {
             // Given an initial board where it's opponent's [second] turn, and user just asked for take back
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1093,6 +1103,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'Draw');
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
             // Given a page where we sent a draw request
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1106,6 +1117,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should forbid to play while draw request is waiting', fakeAsync(async() => {
             // Given a page where we received a draw request
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1120,6 +1132,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should forbid to propose to draw after refusal', fakeAsync(async() => {
             // Given a page where we sent a draw request
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1134,6 +1147,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should finish the game after accepting a proposed draw', fakeAsync(async() => {
             // Given a part on which a draw has been proposed
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1152,6 +1166,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectGameToBeOver();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should finish the game when opponent accepts our proposed draw', fakeAsync(async() => {
             // Given a gameComponent where draw has been proposed
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1170,6 +1185,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#yourOpponentAgreedToDrawIndicator');
             expect(partDAO.update).toHaveBeenCalledTimes(1);
         }));
+
         it('should removeCurrentGame when opponent accepts our proposed draw', fakeAsync(async() => {
             // Given a gameComponent where draw has been proposed
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1188,6 +1204,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
             expectGameToBeOver();
         }));
+
         it('should send refusal when player asks to', fakeAsync(async() => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveRequest(Player.ONE, 'Draw');
@@ -1199,6 +1216,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should only propose to accept/refuse draw when asked', fakeAsync(async() => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             testUtils.expectElementNotToExist('#accept');
@@ -1221,6 +1239,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalledOnceWith();
         }));
+
         it(`should stop player's turn clock when global clock reaches end`, fakeAsync(async() => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -1229,6 +1248,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
             expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalledOnceWith();
         }));
+
         it(`should stop opponent's global clock when turn reaches end`, fakeAsync(async() => {
             // Given an online game where it's the opponent's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1243,6 +1263,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
         }));
+
         it(`should stop opponent's local clock when global clock reaches end`, fakeAsync(async() => {
             // Given an online game where it's the opponent's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
@@ -1257,6 +1278,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
             expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
         }));
+
         it(`should notifyTimeout for opponent if they are considered offline`, fakeAsync(async() => {
             // Given an online game where it's the opponent's turn and opponent is offline
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1455,6 +1477,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             });
             expectGameToBeOver();
         }));
+
         it('should not allow player to move after resigning', fakeAsync(async() => {
             // Given a component where user has resigned
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1469,6 +1492,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();
         }));
+
         it('should display when the opponent resigned', fakeAsync(async() => {
             // Given a board where the opponent has resigned
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1488,6 +1512,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(resignText).toBe(`firstCandidate has resigned.`);
             expectGameToBeOver();
         }));
+
         it('should removeCurrentGame when the opponent resigned', fakeAsync(async() => {
             // Given a board where user has resign
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1522,6 +1547,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then it should allow to propose rematch
             testUtils.expectElementToBeEnabled('#proposeRematch');
         }));
+
         it('should send proposal request when proposing', fakeAsync(async() => {
             // Given an ended game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
@@ -1537,6 +1563,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the gameService must be called
             expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
         }));
+
         it('should send reply when rejecting', fakeAsync(async() => {
             // Given an ended game with a received proposal request
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
@@ -1553,6 +1580,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the gameService's rejectRematch must be called
             expect(gameService.rejectRematch).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
         }));
+
         it('should show when opponent rejected our rematch proposal', fakeAsync(async() => {
             // Given an ended game where we propose a rematch
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
@@ -1568,6 +1596,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then we should be notified
             testUtils.expectElementToExist('#requestRejected');
         }));
+
         it('should show accept/reject button when proposition has been sent', fakeAsync(async() => {
             // Given an ended game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
@@ -1583,6 +1612,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
             testUtils.expectElementToExist('#accept');
         }));
+
         it('should send accepting request when user accept rematch', fakeAsync(async() => {
             // give a part with rematch request send by opponent
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
@@ -1601,6 +1631,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then it should have called acceptRematch
             expect(gameService.acceptRematch).toHaveBeenCalledTimes(1);
         }));
+
         it('should redirect to new part when rematch is accepted', fakeAsync(async() => {
             // Given a part lost with rematch request send by user
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
@@ -1643,6 +1674,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(update);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should remove currentGame when leaving the component', fakeAsync(async() => {
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
@@ -1655,6 +1687,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the currentGame should have been removed
             expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
         }));
+
         it('should redirect to lobby when currentGame changed to non-observer', fakeAsync(async() => {
             // Given a part component where user is observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
@@ -1668,6 +1701,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the currentGame should have been removed
             expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
+
         it('should not removeCurrentGame when destroying component after currentGame changed to non-observer', fakeAsync(async() => {
             // Given a part component where user was observer
             // Then receive an update telling that user is now non-observer-elsewhere
@@ -1683,6 +1717,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the currentGame should have been removed
             expect(currentGameService.removeCurrentGame).not.toHaveBeenCalled();
         }));
+
         it('should not be able to do anything', fakeAsync(async() => {
             // Given a part that we are observing
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
@@ -1703,6 +1738,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 testUtils.expectElementNotToExist(forbiddenButton);
             }
         }));
+
         it('should display that the game is a draw', fakeAsync(async() => {
             // Given a part that the two players agreed to draw
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
@@ -1719,6 +1755,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#playersAgreedToDraw');
             expectGameToBeOver();
         }));
+
         it('should not notify timeout victory', fakeAsync(async() => {
             // Given a part where we are observer
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
@@ -1758,6 +1795,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToHaveClass('#playerOneIndicator', 'player1-bg');
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should highlight the board with the color of the player when it is their turn', fakeAsync(async() => {
             // Given a game that has been started
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
@@ -1770,6 +1808,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToHaveClass('#board-tile', 'player0-bg');
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should highlight the board in grey when game is over', fakeAsync(async() => {
             // Given a game that has been started
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1783,6 +1822,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToHaveClass('#board-tile', 'endgame-bg');
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should not highlight the board when it is the turn of the opponent', fakeAsync(async() => {
             // Given a game that has been started
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1811,6 +1851,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then showLastMove should have been called
             expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
         }));
+
         it('should not call gameComponent.showLastMove if there is no move', fakeAsync(async() => {
             // Given a component without previous move
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1835,6 +1876,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should not be interactive when at the turn of the opponent', fakeAsync(async() => {
             // Given a game that has been started
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1847,6 +1889,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should not be interactive when the game is finished', fakeAsync(async() => {
             // Given a board at the opponent's turn
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);

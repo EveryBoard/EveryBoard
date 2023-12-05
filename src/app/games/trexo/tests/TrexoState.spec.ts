@@ -19,6 +19,7 @@ describe('TrexoState', () => {
         expect(() => TrexoState.of(board, 0)).toThrowError('Assertion failure: ' + error);
         expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
     });
+
     it('should refuse creating a board of which height is not 10', () => {
         const error: string = 'Invalid board dimensions';
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
@@ -30,6 +31,7 @@ describe('TrexoState', () => {
         expect(() => TrexoState.of(board, 0)).toThrowError('Assertion failure: ' + error);
         expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
     });
+
     it('should drop piece at the lowest level possible', () => {
         // Given an empty board
         const state: TrexoState = TrexoRules.get().getInitialState();
@@ -60,6 +62,7 @@ describe('TrexoState', () => {
             new TrexoPiece(Player.ONE, 2),
         ]);
         const X1__T3: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 3)]);
+
         it('should display state', () => {
             const state: TrexoState = TrexoState.of([
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],

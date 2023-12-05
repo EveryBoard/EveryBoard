@@ -47,10 +47,12 @@ describe('YinshMove', () => {
             const move: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
             EncoderTestUtils.expectToBeBijective(YinshMove.encoder, move);
         });
+
         it('should have a bijective encoder for move without capture', () => {
             const move: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.of(new Coord(5, 3)), []);
             EncoderTestUtils.expectToBeBijective(YinshMove.encoder, move);
         });
+
         it('should have a bijective encoder for move with captures', () => {
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(2, 3),
                                                                    new Coord(6, 3),
@@ -76,25 +78,31 @@ describe('YinshMove', () => {
         const move: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
         const capture: YinshCapture =
             YinshCapture.of(new Coord(2, 3), new Coord(6, 3), MGPOptional.of(new Coord(4, 4)));
+
         it('should consider a move equal to itself', () => {
             expect(move.equals(move)).toBeTrue();
         });
+
         it('should consider the same move equal', () => {
             const sameMove: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
             expect(move.equals(sameMove)).toBeTrue();
         });
+
         it('should consider moves with different start to be different', () => {
             const differentMove: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.empty(), []);
             expect(move.equals(differentMove)).toBeFalse();
         });
+
         it('should consider move with different end to be different', () => {
             const differentMove: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.of(new Coord(6, 3)), []);
             expect(move.equals(differentMove)).toBeFalse();
         });
+
         it('should consider moves with different initial captures different', () => {
             const differentMove: YinshMove = new YinshMove([capture], new Coord(2, 3), MGPOptional.empty(), []);
             expect(move.equals(differentMove)).toBeFalse();
         });
+
         it('should consider moves with different final captures different', () => {
             const differentMove: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), [capture]);
             expect(move.equals(differentMove)).toBeFalse();
@@ -105,6 +113,7 @@ describe('YinshMove', () => {
             const move: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
             expect(move.toString()).toBe('YinshMove([], (2, 3), MGPOptional.empty(), [])');
         });
+
         it('should be defined for moves with captures', () => {
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(2, 3),
                                                                    new Coord(6, 3),

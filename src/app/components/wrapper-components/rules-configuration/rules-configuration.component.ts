@@ -24,8 +24,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     @Input() stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState>;
 
-    @Input() rulesConfigDescriptionOptional: MGPOptional<RulesConfigDescription>;
-    public rulesConfigDescription: RulesConfigDescription;
+    @Input() rulesConfigDescriptionOptional: MGPOptional<RulesConfigDescription<RulesConfig>>;
+    public rulesConfigDescription: RulesConfigDescription<RulesConfig>;
 
     // Only needed for the non-creator
     @Input() rulesConfigToDisplay?: RulesConfig;
@@ -62,7 +62,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         this.assertParamsAreCoherent();
         this.gameName = this.getGameName();
         if (this.isCustomisable()) {
-            const defaultConfig: NamedRulesConfig = this.rulesConfigDescription.getDefaultConfig();
+            const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription.getDefaultConfig();
             this.setChosenConfig(defaultConfig.name());
             if (this.userIsCreator) {
                 this.setConfigDemo(defaultConfig.config);
@@ -78,10 +78,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     private setConfigDemo(config: RulesConfig): void {
         if (this.stateProvider.isPresent()) {
             const stateProvider: (config: MGPOptional<RulesConfig>) => GameState = this.stateProvider.get();
-            const node: AbstractNode = new GameNode(stateProvider(MGPOptional.of(config)),
-                                                    undefined,
-                                                    undefined,
-                                                    MGPOptional.of(config));
+            const node: AbstractNode = new GameNode(stateProvider(MGPOptional.of(config)));
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.gameName,

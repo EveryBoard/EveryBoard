@@ -1,8 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LascaMove } from '../LascaMove';
 import { LascaMoveGenerator } from '../LascaMoveGenerator';
 import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const u: LascaStack = new LascaStack([LascaPiece.ZERO]);
 const v: LascaStack = new LascaStack([LascaPiece.ONE]);
@@ -11,10 +13,12 @@ const _: LascaStack = LascaStack.EMPTY;
 describe('LascaControlMoveGenerator', () => {
 
     let moveGenerator: LascaMoveGenerator;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = LascaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new LascaMoveGenerator();
     });
+
     it('should return full list of captures when capture must be done', () => {
         // Given a state where current player should capture
         const state: LascaState = LascaState.of([
@@ -29,20 +33,22 @@ describe('LascaControlMoveGenerator', () => {
         const node: LascaNode = new LascaNode(state);
 
         // When listing the moves
-        const moves: LascaMove[] = moveGenerator.getListMoves(node);
+        const moves: LascaMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should return the list of capture
         expect(moves.length).toBe(2);
     });
+
     it('should return full list of steps when no capture must be done', () => {
         // Given a state where only steps can be made
         const state: LascaState = LascaRules.get().getInitialState();
         const node: LascaNode = new LascaNode(state);
 
         // When listing the moves
-        const moves: LascaMove[] = moveGenerator.getListMoves(node);
+        const moves: LascaMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should return the list of steps
         expect(moves.length).toBe(6);
     });
+
 });

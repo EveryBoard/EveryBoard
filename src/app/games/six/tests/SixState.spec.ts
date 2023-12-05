@@ -27,6 +27,7 @@ describe('SixState', () => {
             ];
             expect(state.toRepresentation()).toEqual(expectedRepresentation);
         });
+
         it('should create correctly from representation', () => {
             const representation: Table<PlayerOrNone> = [
                 [X, _],

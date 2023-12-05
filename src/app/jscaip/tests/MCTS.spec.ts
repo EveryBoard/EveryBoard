@@ -15,11 +15,13 @@ import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { MancalaConfig } from 'src/app/games/mancala/common/MancalaConfig';
 import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from '../RulesConfigUtil';
 
 describe('MCTS', () => {
 
     let mcts: MCTS<QuartoMove, QuartoState>;
     const mctsOptions: AITimeLimitOptions = { name: '200ms', maxSeconds: 0.2 };
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         mcts = new MCTS('MCTS', new QuartoMoveGenerator(), QuartoRules.get());
@@ -37,7 +39,7 @@ describe('MCTS', () => {
         const node: QuartoNode = new QuartoNode(state);
 
         // When computing the best move
-        const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions);
+        const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions, defaultConfig);
         // Then it should not give the win to the opponent
         if (move.coord.equals(new Coord(3, 0))) {
             // MCTS blocked the opponent's only possible win
@@ -60,42 +62,24 @@ describe('MCTS', () => {
         const state: QuartoState = new QuartoState(board, 12, QuartoPiece.BBBB);
         const node: QuartoNode = new QuartoNode(state);
         // When computing the best move
-        const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions);
+        const move: QuartoMove = mcts.chooseNextMove(node, mctsOptions, defaultConfig);
         // Then it should choose the move that leads to the wins
         expect(move).toEqual(new QuartoMove(3, 0, QuartoPiece.ABAB));
     });
 
     it('should not fail on games that are too long', () => {
         // Given a MCTS for a game that has a tendency to give long random games
-        const otherMcts: MCTS<MancalaMove, MancalaState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
+        const otherMcts: MCTS<MancalaMove, MancalaState, MancalaConfig> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
         otherMcts.maxGameLength = 10; // Limit it heavily to ensure we will exhaust the limit (for coverage)
         // When searching for the best move
         const beforeSearch: number = Date.now();
         const config: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
         const node: MancalaNode = AwaleRules.get().getInitialNode(config);
-        const move: MancalaMove = otherMcts.chooseNextMove(node, mctsOptions);
+        const move: MancalaMove = otherMcts.chooseNextMove(node, mctsOptions, config);
         // Then it should find one and not get stuck infinitely
         expect(move).toBeTruthy();
         // Add 10% to allow for iterations to finish
         expect(Date.now() - beforeSearch).toBeLessThan(1000 * (mctsOptions.maxSeconds + 0.1));
-    });
-
-    it('should transmit config to its children', () => {
-        // Given a mother node with a specific config
-        const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-            ...AwaleRules.get().getDefaultRulesConfig().get(),
-            width: 3,
-        });
-        const configurableMcts: MCTS<MancalaMove, MancalaState> = new MCTS('MCTS', new AwaleMoveGenerator(), AwaleRules.get());
-        const node: MancalaNode = AwaleRules.get().getInitialNode(customConfig);
-
-        // When creating the children
-        const nextMove: MancalaMove = configurableMcts.chooseNextMove(node, mctsOptions);
-        const child: MancalaNode = node.getChild(nextMove).get();
-
-        // Then the children should have the same config
-        expect(child.config).toEqual(customConfig);
-
     });
 
 });

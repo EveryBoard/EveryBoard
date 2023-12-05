@@ -74,7 +74,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         return this.demoNodeInfo.name;
     }
 
-    public async onLegalUserMove(move: Move, scores?: [number, number] | undefined): Promise<void> {
+    public async onLegalUserMove(_move: Move, _scores?: [number, number] | undefined): Promise<void> {
         return;
     }
 

@@ -77,6 +77,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (componentType.isPresent()) {
             const rulesConfig: MGPOptional<RulesConfig> = await this.getConfig();
             await this.createGameComponent(componentType.get());
+            this.gameComponent.config = rulesConfig;
             this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig);
             await this.gameComponent.updateBoard(false);
             return true;
@@ -133,11 +134,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
-        const config: MGPOptional<RulesConfig> = this.gameComponent.node.config;
-        // TODO FOR REVIEW: so here we rely on the NODE's config
-        // instead of the one that the component fetched from the user then put inside the node
-        // So actually the async MyWrapper.getConfig() is (at least for (O & L)GWCs)) awaiting the user's config
-        // Then put it in the node, after that we could always fetch via wrapper.component.node ?
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
         const legality: MGPFallible<unknown> =
             this.gameComponent.rules.getLegality(move, this.gameComponent.node.gameState, config);
         if (legality.isFailure()) {
@@ -213,12 +210,12 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         }
     }
 
-    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription> {
+    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {
         const gameName: string = this.getGameName();
         return this.getRulesConfigDescriptionByName(gameName);
     }
 
-    public getRulesConfigDescriptionByName(gameName: string): MGPOptional<RulesConfigDescription> {
+    public getRulesConfigDescriptionByName(gameName: string): MGPOptional<RulesConfigDescription<RulesConfig>> {
         const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
         if (gameInfos.isAbsent()) {
             return MGPOptional.empty();

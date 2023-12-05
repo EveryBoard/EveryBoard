@@ -22,11 +22,13 @@ describe('ReversiMoveGenerator', () => {
         defaultConfig = rules.getDefaultRulesConfig();
         moveGenerator = new ReversiMoveGenerator();
     });
+
     it('should have 4 choices at first turn', () => {
         const node: ReversiNode = rules.getInitialNode(defaultConfig);
-        const moves: ReversiMove[] = moveGenerator.getListMoves(node);
+        const moves: ReversiMove[] = moveGenerator.getListMoves(node, defaultConfig);
         expect(moves.length).toBe(4);
     });
+
     it('should propose passing move when no other moves are possible', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
@@ -39,8 +41,8 @@ describe('ReversiMoveGenerator', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        const node: ReversiNode = new ReversiNode(state, undefined, undefined, defaultConfig);
-        const moves: ReversiMove[] = moveGenerator.getListMoves(node);
+        const node: ReversiNode = new ReversiNode(state);
+        const moves: ReversiMove[] = moveGenerator.getListMoves(node, defaultConfig);
         expect(moves.length).toBe(1);
         expect(moves[0]).toBe(ReversiMove.PASS);
     });

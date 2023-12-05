@@ -7,20 +7,20 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 import { TaflConfig } from './TaflConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Debug.log
-export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, TaflState> {
+export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, TaflState, TaflConfig> {
 
     public constructor(private readonly rules: TaflRules<M>) {
         super();
     }
 
-    public getListMoves(node: TaflNode<M>): M[] {
+    public getListMoves(node: TaflNode<M>, config: MGPOptional<TaflConfig>): M[] {
         const state: TaflState = node.gameState;
-        const config: TaflConfig = node.config.get();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state, config);
-        return this.orderMoves(state, listMoves, config);
+        const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state, config.get());
+        return this.orderMoves(state, listMoves, config.get());
     }
 
     public orderMoves(state: TaflState, listMoves: M[], config: TaflConfig): M[] {

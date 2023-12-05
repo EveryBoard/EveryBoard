@@ -5,10 +5,13 @@ import { SaharaState } from '../SaharaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { SaharaHeuristic } from '../SaharaHeuristic';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { SaharaRules } from '../SaharaRules';
 
 describe('SaharaHeuristic', () => {
 
     let heuristic: SaharaHeuristic;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = SaharaRules.get().getDefaultRulesConfig();
 
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
@@ -41,6 +44,7 @@ describe('SaharaHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 });

@@ -113,9 +113,8 @@ describe('TablutRules', () => {
         const move: TablutMove = TablutMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        const node: TablutNode = new TablutNode(expectedState, undefined, MGPOptional.of(move));
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
     it('Capturing king should require three invader and an edge lead to victory', () => {
@@ -145,9 +144,8 @@ describe('TablutRules', () => {
         const move: TablutMove = TablutMove.from(new Coord(2, 1), new Coord(3, 1)).get();
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        const node: TablutNode = new TablutNode(expectedState, undefined, MGPOptional.of(move));
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
     it('Capturing king with one soldier, one throne, and one edge should not work', () => {
@@ -177,10 +175,9 @@ describe('TablutRules', () => {
         const move: TablutMove = TablutMove.from(new Coord(2, 1), new Coord(1, 1)).get();
         const expectedState: TaflState = new TaflState(expectedBoard, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
+        const node: TablutNode = new TablutNode(expectedState, undefined, MGPOptional.of(move));
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node);
+        RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });
 
     it('Sandwiching king against a throne should not work', () => {
@@ -214,10 +211,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
+        const node: TablutNode = new TablutNode(expectedState, undefined, MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeOngoing(rules, node);
+        RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });
 
     it('Capturing king against a throne with 3 soldier should not work', () => {
@@ -251,10 +247,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 13);
-        const node: TablutNode =
-            new TablutNode(expectedState, undefined, MGPOptional.of(move), defaultConfig);
+        const node: TablutNode = new TablutNode(expectedState, undefined, MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeOngoing(rules, node);
+        RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });
 
     it('should allow King to come back on the throne', () => {

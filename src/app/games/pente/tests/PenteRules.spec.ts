@@ -6,7 +6,8 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
-import { defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PenteRules', () => {
 
@@ -15,10 +16,12 @@ describe('PenteRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: PenteRules;
+    const defaultConfig: MGPOptional<GobanConfig> = PenteRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = PenteRules.get();
     });
+
     it('should allow a drop on an empty space', () => {
         // Given a state
         const state: PenteState = PenteRules.get().getInitialState(defaultGobanConfig);
@@ -60,7 +63,7 @@ describe('PenteRules', () => {
 
         // Then it should be refused
         const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid a drop on an occupied space', () => {
@@ -72,8 +75,9 @@ describe('PenteRules', () => {
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should capture pieces when two opponent pieces are sandwiched', () => {
         // Given a state almost at a sandwich point
         const state: PenteState = new PenteState([
@@ -125,6 +129,7 @@ describe('PenteRules', () => {
         ], [0, 2], 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should support multiple captures', () => {
         // Given a state almost at a double sandwich point, aka a triplette
         const state: PenteState = new PenteState([
@@ -176,13 +181,15 @@ describe('PenteRules', () => {
         ], [0, 4], 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should be ongoing if there are still available spaces and no victory', () => {
         // Given a state with available spaces and no victory
         const state: PenteState = PenteRules.get().getInitialState(defaultGobanConfig);
         const node: PenteNode = new PenteNode(state);
         // Then it should be ongoing
-        RulesUtils.expectToBeOngoing(rules, node);
+        RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });
+
     it('should be a draw if there are no 5-alignments', () => {
         // Given a drawn state
         const state: PenteState = new PenteState([
@@ -208,8 +215,9 @@ describe('PenteRules', () => {
         ], [8, 8], 1337);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a draw
-        RulesUtils.expectToBeDraw(rules, node);
+        RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
+
     it('should detect 10 captures victory', () => {
         // Given a state with 10 captures from a player
         const state: PenteState = new PenteState([
@@ -235,8 +243,9 @@ describe('PenteRules', () => {
         ], [10, 0], 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for this player
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
     it('should detect alignment victory', () => {
         // Given a state where zero has aligned 5
         const state: PenteState = new PenteState([
@@ -262,6 +271,6 @@ describe('PenteRules', () => {
         ], [0, 0], 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for zero
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 });

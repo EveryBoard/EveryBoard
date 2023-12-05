@@ -9,12 +9,13 @@ import { TaflMove } from './TaflMove';
 import { Utils } from 'src/app/utils/utils';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlHeuristicMetrics } from './TaflPieceAndControlHeuristic';
 import { TaflNode } from './TaflRules';
+import { TaflConfig } from './TaflConfig';
 
 export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends TaflPieceAndControlHeuristic<M> {
 
-    public override getBoardValue(node: TaflNode<M>): BoardValue {
+    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
         const state: TaflState = node.gameState;
-        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node);
+        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node, config);
         const defender: Player = state.getPieceAt(this.rules.getKingCoord(state).get()).getOwner() as Player;
         const stepForEscape: number = this.getStepForEscape(state) * defender.getScoreModifier();
         if (stepForEscape === -1) {

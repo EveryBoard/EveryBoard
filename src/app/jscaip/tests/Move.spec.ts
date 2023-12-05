@@ -15,7 +15,7 @@ export class MoveTestUtils {
                                                 L,
                                                 C extends RulesConfig = EmptyRulesConfig>(
         rules: Rules<M, S, C, L>,
-        generator: MoveGenerator<M, S>,
+        generator: MoveGenerator<M, S, C>,
         encoder: Encoder<M>,
         nullableConfig?: MGPOptional<C>,
     ): void
@@ -25,7 +25,7 @@ export class MoveTestUtils {
             config = nullableConfig;
         }
         const node: GameNode<M, S, C> = rules.getInitialNode(config);
-        const moves: M[] = generator.getListMoves(node);
+        const moves: M[] = generator.getListMoves(node, config);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(encoder, move);
         }

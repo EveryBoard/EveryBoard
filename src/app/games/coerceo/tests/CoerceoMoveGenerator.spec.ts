@@ -1,8 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { CoerceoState } from '../CoerceoState';
-import { CoerceoNode } from '../CoerceoRules';
+import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -12,10 +14,12 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('CoerceoMoveGenerator', () => {
 
     let moveGenerator: CoerceoMoveGenerator;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = CoerceoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new CoerceoMoveGenerator();
     });
+
     it('should generate all moves', () => {
         const board: FourStatePiece[][] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -31,6 +35,7 @@ describe('CoerceoMoveGenerator', () => {
         ];
         const state: CoerceoState = new CoerceoState(board, 0, [2, 0], [0, 0]);
         const node: CoerceoNode = new CoerceoNode(state);
-        expect(moveGenerator.getListMoves(node).length).toBe(3);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(3);
     });
+
 });

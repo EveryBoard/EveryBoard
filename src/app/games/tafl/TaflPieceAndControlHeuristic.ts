@@ -12,6 +12,8 @@ import { TaflMove } from './TaflMove';
 import { PointValue, TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
 import { TaflNode } from './TaflRules';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TaflConfig } from './TaflConfig';
 
 export type TaflPieceAndControlHeuristicMetrics = {
     controlScore: number,
@@ -23,10 +25,10 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove>
     extends TaflPieceAndInfluenceHeuristic<M>
 {
 
-    public override getBoardValue(node: TaflNode<M>): BoardValue {
+    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
         const state: TaflState = node.gameState;
 
-        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node);
+        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node, config);
         let scoreValue: number = metrics.controlScore;
         scoreValue += metrics.safeScore * this.getScoreBySafePiece(state);
         const maxControl: number = this.getScoreByThreatenedPiece(state);
@@ -37,9 +39,11 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove>
         return new BoardValue(scoreValue);
     }
 
-    protected getControlScoreAndPieceScores(node: TaflNode<M>): TaflPieceAndControlHeuristicMetrics {
+    protected getControlScoreAndPieceScores(node: TaflNode<M>, config: MGPOptional<TaflConfig>)
+    : TaflPieceAndControlHeuristicMetrics
+    {
         const state: TaflState = node.gameState;
-        const pointValue: PointValue = this.getPointValue(node);
+        const pointValue: PointValue = this.getPointValue(node, config);
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);

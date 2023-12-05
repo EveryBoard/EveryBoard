@@ -8,16 +8,19 @@ import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, ConnectSixState> {
+export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, ConnectSixState, GobanConfig> {
 
-    public getListMoves(node: ConnectSixNode): ConnectSixMove[] {
+    public getListMoves(node: ConnectSixNode, _config: MGPOptional<GobanConfig>): ConnectSixMove[] {
         if (node.gameState.turn === 0) {
             return this.getFirstMove(node.gameState);
         } else {
             return this.getListDrops(node);
         }
     }
+
     private getFirstMove(state: ConnectSixState): ConnectSixFirstMove[] {
         const width: number = state.getWidth();
         const height: number = state.getHeight();

@@ -14,7 +14,7 @@ describe('SiamMove', () => {
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
     const D: SiamPiece = SiamPiece.LIGHT_DOWN;
-    const defaultConfig: SiamConfig = SiamRules.get().getRulesConfigDescription().get().getDefaultConfig().config;
+    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const board: Table<SiamPiece> = [
@@ -27,9 +27,9 @@ describe('SiamMove', () => {
         const move: SiamMove = SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const state: SiamState = new SiamState(board, 0);
         const node: SiamNode =
-            new SiamNode(state, undefined, MGPOptional.of(move), MGPOptional.of(defaultConfig));
+            new SiamNode(state, undefined, MGPOptional.of(move));
         const moveGenerator: SiamMoveGenerator = new SiamMoveGenerator();
-        const moves: SiamMove[] = moveGenerator.getListMoves(node);
+        const moves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(SiamMove.encoder, move);
         }

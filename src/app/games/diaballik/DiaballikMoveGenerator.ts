@@ -11,6 +11,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
 
@@ -168,7 +169,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         super();
     }
 
-    public getListMoves(node: DiaballikNode): DiaballikMove[] {
+    public getListMoves(node: DiaballikNode, _config: MGPOptional<EmptyRulesConfig>): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];

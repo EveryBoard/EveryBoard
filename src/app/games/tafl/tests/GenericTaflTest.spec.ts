@@ -192,7 +192,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(rules);
             const rulesConfig: MGPOptional<TaflConfig> = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
             const firstTurnMoves: M[] = moveGenerator
-                .getListMoves(rules.getInitialNode(rulesConfig))
+                .getListMoves(rules.getInitialNode(rulesConfig), rulesConfig)
                 .map((move: TaflMove) => {
                     return entries.moveProvider(move.getStart(), move.getEnd()).get();
                 });

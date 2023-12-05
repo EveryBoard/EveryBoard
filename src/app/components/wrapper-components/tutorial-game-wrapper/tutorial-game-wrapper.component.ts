@@ -97,12 +97,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        const config: MGPOptional<RulesConfig> = this.gameComponent.node.config;
-        // TODO config.getOrElse({});
         this.gameComponent.node = new GameNode(currentStep.state,
                                                undefined,
-                                               currentStep.previousMove,
-                                               config);
+                                               currentStep.previousMove);
         // Set role will update view with updateBoardAndShowLastMove
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive
@@ -112,7 +109,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
 
     public async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move);
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move, config);
         Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
         this.gameComponent.node = node.get();
         await this.updateBoardAndShowLastMove(false);
@@ -220,9 +218,10 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const solutionStep: TutorialStepWithSolution | TutorialStepClick =
             step as TutorialStepWithSolution | TutorialStepClick;
         const solution: Move | Click = solutionStep.getSolution();
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
-            this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution).get();
+            this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution, config).get();
             await this.updateBoardAndShowLastMove(true);
         } else {
             await this.showStep(this.stepIndex);

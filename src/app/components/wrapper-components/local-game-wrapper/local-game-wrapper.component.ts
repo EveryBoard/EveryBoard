@@ -8,7 +8,6 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -98,13 +97,15 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
-        this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move, config).get();
         await this.proposeAIToPlay();
     }
 
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
         await this.updateBoardAndShowLastMove(triggerAnimation);
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node);
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node, config);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner.isPlayer()) {
@@ -129,7 +130,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async proposeAIToPlay(): Promise<void> {
-        if (this.hasSelectedAI()) {
+        if (await this.hasSelectedAI()) {
             // It is AI's turn, let it play after a small delay
             this.gameComponent.setInteractive(false);
             await this.updateBoard(false);
@@ -148,8 +149,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    private hasSelectedAI(): boolean {
-        if (this.gameComponent.rules.getGameStatus(this.gameComponent.node).isEndGame) {
+    private async hasSelectedAI(): Promise<boolean> {
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        if (this.gameComponent.rules.getGameStatus(this.gameComponent.node, config).isEndGame) {
             // No AI is playing when the game is finished
             return false;
         }
@@ -200,10 +202,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
-        const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
-        assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
-        const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options);
-        const nextNode: MGPFallible<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node, config);
+        Utils.assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
+        const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options, config);
+        const nextNode: MGPFallible<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove, config);
         if (nextNode.isSuccess()) {
             this.gameComponent.node = nextNode.get();
             await this.updateBoard(true);

@@ -13,13 +13,14 @@ describe('GoMove', () => {
         const rules: GoRules = GoRules.get();
         const moveGenerator: GoMoveGenerator = new GoMoveGenerator();
         const node: GoNode = rules.getInitialNode(defaultConfig);
-        const firstTurnMoves: GoMove[] = moveGenerator.getListMoves(node);
+        const firstTurnMoves: GoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         firstTurnMoves.push(GoMove.PASS);
         firstTurnMoves.push(GoMove.ACCEPT);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(GoMove.encoder, move);
         }
     });
+
     it('should stringify nicely', () => {
         expect(GoMove.PASS.toString()).toBe('GoMove.PASS');
         expect(GoMove.ACCEPT.toString()).toBe('GoMove.ACCEPT');

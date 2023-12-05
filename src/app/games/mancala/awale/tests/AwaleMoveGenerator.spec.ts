@@ -12,16 +12,8 @@ import { KalahMoveGenerator } from '../../kalah/KalahMoveGenerator';
 describe('AwaleMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
-    const config: MancalaConfig = AwaleRules.get().getDefaultRulesConfig().get();
+    const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
-    function getMancalaNode(state: MancalaState, config: MancalaConfig): MancalaNode {
-        return new MancalaNode(
-            state,
-            MGPOptional.empty(),
-            MGPOptional.empty(),
-            MGPOptional.of(config),
-        );
-    }
     beforeEach(() => {
         moveGenerator = new AwaleMoveGenerator();
     });
@@ -33,10 +25,10 @@ describe('AwaleMoveGenerator', () => {
             [0, 0, 0, 0, 0, 0],
         ];
         const state: MancalaState = new MancalaState(board, 1, [0, 0]);
-        const node: MancalaNode = getMancalaNode(state, config);
+        const node: MancalaNode = new MancalaNode(state);
 
         // When listing the moves
-        const moves: MancalaMove[] = moveGenerator.getListMoves(node);
+        const moves: MancalaMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then only the legal moves should be present
         expect(moves.length).toBe(1);
@@ -48,16 +40,16 @@ describe('AwaleMoveGenerator', () => {
         it('should provide move with several distributions when possible by config', () => {
             // Given a state with a config allowing multiple sowing
             const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...config,
+                ...defaultConfig.get(),
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
-            const node: MancalaNode = getMancalaNode(state, customConfig.get());
+            const node: MancalaNode = new MancalaNode(state);
 
             // When listing the moves
-            const moves: MancalaMove[] = moveGenerator.getListMoves(node);
+            const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);
 
             // Then there should be the 5 moves not passing by the store
             const noStoreMoves: MancalaMove[] =

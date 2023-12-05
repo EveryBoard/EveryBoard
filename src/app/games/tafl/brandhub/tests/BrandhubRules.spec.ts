@@ -24,6 +24,7 @@ describe('BrandhubRules', () => {
     beforeEach(() => {
         rules = BrandhubRules.get();
     });
+
     it('should allow first move by invader', () => {
         // Given the initial board
         const state: TaflState = BrandhubRules.get().getInitialState(defaultConfig);
@@ -44,6 +45,7 @@ describe('BrandhubRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
     it('should allow second move by defender', () => {
         // Given the initial board
         const board: Table<TaflPawn> = [
@@ -73,6 +75,7 @@ describe('BrandhubRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
     it('should allow soldier to be captured against a throne', () => {
         // Given a board with an endangered invader
         const board: Table<TaflPawn> = [
@@ -102,6 +105,7 @@ describe('BrandhubRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
     it('should forbid king to move back on the throne', () => {
         // Given a board where the king has the possibility to move back to his throne
         const board: Table<TaflPawn> = [
@@ -122,6 +126,7 @@ describe('BrandhubRules', () => {
         const reason: string = TaflFailure.THRONE_IS_LEFT_FOR_GOOD();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should allow capturing the king on his throne with 4 soldiers', () => {
         // Given a board where the king is on his throne, surrounded by 3 invaders
         const board: Table<TaflPawn> = [
@@ -149,10 +154,11 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
     it('should allow capturing the king next to his throne with 3 invader (option throne sandwich)', () => {
         // Given a board where the king is surrounded by 2 invader and his throne
         const board: Table<TaflPawn> = [
@@ -180,10 +186,11 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
     it('should allow capturing the king next to his throne with 3 invader (option soldier sandwich)', () => {
         // Given a board where the king is surrounded by 2 invader and his throne
         const board: Table<TaflPawn> = [
@@ -211,10 +218,11 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
     it('should allow capturing the king with only two soldier when not touching a throne', () => {
         // Given a board where the king is next to on invader
         const board: Table<TaflPawn> = [
@@ -242,10 +250,11 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
     it('should allow capturing the king between one soldier and a corner-throne', () => {
         // Given a board where the king is next to a corner throne
         const board: Table<TaflPawn> = [
@@ -273,10 +282,11 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
-        const node: BrandhubNode = new BrandhubNode(expectedState, undefined, undefined, defaultConfig);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
     it('should forbid soldier to land on the central throne (3, 3)', () => {
         // Given a board where a soldier could land on the throne
         const board: Table<TaflPawn> = [
@@ -297,6 +307,7 @@ describe('BrandhubRules', () => {
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should not allow capturing the king with 4 soldiers if one is an ally', () => {
         // Given a board where the king is surrounded by 2 opponents and 1 ally
         const board: Table<TaflPawn> = [
@@ -326,6 +337,7 @@ describe('BrandhubRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
     it('should not allow capturing the king with one piece next to central throne', () => {
         // Given a board where the king next to his throne
         const board: Table<TaflPawn> = [
@@ -355,6 +367,7 @@ describe('BrandhubRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
     it('should not allow capturing the king with two pieces next to central throne', () => {
         // Given a board where the king next to his throne and to one opponent
         const board: Table<TaflPawn> = [

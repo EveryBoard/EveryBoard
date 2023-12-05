@@ -89,7 +89,9 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
 
     public node: GameNode<M, S, C>;
 
-    public availableAIs: AI<M, S, AIOptions>[];
+    public config: MGPOptional<C> = MGPOptional.empty();
+
+    public availableAIs: AI<M, S, AIOptions, C>[];
 
     public canPass: boolean = false;
 
@@ -191,7 +193,7 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
         return this.node.parent.get().gameState;
     }
 
-    public async showLastMove(move: M): Promise<void> {
+    public async showLastMove(move: M, config: MGPOptional<C> = MGPOptional.empty()): Promise<void> {
         // Not needed by default
         return;
     }
@@ -211,7 +213,7 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
     }
 
     protected getConfig(): MGPOptional<C> {
-        return this.node.config;
+        return this.config;
     }
 
     /**

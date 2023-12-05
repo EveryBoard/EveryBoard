@@ -5,9 +5,9 @@ import { MancalaState } from './MancalaState';
 import { MancalaMove } from './MancalaMove';
 import { MancalaFailure } from './MancalaFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { MancalaConfig } from './MancalaConfig';
-import { MancalaRules } from './MancalaRules';
+import { MancalaNode, MancalaRules } from './MancalaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class MancalaRulesTestEntries {
@@ -19,19 +19,23 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
     describe(entries.gameName + ' rules generic tests', () => {
 
+        const rules: MancalaRules = entries.rules;
         const defaultConfig: MGPOptional<MancalaConfig> = entries.rules.getDefaultRulesConfig();
 
         it('should allow simple move', () => {
             // Given any board
             const state: MancalaState = entries.rules.getInitialState(defaultConfig);
+
             // When doing a simple move
+            const move: MancalaMove = entries.simpleMove;
+
             // Then the seed should be distributed
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [4, 5, 5, 5, 5, 0],
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
-            RulesUtils.expectMoveSuccess(entries.rules, state, entries.simpleMove, expectedState, defaultConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should refuse distributing empty space', () => {
@@ -41,10 +45,13 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 [4, 0, 4, 4, 4, 0],
             ];
             const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+
             // When attempting to distribute empty space
+            const move: MancalaMove = entries.simpleMove;
+
             // Then it should be illegal
             const reason: string = MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
-            RulesUtils.expectMoveFailure(entries.rules, state, entries.simpleMove, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         describe('getGameStatus', () => {
@@ -56,9 +63,9 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                     [0, 0, 0, 0, 0, 0],
                 ];
                 const state: MancalaState = new MancalaState(board, 6, [26, 22]);
-                const node: AbstractNode = new GameNode(state);
+                const node: MancalaNode = new GameNode(state);
                 // Then it should be a victory for player 0
-                RulesUtils.expectToBeVictoryFor(entries.rules, node, Player.ZERO);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
             });
 
             it('should identify victory for player 1', () => {
@@ -68,9 +75,9 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                     [0, 0, 0, 0, 0, 0],
                 ];
                 const state: MancalaState = new MancalaState(board, 6, [22, 26]);
-                const node: AbstractNode = new GameNode(state);
+                const node: MancalaNode = new GameNode(state);
                 // Then it should be a victory for player 1
-                RulesUtils.expectToBeVictoryFor(entries.rules, node, Player.ONE);
+                RulesUtils.expectToBeVictoryFor(entries.rules, node, Player.ONE, defaultConfig);
             });
 
             it('should identify draw', () => {
@@ -80,9 +87,9 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                     [0, 0, 0, 0, 0, 0],
                 ];
                 const state: MancalaState = new MancalaState(board, 6, [24, 24]);
-                const node: AbstractNode = new GameNode(state);
+                const node: MancalaNode = new GameNode(state);
                 // Then it should be a draw
-                RulesUtils.expectToBeDraw(entries.rules, node);
+                RulesUtils.expectToBeDraw(rules, node, defaultConfig);
             });
 
         });
