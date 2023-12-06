@@ -13,8 +13,8 @@ describe('DiamPiece', () => {
         expect(DiamPiece.ZERO_FIRST.toString()).toBe('DiamPiece(PLAYER_ZERO, false)');
     });
     describe('equals', () => {
-        it('should be defined', () => {
-            expect(DiamPiece.ZERO_FIRST.equals(DiamPiece.ZERO_FIRST)).toBeFalse();
+        it('should detect equal pieces', () => {
+            expect(DiamPiece.ZERO_FIRST.equals(DiamPiece.ZERO_FIRST)).toBeTrue();
             expect(DiamPiece.ZERO_FIRST.equals(DiamPiece.ZERO_SECOND)).toBeFalse();
         });
     });
