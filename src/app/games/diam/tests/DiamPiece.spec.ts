@@ -12,4 +12,10 @@ describe('DiamPiece', () => {
     it('should have redefined toString', () => {
         expect(DiamPiece.ZERO_FIRST.toString()).toBe('DiamPiece(PLAYER_ZERO, false)');
     });
+    describe('equals', () => {
+        it('should be defined', () => {
+            expect(DiamPiece.ZERO_FIRST.equals(DiamPiece.ZERO_FIRST)).toBeFalse();
+            expect(DiamPiece.ZERO_FIRST.equals(DiamPiece.ZERO_SECOND)).toBeFalse();
+        });
+    });
 });

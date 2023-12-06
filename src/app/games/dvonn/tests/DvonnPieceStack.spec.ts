@@ -70,4 +70,12 @@ describe('DvonnPieceStack', () => {
             expect(stack1.toString()).toBeTruthy();
         });
     });
+    describe('equals', () => {
+        it('should detect equal stacks', () => {
+            expect(DvonnPieceStack.PLAYER_ZERO.equals(DvonnPieceStack.PLAYER_ZERO)).toBeTrue();
+            expect(DvonnPieceStack.PLAYER_ZERO.equals(DvonnPieceStack.PLAYER_ONE)).toBeFalse();
+            expect(DvonnPieceStack.PLAYER_ZERO.equals(DvonnPieceStack.SOURCE)).toBeFalse();
+            expect(DvonnPieceStack.PLAYER_ZERO.equals(stack4)).toBeFalse();
+        });
+    });
 });
