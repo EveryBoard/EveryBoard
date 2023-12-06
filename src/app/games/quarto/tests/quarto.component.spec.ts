@@ -22,7 +22,9 @@ describe('QuartoComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click', () => {
+
         it('should forbid clicking on occupied square', fakeAsync(async() => {
             // Given a board with at least one piece
             const board: Table<QuartoPiece> = [
@@ -56,7 +58,9 @@ describe('QuartoComponent', () => {
             testUtils.expectElementToExist('#droppedPiece_0_0');
         }));
     });
+
     describe('Second click', () => {
+
         it('should accept move when choosing piece then choosing coord', fakeAsync(async() => {
             // Given any state where user has clicked a piece
             await testUtils.expectClickSuccess('#choosePiece_1');

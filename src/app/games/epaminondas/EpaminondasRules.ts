@@ -2,7 +2,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
@@ -25,7 +25,7 @@ export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState, EpaminondasConfig> {}
 
 export class EpaminondasRules
-    extends Rules<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
+    extends ConfigurableRules<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
 {
     private static singleton: MGPOptional<EpaminondasRules> = MGPOptional.empty();
 
@@ -144,7 +144,7 @@ export class EpaminondasRules
         return MGPFallible.success(board);
     }
 
-    public getInitialState(optionalConfig: MGPOptional<EpaminondasConfig>): EpaminondasState {
+    public override getInitialState(optionalConfig: MGPOptional<EpaminondasConfig>): EpaminondasState {
         const config: EpaminondasConfig = optionalConfig.get();
         const _: PlayerOrNone = PlayerOrNone.NONE;
         const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -160,14 +160,16 @@ export class EpaminondasRules
         return MGPOptional.of(EpaminondasRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {
+    public override isLegal(move: EpaminondasMove, state: EpaminondasState)
+    : MGPFallible<EpaminondasLegalityInformation>
+    {
         return EpaminondasRules.isLegal(move, state);
     }
 
-    public applyLegalMove(_move: EpaminondasMove,
-                          state: EpaminondasState,
-                          _config: MGPOptional<EpaminondasConfig>,
-                          newBoard: EpaminondasLegalityInformation)
+    public override applyLegalMove(_move: EpaminondasMove,
+                                   state: EpaminondasState,
+                                   _config: MGPOptional<EpaminondasConfig>,
+                                   newBoard: EpaminondasLegalityInformation)
     : EpaminondasState
     {
         const resultingState: EpaminondasState = new EpaminondasState(newBoard, state.turn + 1);

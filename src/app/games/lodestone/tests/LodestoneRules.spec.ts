@@ -995,4 +995,5 @@ describe('LodestoneRules', () => {
         // Then it should be a a draw
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
+
 });

@@ -460,5 +460,6 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 mancalaTestUtils.moveGenerator;
             MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, encoder);
         });
+
     });
 }

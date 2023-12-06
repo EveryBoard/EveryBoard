@@ -159,4 +159,5 @@ describe('ConspirateursHeuristic', () => {
                                                                Player.ZERO,
                                                                defaultConfig);
     });
+
 });

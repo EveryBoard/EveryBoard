@@ -3,7 +3,7 @@ import { MancalaConfig } from './MancalaConfig';
 import { MancalaState } from './MancalaState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -37,12 +37,12 @@ export type MancalaDistributionResult = {
 
 export class MancalaNode extends GameNode<MancalaMove, MancalaState, MancalaConfig> {}
 
-export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, MancalaConfig> {
+export abstract class MancalaRules extends ConfigurableRules<MancalaMove, MancalaState, MancalaConfig> {
 
     public static readonly FEED_ORIGINAL_HOUSE: Localized = () => $localize`Feed original house`;
     public static readonly MUST_FEED: Localized = () => $localize`Must feed`;
     public static readonly PASS_BY_PLAYER_STORE: Localized = () => $localize`Pass by player store`;
-    public static readonly MULTIPLE_SOW: Localized = () => $localize`Must continue distribution after last seed ends in store`
+    public static readonly MULTIPLE_SOW: Localized = () => $localize`Must continue distribution after last seed ends in store`;
     public static readonly SEEDS_BY_HOUSE: Localized = () => $localize`Seeds by house`;
 
     // These are the coordinates of the store. These are fake coordinates since the stores are not on the board
@@ -72,7 +72,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         super();
     }
 
-    public isLegal(move: MancalaMove, state: MancalaState, config: MancalaConfig): MGPValidation {
+    public override isLegal(move: MancalaMove, state: MancalaState, config: MancalaConfig): MGPValidation {
         const playerY: number = state.getCurrentPlayerY();
         let canStillPlay: boolean = true;
         for (const distribution of move) {
@@ -99,14 +99,14 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         return MGPValidation.SUCCESS;
     }
 
-    public getInitialState(config: MGPOptional<MancalaConfig>): MancalaState {
+    public override getInitialState(config: MGPOptional<MancalaConfig>): MancalaState {
         return MancalaRules.getInitialState(config);
     }
 
     /**
-      * @param distributions the distributions to try
-      * @return: MGPFallible.failure(reason) if it is illegal, MGPFallible.success(userCanStillPlay)
-      */
+     * If the distribution is illegal, returns a failure including the failure reason
+     * If the distribution is legal, return a MGPFallible of a boolean that is true if user can still play
+     */
     private isLegalDistribution(distributions: MancalaDistribution, state: MancalaState, config: MancalaConfig)
     : MGPFallible<boolean>
     {
@@ -199,7 +199,7 @@ export abstract class MancalaRules extends Rules<MancalaMove, MancalaState, Manc
         return GameStatus.ONGOING;
     }
 
-    public applyLegalMove(move: MancalaMove, state: MancalaState, config: MGPOptional<MancalaConfig>, _: void)
+    public override applyLegalMove(move: MancalaMove, state: MancalaState, config: MGPOptional<MancalaConfig>, _: void)
     : MancalaState
     {
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config.get());

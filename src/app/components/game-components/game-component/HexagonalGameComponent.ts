@@ -3,13 +3,13 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameState } from 'src/app/jscaip/GameState';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { Move } from 'src/app/jscaip/Move';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameComponent } from './GameComponent';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({ template: '' })
-export abstract class HexagonalGameComponent<R extends Rules<M, S, C, L>,
+export abstract class HexagonalGameComponent<R extends ConfigurableRules<M, S, C, L>,
                                              M extends Move,
                                              S extends GameState,
                                              P,

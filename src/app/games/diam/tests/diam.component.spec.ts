@@ -25,7 +25,9 @@ describe('DiamComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click', () => {
+
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
             // Given the initial state
             // When clicking on a piece of the opponent
@@ -80,7 +82,9 @@ describe('DiamComponent', () => {
             testUtils.expectElementToHaveClass('#click_7_0', 'selected-stroke');
         }));
     });
+
     describe('Second click', () => {
+
         it('should allow simple drops by clicking the piece and then the target', fakeAsync(async() => {
             // Given a board on which a piece is selected
             await testUtils.expectClickSuccess('#piece_PLAYER_ZERO_1_7');
@@ -242,7 +246,9 @@ describe('DiamComponent', () => {
             testUtils.expectElementNotToHaveClass('#click_7_0', 'selected-stroke');
         }));
     });
+
     describe('visuals', () => {
+
         it('should not let the user select a piece that is not available', fakeAsync(async() => {
             // Given a state where one piece is not available
             const state: DiamState = DiamState.ofRepresentation([
@@ -304,5 +310,6 @@ describe('DiamComponent', () => {
             testUtils.expectElementNotToHaveClass('#click_7_1', 'victory-stroke');
         }));
     });
+
 });
 

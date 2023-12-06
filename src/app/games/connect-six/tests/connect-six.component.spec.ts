@@ -23,7 +23,9 @@ describe('ConnectSixComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('first click', () => {
+
         it('should do the first move immediately after first click at first turn', fakeAsync(async() => {
             // Given the initial state of the component
             // When clicking anywhere
@@ -93,7 +95,9 @@ describe('ConnectSixComponent', () => {
             testUtils.expectElementToHaveClass('#dropped', 'moved-stroke');
         }));
     });
+
     describe('second click', () => {
+
         it('should deselect piece from ongoing turn when clicking on it again', fakeAsync(async() => {
             // Given a component where you clicked already to drop your first piece
             const state: ConnectSixState = new ConnectSixState([
@@ -160,7 +164,9 @@ describe('ConnectSixComponent', () => {
             await testUtils.expectMoveSuccess('#click_7_7', move);
         }));
     });
+
     describe('view', () => {
+
         it('should show highlight when victory occur', fakeAsync(async() => {
             // Given a board where current player is about to win
             const state: ConnectSixState = new ConnectSixState([
@@ -264,4 +270,5 @@ describe('ConnectSixComponent', () => {
             testUtils.expectElementToHaveClass('#piece_11_9', 'last-move-stroke');
         }));
     });
+
 });

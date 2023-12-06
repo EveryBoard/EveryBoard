@@ -72,4 +72,5 @@ describe('TeekoMoveGenerator', () => {
         // Then there should be 4 x 17 (the number of piece x the number of empty space)
         expect(moves.length).toBe(4 * 17);
     });
+
 });

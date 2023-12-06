@@ -8,6 +8,7 @@ import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 import { TrexoRules } from '../TrexoRules';
 
 describe('TrexoState', () => {
+
     it('should refuse creating a board of which width is not 10', () => {
         const error: string = 'Invalid board dimensions';
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
@@ -46,6 +47,7 @@ describe('TrexoState', () => {
         const piece: TrexoPiece = new TrexoPiece(owner, dropTurn);
         expect(nextState.getPieceAt(coord)).toEqual(TrexoPieceStack.of([piece]));
     });
+
     describe('toString', () => {
         const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
         const O1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);
@@ -88,5 +90,7 @@ describe('TrexoState', () => {
 ,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]`;
             expect(state.toString()).toBe(representation);
         });
+
     });
+
 });

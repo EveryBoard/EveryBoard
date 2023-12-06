@@ -28,4 +28,5 @@ describe('NewGameMinimax', () => {
         // Then it should be the move I want it to be
         expect(bestMove).toBeTruthy();
     });
+
 });

@@ -25,7 +25,9 @@ describe('SixComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click (drop/selection)', () => {
+
         it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [O],
@@ -80,7 +82,9 @@ describe('SixComponent', () => {
             testUtils.expectElementToExist('#selectedPiece_0_0');
         }));
     });
+
     describe('Second click (landing)', () => {
+
         it('should do movement after the 39th turn and show left coords', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [O],
@@ -124,7 +128,9 @@ describe('SixComponent', () => {
             testUtils.expectElementNotToExist('#selectedPiece_0_0');
         }));
     });
+
     describe('Third click (cutting)', () => {
+
         it('should ask to cut when needed', fakeAsync(async() => {
             // Given a board with a chosen piece and chosen landing
             const board: Table<PlayerOrNone> = [
@@ -226,7 +232,9 @@ describe('SixComponent', () => {
             await testUtils.expectMoveSuccess('#piece_0_1', move);
         }));
     });
+
     describe('view', () => {
+
         it('should highlight winning coords', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _, _, _, _, _, _],
@@ -243,4 +251,5 @@ describe('SixComponent', () => {
             testUtils.expectElementToHaveClass('#victoryCoord_4_1', 'victory-stroke');
         }));
     });
+
 });

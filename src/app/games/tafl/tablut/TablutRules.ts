@@ -41,7 +41,7 @@ export class TablutRules extends TaflRules<TablutMove> {
         super(TablutMove.from);
     }
 
-    public getInitialState(config: MGPOptional<TaflConfig>): TaflState {
+    public override getInitialState(config: MGPOptional<TaflConfig>): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;

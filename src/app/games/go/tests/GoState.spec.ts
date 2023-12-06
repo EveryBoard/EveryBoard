@@ -8,7 +8,9 @@ const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
 describe('GoPiece', () => {
+
     describe('toString', () => {
+
         it('should be defined for all pieces', () => {
             expect(GoPiece.DARK.toString()).toBe('GoPiece.DARK');
             expect(GoPiece.LIGHT.toString()).toBe('GoPiece.LIGHT');
@@ -18,13 +20,18 @@ describe('GoPiece', () => {
             expect(GoPiece.DARK_TERRITORY.toString()).toBe('GoPiece.DARK_TERRITORY');
             expect(GoPiece.LIGHT_TERRITORY.toString()).toBe('GoPiece.LIGHT_TERRITORY');
         });
+
     });
+
     describe('ofPlayer', () => {
+
         it('should map correctly the normal player', () => {
             expect(GoPiece.ofPlayer(Player.ZERO)).toBe(GoPiece.DARK);
             expect(GoPiece.ofPlayer(Player.ONE)).toBe(GoPiece.LIGHT);
         });
+
     });
+
 });
 
 describe('GoState', () => {

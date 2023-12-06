@@ -3,7 +3,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -33,7 +33,7 @@ export interface PressurePlateViewPosition {
 export type PressurePlatePositionInformation =
     MGPMap<LodestonePressurePlatePosition, PressurePlateViewPosition>;
 
-export class LodestoneRules extends ConfiglessRules<LodestoneMove, LodestoneState, LodestoneInfos> {
+export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, LodestoneInfos> {
     public static readonly THREATENED_COORD_RANGE: PressurePlatePositionInformation = MGPMap.from({
         top: {
             startForBigPlate: new Coord(0, 0),
@@ -66,7 +66,7 @@ export class LodestoneRules extends ConfiglessRules<LodestoneMove, LodestoneStat
         return LodestoneRules.singleton.get();
     }
 
-    public getInitialState(): LodestoneState {
+    public override getInitialState(): LodestoneState {
         const _: LodestonePiece = LodestonePieceNone.EMPTY;
         const O: LodestonePiece = LodestonePiecePlayer.ZERO;
         const X: LodestonePiece = LodestonePiecePlayer.ONE;
@@ -91,10 +91,10 @@ export class LodestoneRules extends ConfiglessRules<LodestoneMove, LodestoneStat
                                   });
     }
 
-    public applyLegalMove(move: LodestoneMove,
-                          state: LodestoneState,
-                          _config: MGPOptional<EmptyRulesConfig>,
-                          infos: LodestoneInfos)
+    public override applyLegalMove(move: LodestoneMove,
+                                   state: LodestoneState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   infos: LodestoneInfos)
     : LodestoneState
     {
         const currentPlayer: Player = state.getCurrentPlayer();
@@ -166,7 +166,7 @@ export class LodestoneRules extends ConfiglessRules<LodestoneMove, LodestoneStat
             board[coord.y][coord.x] = LodestonePieceNone.UNREACHABLE;
         }
     }
-    public isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
+    public override isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
         const validityBeforeCaptures: MGPValidation = this.isLegalWithoutCaptures(state, move.coord, move.direction);
         if (validityBeforeCaptures.isFailure()) {
             return MGPFallible.failure(validityBeforeCaptures.getReason());

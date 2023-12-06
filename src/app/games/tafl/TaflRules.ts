@@ -1,5 +1,5 @@
 import { Orthogonal, Direction } from '../../jscaip/Direction';
-import { Rules } from '../../jscaip/Rules';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { Coord } from '../../jscaip/Coord';
 import { TaflMove } from './TaflMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -19,7 +19,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState, TaflConfig> {}
 
-export abstract class TaflRules<M extends TaflMove> extends Rules<M, TaflState, TaflConfig> {
+export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M, TaflState, TaflConfig> {
 
     public static readonly CASTLE_IS_LEFT_FOR_GOOD: Localized = () => $localize`Central throne is left for good`;
     public static readonly EDGE_ARE_KING_S_ENNEMY: Localized = () => $localize`Edges are king's ennemy`;
@@ -32,7 +32,7 @@ export abstract class TaflRules<M extends TaflMove> extends Rules<M, TaflState, 
         super();
     }
 
-    public isLegal(move: TaflMove, state: TaflState, config: TaflConfig): MGPValidation {
+    public override isLegal(move: TaflMove, state: TaflState, config: TaflConfig): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state, config);
         if (validity.isFailure()) {
@@ -284,10 +284,10 @@ export abstract class TaflRules<M extends TaflMove> extends Rules<M, TaflState, 
         return kingCoord.getOrthogonalDistance(centralThrone) <= 1;
     }
 
-    public applyLegalMove(move: TaflMove,
-                          state: TaflState,
-                          config: MGPOptional<TaflConfig>,
-                          _info: void): TaflState {
+    public override applyLegalMove(move: TaflMove,
+                                   state: TaflState,
+                                   config: MGPOptional<TaflConfig>,
+                                   _info: void): TaflState {
         const turn: number = state.turn;
 
         const board: TaflPawn[][] = state.getCopiedBoard();

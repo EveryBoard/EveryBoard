@@ -10,9 +10,11 @@ describe('LinesOfActionMove', () => {
     const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(3, 5)).get();
 
     describe('encoder', () => {
+
         it('should have a bijective encoder', () => {
             EncoderTestUtils.expectToBeBijective(LinesOfActionMove.encoder, move);
         });
+
     });
 
     it('should not create a move outside of the board', () => {
@@ -24,12 +26,17 @@ describe('LinesOfActionMove', () => {
         const error: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
         expect(LinesOfActionMove.from(new Coord(3, 3), new Coord(4, 5))).toEqual(MGPFallible.failure(error));
     });
+
     describe('toString', () => {
+
         it('should be defined', () => {
             expect(move.toString()).toEqual('LinesOfActionMove((5, 3)->(3, 5))');
         });
+
     });
+
     describe('equal', () => {
+
         it('should consider a move equal to itself', () => {
             expect(move.equals(move)).toBeTrue();
         });
@@ -43,6 +50,7 @@ describe('LinesOfActionMove', () => {
             const move2: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(6, 4)).get();
             expect(move.equals(move2)).toBeFalse();
         });
+
     });
 
     it('should have a bijective encoder', () => {
@@ -53,4 +61,5 @@ describe('LinesOfActionMove', () => {
             EncoderTestUtils.expectToBeBijective(LinesOfActionMove.encoder, move);
         }
     });
+
 });

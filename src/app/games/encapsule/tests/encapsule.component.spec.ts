@@ -28,7 +28,9 @@ describe('EncapsuleComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click', () => {
+
         it('should forbid clicking directly on the board without selecting a piece', fakeAsync(async() => {
             await testUtils.expectClickFailure('#click_0_0', EncapsuleFailure.INVALID_PIECE_SELECTED());
         }));
@@ -83,7 +85,9 @@ describe('EncapsuleComponent', () => {
             testUtils.expectElementToExist('#chosenCoord_0_1');
         }));
     });
+
     describe('Second click', () => {
+
         it('should drop a piece on the board when selecting it and dropping it', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_5');
 
@@ -221,4 +225,5 @@ describe('EncapsuleComponent', () => {
             testUtils.expectElementNotToExist('#chosenCoord_0_1');
         }));
     });
+
 });

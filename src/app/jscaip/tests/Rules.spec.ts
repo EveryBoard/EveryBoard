@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { GameNode } from '../GameNode';
-import { ConfiglessRules } from '../Rules';
+import { Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
@@ -15,7 +15,7 @@ class AbstractState extends GameStateWithTable<number> {}
 
 class AbstractNode extends GameNode<P4Move, AbstractState> {}
 
-class AbstractRules extends ConfiglessRules<P4Move, AbstractState> {
+class AbstractRules extends Rules<P4Move, AbstractState> {
 
     private static singleton: MGPOptional<AbstractRules> = MGPOptional.empty();
 
@@ -30,18 +30,21 @@ class AbstractRules extends ConfiglessRules<P4Move, AbstractState> {
         super();
     }
 
-    public getInitialState(_config: MGPOptional<RulesConfig>): AbstractState {
+    public override getInitialState(_config: MGPOptional<RulesConfig>): AbstractState {
         return new AbstractState([[]], 0);
     }
 
-    public applyLegalMove(move: P4Move, state: AbstractState, _config: MGPOptional<RulesConfig>, _legality: void)
+    public override applyLegalMove(move: P4Move,
+                                   state: AbstractState,
+                                   _config: MGPOptional<RulesConfig>,
+                                   _legality: void)
     : AbstractState
     {
         const board: readonly number[] = state.board[0];
         return new AbstractState([board.concat([move.x])], state.turn + 1);
     }
 
-    public isLegal(_move: P4Move, _state: AbstractState): MGPValidation {
+    public override isLegal(_move: P4Move, _state: AbstractState): MGPValidation {
         return MGPValidation.SUCCESS;
     }
 

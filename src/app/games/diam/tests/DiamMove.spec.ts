@@ -5,7 +5,9 @@ import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '../DiamM
 import { DiamPiece } from '../DiamPiece';
 
 describe('DiamMove', () => {
+
     describe('drop', () => {
+
         it('should forbid a drop of an empty piece', () => {
             expect(() => new DiamMoveDrop(3, DiamPiece.EMPTY)).toThrowError('Cannot drop an empty piece');
         });
@@ -25,8 +27,11 @@ describe('DiamMove', () => {
             const move: DiamMoveDrop = new DiamMoveDrop(3, DiamPiece.ZERO_FIRST);
             expect(move.toString()).toEqual('DiamMoveDrop(3, DiamPiece(PLAYER_ZERO, false))');
         });
+
     });
+
     describe('shift', () => {
+
         it('should compute the right targets', () => {
             const move1: DiamMoveShift = new DiamMoveShift(new Coord(4, 0), 'clockwise');
             expect(move1.getTarget()).toBe(5);
@@ -51,6 +56,7 @@ describe('DiamMove', () => {
             const move: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'clockwise');
             expect(move.toString()).toEqual('DiamMoveShift((0, 0), clockwise)');
         });
+
     });
 
     it('should have a bijective encoder', () => {
@@ -63,4 +69,5 @@ describe('DiamMove', () => {
             EncoderTestUtils.expectToBeBijective(DiamMoveEncoder, move);
         }
     });
+
 });

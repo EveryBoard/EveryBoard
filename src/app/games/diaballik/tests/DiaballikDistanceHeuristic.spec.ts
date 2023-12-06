@@ -50,4 +50,5 @@ describe('DiaballikDistanceHeuristic', () => {
                                                                Player.ZERO,
                                                                defaultConfig);
     });
+
 });

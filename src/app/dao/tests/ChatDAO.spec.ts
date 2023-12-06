@@ -19,7 +19,7 @@ import { UserDAO } from '../UserDAO';
 import { ChatService } from 'src/app/services/ChatService';
 import { Subscription } from 'rxjs';
 
-xdescribe('ChatDAO', () => {
+describe('ChatDAO', () => {
 
     let chatDAO: ChatDAO;
     let chatService: ChatService;
@@ -32,7 +32,7 @@ xdescribe('ChatDAO', () => {
     }
     async function createPartAndConfigRoom(creator: MinimalUser): Promise<string> {
         const id: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-        await configRoomDAO.set(id, { ...ConfigRoomMocks.getInitial({}), creator });
+        await configRoomDAO.set(id, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
         return id;
     }
     beforeEach(async() => {

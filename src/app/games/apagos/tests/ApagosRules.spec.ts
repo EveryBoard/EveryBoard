@@ -140,4 +140,5 @@ describe('ApagosRules', () => {
         const node: ApagosNode = new ApagosNode(state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
+
 });

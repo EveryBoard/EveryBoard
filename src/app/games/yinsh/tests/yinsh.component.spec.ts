@@ -29,7 +29,9 @@ describe('YinshComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('Initial placement phase', () => {
+
         it('should allow placing a ring and show it highlighted', fakeAsync(async() => {
             // Given a state in the initial placement phase
             // When clicking on an empty space
@@ -71,6 +73,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#player_0_sideRing_5');
         }));
     });
+
     describe('Main phase', () => {
 
         it(`should highlight clickable rings when it is the player's turn`, fakeAsync(async() => {

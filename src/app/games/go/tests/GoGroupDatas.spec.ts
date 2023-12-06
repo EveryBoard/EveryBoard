@@ -69,7 +69,9 @@ describe('GoGroupDatas', () => {
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.DARK_TERRITORY, [coord], [coord, coord], [], [], []);
         expect(group.getWrapper()).toEqual(GoPiece.DARK);
     });
+
     describe('getNeighborsEntryPoint', () => {
+
         it('should give entry points for each neighbor groups', () => {
             // Given a group with all kind of neighbors
             const group: GoGroupDatas = new GoGroupDatas(GoPiece.DARK_TERRITORY,
@@ -84,5 +86,7 @@ describe('GoGroupDatas', () => {
             // Then the four entry coords should be there
             expect(neighborsEntryPoint.length).toBe(4);
         });
+
     });
+
 });

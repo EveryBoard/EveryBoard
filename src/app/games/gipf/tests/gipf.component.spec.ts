@@ -38,7 +38,9 @@ describe('GipfComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click', () => {
+
         it('should allow placement directly resulting in a move if there is no initial capture', fakeAsync(async() => {
             // Given a board on which some external space is empty
             // When clicking on that piece

@@ -1,4 +1,4 @@
-import { ConfiglessRules } from '../../jscaip/Rules';
+import { Rules } from '../../jscaip/Rules';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -20,7 +20,7 @@ export class EncapsuleNode extends GameNode<EncapsuleMove, EncapsuleState> {}
 
 @Debug.log
 // eslint-disable-next-line max-len
-export class EncapsuleRules extends ConfiglessRules<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
+export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
 
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
 
@@ -31,7 +31,7 @@ export class EncapsuleRules extends ConfiglessRules<EncapsuleMove, EncapsuleStat
         return EncapsuleRules.singleton.get();
     }
 
-    public getInitialState(): EncapsuleState {
+    public override getInitialState(): EncapsuleState {
         const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
         const startingBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
         const initialPieces: EncapsulePiece[] = [
@@ -116,14 +116,14 @@ export class EncapsuleRules extends ConfiglessRules<EncapsuleMove, EncapsuleStat
         return MGPFallible.failure(EncapsuleFailure.INVALID_PLACEMENT());
     }
 
-    public isLegal(move: EncapsuleMove, state: EncapsuleState): MGPFallible<EncapsuleLegalityInformation> {
+    public override isLegal(move: EncapsuleMove, state: EncapsuleState): MGPFallible<EncapsuleLegalityInformation> {
         return EncapsuleRules.isLegal(move, state);
     }
 
-    public applyLegalMove(move: EncapsuleMove,
-                          state: EncapsuleState,
-                          _config: MGPOptional<EmptyRulesConfig>,
-                          newLandingSpace: EncapsuleLegalityInformation)
+    public override applyLegalMove(move: EncapsuleMove,
+                                   state: EncapsuleState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   newLandingSpace: EncapsuleLegalityInformation)
     : EncapsuleState
     {
         const newBoard: EncapsuleSpace[][] = state.getCopiedBoard();

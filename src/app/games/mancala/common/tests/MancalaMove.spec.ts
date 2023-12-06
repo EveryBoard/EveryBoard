@@ -6,10 +6,12 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 describe('MancalaMove', () => {
 
     describe('toString', () => {
+
         it('should be defined', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
             expect(move.toString()).toBe('MancalaMove([0])');
         });
+
     });
 
     it('should be iterable', () => {
@@ -28,6 +30,7 @@ describe('MancalaMove', () => {
     });
 
     describe('add', () => {
+
         it('should return new move with one more distribution at the end', () => {
             // Given a basic move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
@@ -38,9 +41,11 @@ describe('MancalaMove', () => {
             // Then whe should have a new move
             expect(longerMove).toEqual(MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(1)]));
         });
+
     });
 
     describe('equals', () => {
+
         it('should return true for the same move', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
             const twin: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
@@ -58,9 +63,11 @@ describe('MancalaMove', () => {
             const other: MancalaMove = MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(1)]);
             expect(move.equals(other)).toBeFalse();
         });
+
     });
 
     describe('encoder', () => {
+
         it('should be bijective', () => {
             const moves: MancalaMove[] = [
                 MancalaMove.of(MancalaDistribution.of(0)),
@@ -70,5 +77,7 @@ describe('MancalaMove', () => {
                 EncoderTestUtils.expectToBeBijective(MancalaMove.encoder, move);
             }
         });
+
     });
+
 });

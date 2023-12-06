@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MancalaMove } from '../common/MancalaMove';
 import { KalahRules } from './KalahRules';
-import { ActivatedRoute } from '@angular/router';
 import { KalahMoveGenerator } from './KalahMoveGenerator';
 import { MancalaComponent } from '../common/MancalaComponent';
 

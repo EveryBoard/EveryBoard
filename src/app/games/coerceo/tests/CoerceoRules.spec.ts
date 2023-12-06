@@ -29,7 +29,9 @@ describe('CoerceoRules', () => {
     beforeEach(() => {
         rules = CoerceoRules.get();
     });
+
     describe('movement', () => {
+
         it('should forbid to start move from outside the board', () => {
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -221,8 +223,11 @@ describe('CoerceoRules', () => {
             const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 1], [0, 1]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('Tiles Exchange', () => {
+
         it(`should forbid exchanges when player don't have enough tiles`, () => {
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -329,6 +334,7 @@ describe('CoerceoRules', () => {
             const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
 
     it('should not remove tiles emptied, when connected by 3 separated sides', () => {
@@ -361,7 +367,9 @@ describe('CoerceoRules', () => {
         const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     describe('GetBoardValue', () => {
+
         it('should set minimal value to victory of Player.ZERO', () => {
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -397,5 +405,7 @@ describe('CoerceoRules', () => {
             const node: CoerceoNode = new CoerceoNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
     });
+
 });

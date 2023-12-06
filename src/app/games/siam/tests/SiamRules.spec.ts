@@ -640,6 +640,7 @@ describe('SiamRules', () => {
             const node: SiamNode = new SiamNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, customConfig);
         });
+
     });
 
 });

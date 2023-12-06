@@ -5,7 +5,7 @@ import { GameState } from '../GameState';
 import { GameStatus } from '../GameStatus';
 import { GameNode } from '../GameNode';
 import { Move } from '../Move';
-import { ConfiglessRules } from '../Rules';
+import { Rules } from '../Rules';
 import { EmptyRulesConfig } from '../RulesConfigUtil';
 
 class GameStateMock extends GameState {
@@ -30,17 +30,20 @@ class MoveMock extends Move {
 
 class MockNode extends GameNode<MoveMock, GameStateMock> {}
 
-class RulesMock extends ConfiglessRules<MoveMock, GameStateMock> {
+class RulesMock extends Rules<MoveMock, GameStateMock> {
 
     public constructor() {
         super();
     }
 
-    public getInitialState(): GameStateMock {
+    public override getInitialState(): GameStateMock {
         return GameStateMock.getInitialState();
     }
 
-    public applyLegalMove(_move: MoveMock, _state: GameStateMock, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    public override applyLegalMove(_move: MoveMock,
+                                   _state: GameStateMock,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : GameStateMock
     {
         throw new Error('RulesMock.applyLegalMove method not implemented.');

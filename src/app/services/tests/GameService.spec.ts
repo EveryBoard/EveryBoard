@@ -23,9 +23,9 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
-xdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
 
@@ -33,7 +33,7 @@ xdescribe('GameService', () => {
 
     let gameEventService: GameEventService;
 
-    const rulesConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig('Quarto').get();
+    const rulesConfig: MGPOptional<EmptyRulesConfig> = RulesConfigUtils.getGameDefaultConfig('Quarto');
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -55,9 +55,11 @@ xdescribe('GameService', () => {
         partDAO = TestBed.inject(PartDAO);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
+
     it('should create', () => {
         expect(gameService).toBeTruthy();
     });
+
     it('should delegate subscribeToChanges callback to partDAO', fakeAsync(async() => {
         // Given an existing part
         const part: Part = {
@@ -86,6 +88,7 @@ xdescribe('GameService', () => {
 
         subscription.unsubscribe();
     }));
+
     it('should delegate delete to PartDAO', fakeAsync(async() => {
         // Given the service at any moment
         spyOn(partDAO, 'delete').and.resolveTo();
@@ -109,6 +112,7 @@ xdescribe('GameService', () => {
             // Then acceptConfig should be called
             expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith('partId');
         }));
+
         it('should call startGame with the accepter player as argument (Player.ZERO)', fakeAsync(async() => {
             const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
             const gameEventService: GameEventService = TestBed.inject(GameEventService);
@@ -126,6 +130,7 @@ xdescribe('GameService', () => {
             // Then startGame is called with Player.ZERO
             expect(gameEventService.startGame).toHaveBeenCalledWith('partId', Player.ZERO);
         }));
+
         it('should can startGame with the accepter player as argument (Player.ONE)', fakeAsync(async() => {
             const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
             const gameEventService: GameEventService = TestBed.inject(GameEventService);
@@ -198,6 +203,7 @@ xdescribe('GameService', () => {
             expect(startConfig.playerZero).toEqual(configRoom.creator);
             expect(startConfig.playerOne).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
         }));
+
         it('should put ChosenOpponent first when math.random() is over 0.5', fakeAsync(async() => {
             // Given a configRoom config asking random start
             const configRoom: ConfigRoom = {
@@ -227,6 +233,7 @@ xdescribe('GameService', () => {
             configRoomService = TestBed.inject(ConfigRoomService);
             partDAO = TestBed.inject(PartDAO);
         });
+
         it('should send request when proposing a rematch', fakeAsync(async() => {
             // Given a game service
             spyOn(gameEventService, 'addRequest').and.resolveTo();
@@ -237,6 +244,7 @@ xdescribe('GameService', () => {
             // Then it should add a request
             expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Rematch');
         }));
+
         it('should send reply when rejecting a rematch', fakeAsync(async() => {
             // Given a game service
             spyOn(gameEventService, 'addReply').and.resolveTo();
@@ -247,6 +255,7 @@ xdescribe('GameService', () => {
             // Then it should add a reply
             expect(gameEventService.addReply).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Reject', 'Rematch');
         }));
+
         it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
             // Given a previous game
             const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
@@ -265,6 +274,7 @@ xdescribe('GameService', () => {
             };
             expect(partDAO.create).toHaveBeenCalledOnceWith(part);
         }));
+
         it('should create elements in this order: part, configRoom, and then chat', fakeAsync(async() => {
             // Given a previous game
             const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
@@ -318,6 +328,7 @@ xdescribe('GameService', () => {
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();
         });
+
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
             const scores: [number, number] = [5, 0];
@@ -376,6 +387,7 @@ xdescribe('GameService', () => {
             // Then it should decrease the turn by one
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
         }));
+
         it(`should decrease turn by 2 when accepting during the opponent's turn`, fakeAsync(async() => {
             spyOn(partDAO, 'update').and.resolveTo();
             // Given a part during the opponent's turn

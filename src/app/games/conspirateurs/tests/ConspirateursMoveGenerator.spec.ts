@@ -18,7 +18,9 @@ describe('ConspirateursMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new ConspirateursMoveGenerator();
     });
+
     describe('drop phase', () => {
+
         it('should propose 45 moves at first turn', () => {
             // Given the initial state
             const node: ConspirateursNode = new ConspirateursNode(ConspirateursRules.get().getInitialState());
@@ -51,8 +53,11 @@ describe('ConspirateursMoveGenerator', () => {
             // Then there should be 44 possible moves
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(44);
         });
+
     });
+
     describe('main phase', () => {
+
         it('should list all types of moves', () => {
             // Given a fictitious state after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -78,5 +83,7 @@ describe('ConspirateursMoveGenerator', () => {
             // Then there are 7 simple moves + 2 jump moves
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(9);
         });
+
     });
+
 });

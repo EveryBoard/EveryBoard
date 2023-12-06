@@ -23,7 +23,9 @@ describe('PylosOrderedMoveGenerator', () => {
         const moves: PylosMove[] = moveGenerator.getListMoves(initialNode, defaultConfig);
         expect(moves.length).toEqual(16);
     });
+
     describe('orderMoves', () => {
+
         it('should order move from lowest stone use to highest', () => {
             const moves: PylosMove[] = [
                 PylosMove.ofClimb(coord0, coord1, [coord1]), // -1 stone used
@@ -47,5 +49,7 @@ describe('PylosOrderedMoveGenerator', () => {
 
             expect(orderedMoves).toEqual(expectedOrderedMoves);
         });
+
     });
+
 });

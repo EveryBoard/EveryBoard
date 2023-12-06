@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -15,7 +15,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
-export class ConspirateursRules extends ConfiglessRules<ConspirateursMove, ConspirateursState> {
+export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursState> {
 
     private static singleton: MGPOptional<ConspirateursRules> = MGPOptional.empty();
 
@@ -26,17 +26,17 @@ export class ConspirateursRules extends ConfiglessRules<ConspirateursMove, Consp
         return ConspirateursRules.singleton.get();
     }
 
-    public getInitialState(): ConspirateursState {
+    public override getInitialState(): ConspirateursState {
         const board: PlayerOrNone[][] = TableUtils.create(ConspirateursState.WIDTH,
                                                           ConspirateursState.HEIGHT,
                                                           PlayerOrNone.NONE);
         return new ConspirateursState(board, 0);
     }
 
-    public applyLegalMove(move: ConspirateursMove,
-                          state: ConspirateursState,
-                          _config: MGPOptional<EmptyRulesConfig>,
-                          _info: void)
+    public override applyLegalMove(move: ConspirateursMove,
+                                   state: ConspirateursState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : ConspirateursState
     {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
@@ -54,7 +54,7 @@ export class ConspirateursRules extends ConfiglessRules<ConspirateursMove, Consp
         return new ConspirateursState(updatedBoard, state.turn + 1);
     }
 
-    public isLegal(move: ConspirateursMove, state: ConspirateursState): MGPValidation {
+    public override isLegal(move: ConspirateursMove, state: ConspirateursState): MGPValidation {
         if (ConspirateursMove.isDrop(move)) {
             return this.dropLegality(move, state);
         } else if (ConspirateursMove.isSimple(move)) {

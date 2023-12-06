@@ -1,4 +1,4 @@
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
@@ -48,7 +48,7 @@ export type SiamConfig = {
 };
 
 @Debug.log
-export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegalityInformation> {
+export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig, SiamLegalityInformation> {
 
     private static singleton: MGPOptional<SiamRules> = MGPOptional.empty();
 
@@ -76,7 +76,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegali
         return MGPOptional.of(SiamRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(optionalConfig: MGPOptional<SiamConfig>): SiamState {
+    public override getInitialState(optionalConfig: MGPOptional<SiamConfig>): SiamState {
         const config: SiamConfig = optionalConfig.get();
         const board: SiamPiece[][] = TableUtils.create(config.width, config.height, SiamPiece.EMPTY);
         const cy: number = Math.floor(config.height / 2);
@@ -123,7 +123,9 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegali
                move.coord.y === state.getHeight();
     }
 
-    public isLegal(move: SiamMove, state: SiamState, config: SiamConfig): MGPFallible<SiamLegalityInformation> {
+    public override isLegal(move: SiamMove, state: SiamState, config: SiamConfig)
+    : MGPFallible<SiamLegalityInformation>
+    {
         const moveValidity: MGPValidation = this.getMoveValidity(move, state);
         if (moveValidity.isFailure()) {
             return moveValidity.toOtherFallible();
@@ -241,10 +243,10 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamConfig, SiamLegali
         return MGPFallible.success(new SiamLegalityInformation(resultingBoard, [coord]));
     }
 
-    public applyLegalMove(_move: SiamMove,
-                          state: SiamState,
-                          _config: MGPOptional<SiamConfig>,
-                          info: SiamLegalityInformation)
+    public override applyLegalMove(_move: SiamMove,
+                                   state: SiamState,
+                                   _config: MGPOptional<SiamConfig>,
+                                   info: SiamLegalityInformation)
     : SiamState
     {
         const newBoard: Table<SiamPiece> = TableUtils.copy(info.resultingBoard);

@@ -89,17 +89,17 @@ abstract class SuperRules<M extends Move,
     public abstract getGameStatus(node: GameNode<M, S, C>, config?: MGPOptional<C>): GameStatus;
 }
 
-export abstract class Rules<M extends Move,
-                            S extends GameState,
-                            C extends RulesConfig,
-                            L = void>
+export abstract class ConfigurableRules<M extends Move,
+                                        S extends GameState,
+                                        C extends RulesConfig,
+                                        L = void>
     extends SuperRules<M, S, C, L>
 {
 }
 
-export abstract class ConfiglessRules<M extends Move,
-                                      S extends GameState,
-                                      L = void>
+export abstract class Rules<M extends Move,
+                            S extends GameState,
+                            L = void>
     extends SuperRules<M, S, EmptyRulesConfig, L>
 {
 
@@ -109,5 +109,5 @@ export abstract class ConfiglessRules<M extends Move,
 
 }
 
-export abstract class AbstractRules extends Rules<Move, GameState, RulesConfig, unknown> {
+export abstract class AbstractRules extends ConfigurableRules<Move, GameState, RulesConfig, unknown> {
 }

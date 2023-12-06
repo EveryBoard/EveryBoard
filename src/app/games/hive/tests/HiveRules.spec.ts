@@ -34,7 +34,9 @@ describe('HiveRules', () => {
     beforeEach(() => {
         rules = HiveRules.get();
     });
+
     describe('dropping', () => {
+
         it('should allow first player to drop any piece initially', () => {
             // Given the initial state
             const state: HiveState = HiveRules.get().getInitialState();
@@ -231,8 +233,11 @@ describe('HiveRules', () => {
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('moving', () => {
+
         it('should be forbidden to move if the queen bee is not on the board', () => {
             // Given a state without the player's queen bee
             const board: Table<HivePiece[]> = [
@@ -759,8 +764,11 @@ describe('HiveRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('restrictions', () => {
+
         it('should be forbidden to split the hive in two', () => {
             // Given a board
             const board: Table<HivePiece[]> = [
@@ -903,6 +911,7 @@ describe('HiveRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
         });
+
     });
 
     it('should allow passing if a player cannot perform any action', () => {
@@ -971,6 +980,7 @@ describe('HiveRules', () => {
     });
 
     describe('victories', () => {
+
         it('should consider winning player the one who has fully surrounded the queen bee of the opponent (Player.ZERO)', () => {
             // Given a board where the queen of player one is surrounded
             const board: Table<HivePiece[]> = [
@@ -1024,5 +1034,7 @@ describe('HiveRules', () => {
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
+
     });
+
 });

@@ -1,7 +1,7 @@
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
@@ -15,7 +15,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
-export class ApagosRules extends ConfiglessRules<ApagosMove, ApagosState> {
+export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 
     public static PIECES_PER_PLAYER: number = 10;
 
@@ -28,7 +28,7 @@ export class ApagosRules extends ConfiglessRules<ApagosMove, ApagosState> {
         return ApagosRules.singleton.get();
     }
 
-    public getInitialState(): ApagosState {
+    public override getInitialState(): ApagosState {
         return ApagosState.fromRepresentation(0, [
             [0, 0, 0, 0],
             [0, 0, 0, 0],
@@ -36,7 +36,10 @@ export class ApagosRules extends ConfiglessRules<ApagosMove, ApagosState> {
         ], ApagosRules.PIECES_PER_PLAYER, ApagosRules.PIECES_PER_PLAYER);
     }
 
-    public applyLegalMove(move: ApagosMove, state: ApagosState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    public override applyLegalMove(move: ApagosMove,
+                                   state: ApagosState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : ApagosState
     {
         if (move.isDrop()) {
@@ -71,7 +74,7 @@ export class ApagosRules extends ConfiglessRules<ApagosMove, ApagosState> {
         resultingState = resultingState.updateAt(move.landing, newLandingSquare);
         return new ApagosState(resultingState.turn + 1, resultingState.board, resultingState.remaining);
     }
-    public isLegal(move: ApagosMove, state: ApagosState): MGPValidation {
+    public override isLegal(move: ApagosMove, state: ApagosState): MGPValidation {
         if (state.getPieceAt(move.landing).isFull()) {
             return MGPValidation.failure(ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE());
         }

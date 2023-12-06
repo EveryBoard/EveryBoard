@@ -52,6 +52,7 @@ describe('DiaballikFilteredMoveGenerator of length 3', () => {
         // It should only have translation after passes when the translated piece is the one that had the ball
         moves.forEach(expectFinalMoveToBePasserTranslation);
     });
+
 });
 
 describe('DiaballikFilteredMoveGenerator', () => {

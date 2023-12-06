@@ -50,4 +50,5 @@ describe('LinesOfActionHeuristic', () => {
                                                                Player.ZERO,
                                                                defaultConfig);
     });
+
 });

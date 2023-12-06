@@ -33,8 +33,11 @@ describe('HiveComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('drop', () => {
+
         describe('selection', () => {
+
             it('should select one of your pieces by clicking on it', fakeAsync(async() => {
                 // Given a state with remaining pieces
                 const state: HiveState = HiveRules.get().getInitialState();
@@ -83,7 +86,9 @@ describe('HiveComponent', () => {
                 await testUtils.expectClickFailure('#remainingPiece_Beetle_PLAYER_ZERO', reason);
             }));
         });
+
         describe('dropping', () => {
+
             it('should drop the piece on the selected space', fakeAsync(async() => {
                 // Given a state with a selected remaining piece
                 const state: HiveState = HiveRules.get().getInitialState();
@@ -154,8 +159,11 @@ describe('HiveComponent', () => {
             testUtils.expectElementNotToExist('#remaining_highlight');
         }));
     });
+
     describe('moving', () => {
+
         describe('selection', () => {
+
             it('should select the piece clicked', fakeAsync(async() => {
                 // Given a state with pieces on the board
                 const state: HiveState = HiveState.fromRepresentation([
@@ -229,7 +237,9 @@ describe('HiveComponent', () => {
                 await testUtils.expectClickFailure('#piece_0_0');
             }));
         });
+
         describe('finishing move', () => {
+
             it('should move the piece to the clicked location', fakeAsync(async() => {
                 // Given a state with pieces on the board and a selected piece
                 const state: HiveState = HiveState.fromRepresentation([
@@ -341,8 +351,11 @@ describe('HiveComponent', () => {
                 testUtils.expectElementToHaveClass('#space_0_1', 'moved-fill');
             }));
         });
+
     });
+
     describe('stacks', () => {
+
         it('should allow clicking on a stack with a beetle to inspect it', fakeAsync(async() => {
             // Given a state with a stack of pieces with a beetle of the player on top
             const state: HiveState = HiveState.fromRepresentation([

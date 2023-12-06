@@ -191,6 +191,7 @@ describe('DiaballikMoveGenerator', () => {
                                            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                                            DiaballikTranslation.from(new Coord(2, 5), new Coord(2, 4)).get());
     });
+
 });
 
 describe('DiaballikMoveGenerator (not avoiding duplicates)', () => {
@@ -215,4 +216,5 @@ describe('DiaballikMoveGenerator (not avoiding duplicates)', () => {
         expect(moves.filter(numberOfSubMovesIs(3)).length).toBeGreaterThanOrEqual(80);
         expect(moves.length).toBeGreaterThanOrEqual(8 + 45 + 80);
     });
+
 });

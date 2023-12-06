@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -18,7 +18,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 
-export class HiveRules extends ConfiglessRules<HiveMove, HiveState> {
+export class HiveRules extends Rules<HiveMove, HiveState> {
 
     private static singleton: MGPOptional<HiveRules> = MGPOptional.empty();
 
@@ -29,12 +29,15 @@ export class HiveRules extends ConfiglessRules<HiveMove, HiveState> {
         return HiveRules.singleton.get();
     }
 
-    public getInitialState(): HiveState {
+    public override getInitialState(): HiveState {
         const board: Table<HivePiece[]> = [];
         return HiveState.fromRepresentation(board, 0);
     }
 
-    public applyLegalMove(move: HiveMove, state: HiveState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    public override applyLegalMove(move: HiveMove,
+                                   state: HiveState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : HiveState
     {
         if (move instanceof HiveDropMove) {
@@ -66,7 +69,7 @@ export class HiveRules extends ConfiglessRules<HiveMove, HiveState> {
             .increaseTurnAndFinalizeUpdate();
     }
 
-    public isLegal(move: HiveMove, state: HiveState): MGPValidation {
+    public override isLegal(move: HiveMove, state: HiveState): MGPValidation {
         if (move instanceof HiveDropMove) {
             return this.isLegalDrop(move, state);
         } else if (move instanceof HiveCoordToCoordMove) {

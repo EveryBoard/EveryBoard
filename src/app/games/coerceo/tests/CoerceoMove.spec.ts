@@ -16,7 +16,9 @@ describe('CoerceoMove', () => {
         const capture: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 4));
         expect(CoerceoMove.isTileExchange(capture)).toBeTrue();
     });
+
     describe('fromMove', () => {
+
         it('should not create move of invalid distance', () => {
             function createMoveWithInvalidDistance(): void {
                 CoerceoRegularMove.of(new Coord(2, 2), new Coord(9, 9));
@@ -39,8 +41,11 @@ describe('CoerceoMove', () => {
             TestUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord,
                                           'Landing coord cannot be out of range (width: 15, height: 10).');
         });
+
     });
+
     describe('CoerceoTileExchangeMove.of', () => {
+
         it('should not allow out of range capture coord', () => {
             const reason: string = 'Captured coord cannot be out of range (width: 15, height: 10).';
             function allowOutOfRangeCaptureCoord(): void {
@@ -48,8 +53,11 @@ describe('CoerceoMove', () => {
             }
             TestUtils.expectToThrowAndLog(allowOutOfRangeCaptureCoord, reason);
         });
+
     });
+
     describe('Overrides', () => {
+
         it('should have functional equals', () => {
             const a: Coord = new Coord(0, 0);
             const b: Coord = new Coord(2, 0);
@@ -77,7 +85,9 @@ describe('CoerceoMove', () => {
             expect(tileExchange.toString()).toBe('CoerceoTileExchangeMove(5, 5)');
             expect(movement.toString()).toBe('CoerceoRegularMove((5, 5) > (7, 5))');
         });
+
         describe('encoder', () => {
+
             it('should be bijective with first turn moves', () => {
                 const rules: CoerceoRules = CoerceoRules.get();
                 const moveGenerator: CoerceoMoveGenerator = new CoerceoMoveGenerator();
@@ -88,6 +98,9 @@ describe('CoerceoMove', () => {
                 const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(5, 7));
                 EncoderTestUtils.expectToBeBijective(CoerceoMove.encoder, move);
             });
+
         });
+
     });
+
 });

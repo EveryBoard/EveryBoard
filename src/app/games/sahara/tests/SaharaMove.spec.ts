@@ -74,7 +74,9 @@ describe('SaharaMoves', () => {
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(error);
         expect(SaharaMove.from(new Coord(0, 0), new Coord(0, 0))).toEqual(failure);
     });
+
     describe('equals', () => {
+
         it('should be equal to itself', () => {
             const move: SaharaMove = SaharaMove.from(new Coord(0, 0), new Coord(1, 0)).get();
             expect(move.equals(move)).toBeTrue();
@@ -85,5 +87,7 @@ describe('SaharaMoves', () => {
             const otherStart: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(1, 0)).get();
             expect(move.equals(otherStart)).toBeFalse();
         });
+
     });
+
 });

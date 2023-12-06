@@ -30,7 +30,9 @@ describe('GoRules', () => {
     it('should be created', () => {
         expect(rules).toBeTruthy();
     });
+
     describe('Phase.PLAYING', () => {
+
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
             const state: GoState = GoRules.get().getInitialState(defaultConfig);
@@ -279,8 +281,11 @@ describe('GoRules', () => {
             const reason: string = GoFailure.CANNOT_COMMIT_SUICIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('Phase.PASSED', () => {
+
         it('Phase.PASSED + GoMove/play = Phase.PLAYING', () => {
             // Given a board on passed phase
             const board: Table<GoPiece> = [
@@ -358,8 +363,11 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [10, 5], 11, MGPOptional.empty(), Phase.COUNTING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('Phase.COUNTING', () => {
+
         it('should always be GameStatus.ONGOING', () => {
             // Given a board with a shared territory
             const board: Table<GoPiece> = [
@@ -492,8 +500,11 @@ describe('GoRules', () => {
             const reason: string = GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('Phase.ACCEPT', () => {
+
         it('Phase.ACCEPT + GoMove/play = Phase.PLAYING', () => {
             // Given an board in accept phase
             const board: Table<GoPiece> = [
@@ -599,8 +610,11 @@ describe('GoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
     });
+
     describe('End Game', () => {
+
         it('should calculate correctly board with dead stones (And Recognize Draw)', () => {
             // Given a board with the same number of point for every player
             const board: Table<GoPiece> = [
@@ -634,6 +648,7 @@ describe('GoRules', () => {
             // Then it should be recognized as a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
     });
 
     it('AddDeadToScore should be a simple counting method', () => {
@@ -671,4 +686,5 @@ describe('GoRules', () => {
         // Then it should be a draw
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
+
 });

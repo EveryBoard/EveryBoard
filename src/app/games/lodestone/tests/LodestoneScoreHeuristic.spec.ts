@@ -62,4 +62,5 @@ describe('LodestoneScoreHeuristic', () => {
                                                                defaultConfig);
 
     });
+
 });

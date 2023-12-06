@@ -46,4 +46,5 @@ describe('ReversiMoveGenerator', () => {
         expect(moves.length).toBe(1);
         expect(moves[0]).toBe(ReversiMove.PASS);
     });
+
 });

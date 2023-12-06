@@ -36,4 +36,5 @@ describe('YinshPiece', () => {
         expect(() => piece.flip()).toThrowError('Assertion failure: ' + message);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', message);
     });
+
 });

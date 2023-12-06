@@ -42,7 +42,9 @@ describe('ConspirateursMove', () => {
                 ConspirateursMoveDrop.of(new Coord(-1, -1));
             }, 'Move out of board');
         });
+
     });
+
     describe('simple', () => {
         const move: ConspirateursMoveSimple = simpleMove(new Coord(7, 7), new Coord(7, 8));
 
@@ -90,7 +92,9 @@ describe('ConspirateursMove', () => {
             expect(failure.isFailure()).toBeTrue();
             expect(failure.getReason()).toBe(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
         });
+
     });
+
     describe('jump', () => {
         const move: ConspirateursMoveJump = jump([new Coord(7, 7), new Coord(7, 9), new Coord(7, 11)]);
 
@@ -132,6 +136,7 @@ describe('ConspirateursMove', () => {
         it('should forbid creating a jump out of the board', () => {
             expect(ConspirateursMoveJump.from([new Coord(1, 1), new Coord(-1, 1)]).isFailure()).toBeTrue();
         });
+
     });
 
     it('should have a bijective encoder', () => {
@@ -144,4 +149,5 @@ describe('ConspirateursMove', () => {
             EncoderTestUtils.expectToBeBijective(ConspirateursMove.encoder, move);
         }
     });
+
 });

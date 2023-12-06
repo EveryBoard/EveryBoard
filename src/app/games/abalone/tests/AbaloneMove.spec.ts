@@ -70,4 +70,5 @@ describe('AbaloneMove', () => {
         const moveGenerator: AbaloneMoveGenerator = new AbaloneMoveGenerator();
         MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, AbaloneMove.encoder);
     });
+
 });

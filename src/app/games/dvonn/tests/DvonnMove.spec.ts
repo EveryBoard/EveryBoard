@@ -59,4 +59,5 @@ describe('DvonnMove', () => {
     it('should construct (-1, -1) -> (-2, -2) as PASS', () => {
         expect(DvonnMove.from(new Coord(-1, -1), new Coord(-2, -2)).get()).toBe(DvonnMove.PASS);
     });
+
 });

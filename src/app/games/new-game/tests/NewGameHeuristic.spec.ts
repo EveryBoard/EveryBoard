@@ -34,4 +34,5 @@ describe('NewGameHeuristic', () => {
                                                                Player.ONE,
                                                                defaultConfig);
     });
+
 });

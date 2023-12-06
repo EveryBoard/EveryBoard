@@ -22,7 +22,9 @@ describe('AbaloneComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<AbaloneComponent>('Abalone');
     }));
+
     describe('First click', () => {
+
         it('should show legal directions choice when clicking piece', fakeAsync(async() => {
             // Given the initial board
 
@@ -55,7 +57,9 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#piece_2_7', 'selected-stroke');
         }));
     });
+
     describe('second click', () => {
+
         it('should show translation and pushings directions when second piece is clicked', fakeAsync(async() => {
             // Given the initial board with one selected piece
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -180,7 +184,9 @@ describe('AbaloneComponent', () => {
             await testUtils.expectMoveSuccess('#direction_UP', move);
         }));
     });
+
     describe('third click', () => {
+
         it('should deselect first piece only when reclicked, and change it', fakeAsync(async() => {
             // Given the initial board with 2 pieces selected
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -331,7 +337,9 @@ describe('AbaloneComponent', () => {
         // When clicking on the space marked by the direction instead of its arrow
         // Then expect nothing, just want this line covered!
     }));
+
     describe('showLastMove', () => {
+
         it('should show last move moved pieces (translation)', fakeAsync(async() => {
             // Given an initial board with two aligned pieces selected
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -374,4 +382,5 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#space_4_6', 'moved-fill');
         }));
     });
+
 });

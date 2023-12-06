@@ -33,4 +33,5 @@ describe('ConspirateursJumpMinimax', () => {
         // Then the game should be over
         expect(rules.getGameStatus(node).isEndGame).toBeTrue();
     });
+
 });

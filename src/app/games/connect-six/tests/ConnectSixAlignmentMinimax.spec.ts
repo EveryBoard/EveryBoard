@@ -125,4 +125,5 @@ describe('ConnectSixAlignmentMinimax', () => {
         // Then the minimax level two should block
         expect(bestMove).toEqual(ConnectSixDrops.of(new Coord(1, 18), new Coord(6, 18)));
     });
+
 });

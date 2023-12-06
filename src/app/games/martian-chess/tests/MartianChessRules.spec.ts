@@ -343,7 +343,9 @@ describe('MartianChessRules', () => {
                                                                        captured);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     describe('Undo last move', () => {
+
         it('should remember last move in state', () => {
             // Given a board
             const state: MartianChessState = MartianChessRules.get().getInitialState();
@@ -397,8 +399,11 @@ describe('MartianChessRules', () => {
             const reason: string = MartianChessFailure.CANNOT_UNDO_LAST_MOVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('field promotion', () => {
+
         it('should be legal to merge one pawn and one drone in one queen when no queen present', () => {
             // Given a board where one pawn and one drone are neighbor and have no queen on their side of the board
             const board: Table<MartianChessPiece> = [
@@ -506,9 +511,13 @@ describe('MartianChessRules', () => {
             const reason: string = MartianChessFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('end game', () => {
+
         describe('empty territory end', () => {
+
             it('should declare winner player with biggest score when one player put its last piece in the opponent territory (Player.ONE)', () => {
                 // Given a board with only one piece in the current player territory
                 // and one player having a superior score
@@ -632,8 +641,11 @@ describe('MartianChessRules', () => {
                 const node: MartianChessNode = new MartianChessNode(expectedState);
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
+
         });
+
         describe('call the clock end', () => {
+
             it('should be legal to "call the clock" during your turn', () => {
                 // Given the initial board
                 const state: MartianChessState = MartianChessRules.get().getInitialState();
@@ -862,6 +874,9 @@ describe('MartianChessRules', () => {
                 const node: MartianChessNode = new MartianChessNode(expectedState);
                 RulesUtils.expectToBeDraw(rules, node, defaultConfig);
             });
+
         });
+
     });
+
 });

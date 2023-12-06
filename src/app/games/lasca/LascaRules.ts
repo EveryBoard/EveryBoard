@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -16,7 +16,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LascaNode extends GameNode<LascaMove, LascaState> {}
 
-export class LascaRules extends ConfiglessRules<LascaMove, LascaState> {
+export class LascaRules extends Rules<LascaMove, LascaState> {
 
     private static singleton: MGPOptional<LascaRules> = MGPOptional.empty();
 
@@ -27,7 +27,7 @@ export class LascaRules extends ConfiglessRules<LascaMove, LascaState> {
         return LascaRules.singleton.get();
     }
 
-    public getInitialState(): LascaState {
+    public override getInitialState(): LascaState {
         const O: LascaStack = new LascaStack([LascaPiece.ZERO]);
         const X: LascaStack = new LascaStack([LascaPiece.ONE]);
         const _: LascaStack = LascaStack.EMPTY;
@@ -129,7 +129,10 @@ export class LascaRules extends ConfiglessRules<LascaMove, LascaState> {
         return pieceMoves;
     }
 
-    public applyLegalMove(move: LascaMove, state: LascaState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    public override applyLegalMove(move: LascaMove,
+                                   state: LascaState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : LascaState
     {
         const moveStart: Coord = move.getStartingCoord();
@@ -154,7 +157,7 @@ export class LascaRules extends ConfiglessRules<LascaMove, LascaState> {
         return resultingState.incrementTurn();
     }
 
-    public isLegal(move: LascaMove, state: LascaState): MGPValidation {
+    public override isLegal(move: LascaMove, state: LascaState): MGPValidation {
         const moveStart: Coord = move.getStartingCoord();
         if (state.getPieceAt(moveStart).isEmpty()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());

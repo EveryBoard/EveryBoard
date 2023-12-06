@@ -1,4 +1,4 @@
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { ConnectSixState } from './ConnectSixState';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -16,7 +16,7 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState, GobanConfig> {}
 
-export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, GobanConfig> {
+export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSixState, GobanConfig> {
 
     private static singleton: MGPOptional<ConnectSixRules> = MGPOptional.empty();
 
@@ -41,14 +41,17 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         return MGPOptional.of(ConnectSixRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(config: MGPOptional<GobanConfig>): ConnectSixState {
+    public override getInitialState(config: MGPOptional<GobanConfig>): ConnectSixState {
         const board: Table<PlayerOrNone> = TableUtils.create(config.get().width,
                                                              config.get().height,
                                                              PlayerOrNone.NONE);
         return new ConnectSixState(board, 0);
     }
 
-    public applyLegalMove(move: ConnectSixMove, state: ConnectSixState, _config: MGPOptional<GobanConfig>, _info: void)
+    public override applyLegalMove(move: ConnectSixMove,
+                                   state: ConnectSixState,
+                                   _config: MGPOptional<GobanConfig>,
+                                   _info: void)
     : ConnectSixState
     {
         if (move instanceof ConnectSixDrops) {
@@ -75,7 +78,7 @@ export class ConnectSixRules extends Rules<ConnectSixMove, ConnectSixState, Goba
         return new ConnectSixState(newBoard, state.turn + 1);
     }
 
-    public isLegal(move: ConnectSixMove, state: ConnectSixState): MGPValidation {
+    public override isLegal(move: ConnectSixMove, state: ConnectSixState): MGPValidation {
         if (move instanceof ConnectSixFirstMove) {
             Utils.assert(state.turn === 0, 'Instance of ConnectSixFirstMove should only happend at first move');
             if (state.isOnBoard(move.coord) === false) {

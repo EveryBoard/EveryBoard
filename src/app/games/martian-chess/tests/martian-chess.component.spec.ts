@@ -216,6 +216,7 @@ describe('MartianChessComponent', () => {
         testUtils.expectElementToHaveClass('#square_2_6', 'moved-fill');
         testUtils.expectElementToHaveClass('#queen_2_6', 'last-move-stroke');
     }));
+
     describe('clock and countdown interaction and appeareance', () => {
 
         it('should select the clock sign when clicking on it', fakeAsync(async() => {
@@ -277,7 +278,9 @@ describe('MartianChessComponent', () => {
             testUtils.expectElementNotToHaveClass('#clockOrCountDownCircle', 'selected-stroke');
         }));
     });
+
     describe('Visual Modes', () => {
+
         it('should unfold "Mode Panel" when clicking on the cog', fakeAsync(async() => {
             // Given the initial board
             // When clicking on the cog
@@ -312,4 +315,5 @@ describe('MartianChessComponent', () => {
             }
         }));
     });
+
 });

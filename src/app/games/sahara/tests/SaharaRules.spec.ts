@@ -70,4 +70,5 @@ describe('SaharaHeuristic', () => {
         const node: SaharaNode = new SaharaNode(state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
+
 });

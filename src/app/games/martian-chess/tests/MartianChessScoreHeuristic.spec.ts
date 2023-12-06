@@ -36,4 +36,5 @@ describe('MartianChessScoreHeuristic', () => {
                                                                Player.ZERO,
                                                                defaultConfig);
     });
+
 });

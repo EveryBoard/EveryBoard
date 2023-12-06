@@ -6,8 +6,11 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('TeekoMove', () => {
+
     describe('TeekoDropMove', () => {
+
         describe('from', () => {
+
             it('should fail when not in range', () => {
                 // Given an out of range coord
                 const coord: Coord = new Coord(6, 6);
@@ -29,14 +32,20 @@ describe('TeekoMove', () => {
                 // Then it should be invalid because it's a static move
                 expect(move).toEqual(MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC()));
             });
+
         });
+
         describe('toString', () => {
+
             it('should be defined', () => {
                 const move: TeekoDropMove = TeekoDropMove.from(new Coord(3, 4)).get();
                 expect(move.toString()).toEqual('TeekoMove(3, 4)');
             });
+
         });
+
         describe('equals', () => {
+
             it('should return true for the same move', () => {
                 const move: TeekoDropMove = TeekoDropMove.from(new Coord(3, 4)).get();
                 expect(move.equals(move)).toBeTrue();
@@ -54,10 +63,15 @@ describe('TeekoMove', () => {
                 const otherMove: TeekoTranslationMove = TeekoTranslationMove.from(coord, new Coord(4, 4)).get();
                 expect(move.equals(otherMove)).toBeFalse();
             });
+
         });
+
     });
+
     describe('TeekoTranslateMove', () => {
+
         describe('from', () => {
+
             it('should fail when start not in range', () => {
                 // Given an out of range coord
                 const goodCoord: Coord = new Coord(3, 3);
@@ -81,14 +95,20 @@ describe('TeekoMove', () => {
                 // Then it should fail because it is out of range
                 expect(fallible).toEqual(MGPFallible.failure(CoordFailure.OUT_OF_RANGE(badCoord)));
             });
+
         });
+
         describe('toString', () => {
+
             it('should be defined', () => {
                 const move: TeekoTranslationMove = TeekoTranslationMove.from(new Coord(1, 2), new Coord(3, 4)).get();
                 expect(move.toString()).toEqual('TeekoMove((1, 2) -> (3, 4))');
             });
+
         });
+
         describe('equals', () => {
+
             it('should return true for the same move', () => {
                 const move: TeekoTranslationMove = TeekoTranslationMove.from(new Coord(1, 2), new Coord(3, 4)).get();
                 expect(move.equals(move)).toBeTrue();
@@ -108,9 +128,13 @@ describe('TeekoMove', () => {
                 const otherMove: TeekoDropMove = TeekoDropMove.from(coord).get();
                 expect(move.equals(otherMove)).toBeFalse();
             });
+
         });
+
     });
+
     describe('encoder', () => {
+
         it('should be bijective', () => {
             const moves: TeekoMove[] = [
                 TeekoDropMove.from(new Coord(3, 4)).get(),
@@ -120,5 +144,7 @@ describe('TeekoMove', () => {
                 EncoderTestUtils.expectToBeBijective(TeekoMove.encoder, move);
             }
         });
+
     });
+
 });

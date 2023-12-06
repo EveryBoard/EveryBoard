@@ -19,6 +19,7 @@ export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
                 // the move should be legal by construction, hence we don't check it
                 moves.push(move);
             });
+
         });
         if (moves.length === 0 && lastMove.equalsValue(DvonnMove.PASS) === false) {
             moves.push(DvonnMove.PASS);

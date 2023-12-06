@@ -17,7 +17,9 @@ describe('EncapsuleMove', () => {
     it('should throw when move has the same starting and landing coords', () => {
         expect(() => EncapsuleMove.ofMove(new Coord(2, 1), new Coord(2, 1))).toThrow();
     });
+
     describe('encoder', () => {
+
         it('should be bijective for first turn moves', () => {
             const rules: EncapsuleRules = EncapsuleRules.get();
             const moveGenerator: EncapsuleMoveGenerator = new EncapsuleMoveGenerator();
@@ -28,8 +30,11 @@ describe('EncapsuleMove', () => {
             const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 2));
             EncoderTestUtils.expectToBeBijective(EncapsuleMove.encoder, move);
         });
+
     });
+
     describe('equals', () => {
+
         it('should consider same move equal', () => {
             const moveA: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
             const moveB: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
@@ -54,11 +59,16 @@ describe('EncapsuleMove', () => {
             const moveB: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.MEDIUM_DARK, new Coord(0, 1));
             expect(moveA.equals(moveB)).toBeFalse();
         });
+
     });
+
     describe('toString', () => {
+
         it('should be defined', () => {
             expect(EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(2, 1)).toString()).toBeTruthy();
             expect(EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 1)).toString()).toBeTruthy();
         });
+
     });
+
 });

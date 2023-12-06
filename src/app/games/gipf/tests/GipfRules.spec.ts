@@ -45,8 +45,11 @@ describe('GipfRules', () => {
         state.forEachCoord((c: Coord, content: FourStatePiece) => {
             expect(content).toEqual(expectedState.getPieceAt(c));
         });
+
     });
+
     describe('isLegal and applyLegalMove', () => {
+
         it('should forbid placements on non-border spaces', () => {
             const state: GipfState = GipfRules.get().getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 3), MGPOptional.empty());
@@ -415,14 +418,19 @@ describe('GipfRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('applyPlacement', () => {
+
         it('should not allow applying placements where a piece already is no direction is given', () => {
             const state: GipfState = GipfRules.get().getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(6, 3), MGPOptional.empty());
             expect(() => GipfRules.applyPlacement(placement, state)).toThrow();
         });
+
     });
+
     describe('game status', () => {
         const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
                                                            MGPOptional.of(HexaDirection.UP_RIGHT));
@@ -473,11 +481,16 @@ describe('GipfRules', () => {
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
+
     });
+
     describe('getAllDirectionsForEntrance', () => {
+
         it('should fail on non-entrances', () => {
             expect(() => GipfRules.getAllDirectionsForEntrance(GipfRules.get().getInitialState(), new Coord(3, 3)))
                 .toThrow();
         });
+
     });
+
 });

@@ -32,4 +32,5 @@ describe('P4MoveGenerator', () => {
         const node: P4Node = new P4Node(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(6);
     });
+
 });

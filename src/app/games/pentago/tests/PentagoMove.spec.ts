@@ -57,4 +57,5 @@ describe('PentagoMove', () => {
             EncoderTestUtils.expectToBeBijective(PentagoMove.encoder, move);
         }
     });
+
 });

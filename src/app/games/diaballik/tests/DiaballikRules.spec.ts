@@ -88,6 +88,7 @@ describe('DiaballikRules', () => {
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
 
     it('should allow full move with two translations of the same piece and one pass', () => {
@@ -364,6 +365,7 @@ describe('DiaballikRules', () => {
     });
 
     describe('getGameStatus', () => {
+
         it('should adhere to anti-game rule (Player.ZERO)', () => {
             // Given a state where a player has 3 pieces against a blocked line from its opponent
             const state: DiaballikState = new DiaballikState([
@@ -463,9 +465,11 @@ describe('DiaballikRules', () => {
             // Then it should be ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
+
     });
 
     describe('victory and blocker coords', () => {
+
         it('should not detect anything on initial state', () => {
             // Given a state without victory
             const state: DiaballikState = DiaballikRules.get().getInitialState();
@@ -507,5 +511,7 @@ describe('DiaballikRules', () => {
             // Then it should not return anything
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });
+
     });
+
 });

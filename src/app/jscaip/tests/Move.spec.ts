@@ -3,7 +3,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { GameState } from '../GameState';
 import { GameNode } from '../GameNode';
 import { Move } from '../Move';
-import { Rules } from '../Rules';
+import { ConfigurableRules } from '../Rules';
 import { MoveGenerator } from '../AI';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -14,7 +14,7 @@ export class MoveTestUtils {
                                                 S extends GameState,
                                                 L,
                                                 C extends RulesConfig = EmptyRulesConfig>(
-        rules: Rules<M, S, C, L>,
+        rules: ConfigurableRules<M, S, C, L>,
         generator: MoveGenerator<M, S, C>,
         encoder: Encoder<M>,
         nullableConfig?: MGPOptional<C>,

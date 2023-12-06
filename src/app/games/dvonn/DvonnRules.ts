@@ -2,7 +2,7 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { DvonnState } from './DvonnState';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
@@ -18,7 +18,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}
 
-export class DvonnRules extends ConfiglessRules<DvonnMove, DvonnState> {
+export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 
     private static singleton: MGPOptional<DvonnRules> = MGPOptional.empty();
 
@@ -29,7 +29,7 @@ export class DvonnRules extends ConfiglessRules<DvonnMove, DvonnState> {
         return DvonnRules.singleton.get();
     }
 
-    public getInitialState(): DvonnState {
+    public override getInitialState(): DvonnState {
         return new DvonnState(DvonnState.balancedBoard(), 0, false);
     }
 
@@ -141,7 +141,10 @@ export class DvonnRules extends ConfiglessRules<DvonnMove, DvonnState> {
         return newState;
     }
 
-    public applyLegalMove(move: DvonnMove, state: DvonnState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    public override applyLegalMove(move: DvonnMove,
+                                   state: DvonnState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : DvonnState
     {
         if (move === DvonnMove.PASS) {
@@ -160,7 +163,7 @@ export class DvonnRules extends ConfiglessRules<DvonnMove, DvonnState> {
         }
     }
 
-    public isLegal(move: DvonnMove, state: DvonnState): MGPValidation {
+    public override isLegal(move: DvonnMove, state: DvonnState): MGPValidation {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself

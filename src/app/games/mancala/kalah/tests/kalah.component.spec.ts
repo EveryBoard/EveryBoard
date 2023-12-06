@@ -88,12 +88,14 @@ describe('KalahComponent', () => {
             ],
         },
     });
+
     describe('Kalah-Specific Tests', () => {
         beforeEach(fakeAsync(async() => {
             const testUtils: ComponentTestUtils<KalahComponent> = await ComponentTestUtils.forGame<KalahComponent>('Kalah');
             mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new KalahMoveGenerator());
         }));
         describe('Animations', () => {
+
             it('should feed the Kalah during animation', fakeAsync(async() => {
                 // Given a board where a distribution pass by the Kalah
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click_1_1');
@@ -346,4 +348,5 @@ describe('KalahComponent', () => {
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1
         }));
     });
+
 });

@@ -273,4 +273,5 @@ describe('PenteRules', () => {
         // Then it should be a victory for zero
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
 });

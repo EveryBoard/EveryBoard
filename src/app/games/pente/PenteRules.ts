@@ -3,7 +3,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -17,7 +17,7 @@ import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class PenteNode extends GameNode<PenteMove, PenteState, GobanConfig> {}
 
-export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
+export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanConfig> {
 
     public static readonly PENTE_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 5);
@@ -34,7 +34,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         return PenteRules.singleton.get();
     }
 
-    public getInitialState(optionalConfig: MGPOptional<GobanConfig>): PenteState {
+    public override getInitialState(optionalConfig: MGPOptional<GobanConfig>): PenteState {
         const config: GobanConfig = optionalConfig.get();
         const board: PlayerOrNone[][] = TableUtils.create(config.width,
                                                           config.height,
@@ -49,7 +49,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         return MGPOptional.of(PenteRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public isLegal(move: PenteMove, state: PenteState): MGPValidation {
+    public override isLegal(move: PenteMove, state: PenteState): MGPValidation {
         if (state.isOnBoard(move.coord) === false) {
             return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.coord));
         } else if (state.getPieceAt(move.coord).isPlayer()) {
@@ -59,7 +59,7 @@ export class PenteRules extends Rules<PenteMove, PenteState, GobanConfig> {
         }
     }
 
-    public applyLegalMove(move: PenteMove, state: PenteState, _config: MGPOptional<GobanConfig>, _info: void)
+    public override applyLegalMove(move: PenteMove, state: PenteState, _config: MGPOptional<GobanConfig>, _info: void)
     : PenteState
     {
         const player: Player = state.getCurrentPlayer();

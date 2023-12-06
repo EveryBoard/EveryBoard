@@ -96,4 +96,5 @@ describe('PylosCoord', () => {
         expect(piece.getNextValid(Orthogonal.LEFT)).toEqual(MGPOptional.empty());
         expect(piece.getNextValid(Orthogonal.RIGHT)).toEqual(MGPOptional.of(right));
     });
+
 });

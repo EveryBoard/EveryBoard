@@ -1,5 +1,5 @@
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -19,7 +19,7 @@ export type TeekoConfig = {
     teleport: boolean;
 };
 
-export class TeekoRules extends Rules<TeekoMove, TeekoState, TeekoConfig> {
+export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoConfig> {
 
     private static singleton: MGPOptional<TeekoRules> = MGPOptional.empty();
 
@@ -51,12 +51,14 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState, TeekoConfig> {
         return MGPOptional.of(TeekoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(): TeekoState {
-        const board: Table<PlayerOrNone> = TableUtils.create(TeekoState.WIDTH, TeekoState.WIDTH, PlayerOrNone.NONE);
+    public override getInitialState(): TeekoState {
+        const board: Table<PlayerOrNone> = TableUtils.create(TeekoState.WIDTH,
+                                                             TeekoState.WIDTH,
+                                                             PlayerOrNone.NONE);
         return new TeekoState(board, 0);
     }
 
-    public isLegal(move: TeekoMove, state: TeekoState, config: TeekoConfig): MGPValidation {
+    public override isLegal(move: TeekoMove, state: TeekoState, config: TeekoConfig): MGPValidation {
         if (state.isInDropPhase()) {
             Utils.assert(move instanceof TeekoDropMove, 'Cannot translate in dropping phase !');
             return this.isLegalDrop(move as TeekoDropMove, state);
@@ -91,7 +93,7 @@ export class TeekoRules extends Rules<TeekoMove, TeekoState, TeekoConfig> {
         return MGPValidation.SUCCESS;
     }
 
-    public applyLegalMove(move: TeekoMove, state: TeekoState, _config: MGPOptional<TeekoConfig>, _info: void)
+    public override applyLegalMove(move: TeekoMove, state: TeekoState, _config: MGPOptional<TeekoConfig>, _info: void)
     : TeekoState
     {
         if (move instanceof TeekoDropMove) {

@@ -4,7 +4,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { TrexoFailure } from './TrexoFailure';
@@ -15,7 +15,7 @@ import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 
-export class TrexoRules extends ConfiglessRules<TrexoMove, TrexoState> {
+export class TrexoRules extends Rules<TrexoMove, TrexoState> {
 
     private static instance: MGPOptional<TrexoRules> = MGPOptional.empty();
 
@@ -31,11 +31,15 @@ export class TrexoRules extends ConfiglessRules<TrexoMove, TrexoState> {
     public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
         new NInARowHelper(TrexoRules.getOwner, 5);
 
-    public getInitialState(): TrexoState {
+    public override getInitialState(): TrexoState {
         const board: TrexoPieceStack[][] = TableUtils.create(TrexoState.SIZE, TrexoState.SIZE, TrexoPieceStack.EMPTY);
         return new TrexoState(board, 0);
     }
-    public applyLegalMove(move: TrexoMove, state: TrexoState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+
+    public override applyLegalMove(move: TrexoMove,
+                                   state: TrexoState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : TrexoState
     {
         return state
@@ -43,7 +47,7 @@ export class TrexoRules extends ConfiglessRules<TrexoMove, TrexoState> {
             .drop(move.getOne(), Player.ONE)
             .incrementTurn();
     }
-    public isLegal(move: TrexoMove, state: TrexoState): MGPValidation {
+    public override isLegal(move: TrexoMove, state: TrexoState): MGPValidation {
         if (this.isUnevenGround(move, state)) {
             return MGPValidation.failure(TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
         }

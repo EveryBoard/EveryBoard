@@ -8,6 +8,7 @@ import { LascaMove } from '../LascaMove';
 describe('LascaMove', () => {
 
     describe('Move', () => {
+
         it('should forbid vertical move', () => {
             // When trying to create a vertical move
             const move: MGPFallible<LascaMove> = LascaMove.fromStep(new Coord(0, 0), new Coord(0, 2));
@@ -47,8 +48,11 @@ describe('LascaMove', () => {
             // Then it should succeed
             expect(move.isSuccess()).toBeTrue();
         });
+
     });
+
     describe('Capture', () => {
+
         it('should forbid vertical move', () => {
             // When trying to create a vertical capture
             const move: MGPFallible<LascaMove> = LascaMove.fromCapture([new Coord(0, 0), new Coord(0, 2)]);
@@ -89,8 +93,11 @@ describe('LascaMove', () => {
             // Then it should succeed
             expect(move.isSuccess()).toBeTrue();
         });
+
     });
+
     describe('Encoder', () => {
+
         it('should encode steps', () => {
             // Given a step
             const move: LascaMove = LascaMove.fromStep(new Coord(0, 0), new Coord(1, 1)).get();
@@ -115,8 +122,11 @@ describe('LascaMove', () => {
             // Then the decoded value should be the original value
             expect(decoded).toEqual(move);
         });
+
     });
+
     describe('equals', () => {
+
         it('should see as equal identical moves', () => {
             // Given two identical moves
             const first: LascaMove = LascaMove.fromStep(new Coord(2, 2), new Coord(3, 3)).get();
@@ -136,8 +146,11 @@ describe('LascaMove', () => {
             // Then the result should be false
             expect(first.equals(second)).toBeFalse();
         });
+
     });
+
     describe('isPrefix', () => {
+
         it('should see as prefix move that is the same without the ending captures', () => {
             // Given one capture and a second one identical but without the last capture
             const long: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]).get();
@@ -158,8 +171,11 @@ describe('LascaMove', () => {
             // Then the result should be false
             expect(first.isPrefix(second)).toBeFalse();
         });
+
     });
+
     describe('getStartingCoord', () => {
+
         it('should return the first coord', () => {
             // Given any move
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4)]).get();
@@ -170,8 +186,11 @@ describe('LascaMove', () => {
             // Then it should return first coord
             expect(startingCoord.equals(move.coords.get(0))).toBeTrue();
         });
+
     });
+
     describe('getEndingCoord', () => {
+
         it('should return the last coord', () => {
             // Given any move
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4)]).get();
@@ -182,8 +201,11 @@ describe('LascaMove', () => {
             // Then it should return first coord
             expect(endingCoord.equals(move.coords.get(1))).toBeTrue();
         });
+
     });
+
     describe('getCapturedCoords', () => {
+
         it('should return the coords between move.coords', () => {
             // Given a capture
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4)]).get();
@@ -194,8 +216,11 @@ describe('LascaMove', () => {
             // Then the piece should be the stepped over coords
             expect(steppedOverCoords).toEqual([new Coord(3, 3)]);
         });
+
     });
+
     describe('concatenate', () => {
+
         it('should concatenate moves and return a new one', () => {
             // Given two moves, the second starting where the first start
             const first: LascaMove = LascaMove.fromCapture([new Coord(0, 0), new Coord(2, 2)]).get();
@@ -213,8 +238,11 @@ describe('LascaMove', () => {
             const expectedThird: LascaMove = LascaMove.fromCapture(coords).get();
             expect(third.equals(expectedThird)).toBeTrue();
         });
+
     });
+
     describe('toString', () => {
+
         it('should stringify as a coord list', () => {
             // Given any move
             const move: LascaMove = LascaMove.fromCapture([new Coord(0, 0), new Coord(2, 2)]).get();
@@ -225,5 +253,7 @@ describe('LascaMove', () => {
             // Then it should look like this
             expect(stringification).toBe('LascaMove((0, 0), (2, 2))');
         });
+
     });
+
 });

@@ -37,7 +37,9 @@ describe('LodestoneComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('first click', () => {
+
         it('should forbid placing a lodestone on an occupied square', fakeAsync(async() => {
             // Given the initial state
             // When clicking on a an occupied square
@@ -68,7 +70,9 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
         }));
     });
+
     describe('second click', () => {
+
         it('should allow placing a lodestone by selecting it and then clicking on an empty square', fakeAsync(async() => {
             // Given the initial state
             // When clicking on a lodestone and then on an empty square
@@ -144,7 +148,9 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
         }));
     });
+
     describe('post move captures', () => {
+
         it('should put captures on the selected pressure plate and highlight it as moved', fakeAsync(async() => {
             // Given an intermediary state where a lodestone has been placed, resulting in 2 captures
             await testUtils.expectClickSuccess('#square_3_3');
@@ -318,7 +324,9 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickFailure('#square_0_0', LodestoneFailure.MUST_PLACE_CAPTURES());
         }));
     });
+
     describe('visuals', () => {
+
         it('should display only the available lodestones when a lodestone is already on the board', fakeAsync(async() => {
             // Given a state with the player lodestone on the board
             const O: LodestonePiece = LodestonePieceLodestone.of(Player.ZERO,
@@ -363,4 +371,5 @@ describe('LodestoneComponent', () => {
             expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of([22, 20]));
         }));
     });
+
 });

@@ -1,5 +1,5 @@
 import { Coord } from '../../jscaip/Coord';
-import { Rules } from '../../jscaip/Rules';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { P4State } from './P4State';
 import { GameNode } from '../../jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -22,13 +22,13 @@ export type P4Config = {
 export class P4Node extends GameNode<P4Move, P4State, P4Config> {}
 
 @Debug.log
-export class P4Rules extends Rules<P4Move, P4State, P4Config> {
+export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
 
     private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<P4Config> =
         new RulesConfigDescription<P4Config>({
-            name: (): string => $localize`P4`,
+            name: (): string => $localize`Four in a Row`,
             config: {
                 width: new NumberConfigLine(7, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 height: new NumberConfigLine(6, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
@@ -53,14 +53,14 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         return MGPOptional.of(P4Rules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(config: MGPOptional<P4Config>): P4State {
+    public override getInitialState(config: MGPOptional<P4Config>): P4State {
         const board: PlayerOrNone[][] = TableUtils.create(config.get().width,
                                                           config.get().height,
                                                           PlayerOrNone.NONE);
         return new P4State(board, 0);
     }
 
-    public applyLegalMove(move: P4Move, state: P4State, _config: MGPOptional<P4Config>, _info: void): P4State {
+    public override applyLegalMove(move: P4Move, state: P4State, _config: MGPOptional<P4Config>, _info: void): P4State {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         const y: number = P4Rules.get().getLowestUnoccupiedSpace(board, x);
@@ -73,7 +73,7 @@ export class P4Rules extends Rules<P4Move, P4State, P4Config> {
         return resultingState;
     }
 
-    public isLegal(move: P4Move, state: P4State): MGPValidation {
+    public override isLegal(move: P4Move, state: P4State): MGPValidation {
         if (state.getPieceAtXY(move.x, 0).isPlayer()) {
             return MGPValidation.failure(P4Failure.COLUMN_IS_FULL());
         }

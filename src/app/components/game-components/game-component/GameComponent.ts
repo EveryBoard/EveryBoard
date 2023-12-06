@@ -1,5 +1,5 @@
 import { Move } from '../../../jscaip/Move';
-import { Rules } from '../../../jscaip/Rules';
+import { ConfigurableRules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -70,7 +70,7 @@ export abstract class BaseWrapperComponent extends BaseComponent {
     styleUrls: ['./game-component.scss'],
 })
 @Debug.log
-export abstract class GameComponent<R extends Rules<M, S, C, L>,
+export abstract class GameComponent<R extends ConfigurableRules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
                                     C extends RulesConfig = EmptyRulesConfig,
@@ -231,7 +231,10 @@ export abstract class GameComponent<R extends Rules<M, S, C, L>,
 
 }
 
-export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, RulesConfig, unknown>,
+export abstract class AbstractGameComponent extends GameComponent<ConfigurableRules<Move,
+                                                                                    GameState,
+                                                                                    RulesConfig,
+                                                                                    unknown>,
                                                                   Move,
                                                                   GameState,
                                                                   RulesConfig,

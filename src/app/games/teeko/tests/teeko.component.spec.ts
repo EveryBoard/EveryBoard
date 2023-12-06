@@ -27,7 +27,9 @@ describe('TeekoComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('drop phase', () => {
+
         it('should fail when clicking on occupied space', fakeAsync(async() => {
             // Given any component in drop phase with present pieces
             const board: Table<PlayerOrNone> = [
@@ -65,8 +67,11 @@ describe('TeekoComponent', () => {
             testUtils.expectElementToHaveClasses('#piece_2_2', ['base', 'player0-fill', 'last-move-stroke']);
         }));
     });
+
     describe('translation phase', () => {
+
         describe('first click', () => {
+
             it('should fail when clicking on empty space', fakeAsync(async() => {
                 // Given any board in translation phase
                 const board: Table<PlayerOrNone> = [
@@ -122,6 +127,7 @@ describe('TeekoComponent', () => {
                 testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'selected-stroke']);
             }));
         });
+
         describe('second click', () => {
 
             it('should deselect the player piece when clicked on again', fakeAsync(async() => {
@@ -256,5 +262,7 @@ describe('TeekoComponent', () => {
                 testUtils.expectElementToHaveClasses('#piece_1_1', ['base', 'player0-fill', 'victory-stroke']);
             }));
         });
+
     });
+
 });

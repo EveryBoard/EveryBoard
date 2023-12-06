@@ -60,7 +60,9 @@ describe('PylosComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click', () => {
+
         it('should allow dropping piece on occupable space', fakeAsync(async() => {
             // Given a board where a drop is possible
             // When clicking on it
@@ -134,7 +136,9 @@ describe('PylosComponent', () => {
             testUtils.expectElementToHaveClass('#piece_0_0_0', 'selected-stroke');
         }));
     });
+
     describe('Second click', () => {
+
         it('should refuse to change selected piece to a supporting one', fakeAsync(async() => {
             // Given a board with a high piece selected
             const initialBoard: PlayerOrNone[][][] = [
@@ -176,7 +180,9 @@ describe('PylosComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_0_0_0', 'selected-stroke');
         }));
     });
+
     describe('climbing', () => {
+
         it(`should show as 'left' climbing piece during the capture`, fakeAsync(async() => {
             // Given a board where by climbing you can make a capture
             const initialBoard: PlayerOrNone[][][] = [
@@ -283,7 +289,9 @@ describe('PylosComponent', () => {
             testUtils.expectElementToExist('#drop_0_0_1');
         }));
     });
+
     describe('capture', () => {
+
         it('should display a disabled capture-validation button when capture start to be possible', fakeAsync(async() => {
             // Given a board where a capture is about to be possible
             const initialState: PylosState = new PylosState(preCaptureBoard, 0);
@@ -590,4 +598,5 @@ describe('PylosComponent', () => {
             testUtils.expectElementNotToExist('#drop_2_2_1');
         }));
     });
+
 });

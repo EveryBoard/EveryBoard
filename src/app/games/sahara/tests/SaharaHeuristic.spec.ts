@@ -47,4 +47,5 @@ describe('SaharaHeuristic', () => {
                                                                Player.ONE,
                                                                defaultConfig);
     });
+
 });

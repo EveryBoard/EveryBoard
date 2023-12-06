@@ -1,4 +1,4 @@
-import { Rules } from '../../jscaip/Rules';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
@@ -33,7 +33,11 @@ export type ReversiConfig = {
 };
 
 @Debug.log
-export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig, ReversiLegalityInformation> {
+export class ReversiRules extends ConfigurableRules<ReversiMove,
+                                                    ReversiState,
+                                                    ReversiConfig,
+                                                    ReversiLegalityInformation>
+{
 
     private static singleton: MGPOptional<ReversiRules> = MGPOptional.empty();
 
@@ -56,7 +60,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
         return MGPOptional.of(ReversiRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(optionalConfig: MGPOptional<ReversiConfig>): ReversiState {
+    public override getInitialState(optionalConfig: MGPOptional<ReversiConfig>): ReversiState {
         const config: ReversiConfig = optionalConfig.get();
         const board: PlayerOrNone[][] = TableUtils.create(config.width, config.height, PlayerOrNone.NONE);
         const downRightCenter: Coord = new Coord(Math.floor(config.width / 2), Math.floor(config.height / 2));
@@ -67,10 +71,10 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
         return new ReversiState(board, 0);
     }
 
-    public applyLegalMove(move: ReversiMove,
-                          state: ReversiState,
-                          _config: MGPOptional<ReversiConfig>,
-                          info: ReversiLegalityInformation)
+    public override applyLegalMove(move: ReversiMove,
+                                   state: ReversiState,
+                                   _config: MGPOptional<ReversiConfig>,
+                                   info: ReversiLegalityInformation)
     : ReversiState
     {
         const turn: number = state.turn;
@@ -212,7 +216,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiConfig
         return moves;
     }
 
-    public isLegal(move: ReversiMove, state: ReversiState, config?: ReversiConfig)
+    public override isLegal(move: ReversiMove, state: ReversiState, config?: ReversiConfig)
     : MGPFallible<ReversiLegalityInformation>
     {
         if (move.equals(ReversiMove.PASS)) { // if the player passes

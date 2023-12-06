@@ -73,4 +73,5 @@ describe('ConnectSixMoveGenerator', () => {
         // Then the answer should be 65
         expect(moves.length).toBe(65);
     });
+
 });

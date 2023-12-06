@@ -3,7 +3,7 @@ import { MGPMap } from '../utils/MGPMap';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { GameState } from './GameState';
-import { Rules } from './Rules';
+import { ConfigurableRules } from './Rules';
 import { GameStatus } from './GameStatus';
 import { Player } from './Player';
 import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
@@ -80,7 +80,7 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public printDot<L>(rules: Rules<M, S, C, L>,
+    public printDot<L>(rules: ConfigurableRules<M, S, C, L>,
                        labelFn?: (node: GameNode<M, S, C>) => string,
                        max?: number,
                        level: number = 0,

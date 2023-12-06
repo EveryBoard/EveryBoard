@@ -3,6 +3,7 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { LodestoneMove } from '../LodestoneMove';
 
 describe('LodestoneMove', () => {
+
     it('should redefine equality', () => {
         const someMove: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'diagonal');
         const moveWithDifferentCoord: LodestoneMove = new LodestoneMove(new Coord(1, 0), 'push', 'diagonal');
@@ -36,4 +37,5 @@ describe('LodestoneMove', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 });
         EncoderTestUtils.expectToBeBijective(LodestoneMove.encoder, move);
     });
+
 });

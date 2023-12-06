@@ -29,7 +29,9 @@ describe('LascaComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('first click', () => {
+
         it('should highlight possible step-landing after selecting piece', fakeAsync(async() => {
             // Given any board where steps are possible (initial board)
             // When selecting a piece
@@ -104,7 +106,9 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#square_4_4_piece_0', 'selected-stroke');
         }));
     });
+
     describe('second click', () => {
+
         it('should fail when clicking on opponent', fakeAsync(async() => {
             // Given any board with a selected piece
             await testUtils.expectClickSuccess('#coord_4_4');
@@ -273,7 +277,9 @@ describe('LascaComponent', () => {
             await testUtils.expectMoveFailure('#coord_0_4', RulesFailure.CANNOT_SELF_CAPTURE(), move);
         }));
     });
+
     describe('experience as second player (reversed board)', () => {
+
         it('should have first player on top', fakeAsync(async() => {
             // Given a board that has been reversed
             testUtils.getGameComponent().setPointOfView(Player.ONE);
@@ -318,7 +324,9 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#square_at_4_4 #square_2_2', 'moved-fill');
         }));
     });
+
     describe('multiple capture', () => {
+
         it('should perform capture when no more piece can be captured', fakeAsync(async() => {
             // Given a board on which a piece is selected and already captured
             const state: LascaState = LascaState.of([
@@ -345,7 +353,9 @@ describe('LascaComponent', () => {
             testUtils.expectElementToExist('#square_6_6_piece_2');
         }));
     });
+
     describe('interactivity', () => {
+
         it('should show possible selections when interactive', fakeAsync(async() => {
             // Given a state
             // When it is interactive
@@ -364,4 +374,5 @@ describe('LascaComponent', () => {
         }));
 
     });
+
 });

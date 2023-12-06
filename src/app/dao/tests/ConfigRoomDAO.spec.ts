@@ -23,7 +23,7 @@ type CreatedPart = {
     creator: MinimalUser,
 }
 
-xdescribe('ConfigRoomDAO', () => {
+describe('ConfigRoomDAO', () => {
 
     let partDAO: PartDAO;
     let configRoomDAO: ConfigRoomDAO;
@@ -57,7 +57,7 @@ xdescribe('ConfigRoomDAO', () => {
         const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
         const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
         if (options.createConfigRoom === true) {
-            const configRoom: ConfigRoom = { ...ConfigRoomMocks.getInitial({}), creator };
+            const configRoom: ConfigRoom = { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator };
             await configRoomDAO.set(partId, configRoom);
         }
         if (options.signOut === true) {
@@ -90,8 +90,10 @@ xdescribe('ConfigRoomDAO', () => {
             const nonVerifiedUser: MinimalUser = await createUnverifiedUser(MALICIOUS_EMAIL, MALICIOUS_NAME);
 
             // When the user tries to create the configRoom
-            const result: Promise<void> =
-                configRoomDAO.set(partId, { ...ConfigRoomMocks.getInitial({}), creator: nonVerifiedUser });
+            const result: Promise<void> = configRoomDAO.set(partId, {
+                ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
+                creator: nonVerifiedUser,
+            });
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -139,7 +141,7 @@ xdescribe('ConfigRoomDAO', () => {
 
             // When creating the corresponding configRoom, with the current user as creator
             const result: Promise<void> = configRoomDAO.set(createdPart.partId, {
-                ...ConfigRoomMocks.getInitial({}),
+                ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
                 creator: createdPart.creator,
             });
 
@@ -151,7 +153,7 @@ xdescribe('ConfigRoomDAO', () => {
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
 
             // When creating a configRoom with no corresponding part
-            const result: Promise<void> = configRoomDAO.set('unexisting-part-id', { ...ConfigRoomMocks.getInitial({}), creator });
+            const result: Promise<void> = configRoomDAO.set('unexisting-part-id', { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
 
             // Then it should fail
             await expectPermissionToBeDenied(result);
@@ -163,7 +165,7 @@ xdescribe('ConfigRoomDAO', () => {
 
             // When the malicious user creates the corresponding configRoom on behalf of the regular user
             const result: Promise<void> = configRoomDAO.set(createdPart.partId, {
-                ...ConfigRoomMocks.getInitial({}),
+                ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
                 creator: createdPart.creator,
             });
 
@@ -273,7 +275,7 @@ xdescribe('ConfigRoomDAO', () => {
             // When creating the corresponding configRoom, with the user as creator but with a fake username
             const fakeCreator: MinimalUser = { id: createdPart.creator.id, name: 'fake-jeanjaja' };
             const result: Promise<void> = configRoomDAO.set(createdPart.partId, {
-                ...ConfigRoomMocks.getInitial({}),
+                ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
                 creator: fakeCreator,
             });
 

@@ -27,7 +27,9 @@ describe('YinshRules', () => {
     beforeEach(() => {
         rules = YinshRules.get();
     });
+
     describe('isLegal and applyLegalMove', () => {
+
         it('should initially allow placing rings', () => {
             // Given the initial state
             const state: YinshState = YinshRules.get().getInitialState();
@@ -536,7 +538,9 @@ describe('YinshRules', () => {
 
         it('should not allow making moves once victory has been reached');
     });
+
     describe('getPossibleCaptures', () => {
+
         it('should not consider rings as capturable pieces', () => {
             // Given a state with 5 player pieces aligned, but including rings
             const board: Table<YinshPiece> = [
@@ -670,8 +674,11 @@ describe('YinshRules', () => {
             // Then there should be exactly one
             expect(captures.length).toBe(1);
         });
+
     });
+
     describe('getGameStatus', () => {
+
         it('should consider initial phase as ongoing', () => {
             const state: YinshState = YinshRules.get().getInitialState();
             expect(rules.getGameStatus(new YinshNode(state))).toBe(GameStatus.ONGOING);
@@ -693,5 +700,7 @@ describe('YinshRules', () => {
             const node: YinshNode = new YinshNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
     });
+
 });

@@ -38,4 +38,5 @@ describe('TaflPieceMinimax', () => {
         const bestMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 }, defaultConfig);
         expect(bestMove).toEqual(winnerMove);
     });
+
 });

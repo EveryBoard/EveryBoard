@@ -23,6 +23,7 @@ describe('GipfMoveGenerator', () => {
         rules = GipfRules.get();
         moveGenerator = new GipfMoveGenerator();
     });
+
     describe('getListMoves', () => {
 
         it('should have 30 moves on the initial state', () => {

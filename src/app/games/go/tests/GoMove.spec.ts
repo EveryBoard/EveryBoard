@@ -26,4 +26,5 @@ describe('GoMove', () => {
         expect(GoMove.ACCEPT.toString()).toBe('GoMove.ACCEPT');
         expect(new GoMove(0, 1).toString()).toBe('GoMove(0, 1)');
     });
+
 });

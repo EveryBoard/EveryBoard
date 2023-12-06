@@ -24,7 +24,9 @@ describe('SixRules', () => {
     beforeEach(() => {
         rules = SixRules.get();
     });
+
     describe('dropping', () => {
+
         it('should forbid landing/dropping on existing piece (drop)', () => {
             // Given a board in Phase 1 with pieces
             const board: Table<PlayerOrNone> = [
@@ -112,8 +114,11 @@ describe('SixRules', () => {
             const reason: string = SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('Deplacement', () => {
+
         it('should forbid movement before 40th turn', () => {
             // Given a board in phase 1
             const board: Table<PlayerOrNone> = [
@@ -181,8 +186,11 @@ describe('SixRules', () => {
             const reason: string = SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('Deconnection', () => {
+
         it('should deconnect smaller group automatically', () => {
             // Given a board where two pieces could be disconnected
             const board: Table<PlayerOrNone> = [
@@ -284,9 +292,13 @@ describe('SixRules', () => {
             const reason: string = SixFailure.MUST_CAPTURE_BIGGEST_GROUPS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('victories', () => {
+
         describe('Shape Victories', () => {
+
             it('should consider winner player who align 6 pieces (playing on border)', () => {
                 // Given a board in pre-victory
                 const board: Table<PlayerOrNone> = [
@@ -461,8 +473,11 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
+
         });
+
         describe('Disconnection Victories', () => {
+
             it('should consider loser PLAYER.ZERO when he drop below 6 pieces on phase two', () => {
                 // Given a board in phase two
                 const board: Table<PlayerOrNone> = [
@@ -565,6 +580,9 @@ describe('SixRules', () => {
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
+
         });
+
     });
+
 });

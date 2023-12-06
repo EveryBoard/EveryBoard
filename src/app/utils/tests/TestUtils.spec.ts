@@ -296,11 +296,12 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1); // Need to be at least 1ms
-        const canChooseConfig: boolean = testUtils.getWrapper() instanceof LocalGameWrapperComponent;
-        if (canChooseConfig && chooseDefaultConfig) {
-            await testUtils.acceptDefaultConfig();
-        }
         if (chooseDefaultConfig) {
+            const wrapperIsLocal: boolean = testUtils.getWrapper() instanceof LocalGameWrapperComponent;
+            const config: MGPOptional<RulesConfig> = GameInfo.getByUrlName(game).get().getRulesConfig();
+            if (wrapperIsLocal && config.isPresent()) {
+                await testUtils.acceptDefaultConfig();
+            }
             /**
              * If we just choose default config, here, the local game wrapper is not yet in playing phase
              * so most things are not spyable
@@ -326,10 +327,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
 
     public async acceptDefaultConfig(): Promise<void> {
-        if (this.findElement('#startGameWithConfig') != null) {
-            await this.clickElement('#startGameWithConfig');
-            tick(1);
-        }
+        await this.clickElement('#startGameWithConfig');
+        tick(1);
     }
 
     public bindGameComponent(): void {

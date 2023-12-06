@@ -6,8 +6,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfigDescription, NumberConfigLine } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 
 /**
  * This class is optional.
@@ -38,7 +37,7 @@ export type NewGameConfig = {
  * It should be a singleton class.
  * It is used by the wrappers to check the legality of a move, and to apply the move on a state.
  */
-export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameConfig, NewGameLegalityInfo> {
+export class NewGameRules extends ConfigurableRules<NewGameMove, NewGameState, NewGameConfig, NewGameLegalityInfo> {
 
     /**
      * This is the singleton instance. You should keep this as is, except for adapting the class name.
@@ -93,7 +92,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameConfig
     /**
      * This method returns the initial state of a game
      */
-    public getInitialState(): NewGameState {
+    public override getInitialState(): NewGameState {
         return new NewGameState(0);
     }
 
@@ -104,7 +103,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameConfig
      * @returns a MGPFallible of the GameLegalityInfo, being a success if the move is legal,
      *   a failure containing the reason for the illegality of the move.
      */
-    public isLegal(move: NewGameMove, state: NewGameState): MGPFallible<NewGameLegalityInfo> {
+    public override isLegal(move: NewGameMove, state: NewGameState): MGPFallible<NewGameLegalityInfo> {
         return MGPFallible.success(new NewGameLegalityInfo());
     }
 
@@ -116,10 +115,10 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameConfig
      * @param info the info that had been returned by `isLegal`
      * @returns the resulting state, i.e., the state on which move has been applied
      */
-    public applyLegalMove(_move: NewGameMove,
-                          state: NewGameState,
-                          _config: MGPOptional<NewGameConfig>,
-                          _info: NewGameLegalityInfo)
+    public override applyLegalMove(_move: NewGameMove,
+                                   state: NewGameState,
+                                   _config: MGPOptional<NewGameConfig>,
+                                   _info: NewGameLegalityInfo)
     : NewGameState
     {
         return new NewGameState(state.turn + 1);
@@ -139,7 +138,3 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameConfig
     }
 
 }
-
-// For coverage
-// eslint-disable-next-line max-len
-Utils.getNonNullable(NewGameRules.RULES_CONFIG_DESCRIPTION.defaultConfigDescription.config.the_name_you_will_use_in_your_rules_and_states.validator)(null);

@@ -85,4 +85,5 @@ describe('PylosMove', () => {
         const moveAB: PylosMove = PylosMove.ofClimb(coord, highCoord, [coord, highCoord]);
         expect(moveAB.firstCapture.get()).toEqual(highCoord);
     });
+
 });

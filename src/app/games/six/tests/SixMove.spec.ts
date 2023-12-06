@@ -35,6 +35,7 @@ describe('SixMove', () => {
         TestUtils.expectToThrowAndLog(creatingMovementKeepingStartingCoord,
                                       'Cannot keep starting coord, since it will always be empty after move!');
     });
+
     describe('Overrides', () => {
 
         const drop: SixMove = SixMove.ofDrop(new Coord(5, 5));
@@ -64,5 +65,7 @@ describe('SixMove', () => {
                 EncoderTestUtils.expectToBeBijective(SixMove.encoder, move);
             }
         });
+
     });
+
 });

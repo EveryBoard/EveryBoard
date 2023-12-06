@@ -261,4 +261,5 @@ describe('TrexoRules', () => {
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
     });
+
 });

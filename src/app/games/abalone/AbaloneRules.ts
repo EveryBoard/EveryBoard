@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneFailure } from './AbaloneFailure';
@@ -18,7 +18,7 @@ export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
 export class AbaloneNode extends GameNode<AbaloneMove, AbaloneState> {}
 
-export class AbaloneRules extends ConfiglessRules<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
+export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
 
     private static singleton: MGPOptional<AbaloneRules> = MGPOptional.empty();
 
@@ -29,7 +29,7 @@ export class AbaloneRules extends ConfiglessRules<AbaloneMove, AbaloneState, Aba
         return AbaloneRules.singleton.get();
     }
 
-    public getInitialState(): AbaloneState {
+    public override getInitialState(): AbaloneState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
@@ -87,16 +87,16 @@ export class AbaloneRules extends ConfiglessRules<AbaloneMove, AbaloneState, Aba
         }
     }
 
-    public applyLegalMove(_move: AbaloneMove,
-                          state: AbaloneState,
-                          _config: MGPOptional<EmptyRulesConfig>,
-                          newBoard: AbaloneLegalityInformation)
+    public override applyLegalMove(_move: AbaloneMove,
+                                   state: AbaloneState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   newBoard: AbaloneLegalityInformation)
     : AbaloneState
     {
         return new AbaloneState(newBoard, state.turn + 1);
     }
 
-    public isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
+    public override isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         const firstPieceValidity: MGPValidation = this.getFirstPieceValidity(move, state);
         if (firstPieceValidity.isFailure()) {
             return firstPieceValidity.toOtherFallible();

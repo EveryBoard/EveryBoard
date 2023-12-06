@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -15,7 +15,7 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 
-export class PentagoRules extends ConfiglessRules<PentagoMove, PentagoState> {
+export class PentagoRules extends Rules<PentagoMove, PentagoState> {
 
     private static singleton: MGPOptional<PentagoRules> = MGPOptional.empty();
 
@@ -26,7 +26,7 @@ export class PentagoRules extends ConfiglessRules<PentagoMove, PentagoState> {
         return PentagoRules.singleton.get();
     }
 
-    public getInitialState(): PentagoState {
+    public override getInitialState(): PentagoState {
         const initialBoard: Table<PlayerOrNone> = TableUtils.create(PentagoState.SIZE,
                                                                     PentagoState.SIZE,
                                                                     PlayerOrNone.NONE);
@@ -57,15 +57,15 @@ export class PentagoRules extends ConfiglessRules<PentagoMove, PentagoState> {
         [new Coord(1, 4), new Vector(1, 0), true],
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
-    public applyLegalMove(move: PentagoMove,
-                          state: PentagoState,
-                          _config: MGPOptional<EmptyRulesConfig>,
-                          _info: void)
+    public override applyLegalMove(move: PentagoMove,
+                                   state: PentagoState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : PentagoState
     {
         return state.applyLegalMove(move);
     }
-    public isLegal(move: PentagoMove, state: PentagoState): MGPValidation {
+    public override isLegal(move: PentagoMove, state: PentagoState): MGPValidation {
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }

@@ -65,4 +65,5 @@ describe('HiveMove', () => {
             EncoderTestUtils.expectToBeBijective(HiveMove.encoder, move);
         }
     });
+
 });

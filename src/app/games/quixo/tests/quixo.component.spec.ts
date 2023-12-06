@@ -28,7 +28,9 @@ describe('QuixoComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('first click', () => {
+
         it('should cancel move when trying to select opponent piece', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _],
@@ -78,7 +80,9 @@ describe('QuixoComponent', () => {
             testUtils.expectElementToHaveClass('#click_0_0', 'selected-stroke');
         }));
     });
+
     describe('second click', () => {
+
         it('should allow a simple move', fakeAsync(async() => {
             // Given any board with a selected coord
             await testUtils.expectClickSuccess('#click_4_0');
@@ -106,7 +110,9 @@ describe('QuixoComponent', () => {
             testUtils.expectElementNotToHaveClass('#click_0_0', 'selected-stroke');
         }));
     });
+
     describe('visuals', () => {
+
         it('should highlight victory', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [O, O, O, O, O],
@@ -125,4 +131,5 @@ describe('QuixoComponent', () => {
             expect(testUtils.getGameComponent().getPieceClasses(4, 0)).toContain('victory-stroke');
         }));
     });
+
 });

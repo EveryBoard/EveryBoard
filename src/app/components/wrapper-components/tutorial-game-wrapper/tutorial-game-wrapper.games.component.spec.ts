@@ -8,7 +8,7 @@ import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
-import { AbstractRules, Rules } from 'src/app/jscaip/Rules';
+import { AbstractRules, ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -321,7 +321,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
-                const rules: Rules<Move, GameState, RulesConfig, unknown> = stepExpectation[0];
+                const rules: ConfigurableRules<Move, GameState, RulesConfig, unknown> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
                 if (step.isPredicate()) {
                     const config: MGPOptional<RulesConfig> = rules.getDefaultRulesConfig();
@@ -348,7 +348,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
                                                                  TutorialGameWrapperComponent))
                         .getGameComponent();
-                const rules: Rules<Move, GameState, RulesConfig, unknown> = gameComponent.rules;
+                const rules: ConfigurableRules<Move, GameState, RulesConfig, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 const config: MGPOptional<RulesConfig> = gameInfo.getRulesConfig();
                 for (const step of steps) {

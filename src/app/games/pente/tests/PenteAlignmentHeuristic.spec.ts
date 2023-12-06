@@ -71,4 +71,5 @@ describe('PenteAlignmentHeuristic', () => {
                                                                Player.ZERO,
                                                                defaultConfig);
     });
+
 });

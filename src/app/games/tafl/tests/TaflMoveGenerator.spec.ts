@@ -39,4 +39,5 @@ describe('TaflMoveGenerator', () => {
         const kingBackOnThrone: BrandhubMove = BrandhubMove.from(new Coord(3, 2), new Coord(3, 3)).get();
         expect(moves).not.toContain(kingBackOnThrone);
     });
+
 });

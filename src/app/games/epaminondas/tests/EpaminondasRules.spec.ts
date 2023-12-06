@@ -316,7 +316,9 @@ describe('EpaminondasRules', () => {
         const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     describe('Victories', () => {
+
         it('should declare first player winner if their pawn survives one turn on last line', () => {
             // Given a board where first player wins
             const board: Table<PlayerOrNone> = [
@@ -431,5 +433,7 @@ describe('EpaminondasRules', () => {
             // Then it should be a win for player one
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
     });
+
 });

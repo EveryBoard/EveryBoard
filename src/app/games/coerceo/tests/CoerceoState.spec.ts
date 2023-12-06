@@ -55,6 +55,7 @@ describe('CoerceoState', () => {
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0]);
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });
+
     });
 
     it('getTilesUpperLeftCoord should assign correct value', () => {
@@ -75,4 +76,5 @@ describe('CoerceoState', () => {
             }
         }
     });
+
 });

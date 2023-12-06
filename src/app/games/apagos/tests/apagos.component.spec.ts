@@ -16,7 +16,9 @@ describe('ApagosComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ApagosComponent>('Apagos');
     }));
+
     describe('show last move', () => {
+
         it('should show only legal drop arrows', fakeAsync(async() => {
             // Given a board where some square are selectable and some not, some square can receive drop some don't
             const state: ApagosState = ApagosState.fromRepresentation(8, [

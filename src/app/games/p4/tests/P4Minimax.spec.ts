@@ -24,4 +24,5 @@ describe('P4Minimax', () => {
                 .toEqual(P4Move.of(3));
         }
     });
+
 });

@@ -8,7 +8,7 @@ import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
 import { GameNode } from './GameNode';
 import { Move } from './Move';
 import { Player } from './Player';
-import { Rules } from './Rules';
+import { ConfigurableRules } from './Rules';
 import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 
 type NodeAndPath<M extends Move, S extends GameState, C extends RulesConfig> = {
@@ -39,7 +39,7 @@ implements AI<M, S, AITimeLimitOptions, C>
 
     public constructor(public readonly name: string,
                        private readonly moveGenerator: MoveGenerator<M, S, C>,
-                       private readonly rules: Rules<M, S, C, L>)
+                       private readonly rules: ConfigurableRules<M, S, C, L>)
     {
         for (let i: number = 1; i < 10; i++) {
             this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });

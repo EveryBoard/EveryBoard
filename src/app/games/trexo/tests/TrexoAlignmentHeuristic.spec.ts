@@ -56,4 +56,5 @@ describe('TrexoHeuristic', () => {
                                                                Player.ZERO,
                                                                defaultConfig);
     });
+
 });

@@ -135,7 +135,7 @@ export class ConfigRoomService {
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
                                totalPartDuration: number,
-                               rulesConfig: RulesConfig)
+                               rulesConfig: MGPOptional<RulesConfig>)
     : Promise<void>
     {
         return this.configRoomDAO.update(configRoomId, {
@@ -145,7 +145,7 @@ export class ConfigRoomService {
             maximalMoveDuration,
             totalPartDuration,
             firstPlayer: firstPlayer.value,
-            rulesConfig,
+            rulesConfig: rulesConfig.getOrElse({}),
         });
     }
 

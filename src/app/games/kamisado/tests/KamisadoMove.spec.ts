@@ -44,4 +44,5 @@ describe('KamisadoMove', () => {
     it('should assign a length of 0 to PASS moves', () => {
         expect(KamisadoMove.PASS.length()).toBe(0);
     });
+
 });

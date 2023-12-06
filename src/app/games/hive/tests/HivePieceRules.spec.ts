@@ -18,6 +18,7 @@ const A: HivePiece = new HivePiece(Player.ZERO, 'SoldierAnt');
 const q: HivePiece = new HivePiece(Player.ONE, 'QueenBee');
 
 describe('HivePieceRules', () => {
+
     it('should compute all possible moves for the queen bee', () => {
         // Given a state with 5 queen bee moves
         const board: Table<HivePiece[]> = [
@@ -121,4 +122,5 @@ describe('HivePieceRules', () => {
         // Then we should have exactly 7 moves
         expect(moves.length).toBe(7);
     });
+
 });

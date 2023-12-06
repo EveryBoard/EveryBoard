@@ -20,4 +20,5 @@ describe('YinshScoreHeuristic', () => {
         const node: YinshNode = new YinshNode(state);
         expect(heuristic.getBoardValue(node, defaultConfig).value * Player.ZERO.getScoreModifier()).toBeGreaterThan(0);
     });
+
 });

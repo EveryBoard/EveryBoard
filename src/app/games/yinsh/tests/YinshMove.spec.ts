@@ -15,7 +15,9 @@ describe('YinshCapture', () => {
             new Coord(6, 3), new Coord(7, 3)];
         expect(() => new YinshCapture(coords2, MGPOptional.of(ringTaken))).toThrowError('YinshCapture must capture exactly 5 pieces');
     });
+
     describe('of', () => {
+
         it('should return the capture with all coords from start to end', () => {
             const markers: Coord[] = [
                 new Coord(2, 3),
@@ -29,8 +31,11 @@ describe('YinshCapture', () => {
                 YinshCapture.of(new Coord(2, 3), new Coord(6, 3), MGPOptional.of(new Coord(4, 4)));
             expect(expectedCapture.equals(capture)).toBeTrue();
         });
+
     });
+
     describe('equals', () => {
+
         it('should consider captures with different ring takens not equal', () => {
             const capture1: YinshCapture =
                 YinshCapture.of(new Coord(2, 3), new Coord(6, 3), MGPOptional.of(new Coord(4, 4)));
@@ -38,11 +43,15 @@ describe('YinshCapture', () => {
                 YinshCapture.of(new Coord(2, 3), new Coord(6, 3), MGPOptional.of(new Coord(5, 4)));
             expect(capture1.equals(capture2)).toBeFalse();
         });
+
     });
+
 });
 
 describe('YinshMove', () => {
+
     describe('encoder', () => {
+
         it('should have a bijective encoder initial placements', () => {
             const move: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
             EncoderTestUtils.expectToBeBijective(YinshMove.encoder, move);
@@ -64,8 +73,11 @@ describe('YinshMove', () => {
                                                                    MGPOptional.of(new Coord(5, 5)))]);
             EncoderTestUtils.expectToBeBijective(YinshMove.encoder, move);
         });
+
     });
+
     describe('isInitialPlacement', () => {
+
         it('should return true for initial placements only', () => {
             const moveWithInitialPlacement: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
             expect(moveWithInitialPlacement.isInitialPlacement()).toBeTrue();
@@ -73,7 +85,9 @@ describe('YinshMove', () => {
                 new YinshMove([], new Coord(2, 3), MGPOptional.of(new Coord(5, 3)), []);
             expect(moveWithoutInitialPlacement.isInitialPlacement()).toBeFalse();
         });
+
     });
+
     describe('equals', () => {
         const move: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
         const capture: YinshCapture =
@@ -107,8 +121,11 @@ describe('YinshMove', () => {
             const differentMove: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), [capture]);
             expect(move.equals(differentMove)).toBeFalse();
         });
+
     });
+
     describe('toString', () => {
+
         it('should be defined for moves without captures', () => {
             const move: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), []);
             expect(move.toString()).toBe('YinshMove([], (2, 3), MGPOptional.empty(), [])');
@@ -123,5 +140,7 @@ describe('YinshMove', () => {
                                                   []);
             expect(move.toString()).toBe('YinshMove([[(2, 3),(3, 3),(4, 3),(5, 3),(6, 3)]], (2, 3), MGPOptional.of((6, 3)), [])');
         });
+
     });
+
 });

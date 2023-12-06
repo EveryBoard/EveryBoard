@@ -5,7 +5,9 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConnectSixMove', () => {
+
     describe('ConnectSixDrops', () => {
+
         describe('from', () => {
 
             it('should not create move where first coord and second coord are the same', () => {

@@ -38,4 +38,5 @@ describe('ApagosMove', () => {
         expect(move.equals(differentMove)).toBeFalse();
         expect(differentMove.equals(otherDifferentMove)).toBeFalse();
     });
+
 });

@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
@@ -16,7 +16,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
 @Debug.log
-export class CoerceoRules extends ConfiglessRules<CoerceoMove, CoerceoState> {
+export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 
     private static singleton: MGPOptional<CoerceoRules> = MGPOptional.empty();
 
@@ -27,7 +27,7 @@ export class CoerceoRules extends ConfiglessRules<CoerceoMove, CoerceoState> {
         return CoerceoRules.singleton.get();
     }
 
-    public getInitialState(): CoerceoState {
+    public override getInitialState(): CoerceoState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
@@ -46,7 +46,10 @@ export class CoerceoRules extends ConfiglessRules<CoerceoMove, CoerceoState> {
         ];
         return new CoerceoState(board, 0, [0, 0], [0, 0]);
     }
-    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    public override applyLegalMove(move: CoerceoMove,
+                                   state: CoerceoState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : CoerceoState
     {
         if (CoerceoMove.isTileExchange(move)) {
@@ -87,7 +90,7 @@ export class CoerceoRules extends ConfiglessRules<CoerceoMove, CoerceoState> {
                                                               afterCaptures.captures);
         return resultingState;
     }
-    public isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
+    public override isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
         if (CoerceoMove.isTileExchange(move)) {
             return this.isLegalTileExchange(move, state);
         } else {

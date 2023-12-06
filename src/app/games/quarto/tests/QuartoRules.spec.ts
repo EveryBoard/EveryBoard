@@ -197,4 +197,5 @@ describe('QuartoRules', () => {
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });
+
 });

@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -16,7 +16,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
-export class LinesOfActionRules extends ConfiglessRules<LinesOfActionMove, LinesOfActionState> {
+export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 
     private static singleton: MGPOptional<LinesOfActionRules> = MGPOptional.empty();
 
@@ -27,7 +27,7 @@ export class LinesOfActionRules extends ConfiglessRules<LinesOfActionMove, Lines
         return LinesOfActionRules.singleton.get();
     }
 
-    public getInitialState(): LinesOfActionState {
+    public override getInitialState(): LinesOfActionState {
         const _: PlayerOrNone = PlayerOrNone.NONE;
         const O: PlayerOrNone = PlayerOrNone.ZERO;
         const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -80,10 +80,10 @@ export class LinesOfActionRules extends ConfiglessRules<LinesOfActionMove, Lines
             }
         }
     }
-    public applyLegalMove(move: LinesOfActionMove,
-                          state: LinesOfActionState,
-                          _config: MGPOptional<EmptyRulesConfig>,
-                          _info: void)
+    public override applyLegalMove(move: LinesOfActionMove,
+                                   state: LinesOfActionState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : LinesOfActionState
     {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
@@ -112,7 +112,7 @@ export class LinesOfActionRules extends ConfiglessRules<LinesOfActionMove, Lines
         }
         return MGPValidation.SUCCESS;
     }
-    public isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
+    public override isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
         return LinesOfActionRules.isLegal(move, state);
     }
     private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Direction): number {

@@ -61,5 +61,7 @@ describe('YinshState', () => {
             const state2: YinshState = new YinshState(board2, [0, 0], 0);
             expect(state1.equals(state2)).toBeFalse();
         });
+
     });
+
 });

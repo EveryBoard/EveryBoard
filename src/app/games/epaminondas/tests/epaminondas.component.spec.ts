@@ -360,6 +360,7 @@ describe('EpaminondasComponent', () => {
         expect(epaminondasComponent.getPieceClasses(0, 10)).toContain('selected-stroke');
         expect(epaminondasComponent.getPieceClasses(0, 11)).toContain('selected-stroke');
     }));
+
     describe('third click behaviour', () => {
         beforeEach(fakeAsync(async() => {
             // Given a board with aligned soldiers that are selected

@@ -22,6 +22,7 @@ describe('KalahRules', () => {
             rules,
             simpleMove: MancalaMove.of(MancalaDistribution.of(5)),
         });
+
     });
 
     describe('distribution', () => {

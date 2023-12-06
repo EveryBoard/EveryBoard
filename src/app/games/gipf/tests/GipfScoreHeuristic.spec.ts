@@ -70,4 +70,5 @@ describe('GipfScoreHeuristic', () => {
                                                                Player.ONE,
                                                                defaultConfig);
     });
+
 });

@@ -2,7 +2,7 @@
 import { GameNode } from '../GameNode';
 import { Move } from '../Move';
 import { Player } from '../Player';
-import { Rules } from '../Rules';
+import { ConfigurableRules } from '../Rules';
 import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -13,7 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class RulesUtils {
 
-    public static expectMoveSuccess<R extends Rules<M, S, C, L>,
+    public static expectMoveSuccess<R extends ConfigurableRules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
                                     L,
@@ -41,7 +41,7 @@ export class RulesUtils {
         }
     }
 
-    public static expectMoveFailure<R extends Rules<M, S, C, L>,
+    public static expectMoveFailure<R extends ConfigurableRules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
                                     L,
@@ -58,7 +58,7 @@ export class RulesUtils {
         expect(legality.getReason()).toBe(reason);
     }
 
-    public static expectToBeVictoryFor<R extends Rules<M, S, C, L>,
+    public static expectToBeVictoryFor<R extends ConfigurableRules<M, S, C, L>,
                                        M extends Move,
                                        S extends GameState,
                                        L,
@@ -74,7 +74,7 @@ export class RulesUtils {
             .toEqual(GameStatus.getVictory(player));
     }
 
-    public static expectToBeOngoing<R extends Rules<M, S, C, L>,
+    public static expectToBeOngoing<R extends ConfigurableRules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
                                     L,
@@ -87,7 +87,7 @@ export class RulesUtils {
         expect(rules.getGameStatus(node, config)).toEqual(GameStatus.ONGOING);
     }
 
-    public static expectToBeDraw<R extends Rules<M, S, C, L>,
+    public static expectToBeDraw<R extends ConfigurableRules<M, S, C, L>,
                                  M extends Move,
                                  S extends GameState,
                                  L,
@@ -110,7 +110,7 @@ export class RulesUtils {
     public static applyMoves<S extends GameState,
                              M extends Move,
                              L,
-                             C extends RulesConfig>(ruler: Rules<M, S, C, L>,
+                             C extends RulesConfig>(ruler: ConfigurableRules<M, S, C, L>,
                                                     encodedMoves: JSONValue[],
                                                     state: S,
                                                     moveDecoder: (em: JSONValue) => M,

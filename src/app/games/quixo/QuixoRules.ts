@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { QuixoConfig, QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -20,7 +20,7 @@ import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState, QuixoConfig> {}
 
-export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
+export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoConfig> {
 
     private static singleton: MGPOptional<QuixoRules> = MGPOptional.empty();
 
@@ -122,7 +122,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
         return MGPOptional.of(QuixoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public getInitialState(config: MGPOptional<QuixoConfig>): QuixoState {
+    public override getInitialState(config: MGPOptional<QuixoConfig>): QuixoState {
         const initialBoard: PlayerOrNone[][] = TableUtils.create(config.get().width,
                                                                  config.get().height,
                                                                  PlayerOrNone.NONE);
@@ -165,13 +165,13 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState, QuixoConfig> {
                      `Invalid direction: pawn on the top side can't be moved up.`);
     }
 
-    public applyLegalMove(move: QuixoMove, state: QuixoState, _config: MGPOptional<QuixoConfig>, _info: void)
+    public override applyLegalMove(move: QuixoMove, state: QuixoState, _config: MGPOptional<QuixoConfig>, _info: void)
     : QuixoState
     {
         return state.applyLegalMove(move);
     }
 
-    public isLegal(move: QuixoMove, state: QuixoState): MGPValidation {
+    public override isLegal(move: QuixoMove, state: QuixoState): MGPValidation {
         const coordValidity: MGPValidation = this.isValidCoord(state, move.coord);
         if (coordValidity.isFailure()) {
             return coordValidity;

@@ -19,7 +19,9 @@ describe('P4Move', () => {
         });
 
     });
+
     describe('equals', () => {
+
         it('should consider identical move equal', () => {
             const move: P4Move = P4Move.of(5);
             expect(move.equals(move)).toBeTrue();
@@ -30,16 +32,21 @@ describe('P4Move', () => {
             const move2: P4Move = P4Move.of(6);
             expect(move1.equals(move2)).toBeFalse();
         });
+
     });
 
     it('should have a bijective encoder', () => {
         const move: P4Move = P4Move.of(3);
         EncoderTestUtils.expectToBeBijective(P4Move.encoder, move);
     });
+
     describe('toString', () => {
+
         it('should contain information on the column', () => {
             const move: P4Move = P4Move.of(1);
             expect(move.toString()).toBe('P4Move(1)');
         });
+
     });
+
 });

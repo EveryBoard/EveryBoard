@@ -44,9 +44,11 @@ describe('GipfState', () => {
         it('should start at turn 0', () => {
             expect(state.turn).toBe(0);
         });
+
     });
 
     describe('equals', () => {
+
         it('should detect that a state is equal to itself', () => {
             const board: Table<FourStatePiece> = [
                 [_, _, _, _, A, _, _],
@@ -134,5 +136,7 @@ describe('GipfState', () => {
             const state3: GipfState = new GipfState(board, 5, [5, 5], [1, 0]);
             expect(state1.equals(state3)).toBeFalse();
         });
+
     });
+
 });

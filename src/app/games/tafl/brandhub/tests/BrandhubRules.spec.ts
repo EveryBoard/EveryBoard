@@ -397,4 +397,5 @@ describe('BrandhubRules', () => {
         const expectedState: TaflState = new TaflState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
 });

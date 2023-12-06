@@ -32,7 +32,9 @@ describe('LascaRules', () => {
     beforeEach(() => {
         rules = LascaRules.get();
     });
+
     describe('Move', () => {
+
         it('should forbid move when first coord is empty', () => {
             // Given any board
             const state: LascaState = LascaRules.get().getInitialState();
@@ -108,8 +110,11 @@ describe('LascaRules', () => {
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('Capture', () => {
+
         it('should forbid continuing move after last capture', () => {
             // Given a board with a possible capture
             const state: LascaState = LascaState.of([
@@ -382,8 +387,11 @@ describe('LascaRules', () => {
             ], 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('Promotion', () => {
+
         it('should promote the commander of a stack that reached last line', () => {
             // Given a board where a stack is about to reach final line
             const state: LascaState = LascaState.of([
@@ -439,8 +447,11 @@ describe('LascaRules', () => {
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('End Game', () => {
+
         it(`should declare current player winner when opponent has no more commander`, () => {
             // Given a board where Player.ONE have no more commander
             // When evaluating its value
@@ -474,5 +485,7 @@ describe('LascaRules', () => {
             const node: LascaNode = new LascaNode(expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
     });
+
 });

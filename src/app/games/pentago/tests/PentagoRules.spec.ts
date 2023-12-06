@@ -140,7 +140,9 @@ describe('PentagoRules', () => {
         const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
+
     describe('victories', () => {
+
         it('it should notice victory', () => {
             const board: Table<PlayerOrNone> = [
                 [O, _, _, O, _, _],
@@ -215,5 +217,7 @@ describe('PentagoRules', () => {
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
+
     });
+
 });

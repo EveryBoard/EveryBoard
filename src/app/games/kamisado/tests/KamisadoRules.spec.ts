@@ -36,7 +36,9 @@ describe('KamisadoRules', () => {
     it('should be created', () => {
         expect(rules).toBeTruthy();
     });
+
     describe('Allowed moves', () => {
+
         it('should allow vertical moves without obstacles', () => {
             // Given a board
             const board: Table<KamisadoPiece> = [
@@ -128,8 +130,11 @@ describe('KamisadoRules', () => {
                 new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('Forbidden moves', () => {
+
         it('should forbid moves landing on occupied space', () => {
             // Given any board
             const board: Table<KamisadoPiece> = [
@@ -353,8 +358,11 @@ describe('KamisadoRules', () => {
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('Endgames', () => {
+
         it('should detect victory for Player.ONE', () => {
             // Given a board where Player.ONE just landed on last line
             const board: Table<KamisadoPiece> = [
@@ -416,10 +424,12 @@ describe('KamisadoRules', () => {
             // Then it should be victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
     });
 
     it('should not allow creating invalid color', () => {
         expect(() => KamisadoColor.of(15)).toThrowError();
         expect(KamisadoColor.of(0)).toBe(KamisadoColor.ANY);
     });
+
 });

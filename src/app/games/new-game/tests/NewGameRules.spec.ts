@@ -3,6 +3,8 @@ import { NewGameMove } from '../NewGameMove';
 import { NewGameConfig, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Utils } from 'src/app/utils/utils';
+import { ConfigLine } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 /**
  * This is the test suite for the rules
@@ -43,4 +45,12 @@ describe('NewGameRules', () => {
         // Or you could use this
         // RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
+    it('Should have valid ConfigLine ou quoi que ce soye !', () => {
+        // For coverage
+        // eslint-disable-next-line max-len
+        const fieldUnderTest: ConfigLine = NewGameRules.RULES_CONFIG_DESCRIPTION.defaultConfigDescription.config.the_name_you_will_use_in_your_rules_and_states;
+        expect(Utils.getNonNullable(fieldUnderTest.validator)(null)).toBeTruthy();
+    });
+
 });

@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { Player } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -20,7 +20,7 @@ export type YinshLegalityInformation = YinshState;
 
 export class YinshNode extends GameNode<YinshMove, YinshState> {}
 
-export class YinshRules extends ConfiglessRules<YinshMove, YinshState, YinshLegalityInformation> {
+export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInformation> {
 
     private static singleton: MGPOptional<YinshRules> = MGPOptional.empty();
 
@@ -31,7 +31,7 @@ export class YinshRules extends ConfiglessRules<YinshMove, YinshState, YinshLega
         return YinshRules.singleton.get();
     }
 
-    public getInitialState(): YinshState {
+    public override getInitialState(): YinshState {
         const _: YinshPiece = YinshPiece.EMPTY;
         const N: YinshPiece = YinshPiece.UNREACHABLE;
         const board: Table<YinshPiece> = [
@@ -50,10 +50,10 @@ export class YinshRules extends ConfiglessRules<YinshMove, YinshState, YinshLega
         return new YinshState(board, [5, 5], 0);
     }
 
-    public applyLegalMove(_move: YinshMove,
-                          _state: YinshState,
-                          _config: MGPOptional<EmptyRulesConfig>,
-                          info: YinshState)
+    public override applyLegalMove(_move: YinshMove,
+                                   _state: YinshState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   info: YinshState)
     : YinshState
     {
         const stateWithoutTurn: YinshState = info;
@@ -116,7 +116,7 @@ export class YinshRules extends ConfiglessRules<YinshMove, YinshState, YinshLega
         return newState;
     }
 
-    public isLegal(move: YinshMove, state: YinshState): MGPFallible<YinshLegalityInformation> {
+    public override isLegal(move: YinshMove, state: YinshState): MGPFallible<YinshLegalityInformation> {
         if (move.isInitialPlacement()) {
             return this.initialPlacementValidity(state, move.start);
         }

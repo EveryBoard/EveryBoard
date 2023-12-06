@@ -36,4 +36,5 @@ describe('TeekoHeuristic', () => {
         // Then it should be the negative number of possible victories for Player.ZERO
         expect(boardValue).toBe(-12);
     });
+
 });

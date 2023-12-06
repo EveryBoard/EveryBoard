@@ -24,7 +24,9 @@ describe('PentagoComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('first click', () => {
+
         it('should do move in one click when click make all block are neutral', fakeAsync(async() => {
             const move: PentagoMove = PentagoMove.rotationless(1, 1);
             await testUtils.expectMoveSuccess('#click_1_1', move);
@@ -86,7 +88,9 @@ describe('PentagoComponent', () => {
             testUtils.expectElementNotToExist('#last_rotation_3_counterclockwise');
         }));
     });
+
     describe('second click', () => {
+
         it('should show a "skip rotation button" when there is both neutral and non-neutral blocks', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_0_0');
             const move: PentagoMove = PentagoMove.rotationless(0, 0);

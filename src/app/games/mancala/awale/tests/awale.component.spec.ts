@@ -109,13 +109,13 @@ describe('AwaleComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
 
             // Then this should trigger a single distribution move
-            // await testUtils.expectMoveSuccess('#click_0_1', move, 1500);
-            // const expectedState: MancalaState = new MancalaState([
-            //     [5, 5, 5, 5, 4, 4],
-            //     [0, 5, 5, 0, 4, 4],
-            // ], 1, [2, 0]);
-            // const actualState: MancalaState = testUtils.getGameComponent().getState();
-            // expect(actualState).toEqual(expectedState);
+            await testUtils.expectMoveSuccess('#click_0_1', move, 1500);
+            const expectedState: MancalaState = new MancalaState([
+                [5, 5, 5, 5, 4, 4],
+                [0, 5, 5, 0, 4, 4],
+            ], 1, [2, 0]);
+            const actualState: MancalaState = testUtils.getGameComponent().getState();
+            expect(actualState).toEqual(expectedState);
         }));
 
     });

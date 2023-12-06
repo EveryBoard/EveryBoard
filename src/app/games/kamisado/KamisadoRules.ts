@@ -7,7 +7,7 @@ import { KamisadoState } from './KamisadoState';
 import { KamisadoPiece } from './KamisadoPiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { KamisadoFailure } from './KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -19,7 +19,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class KamisadoNode extends GameNode<KamisadoMove, KamisadoState> {}
 
-export class KamisadoRules extends ConfiglessRules<KamisadoMove, KamisadoState> {
+export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
 
     private static singleton: MGPOptional<KamisadoRules> = MGPOptional.empty();
 
@@ -30,7 +30,7 @@ export class KamisadoRules extends ConfiglessRules<KamisadoMove, KamisadoState> 
         return KamisadoRules.singleton.get();
     }
 
-    public getInitialState(): KamisadoState {
+    public override getInitialState(): KamisadoState {
         return new KamisadoState(0,
                                  KamisadoColor.ANY,
                                  MGPOptional.empty(),
@@ -177,7 +177,10 @@ export class KamisadoRules extends ConfiglessRules<KamisadoMove, KamisadoState> 
     }
 
     // Apply the move by only relying on tryMove
-    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    public override applyLegalMove(move: KamisadoMove,
+                                   state: KamisadoState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : KamisadoState
     {
         if (KamisadoMove.isPiece(move)) {
@@ -205,7 +208,7 @@ export class KamisadoRules extends ConfiglessRules<KamisadoMove, KamisadoState> 
         }
     }
 
-    public isLegal(move: KamisadoMove, state: KamisadoState): MGPValidation {
+    public override isLegal(move: KamisadoMove, state: KamisadoState): MGPValidation {
         return KamisadoRules.isLegal(move, state);
     }
 

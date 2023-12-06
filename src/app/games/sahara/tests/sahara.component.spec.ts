@@ -25,7 +25,9 @@ describe('SaharaComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click', () => {
+
         it('should not allow to click on empty space when no pyramid selected', fakeAsync(async() => {
             // Given the initial board
             // When clicking on empty space, expect move to be refused
@@ -49,7 +51,9 @@ describe('SaharaComponent', () => {
             testUtils.expectElementToExist('#possible_landing_6_1');
         }));
     });
+
     describe('Second click', () => {
+
         it('should not allow to land on opponent pyramid', fakeAsync(async() => {
             // Given the initial board on which a piece is selected
             await testUtils.expectClickSuccess('#click_2_0');

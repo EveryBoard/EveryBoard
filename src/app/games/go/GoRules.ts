@@ -7,7 +7,7 @@ import { GoGroupDatas } from './GoGroupsDatas';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
@@ -28,7 +28,7 @@ export type GoConfig = GobanConfig & {
 export class GoNode extends GameNode<GoMove, GoState, GoConfig> {}
 
 @Debug.log
-export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformation> {
+export class GoRules extends ConfigurableRules<GoMove, GoState, GoConfig, GoLegalityInformation> {
 
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
 
@@ -63,7 +63,7 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         return GoRules.singleton.get();
     }
 
-    public getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {
+    public override getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {
         const config: GoConfig = optionalConfig.get();
         const board: GoPiece[][] = GoState.getStartingBoard(config);
         let turn: number = 0;
@@ -485,14 +485,14 @@ export class GoRules extends Rules<GoMove, GoState, GoConfig, GoLegalityInformat
         return GoRules.markTerritoryAndCount(resultingState);
     }
 
-    public isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
+    public override isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         return GoRules.isLegal(move, state);
     }
 
-    public applyLegalMove(legalMove: GoMove,
-                          state: GoState,
-                          _config: MGPOptional<GoConfig>,
-                          infos: GoLegalityInformation)
+    public override applyLegalMove(legalMove: GoMove,
+                                   state: GoState,
+                                   _config: MGPOptional<GoConfig>,
+                                   infos: GoLegalityInformation)
     : GoState
     {
         if (GoRules.isPass(legalMove)) {

@@ -4,7 +4,7 @@ import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GipfMove, GipfPlacement } from './GipfMove';
@@ -22,7 +22,7 @@ export type GipfLegalityInformation = GipfState
 
 export class GipfNode extends GameNode<GipfMove, GipfState> {}
 
-export class GipfRules extends ConfiglessRules<GipfMove, GipfState, GipfLegalityInformation> {
+export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformation> {
 
     private static singleton: MGPOptional<GipfRules> = MGPOptional.empty();
 
@@ -33,7 +33,7 @@ export class GipfRules extends ConfiglessRules<GipfMove, GipfState, GipfLegality
         return GipfRules.singleton.get();
     }
 
-    public getInitialState(): GipfState {
+    public override getInitialState(): GipfState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
@@ -50,10 +50,10 @@ export class GipfRules extends ConfiglessRules<GipfMove, GipfState, GipfLegality
         return new GipfState(board, 0, [12, 12], [0, 0]);
     }
 
-    public applyLegalMove(_move: GipfMove,
-                          _state: GipfState,
-                          _config: MGPOptional<EmptyRulesConfig>,
-                          computedState: GipfLegalityInformation)
+    public override applyLegalMove(_move: GipfMove,
+                                   _state: GipfState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   computedState: GipfLegalityInformation)
     : GipfState
     {
         return new GipfState(computedState.board,
@@ -198,7 +198,7 @@ export class GipfRules extends ConfiglessRules<GipfMove, GipfState, GipfLegality
         }
     }
 
-    public isLegal(move: GipfMove, state: GipfState): MGPFallible<GipfLegalityInformation> {
+    public override isLegal(move: GipfMove, state: GipfState): MGPFallible<GipfLegalityInformation> {
         const initialCapturesValidity: MGPValidation = this.capturesValidity(state, move.initialCaptures);
         if (initialCapturesValidity.isFailure()) {
             return initialCapturesValidity.toOtherFallible();

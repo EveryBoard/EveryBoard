@@ -32,7 +32,9 @@ describe('CoerceoComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('visual features', () => {
+
         it('should show tile when more than zero', fakeAsync(async() => {
             const board: Table<FourStatePiece> = CoerceoRules.get().getInitialState().getCopiedBoard();
             const state: CoerceoState = new CoerceoState(board, 0, [1, 0], [0, 0]);
@@ -123,7 +125,9 @@ describe('CoerceoComponent', () => {
             expectCoordToBeOfRemovedFill(10, 7);
         }));
     });
+
     describe('First click', () => {
+
         it('should refuse tiles exchange when player have no tiles', fakeAsync(async() => {
             // Given a board without tiles (the initial one here)
             // When clicking on an opponent piece
@@ -170,7 +174,9 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementNotToExist('#last_end_7_3');
         }));
     });
+
     describe('Second click', () => {
+
         it('should allow simple move', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_6_2');
             const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
@@ -227,7 +233,9 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementToHaveClass('#last_end_7_3', 'last-move-stroke');
         }));
     });
+
     describe('showLastMove', () => {
+
         it('should work for tile exchange', fakeAsync(async() => {
             // Given a board where last move was a piece move
             const board: FourStatePiece[][] = [
@@ -257,4 +265,5 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementToHaveClass('#pyramid_6_9', 'captured-fill');
         }));
     });
+
 });

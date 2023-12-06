@@ -8,6 +8,7 @@ const q: HivePiece = new HivePiece(Player.ONE, 'QueenBee');
 const b: HivePiece = new HivePiece(Player.ONE, 'Beetle');
 
 describe('HivePiece', () => {
+
     it('should define toString', () => {
         expect(Q.toString()).toEqual('QueenBee_PLAYER_ZERO');
     });
@@ -17,9 +18,11 @@ describe('HivePiece', () => {
         expect(Q.equals(q)).toBeFalse();
         expect(Q.equals(B)).toBeFalse();
     });
+
 });
 
 describe('HivePieceStack', () => {
+
     it('should redefine equals', () => {
         const emptyStack: HivePieceStack = HivePieceStack.EMPTY;
         const onePieceStack: HivePieceStack = new HivePieceStack([Q]);
@@ -30,4 +33,5 @@ describe('HivePieceStack', () => {
         expect(twoPiecesStack.equals(otherTwoPiecesStack)).toBeFalse();
         expect(twoPiecesStack.equals(twoPiecesStack)).toBeTrue();
     });
+
 });

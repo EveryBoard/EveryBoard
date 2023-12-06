@@ -1,7 +1,7 @@
 import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
 import { Move } from './Move';
 import { BoardValue } from './BoardValue';
-import { Rules } from './Rules';
+import { ConfigurableRules } from './Rules';
 import { GameState } from './GameState';
 import { MGPSet } from '../utils/MGPSet';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -69,7 +69,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
     public readonly availableOptions: AIDepthLimitOptions[] = [];
 
     public constructor(public readonly name: string,
-                       private readonly rules: Rules<M, S, C, L>,
+                       private readonly rules: ConfigurableRules<M, S, C, L>,
                        private readonly heuristic: Heuristic<M, S, BoardValue, C>,
                        private readonly moveGenerator: MoveGenerator<M, S, C>)
     {

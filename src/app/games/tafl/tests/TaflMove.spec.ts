@@ -29,9 +29,11 @@ describe('TaflMove', () => {
             TestUtils.expectToThrowAndLog(() => MyTaflMove.from(inRange, outOfRange),
                                           'Landing coord of TaflMove must be on the board, not at (-1, -1).');
         });
+
     });
 
     describe('isValidDirection', () => {
+
         it('should report diagonal moves', () => {
             const validity: MGPValidation = TaflMove.isValidDirection(new Coord(0, 0), new Coord(1, 1));
             const reason: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
@@ -43,6 +45,7 @@ describe('TaflMove', () => {
             const reason: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
             MGPValidationTestUtils.expectToBeFailure(validity, reason);
         });
+
     });
 
     it('should override equals and toString correctly', () => {
@@ -60,4 +63,5 @@ describe('TaflMove', () => {
 
         expect(move.toString()).toEqual('TaflMove((0, 0)->(0, 1))');
     });
+
 });

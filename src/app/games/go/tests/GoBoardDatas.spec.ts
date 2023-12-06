@@ -62,4 +62,5 @@ describe('GoBoardDatas', () => {
         expect(darkGroupInfos.coords.length).toBe(1, 'Dark group is composed of two stones');
         expect(darkGroupInfos.neighborsEntryPoints).toEqual([new Coord(1, 3), new Coord(2, 2)]);
     });
+
 });

@@ -26,7 +26,9 @@ describe('LinesOfActionComponent', () => {
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click', () => {
+
         it('should forbid selecting a piece that has no valid targets', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [X, O, O, O, O, O, O, _],
@@ -61,7 +63,9 @@ describe('LinesOfActionComponent', () => {
             testUtils.expectElementToHaveClass('#piece_2_0', 'selected-stroke');
         }));
     });
+
     describe('Second click', () => {
+
         it('should allow a simple move', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_2_0');
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();

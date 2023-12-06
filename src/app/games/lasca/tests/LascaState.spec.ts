@@ -8,19 +8,25 @@ describe('LascaPiece ', () => {
     const u: LascaPiece = LascaPiece.ZERO;
 
     describe('toString', () => {
+
         it('should display officer piece as the player owning them and non officer as half of it', () => {
             expect(X.toString()).toBe('X');
             expect(O.toString()).toBe('O');
             expect(v.toString()).toBe('v');
             expect(u.toString()).toBe('u');
         });
+
     });
+
     describe('equal', () => {
+
         it('should work', () => {
             expect(X.equals(X)).toBeTrue();
             expect(X.equals(O)).toBeFalse();
         });
+
     });
+
 });
 
 describe('LascaState', () => {
@@ -37,6 +43,7 @@ describe('LascaState', () => {
     const __X: LascaStack = new LascaStack([oneOfficer]);
     const ___: LascaStack = LascaStack.EMPTY;
     describe('toString', () => {
+
         it('should display state', () => {
             const state: LascaState = LascaState.of([
                 [_uv, ___, __v, ___, __v, ___, __v],
@@ -56,5 +63,7 @@ __ _X __ _u __ _u __
 _u __ __ __ _u __ _u`;
             expect(state.toString()).toBe(representation);
         });
+
     });
+
 });

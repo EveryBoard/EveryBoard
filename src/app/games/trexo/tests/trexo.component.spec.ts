@@ -280,7 +280,9 @@ describe('TrexoComponent', () => {
             });
         }
     });
+
     describe(`view`, () => {
+
         it(`should provide a button to switch 2D`, fakeAsync(async() => {
             // Given a component just started
             // When clicking on the switchTo2D button
@@ -346,4 +348,5 @@ describe('TrexoComponent', () => {
             testUtils.expectElementToHaveClass('#tile_4_4_1', 'player1-fill');
         }));
     });
+
 });

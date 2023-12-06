@@ -350,4 +350,5 @@ describe('LinesOfActionRules', () => {
             new Coord(1, 3), new Coord(1, 1),
         ]);
     });
+
 });

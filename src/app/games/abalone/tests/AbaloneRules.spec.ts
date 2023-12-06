@@ -421,4 +421,5 @@ describe('AbaloneRules', () => {
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
 });

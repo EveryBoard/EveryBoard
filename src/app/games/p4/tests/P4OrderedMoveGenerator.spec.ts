@@ -23,4 +23,5 @@ describe('P4OrderedMoveGenerator', () => {
         // Then it should have the center as the first move
         expect(moves[0]).toEqual(P4Move.of(3));
     });
+
 });

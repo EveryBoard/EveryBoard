@@ -32,6 +32,7 @@ describe('ConspirateursRules', () => {
         return ConspirateursMoveJump.from(coords).get();
     }
     describe('drop moves', () => {
+
         it('should allow drops within the center zone', () => {
             // Given the initial state
             const state: ConspirateursState = ConspirateursRules.get().getInitialState();
@@ -125,8 +126,11 @@ describe('ConspirateursRules', () => {
             const reason: string = ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('simple moves', () => {
+
         it('should allow simple moves', () => {
             // Given a fictitious board after the drop phase, with one piece
             const state: ConspirateursState = new ConspirateursState([
@@ -284,8 +288,11 @@ describe('ConspirateursRules', () => {
             const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('jump moves', () => {
+
         it('should allow one jump over a piece', () => {
             // Given a fictitious board after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -517,8 +524,11 @@ describe('ConspirateursRules', () => {
             const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('win', () => {
+
         it('should consider game ongoing as long as both players have not reached the win condition', () => {
             // Given a state with no victory
             const state: ConspirateursState = ConspirateursRules.get().getInitialState();
@@ -578,6 +588,7 @@ describe('ConspirateursRules', () => {
             // Then the victory should be detected for player 1
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
     });
 
     it('should not compute jumps that go out of the board', () => {
@@ -585,4 +596,5 @@ describe('ConspirateursRules', () => {
         // Then the jumps out of the board are not returned
         expect(rules.jumpTargetsFrom(new Coord(1, 0)).length).toBe(3);
     });
+
 });

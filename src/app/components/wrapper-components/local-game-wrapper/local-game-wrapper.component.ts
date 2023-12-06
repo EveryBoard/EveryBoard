@@ -9,7 +9,7 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { GameState } from 'src/app/jscaip/GameState';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -58,9 +58,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.setDefaultRulesConfig();
     }
 
-    // Will set the default rules config
-    // Will set it to MGPOptional.empty() if the game doesn't exist, but an error will be handled by some other function
-    // Because rules that don't override their rules have MGPOptional.empty() value
+    // Will set the default rules config.
+    // Will set it to MGPOptional.empty() if the game doesn't exist, but an error will be handled by another function.
+    // ConfiglessRules have MGPOptional.empty() value.
     private setDefaultRulesConfig(): void {
         const gameName: string = this.getGameName();
         this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);
@@ -201,7 +201,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
         // called only when it's AI's Turn
-        const ruler: Rules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
+        const ruler: ConfigurableRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node, config);
         Utils.assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');

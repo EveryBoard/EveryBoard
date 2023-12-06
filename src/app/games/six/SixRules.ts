@@ -8,7 +8,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
@@ -28,7 +28,7 @@ export interface SixVictorySource {
 }
 
 @Debug.log
-export class SixRules extends ConfiglessRules<SixMove, SixState, SixLegalityInformation> {
+export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
 
     private static singleton: MGPOptional<SixRules> = MGPOptional.empty();
 
@@ -41,15 +41,15 @@ export class SixRules extends ConfiglessRules<SixMove, SixState, SixLegalityInfo
         return SixRules.singleton.get();
     }
 
-    public getInitialState(): SixState {
+    public override getInitialState(): SixState {
         const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
         return SixState.ofRepresentation(board, 0);
     }
 
-    public applyLegalMove(move: SixMove,
-                          state: SixState,
-                          _config: MGPOptional<EmptyRulesConfig>,
-                          kept: SixLegalityInformation)
+    public override applyLegalMove(move: SixMove,
+                                   state: SixState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   kept: SixLegalityInformation)
     : SixState
     {
         if (state.turn < 40) {
@@ -59,7 +59,7 @@ export class SixRules extends ConfiglessRules<SixMove, SixState, SixLegalityInfo
         }
     }
 
-    public isLegal(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
+    public override isLegal(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start);
         if (landingLegality.isFailure()) {
             return landingLegality.toOtherFallible();

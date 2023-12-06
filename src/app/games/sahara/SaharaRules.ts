@@ -1,4 +1,4 @@
-import { ConfiglessRules } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -20,7 +20,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
 @Debug.log
-export class SaharaRules extends ConfiglessRules<SaharaMove, SaharaState> {
+export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     private static singleton: MGPOptional<SaharaRules> = MGPOptional.empty();
 
@@ -31,7 +31,7 @@ export class SaharaRules extends ConfiglessRules<SaharaMove, SaharaState> {
         return SaharaRules.singleton.get();
     }
 
-    public getInitialState(): SaharaState {
+    public override getInitialState(): SaharaState {
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
         const X: FourStatePiece = FourStatePiece.ONE;
@@ -72,7 +72,10 @@ export class SaharaRules extends ConfiglessRules<SaharaMove, SaharaState> {
         return playerFreedoms.sort((a: number, b: number) => a - b);
     }
 
-    public applyLegalMove(move: SaharaMove, state: SaharaState, _config: MGPOptional<EmptyRulesConfig>, _info: void)
+    public override applyLegalMove(move: SaharaMove,
+                                   state: SaharaState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
     : SaharaState
     {
         const board: FourStatePiece[][] = state.getCopiedBoard();
@@ -81,7 +84,7 @@ export class SaharaRules extends ConfiglessRules<SaharaMove, SaharaState> {
         const resultingState: SaharaState = new SaharaState(board, state.turn + 1);
         return resultingState;
     }
-    public isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
+    public override isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
         const movedPawn: FourStatePiece = state.getPieceAt(move.getStart());
         if (movedPawn.value !== state.getCurrentPlayer().value) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
