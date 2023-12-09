@@ -540,14 +540,11 @@ export class TestUtils {
 
     public static expectToThrowAndLog(func: () => void, error: string): void {
         if (jasmine.isSpy(ErrorLoggerService.logError) === false) {
-            console.log('>>> we will make a spy out of ErrorLoggerService.logError')
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         }
-        console.log('>>> calling the call back')
         expect(func)
             .withContext('Expected Assertion failure: ' + error)
             .toThrowError('Assertion failure: ' + error);
-        console.log('>>> call back is called')
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
     }
 
