@@ -75,7 +75,9 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     public async onLegalUserMove(_move: Move, _scores?: [number, number] | undefined): Promise<void> {
-        return;
+        console.log('henlo')
+        Utils.assert(false, 'this should not be usefull, right ?');
+        console.log('onLegalUserMove finished')
     }
 
     public override getPlayer(): string {

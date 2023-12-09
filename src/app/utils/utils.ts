@@ -161,6 +161,7 @@ export class Utils {
             // we don't want to execute the code after the assertion.
             // Otherwise, this could result in potentially very serious issues.
             ErrorLoggerService.logError('Assertion failure', message);
+            console.log('Throwage de mon jaaj: ', message)
             throw new Error(`Assertion failure: ${message}`);
         }
     }
