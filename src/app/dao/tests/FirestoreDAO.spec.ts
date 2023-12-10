@@ -214,7 +214,6 @@ xdescribe('FirestoreDAO', () => {
             const subDAO: FirestoreDAO<FirestoreJSONObject> =
                 fooDAO.subCollectionDAO('foo', 'sub') as FirestoreDAO<FirestoreJSONObject>;
             // Then it should have the right path
-            // eslint-disable-next-line dot-notation
             const subDAOPath: string = subDAO.collection.path;
             expect(subDAOPath).toEqual(path + '/foo/sub');
         });

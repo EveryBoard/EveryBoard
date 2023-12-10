@@ -3,14 +3,13 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
-import { QuixoState } from 'src/app/games/quixo/QuixoState';
+import { QuixoConfig, QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { QuixoTutorial } from './QuixoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
@@ -22,7 +21,12 @@ import { QuixoHeuristic } from './QuixoHeuristic';
     templateUrl: './quixo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMove, QuixoState, PlayerOrNone> {
+export class QuixoComponent extends RectangularGameComponent<QuixoRules,
+                                                             QuixoMove,
+                                                             QuixoState,
+                                                             PlayerOrNone,
+                                                             QuixoConfig>
+{
 
     public QuixoState: typeof QuixoState = QuixoState;
 
@@ -38,14 +42,12 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = QuixoRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Quixo');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new QuixoHeuristic(), new QuixoMoveGenerator()),
             new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),
         ];
         this.encoder = QuixoMove.encoder;
-        this.tutorial = new QuixoTutorial().tutorial;
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -77,7 +79,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: Coord = new Coord(x, y);
-        const coordLegality: MGPValidation = QuixoMove.isValidCoord(clickedCoord);
+        const state: QuixoState = this.getState();
+        const coordLegality: MGPValidation = this.rules.isValidCoord(state, clickedCoord);
         if (coordLegality.isFailure()) {
             return this.cancelMove(coordLegality.getReason());
         }
@@ -96,9 +99,10 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     public getPossiblesDirections(): Orthogonal[] {
         const directions: Orthogonal[] = [];
         const chosenCoord: Coord = this.chosenCoord.get();
-        if (chosenCoord.x !== QuixoState.SIZE - 1) directions.push(Orthogonal.RIGHT);
+        const state: QuixoState = this.getState();
+        if (chosenCoord.x !== state.getWidth() - 1) directions.push(Orthogonal.RIGHT);
         if (chosenCoord.x !== 0) directions.push(Orthogonal.LEFT);
-        if (chosenCoord.y !== QuixoState.SIZE) directions.push(Orthogonal.DOWN);
+        if (chosenCoord.y !== state.getHeight()) directions.push(Orthogonal.DOWN);
         if (chosenCoord.y !== 0) directions.push(Orthogonal.UP);
         return directions;
     }
@@ -121,7 +125,10 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     }
 
     public getArrowTransform(orientation: Orthogonal): string {
-        return GameComponentUtils.getArrowTransform(QuixoState.SIZE * this.SPACE_SIZE, orientation);
+        const state: QuixoState = this.getState();
+        const boardWidth: number = state.getWidth() * this.SPACE_SIZE;
+        const boardHeight: number = state.getHeight() * this.SPACE_SIZE;
+        return GameComponentUtils.getArrowTransform(boardWidth, boardHeight, orientation);
     }
 
 }

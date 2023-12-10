@@ -1,9 +1,8 @@
-import { TeekoRules } from './TeekoRules';
+import { TeekoConfig, TeekoRules } from './TeekoRules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TeekoTutorial } from './TeekoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -24,7 +23,8 @@ import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 export class TeekoComponent extends RectangularGameComponent<TeekoRules,
                                                              TeekoMove,
                                                              TeekoState,
-                                                             PlayerOrNone>
+                                                             PlayerOrNone,
+                                                             TeekoConfig>
 {
     public selected: MGPOptional<Coord> = MGPOptional.empty();
     public last: MGPOptional<Coord> = MGPOptional.empty();
@@ -33,14 +33,12 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = TeekoRules.get();
-        this.node = this.rules.getInitialNode();
-        this.encoder = TeekoMove.encoder;
-        this.tutorial = new TeekoTutorial().tutorial;
+        this.setRulesAndNode('Teeko');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new TeekoHeuristic(), new TeekoMoveGenerator()),
             new MCTS($localize`MCTS`, new TeekoMoveGenerator(), this.rules),
         ];
+        this.encoder = TeekoMove.encoder;
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

@@ -25,7 +25,6 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
-import { HiveTutorial } from './HiveTutorial';
 
 interface GroundInfo {
     spaceClasses: string[];
@@ -114,23 +113,19 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    constructor(messageDisplayer: MessageDisplayer)
-    {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = HiveRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Hive');
         this.availableAIs = [
             new Minimax($localize`Minimax`, HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator()),
             new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),
         ];
         this.encoder = HiveMove.encoder;
-        this.tutorial = new HiveTutorial().tutorial;
         this.SPACE_SIZE = 30;
         this.PIECE_HEIGHT = this.SPACE_SIZE / 3;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.5,
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.canPass = false;
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -172,7 +167,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     public override async pass(): Promise<MGPValidation> {
-        Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
+        Utils.assert(this.canPass, 'HiveComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(HiveMove.PASS);
     }
 

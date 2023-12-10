@@ -6,10 +6,13 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
+import { ReversiConfig, ReversiRules } from '../ReversiRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ReversiComponent>;
+    const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -18,9 +21,11 @@ describe('ReversiComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     it('should show last move and captures', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, X, _, _, _],
@@ -51,6 +56,7 @@ describe('ReversiComponent', () => {
 
         expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved-fill']);
     }));
+
     it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
         // Given a fictitious board on which player can only pass
         const state: ReversiState = new ReversiState([
@@ -65,7 +71,7 @@ describe('ReversiComponent', () => {
         ], 1);
 
         // When displaying the board
-        await testUtils.setupState(state);
+        await testUtils.setupState(state, undefined, undefined, defaultConfig);
 
         // Then the player can pass
         await testUtils.expectPassSuccess(ReversiMove.PASS);

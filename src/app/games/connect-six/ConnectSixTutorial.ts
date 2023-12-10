@@ -3,6 +3,7 @@ import { ConnectSixState } from './ConnectSixState';
 import { ConnectSixDrops, ConnectSixFirstMove } from './ConnectSixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
 import { ConnectSixRules } from './ConnectSixRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -15,13 +16,13 @@ export class ConnectSixTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Initial board and object of the game`,
             $localize`Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.`,
-            ConnectSixRules.get().getInitialState(),
+            ConnectSixRules.get().getInitialState(defaultGobanConfig),
         ),
         // First turn: you must place only one
         TutorialStep.anyMove(
             $localize`First turn`,
             $localize`On the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
-            ConnectSixRules.get().getInitialState(),
+            ConnectSixRules.get().getInitialState(defaultGobanConfig),
             ConnectSixFirstMove.of(new Coord(9, 9)),
             $localize`Congratulations!`,
         ),

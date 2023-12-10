@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -59,14 +60,17 @@ describe('DiaballikMove', () => {
     });
 
     describe('toString', () => {
+
         it('should be defined', () => {
             const translation: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
             const move: DiaballikMove = new DiaballikMove(translation, MGPOptional.empty(), MGPOptional.empty());
             expect(move.toString()).toBe('DiaballikMove((0, 0) -> (1, 0), MGPOptional.empty(), MGPOptional.empty())');
         });
+
     });
 
     describe('equals', () => {
+
         it('should return true for the same move', () => {
             const translation: DiaballikTranslation = DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
             const move: DiaballikMove = new DiaballikMove(translation, MGPOptional.empty(), MGPOptional.empty());
@@ -97,9 +101,11 @@ describe('DiaballikMove', () => {
             expect(fullMove.equals(yetAnotherFullMove)).toBeFalse();
             expect(fullMove.equals(moveWithoutPass)).toBeFalse();
         });
+
     });
 
     describe('encoder', () => {
+
         it('should be bijective', () => {
             const firstTranslation: DiaballikTranslation =
                 DiaballikTranslation.from(new Coord(0, 0), new Coord(1, 0)).get();
@@ -129,5 +135,7 @@ describe('DiaballikMove', () => {
                 EncoderTestUtils.expectToBeBijective(DiaballikMove.encoder, move);
             }
         });
+
     });
+
 });

@@ -2,9 +2,11 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
-import { SixNode } from '../SixRules';
+import { SixNode, SixRules } from '../SixRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { SixMoveGenerator } from '../SixMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
@@ -12,6 +14,7 @@ const X: PlayerOrNone = Player.ONE;
 describe('SixMoveGenerator', () => {
 
     let moveGenerator: SixMoveGenerator;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new SixMoveGenerator();
@@ -25,11 +28,12 @@ describe('SixMoveGenerator', () => {
         const state: SixState = SixState.ofRepresentation(board, 40);
         const node: SixNode = new SixNode(state);
 
-        // When listing the choices
-        const choices: SixMove[] = moveGenerator.getListMoves(node);
+        // When listing the moves
+        const choices: SixMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be all the possibilities
         // 2 starting positions * 15 possible ends
         expect(choices.length).toBe(30);
     });
+
 });

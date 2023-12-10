@@ -5,7 +5,6 @@ import { LodestoneState } from './LodestoneState';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/MGPMap';
 
-
 export class LodestoneScoreHeuristic extends PlayerMetricHeuristic<LodestoneMove, LodestoneState> {
 
     public getMetrics(node: LodestoneNode): MGPMap<Player, ReadonlyArray<number>> {

@@ -1,6 +1,7 @@
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameMoveGenerator } from '../NewGameMoveGenerator';
-import { NewGameNode, NewGameRules } from '../NewGameRules';
+import { NewGameConfig, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
 
 /**
@@ -11,19 +12,22 @@ import { NewGameState } from '../NewGameState';
 describe('NewGameMoveGenerator', () => {
 
     let moveGenerator: NewGameMoveGenerator;
+    const defaultConfig: MGPOptional<NewGameConfig> = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new NewGameMoveGenerator();
     });
+
     it('should have all move options', () => {
         // Given an initial node
         const initialState: NewGameState = NewGameRules.get().getInitialState();
         const node: NewGameNode = new NewGameNode(initialState);
 
-        // When computing the list of moves
-        const moves: NewGameMove[] = moveGenerator.getListMoves(node);
+        // When listing the moves
+        const moves: NewGameMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be this many moves
         expect(moves.length).toBe(1);
     });
+
 });

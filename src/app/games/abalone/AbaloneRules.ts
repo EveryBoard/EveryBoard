@@ -12,6 +12,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
@@ -28,7 +29,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         return AbaloneRules.singleton.get();
     }
 
-    public getInitialState(): AbaloneState {
+    public override getInitialState(): AbaloneState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
@@ -63,7 +64,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             opponentPieces++;
             firstOpponent = firstOpponent.getNext(move.dir);
         }
-        if (opponentPieces >= pushingPieces) {
+        if (pushingPieces <= opponentPieces) {
             return MGPFallible.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
         } else if (AbaloneState.isOnBoard(firstOpponent)) {
             if (state.getPieceAt(firstOpponent) === FourStatePiece.EMPTY) {
@@ -85,10 +86,17 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             return GameStatus.ONGOING;
         }
     }
-    public applyLegalMove(_move: AbaloneMove, state: AbaloneState, newBoard: AbaloneLegalityInformation): AbaloneState {
+
+    public override applyLegalMove(_move: AbaloneMove,
+                                   state: AbaloneState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   newBoard: AbaloneLegalityInformation)
+    : AbaloneState
+    {
         return new AbaloneState(newBoard, state.turn + 1);
     }
-    public isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
+
+    public override isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         const firstPieceValidity: MGPValidation = this.getFirstPieceValidity(move, state);
         if (firstPieceValidity.isFailure()) {
             return firstPieceValidity.toOtherFallible();

@@ -4,6 +4,8 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LascaControlHeuristic } from '../LascaControlHeuristic';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { LascaRules } from '../LascaRules';
 
 const u: LascaStack = new LascaStack([LascaPiece.ZERO]);
 const v: LascaStack = new LascaStack([LascaPiece.ONE]);
@@ -12,6 +14,7 @@ const _: LascaStack = LascaStack.EMPTY;
 describe('LascaControlHeuristic', () => {
 
     let heuristic: LascaControlHeuristic;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = LascaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new LascaControlHeuristic();
@@ -45,7 +48,8 @@ describe('LascaControlHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                mobileState,
                                                                MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 
     it('should count the potential mobility as primary board value', () => {
@@ -72,7 +76,7 @@ describe('LascaControlHeuristic', () => {
         // When comparing them
         // Then the two should be of equal value:
         //     the number of non-blocked stacks times the number of piece (which is 11)
-        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState);
+        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState, defaultConfig);
     });
 
 });

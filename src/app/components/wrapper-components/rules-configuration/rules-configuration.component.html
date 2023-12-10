@@ -1,0 +1,73 @@
+<div *ngIf="isCustomisable()">
+    <p class="title" i18n>Configuration of your {{ gameName }} game</p>
+
+    <div class="select is-primary is-fullwidth">
+        <select id="ruleSelect"
+                [disabled]="userIsCreator === false"
+                (change)="onChange($event)">
+            <option [value]="rulesConfigDescription.getDefaultConfig().name()"
+                    selected>
+                {{ rulesConfigDescription.getDefaultConfig().name() }}
+            </option>
+            <option *ngFor="let standardConfig of rulesConfigDescription.getNonDefaultStandardConfigs()"
+                    [value]="standardConfig.name()">
+                {{ standardConfig.name() }}
+            </option>
+            <option value="Custom"
+                    i18n>Custom</option>
+        </select>
+    </div>
+
+    <form [formGroup]="rulesConfigForm"
+          id="{{ getChosenConfigName() }}_values">
+        <fieldset>
+            <div *ngFor="let configParameter of getFields()"
+                 id="{{ configParameter }}_config"
+                 class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">{{ rulesConfigDescription.getI18nName(configParameter) }}</label>
+                </div>
+                <div *ngIf="isNumber(configParameter)"
+                     class="field-body">
+                    <div class="field">
+                        <div class="control has-icons-right">
+                            <input id="{{ configParameter }}_number_config_input"
+                                   [formControlName]="configParameter"
+                                   type="number"
+                                   class="input"
+                                   required
+                                   placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
+                            <span class="icon is-small is-right">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </span>
+                        </div>
+                        <div *ngIf="isValid(configParameter) === false"
+                              class="message is-danger"
+                              role="alert">
+                            <div id="{{ configParameter }}_number_config_error"
+                                 class="message-header">{{ getErrorMessage(configParameter) }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="isBoolean(configParameter)"
+                     class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input id="{{ configParameter }}_boolean_config_input"
+                                   [formControlName]="configParameter"
+                                   type="checkbox"
+                                   class="checkbox"
+                                   required
+                                   placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <app-demo-card id="demoCard"
+                   *ngIf="getConfigDemo() !== undefined"
+                   [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+
+</div>

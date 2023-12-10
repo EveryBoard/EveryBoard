@@ -123,6 +123,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
             this.map.push({ key, value: firstValue });
         }
     }
+
     public delete(key: K): V {
         this.checkImmutability('delete');
         for (let i: number = 0; i < this.map.length; i++) {
@@ -137,6 +138,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
         throw new Error('No Value to delete for key "'+ key.toString() +'"!');
     }
+
     public getCopy(): this {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newMap: this = new (<any> this.constructor)();
@@ -145,6 +147,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
         return newMap;
     }
+
     public equals(other: MGPMap<K, V>): boolean {
         const thisKeySet: MGPSet<K> = this.getKeySet();
         const otherKeySet: MGPSet<K> = other.getKeySet();

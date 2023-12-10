@@ -44,44 +44,61 @@ import { NextGameLoadingComponent } from './components/normal-component/next-gam
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/mancala/awale/awale.component';
+
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
+
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { ConnectSixComponent } from './games/connect-six/connect-six.component';
 import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
+
 import { DiaballikComponent } from './games/diaballik/diaballik.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
+
 import { EncapsuleComponent } from './games/encapsule/encapsule.component';
 import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
+
 import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
+
 import { HiveComponent } from './games/hive/hive.component';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
+
 import { KalahComponent } from './games/mancala/kalah/kalah.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
+
 import { LascaComponent } from './games/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
+
 import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
 import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
 import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
 import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
+
 import { NumberedCircleComponent } from './games/mancala/common/numbered-circle.component';
+
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
 import { PenteComponent } from './games/pente/pente.component';
 import { PylosComponent } from './games/pylos/pylos.component';
+
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
+
 import { ReversiComponent } from './games/reversi/reversi.component';
+
 import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
+import { SiamOrientationArrowComponent } from './games/siam/siam-orientation-arrow.component';
 import { SixComponent } from './games/six/six.component';
+
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { TeekoComponent } from './games/teeko/teeko.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
 import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
+
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
@@ -97,6 +114,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
+import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 
 import * as Firebase from '@angular/fire/app';
 import * as Firestore from '@angular/fire/firestore';
@@ -220,7 +238,7 @@ export class FirebaseProviders {
         QuixoComponent,
         ReversiComponent,
         SaharaComponent,
-        SiamComponent,
+        SiamComponent, SiamOrientationArrowComponent,
         SixComponent,
         TablutComponent,
         TeekoComponent,
@@ -231,6 +249,8 @@ export class FirebaseProviders {
         FirestoreTimePipe,
         AutofocusDirective,
         ToggleVisibilityDirective,
+        RulesConfigurationComponent,
+        SiamOrientationArrowComponent,
     ],
     imports: [
         FirebaseProviders.app(),

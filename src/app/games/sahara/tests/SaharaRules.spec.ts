@@ -9,6 +9,8 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaFailure } from '../SaharaFailure';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('SaharaHeuristic', () => {
 
@@ -18,6 +20,7 @@ describe('SaharaHeuristic', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     let rules: SaharaRules;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = SaharaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = SaharaRules.get();
@@ -44,14 +47,14 @@ describe('SaharaHeuristic', () => {
 
         // Then it should be illegal
         const reason: string = SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid moving opponent piece', () => {
         const state: SaharaState = SaharaRules.get().getInitialState();
         const move: SaharaMove = SaharaMove.from(new Coord(3, 0), new Coord(4, 0)).get();
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should see that Player.ONE won', () => {
@@ -65,7 +68,7 @@ describe('SaharaHeuristic', () => {
         ];
         const state: SaharaState = new SaharaState(board, 4);
         const node: SaharaNode = new SaharaNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
 });

@@ -14,7 +14,6 @@ import { LascaFailure } from './LascaFailure';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
-import { LascaTutorial } from './LascaTutorial';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { LascaControlHeuristic } from './LascaControlHeuristic';
@@ -69,9 +68,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymmetricBoard = true;
-        this.rules = LascaRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Lasca');
         this.availableAIs = [
             new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),
             new Minimax($localize`Control and Domination`,
@@ -81,14 +78,13 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];
         this.encoder = LascaMove.encoder;
-        this.tutorial = new LascaTutorial().tutorial;
-        this.canPass = false;
+        this.hasAsymmetricBoard = true;
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: LascaState = this.getState();
         this.board = state.getCopiedBoard();
-        this.legalMoves = this.moveGenerator.getListMoves(this.node);
+        this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
         this.createAdaptedBoardFrom(state);
         this.showPossibleMoves();
         this.rotateAdaptedBoardIfNeeded();
@@ -128,7 +124,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const square: LascaStack = state.getPieceAtXY(x, y);
         const pieceInfos: LascaPieceInfo[] = [];
         // Start by the lower piece
-        for (let pieceIndex: number = square.getStackSize() - 1; pieceIndex >= 0; pieceIndex--) {
+        for (let pieceIndex: number = square.getStackSize() - 1; 0 <= pieceIndex; pieceIndex--) {
             const piece: LascaPiece = square.get(pieceIndex);
             pieceInfos.push({
                 classes: [this.getPlayerClass(piece.player)],
@@ -165,7 +161,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     }
 
     private showPossibleMoves(): void {
-        if (this.isInteractive) {
+        if (this.interactive) {
             for (const validMove of this.legalMoves) {
                 const startingCoord: Coord = validMove.getStartingCoord();
                 this.getSpaceInfoAt(startingCoord).squareClasses.push('selectable-fill');

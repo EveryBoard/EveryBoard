@@ -1,12 +1,15 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';
 import { PylosNode, PylosRules } from '../PylosRules';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('PylosOrderedMoveGenerator', () => {
 
     let moveGenerator: PylosOrderedMoveGenerator;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = PylosRules.get().getDefaultRulesConfig();
     const coord0: PylosCoord = new PylosCoord(0, 0, 0);
     const coord1: PylosCoord = new PylosCoord(0, 0, 1);
     const coord2: PylosCoord = new PylosCoord(0, 0, 2);
@@ -14,12 +17,15 @@ describe('PylosOrderedMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new PylosOrderedMoveGenerator();
     });
+
     it('should generate 16 moves at first turn', () => {
-        const initialNode: PylosNode = PylosRules.get().getInitialNode();
-        const moves: PylosMove[] = moveGenerator.getListMoves(initialNode);
+        const initialNode: PylosNode = PylosRules.get().getInitialNode(MGPOptional.empty());
+        const moves: PylosMove[] = moveGenerator.getListMoves(initialNode, defaultConfig);
         expect(moves.length).toEqual(16);
     });
+
     describe('orderMoves', () => {
+
         it('should order move from lowest stone use to highest', () => {
             const moves: PylosMove[] = [
                 PylosMove.ofClimb(coord0, coord1, [coord1]), // -1 stone used
@@ -43,5 +49,7 @@ describe('PylosOrderedMoveGenerator', () => {
 
             expect(orderedMoves).toEqual(expectedOrderedMoves);
         });
+
     });
+
 });

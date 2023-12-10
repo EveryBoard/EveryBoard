@@ -3,9 +3,10 @@ import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class MancalaState extends GameStateWithTable<number> {
 
-    public static readonly WIDTH: number = 6;
-
-    public constructor(b: Table<number>, turn: number, public readonly scores: readonly [number, number]) {
+    public constructor(b: Table<number>,
+                       turn: number,
+                       public readonly scores: readonly [number, number])
+    {
         super(b, turn);
     }
 
@@ -15,7 +16,7 @@ export class MancalaState extends GameStateWithTable<number> {
 
     public equals(other: MancalaState): boolean {
         if (TableUtils.compare(this.board, other.board) === false) return false;
-        if (ArrayUtils.compare(this.scores, other.scores) === false) return false;
+        if (ArrayUtils.equals(this.scores, other.scores) === false) return false;
         return this.turn === other.turn;
     }
 
@@ -26,4 +27,5 @@ export class MancalaState extends GameStateWithTable<number> {
     public getOpponentY(): number {
         return this.getCurrentPlayer().value;
     }
+
 }

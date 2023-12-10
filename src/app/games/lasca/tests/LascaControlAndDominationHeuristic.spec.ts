@@ -4,12 +4,15 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LascaControlAndDominationHeuristic } from '../LascaControlAndDominationHeuristic';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { LascaRules } from '../LascaRules';
 
 describe('LascaControlAndDominationHeuristic', () => {
 
     const O: LascaStack = new LascaStack([LascaPiece.ZERO]);
     const X: LascaStack = new LascaStack([LascaPiece.ONE]);
     const _: LascaStack = LascaStack.EMPTY;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = LascaRules.get().getDefaultRulesConfig();
 
     let heuristic: LascaControlAndDominationHeuristic;
 
@@ -45,7 +48,8 @@ describe('LascaControlAndDominationHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                mobileState,
                                                                MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 
     it('should count the potential mobility as primary board value', () => {
@@ -72,7 +76,7 @@ describe('LascaControlAndDominationHeuristic', () => {
         // When comparing them
         // Then the two should be of equal value:
         //     the number of non-blocked stacks times the number of piece (which is 11)
-        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState);
+        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState, defaultConfig);
     });
 
     it('should count the dominating piece as secondary board value (at equal potential mobility)', () => {
@@ -106,7 +110,8 @@ describe('LascaControlAndDominationHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                dominatingState,
                                                                MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 
 });

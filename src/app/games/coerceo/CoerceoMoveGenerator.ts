@@ -5,14 +5,17 @@ import { CoerceoNode } from './CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState> {
 
-    public getListMoves(node: CoerceoNode): CoerceoMove[] {
+    public getListMoves(node: CoerceoNode, _config: MGPOptional<EmptyRulesConfig>): CoerceoMove[] {
         let moves: CoerceoMove[] = this.getListExchanges(node);
         moves = moves.concat(this.getListMovement(node));
         return moves;
     }
+
     public getListExchanges(node: CoerceoNode): CoerceoMove[] {
         const exchanges: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;

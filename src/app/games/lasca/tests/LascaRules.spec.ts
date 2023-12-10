@@ -7,6 +7,8 @@ import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaFailure } from '../LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LascaRules', () => {
 
@@ -25,11 +27,14 @@ describe('LascaRules', () => {
     const ___: LascaStack = LascaStack.EMPTY;
 
     let rules: LascaRules;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = LascaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = LascaRules.get();
     });
+
     describe('Move', () => {
+
         it('should forbid move when first coord is empty', () => {
             // Given any board
             const state: LascaState = LascaRules.get().getInitialState();
@@ -39,8 +44,9 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid moving opponent piece', () => {
             // Given any board
             const state: LascaState = LascaRules.get().getInitialState();
@@ -50,8 +56,9 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid moving normal piece backward', () => {
             // Given any board
             const state: LascaState = LascaState.of([
@@ -69,8 +76,9 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = LascaFailure.CANNOT_GO_BACKWARD();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid landing on an occupied square', () => {
             // Given a board where a piece could be tempted to take another's place
             const state: LascaState = LascaRules.get().getInitialState();
@@ -80,8 +88,9 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow simple move', () => {
             // Given any board
             const state: LascaState = LascaRules.get().getInitialState();
@@ -101,8 +110,11 @@ describe('LascaRules', () => {
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('Capture', () => {
+
         it('should forbid continuing move after last capture', () => {
             // Given a board with a possible capture
             const state: LascaState = LascaState.of([
@@ -120,8 +132,9 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = LascaFailure.CANNOT_CAPTURE_EMPTY_SPACE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid skipping capture', () => {
             // Given a board with a possible capture
             const state: LascaState = LascaState.of([
@@ -139,8 +152,9 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = LascaFailure.CANNOT_SKIP_CAPTURE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid partial-capture', () => {
             // Given a board on which a capture of two pieces is possible
             const state: LascaState = LascaState.of([
@@ -158,8 +172,9 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = LascaFailure.MUST_FINISH_CAPTURING();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid self-capturing', () => {
             // Given a board on which a piece could try to capture its ally
             const state: LascaState = LascaState.of([
@@ -177,8 +192,9 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid backward capture with normal piece', () => {
             // Given a board on which a normal-piece could try to capture backward
             const state: LascaState = LascaState.of([
@@ -196,8 +212,9 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = LascaFailure.CANNOT_GO_BACKWARD();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should allow backward capture with officer', () => {
             // Given a board on which an officer can capture backward
             const state: LascaState = LascaState.of([
@@ -225,6 +242,7 @@ describe('LascaRules', () => {
             ], 3);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow to do small capture when big capture available', () => {
             // Given a board where two different sized captures are possible
             const state: LascaState = LascaState.of([
@@ -252,6 +270,7 @@ describe('LascaRules', () => {
             ], 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow to do big capture when small capture available', () => {
             // Given a board where two different sized captures are possible
             const state: LascaState = LascaState.of([
@@ -280,6 +299,7 @@ describe('LascaRules', () => {
             ], 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow capturing standalone opponent piece', () => {
             // Given a board with a possible single-capture
             const state: LascaState = LascaState.of([
@@ -307,6 +327,7 @@ describe('LascaRules', () => {
             ], 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow capturing commander of an opponent stack', () => {
             // Given a board with a possible stack-capture
             const state: LascaState = LascaState.of([
@@ -334,6 +355,7 @@ describe('LascaRules', () => {
             ], 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow multiple-capture', () => {
             // Given a board where a multiple captures is possible
             const state: LascaState = LascaState.of([
@@ -365,8 +387,11 @@ describe('LascaRules', () => {
             ], 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('Promotion', () => {
+
         it('should promote the commander of a stack that reached last line', () => {
             // Given a board where a stack is about to reach final line
             const state: LascaState = LascaState.of([
@@ -394,6 +419,7 @@ describe('LascaRules', () => {
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should promote piece that reached last line', () => {
             // Given a board where a single piece is about to reach final line
             const state: LascaState = LascaState.of([
@@ -421,8 +447,11 @@ describe('LascaRules', () => {
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('End Game', () => {
+
         it(`should declare current player winner when opponent has no more commander`, () => {
             // Given a board where Player.ONE have no more commander
             // When evaluating its value
@@ -437,8 +466,9 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
             ], 1);
             const node: LascaNode = new LascaNode(expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
         it(`should declare current player winner when blocking all opponent's pieces`, () => {
             // Given a board where the last commander(s) of Player.ZERO are stucked
             // When evaluating its value
@@ -453,7 +483,9 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
             ], 2);
             const node: LascaNode = new LascaNode(expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
     });
+
 });

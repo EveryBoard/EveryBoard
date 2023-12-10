@@ -4,8 +4,9 @@ import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { TaflRules } from './TaflRules';
+import { TaflConfig } from './TaflConfig';
 
-export class TaflPieceAndInfluenceMinimax<M extends TaflMove> extends Minimax<M, TaflState> {
+export class TaflPieceAndInfluenceMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
 
     public constructor(rules: TaflRules<M>) {
         super($localize`Pieces > Influence`,
@@ -14,4 +15,5 @@ export class TaflPieceAndInfluenceMinimax<M extends TaflMove> extends Minimax<M,
               new TaflMoveGenerator(rules),
         );
     }
+
 }

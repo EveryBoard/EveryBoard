@@ -4,15 +4,17 @@ import { Move } from 'src/app/jscaip/Move';
 import { GameComponent } from './GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({ template: '' })
-export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
+export abstract class TriangularGameComponent<R extends ConfigurableRules<M, S, C, L>,
                                               M extends Move,
                                               S extends GameState,
                                               P,
+                                              C extends RulesConfig = EmptyRulesConfig,
                                               L = void>
-    extends GameComponent<R, M, S, L>
+    extends GameComponent<R, M, S, C, L>
 {
     public override SPACE_SIZE: number = 100;
 

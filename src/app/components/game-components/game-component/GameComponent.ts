@@ -1,5 +1,5 @@
 import { Move } from '../../../jscaip/Move';
-import { Rules } from '../../../jscaip/Rules';
+import { ConfigurableRules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -13,16 +13,12 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { ActivatedRoute } from '@angular/router';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
 
-/**
- * Define some methods that are useful to have in game components.
- * We can't define these in GameComponent itself, as they are required
- * by sub components which themselves are not GameComponent subclasses
- */
-export abstract class BaseGameComponent {
-    // Make ArrayUtils available in game components
-    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
+abstract class BaseComponent {
 
     /**
      * Gets the CSS class for a player color
@@ -36,6 +32,32 @@ export abstract class BaseGameComponent {
                 return '';
         }
     }
+
+}
+
+/**
+ * Define some methods that are useful to have in game components.
+ * We can't define these in GameComponent itself, as they are required
+ * by sub components which themselves are not GameComponent subclasses
+ */
+export abstract class BaseGameComponent extends BaseComponent {
+
+    public SPACE_SIZE: number = 100;
+
+    // Make ArrayUtils available in game components
+    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
+}
+
+export abstract class BaseWrapperComponent extends BaseComponent {
+
+    public constructor(public readonly activatedRoute: ActivatedRoute) {
+        super();
+    }
+
+    protected getGameName(): string {
+        return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
+    }
+
 }
 
 /**
@@ -48,9 +70,10 @@ export abstract class BaseGameComponent {
     styleUrls: ['./game-component.scss'],
 })
 @Debug.log
-export abstract class GameComponent<R extends Rules<M, S, L>,
+export abstract class GameComponent<R extends ConfigurableRules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
+                                    C extends RulesConfig = EmptyRulesConfig,
                                     L = void>
     extends BaseGameComponent
 {
@@ -58,17 +81,17 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public Player: typeof Player = Player;
 
-    public SPACE_SIZE: number = 100;
-
     public readonly STROKE_WIDTH: number = 8;
 
     public readonly SMALL_STROKE_WIDTH: number = 2;
 
     public rules: R;
 
-    public node: GameNode<M, S>;
+    public node: GameNode<M, S, C>;
 
-    public availableAIs: AI<M, S, AIOptions>[];
+    public config: MGPOptional<C> = MGPOptional.empty();
+
+    public availableAIs: AI<M, S, AIOptions, C>[];
 
     public canPass: boolean = false;
 
@@ -95,26 +118,35 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     private pointOfView: Player = Player.ZERO;
 
     // This is true when the view is interactive, e.g., to display clickable pieces
-    protected isInteractive: boolean = false;
+    protected interactive: boolean = false;
 
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
     }
+
     public getPointOfView(): Player {
         return this.pointOfView;
     }
+
     public setPointOfView(pointOfView: Player): void {
         this.pointOfView = pointOfView;
         if (this.hasAsymmetricBoard) {
             this.rotation = 'rotate(' + (pointOfView.value * 180) + ')';
         }
     }
+
     public setInteractive(interactive: boolean): void {
-        this.isInteractive = interactive;
+        this.interactive = interactive;
     }
+
+    public isInteractive(): boolean {
+        return this.interactive;
+    }
+
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
     }
+
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
@@ -128,9 +160,11 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
             return MGPValidation.failure(reason);
         }
     }
+
     public cancelMoveAttempt(): void {
         // Override if need be
     }
+
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {
@@ -138,28 +172,48 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
         const error: string = `pass() called on a game that does not redefine it`;
         return ErrorLoggerService.logError('GameComponent', error, { gameName });
     }
+
     public getTurn(): number {
         return this.node.gameState.turn;
     }
+
     public getCurrentPlayer(): Player {
         return this.node.gameState.getCurrentPlayer();
     }
+
     public getCurrentOpponent(): Player {
         return this.node.gameState.getCurrentOpponent();
     }
+
     public getState(): S {
         return this.node.gameState;
     }
+
     public getPreviousState(): S {
         return this.node.parent.get().gameState;
     }
-    public async showLastMove(move: M): Promise<void> {
+
+    public async showLastMove(move: M, config: MGPOptional<C> = MGPOptional.empty()): Promise<void> {
         // Not needed by default
         return;
     }
+
     public hideLastMove(): void {
         // Not needed by default
         return;
+    }
+
+    protected setRulesAndNode(urlName: string): void {
+        const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
+        const defaultConfig: MGPOptional<C> = gameInfo.getRulesConfig() as MGPOptional<C>;
+
+        this.rules = gameInfo.rules as R;
+        this.node = this.rules.getInitialNode(defaultConfig);
+        this.tutorial = gameInfo.tutorial.tutorial;
+    }
+
+    protected getConfig(): MGPOptional<C> {
+        return this.config;
     }
 
     /**
@@ -168,16 +222,22 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getTranslation(coord: Coord): string {
         return this.getTranslationXY(coord.x, coord.y);
     }
+
     public getTranslationXY(coordX: number, coordY: number): string {
         const svgX: number = coordX * this.SPACE_SIZE;
         const svgY: number = coordY * this.SPACE_SIZE;
         return `translate(${svgX} ${svgY})`;
     }
+
 }
 
-export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, unknown>,
+export abstract class AbstractGameComponent extends GameComponent<ConfigurableRules<Move,
+                                                                                    GameState,
+                                                                                    RulesConfig,
+                                                                                    unknown>,
                                                                   Move,
                                                                   GameState,
+                                                                  RulesConfig,
                                                                   unknown>
 {
 }

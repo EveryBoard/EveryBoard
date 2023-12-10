@@ -12,6 +12,7 @@ import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LascaNode extends GameNode<LascaMove, LascaState> {}
 
@@ -26,7 +27,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         return LascaRules.singleton.get();
     }
 
-    public getInitialState(): LascaState {
+    public override getInitialState(): LascaState {
         const O: LascaStack = new LascaStack([LascaPiece.ZERO]);
         const X: LascaStack = new LascaStack([LascaPiece.ONE]);
         const _: LascaStack = LascaStack.EMPTY;
@@ -46,6 +47,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         const player: Player = state.getCurrentPlayer();
         return this.getCapturesOf(state, player);
     }
+
     public getCapturesOf(state: LascaState, player: Player): LascaMove[] {
         const captures: LascaMove[] = [];
         const playerPieces: Coord[] = state.getStacksOf(player);
@@ -54,6 +56,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return captures;
     }
+
     public getPieceCaptures(state: LascaState, coord: Coord): LascaMove[] {
         let pieceMoves: LascaMove[] = [];
         const piece: LascaStack = state.getPieceAt(coord);
@@ -81,6 +84,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return pieceMoves;
     }
+
     private getPieceDirections(state: LascaState, coord: Coord): Direction[] {
         const piece: LascaStack = state.getPieceAt(coord);
         const pieceOwner: Player = piece.getCommander().player;
@@ -97,10 +101,12 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return directions;
     }
+
     public getSteps(state: LascaState): LascaMove[] {
         const player: Player = state.getCurrentPlayer();
         return this.getStepsOf(state, player);
     }
+
     public getStepsOf(state: LascaState, player: Player): LascaMove[] {
         const steps: LascaMove[] = [];
         const playerPieces: Coord[] = state.getStacksOf(player);
@@ -109,6 +115,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return steps;
     }
+
     public getPieceSteps(state: LascaState, coord: Coord): LascaMove[] {
         const pieceMoves: LascaMove[] = [];
         const directions: Direction[] = this.getPieceDirections(state, coord);
@@ -121,7 +128,13 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return pieceMoves;
     }
-    public applyLegalMove(move: LascaMove, state: LascaState, _info: void): LascaState {
+
+    public override applyLegalMove(move: LascaMove,
+                                   state: LascaState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
+    : LascaState
+    {
         const moveStart: Coord = move.getStartingCoord();
         const moveEnd: Coord = move.getEndingCoord();
         let movingStack: LascaStack = state.getPieceAt(moveStart);
@@ -143,7 +156,8 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
         return resultingState.incrementTurn();
     }
-    public isLegal(move: LascaMove, state: LascaState): MGPValidation {
+
+    public override isLegal(move: LascaMove, state: LascaState): MGPValidation {
         const moveStart: Coord = move.getStartingCoord();
         if (state.getPieceAt(moveStart).isEmpty()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
@@ -174,6 +188,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
             return this.isLegalCapture(move, state, possibleCaptures);
         }
     }
+
     public isLegalCapture(move: LascaMove, state: LascaState, possibleCaptures: LascaMove[]): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const steppedOverCoords: MGPSet<Coord> = move.getCapturedCoords().get();
@@ -192,6 +207,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
             return MGPValidation.failure(LascaFailure.MUST_FINISH_CAPTURING());
         }
     }
+
     public getGameStatus(node: LascaNode): GameStatus {
         const state: LascaState = node.gameState;
         const captures: LascaMove[] = this.getCaptures(state);
@@ -201,4 +217,5 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
     }
+
 }

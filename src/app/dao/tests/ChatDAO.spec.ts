@@ -32,7 +32,7 @@ xdescribe('ChatDAO', () => {
     }
     async function createPartAndConfigRoom(creator: MinimalUser): Promise<string> {
         const id: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-        await configRoomDAO.set(id, { ...ConfigRoomMocks.INITIAL, creator });
+        await configRoomDAO.set(id, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
         return id;
     }
     beforeEach(async() => {

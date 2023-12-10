@@ -8,21 +8,20 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { CoerceoState } from '../CoerceoState';
-import { CoerceoNode } from '../CoerceoRules';
+import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('CoerceoPiecesThreatTilesHeuristic', () => {
 
     let heuristic: CoerceoPiecesThreatsTilesHeuristic;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = CoerceoRules.get().getDefaultRulesConfig();
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
-
-    const SAFE: number = CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
-    const THREATENED: number = CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE;
 
     beforeEach(() => {
         heuristic = new CoerceoPiecesThreatsTilesHeuristic();
@@ -58,7 +57,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 
     it('should prefer board with more safe pieces', () => {
@@ -91,7 +91,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 
     it('should distinguish fake and true threats', () => {
@@ -124,7 +125,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 
     it('should prefer board with more tiles (with safe board config)', () => {
@@ -157,7 +159,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 
     it('should prefer current player to be falsely threatened than really threatened (direct threat is fake)', () => {
@@ -192,7 +195,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
     it('should prefer current player to be falsely threatened than really threatened (moving threat is fake)', () => {
@@ -227,7 +231,8 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 
     describe('getThreat', () => {
@@ -366,10 +371,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: number = heuristic.getBoardValue(node).value[0];
+        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be the vone attributed to one safe piece
-        expect(value).toEqual(SAFE);
+        expect(value[0]).toEqual(1);
     });
 
     it('should count one 2 SAFE - 1 THREATENED', () => {
@@ -391,10 +396,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: number = heuristic.getBoardValue(node).value[0];
+        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be correct
-        expect(value).toEqual((3 * SAFE) - THREATENED);
+        expect(value).toEqual([3, -1, 0]);
     });
 
     it(`should not count as threatened pieces which has a moving threat that is also a direct threat`, () => {
@@ -417,10 +422,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: number = heuristic.getBoardValue(node).value[0];
+        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be correct
-        expect(value).toEqual((3 * SAFE) - (2 * SAFE));
+        expect(value).toEqual([3 - 2, 0, 0]);
     });
 
     it('should count "zero freedom" as safe when tile is not removable', () => {
@@ -441,10 +446,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: number = heuristic.getBoardValue(node).value[0];
+        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be correct
-        expect(value).toEqual((4 * SAFE) - (3 * SAFE));
+        expect(value).toEqual([4 - 3, 0, 0]);
     });
 
     it('should count "zero freedom" as safe when tile is removable but player cannot leave it', () => {
@@ -465,10 +470,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: number = heuristic.getBoardValue(node).value[0];
+        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be correct
-        expect(value).toEqual((4 * SAFE) - (1 * SAFE));
+        expect(value).toEqual([4 - 1, 0, 0]);
     });
 
     it('should count "zero freedom x leavable neighbor-tile" as threat', () => {
@@ -491,10 +496,10 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: number = heuristic.getBoardValue(node).value[0];
+        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then the value should be correct
-        expect(value).toEqual((4 * SAFE) - (1 * THREATENED));
+        expect(value).toEqual([4, -1, 0]);
     });
 
 });

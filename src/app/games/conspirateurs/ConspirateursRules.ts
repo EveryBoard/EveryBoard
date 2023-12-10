@@ -11,6 +11,7 @@ import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
@@ -25,19 +26,19 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         return ConspirateursRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
-    public getInitialState(): ConspirateursState {
+    public override getInitialState(): ConspirateursState {
         const board: PlayerOrNone[][] = TableUtils.create(ConspirateursState.WIDTH,
                                                           ConspirateursState.HEIGHT,
                                                           PlayerOrNone.NONE);
         return new ConspirateursState(board, 0);
     }
 
-
-    public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _info: void): ConspirateursState {
+    public override applyLegalMove(move: ConspirateursMove,
+                                   state: ConspirateursState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
+    : ConspirateursState
+    {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
         if (ConspirateursMove.isDrop(move)) {
             updatedBoard[move.coord.y][move.coord.x] = state.getCurrentPlayer();
@@ -52,7 +53,8 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return new ConspirateursState(updatedBoard, state.turn + 1);
     }
-    public isLegal(move: ConspirateursMove, state: ConspirateursState): MGPValidation {
+
+    public override isLegal(move: ConspirateursMove, state: ConspirateursState): MGPValidation {
         if (ConspirateursMove.isDrop(move)) {
             return this.dropLegality(move, state);
         } else if (ConspirateursMove.isSimple(move)) {
@@ -62,7 +64,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
     }
     public dropLegality(move: ConspirateursMoveDrop, state: ConspirateursState): MGPValidation {
-        if (state.turn >= 40) {
+        if (40 <= state.turn) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40());
         }
         if (state.getPieceAt(move.coord).isPlayer()) {

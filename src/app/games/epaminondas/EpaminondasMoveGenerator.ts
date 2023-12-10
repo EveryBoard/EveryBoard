@@ -3,13 +3,14 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules, EpaminondasConfig } from './EpaminondasRules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState> {
+export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState, EpaminondasConfig> {
 
-    public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
+    public getListMoves(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): EpaminondasMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const opponent: Player = node.gameState.getCurrentOpponent();
         const empty: PlayerOrNone = PlayerOrNone.NONE;
@@ -23,14 +24,14 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
                 for (const direction of Direction.DIRECTIONS) {
                     let movedPieces: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            state.getPieceAt(nextCoord) === player)
                     {
                         movedPieces += 1;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
                     let stepSize: number = 1;
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            stepSize <= movedPieces &&
                            state.getPieceAt(nextCoord) === empty)
                     {
@@ -39,7 +40,7 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
                         stepSize++;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
-                    if (EpaminondasState.isOnBoard(nextCoord) &&
+                    if (state.isOnBoard(nextCoord) &&
                         stepSize <= movedPieces &&
                         state.getPieceAt(nextCoord) === opponent)
                     {
@@ -51,7 +52,11 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
         }
         return moves;
     }
-    public addMove(moves: EpaminondasMove[], move: EpaminondasMove, state: EpaminondasState): EpaminondasMove[] {
+    public addMove(moves: EpaminondasMove[],
+                   move: EpaminondasMove,
+                   state: EpaminondasState)
+    : EpaminondasMove[]
+    {
         const legality: MGPFallible<EpaminondasLegalityInformation> = EpaminondasRules.isLegal(move, state);
         if (legality.isSuccess()) {
             moves.push(move);

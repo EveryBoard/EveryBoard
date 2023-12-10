@@ -26,7 +26,7 @@ export class LodestonePressurePlate {
     }
 
     public addCaptured(player: Player, quantity: number): MGPOptional<LodestonePressurePlate> {
-        if (this.pieces.length + quantity >= this.width) {
+        if (this.width <= this.pieces.length + quantity) {
             // The pressure plate is full, it therefore crumbles the floor.
             if (this.width === 5) {
                 // Put the rest of the pieces on the next pressure plate

@@ -1,12 +1,15 @@
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursNode } from './ConspirateursRules';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursOrderedMoveGenerator extends ConspirateursMoveGenerator {
 
-    public override getListMoves(node: ConspirateursNode): ConspirateursMove[] {
-        return this.sortByNumberOfJumps(super.getListMoves(node));
+    public override getListMoves(node: ConspirateursNode, config: MGPOptional<EmptyRulesConfig>): ConspirateursMove[] {
+        return this.sortByNumberOfJumps(super.getListMoves(node, config));
     }
+
     public sortByNumberOfJumps(moves: ConspirateursMove[]): ConspirateursMove[] {
         return moves.sort((a: ConspirateursMove, b: ConspirateursMove) => {
             const leftSize: number =

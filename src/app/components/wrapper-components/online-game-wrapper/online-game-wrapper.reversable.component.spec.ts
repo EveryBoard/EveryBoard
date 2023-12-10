@@ -29,8 +29,9 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
     }));
     it('should have a rotation applied for player one', fakeAsync(async() => {
         // Given a game started for opponent (Player.ONE)
-        testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.OPPONENT_AUTH_USER, 'Awale', PreparationOptions.dontWait)).testUtils;
-
+        testUtils = (await prepareStartedGameFor<AwaleComponent>(UserMocks.OPPONENT_AUTH_USER,
+                                                                 'Awale',
+                                                                 PreparationOptions.dontWait)).testUtils;
         // When displaying the component
         tick(2);
         testUtils.detectChanges();

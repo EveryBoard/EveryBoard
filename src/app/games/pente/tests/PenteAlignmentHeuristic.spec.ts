@@ -4,6 +4,8 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PenteAlignmentHeuristic } from '../PenteAlignmentHeuristic';
 import { PenteState } from '../PenteState';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { PenteRules } from '../PenteRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -11,6 +13,7 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 describe('PenteAlignmentHeuristic', () => {
 
     let heuristic: PenteAlignmentHeuristic;
+    const defaultConfig: MGPOptional<GobanConfig> = PenteRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new PenteAlignmentHeuristic();
@@ -65,7 +68,8 @@ describe('PenteAlignmentHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakerState, MGPOptional.empty(),
                                                                strongerState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
 });

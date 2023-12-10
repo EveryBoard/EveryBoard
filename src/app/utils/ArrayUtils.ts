@@ -32,7 +32,7 @@ export class ArrayUtils {
         });
     }
 
-    public static compare<T extends Comparable>(t1: ReadonlyArray<T>, t2: ReadonlyArray<T>): boolean {
+    public static equals<T extends Comparable>(t1: ReadonlyArray<T>, t2: ReadonlyArray<T>): boolean {
         if (t1.length !== t2.length) return false;
         for (let i: number = 0; i < t1.length; i++) {
             if (comparableEquals(t1[i], t2[i]) === false) return false;
@@ -42,7 +42,7 @@ export class ArrayUtils {
 
     public static isPrefix<T extends Comparable>(prefix: ReadonlyArray<T>, list: ReadonlyArray<T>): boolean {
         if (prefix.length > list.length) return false;
-        return ArrayUtils.compare(prefix, list.slice(0, prefix.length));
+        return ArrayUtils.equals(prefix, list.slice(0, prefix.length));
     }
 
     /**
@@ -145,8 +145,6 @@ export class ArrayUtils {
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 
-export type NumberTable = Table<number>;
-
 export class TableUtils {
 
     public static create<T>(width: number, height: number, initValue: T): T[][] {
@@ -168,7 +166,7 @@ export class TableUtils {
     public static compare<T extends Comparable>(t1: Table<T>, t2: Table<T>): boolean {
         if (t1.length !== t2.length) return false;
         for (let i: number = 0; i < t1.length; i++) {
-            if (ArrayUtils.compare(t1[i], t2[i]) === false) return false;
+            if (ArrayUtils.equals(t1[i], t2[i]) === false) return false;
         }
         return true;
     }

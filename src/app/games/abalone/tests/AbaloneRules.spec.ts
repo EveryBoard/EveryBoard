@@ -10,6 +10,8 @@ import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('AbaloneRules', () => {
 
@@ -18,15 +20,18 @@ describe('AbaloneRules', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     let rules: AbaloneRules;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AbaloneRules.get();
     });
+
     it('should start with an ongoing board status', () => {
         const state: AbaloneState = AbaloneRules.get().getInitialState();
         const node: AbaloneNode = new AbaloneNode(state);
         expect(rules.getGameStatus(node)).toBe(GameStatus.ONGOING);
     });
+
     it('should move simple piece in provided direction', () => {
         // Given an initial board (for simplicity)
         const state: AbaloneState = AbaloneRules.get().getInitialState();
@@ -49,6 +54,7 @@ describe('AbaloneRules', () => {
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should refuse move starting by opponent piece', () => {
         // Given an initial board (for simplicity)
         const state: AbaloneState = AbaloneRules.get().getInitialState();
@@ -58,8 +64,9 @@ describe('AbaloneRules', () => {
 
         // Then the movement should be refused
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should refuse move starting by empty space', () => {
         // Given an initial board (for simplicity)
         const state: AbaloneState = AbaloneRules.get().getInitialState();
@@ -69,8 +76,9 @@ describe('AbaloneRules', () => {
 
         // Then the movement should be refused
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should move group of piece in provided direction', () => {
         // Given an initial board (for simplicity)
         const state: AbaloneState = AbaloneRules.get().getInitialState();
@@ -93,6 +101,7 @@ describe('AbaloneRules', () => {
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should refuse moving group of piece greater than 3', () => {
         // Given a board with 4 piece aligned
         const board: FourStatePiece[][] = [
@@ -113,8 +122,9 @@ describe('AbaloneRules', () => {
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it(`should refuse moving group of piece smaller than the opponent's group`, () => {
         // Given a board with 4 piece aligned
         const board: FourStatePiece[][] = [
@@ -135,8 +145,9 @@ describe('AbaloneRules', () => {
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should refuse moving a group of piece of equal size to the opponent', () => {
         // Given a board with 4 piece aligned
         const board: FourStatePiece[][] = [
@@ -157,8 +168,9 @@ describe('AbaloneRules', () => {
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should refuse moving a group of piece when first piece after the opponent group is not empty', () => {
         // Given a board with possible push that is self-blocked
         const board: FourStatePiece[][] = [
@@ -179,8 +191,9 @@ describe('AbaloneRules', () => {
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should make pushed piece get of the board', () => {
         // Given an board where 3 can push 1 out of 2 aligned pieces out of the board
         const board: FourStatePiece[][] = [
@@ -199,7 +212,7 @@ describe('AbaloneRules', () => {
         // When pushing
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(4, 4), HexaDirection.LEFT);
 
-        // Then the piece should be throwed out of the board
+        // Then the piece should be thrown out of the board
         const expectedBoard: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],
@@ -214,6 +227,7 @@ describe('AbaloneRules', () => {
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should declare player zero winner when he push a 6th opponent piece out of the board', () => {
         const winningBoard: FourStatePiece[][] = [
             [N, N, N, N, X, X, X, X, X],
@@ -228,8 +242,9 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
     it('should declare player one winner when he push a 6th opponent piece out of the board', () => {
         const winningBoard: FourStatePiece[][] = [
             [N, N, N, N, X, X, X, X, X],
@@ -244,8 +259,9 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
+
     it('should allow unblocked translation', () => {
         // Given an initial board (for simplicity)
         const state: AbaloneState = AbaloneRules.get().getInitialState();
@@ -268,6 +284,7 @@ describe('AbaloneRules', () => {
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should refuse blocked translation', () => {
         // Given a board with possible blocked translation
         const board: FourStatePiece[][] = [
@@ -288,8 +305,9 @@ describe('AbaloneRules', () => {
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.TRANSLATION_IMPOSSIBLE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should refuse to translate a group containing non player piece', () => {
         // Given a board with 2 aligned piece separated by a hole
         const board: FourStatePiece[][] = [
@@ -310,8 +328,9 @@ describe('AbaloneRules', () => {
 
         // Then the move should be forbidden
         const reason: string = AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should push on UNREACHABLE the same way as outside the array board', () => {
         // Given the initial state
         const state: AbaloneState = AbaloneRules.get().getInitialState();
@@ -334,6 +353,7 @@ describe('AbaloneRules', () => {
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should do sidestep landing on UNREACHABLE the same way as outside the array board', () => {
         // Given a state allowing to translate two piece, one of them going to UNREACHABLE
         const board: FourStatePiece[][] = [
@@ -367,6 +387,7 @@ describe('AbaloneRules', () => {
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('should do sidestep landing outside the board correctly', () => {
         // Given a state allowing to translate three pieces, one of them going outside the board
         const board: FourStatePiece[][] = [
@@ -400,4 +421,5 @@ describe('AbaloneRules', () => {
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
 });

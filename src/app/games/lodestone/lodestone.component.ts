@@ -16,8 +16,8 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
-import { LodestoneTutorial } from './LodestoneTutorial';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
@@ -73,7 +73,7 @@ interface SquareInfo {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class LodestoneComponent
-    extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, LodestoneInfos>
+    extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos>
 {
     private static readonly PRESSURE_PLATE_EXTRA_SHIFT: number = 0.2;
 
@@ -129,14 +129,14 @@ export class LodestoneComponent
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = LodestoneRules.get();
-        this.node = this.rules.getInitialNode();
-        this.tutorial = new LodestoneTutorial().tutorial;
+        this.setRulesAndNode('Lodestone');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
             new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         const radius80: number = this.PIECE_RADIUS * 0.8;
         const radius30: number = this.PIECE_RADIUS * 0.3;
@@ -144,7 +144,6 @@ export class LodestoneComponent
         this.TRIANGLE_OUT = `${radius80},0 ${radius30},${radius20} ${radius30},-${radius20}`;
         this.TRIANGLE_IN = `${radius30},0 ${radius80},${radius30} ${radius80},-${radius30}`;
         this.displayedState = this.getState();
-        this.scores = MGPOptional.of([0, 0]);
     }
 
     public async selectCoord(coord: Coord): Promise<MGPValidation> {

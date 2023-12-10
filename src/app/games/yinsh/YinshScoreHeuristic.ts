@@ -9,7 +9,7 @@ export class YinshScoreHeuristic extends PlayerMetricHeuristic<YinshMove, YinshS
 
     public getMetrics(node: YinshNode): MGPMap<Player, ReadonlyArray<number>> {
         return new MGPMap<Player, ReadonlyArray<number>>([
-            { key: Player.ZERO, value: [node.gameState.sideRings[0]] }, // TODO there should be no need to do this!
+            { key: Player.ZERO, value: [node.gameState.sideRings[0]] },
             { key: Player.ONE, value: [node.gameState.sideRings[1]] },
         ]);
     }

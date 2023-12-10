@@ -5,6 +5,7 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { EpaminondasState } from '../EpaminondasState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EpaminondasAttackHeuristic } from '../EpaminondasAttackHeuristic';
+import { EpaminondasConfig, EpaminondasRules } from '../EpaminondasRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -13,6 +14,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('AttackEpaminondasHeuristic', () => {
 
     let heuristic: EpaminondasAttackHeuristic;
+    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new EpaminondasAttackHeuristic();
@@ -52,7 +54,8 @@ describe('AttackEpaminondasHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakerState, MGPOptional.empty(),
                                                                strongerState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
     it('should prefer going into the winning territory', () => {
@@ -89,7 +92,8 @@ describe('AttackEpaminondasHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                strongerState, MGPOptional.empty(),
                                                                weakerState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
 
 });

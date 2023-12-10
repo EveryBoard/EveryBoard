@@ -4,10 +4,11 @@ import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
 
-    public getListMoves(node: DvonnNode): DvonnMove[] {
+    public getListMoves(node: DvonnNode, _config: MGPOptional<EmptyRulesConfig>): DvonnMove[] {
         const lastMove: MGPOptional<DvonnMove> = node.previousMove;
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = [];
@@ -18,6 +19,7 @@ export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
                 // the move should be legal by construction, hence we don't check it
                 moves.push(move);
             });
+
         });
         if (moves.length === 0 && lastMove.equalsValue(DvonnMove.PASS) === false) {
             moves.push(DvonnMove.PASS);

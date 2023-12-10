@@ -3,6 +3,9 @@ import { EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
+import { EncapsuleMove } from '../EncapsuleMove';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const ___: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 const X__: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
@@ -17,18 +20,25 @@ const X2: EncapsulePiece = EncapsulePiece.BIG_LIGHT;
 describe('EncapsuleMoveGenerator', () => {
 
     let moveGenerator: EncapsuleMoveGenerator;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = EncapsuleRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new EncapsuleMoveGenerator();
     });
+
     describe('getListMoves', () => {
+
         it('should have 27 moves on first turn', () => {
             // Given an initial node
-            const node: EncapsuleNode = EncapsuleRules.get().getInitialNode();
-            // When counting the number of moves
-            // 3 pieces x 9 coords = 27 moves
-            expect(moveGenerator.getListMoves(node).length).toBe(27);
+            const node: EncapsuleNode = EncapsuleRules.get().getInitialNode(MGPOptional.empty());
+
+            // When listing the moves
+            const moves: EncapsuleMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
+            // Then the should be 3 pieces x 9 coords = 27 moves
+            expect(moves.length).toBe(27);
         });
+
         it('should have XX moves on a specific third turn', () => {
             // Given a board like this
             const board: EncapsuleSpace[][] = [
@@ -42,12 +52,16 @@ describe('EncapsuleMoveGenerator', () => {
             ]);
             const node: EncapsuleNode = new EncapsuleNode(state);
 
-            // When counting the possible moves
+            // When listing the moves
+            const moves: EncapsuleMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
             // Then there should be:
             // Drops medium = 9, drops big = 9, drops small = 7
             // Moving the piece on board = 7 possible landing space
             // Total: 32
-            expect(moveGenerator.getListMoves(node).length).toBe(32);
+            expect(moves.length).toBe(32);
         });
+
     });
+
 });

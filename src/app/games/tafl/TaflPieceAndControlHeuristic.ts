@@ -11,7 +11,8 @@ import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { TaflMove } from './TaflMove';
 import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
 import { TaflNode } from './TaflRules';
-import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TaflConfig } from './TaflConfig';
 
 export type TaflPieceAndControlHeuristicMetrics = {
     controlScore: number,
@@ -21,23 +22,21 @@ export type TaflPieceAndControlHeuristicMetrics = {
 
 export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceAndInfluenceHeuristic<M> {
 
-    public override getBoardValue(node: TaflNode<M>): BoardValue {
-        const state: TaflState = node.gameState;
-
-        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(state);
-        let scoreValue: number = metrics.controlScore;
-        scoreValue += metrics.safeScore * this.getScoreBySafePiece(state);
-        const maxControl: number = this.getScoreByThreatenedPiece(state);
-        scoreValue += metrics.threatenedScore * maxControl;
-        Utils.assert(metrics.controlScore <= maxControl, 'Control Score should be below ' + maxControl + ', got ' + metrics.controlScore);
-        Utils.assert(metrics.threatenedScore <= 16, 'Threatened Score should be below 16, got ' + metrics.threatenedScore);
-        Utils.assert(metrics.safeScore <= 16, 'Safe Score should be below 16, got ' + metrics.threatenedScore);
-        return new BoardValue([scoreValue]);
+    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
+        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node, config);
+        return new BoardValue([
+            metrics.safeScore,
+            metrics.threatenedScore,
+            metrics.controlScore,
+        ]);
     }
 
-    protected getControlScoreAndPieceScores(state: TaflState): TaflPieceAndControlHeuristicMetrics {
+    protected getControlScoreAndPieceScores(node: TaflNode<M>, config: MGPOptional<TaflConfig>)
+    : TaflPieceAndControlHeuristicMetrics
+    {
+        const state: TaflState = node.gameState;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
-        const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);
+        const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         const metrics: TaflPieceAndControlHeuristicMetrics = { safeScore: 0, threatenedScore: 0, controlScore: 0 };
         for (const owner of Player.PLAYERS) {
@@ -49,8 +48,9 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
                     metrics.safeScore += owner.getScoreModifier();
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(this.width, this.width) &&
-                            state.getPieceAt(testedCoord) === TaflPawn.UNOCCUPIED) {
+                        while (state.isOnBoard(testedCoord) &&
+                               state.getPieceAt(testedCoord) === TaflPawn.UNOCCUPIED)
+                        {
                             controlledSquares.add(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
@@ -58,12 +58,14 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
                 }
             }
             for (const controlled of controlledSquares) {
-                const controlledValue: number = this.getControlledPieceValue(controlled.x, controlled.y, this.width);
+                const controlledValue: number =
+                    this.getControlledPieceValue(controlled.x, controlled.y, state.getWidth());
                 metrics.controlScore += owner.getScoreModifier() * controlledValue;
             }
         }
         return metrics;
     }
+
     private getControlledPieceValue(x: number, y: number, width: number): number {
         let value: number = 1;
         if (x === 0 || x === width - 1) {
@@ -78,7 +80,8 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
           */
         return value;
     }
-    protected getScoreByThreatenedPiece(state: TaflState): number {
+
+    protected _getScoreByThreatenedPiece(state: TaflState): number {
         const width: number = state.getWidth();
         // The value of the four corners (each being "width" * "width")
         // + the value of what remains of the four edges (each border square being worth "width")
@@ -86,8 +89,5 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
         const reducedWidth: number = width - 2;
         return (4 * width * width) + (4 * reducedWidth * width) + (reducedWidth * reducedWidth);
     }
-    private getScoreBySafePiece(state: TaflState): number {
-        const scoreByThreatenedPiece: number = this.getScoreByThreatenedPiece(state);
-        return (16 * scoreByThreatenedPiece) + 1;
-    }
+
 }

@@ -11,6 +11,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
 
@@ -42,7 +43,7 @@ export class DiaballikMoveInConstruction implements ComparableObject {
     }
 
     public equals(other: this): boolean {
-        return ArrayUtils.compare(this.subMoves, other.subMoves);
+        return ArrayUtils.equals(this.subMoves, other.subMoves);
     }
 
     public addIfLegal(subMove: DiaballikSubMove, listToAddTo: DiaballikMoveInConstruction[]): void {
@@ -168,7 +169,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         super();
     }
 
-    public getListMoves(node: DiaballikNode): DiaballikMove[] {
+    public getListMoves(node: DiaballikNode, _config: MGPOptional<EmptyRulesConfig>): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
@@ -191,9 +192,11 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         }
         const seenStates: MGPSet<DiaballikState> = new MGPSet();
         const movesToKeep: DiaballikMove[] = [];
+        const rules: DiaballikRules = DiaballikRules.get();
         for (const move of moves) {
             const legalityInfo: MGPFallible<DiaballikState> = DiaballikRules.get().isLegal(move, state);
-            const stateAfterMove: DiaballikState = DiaballikRules.get().applyLegalMove(move, state, legalityInfo.get());
+            const stateAfterMove: DiaballikState =
+                rules.applyLegalMove(move, state, MGPOptional.empty(), legalityInfo.get());
             if (seenStates.contains(stateAfterMove) === false) {
                 movesToKeep.push(move);
                 seenStates.add(stateAfterMove);

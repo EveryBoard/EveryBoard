@@ -6,16 +6,19 @@ import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove, ConspirateursState> {
 
-    public getListMoves(node: ConspirateursNode): ConspirateursMove[] {
+    public getListMoves(node: ConspirateursNode, _config: MGPOptional<EmptyRulesConfig>): ConspirateursMove[] {
         if (node.gameState.turn < 40) {
             return this.getListMovesDrop(node.gameState);
         } else {
             return this.getListMovesAfterDrop(node.gameState);
         }
     }
+
     private getListMovesDrop(state: ConspirateursState): ConspirateursMoveDrop[] {
         const moves: ConspirateursMoveDrop[] = [];
         const start: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;

@@ -3,7 +3,6 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Table } from 'src/app/utils/ArrayUtils';
 
 export class TaflState extends GameStateWithTable<TaflPawn> {
 
@@ -12,7 +11,7 @@ export class TaflState extends GameStateWithTable<TaflPawn> {
     }
 
     public getCentralThrone(): Coord {
-        const center: number = (this.board.length - 1) / 2;
+        const center: number = (this.getHeight() - 1) / 2;
         return new Coord(center, center);
     }
 
@@ -34,7 +33,8 @@ export class TaflState extends GameStateWithTable<TaflPawn> {
         return pawn.getOwner();
     }
 
-    public of(board: Table<TaflPawn>, turn: number): this {
-        return new TaflState(board, turn) as this;
+    public getSize(): number {
+        return this.getHeight();
     }
+
 }

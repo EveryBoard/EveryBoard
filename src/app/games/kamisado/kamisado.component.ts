@@ -1,5 +1,5 @@
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Component } from '@angular/core';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
 import { KamisadoMove, KamisadoPieceMove } from 'src/app/games/kamisado/KamisadoMove';
@@ -11,7 +11,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { KamisadoTutorial } from './KamisadoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -38,16 +37,13 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymmetricBoard = true;
-        this.rules = KamisadoRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Kamisado');
         this.availableAIs = [
             new Minimax($localize`Minimax`, KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator()),
             new MCTS($localize`MCTS`, new KamisadoMoveGenerator(), this.rules),
         ];
         this.encoder = KamisadoMove.encoder;
-        this.tutorial = new KamisadoTutorial().tutorial;
-        this.canPass = false;
+        this.hasAsymmetricBoard = true;
     }
 
     public backgroundColor(x: number, y: number): string {

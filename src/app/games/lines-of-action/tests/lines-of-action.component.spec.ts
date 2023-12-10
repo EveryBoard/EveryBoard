@@ -22,10 +22,13 @@ describe('LinesOfActionComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click', () => {
+
         it('should forbid selecting a piece that has no valid targets', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [X, O, O, O, O, O, O, _],
@@ -42,12 +45,15 @@ describe('LinesOfActionComponent', () => {
 
             await testUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }));
+
         it('should forbid selecting an empty piece', fakeAsync(async() => {
             await testUtils.expectClickFailure('#click_2_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
+
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
             await testUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
+
         it('should show selected piece', fakeAsync(async() => {
             // Given any board
             // When clicking on a piece of the user
@@ -57,16 +63,20 @@ describe('LinesOfActionComponent', () => {
             testUtils.expectElementToHaveClass('#piece_2_0', 'selected-stroke');
         }));
     });
+
     describe('Second click', () => {
+
         it('should allow a simple move', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_2_0');
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
             await testUtils.expectMoveSuccess('#click_2_2', move);
         }));
+
         it('should forbid moving in an invalid direction', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_2_0');
             await testUtils.expectClickFailure('#click_4_5', DirectionFailure.DIRECTION_MUST_BE_LINEAR());
         }));
+
         it('should show last move spaces', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_2_0');
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
@@ -76,6 +86,7 @@ describe('LinesOfActionComponent', () => {
             expect(component.getSquareClasses(2, 2)).toEqual(['moved-fill']);
             expect(component.getSquareClasses(2, 0)).toEqual(['moved-fill']);
         }));
+
         it('should show captures', fakeAsync(async() => {
             const board: Table<PlayerOrNone> = [
                 [X, O, O, O, O, O, O, O],
@@ -97,6 +108,7 @@ describe('LinesOfActionComponent', () => {
             const component: LinesOfActionComponent = testUtils.getGameComponent();
             expect(component.getSquareClasses(2, 2)).toEqual(['captured-fill']);
         }));
+
         it('should change selected piece when clicking another piece', fakeAsync(async() => {
             // Given a board on which you have a selected piece
             await testUtils.expectClickSuccess('#click_2_0');
@@ -109,6 +121,7 @@ describe('LinesOfActionComponent', () => {
             // And the previous one no longer
             testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');
         }));
+
         it('should deselect selected piece when clicking on it again', fakeAsync(async() => {
             // Given any board with a piece selected
             await testUtils.expectClickSuccess('#click_2_0');
@@ -120,6 +133,7 @@ describe('LinesOfActionComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');
         }));
     });
+
     it('should hide first move when taking back', fakeAsync(async() => {
         // Given a state with a first move done
         const board: Table<PlayerOrNone> = [

@@ -3,7 +3,6 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { PenteTutorial } from './PenteTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -27,15 +26,13 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of([0, 0]);
-        this.rules = PenteRules.get();
-        this.node = this.rules.getInitialNode();
-        this.encoder = PenteMove.encoder;
-        this.tutorial = new PenteTutorial().tutorial;
+        this.setRulesAndNode('Pente');
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
             new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
+        this.encoder = PenteMove.encoder;
+        this.scores = MGPOptional.of([0, 0]);
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

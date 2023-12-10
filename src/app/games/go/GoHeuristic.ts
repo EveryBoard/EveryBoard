@@ -1,11 +1,11 @@
 import { GoState, GoPiece } from './GoState';
 import { GoMove } from './GoMove';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { GoNode, GoRules } from './GoRules';
+import { GoConfig, GoNode, GoRules } from './GoRules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/MGPMap';
 
-export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
+export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig> {
 
     public getMetrics(node: GoNode): MGPMap<Player, ReadonlyArray<number>> {
         const goState: GoState = GoRules.markTerritoryAndCount(node.gameState);
@@ -28,4 +28,5 @@ export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
         }
         return killed;
     }
+
 }

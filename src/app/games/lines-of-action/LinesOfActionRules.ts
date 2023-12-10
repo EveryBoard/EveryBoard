@@ -12,6 +12,7 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
@@ -26,7 +27,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return LinesOfActionRules.singleton.get();
     }
 
-    public getInitialState(): LinesOfActionState {
+    public override getInitialState(): LinesOfActionState {
         const _: PlayerOrNone = PlayerOrNone.NONE;
         const O: PlayerOrNone = PlayerOrNone.ZERO;
         const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -79,7 +80,12 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             }
         }
     }
-    public applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _info: void): LinesOfActionState {
+    public override applyLegalMove(move: LinesOfActionMove,
+                                   state: LinesOfActionState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _info: void)
+    : LinesOfActionState
+    {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         board[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
         board[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();
@@ -106,7 +112,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         return MGPValidation.SUCCESS;
     }
-    public isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
+    public override isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
         return LinesOfActionRules.isLegal(move, state);
     }
     private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Direction): number {

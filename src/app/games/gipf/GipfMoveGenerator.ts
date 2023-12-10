@@ -4,10 +4,12 @@ import { GipfState } from './GipfState';
 import { GipfRules, GipfNode } from './GipfRules';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { GipfCapture, GipfProjectHelper } from 'src/app/jscaip/GipfProjectHelper';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class GipfMoveGenerator extends MoveGenerator<GipfMove, GipfState> {
 
-    public getListMoves(node: GipfNode): GipfMove[] {
+    public getListMoves(node: GipfNode, _config: MGPOptional<EmptyRulesConfig>): GipfMove[] {
         const state: GipfState = node.gameState;
         const moves: GipfMove[] = [];
 

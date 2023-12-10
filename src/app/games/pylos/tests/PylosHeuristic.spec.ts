@@ -2,10 +2,11 @@
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
-import { PylosNode } from '../PylosRules';
+import { PylosNode, PylosRules } from '../PylosRules';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosHeuristic } from '../PylosHeuristic';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -14,6 +15,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('PylosHeuristic', () => {
 
     let heuristic: PylosHeuristic;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = PylosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new PylosHeuristic();
@@ -41,7 +43,7 @@ describe('PylosHeuristic', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
         const node: PylosNode = new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        expect(heuristic.getBoardValue(node).value[0]).toBe(0);
+        expect(heuristic.getBoardValue(node, defaultConfig).value[0]).toBe(0);
     });
 
 });

@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { TeekoNode } from '../TeekoRules';
+import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TeekoHeuristic } from '../TeekoHeuristic';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -11,6 +12,7 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 describe('TeekoHeuristic', () => {
 
     let heuristic: TeekoHeuristic;
+    const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new TeekoHeuristic();
@@ -29,7 +31,7 @@ describe('TeekoHeuristic', () => {
         const node: TeekoNode = new TeekoNode(state);
 
         // When calculating the board value
-        const boardValue: number = heuristic.getBoardValue(node).value[0];
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
 
         // Then it should be the negative number of possible victories for Player.ZERO
         expect(boardValue).toBe(-12);

@@ -14,6 +14,7 @@ import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestoneState, LodestonePositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
@@ -65,7 +66,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         return LodestoneRules.singleton.get();
     }
 
-    public getInitialState(): LodestoneState {
+    public override getInitialState(): LodestoneState {
         const _: LodestonePiece = LodestonePieceNone.EMPTY;
         const O: LodestonePiece = LodestonePiecePlayer.ZERO;
         const X: LodestonePiece = LodestonePiecePlayer.ONE;
@@ -90,7 +91,12 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                                   });
     }
 
-    public applyLegalMove(move: LodestoneMove, state: LodestoneState, infos: LodestoneInfos): LodestoneState {
+    public override applyLegalMove(move: LodestoneMove,
+                                   state: LodestoneState,
+                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   infos: LodestoneInfos)
+    : LodestoneState
+    {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = TableUtils.copy(infos.board);
@@ -100,6 +106,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         this.updatePressurePlates(board, pressurePlates, lodestones, opponent, move.captures);
         return new LodestoneState(board, state.turn + 1, lodestones, pressurePlates);
     }
+
     public updatePressurePlates(board: LodestonePiece[][],
                                 pressurePlates: LodestonePressurePlates,
                                 lodestones: LodestonePositions,
@@ -159,7 +166,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             board[coord.y][coord.x] = LodestonePieceNone.UNREACHABLE;
         }
     }
-    public isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
+    public override isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
         const validityBeforeCaptures: MGPValidation = this.isLegalWithoutCaptures(state, move.coord, move.direction);
         if (validityBeforeCaptures.isFailure()) {
             return MGPFallible.failure(validityBeforeCaptures.getReason());

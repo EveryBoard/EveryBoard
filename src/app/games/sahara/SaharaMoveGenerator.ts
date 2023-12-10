@@ -6,10 +6,12 @@ import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { SaharaNode, SaharaRules } from './SaharaRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SaharaMoveGenerator extends MoveGenerator<SaharaMove, SaharaState> {
 
-    public getListMoves(node: SaharaNode): SaharaMove[] {
+    public getListMoves(node: SaharaNode, _config: MGPOptional<EmptyRulesConfig>): SaharaMove[] {
         const moves: SaharaMove[] = [];
         const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
         const player: Player = node.gameState.getCurrentPlayer();

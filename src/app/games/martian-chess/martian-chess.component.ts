@@ -11,8 +11,8 @@ import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
-import { MartianChessTutorial } from './MartianChessTutorial';
 import { Direction } from 'src/app/jscaip/Direction';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
@@ -54,6 +54,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                                                                     MartianChessMove,
                                                                     MartianChessState,
                                                                     MartianChessPiece,
+                                                                    EmptyRulesConfig,
                                                                     MartianChessMoveResult>
 {
     public static SPACE_SIZE: number = 100;
@@ -161,20 +162,19 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymmetricBoard = true;
-        this.rules = MartianChessRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('MartianChess');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new MartianChessScoreHeuristic(), new MartianChessMoveGenerator()),
             new MCTS($localize`MCTS`, new MartianChessMoveGenerator(), this.rules),
         ];
+        this.encoder = MartianChessMove.encoder;
+        this.hasAsymmetricBoard = true;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();
         this.configViewTranslation = this.getConfigViewTranslation();
         this.clockNeedlesPoints = this.getClockNeedlesPoints();
-        this.encoder = MartianChessMove.encoder;
-        this.tutorial = new MartianChessTutorial().tutorial;
-        this.scores = MGPOptional.of([0, 0]);
     }
 
     public getConfigViewTranslation(): string {

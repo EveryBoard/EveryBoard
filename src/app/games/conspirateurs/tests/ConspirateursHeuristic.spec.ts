@@ -4,6 +4,8 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { ConspirateursState } from '../ConspirateursState';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { ConspirateursRules } from '../ConspirateursRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -12,6 +14,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('ConspirateursHeuristic', () => {
 
     let heuristic: ConspirateursHeuristic;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new ConspirateursHeuristic();
@@ -59,7 +62,8 @@ describe('ConspirateursHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
     it('should assign a higher score to a board with a piece in a shelter than on the side', () => {
@@ -104,7 +108,8 @@ describe('ConspirateursHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
     it('should assign a higher score for a piece close to an empty shelter', () => {
@@ -151,7 +156,8 @@ describe('ConspirateursHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
 });

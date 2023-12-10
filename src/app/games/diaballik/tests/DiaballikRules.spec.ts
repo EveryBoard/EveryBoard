@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation, DiaballikSubMove } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
@@ -9,10 +10,12 @@ import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { CoordFailure } from '../../../jscaip/Coord';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiaballikRules', () => {
 
     let rules: DiaballikRules;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = DiaballikRules.get().getDefaultRulesConfig();
 
     const O: DiaballikPiece = DiaballikPiece.ZERO;
     const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
@@ -47,7 +50,7 @@ describe('DiaballikRules', () => {
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should reject translation ending out of board', () => {
@@ -59,7 +62,7 @@ describe('DiaballikRules', () => {
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should reject pass starting out of board', () => {
@@ -71,7 +74,7 @@ describe('DiaballikRules', () => {
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should reject pass ending out of board', () => {
@@ -83,8 +86,9 @@ describe('DiaballikRules', () => {
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
 
     it('should allow full move with two translations of the same piece and one pass', () => {
@@ -253,7 +257,8 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = translation(new Coord(3, 6), new Coord(3, 5));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, DiaballikFailure.CANNOT_MOVE_WITH_BALL());
+        const reason: string = DiaballikFailure.CANNOT_MOVE_WITH_BALL();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid moving from an empty space', () => {
@@ -264,7 +269,8 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = translation(new Coord(3, 3), new Coord(3, 4));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid moving opponent pieces', () => {
@@ -275,7 +281,8 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = translation(new Coord(0, 0), new Coord(0, 1));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig); // TODO FOR REVIEW: je maintient qu'on aurais du faire comme ça direct, ceux ou j'ai accepté que reason soient pas envariablés ont juste été une source de perte de temps :D
     });
 
     it('should forbid passing from an empty piece', () => {
@@ -286,7 +293,8 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = pass(new Coord(4, 1), new Coord(4, 0));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid passing from a piece of the opponent', () => {
@@ -297,7 +305,8 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = pass(new Coord(3, 0), new Coord(4, 0));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should throw when passing from a piece of the player that does not hold the ball', () => {
@@ -319,7 +328,8 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = pass(new Coord(3, 6), new Coord(3, 3));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid moving to an occupied space', () => {
@@ -330,7 +340,8 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = translation(new Coord(1, 6), new Coord(2, 6));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+        const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid making a pass on an obstructed path', () => {
@@ -349,10 +360,12 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove = pass(new Coord(3, 6), new Coord(3, 2));
 
         // Then it should fail
-        RulesUtils.expectMoveFailure(rules, state, move, DiaballikFailure.PASS_PATH_OBSTRUCTED());
+        const reason: string = DiaballikFailure.PASS_PATH_OBSTRUCTED();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     describe('getGameStatus', () => {
+
         it('should adhere to anti-game rule (Player.ZERO)', () => {
             // Given a state where a player has 3 pieces against a blocked line from its opponent
             const state: DiaballikState = new DiaballikState([
@@ -368,7 +381,7 @@ describe('DiaballikRules', () => {
 
             // When checking for victory
             // Then it should detect a victory for the blocked player
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
         it('should adhere to anti-game rule (Player.ONE)', () => {
@@ -386,7 +399,7 @@ describe('DiaballikRules', () => {
             // When checking for victory
 
             // Then it should detect a victory for the blocked player
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should detect defeat from current player when both form a blocking line', () => {
@@ -404,7 +417,7 @@ describe('DiaballikRules', () => {
 
             // When checking for victory
             // Then it should detect a defeat for the current player (here, zero loses so one wins)
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
         it('should detect victory (Player.ZERO)', () => {
@@ -422,7 +435,7 @@ describe('DiaballikRules', () => {
 
             // When checking for victory
             // Then it should detect the victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should detect victory (Player.ONE)', () => {
@@ -440,7 +453,7 @@ describe('DiaballikRules', () => {
 
             // When checking for victory
             // Then it should detect the victory
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
         it('should detect non victories as ongoing', () => {
@@ -450,11 +463,13 @@ describe('DiaballikRules', () => {
 
             // When checking its status
             // Then it should be ongoing
-            RulesUtils.expectToBeOngoing(rules, node);
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
+
     });
 
     describe('victory and blocker coords', () => {
+
         it('should not detect anything on initial state', () => {
             // Given a state without victory
             const state: DiaballikState = DiaballikRules.get().getInitialState();
@@ -479,6 +494,7 @@ describe('DiaballikRules', () => {
             // When computing victory/defeat coords
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });
+
         it('should not detect blockers when the goal line accessible (empty column)', () => {
             // Given a state where a row doesn't have any piece of a player
             const state: DiaballikState = new DiaballikState([
@@ -495,5 +511,7 @@ describe('DiaballikRules', () => {
             // Then it should not return anything
             expect(DiaballikRules.get().getVictoryOrDefeatCoords(state).isAbsent()).toBeTrue();
         });
+
     });
+
 });

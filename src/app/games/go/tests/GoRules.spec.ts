@@ -4,7 +4,7 @@ import { Phase, GoState, GoPiece } from '../GoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GoNode, GoRules } from '../GoRules';
+import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoFailure } from '../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
@@ -21,26 +21,28 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    beforeAll(() => {
-        GoState.HEIGHT = 5;
-        GoState.WIDTH = 5;
-    });
+    const defaultConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 5, height: 5, handicap: 0 });
+
     beforeEach(() => {
         rules = GoRules.get();
     });
+
     it('should be created', () => {
         expect(rules).toBeTruthy();
     });
+
     describe('Phase.PLAYING', () => {
+
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
-            const state: GoState = GoRules.get().getInitialState();
+            const state: GoState = GoRules.get().getInitialState(defaultConfig);
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node);
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
+
         it('should allow simple capture', () => {
             // Given board with an atari (capture threat)
             const board: Table<GoPiece> = [
@@ -70,6 +72,7 @@ describe('GoRules', () => {
                                                        Phase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should allow complex capture', () => {
             // Given a board where several piece can be captured
             const board: Table<GoPiece> = [
@@ -100,6 +103,7 @@ describe('GoRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should create ko coord when needed (for Player.ONE)', () => {
             // Given a board with an imminent ko creation
             const board: Table<GoPiece> = [
@@ -128,6 +132,7 @@ describe('GoRules', () => {
                 new GoState(expectedBoard, [0, 1], 2, MGPOptional.of(koCoord), Phase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should create ko coord when needed (for Player.ZERO)', () => {
             // Given a board with an imminent ko creation
             const board: Table<GoPiece> = [
@@ -156,6 +161,7 @@ describe('GoRules', () => {
                 new GoState(expectedBoard, [1, 0], 3, MGPOptional.of(koCoord), Phase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('ko should be illegal', () => {
             // Given a board with a Ko
             const board: Table<GoPiece> = [
@@ -173,8 +179,9 @@ describe('GoRules', () => {
 
             // Then the move should be illegal
             const reason: string = GoFailure.ILLEGAL_KO();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('capture via-fake-suicide should be legal', () => {
             // Given a board with a possible capture
             const board: Table<GoPiece> = [
@@ -200,9 +207,10 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [3, 0], 1, MGPOptional.empty(), Phase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('Phase.PLAYING + GoMove.PASS = Phase.PASSED', () => {
             // Given initial board (so, playing phase)
-            const state: GoState = GoRules.get().getInitialState();
+            const state: GoState = GoRules.get().getInitialState(defaultConfig);
             expect(state.phase).toBe(Phase.PLAYING);
 
             // When passing
@@ -216,6 +224,7 @@ describe('GoRules', () => {
                                                        Phase.PASSED);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('Phase.PLAYING Should forbid accepting', () => {
             // Given a board in playing phase
             const board: Table<GoPiece> = [
@@ -232,8 +241,9 @@ describe('GoRules', () => {
 
             // Then the move should be forbidden
             const reason: string = GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('superposition should be illegal in playing phase', () => {
             // Given a board with piece on it
             const board: Table<GoPiece> = [
@@ -250,8 +260,9 @@ describe('GoRules', () => {
 
             // Then the move should be illegal
             const reason: string = GoFailure.OCCUPIED_INTERSECTION();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid suicide', () => {
             // Given a board with a coord without freedom
             const board: Table<GoPiece> = [
@@ -268,10 +279,13 @@ describe('GoRules', () => {
 
             // Then the move should be illegal
             const reason: string = GoFailure.CANNOT_COMMIT_SUICIDE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('Phase.PASSED', () => {
+
         it('Phase.PASSED + GoMove/play = Phase.PLAYING', () => {
             // Given a board on passed phase
             const board: Table<GoPiece> = [
@@ -297,6 +311,7 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('Phase.PASSED + GoMove.PASS = Phase.COUNTING', () => {
             // Given a board on passed phase
             const board: Table<GoPiece> = [
@@ -322,6 +337,7 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [10, 1], 1, MGPOptional.empty(), Phase.COUNTING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('simply shared board should be simple to calculate', () => {
             // Given a simply shared board on which one player passed
             const previousBoard: Table<GoPiece> = [
@@ -347,8 +363,11 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [10, 5], 11, MGPOptional.empty(), Phase.COUNTING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
     });
+
     describe('Phase.COUNTING', () => {
+
         it('should always be GameStatus.ONGOING', () => {
             // Given a board with a shared territory
             const board: Table<GoPiece> = [
@@ -363,8 +382,9 @@ describe('GoRules', () => {
 
             // When evaluating it
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node);
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
+
         it('should attribute shared territory to surviving group', () => {
             // Given a board with a shared territory
             const board: Table<GoPiece> = [
@@ -390,6 +410,7 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [10, 5], 1, MGPOptional.empty(), Phase.COUNTING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should transfer territory when marking group as dead', () => {
             // Given a board where a group own territory
             const board: Table<GoPiece> = [
@@ -415,8 +436,9 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [25, 0], 1, MGPOptional.empty(), Phase.COUNTING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('Phase.COUNTING + GoMove/play = Phase.PLAYING', () => {
-            // Given a board on counting phase (by example, incorrectly marked)
+            // Given a board on counting phase (for example, incorrectly marked)
             const board: Table<GoPiece> = [
                 [b, b, b, b, b],
                 [b, b, b, b, b],
@@ -440,8 +462,9 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [0, 1], 2, MGPOptional.empty(), Phase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('Phase.COUNTING + GoMove.ACCEPT = Phase.ACCEPT', () => {
-            // Given a board on counting phase (by example, incorrectly marked)
+            // Given a board on counting phase (for example, incorrectly marked)
             const board: Table<GoPiece> = [
                 [b, b, b, b, b],
                 [b, b, b, b, b],
@@ -458,6 +481,7 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(board, [25, 0], 2, MGPOptional.empty(), Phase.ACCEPT);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('should forbid PASSING', () => {
             // Given a board on counting phase
             const board: Table<GoPiece> = [
@@ -474,10 +498,13 @@ describe('GoRules', () => {
 
             // Then the move should be rejected
             const reason: string = GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('Phase.ACCEPT', () => {
+
         it('Phase.ACCEPT + GoMove/play = Phase.PLAYING', () => {
             // Given an board in accept phase
             const board: Table<GoPiece> = [
@@ -503,6 +530,7 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [0, 0], 2, MGPOptional.empty(), Phase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('Phase.ACCEPT + GoMove/play should capture', () => {
             // Given a board on accepted phase
             const board: Table<GoPiece> = [
@@ -528,6 +556,7 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [0, 1], 2, MGPOptional.empty(), Phase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('Phase.ACCEPT + GoMove/markAsDead = Phase.COUNTING', () => {
             // Given a board on accepted phase
             const board: Table<GoPiece> = [
@@ -553,6 +582,7 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [6, 5], 2, MGPOptional.empty(), Phase.COUNTING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
+
         it('Phase.ACCEPT + GoMove.ACCEPT = Game Over', () => {
             // Given a board on accepted phase
             const board: Table<GoPiece> = [
@@ -578,10 +608,13 @@ describe('GoRules', () => {
             const expectedState: GoState = new GoState(expectedBoard, [0, 5], 2, MGPOptional.empty(), Phase.FINISHED);
             const node: GoNode = new GoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
     });
+
     describe('End Game', () => {
+
         it('should calculate correctly board with dead stones (And Recognize Draw)', () => {
             // Given a board with the same number of point for every player
             const board: Table<GoPiece> = [
@@ -596,8 +629,9 @@ describe('GoRules', () => {
 
             // When evaluating its value
             // Then it should see the draw
-            RulesUtils.expectToBeDraw(rules, node);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
+
         it('should recognize victory', () => {
             // Given a board where Player.ZERO win
             const board: Table<GoPiece> = [
@@ -611,10 +645,12 @@ describe('GoRules', () => {
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
-            // Then it should be recognised as a victory for Player.ZERO
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            // Then it should be recognized as a victory for Player.ZERO
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
     });
+
     it('AddDeadToScore should be a simple counting method', () => {
         // Given a board with dead not counted as score yet
         const board: Table<GoPiece> = [
@@ -634,6 +670,7 @@ describe('GoRules', () => {
         const expectedScore: number[] = [7, 3];
         expect(score).withContext('Score should be 7 vs 3').toEqual(expectedScore);
     });
+
     it('should calculate correctly board with dead stones', () => {
         // Given a board where the territory and capture is simply and equally divided
         const board: Table<GoPiece> = [
@@ -647,6 +684,7 @@ describe('GoRules', () => {
         const node: GoNode = new GoNode(state);
         // When evaluating the board
         // Then it should be a draw
-        RulesUtils.expectToBeDraw(rules, node);
+        RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
+
 });

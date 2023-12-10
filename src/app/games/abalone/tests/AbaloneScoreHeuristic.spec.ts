@@ -6,6 +6,8 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { AbaloneScoreHeuristic } from '../AbaloneScoreHeuristic';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { AbaloneRules } from '../AbaloneRules';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -15,6 +17,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('AbaloneScoreHeuristic', () => {
 
     let heuristic: AbaloneScoreHeuristic;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new AbaloneScoreHeuristic();
@@ -51,7 +54,8 @@ describe('AbaloneScoreHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                new AbaloneState(boardWithMorePieces, 0),
                                                                MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
 });

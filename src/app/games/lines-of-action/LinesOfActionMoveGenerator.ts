@@ -4,11 +4,12 @@ import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LinesOfActionMoveGenerator extends MoveGenerator<LinesOfActionMove, LinesOfActionState> {
 
-
-    public getListMoves(node: LinesOfActionNode): LinesOfActionMove[] {
+    public getListMoves(node: LinesOfActionNode, _config: MGPOptional<EmptyRulesConfig>): LinesOfActionMove[] {
         const state: LinesOfActionState = node.gameState;
         const moves: LinesOfActionMove[] = [];
 

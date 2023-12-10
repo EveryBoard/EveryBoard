@@ -8,10 +8,12 @@ import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessRules } from '../MartianChessRules';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessScoreHeuristic', () => {
 
     let heuristic: MartianChessScoreHeuristic;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = MartianChessRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new MartianChessScoreHeuristic();
@@ -29,11 +31,10 @@ describe('MartianChessScoreHeuristic', () => {
                                                                      MGPOptional.empty(),
                                                                      captured);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState,
-                                                               MGPOptional.empty(),
-                                                               strongState,
-                                                               MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
 });

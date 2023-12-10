@@ -10,4 +10,4 @@ export type Message = {
     currentTurn?: number; // number of the turn when this message was written
 }
 
-export type MessageDocument = FirestoreDocument<Message>
+export type MessageDocument = FirestoreDocument<Message>;

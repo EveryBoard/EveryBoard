@@ -10,7 +10,6 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
@@ -37,14 +36,12 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = LinesOfActionRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('LinesOfAction');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),
             new MCTS($localize`MCTS`, new LinesOfActionMoveGenerator(), this.rules),
         ];
         this.encoder = LinesOfActionMove.encoder;
-        this.tutorial = new LinesOfActionTutorial().tutorial;
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {

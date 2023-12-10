@@ -8,10 +8,12 @@ import { PentagoState } from '../PentagoState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('PentagoRules', () => {
 
     let rules: PentagoRules;
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = PentagoRules.get().getDefaultRulesConfig();
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -19,6 +21,7 @@ describe('PentagoRules', () => {
     beforeEach(() => {
         rules = PentagoRules.get();
     });
+
     it('it should be illegal to drop piece on occupied space', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _],
@@ -31,8 +34,9 @@ describe('PentagoRules', () => {
         const state: PentagoState = new PentagoState(board, 1);
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('it should prevent redundancy by refusing rotating neutral block', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _],
@@ -45,8 +49,9 @@ describe('PentagoRules', () => {
         const state: PentagoState = new PentagoState(board, 1);
         const move: PentagoMove = PentagoMove.withRotation(4, 1, 3, true);
         const reason: string = PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('it should refuse rotation less move when there is no neutral block', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, _, _],
@@ -59,8 +64,9 @@ describe('PentagoRules', () => {
         const state: PentagoState = new PentagoState(board, 3);
         const move: PentagoMove = PentagoMove.rotationless(0, 0);
         const reason: string = PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('it should allow rotation-free move when there is neutral block', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, _, _],
@@ -83,6 +89,7 @@ describe('PentagoRules', () => {
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+
     it('it should be able to twist any block clockwise', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, _, _],
@@ -106,8 +113,9 @@ describe('PentagoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node);
+        RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });
+
     it('it should be able to twist any board anti-clockwise', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, _, _],
@@ -130,9 +138,11 @@ describe('PentagoRules', () => {
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, false);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
+
     describe('victories', () => {
+
         it('it should notice victory', () => {
             const board: Table<PlayerOrNone> = [
                 [O, _, _, O, _, _],
@@ -155,8 +165,9 @@ describe('PentagoRules', () => {
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
         it('it should notice draw by end game', () => {
             const board: Table<PlayerOrNone> = [
                 [O, X, O, X, O, X],
@@ -179,8 +190,9 @@ describe('PentagoRules', () => {
             const expectedState: PentagoState = new PentagoState(expectedBoard, 36);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeDraw(rules, node);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
+
         it('it should notice draw by double-victory', () => {
             const board: Table<PlayerOrNone> = [
                 [_, X, _, _, _, _],
@@ -203,7 +215,9 @@ describe('PentagoRules', () => {
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-            RulesUtils.expectToBeDraw(rules, node);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
+
     });
+
 });

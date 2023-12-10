@@ -2,7 +2,7 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoState, GoPiece, Phase } from '../GoState';
-import { GoNode } from '../GoRules';
+import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoHeuristic } from '../GoHeuristic';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
@@ -14,6 +14,7 @@ const _: GoPiece = GoPiece.EMPTY;
 describe('GoHeuristic', () => {
 
     let heuristic: GoHeuristic;
+    const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new GoHeuristic();
@@ -29,7 +30,7 @@ describe('GoHeuristic', () => {
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
         const initialNode: GoNode = new GoNode(state);
-        const boardValue: number = heuristic.getBoardValue(initialNode).value[0];
+        const boardValue: number = heuristic.getBoardValue(initialNode, defaultConfig).value[0];
         expect(boardValue).toBe(3);
     });
 
@@ -56,7 +57,8 @@ describe('GoHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
     it('should not care about kills in territory', () => {
@@ -80,7 +82,7 @@ describe('GoHeuristic', () => {
         const weakState: GoState = new GoState(weakBoard, [10, 1], 0, MGPOptional.empty(), Phase.PLAYING);
         // When computing their value
         // Then it should assign the same value for both
-        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState);
+        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState, defaultConfig);
     });
 
 });

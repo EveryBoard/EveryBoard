@@ -41,12 +41,20 @@ export class Debug {
         if (verbosityJSON != null) {
             verbosity = JSON.parse(verbosityJSON);
         }
-        if (methodName) {
-            verbosity[className + '.' + methodName] = entryExit;
-        } else {
+        if (methodName === undefined) {
             verbosity[className] = entryExit;
+        } else {
+            verbosity[className + '.' + methodName] = entryExit;
         }
-        localStorage.setItem('verbosity', JSON.stringify(verbosity));
+        const stringifiedVerbosity: string = Debug.getStringified(verbosity);
+        localStorage.setItem('verbosity', stringifiedVerbosity);
+    }
+    private static getStringified(o: object): string {
+        try {
+            return JSON.stringify(o);
+        } catch (e) {
+            return 'recursive and not stringifiable!';
+        }
     }
     private static isVerbose(name: string): [boolean, boolean] {
         const verbosityJSON: string | null = localStorage.getItem('verbosity');
@@ -78,9 +86,12 @@ export class Debug {
      * but this would restrict the decorator to only be applied to classes with public constructors.
      */
     public static log<T>(constructor: T): void {
+        // eslint-disable-next-line dot-notation
         const className: string = constructor['name'];
+        // eslint-disable-next-line dot-notation
         for (const propertyName of Object.getOwnPropertyNames(constructor['prototype'])) {
             const nullableDescriptor: PropertyDescriptor | undefined = Object.getOwnPropertyDescriptor(
+                // eslint-disable-next-line dot-notation
                 constructor['prototype'],
                 propertyName);
             const descriptor: PropertyDescriptor = Utils.getNonNullable(nullableDescriptor);
@@ -91,17 +102,16 @@ export class Debug {
             const originalMethod: (...args: unknown[]) => unknown = descriptor.value;
             descriptor.value = function(...args: unknown[]): unknown {
                 if (Debug.isMethodVerboseEntry(className, propertyName)) {
-                    const strArgs: string = Array.from(args).map((arg: unknown): string =>
-                        JSON.stringify(arg)).join(', ');
+                    const strArgs: string = Array.from(args).map(Debug.getStringified).join(', ');
                     console.log(`> ${className}.${propertyName}(${strArgs})`);
                 }
                 const result: unknown = originalMethod.apply(this, args);
                 if (Debug.isMethodVerboseExit(className, propertyName)) {
-                    console.log(`< ${className}.${propertyName} -> ${JSON.stringify(result)}`);
+                    console.log(`< ${className}.${propertyName} -> ${Debug.getStringified(result as object)}`);
                 }
                 return result;
             };
-
+            // eslint-disable-next-line dot-notation
             Object.defineProperty(constructor['prototype'], propertyName, descriptor);
         }
     }
@@ -109,6 +119,7 @@ export class Debug {
 
 // This makes Debug.enableLog accessible in the console
 // To use it, one just has to do window.enableLog([true, true], 'SomeClass, 'someMethod')
+// eslint-disable-next-line dot-notation
 window['enableLog'] = Debug.enableLog;
 
 export class Utils {
@@ -157,4 +168,5 @@ export class Utils {
     public static identity<T>(thing: T): T {
         return thing;
     }
+
 }

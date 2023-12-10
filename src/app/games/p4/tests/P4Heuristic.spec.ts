@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { P4State } from '../P4State';
-import { P4Node } from '../P4Rules';
+import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -13,6 +13,7 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 describe('P4Heuristic', () => {
 
     let heuristic: P4Heuristic;
+    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new P4Heuristic();
@@ -41,7 +42,8 @@ describe('P4Heuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
 
     it('should count three point for the corner', () => {
@@ -58,7 +60,7 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value[0];
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
 
         // Then the value should be -3
         expect(boardValue).toBe(-3);
@@ -78,7 +80,7 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value[0];
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
 
         // Then the value should be -4
         expect(boardValue).toBe(-4);
@@ -98,7 +100,7 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value[0];
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
 
         // Then the value should be -5
         expect(boardValue).toBe(-5);
@@ -118,7 +120,7 @@ describe('P4Heuristic', () => {
         const node: P4Node = new P4Node(state);
 
         // When counting board value
-        const boardValue: number = heuristic.getBoardValue(node).value[0];
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
 
         // Then the value should be -7
         expect(boardValue).toBe(-7);

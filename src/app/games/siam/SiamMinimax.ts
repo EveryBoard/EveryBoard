@@ -3,9 +3,9 @@ import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamState } from './SiamState';
 import { SiamMove } from './SiamMove';
 import { SiamHeuristic } from './SiamHeuristic';
-import { SiamLegalityInformation, SiamRules } from './SiamRules';
+import { SiamConfig, SiamLegalityInformation, SiamRules } from './SiamRules';
 
-export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInformation> {
+export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation> {
 
     public constructor() {
         super($localize`Minimax`,
