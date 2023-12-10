@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { SuperRules } from 'src/app/jscaip/Rules';
 import { Move } from 'src/app/jscaip/Move';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -22,7 +22,7 @@ export interface ModeConfig {
 @Component({
     template: '',
 })
-export abstract class ParallelogramGameComponent<R extends ConfigurableRules<M, S, C, L>,
+export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L>,
                                                  M extends Move,
                                                  S extends GameStateWithTable<P>,
                                                  P,
