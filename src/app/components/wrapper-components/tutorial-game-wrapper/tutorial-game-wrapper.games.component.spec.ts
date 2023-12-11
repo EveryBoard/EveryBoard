@@ -326,7 +326,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 if (step.isPredicate()) {
                     const config: MGPOptional<RulesConfig> = rules.getDefaultRulesConfig();
                     const move: Move = stepExpectation[2];
-                    const moveResult: MGPFallible<unknown> = rules.getLegality(move, step.state, config);
+                    const moveResult: MGPFallible<unknown> = rules.isLegal(move, step.state, config);
                     if (moveResult.isSuccess()) {
                         const resultingState: GameState =
                             rules.applyLegalMove(move, step.state, config, moveResult.get());
@@ -355,7 +355,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     if (step.hasSolution()) {
                         const solution: Move | Click = step.getSolution();
                         if (solution instanceof Move) {
-                            const moveResult: MGPFallible<unknown> = rules.getLegality(solution, step.state, config);
+                            const moveResult: MGPFallible<unknown> = rules.isLegal(solution, step.state, config);
                             if (moveResult.isSuccess()) {
                                 if (step.isPredicate()) {
                                     const resultingState: GameState =

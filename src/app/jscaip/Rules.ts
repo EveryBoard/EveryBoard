@@ -30,7 +30,7 @@ export abstract class SuperRules<M extends Move,
          * return false otherwise
          */
         Debug.display('Rules', 'choose', move.toString() + ' was proposed');
-        const legality: MGPFallible<L> = this.getLegality(move, node.gameState, config);
+        const legality: MGPFallible<L> = this.isLegal(move, node.gameState, config);
         if (legality.isFailure()) {
             Debug.display('Rules', 'choose', 'Move is illegal: ' + legality.getReason());
             return MGPFallible.failure(legality.getReason());
@@ -49,14 +49,6 @@ export abstract class SuperRules<M extends Move,
         return MGPFallible.success(child);
     }
 
-    public getLegality(move: M, state: S, config: MGPOptional<C>): MGPFallible<L> {
-        if (config.isPresent()) {
-            return this.isLegal(move, state, config.get());
-        } else {
-            return this.isLegal(move, state);
-        }
-    }
-
     /**
      * Applies a legal move, given the precomputed information `info`
      */
@@ -66,7 +58,7 @@ export abstract class SuperRules<M extends Move,
      * Returns success if the move is legal, with some potentially precomputed data.
      * If the move is illegal, returns a failure with information on why it is illegal
      */
-    public abstract isLegal(move: M, state: S, config?: C): MGPFallible<L>;
+    public abstract isLegal(move: M, state: S, config: MGPOptional<C>): MGPFallible<L>;
 
     public abstract getInitialState(config: MGPOptional<C>): S;
 

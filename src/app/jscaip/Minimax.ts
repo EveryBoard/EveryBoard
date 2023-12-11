@@ -174,7 +174,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
     private getOrCreateChild(node: GameNode<M, S, C>, move: M, config: MGPOptional<C>): GameNode<M, S, C> {
         const child: MGPOptional<GameNode<M, S, C>> = node.getChild(move);
         if (child.isAbsent()) {
-            const legality: MGPFallible<L> = this.rules.getLegality(move, node.gameState, config);
+            const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
             const moveString: string = move.toString();
             Utils.assert(legality.isSuccess(), 'The minimax "' + this.name + '" has proposed an illegal move (' + moveString + '), refusal reason: ' + legality.getReasonOr('') + ' this should not happen.');
             const state: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());

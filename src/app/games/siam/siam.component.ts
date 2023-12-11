@@ -75,7 +75,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public override async showLastMove(move: SiamMove): Promise<void> {
         this.lastMove = MGPOptional.of(move);
         const previousGameState: SiamState = this.getPreviousState();
-        const config: SiamConfig = this.getConfig().get();
+        const config: MGPOptional<SiamConfig> = this.getConfig();
         this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState, config).get().moved;
     }
 

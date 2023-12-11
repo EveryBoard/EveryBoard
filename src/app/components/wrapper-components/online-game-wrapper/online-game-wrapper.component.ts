@@ -283,7 +283,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
         const state: GameState = this.gameComponent.node.gameState;
         const config: MGPOptional<RulesConfig> = await this.getConfig();
-        const legality: MGPFallible<unknown> = this.gameComponent.rules.getLegality(chosenMove, state, config);
+        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(chosenMove, state, config);
         const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
             ' at turn ' + currentPartTurn +
             'because "' + legality.getReasonOr('') + '"';
@@ -443,7 +443,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const rules: AbstractRules = this.gameComponent.rules;
             const state: GameState = oldNode.gameState;
             const config: MGPOptional<RulesConfig> = await this.getConfig();
-            const legality: MGPFallible<unknown> = this.gameComponent.rules.getLegality(move, state, config);
+            const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
             Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
             const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
             const newNode: AbstractNode = new GameNode(stateAfterMove,

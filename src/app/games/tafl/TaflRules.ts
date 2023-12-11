@@ -32,7 +32,10 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         super();
     }
 
-    public override isLegal(move: TaflMove, state: TaflState, config: TaflConfig): MGPValidation {
+    public override isLegal(move: TaflMove, state: TaflState, optionalConfig: MGPOptional<TaflConfig>)
+    : MGPValidation
+    {
+        const config: TaflConfig = optionalConfig.get();
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state, config);
         if (validity.isFailure()) {

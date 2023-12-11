@@ -11,7 +11,7 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type EpaminondasConfig = {
@@ -33,9 +33,9 @@ export class EpaminondasRules
         new RulesConfigDescription<EpaminondasConfig>({
             name: (): string => $localize`Epaminondas`,
             config: {
-                width: new NumberConfigLine(14, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
-                emptyRows: new NumberConfigLine(8, () => $localize`Number of empty rows`, MGPValidators.range(1, 99)),
-                rowsOfSoldiers: new NumberConfigLine(2, () => $localize`Number of soldier rows`, MGPValidators.range(1, 99)),
+                width: new NumberConfig(14, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                emptyRows: new NumberConfig(8, () => $localize`Number of empty rows`, MGPValidators.range(1, 99)),
+                rowsOfSoldiers: new NumberConfig(2, () => $localize`Number of soldier rows`, MGPValidators.range(1, 99)),
             },
         });
 

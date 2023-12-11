@@ -6,7 +6,7 @@ import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '.
 import { Utils } from 'src/app/utils/utils';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { BooleanConfig, NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
 export class AwaleRules extends MancalaRules {
 
@@ -20,8 +20,8 @@ export class AwaleRules extends MancalaRules {
                 mustFeed: new BooleanConfig(true, MancalaRules.MUST_FEED),
                 passByPlayerStore: new BooleanConfig(false, MancalaRules.PASS_BY_PLAYER_STORE),
                 mustContinueDistributionAfterStore: new BooleanConfig(false, MancalaRules.MULTIPLE_SOW),
-                seedsByHouse: new NumberConfigLine(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
-                width: new NumberConfigLine(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
+                width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
             },
         });
 

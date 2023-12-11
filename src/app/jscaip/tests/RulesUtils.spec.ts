@@ -24,7 +24,7 @@ export class RulesUtils {
                                                            config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        const legality: MGPFallible<L> = rules.getLegality(move, state, config);
+        const legality: MGPFallible<L> = rules.isLegal(move, state, config);
         if (legality.isSuccess()) {
             const resultingState: S = rules.applyLegalMove(move, state, config, legality.get());
             if (isComparableObject(resultingState)) {
@@ -53,7 +53,7 @@ export class RulesUtils {
         config: MGPOptional<C>)
     : void
     {
-        const legality: MGPFallible<L> = rules.getLegality(move, state, config);
+        const legality: MGPFallible<L> = rules.isLegal(move, state, config);
         expect(legality.isFailure()).withContext('move should have failed but it succeeded').toBeTrue();
         expect(legality.getReason()).toBe(reason);
     }
@@ -120,7 +120,7 @@ export class RulesUtils {
         let i: number = 0;
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);
-            const legality: MGPFallible<L> = ruler.getLegality(move, state, config);
+            const legality: MGPFallible<L> = ruler.isLegal(move, state, config);
             Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
             state = ruler.applyLegalMove(move, state, config, legality.get());
             i++;
