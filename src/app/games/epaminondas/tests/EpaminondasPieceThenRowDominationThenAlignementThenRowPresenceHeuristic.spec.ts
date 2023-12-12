@@ -2,7 +2,7 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EpaminondasHeuristic } from '../EpaminondasHeuristic';
+import { EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic } from '../EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasConfig, EpaminondasRules } from '../EpaminondasRules';
 
@@ -10,13 +10,13 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-describe('EpaminondasHeuristic', () => {
+describe('EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic', () => {
 
-    let heuristic: EpaminondasHeuristic;
+    let heuristic: EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic;
     const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        heuristic = new EpaminondasHeuristic();
+        heuristic = new EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic();
     });
 
     it('should prefer having more pieces', () => {

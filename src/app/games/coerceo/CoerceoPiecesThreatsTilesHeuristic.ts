@@ -35,7 +35,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends Heuristic<CoerceoMove, C
             }
             tiles += state.tiles[owner.value] * owner.getScoreModifier();
         }
-        return new BoardValue([
+        return BoardValue.multiMetric([
             safePiece,
             threatenedPiece,
             tiles,

@@ -30,8 +30,9 @@ export class BoardValue {
     public static ofMultiple(playerZeroScores: ReadonlyArray<number>, playerOneScores: ReadonlyArray<number>)
     : BoardValue
     {
+        // TODO FOR REVIEW: non je voulais dire, si zero a [1, 2] mais un a [1], je considère que 1 a [1, 0] ???
         Utils.assert(playerZeroScores.length === playerOneScores.length, 'both player should have the same number of metric');
-        // TODO FOR REVIEW: or do we prefer to assume that it's 0 if it is not provided ?
+        Utils.assert(playerZeroScores.length >= 1, 'scores list should be filled');
         const subValues: number[] = [];
         for (let i: number = 0; i < playerZeroScores.length; i++) {
             const playerZeroScore: number = playerZeroScores[i] * Player.ZERO.getScoreModifier();
@@ -41,5 +42,13 @@ export class BoardValue {
         return new BoardValue(subValues);
     }
 
-    public constructor(public readonly value: ReadonlyArray<number>) {}
+    public static of(value: number): BoardValue {
+        return new BoardValue([value]);
+    }
+
+    public static multiMetric(value: ReadonlyArray<number>): BoardValue {
+        return new BoardValue(value);
+    }
+
+    private constructor(public readonly value: ReadonlyArray<number>) {}
 }

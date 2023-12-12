@@ -33,8 +33,8 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
-        expect(boardValue).toBe(16);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        expect(boardValue).toEqual([16]);
     });
 
     it('should get 4 points for edges', () => {
@@ -50,8 +50,8 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
-        expect(boardValue).toBe(4);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        expect(boardValue).toEqual([4]);
     });
 
     it('should get 1 points for normal square', () => {
@@ -67,8 +67,8 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
-        expect(boardValue).toBe(1);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        expect(boardValue).toEqual([1]);
     });
 
     it('should prefer owning the corners', () => {

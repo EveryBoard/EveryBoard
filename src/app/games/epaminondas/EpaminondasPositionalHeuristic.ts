@@ -13,7 +13,7 @@ export class EpaminondasPositionalHeuristic
 {
 
     public getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
-        return new BoardValue([this.getPieceCountThenSupportThenAdvancement(node.gameState)]);
+        return BoardValue.of(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
 
     private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {

@@ -13,7 +13,7 @@ export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, Si
     public getBoardValue(node: SiamNode, config: MGPOptional<SiamConfig>): BoardValue {
         const boardValueInfo: { shortestZero: number, shortestOne: number, boardValue: number } =
             this.getBoardValueInfo(node.gameState, config.get());
-        return new BoardValue([boardValueInfo.boardValue]);
+        return BoardValue.of(boardValueInfo.boardValue);
     }
 
     private getBoardValueInfo(state: SiamState, config: SiamConfig)

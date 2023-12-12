@@ -19,7 +19,7 @@ export class P4Heuristic extends Heuristic<P4Move, P4State, BoardValue, P4Config
                 score += squareScore;
             }
         }
-        return new BoardValue([score]);
+        return BoardValue.of(score);
     }
 
 }

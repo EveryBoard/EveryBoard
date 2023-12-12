@@ -43,10 +43,11 @@ export class HeuristicUtils {
     {
         for (const heuristic of heuristics) {
             const node: GameNode<M, S, C> = new GameNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
-            const value: number = heuristic.getBoardValue(node, config).value[0];
-            const expectedValue: number = player.getPreVictory();
-            expect(BoardValue.isPreVictory(value)).toBeTrue();
-            expect(value).toBe(expectedValue);
+            for (const boardSubValue of heuristic.getBoardValue(node, config).value) {
+                const expectedValue: number = player.getPreVictory();
+                expect(BoardValue.isPreVictory(boardSubValue)).toBeTrue();
+                expect(boardSubValue).toBe(expectedValue);
+            }
         }
     }
     public static expectStatesToBeOfEqualValue<M extends Move, S extends GameState, C extends RulesConfig>(
@@ -56,9 +57,9 @@ export class HeuristicUtils {
         config: MGPOptional<C>)
     : void {
         const leftNode: GameNode<M, S, C> = new GameNode(leftState);
-        const leftValue: number = heuristic.getBoardValue(leftNode, config).value[0];
+        const leftValue: readonly number[] = heuristic.getBoardValue(leftNode, config).value;
         const rightNode: GameNode<M, S, C> = new GameNode(rightState);
-        const rightValue: number = heuristic.getBoardValue(rightNode, config).value[0];
+        const rightValue: readonly number[] = heuristic.getBoardValue(rightNode, config).value;
         expect(leftValue).withContext('both value should be equal').toEqual(rightValue);
     }
 

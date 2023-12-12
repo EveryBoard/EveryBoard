@@ -36,10 +36,10 @@ describe('DvonnScoreHeuristic', () => {
         const node: DvonnNode = new DvonnNode(state);
 
         // When computing the board value
-        const value: number = heuristic.getBoardValue(node, defaultConfig).value[0];
+        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then it should be 2 - 1 = 1
-        expect(value).toBe(1);
+        expect(value).toEqual([1]);
     });
 
 });

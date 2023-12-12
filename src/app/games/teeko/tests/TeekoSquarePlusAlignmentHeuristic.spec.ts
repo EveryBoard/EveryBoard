@@ -3,19 +3,19 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { TeekoHeuristic } from '../TeekoHeuristic';
+import { TeekoSquarePlusAlignmentHeuristic } from '../TeekoHeuristic';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 
-describe('TeekoHeuristic', () => {
+describe('TeekoSquarePlusAlignmentHeuristic', () => {
 
-    let heuristic: TeekoHeuristic;
+    let heuristic: TeekoSquarePlusAlignmentHeuristic;
     const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        heuristic = new TeekoHeuristic();
+        heuristic = new TeekoSquarePlusAlignmentHeuristic();
     });
 
     it('should count the number of possible squares and lines', () => {
@@ -31,10 +31,10 @@ describe('TeekoHeuristic', () => {
         const node: TeekoNode = new TeekoNode(state);
 
         // When calculating the board value
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then it should be the negative number of possible victories for Player.ZERO
-        expect(boardValue).toBe(-12);
+        expect(boardValue).toEqual([-12]);
     });
 
 });

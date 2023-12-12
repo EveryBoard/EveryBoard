@@ -2,6 +2,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils, Table, TableUtils, TableWithPossibleNegativeIndices } from '../ArrayUtils';
 import { MGPOptional } from '../MGPOptional';
+import { TestUtils } from './TestUtils.spec';
+import { Utils } from '../utils';
 
 describe('ArrayUtils', () => {
 
@@ -29,12 +31,26 @@ describe('ArrayUtils', () => {
 
     describe('isSuperior && isInferior', () => {
 
-        function expectCorrectness(left: number[], right: number[], isSuperior: boolean, isInferior: boolean): void {
+        function expectComparisonCorrectness(left: number[], status: '<' | '=' | '>', right: number[]): void {
             const actualIsSuperior: boolean = ArrayUtils.isSuperior(left, right);
             const actualIsInferior: boolean = ArrayUtils.isInferior(left, right);
+            switch (status) {
+                case '<':
+                    expect(actualIsInferior).toBeTrue();
+                    expect(actualIsSuperior).toBeFalse();
+                    break;
+                case '=':
+                    expect(actualIsInferior).toBeFalse();
+                    expect(actualIsSuperior).toBeFalse();
+                    break;
+                default:
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    Utils.assert(status === '>', 'should be =');
+                    expect(actualIsInferior).toBeFalse();
+                    expect(actualIsSuperior).toBeTrue();
+                    break;
 
-            expect(isSuperior).withContext('isSuperior').toBe(actualIsSuperior);
-            expect(isInferior).withContext('isInferior').toBe(actualIsInferior);
+            }
         }
 
         it('should discover superiority on short list', () => {
@@ -45,7 +61,7 @@ describe('ArrayUtils', () => {
 
             // When comparing them
             // Then isSuperior should be true and isInferior false
-            expectCorrectness(superior, inferior, true, false);
+            expectComparisonCorrectness(superior, '>', inferior);
         });
 
         it('should discover superiority', () => {
@@ -56,7 +72,7 @@ describe('ArrayUtils', () => {
 
             // When comparing them
             // Then isSuperior should be true and isInferior false
-            expectCorrectness(superior, inferior, true, false);
+            expectComparisonCorrectness(superior, '>', inferior);
         });
 
         it('should discover inferiority', () => {
@@ -67,7 +83,7 @@ describe('ArrayUtils', () => {
 
             // When comparing them
             // Then isSuperior should be false and isInferior true
-            expectCorrectness(inferior, superior, false, true);
+            expectComparisonCorrectness(inferior, '<', superior);
         });
 
         it('should discover inferiority on short list', () => {
@@ -78,7 +94,7 @@ describe('ArrayUtils', () => {
 
             // When comparing them
             // Then isSuperior should be false and isInferior true
-            expectCorrectness(inferior, superior, false, true);
+            expectComparisonCorrectness(inferior, '<', superior);
         });
 
         it('should discover equality', () => {
@@ -88,7 +104,7 @@ describe('ArrayUtils', () => {
 
             // When comparing them
             // Then isSuperior should be false and isInferior false
-            expectCorrectness(left, right, false, false);
+            expectComparisonCorrectness(left, '=', right);
         });
 
         it('should discover equality on short list', () => {
@@ -98,7 +114,25 @@ describe('ArrayUtils', () => {
 
             // When comparing them
             // Then isSuperior should be false and isInferior false
-            expectCorrectness(left, right, false, false);
+            expectComparisonCorrectness(left, '=', right);
+        });
+
+        it('should throw with empty list (isSuperior)', () => {
+            // Given one empty list and one normal
+            // When comparing both list
+            const reason: string = 'ArrayUtils.isInferior/isSuperior should have two non-empty list as parameter';
+            TestUtils.expectToThrowAndLog(() => {
+                ArrayUtils.isSuperior([], [1]);
+            }, reason);
+        });
+
+        it('should throw with empty list (isInferior)', () => {
+            // Given one empty list and one normal
+            // When comparing both list
+            const reason: string = 'ArrayUtils.isInferior/isSuperior should have two non-empty list as parameter';
+            TestUtils.expectToThrowAndLog(() => {
+                ArrayUtils.isInferior([], [1]);
+            }, reason);
         });
 
     });

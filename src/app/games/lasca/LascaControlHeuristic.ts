@@ -1,22 +1,28 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LascaMove } from './LascaMove';
 import { LascaNode, LascaRules } from './LascaRules';
 import { LascaState } from './LascaState';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 
-export class LascaControlHeuristic extends PlayerMetricHeuristic<LascaMove, LascaState> {
+export class LascaControlHeuristic extends Heuristic<LascaMove, LascaState> {
 
-    public getMetrics(node: LascaNode): MGPMap<Player, ReadonlyArray<number>> {
+    public override getBoardValue(node: LascaNode, config: MGPOptional<EmptyRulesConfig>): BoardValue {
+        const controlScore: number = this.getControlScore(node, config);
+        return BoardValue.of(controlScore);
+    }
+
+    protected getControlScore(node: LascaNode, _config: MGPOptional<EmptyRulesConfig>): number {
         const state: LascaState = node.gameState;
-        const pieceUnderZeroControl: number = this.getNumberOfMobileCoords(state, Player.ZERO);
-        const pieceUnderOneControl: number = this.getNumberOfMobileCoords(state, Player.ONE);
-        return new MGPMap<Player, ReadonlyArray<number>>([
-            { key: Player.ZERO, value: [pieceUnderZeroControl] },
-            { key: Player.ONE, value: [pieceUnderOneControl] },
-        ]);
+        let controlScore: number = 0;
+        for (const player of Player.PLAYERS) {
+            controlScore += player.getScoreModifier() * this.getNumberOfMobileCoords(state, player);
+        }
+        return controlScore;
     }
 
     public getNumberOfMobileCoords(state: LascaState, player: Player): number {

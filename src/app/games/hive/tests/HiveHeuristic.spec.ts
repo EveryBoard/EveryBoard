@@ -27,10 +27,10 @@ describe('HiveHeuristic', () => {
         const node: HiveNode = new HiveNode(state);
 
         // When computing its value
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
         // Then it should be zero
-        expect(boardValue).toEqual(0);
+        expect(boardValue).toEqual([0]);
     });
 
     it('should prefer when queen bee has a higher mobility', () => {

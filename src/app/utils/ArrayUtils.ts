@@ -102,27 +102,18 @@ export class ArrayUtils {
     }
 
     public static isInferior(inferior: ReadonlyArray<number>, superior: ReadonlyArray<number>): boolean {
-        Utils.assert(inferior.length > 0, 'ArrayUtils.isInferior should have a non empty list as first param TODO TEST');
-        Utils.assert(superior.length > 0, 'ArrayUtils.isInferior should have a non empty list as second param TODO TEST');
-        return ArrayUtils.compareNumberList(inferior, superior);
-    }
-
-    public static isSuperior(superior: ReadonlyArray<number>, inferior: ReadonlyArray<number>): boolean {
-        Utils.assert(superior.length > 0, 'ArrayUtils.isSuperior should have a non empty list as first param TODO TEST');
-        Utils.assert(inferior.length > 0, 'ArrayUtils.isSuperior should have a non empty list as second param TODO TEST');
-        return ArrayUtils.compareNumberList(inferior, superior);
-    }
-
-    private static compareNumberList(left: ReadonlyArray<number>, right: ReadonlyArray<number>): boolean {
-        const maximumIndex: number = Math.min(left.length, right.length);
+        Utils.assert(inferior.length > 0 && superior.length > 0, 'ArrayUtils.isInferior/isSuperior should have two non-empty list as parameter');
+        const maximumIndex: number = Math.min(inferior.length, superior.length);
         for (let i: number = 0; i < maximumIndex; i++) {
-            if (right[i] === left[i]) { // They are so far equals
-                continue;
-            } else {
-                return left[i] < right[i];
+            if (superior[i] !== inferior[i]) { // We found an inequality
+                return inferior[i] < superior[i];
             }
         }
         return false; // They are equal
+    }
+
+    public static isSuperior(superior: ReadonlyArray<number>, inferior: ReadonlyArray<number>): boolean {
+        return ArrayUtils.isInferior(inferior, superior);
     }
 
     public static min(left: ReadonlyArray<number>, right: ReadonlyArray<number>): ReadonlyArray<number> {

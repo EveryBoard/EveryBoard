@@ -98,7 +98,7 @@ describe('DummyHeuristic', () => {
         const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
 
         // Then it should be zero
-        expect(boardValue.value[0]).toBe(0);
+        expect(boardValue.value).toEqual([0]);
     });
 
 });

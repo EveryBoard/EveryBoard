@@ -38,7 +38,7 @@ describe('QuartoHeuristic', () => {
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
         // Then the heuristic should assign 0 as board value
         const boardValue: BoardValue = heuristic.getBoardValue(new QuartoNode(state), defaultConfig);
-        expect(boardValue.value[0]).toBe(0);
+        expect(boardValue.value).toEqual([0]);
     });
 
     it('should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {

@@ -20,7 +20,7 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState, Board
      * is often what you want.
      */
     public getBoardValue(node: NewGameNode, _config: MGPOptional<NewGameConfig>): BoardValue {
-        return new BoardValue([node.gameState.turn]);
+        return BoardValue.of(node.gameState.turn);
     }
 
 }

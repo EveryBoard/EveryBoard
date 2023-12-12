@@ -24,7 +24,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
 
     public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
         const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node, config);
-        return new BoardValue([
+        return BoardValue.multiMetric([
             metrics.safeScore,
             metrics.threatenedScore,
             metrics.controlScore,

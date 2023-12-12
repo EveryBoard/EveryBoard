@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { TeekoHeuristic } from './TeekoHeuristic';
+import { TeekoSquarePlusAlignmentHeuristic, TeekoSquareThenAlignementHeuristic } from './TeekoHeuristic';
 import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 
 @Component({
@@ -35,7 +35,8 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         super(messageDisplayer);
         this.setRulesAndNode('Teeko');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new TeekoHeuristic(), new TeekoMoveGenerator()),
+            new Minimax($localize`Square + Alignment`, this.rules, new TeekoSquarePlusAlignmentHeuristic(), new TeekoMoveGenerator()),
+            new Minimax($localize`Square > Alignment`, this.rules, new TeekoSquareThenAlignementHeuristic(), new TeekoMoveGenerator()),
             new MCTS($localize`MCTS`, new TeekoMoveGenerator(), this.rules),
         ];
         this.encoder = TeekoMove.encoder;

@@ -32,7 +32,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             shapeInfo = this.calculateBoardValue(move.get(), state);
         }
         if (shapeInfo.status === SCORE.VICTORY) {
-            return new BoardValue([victoryValue]);
+            return BoardValue.of(victoryValue);
         }
         if (state.turn > 39) {
             const pieces: [number, number] = state.countPieces();
@@ -41,9 +41,9 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             return BoardValue.ofSingle(zeroPieces, onePieces);
         }
         if (shapeInfo.status === SCORE.PRE_VICTORY) {
-            return new BoardValue([LAST_PLAYER.getPreVictory()]);
+            return BoardValue.of(LAST_PLAYER.getPreVictory());
         }
-        return new BoardValue([shapeInfo.sum * LAST_PLAYER.getScoreModifier()]);
+        return BoardValue.of(shapeInfo.sum * LAST_PLAYER.getScoreModifier());
     }
 
     public startSearchingVictorySources(): void {

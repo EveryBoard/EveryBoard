@@ -18,7 +18,7 @@ export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, Conn
                 score += squareScore;
             }
         }
-        return new BoardValue([score]);
+        return BoardValue.of(score);
     }
 
 }

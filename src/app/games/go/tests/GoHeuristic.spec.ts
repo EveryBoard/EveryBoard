@@ -30,8 +30,8 @@ describe('GoHeuristic', () => {
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
         const initialNode: GoNode = new GoNode(state);
-        const boardValue: number = heuristic.getBoardValue(initialNode, defaultConfig).value[0];
-        expect(boardValue).toBe(3);
+        const boardValue: readonly number[] = heuristic.getBoardValue(initialNode, defaultConfig).value;
+        expect(boardValue).toEqual([3]);
     });
 
     it('should prefer a larger territory', () => {

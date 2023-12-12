@@ -57,7 +57,11 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                 }
             }
         }
-        return new BoardValue([safePiece, threatenedPiece, totalInfluence]);
+        return BoardValue.multiMetric([
+            safePiece,
+            threatenedPiece,
+            totalInfluence,
+        ]);
     }
 
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
