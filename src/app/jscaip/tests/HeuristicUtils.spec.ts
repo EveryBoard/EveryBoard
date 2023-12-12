@@ -4,8 +4,8 @@ import { GameState } from '../GameState';
 import { Move } from '../Move';
 import { Heuristic } from '../AI/Minimax';
 import { Player } from '../Player';
-import { GameNode } from '../AI/GameNode';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { GameNode } from '../AI/GameNode';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class HeuristicUtils {
@@ -50,6 +50,7 @@ export class HeuristicUtils {
             }
         }
     }
+
     public static expectStatesToBeOfEqualValue<M extends Move, S extends GameState, C extends RulesConfig>(
         heuristic: Heuristic<M, S, BoardValue, C>,
         leftState: S,

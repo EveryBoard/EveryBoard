@@ -1,8 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement, SimpleChanges } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
+
 import { P4Config, P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
 import { LodestoneNode, LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
+import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { AbstractRules } from 'src/app/jscaip/Rules';
@@ -14,6 +16,7 @@ import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapperMessages } from '../GameWrapper';
+import { Utils } from 'src/app/utils/utils';
 
 describe('DemoCardComponent', () => {
 
@@ -117,6 +120,16 @@ describe('DemoCardComponent', () => {
 
         // Then we should see that the component has indeed been changed
         testUtils.expectElementToExist('.player0-fill');
+    }));
+
+    it('should not use onLegalUserMove', fakeAsync(async() => {
+        spyOn(Utils, 'assert').and.callFake(() => {});
+        // Given any demo node
+        // When calling onLegalUserMove
+        const reason: string = 'this should not be usefull, right ?';
+        await testUtils.getComponent().onLegalUserMove(null as unknown as P4Move);
+        // Then it should throw
+        expect(Utils.assert).toHaveBeenCalledOnceWith(false, reason);
     }));
 
     describe('getConfig', () => {

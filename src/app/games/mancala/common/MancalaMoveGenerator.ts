@@ -23,7 +23,7 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
                 if (config.get().mustContinueDistributionAfterStore) {
                     moves.push(...this.getPossibleMoveContinuations(state, x, playerY, move, config.get()));
                 } else {
-                    const legality: MGPValidation = this.rules.isLegal(move, state, config.get());
+                    const legality: MGPValidation = this.rules.isLegal(move, state, config);
                     if (legality.isSuccess()) {
                         moves.push(move);
                     }

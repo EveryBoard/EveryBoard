@@ -14,7 +14,7 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class SiamLegalityInformation {
@@ -64,11 +64,11 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
             name: (): string => $localize`Siam`,
             config: {
                 // minimum 3 so that there is space around the mountain
-                width: new NumberConfigLine(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
-                height: new NumberConfigLine(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
-                numberOfPiece: new NumberConfigLine(5, () => $localize`Number of piece by player`, MGPValidators.range(1, 99)),
+                width: new NumberConfig(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
+                height: new NumberConfig(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
+                numberOfPiece: new NumberConfig(5, () => $localize`Number of piece by player`, MGPValidators.range(1, 99)),
                 // -1 on two ends because there will always be the first mountain
-                numberOfBonusMountain: new NumberConfigLine(2, () => $localize`Number of bonus mountains`, MGPValidators.range(0, 98)),
+                numberOfBonusMountain: new NumberConfig(2, () => $localize`Number of bonus mountains`, MGPValidators.range(0, 98)),
             },
         });
 
@@ -123,7 +123,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
                move.coord.y === state.getHeight();
     }
 
-    public override isLegal(move: SiamMove, state: SiamState, config: SiamConfig)
+    public override isLegal(move: SiamMove, state: SiamState, optionalConfig: MGPOptional<SiamConfig>)
     : MGPFallible<SiamLegalityInformation>
     {
         const moveValidity: MGPValidation = this.getMoveValidity(move, state);
@@ -144,7 +144,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
             let movingPiece: SiamPiece;
             if (this.isInsertion(move, state)) {
                 const insertionInfo: {insertedPiece: SiamPiece, legal: MGPValidation} =
-                    this.isLegalInsertion(move.coord, state, config);
+                    this.isLegalInsertion(move.coord, state, optionalConfig.get());
                 if (insertionInfo.legal.isFailure()) {
                     return MGPFallible.failure(insertionInfo.legal.getReason());
                 }
@@ -512,7 +512,8 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
                         SiamMove.of(entrance.x, entrance.y, MGPOptional.of(direction), orientation);
                     Utils.assert(this.getMoveValidity(move, state).isSuccess(),
                                  'SiamRules.getInsertionsAt should only construct valid insertions');
-                    const legality: MGPFallible<SiamLegalityInformation> = this.isLegal(move, state, config);
+                    const legality: MGPFallible<SiamLegalityInformation> =
+                        this.isLegal(move, state, MGPOptional.of(config));
                     if (legality.isSuccess()) {
                         moves.push(move);
                     }

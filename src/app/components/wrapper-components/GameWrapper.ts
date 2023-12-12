@@ -136,7 +136,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         const legality: MGPFallible<unknown> =
-            this.gameComponent.rules.getLegality(move, this.gameComponent.node.gameState, config);
+            this.gameComponent.rules.isLegal(move, this.gameComponent.node.gameState, config);
         if (legality.isFailure()) {
             await this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);

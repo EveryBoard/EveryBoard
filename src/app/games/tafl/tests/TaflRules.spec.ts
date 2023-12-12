@@ -189,7 +189,7 @@ describe('TaflRules', () => {
             expect(invader).toEqual(Player.ZERO);
         });
 
-        it(`should return Player.ONE when invader don't start`, () => {
+        it(`should return Player.ONE when invader doesn't start`, () => {
             // Given a state instance configured with a starting defender
             const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
                 ...defaultConfig.get(),

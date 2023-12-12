@@ -72,7 +72,10 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         super();
     }
 
-    public override isLegal(move: MancalaMove, state: MancalaState, config: MancalaConfig): MGPValidation {
+    public override isLegal(move: MancalaMove, state: MancalaState, optionalConfig: MGPOptional<MancalaConfig>)
+    : MGPValidation
+    {
+        const config: MancalaConfig = optionalConfig.get();
         const playerY: number = state.getCurrentPlayerY();
         let canStillPlay: boolean = true;
         for (const distribution of move) {

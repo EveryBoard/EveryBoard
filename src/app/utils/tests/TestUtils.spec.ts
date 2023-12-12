@@ -542,7 +542,9 @@ export class TestUtils {
         if (jasmine.isSpy(ErrorLoggerService.logError) === false) {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         }
-        expect(func).toThrowError('Assertion failure: ' + error);
+        expect(func)
+            .withContext('Expected Assertion failure: ' + error)
+            .toThrowError('Assertion failure: ' + error);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
     }
 

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { NumberConfigLine, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('RulesConfigUtil', () => {
@@ -15,7 +15,7 @@ describe('RulesConfigUtil', () => {
         const defaultNamedRulesConfig: DefaultConfigDescription<MyConfig> = {
             name: () => 'My Default Config',
             config: {
-                helaRosee: new NumberConfigLine(5, () => 'coucoute', MGPValidators.range(1, 99)),
+                helaRosee: new NumberConfig(5, () => 'coucoute', MGPValidators.range(1, 99)),
             },
         };
 
@@ -55,10 +55,10 @@ describe('RulesConfigUtil', () => {
             const defaultConfig: DefaultConfigDescription<MaConfigInterface> = {
                 name: () => 'My Default Config',
                 config: {
-                    helaRosee: new NumberConfigLine(2012, () => 'biilboul eh!', MGPValidators.range(1, 99)),
+                    helaRosee: new NumberConfig(2012, () => 'biilboul eh!', MGPValidators.range(1, 99)),
                 },
             };
-            defaultConfig.config.holaBanana = new NumberConfigLine(5, () => 'biilboul eh!', MGPValidators.range(1, 99));
+            defaultConfig.config.holaBanana = new NumberConfig(5, () => 'biilboul eh!', MGPValidators.range(1, 99));
 
             const secondaryConfig: NamedRulesConfig<MaConfigInterface> = {
                 config: { helaRosee: 7 },

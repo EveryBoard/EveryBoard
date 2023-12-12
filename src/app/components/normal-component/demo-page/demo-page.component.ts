@@ -74,7 +74,7 @@ export class DemoPageComponent {
                 };
             } else {
                 const move: Move = solution;
-                const legalityStatus: MGPFallible<unknown> = rules.getLegality(move, step.state, config);
+                const legalityStatus: MGPFallible<unknown> = rules.isLegal(move, step.state, config);
                 const state: GameState = rules.applyLegalMove(move, step.state, config, legalityStatus.get());
                 const parent: AbstractNode =
                     new GameNode(step.state);

@@ -3,14 +3,14 @@ import { Component } from '@angular/core';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { GameComponent } from '../game-component/GameComponent';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { SuperRules } from 'src/app/jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ViewBox } from '../GameComponentUtils';
 
 @Component({
     template: '',
 })
-export abstract class RectangularGameComponent<R extends ConfigurableRules<M, S, C, L>,
+export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
                                                M extends Move,
                                                S extends GameStateWithTable<P>,
                                                P,

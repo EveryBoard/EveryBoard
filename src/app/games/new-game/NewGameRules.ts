@@ -4,7 +4,7 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfigDescription, NumberConfigLine } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescription, NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 
@@ -55,7 +55,7 @@ export class NewGameRules extends ConfigurableRules<NewGameMove, NewGameState, N
             name: (): string => 'the internationalisable name of that standard config',
             config: {
                 the_name_you_will_use_in_your_rules_and_states:
-                    new NumberConfigLine(
+                    new NumberConfig(
                         5,
                         () => `the translatable and writable name of this parameter`,
                         (value: number | null): MGPValidation => {

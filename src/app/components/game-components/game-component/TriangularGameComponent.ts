@@ -4,11 +4,11 @@ import { Move } from 'src/app/jscaip/Move';
 import { GameComponent } from './GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { SuperRules } from 'src/app/jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({ template: '' })
-export abstract class TriangularGameComponent<R extends ConfigurableRules<M, S, C, L>,
+export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
                                               M extends Move,
                                               S extends GameState,
                                               P,

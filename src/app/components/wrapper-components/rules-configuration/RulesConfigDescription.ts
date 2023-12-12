@@ -17,13 +17,13 @@ export class RulesConfigDescriptionLocalizable {
 export class ConfigLine {
 
     protected constructor(public readonly value: ConfigDescriptionType,
-                       public readonly title: Localized,
-                       public readonly validator?: MGPValidator)
+                          public readonly title: Localized,
+                          public readonly validator?: MGPValidator)
     {
     }
 }
 
-export class NumberConfigLine extends ConfigLine {
+export class NumberConfig extends ConfigLine {
 
     public constructor(value: number,
                        title: Localized,
@@ -101,8 +101,8 @@ export class RulesConfigDescriptions {
     public static readonly GOBAN: RulesConfigDescription<GobanConfig> = new RulesConfigDescription<GobanConfig>({
         name: (): string => $localize`Default`,
         config: {
-            width: new NumberConfigLine(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
-            height: new NumberConfigLine(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+            width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+            height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
         },
     });
 }

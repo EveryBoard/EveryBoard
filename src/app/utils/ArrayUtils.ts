@@ -81,11 +81,11 @@ export class ArrayUtils {
     public static maximumsBy<T>(array: T[], metric: (value: T) => number): T[] {
         const maximums: T[] = [];
         let maxMetricValue: number = Number.MIN_SAFE_INTEGER;
-        for (let i: number = 0; i < array.length; i++) {
-            const currentMetricValue: number = metric(array[i]);
+        for (const element of array) {
+            const currentMetricValue: number = metric(element);
             if (currentMetricValue > maxMetricValue) {
                 maxMetricValue = currentMetricValue;
-                maximums.push(array[i]);
+                maximums.push(element);
             }
         }
         return maximums;

@@ -13,7 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { NumberConfigLine, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export type ReversiLegalityInformation = Coord[];
@@ -51,8 +51,8 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         new RulesConfigDescription<ReversiConfig>({
             name: (): string => $localize`Reversi`,
             config: {
-                width: new NumberConfigLine(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
-                height: new NumberConfigLine(8, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
+                width: new NumberConfig(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
+                height: new NumberConfig(8, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
             },
         });
 
@@ -216,14 +216,14 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         return moves;
     }
 
-    public override isLegal(move: ReversiMove, state: ReversiState, config?: ReversiConfig)
+    public override isLegal(move: ReversiMove, state: ReversiState, config: MGPOptional<ReversiConfig>)
     : MGPFallible<ReversiLegalityInformation>
     {
         if (move.equals(ReversiMove.PASS)) { // if the player passes
             // let's check that pass is a legal move right now
             // if there was no choice but to pass, then passing is legal!
             // else, passing was illegal
-            if (this.playerCanOnlyPass(state, MGPOptional.ofNullable(config))) {
+            if (this.playerCanOnlyPass(state, config)) {
                 return MGPFallible.success([]);
             } else {
                 return MGPFallible.failure(RulesFailure.CANNOT_PASS());

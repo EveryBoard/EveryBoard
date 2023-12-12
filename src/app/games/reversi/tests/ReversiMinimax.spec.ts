@@ -23,7 +23,7 @@ describe('ReversiMinimax', () => {
     it('should not throw at first choice', () => {
         const node: ReversiNode = rules.getInitialNode(defaultConfig);
         const bestMove: ReversiMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
-        expect(rules.isLegal(bestMove, node.gameState, defaultConfig.get()).isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, node.gameState, defaultConfig).isSuccess()).toBeTrue();
     });
 
 });

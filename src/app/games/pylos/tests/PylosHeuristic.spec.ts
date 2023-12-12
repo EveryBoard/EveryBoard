@@ -43,7 +43,8 @@ describe('PylosHeuristic', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
         const node: PylosNode = new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        expect(heuristic.getBoardValue(node, defaultConfig).value).toEqual([0]);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        expect(boardValue).toEqual([0]);
     });
 
 });
