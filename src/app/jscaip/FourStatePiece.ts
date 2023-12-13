@@ -31,6 +31,11 @@ export class FourStatePiece implements ComparableObject {
     public isPlayer(): boolean {
         return this === FourStatePiece.ZERO || this === FourStatePiece.ONE;
     }
+
+    public getPlayer() : PlayerOrNone {
+        return this.player;
+    }
+
     public getValue(): number {
         if (this.reachable) {
             return this.player.getValue();

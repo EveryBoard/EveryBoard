@@ -137,10 +137,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
     public getPyramidClass(x: number, y: number): string {
         const spaceContent: FourStatePiece = this.board[y][x];
-        if (spaceContent === FourStatePiece.ZERO) {
-            return this.getPlayerClass(Player.ZERO);
-        } else if (spaceContent === FourStatePiece.ONE) {
-            return this.getPlayerClass(Player.ONE);
+        if (spaceContent.isPlayer()) {
+            return this.getPlayerClass(spaceContent.getPlayer())
         } else {
             return 'captured-fill';
         }
