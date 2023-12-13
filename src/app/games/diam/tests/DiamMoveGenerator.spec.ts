@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { DiamMoveGenerator } from '../DiamMoveGenerator';
 import { DiamPiece } from '../DiamPiece';
-import { DiamNode } from '../DiamRules';
+import { DiamNode, DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
 
 describe('DiamMoveGenerator', () => {
@@ -18,7 +18,7 @@ describe('DiamMoveGenerator', () => {
         moveGenerator = new DiamMoveGenerator();
     });
     it('should propose 16 moves at first turn', () => {
-        const node: DiamNode = new DiamNode(DiamState.getInitialState());
+        const node: DiamNode = new DiamNode(DiamRules.get().getInitialState());
         expect(moveGenerator.getListMoves(node).length).toBe(16);
     });
     it('should detect shift moves', () => {

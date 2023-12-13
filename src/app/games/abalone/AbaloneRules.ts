@@ -27,9 +27,26 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         }
         return AbaloneRules.singleton.get();
     }
-    private constructor() {
-        super(AbaloneState);
+
+    public getInitialState(): AbaloneState {
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, X, X, X, X, X],
+            [N, N, N, X, X, X, X, X, X],
+            [N, N, _, _, X, X, X, _, _],
+            [N, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, N],
+            [_, _, O, O, O, _, _, N, N],
+            [O, O, O, O, O, O, N, N, N],
+            [O, O, O, O, O, N, N, N, N],
+        ];
+        return new AbaloneState(board, 0);
     }
+
     private static isLegalRealPush(firstOpponent: Coord,
                                    move: AbaloneMove,
                                    state: AbaloneState,
@@ -87,7 +104,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         if (state.isPiece(move.coord) === false) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else if (firstPiece === FourStatePiece.ofPlayer(state.getCurrentOpponent())) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             return MGPValidation.SUCCESS;
         }

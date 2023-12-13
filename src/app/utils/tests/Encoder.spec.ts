@@ -16,11 +16,7 @@ export class EncoderTestUtils {
 
 describe('MoveEncoder', () => {
     describe('tuple', () => {
-        class MyMove extends MoveCoordToCoord {
-            public toString(): string {
-                return `${this.getStart().toString()} -> ${this.getEnd().toString()}`;
-            }
-        }
+        class MyMove extends MoveCoordToCoord {}
         const myMoveEncoder: Encoder<MyMove> = Encoder.tuple<MyMove, [Coord, Coord]>(
             [Coord.encoder, Coord.encoder],
             (move: MyMove): [Coord, Coord] => [move.getStart(), move.getEnd()],

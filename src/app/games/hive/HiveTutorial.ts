@@ -7,6 +7,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { HiveRules } from './HiveRules';
 
 const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
 const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');
@@ -41,7 +42,7 @@ export class HiveTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Placing the first and second piece`,
             $localize`There are two types of actions: drops and moves. Initially, the board is empty, so we will have to put (drop) pieces on the board. For the first piece dropped on the board, there is no placement restriction: you can choose any piece and put in on the board. The second piece, put by Light, will need to be put in a neighboring space of the first piece. To drop a piece on the board, select the piece of your choice in your remaining pieces (below the board), and then click on the space you want to drop it on.<br/><br/>You're playing Dark and starting the game, put any piece on the board.`,
-            HiveState.getInitialState(),
+            HiveRules.get().getInitialState(),
             HiveMove.drop(B, new Coord(0, 0)),
             $localize`Congratulations!`),
         TutorialStep.anyMove(

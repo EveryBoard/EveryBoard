@@ -46,7 +46,7 @@ export class HiveCoordToCoordMove extends MoveCoordToCoord {
     protected constructor(start: Coord, end: Coord) {
         super(start, end);
     }
-    public toString(): string {
+    public override toString(): string {
         return `HiveMoveCoordToCoord(${this.getStart().toString()} -> ${this.getEnd().toString()})`;
     }
     public override equals(other: HiveMove): boolean {

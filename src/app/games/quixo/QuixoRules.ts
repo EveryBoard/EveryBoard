@@ -12,6 +12,7 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
@@ -25,9 +26,12 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         }
         return QuixoRules.singleton.get();
     }
-    private constructor() {
-        super(QuixoState);
+
+    public getInitialState(): QuixoState {
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(QuixoState.SIZE, QuixoState.SIZE, PlayerOrNone.NONE);
+        return new QuixoState(initialBoard, 0);
     }
+
     public static readonly QUIXO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(QuixoState.isOnBoard, Utils.identity, QuixoState.SIZE);
 
@@ -105,7 +109,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
     public isLegal(move: QuixoMove, state: QuixoState): MGPValidation {
         if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             return MGPValidation.SUCCESS;
         }

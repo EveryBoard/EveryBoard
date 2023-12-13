@@ -22,7 +22,7 @@ describe('QuartoRules', () => {
     });
     it('should forbid not to give a piece when not last turn', () => {
         // Given a board that is not on last turn
-        const state: QuartoState = QuartoState.getInitialState();
+        const state: QuartoState = QuartoRules.get().getInitialState();
 
         // When giving no piece to next player
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.EMPTY);
@@ -75,7 +75,7 @@ describe('QuartoRules', () => {
     });
     it('should forbid to give the piece that you had in your hand', () => {
         // Given any board
-        const state: QuartoState = QuartoState.getInitialState();
+        const state: QuartoState = QuartoRules.get().getInitialState();
 
         // When giving the piece you had in hand
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
@@ -103,7 +103,7 @@ describe('QuartoRules', () => {
     });
     it('should allow simple move', () => {
         // Given a board
-        const state: QuartoState = QuartoState.getInitialState();
+        const state: QuartoState = QuartoRules.get().getInitialState();
 
         // When doing a simple move
         const move: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);

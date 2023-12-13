@@ -11,6 +11,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Debug } from 'src/app/utils/utils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 
@@ -27,9 +28,19 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         }
         return EncapsuleRules.singleton.get();
     }
-    private constructor() {
-        super(EncapsuleState);
+
+    public getInitialState(): EncapsuleState {
+        const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
+        const startingBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
+        const initialPieces: EncapsulePiece[] = [
+            EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
+            EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,
+            EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.SMALL_DARK,
+            EncapsulePiece.SMALL_DARK, EncapsulePiece.SMALL_LIGHT, EncapsulePiece.SMALL_LIGHT,
+        ];
+        return new EncapsuleState(startingBoard, 0, initialPieces);
     }
+
     public static readonly LINES: Coord[][] = [
         [new Coord(0, 0), new Coord(0, 1), new Coord(0, 2)],
         [new Coord(1, 0), new Coord(1, 1), new Coord(1, 2)],
@@ -70,8 +81,12 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
-            if (state.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            const owner: PlayerOrNone = movingPiece.getPlayer();
+            if (owner === PlayerOrNone.NONE) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            }
+            if (owner === state.getCurrentOpponent()) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             }
             if (state.isInRemainingPieces(movingPiece) === false) {
                 return MGPFallible.failure(EncapsuleFailure.PIECE_OUT_OF_STOCK());
@@ -80,8 +95,12 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
             const startingCoord: Coord = move.startingCoord.get();
             const startingSpace: EncapsuleSpace = state.getPieceAt(startingCoord);
             movingPiece = startingSpace.getBiggest();
-            if (state.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            const owner: PlayerOrNone = movingPiece.getPlayer();
+            if (owner === PlayerOrNone.NONE) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            }
+            if (owner === state.getCurrentOpponent()) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             }
         }
         const landingSpace: EncapsuleSpace = state.getPieceAt(move.landingCoord);

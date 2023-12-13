@@ -1,9 +1,10 @@
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from './MancalaState';
 
 describe('MancalaState', () => {
     it('should compare correctly', () => {
         // Given an initial state
-        const state: MancalaState = MancalaState.getInitialState();
+        const state: MancalaState = new MancalaState(TableUtils.create(MancalaState.WIDTH, 2, 4), 0, [0, 0]);
         // and state with different board
         const differentBoard: MancalaState = new MancalaState([
             [1, 2, 3, 4, 5, 6],

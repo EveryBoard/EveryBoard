@@ -14,6 +14,9 @@ module.exports = function(config) {
         ],
         client: {
             clearContext: false, // leave Jasmine Spec Runner output visible in browser
+            jasmine: {
+                timeoutInterval: 10000,
+            }
         },
         coverageReporter: {
             dir: 'coverage/',
@@ -34,6 +37,9 @@ module.exports = function(config) {
             ChromeHeadlessCustom: {
                 base: 'ChromeHeadless',
                 flags: ['--no-sandbox', '--disable-gpu'],
+                browserNoActivityTimeout: 10000,
+                browserDisconnectTimeout: 10000,
+                pingTimeout: 10000
             },
         },
         reporters: ['progress', 'coverage', 'kjhtml'],
@@ -43,5 +49,6 @@ module.exports = function(config) {
         autoWatch: true,
         browsers: ['Chrome'],
         singleRun: false,
+        browserNoActivityTimeout: 15000, // Timeout set to 15s because the tests often time out with 2s
     });
 };

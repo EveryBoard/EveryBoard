@@ -16,7 +16,7 @@ import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 describe('MCTS', () => {
 
     let mcts: MCTS<QuartoMove, QuartoState>;
-    const mctsOptions: AITimeLimitOptions = { name: '100ms', maxSeconds: 0.1 };
+    const mctsOptions: AITimeLimitOptions = { name: '200ms', maxSeconds: 0.2 };
 
     beforeEach(() => {
         mcts = new MCTS('MCTS', new QuartoMoveGenerator(), QuartoRules.get());

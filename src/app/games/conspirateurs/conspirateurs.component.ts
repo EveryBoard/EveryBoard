@@ -88,7 +88,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const squareInfo: SquareInfo = {
                     coord,
                     squareClasses: [],
-                    shelterClasses: [],
+                    shelterClasses: ['no-fill'],
                     pieceClasses: [this.getPlayerClass(piece)],
                     hasPiece: piece.isPlayer(),
                     isShelter: false,
@@ -98,18 +98,8 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             }
         }
         this.viewInfo.sidePieces = state.getSidePieces();
-        this.updateOccupiedShelters();
         this.updateSelected();
-        this.updateVictory();
-    }
-    private updateOccupiedShelters(): void {
-        for (const shelter of ConspirateursState.ALL_SHELTERS) {
-            const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
-            squareInfo.isShelter = true;
-            if (squareInfo.hasPiece) {
-                squareInfo.shelterClasses.push('selectable-stroke');
-            }
-        }
+        this.updateShelterHighlights();
     }
     private updateSelected(): void {
         if (this.selected.isPresent()) {
@@ -130,14 +120,20 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             }
         }
     }
-    private updateVictory(): void {
+    private updateShelterHighlights(): void {
         const state: ConspirateursState = this.getState();
         const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.node);
-        if (gameStatus.isEndGame === true) {
-            for (const shelter of ConspirateursState.ALL_SHELTERS) {
-                if (state.getPieceAt(shelter) === gameStatus.winner) {
-                    this.viewInfo.boardInfo[shelter.y][shelter.x].squareClasses.push('victory-fill');
-                }
+        const gameFinished: boolean = gameStatus.isEndGame === true;
+        for (const shelter of ConspirateursState.ALL_SHELTERS) {
+            const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
+            const owner: PlayerOrNone = state.getPieceAt(shelter);
+            const spaceIsOccupiedButNobodyWon: boolean = gameFinished === false && owner.isPlayer();
+            const shelterBelongToWinner: boolean = gameFinished && owner === gameStatus.winner;
+            if (shelterBelongToWinner || spaceIsOccupiedButNobodyWon)
+            {
+                squareInfo.shelterClasses.push('selectable-stroke');
+                squareInfo.pieceClasses.push('victory-stroke');
+                squareInfo.squareClasses.push('victory-fill');
             }
         }
     }
@@ -170,6 +166,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         }
 
         const state: ConspirateursState = this.getState();
+        const piece: PlayerOrNone = state.getPieceAt(coord);
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             if (this.selected.equalsValue(coord)) {
                 await this.cancelMoveAttempt();
@@ -186,9 +183,12 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         } else if (state.isDropPhase()) {
             const move: ConspirateursMove = ConspirateursMoveDrop.of(coord);
             return this.chooseMove(move);
+        } else if (piece === PlayerOrNone.NONE) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
+
     }
     private async constructJump(nextTarget: Coord): Promise<MGPValidation> {
         const jump: ConspirateursMoveJump = this.jumpInConstruction.get();

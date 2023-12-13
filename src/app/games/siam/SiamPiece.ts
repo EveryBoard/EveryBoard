@@ -41,7 +41,7 @@ export class SiamPiece {
             case 9: return SiamPiece.MOUNTAIN;
         }
     }
-    public belongTo(player: Player): boolean {
+    public belongsTo(player: Player): boolean {
         if (player === Player.ZERO) {
             return (1 <= this.value && this.value <= 4);
         } else {

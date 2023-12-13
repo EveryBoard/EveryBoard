@@ -4,6 +4,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
+import { LinesOfActionRules } from './LinesOfActionRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -35,7 +36,7 @@ export class LinesOfActionTutorial {
          The length of a move is equal to the number of pieces that are on the line of the move.
          Note that there is a helping indicator to let you know where a piece can land when you select it.<br/><br/>
          You're playing Dark, make the first move!`,
-            LinesOfActionState.getInitialState(),
+            LinesOfActionRules.get().getInitialState(),
             LinesOfActionMove.from(new Coord(1, 7), new Coord(1, 5)).get(),
             $localize`Congratulations!`,
         ),

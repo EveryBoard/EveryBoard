@@ -28,9 +28,15 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         }
         return KamisadoRules.singleton.get();
     }
-    private constructor() {
-        super(KamisadoState);
+
+    public getInitialState(): KamisadoState {
+        return new KamisadoState(0,
+                                 KamisadoColor.ANY,
+                                 MGPOptional.empty(),
+                                 false,
+                                 KamisadoBoard.INITIAL);
     }
+
     public static getColorMatchingPiece(state: KamisadoState): Array<Coord> {
         if (state.coordToPlay.isPresent()) {
             // Only one piece can move, and its coord is stored in state.coordToPlay
@@ -108,8 +114,11 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             //    - the move is within the board (this has been checked when constructing the move)
             //    - start piece should be owned by the current player
             const piece: KamisadoPiece = state.getPieceAt(start);
-            if (piece.belongsTo(state.getCurrentPlayer()) === false) {
-                return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            if (piece.isEmpty()) {
+                return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            }
+            if (piece.belongsTo(state.getCurrentOpponent())) {
+                return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             }
             //    - start space should contain a piece of the right color (or any color can be played)
             if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {

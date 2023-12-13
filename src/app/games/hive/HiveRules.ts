@@ -13,6 +13,7 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 
@@ -26,9 +27,12 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return HiveRules.singleton.get();
     }
-    private constructor() {
-        super(HiveState);
+
+    public getInitialState(): HiveState {
+        const board: Table<HivePiece[]> = [];
+        return HiveState.fromRepresentation(board, 0);
     }
+
     public applyLegalMove(move: HiveMove, state: HiveState, _info: void): HiveState {
         if (move instanceof HiveDropMove) {
             return this.applyLegalDrop(move, state);
@@ -76,11 +80,11 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         const stack: HivePieceStack = state.getAt(move.getStart());
         if (stack.isEmpty()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         const movedPiece: HivePiece = stack.topPiece();
         if (movedPiece.owner === state.getCurrentOpponent()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
 
         const moveValidity: MGPValidation = HivePieceRules.of(movedPiece).moveValidity(move, state);
@@ -108,7 +112,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         const player: Player = state.getCurrentPlayer();
         // This should be a piece of the player
         if (move.piece.owner === player.getOpponent()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         // The player must have the piece in its reserve to drop it
         if (state.remainingPieces.hasRemaining(move.piece) === false) {

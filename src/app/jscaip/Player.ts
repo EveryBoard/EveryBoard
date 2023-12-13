@@ -27,9 +27,9 @@ class PlayerNone implements ComparableObject {
 export class Player implements ComparableObject {
 
     public static encoder: Encoder<Player> = Encoder.tuple(
-        [Encoder.identity<number>()],
+        [Encoder.identity<0 | 1>()],
         (player: Player) => [player.getValue()],
-        (fields: [number]) => Player.of(fields[0]),
+        (fields: [0 | 1]) => Player.of(fields[0]),
     );
     public static readonly ZERO: Player = new Player(0);
     public static readonly ONE: Player = new Player(1);
@@ -47,7 +47,7 @@ export class Player implements ComparableObject {
     public static ofTurn(turn: number): Player {
         return turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
-    protected constructor(private readonly value: number) {}
+    protected constructor(private readonly value: 0 | 1) {}
 
     public isPlayer(): this is Player {
         return true;

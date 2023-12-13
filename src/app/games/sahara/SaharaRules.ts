@@ -29,9 +29,23 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return SaharaRules.singleton.get();
     }
-    private constructor() {
-        super(SaharaState);
+
+    public getInitialState(): SaharaState {
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const board: FourStatePiece[][] = [
+            [N, N, O, X, _, _, _, O, X, N, N],
+            [N, _, _, _, _, _, _, _, _, _, N],
+            [X, _, _, _, _, _, _, _, _, _, O],
+            [O, _, _, _, _, _, _, _, _, _, X],
+            [N, _, _, _, _, _, _, _, _, _, N],
+            [N, N, X, O, _, _, _, X, O, N, N],
+        ];
+        return new SaharaState(board, 0);
     }
+
     public static getStartingCoords(board: Table<FourStatePiece>, player: Player): Coord[] {
         const startingCoords: Coord[] = [];
         for (let y: number = 0; y < SaharaState.HEIGHT; y++) {
@@ -66,7 +80,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     public isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
         const movedPawn: FourStatePiece = state.getPieceAt(move.getStart());
         if (movedPawn.is(state.getCurrentPlayer()) === false) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const landingSpace: FourStatePiece = state.getPieceAt(move.getEnd());
         if (landingSpace !== FourStatePiece.EMPTY) {

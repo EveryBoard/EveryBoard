@@ -2,10 +2,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { TaflPawn } from '../TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { BrandhubState } from '../brandhub/BrandhubState';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflState } from '../TaflState';
 
 describe('TaflMoveGenerator', () => {
 
@@ -16,8 +16,7 @@ describe('TaflMoveGenerator', () => {
 
     it('should not propose to King to go back on the throne when its forbidden', () => {
         // Given a board where king could go back on his throne but the rules forbid it
-        const moveGenerator: TaflMoveGenerator<BrandhubMove, BrandhubState> =
-            new TaflMoveGenerator(BrandhubRules.get());
+        const moveGenerator: TaflMoveGenerator<BrandhubMove> = new TaflMoveGenerator(BrandhubRules.get());
         const board: Table<TaflPawn> = [
             [_, _, _, O, _, _, _],
             [_, _, _, _, O, _, _],
@@ -27,14 +26,14 @@ describe('TaflMoveGenerator', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const state: BrandhubState = new BrandhubState(board, 1);
+        const state: TaflState = new TaflState(board, 1);
         const node: BrandhubNode = new BrandhubNode(state);
 
         // When asking the list of legal move
         const moves: BrandhubMove[] = moveGenerator.getListMoves(node);
 
         // Then going back on throne should not be part of it
-        const kingBackOnThrone: BrandhubMove = BrandhubMove.of(new Coord(3, 2), new Coord(3, 3));
+        const kingBackOnThrone: BrandhubMove = BrandhubMove.from(new Coord(3, 2), new Coord(3, 3)).get();
         expect(moves).not.toContain(kingBackOnThrone);
     });
 });

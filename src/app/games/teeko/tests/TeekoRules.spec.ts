@@ -8,6 +8,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('TeekoRules', () => {
 
@@ -29,14 +30,14 @@ describe('TeekoRules', () => {
     describe('dropping phase', () => {
         it('should fail if receiving translation in the 8 first turns', () => {
             // Given a board on the first phase
-            const state: TeekoState = TeekoState.getInitialState();
+            const state: TeekoState = TeekoRules.get().getInitialState();
 
             // When doing a translation
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(1, 1));
 
             // Then the move attempt should throw
             const reason: string = 'Cannot translate in dropping phase !';
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });
@@ -60,7 +61,7 @@ describe('TeekoRules', () => {
         });
         it('should allow simple drop', () => {
             // Given a board on the first phase
-            const state: TeekoState = TeekoState.getInitialState();
+            const state: TeekoState = TeekoRules.get().getInitialState();
 
             // When dropping a piece
             const move: TeekoMove = drop(new Coord(2, 2));
@@ -202,7 +203,7 @@ describe('TeekoRules', () => {
 
             // Then the move attempt should throw
             const reason: string = 'Cannot drop in translation phase !';
-            RulesUtils.expectToThrowAndLog(() => {
+            TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason);
             }, reason);
         });
@@ -239,7 +240,7 @@ describe('TeekoRules', () => {
             const move: TeekoMove = translate(new Coord(0, 3), new Coord(2, 2));
 
             // Then the move should be illegal
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should refuse dropping on occupied space', () => {

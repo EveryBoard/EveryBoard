@@ -34,7 +34,7 @@ describe('SiamRules', () => {
     });
     it('should allow insertions', () => {
         // Given the initial board
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
         // When performing an insertion
         const move: SiamMove = SiamMove.from(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get();
         // Then it should succeed
@@ -86,7 +86,18 @@ describe('SiamRules', () => {
         const move: SiamMove = SiamMove.from(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
 
         // Then it should fail
-        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
+    it('should forbid moving the empty piece', () => {
+        // Given a state
+        const state: SiamState = SiamRules.get().getInitialState();
+
+        // When trying to move an empty piece
+        const move: SiamMove = SiamMove.from(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+
+        // Then it should fail
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should allow pushing', () => {
@@ -456,7 +467,7 @@ describe('SiamRules', () => {
     });
     it('should compute empty list of moves between two impossible squares', () => {
         // Given two coordinatess that are not neighbors
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 2);
         // When computing the list of moves between these coords
@@ -466,7 +477,7 @@ describe('SiamRules', () => {
     });
     it('should compute empty list of moves between aligned squares that are too far away', () => {
         // Given two coordinatess that are aligned but of a distance greater than one
-        const state: SiamState = SiamState.getInitialState();
+        const state: SiamState = SiamRules.get().getInitialState();
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
         // When computing the list of moves between these coords

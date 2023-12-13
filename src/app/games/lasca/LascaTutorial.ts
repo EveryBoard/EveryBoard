@@ -2,6 +2,7 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 import { Coord } from 'src/app/jscaip/Coord';
 import { LascaMove } from './LascaMove';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
+import { LascaRules } from './LascaRules';
 
 const zero: LascaPiece = LascaPiece.ZERO;
 const one: LascaPiece = LascaPiece.ONE;
@@ -16,17 +17,17 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Lasca: origins`,
             $localize`Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It's played on a 7x7 board, each player has 11 pieces.`,
-            LascaState.getInitialState(),
+            LascaRules.get().getInitialState(),
         ),
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`The goal of Lasca is, like for draughts, to render the opponent unable to move, either by capturing all his pieces, either by blocking them.`,
-            LascaState.getInitialState(),
+            LascaRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Steps`,
             $localize`A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.<br/><br/>You are playing Dark, do the first move.`,
-            LascaState.getInitialState(),
+            LascaRules.get().getInitialState(),
             LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get(),
             $localize`Congratulations!`,
         ),

@@ -8,6 +8,7 @@ import { LascaComponent } from '../lasca.component';
 import { LascaFailure } from '../LascaFailure';
 import { LascaMove } from '../LascaMove';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
+import { LascaRules } from '../LascaRules';
 
 describe('LascaComponent', () => {
 
@@ -71,7 +72,7 @@ describe('LascaComponent', () => {
             // Given any board
             // When clicking on the opponent's piece
             // Then it should fail
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             await testUtils.expectClickFailure('#coord_0_0', reason);
         }));
         it('should forbid clicking on empty square', fakeAsync(async() => {
@@ -103,7 +104,7 @@ describe('LascaComponent', () => {
 
             // When clicking on an opponent
             // Then it should fail
-            const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             await testUtils.expectClickFailure('#coord_2_2', reason);
         }));
         it('should fail when doing impossible click', fakeAsync(async() => {
@@ -337,7 +338,7 @@ describe('LascaComponent', () => {
             // Given a state
             // When it is not interactive
             testUtils.getGameComponent().setInteractive(false);
-            await testUtils.setupState(LascaState.getInitialState());
+            await testUtils.setupState(LascaRules.get().getInitialState());
             // Then it should not show possible selections
             testUtils.expectElementNotToExist('.selectable-fill');
         }));

@@ -25,9 +25,24 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         return LinesOfActionRules.singleton.get();
     }
-    private constructor() {
-        super(LinesOfActionState);
+
+    public getInitialState(): LinesOfActionState {
+        const _: PlayerOrNone = PlayerOrNone.NONE;
+        const O: PlayerOrNone = PlayerOrNone.ZERO;
+        const X: PlayerOrNone = PlayerOrNone.ONE;
+        const board: PlayerOrNone[][] = [
+            [_, O, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
+        ];
+        return new LinesOfActionState(board, 0);
     }
+
     public static getNumberOfGroups(state: LinesOfActionState): [number, number] {
         const groups: number[][] = TableUtils.create(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);
         const numGroups: [number, number] = [0, 0];
@@ -72,8 +87,12 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return new LinesOfActionState(board, state.turn + 1);
     }
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
-        if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const piece: PlayerOrNone = state.getPieceAt(move.getStart());
+        if (piece === PlayerOrNone.NONE) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (piece === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.getStart(), move.direction)) {
             return MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());

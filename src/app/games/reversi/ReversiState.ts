@@ -1,7 +1,6 @@
 import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class ReversiState extends GameStateWithTable<PlayerOrNone> {
 
@@ -9,19 +8,10 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
 
     public static readonly BOARD_HEIGHT: number = 8; // default
 
-    public static getInitialState(): ReversiState {
-        const board: PlayerOrNone[][] = TableUtils.create(ReversiState.BOARD_WIDTH,
-                                                          ReversiState.BOARD_HEIGHT,
-                                                          PlayerOrNone.NONE);
-        board[3][3] = Player.ZERO;
-        board[4][4] = Player.ZERO;
-        board[3][4] = Player.ONE;
-        board[4][3] = Player.ONE;
-        return new ReversiState(board, 0);
-    }
     public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT);
     }
+
     public static getNeighboringPawnLike(board: PlayerOrNone[][],
                                          searchedValue: Player,
                                          cx: number,
@@ -42,6 +32,7 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
         }
         return result;
     }
+
     public countScore(): [number, number] {
         const scores: [number, number] = [0, 0];
         for (let y: number = 0; y < ReversiState.BOARD_HEIGHT; y++) {

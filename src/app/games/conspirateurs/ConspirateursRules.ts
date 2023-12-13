@@ -10,6 +10,7 @@ import { MGPValidation } from '../../utils/MGPValidation';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
@@ -23,9 +24,19 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return ConspirateursRules.singleton.get();
     }
+
     private constructor() {
-        super(ConspirateursState);
+        super();
     }
+
+    public getInitialState(): ConspirateursState {
+        const board: PlayerOrNone[][] = TableUtils.create(ConspirateursState.WIDTH,
+                                                          ConspirateursState.HEIGHT,
+                                                          PlayerOrNone.NONE);
+        return new ConspirateursState(board, 0);
+    }
+
+
     public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _info: void): ConspirateursState {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
         if (ConspirateursMove.isDrop(move)) {
@@ -66,8 +77,12 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (state.turn < 40) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
         }
-        if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const startPiece: PlayerOrNone = state.getPieceAt(move.getStart());
+        if (startPiece === PlayerOrNone.NONE) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (startPiece === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (state.getPieceAt(move.getEnd()).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
@@ -78,8 +93,12 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (state.turn < 40) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
         }
-        if (state.getPieceAt(move.getStartingCoord()) !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const startPiece: PlayerOrNone = state.getPieceAt(move.getStartingCoord());
+        if (startPiece === PlayerOrNone.NONE) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (startPiece === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         for (const jumpedOver of move.getJumpedOverCoords()) {
             if (state.getPieceAt(jumpedOver) === PlayerOrNone.NONE) {
