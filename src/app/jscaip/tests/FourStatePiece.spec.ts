@@ -1,12 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from '../FourStatePiece';
 import {Player} from "../Player";
-import {TRUE} from "sass";
 
-fdescribe('FourStatePiece', () => {
-    it('should TODO', () => {
-        
-    });
+describe('FourStatePiece', () => {
     describe('ofPlayer', () => {
         it('should return the matching piece to the given player', () => {
             // Given

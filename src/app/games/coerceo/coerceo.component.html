@@ -63,7 +63,7 @@
            [attr.transform]="getTilesCountTranslate(player)">
             <polygon [attr.points]="getTilesCountCoordinate()"
                      [attr.stroke]="lastTurnWasTilesExchange(player) ? 'yellow' : 'black'"
-                     [ngClass]="['base', 'player' + player.value + '-fill']"
+                     [ngClass]="['base', 'player' + player.getValue() + '-fill']"
                      stroke-linecap="round"
             />
             <text id="playerZeroTilesCount"

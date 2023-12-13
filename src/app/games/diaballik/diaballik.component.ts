@@ -296,7 +296,7 @@ export class DiaballikComponent
     }
 
     public getBoardRotation(): string {
-        const rotation: number = this.getPointOfView().value * 180;
+        const rotation: number = this.getPointOfView().getValue() * 180;
         const boardWidth: number = this.getState().getWidth() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const boardHeight: number = this.getState().getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const centerX: number = boardWidth / 2;

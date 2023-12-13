@@ -222,7 +222,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         ];
         if (blocking[0].isPresent() && blocking[1].isPresent()) {
             // Both players form a line, so the current player loses
-            return blocking[state.getCurrentPlayer().value];
+            return blocking[state.getCurrentPlayer().getValue()];
         }
         if (blocking[0].isPresent()) return blocking[0];
         if (blocking[1].isPresent()) return blocking[1];

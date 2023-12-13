@@ -21,7 +21,7 @@ export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
         for (const coordAndContent of state.getCoordsAndContents()) {
             const piece: GoPiece = coordAndContent.content;
             if (piece.type === 'dead') {
-                killed[piece.player.value] = killed[piece.player.value] + 1;
+                killed[piece.player.getValue()] = killed[piece.player.getValue()] + 1;
             }
         }
         return killed;
