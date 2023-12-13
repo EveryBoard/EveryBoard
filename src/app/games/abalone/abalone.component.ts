@@ -6,7 +6,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { Player } from 'src/app/jscaip/Player';
+import {Player, PlayerOrNone} from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -324,7 +324,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const player: Player = Player.of(this.hexaBoard[y][x].getValue());
+        const player: PlayerOrNone = this.hexaBoard[y][x].getPlayer();
         const classes: string[] = [this.getPlayerClass(player)];
         if (this.selecteds.some((c: Coord) => c.equals(coord))) {
             classes.push('selected-stroke');

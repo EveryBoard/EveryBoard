@@ -70,7 +70,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
         return threatMap;
     }
     public getThreat(coord: Coord, state: CoerceoState): MGPOptional<PieceThreat> {
-        const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).getValue());
+        const threatenerPlayer: Player = state.getPieceAt(coord).getPlayer() as Player;
         const opponent: Player = threatenerPlayer.getOpponent();
         let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
         let emptiableNeighborTile: MGPOptional<Coord> = MGPOptional.empty();
