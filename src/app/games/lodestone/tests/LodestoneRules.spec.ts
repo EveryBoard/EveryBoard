@@ -246,7 +246,7 @@ describe('LodestoneRules', () => {
                                expectedLodestones,
                                {
                                    ...LodestoneState.INITIAL_PRESSURE_PLATES,
-                                   top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
+                                   top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
                                });
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
@@ -436,7 +436,7 @@ describe('LodestoneRules', () => {
         ];
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 1),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 1),
         };
         const expectedLodestones: LodestonePositions = new MGPMap([
             { key: Player.ZERO, value: new Coord(4, 4) },
@@ -499,10 +499,10 @@ describe('LodestoneRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const pressurePlates: LodestonePressurePlates = {
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
-            bottom: LodestonePressurePlateGroup.getNew([5, 3]),
-            left: LodestonePressurePlateGroup.getNew([5, 3]),
-            right: LodestonePressurePlateGroup.getNew([5, 3]),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
+            bottom: LodestonePressurePlateGroup.of([5, 3]),
+            left: LodestonePressurePlateGroup.of([5, 3]),
+            right: LodestonePressurePlateGroup.of([5, 3]),
         };
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
         // When placing a lodestone on the crumbled floor
@@ -526,7 +526,7 @@ describe('LodestoneRules', () => {
         ];
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 5),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 5),
         };
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
         // When placing a lodestone to push B
@@ -551,7 +551,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
-            bottom: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 1),
+            bottom: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 1),
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
@@ -572,7 +572,7 @@ describe('LodestoneRules', () => {
         ];
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
         };
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
         // When placing a lodestone to push the B and putting this capture on the top pressure plate
@@ -597,7 +597,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 5),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 5),
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
@@ -618,7 +618,7 @@ describe('LodestoneRules', () => {
         ];
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 7),
         };
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
         // When placing a lodestone to push the B and putting this capture on the top pressure plate
@@ -643,7 +643,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 8),
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
@@ -665,7 +665,7 @@ describe('LodestoneRules', () => {
 
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 3),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 3),
         };
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
         // When placing a lodestone to capture all Bs
@@ -690,7 +690,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 8),
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
@@ -711,7 +711,7 @@ describe('LodestoneRules', () => {
         ];
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 4),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 4),
         };
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
         // When placing a lodestone to capture all Bs, trying to place all of the on the top pressure plate
@@ -738,7 +738,7 @@ describe('LodestoneRules', () => {
         ];
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
         };
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
         // When placing a lodestone to push one of the B
@@ -763,7 +763,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 5),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 5),
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
@@ -785,7 +785,7 @@ describe('LodestoneRules', () => {
         ];
         const pressurePlates: LodestonePressurePlates = {
             ...allPressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
         };
         const lodestones: LodestonePositions = new MGPMap([
             { key: Player.ONE, value: new Coord(6, 0) },
@@ -813,7 +813,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedPressurePlates: LodestonePressurePlates = {
             ...pressurePlates,
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 5),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 5),
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
@@ -835,10 +835,10 @@ describe('LodestoneRules', () => {
             [N, N, N, N, N, N, N, N],
         ];
         const pressurePlates: LodestonePressurePlates = {
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
-            bottom: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
-            left: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
-            right: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
+            bottom: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
+            left: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
+            right: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
         };
         const lodestones: LodestonePositions = new MGPMap([
             { key: Player.ZERO, value: new Coord(3, 2) },
@@ -886,10 +886,10 @@ describe('LodestoneRules', () => {
             [N, N, N, N, N, N, N, N],
         ];
         const noPressurePlates: LodestonePressurePlates = {
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
-            bottom: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
-            left: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
-            right: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ZERO, 8),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
+            bottom: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
+            left: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
+            right: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
         };
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, noPressurePlates);
         // When placing a lodestone to push B

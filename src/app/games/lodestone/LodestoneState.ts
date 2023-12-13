@@ -11,7 +11,7 @@ import { Utils } from 'src/app/utils/utils';
 
 export class LodestonePressurePlateGroup {
 
-    public static getNew(sizes: number[]): LodestonePressurePlateGroup {
+    public static of(sizes: number[]): LodestonePressurePlateGroup {
         let plates: LodestonePressurePlate[] = [];
         for (const size of sizes) {
             const newPlate: LodestonePressurePlate = new LodestonePressurePlate(size, []);
@@ -67,7 +67,7 @@ export class LodestonePressurePlateGroup {
     }
 
     /**
-     * @returns the number of piece that can be put in that pressure plate group, all pressure plate included
+     * @returns the number of piece that can be put in that pressure plate group, all pressures plates included
      */
     public getGroupRemainingSpaces(): number {
         const remainingSpaces: number[] =
@@ -149,7 +149,7 @@ export namespace LodestonePressurePlates {
     export function getInitialLodestonePressurePlates(sizes: number[]): LodestonePressurePlates {
         const newLodestonePressurePlates: LodestonePressurePlates = {} as LodestonePressurePlates;
         for (const position of LodestonePressurePlate.POSITIONS) {
-            newLodestonePressurePlates[position] = LodestonePressurePlateGroup.getNew(sizes);
+            newLodestonePressurePlates[position] = LodestonePressurePlateGroup.of(sizes);
         }
         return newLodestonePressurePlates;
     }

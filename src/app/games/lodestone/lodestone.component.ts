@@ -159,11 +159,8 @@ export class LodestoneComponent
     }
 
     public getViewBox(): ViewBox {
-        const abstractPlateWidth: number = this.getState().pressurePlates.top.plates.length;
-        this.platesGroupSize = abstractPlateWidth * (this.SPACE_SIZE * 1.2);
         const left: number = - this.platesGroupSize;
         const up: number = - (this.platesGroupSize + this.SPACE_SIZE);
-        this.boardSize = this.getState().board.length * this.SPACE_SIZE;
         const width: number = this.boardSize + (2 * this.platesGroupSize);
         const height: number = this.boardSize + (2 * this.platesGroupSize) + (2 * this.SPACE_SIZE) + this.STROKE_WIDTH;
         return new ViewBox(left, up, width, height);
@@ -313,6 +310,9 @@ export class LodestoneComponent
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         this.scores = MGPOptional.of(this.getState().getScores());
+        this.boardSize = this.getState().board.length * this.SPACE_SIZE;
+        const abstractPlateWidth: number = this.getState().pressurePlates.top.plates.length;
+        this.platesGroupSize = abstractPlateWidth * (this.SPACE_SIZE * 1.2);
     }
 
     public override cancelMoveAttempt(): void {

@@ -96,10 +96,6 @@ describe('GameComponent', () => {
         Lodestone: {
             selectCoord: [new Coord(0, 0)],
             selectLodestone: ['push', false],
-            // TODO FOR REVEIW: thoses two should not be called !!! they're private, those are not entry point tests!
-            // selectPressurePlate: ['top', 1, 1],
-            // deselectPressurePlate: ['top', 1, 1],
-            // Instead:
             onTemporaryPressurePlateClick: ['top', 1, 1],
             onPressurePlateClick: ['top', 1, 1],
         },

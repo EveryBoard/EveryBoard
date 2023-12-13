@@ -197,7 +197,7 @@ describe('LodestoneComponent', () => {
             ];
             const pressurePlates: LodestonePressurePlates = {
                 ...allPressurePlates,
-                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
+                top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
             };
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
             await testUtils.setupState(state);
@@ -245,7 +245,7 @@ describe('LodestoneComponent', () => {
             ];
             const pressurePlates: LodestonePressurePlates = {
                 ...allPressurePlates,
-                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
+                top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
             };
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
             await testUtils.setupState(state);
@@ -277,7 +277,7 @@ describe('LodestoneComponent', () => {
             ];
             const pressurePlates: LodestonePressurePlates = {
                 ...allPressurePlates,
-                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
+                top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 7),
             };
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
             await testUtils.setupState(state);
@@ -307,7 +307,7 @@ describe('LodestoneComponent', () => {
             ];
             const pressurePlates: LodestonePressurePlates = {
                 ...allPressurePlates,
-                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
+                top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
             };
             const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
             await testUtils.setupState(state);
@@ -351,7 +351,7 @@ describe('LodestoneComponent', () => {
             ]);
             const pressurePlates: LodestonePressurePlates = {
                 ...allPressurePlates,
-                top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 4),
+                top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
             };
             const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
             await testUtils.setupState(state);

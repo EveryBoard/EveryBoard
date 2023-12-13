@@ -24,7 +24,7 @@ import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
 
-xdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
 

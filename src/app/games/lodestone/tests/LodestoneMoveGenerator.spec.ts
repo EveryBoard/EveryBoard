@@ -51,10 +51,10 @@ describe('LodestoneMoveGenerator', () => {
             { key: Player.ONE, value: new Coord(4, 2) },
         ]);
         const pressurePlates: LodestonePressurePlates = {
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
-            bottom: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
-            left: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
-            right: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 8),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 8),
+            bottom: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 8),
+            left: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 8),
+            right: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 8),
         };
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
 
@@ -78,10 +78,10 @@ describe('LodestoneMoveGenerator', () => {
         ];
         const lodestones: LodestonePositions = new MGPMap();
         const pressurePlates: LodestonePressurePlates = {
-            top: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
-            bottom: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
-            left: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
-            right: LodestonePressurePlateGroup.getNew([5, 3]).addCaptured(Player.ONE, 7),
+            top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 7),
+            bottom: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 7),
+            left: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 7),
+            right: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 7),
         };
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
 
