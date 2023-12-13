@@ -72,7 +72,7 @@ export class LodestonePressurePlateGroup {
     public getGroupRemainingSpaces(): number {
         const remainingSpaces: number[] =
             this.plates.map((plate: LodestonePressurePlate) => plate.getRemainingSpaces());
-        const totalRemainingSpaces: number = remainingSpaces.reduceRight((left: number, right: number) => left + right);
+        const totalRemainingSpaces: number = remainingSpaces.reduce((left: number, right: number) => left + right);
         return totalRemainingSpaces;
     }
 
