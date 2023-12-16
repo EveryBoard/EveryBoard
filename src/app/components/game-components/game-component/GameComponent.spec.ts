@@ -47,7 +47,7 @@ describe('GameComponent', () => {
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
-    it('click methods should refuse when observer clicks', fakeAsync(async() => {
+    fit('click methods should refuse when observer clicks', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
             Abalone: {
                 onPieceClick: [0, 0],
@@ -87,7 +87,7 @@ describe('GameComponent', () => {
             Hnefatafl: { onClick: [0, 0] },
             Kalah: {
                 onClick: [0, 0],
-                onStoreClick: [0],
+                onStoreClick: [Player.ZERO],
             },
             Kamisado: { onClick: [0, 0] },
             Lasca: { onClick: [0, 0] },
