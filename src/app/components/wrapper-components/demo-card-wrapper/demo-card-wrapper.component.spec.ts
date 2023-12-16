@@ -57,7 +57,7 @@ describe('DemoCardComponent', () => {
             click: MGPOptional.of('#lodestone_push_orthogonal_PLAYER_ZERO'),
         });
         // Then it should have performed a click
-        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g >.black-fill', 'selected-stroke');
+        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
     }));
 
     it('should not allow moves', fakeAsync(async() => {

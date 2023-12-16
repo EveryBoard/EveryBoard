@@ -1,7 +1,7 @@
 <svg:g class="lodestone_wrapper"
        [attr.transform]="getSVGTranslate(SPACE_SIZE / 2, SPACE_SIZE / 2)">
     <svg:circle id="lodestone_{{ lodestoneInfo.direction }}_{{ lodestoneInfo.orientation }}_{{ lodestoneInfo.owner.toString() }}"
-                class="base black-fill"
+                class="lodestone_main_circle base black-fill"
                 [ngClass]="lodestoneInfo.selectedClass"
                 [attr.r]="PIECE_RADIUS"
                 cx="0"

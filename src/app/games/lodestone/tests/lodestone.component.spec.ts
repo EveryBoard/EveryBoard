@@ -63,7 +63,7 @@ describe('LodestoneComponent', () => {
             // When clicking of a lodestone
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal_PLAYER_ZERO');
             // Then it should be selected
-            testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .black-fill', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
         }));
 
     });
@@ -142,7 +142,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal_PLAYER_ZERO');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .black-fill', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
         }));
 
     });
