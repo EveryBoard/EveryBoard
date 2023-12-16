@@ -14,9 +14,8 @@ export class KalahTutorial extends Tutorial {
     public gameName: string = $localize`Kalah`;
 
     public tutorial: TutorialStep[] = [
-        TutorialStep.informational(
+        MancalaTutorial.intro(
             this.gameName,
-            $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.`,
             KalahRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
@@ -24,8 +23,7 @@ export class KalahTutorial extends Tutorial {
             $localize`Bonus fact: Kalah has been created in the U.S.A in 1940 by William Julius Champion Jr.`,
             KalahRules.get().getInitialState(defaultConfig),
         ),
-        MancalaTutorial.sowing(KalahRules.get().getInitialState(defaultConfig),
-                               MancalaMove.of(MancalaDistribution.of(5))),
+        MancalaTutorial.sowing(KalahRules.get().getInitialState(defaultConfig)),
 
         TutorialStep.forClick(
             $localize`The Kalah (1/2)`,

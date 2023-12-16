@@ -12,7 +12,7 @@ import { MancalaNode } from '../../common/MancalaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
-describe('AwaleScoreMinimax', () => {
+fdescribe('AwaleScoreMinimax', () => {
 
     let rules: AwaleRules;
     let minimax: Minimax<MancalaMove, MancalaState, MancalaConfig>;

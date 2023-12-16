@@ -2,11 +2,11 @@ import { MancalaState } from './MancalaState';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from './MancalaRules';
+import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
 import { ChangeDetectorRef } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -21,9 +21,10 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 export abstract class MancalaComponent<R extends MancalaRules>
     extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig>
 {
-    public static readonly TIMEOUT_BETWEEN_SEED: number = 200;
+    public static readonly TIMEOUT_BETWEEN_SEED: number = 1000;
 
-    public static readonly TIMEOUT_BETWEEN_DISTRIBUTION: number = 1000;
+    // The awaited time between two laps or distributions
+    public static readonly TIMEOUT_BETWEEN_LAPS: number = 3000;
 
     public MGPOptional: typeof MGPOptional = MGPOptional;
 
@@ -33,10 +34,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     private clickOngoing: boolean = false;
 
-    public captured: Table<number> = [
-        [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0],
-    ];
+    public captured: Table<number> = TableUtils.create(6, 2, 0);
+
     public droppedInStore: [number, number] = [0, 0];
 
     protected filledCoords: Coord[] = [];
@@ -72,14 +71,14 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const distributionResult: MancalaDistributionResult =
             this.rules.distributeMove(move, previousState, config);
         this.filledCoords = distributionResult.filledCoords;
-        let captureResult: MancalaCaptureResult = this.rules.applyCapture(distributionResult);
+        let captureResult: MancalaCaptureResult = this.rules.applyCapture(distributionResult, config);
         this.captured = captureResult.captureMap;
         const playerY: number = previousState.getCurrentPlayerY();
         this.lastDistributedHouses = move.distributions.map((d: MancalaDistribution) => new Coord(d.x, playerY));
         const mansoonedPlayer: PlayerOrNone = this.rules.mustMansoon(captureResult.resultingState, config);
         if (mansoonedPlayer !== PlayerOrNone.NONE) {
             captureResult = this.rules.monsoon(mansoonedPlayer as Player, captureResult);
-            this.captured = captureResult.captureMap;
+            this.captured = TableUtils.add(this.captured, captureResult.captureMap);
         }
         this.changeVisibleState(this.getState());
     }
@@ -96,7 +95,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 await this.showSimpleDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
                     // This prevent to wait 1sec at the end of the animation for nothing
-                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_DISTRIBUTION);
+                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
                 indexDistribution++;
             }
@@ -162,50 +161,87 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.lastDistributedHouses.push(coord);
         const config: MancalaConfig = this.getConfig().get();
         await this.showSeedBySeed(coord, state, config);
+        const previousDistributionResult: MancalaDistributionResult = MancalaRules.getEmptyDistributionResult(state);
         const distributionResult: MancalaDistributionResult =
-            this.rules.distributeHouse(distribution.x, playerY, state, config);
+            this.rules.distributeHouse(distribution.x, playerY, previousDistributionResult, config);
         return distributionResult;
     }
 
     private async showSeedBySeed(coord: Coord, state: MancalaState, config: MancalaConfig): Promise<void> {
-        const resultingBoard: number[][] = state.getCopiedBoard();
+        let resultingState: MancalaState = state;
         const player: Player = state.getCurrentPlayer();
         const initial: Coord = coord; // to remember in order not to sow in the starting space if we make a full turn
-        let seedsInHand: number = resultingBoard[coord.y][coord.x];
         let currentDropIsStore: boolean = false;
-        const scores: [number, number] = state.getScoresCopy();
-        resultingBoard[coord.y][coord.x] = 0;
-        // Changing immediately the chosen house
-        this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores));
-        await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
-        while (seedsInHand > 0) {
-            const nextCoord: MGPOptional<Coord> =
-                this.rules.getNextCoord(coord, player, currentDropIsStore, state, config);
-            currentDropIsStore = nextCoord.isAbsent();
-            if (currentDropIsStore) {
-                seedsInHand--;
-                this.filledCoords.push(MancalaRules.FAKE_STORE_COORD.get(player).get());
-                this.droppedInStore[player.value] += 1;
-                scores[player.value] += 1;
+        let houseToDistribute: Coord = coord;
+        let mustDoOneMoreLap: boolean = true;
+        while (mustDoOneMoreLap) {
+            let seedsInHand: number = resultingState.getPieceAt(houseToDistribute);
+            resultingState = resultingState.setPieceAt(houseToDistribute, 0);
+            // Changing immediately the chosen house
+            this.changeVisibleState(resultingState);
+            await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
+            while (seedsInHand > 0) {
+                ({ houseToDistribute, currentDropIsStore, seedsInHand, resultingState } =
+                    await this.showSeedDrop(houseToDistribute,
+                                            player,
+                                            currentDropIsStore,
+                                            state,
+                                            config,
+                                            seedsInHand,
+                                            resultingState,
+                                            initial));
+            }
+            houseToDistribute = this.filledCoords[this.filledCoords.length - 1]; // TODO; killable I believe
+            if (currentDropIsStore || config.continueLapIfLastHouseIsFilled === false) {
+                mustDoOneMoreLap = false;
             } else {
-                coord = nextCoord.get();
-                if (initial.equals(coord) === false || config.feedOriginalHouse) {
-                    // not to distribute on our starting space
-                    resultingBoard[coord.y][coord.x] += 1;
-                    this.filledCoords.push(coord);
-                    seedsInHand--; // drop in this space a piece we have in hand
+                const lastHouseContent: number = resultingState.getPieceAt(houseToDistribute);
+                mustDoOneMoreLap = lastHouseContent !== 1 && lastHouseContent !== 4;
+                if (mustDoOneMoreLap) {
+                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
             }
-            this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores));
-            await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
         }
     }
 
+    private async showSeedDrop(houseToDistribute: Coord,
+                               player: Player,
+                               currentDropIsStore: boolean,
+                               state: MancalaState,
+                               config: MancalaConfig,
+                               seedsInHand: number,
+                               resultingState: MancalaState,
+                               initial: Coord)
+    {
+        const nextCoord: MGPOptional<Coord> =
+            this.rules.getNextCoord(houseToDistribute, player, currentDropIsStore, state, config);
+        currentDropIsStore = nextCoord.isAbsent();
+        if (currentDropIsStore) {
+            seedsInHand--;
+            this.filledCoords.push(MancalaRules.FAKE_STORE_COORD.get(player).get());
+            this.droppedInStore[player.value] += 1;
+            resultingState = resultingState.feedStore(player);
+        } else {
+            houseToDistribute = nextCoord.get();
+            if (initial.equals(houseToDistribute) === false || config.feedOriginalHouse) {
+                // not to distribute on our starting space
+                const feedResult: MancalaDropResult =
+                    this.rules.getDropResult(seedsInHand, resultingState, houseToDistribute);
+                resultingState = feedResult.resultingState;
+                this.captured = TableUtils.add(this.captured, feedResult.captureMap);
+                this.filledCoords.push(houseToDistribute);
+                seedsInHand--; // drop in this space a piece we have in hand
+            }
+        }
+        this.changeVisibleState(resultingState);
+        if (seedsInHand > 0) {
+            await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
+        }
+        return { houseToDistribute, currentDropIsStore, seedsInHand, resultingState };
+    }
+
     public override hideLastMove(): void {
-        this.captured = [
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-        ];
+        this.captured = TableUtils.create(6, 2, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];
         this.changeVisibleState(this.getState());

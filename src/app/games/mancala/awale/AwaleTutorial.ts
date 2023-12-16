@@ -13,9 +13,8 @@ export class AwaleTutorial extends Tutorial {
     public gameName: string = $localize`Awalé`;
 
     public tutorial: TutorialStep[] = [
-        TutorialStep.informational(
+        MancalaTutorial.intro(
             this.gameName,
-            $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.`,
             AwaleRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
@@ -23,10 +22,7 @@ export class AwaleTutorial extends Tutorial {
             $localize`Bonus fact: Awalé is the most common of all Mancalas.`,
             AwaleRules.get().getInitialState(defaultConfig),
         ),
-        MancalaTutorial.sowing(
-            AwaleRules.get().getInitialState(defaultConfig),
-            MancalaMove.of(MancalaDistribution.of(5)),
-        ),
+        MancalaTutorial.sowing(AwaleRules.get().getInitialState(defaultConfig)),
 
         TutorialStep.anyMove(
             $localize`Big sowing`,

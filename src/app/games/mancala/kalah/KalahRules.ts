@@ -19,6 +19,7 @@ export class KalahRules extends MancalaRules {
                 mustFeed: new BooleanConfig(false, MancalaRules.MUST_FEED),
                 passByPlayerStore: new BooleanConfig(true, MancalaRules.PASS_BY_PLAYER_STORE),
                 mustContinueDistributionAfterStore: new BooleanConfig(true, MancalaRules.MULTIPLE_SOW),
+                continueLapIfLastHouseIsFilled: new BooleanConfig(false, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
             },
@@ -39,10 +40,7 @@ export class KalahRules extends MancalaRules {
         const distributedState: MancalaState = distributionResult.resultingState;
         const capturelessResult: MancalaCaptureResult = {
             capturedSum: 0,
-            captureMap: [
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ],
+            captureMap: TableUtils.create(6, 2, 0),
             resultingState: distributedState,
         };
         if (distributionResult.endsUpInStore) {

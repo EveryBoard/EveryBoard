@@ -8,7 +8,7 @@ import { MancalaConfig } from '../MancalaConfig';
 import { KalahRules } from '../../kalah/KalahRules';
 import { AwaleRules } from '../../awale/AwaleRules';
 
-describe('MancalaScoreHeuristic', () => {
+fdescribe('MancalaScoreHeuristic', () => {
 
     let heuristic: MancalaScoreHeuristic;
     let defaultConfig: MGPOptional<MancalaConfig>;

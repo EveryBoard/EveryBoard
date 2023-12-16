@@ -3,7 +3,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { KalahRules } from '../KalahRules';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaState } from '../../common/MancalaState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
@@ -11,7 +11,7 @@ import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
-describe('KalahRules', () => {
+fdescribe('KalahRules', () => {
 
     const rules: MancalaRules = KalahRules.get();
     const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
@@ -181,10 +181,11 @@ describe('KalahRules', () => {
 
             // Then that normally-illegal move should be accepted
             // And since player gave their last stone, monsoon
-            const expectedState: MancalaState = new MancalaState([
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ], 11, [14, 19]);
+            const expectedState: MancalaState = new MancalaState(
+                TableUtils.create(6, 2, 0),
+                11,
+                [14, 19],
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -204,10 +205,7 @@ describe('KalahRules', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then the move should be the last of the game and Player.ZERO should monsoon
-            const expectedBoard: Table<number> = [
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ];
+            const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
             const node: MancalaNode = new MancalaNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -226,10 +224,7 @@ describe('KalahRules', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then the move should be the last of the game and Player.ZERO should monsoon
-            const expectedBoard: Table<number> = [
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ];
+            const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [26, 22]);
             const node: MancalaNode = new MancalaNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -248,10 +243,7 @@ describe('KalahRules', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then, since the other player can't distribute, all its pieces should be mansooned
-            const expectedBoard: Table<number> = [
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ];
+            const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: MancalaNode = new MancalaNode(expectedState,
