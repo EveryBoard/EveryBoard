@@ -21,10 +21,10 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 export abstract class MancalaComponent<R extends MancalaRules>
     extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig>
 {
-    public static readonly TIMEOUT_BETWEEN_SEED: number = 1000;
+    public static readonly TIMEOUT_BETWEEN_SEED: number = 100;
 
     // The awaited time between two laps or distributions
-    public static readonly TIMEOUT_BETWEEN_LAPS: number = 3000;
+    public static readonly TIMEOUT_BETWEEN_LAPS: number = 1000;
 
     public MGPOptional: typeof MGPOptional = MGPOptional;
 
