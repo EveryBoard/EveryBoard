@@ -62,11 +62,8 @@ export class LodestonePressurePlateGroup {
 
     public getCurrentPlateWidth(): number {
         const currentPlate: MGPOptional<LodestonePressurePlate> = this.getCurrentPlate();
-        if (currentPlate.isPresent()) {
-            return currentPlate.get().width;
-        } else {
-            return 0;
-        }
+        const emptyplate: LodestonePressurePlate = new LodestonePressurePlate(0, []);
+        return currentPlate.getOrElse(emptyplate).width;
     }
 
     /**

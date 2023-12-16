@@ -37,7 +37,10 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
 
     public static readonly THREATENED_COORD_RANGE: PressurePlatePositionInformation = MGPMap.from({
         top: {
-            start: (indexPlate: number) => new Coord(0, indexPlate),
+            start: (indexPlate: number) => new Coord(
+                0,
+                indexPlate,
+            ),
             direction: Direction.RIGHT,
         },
         bottom: {
@@ -48,7 +51,10 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             direction: Direction.RIGHT,
         },
         left: {
-            start: (indexPlate: number) => new Coord(indexPlate, 0),
+            start: (indexPlate: number) => new Coord(
+                indexPlate,
+                0,
+            ),
             direction: Direction.DOWN,
         },
         right: {
