@@ -9,6 +9,9 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneCaptures } from './LodestoneMove';
 import { Utils } from 'src/app/utils/utils';
 
+/**
+ * Represent different LodestonePressurePlate from the same side of the board
+ */
 export class LodestonePressurePlateGroup {
 
     public static of(sizes: number[]): LodestonePressurePlateGroup {
