@@ -20,27 +20,25 @@ export class FourStatePiece implements ComparableObject {
                 return FourStatePiece.ONE;
         }
     }
+
     private constructor(private readonly player: PlayerOrNone, private readonly reachable: boolean) {
     }
+
     public equals(other: FourStatePiece): boolean {
-        return this === other;
+        return this.player.equals(other.player) &&
+               this.reachable === other.reachable;
     }
+
     public is(player: Player): boolean {
         return this.player === player;
     }
+
     public isPlayer(): boolean {
         return this === FourStatePiece.ZERO || this === FourStatePiece.ONE;
     }
 
-    public getPlayer() : PlayerOrNone {
+    public getPlayer(): PlayerOrNone {
         return this.player;
     }
 
-    public getValue(): number {
-        if (this.reachable) {
-            return this.player.getValue();
-        } else {
-            return 3;
-        }
-    }
 }

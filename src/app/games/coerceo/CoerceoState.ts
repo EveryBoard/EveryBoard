@@ -9,6 +9,7 @@ import { CoerceoRegularMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 @Debug.log
 export class CoerceoState extends TriangularGameState<FourStatePiece> {
@@ -207,19 +208,21 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         return legalLandings;
     }
 
-    public getPiecesByFreedom(): number[][] {
-        const playersScores: number[][] = [
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-        ];
+    public getPiecesByFreedom(): MGPMap<Player, number[]> {
+        const playersScores: MGPMap<Player, number[]> = new MGPMap([
+            { key: Player.ZERO, value: [0, 0, 0, 0] },
+            { key: Player.ONE, value: [0, 0, 0, 0] },
+        ]);
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
                 const piece: FourStatePiece = this.board[y][x];
                 if (piece.isPlayer()) {
+                    const player: Player = piece.getPlayer() as Player;
                     const nbFreedom: number =
                         this.getEmptyNeighbors(new Coord(x, y), FourStatePiece.EMPTY).length;
-                    const oldValue: number = playersScores[piece.getValue()][nbFreedom];
-                    playersScores[piece.getValue()][nbFreedom] = oldValue + 1;
+                    const oldValues: number[] = playersScores.get(player).get();
+                    oldValues[nbFreedom] += 1;
+                    playersScores.put(player, oldValues);
                 }
             }
         }
