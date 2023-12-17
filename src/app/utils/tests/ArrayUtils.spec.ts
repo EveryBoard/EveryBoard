@@ -2,6 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils, NumberTable, TableUtils, TableWithPossibleNegativeIndices } from '../ArrayUtils';
 import { MGPOptional } from '../MGPOptional';
+import { Utils } from '../utils';
 
 describe('ArrayUtils', () => {
     describe('isPrefix', () => {
@@ -19,6 +20,18 @@ describe('ArrayUtils', () => {
             const prefix: number[] = [1, 2, 3];
             const list: number[] = [1, 2, 3, 4, 5];
             expect(ArrayUtils.isPrefix(prefix, list)).toBeTrue();
+        });
+    });
+
+    describe('maximumsBy', () => {
+        it('should extract the maximums', () => {
+            // Given an array and a metric
+            const array: number[] = [0, 3, 1, 2, 3];
+            const metric: (value: number) => number = Utils.identity;
+            // When extracting the maximums
+            const maximums: number[] = ArrayUtils.maximumsBy(array, metric);
+            // Then it should return all the maximum elements
+            expect(maximums).toEqual([3, 3]);
         });
     });
 });
