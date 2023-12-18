@@ -20,7 +20,7 @@ import { KalahRules } from '../KalahRules';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('KalahComponent', () => {
+fdescribe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules>;
     const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
@@ -60,9 +60,9 @@ describe('KalahComponent', () => {
             ], 100, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(5)),
             result: [
-                { x: 4, y: 0, content: { mainContent: ' -2 ' } },
-                { x: 4, y: 1, content: { mainContent: ' -1 ' } },
-                { x: 0, y: 1, content: { mainContent: ' -1 ' } },
+                { x: 4, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } },
+                { x: 4, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
+                { x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
             ],
         },
         capture: {
@@ -72,8 +72,8 @@ describe('KalahComponent', () => {
             ], 2, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(5)),
             result: [
-                { x: 1, y: 0, content: { mainContent: ' -6 ' } },
-                { x: 1, y: 1, content: { mainContent: ' -1 ' } },
+                { x: 1, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -6 ' } },
+                { x: 1, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
             ],
         },
         fillThenCapture: {
@@ -83,13 +83,13 @@ describe('KalahComponent', () => {
             ], 0, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
-                { x: 5, y: 0, content: { mainContent: ' -1 ' } },
-                { x: 5, y: 1, content: { mainContent: ' -1 ' } },
+                { x: 5, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
+                { x: 5, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
             ],
         },
     });
 
-    describe('Kalah-Specific Tests', () => {
+    describe('Kalah Specific Tests', () => {
         beforeEach(fakeAsync(async() => {
             const testUtils: ComponentTestUtils<KalahComponent> = await ComponentTestUtils.forGame<KalahComponent>('Kalah');
             mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new KalahMoveGenerator());
@@ -141,7 +141,7 @@ describe('KalahComponent', () => {
                 tick(4 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
 
                 // Then second turn start, 1000ms pause that this test is about
-                tick(MancalaComponent.TIMEOUT_BETWEEN_DISTRIBUTION);
+                tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 // and to optimise gain, AI will still play a move that pass through the Kalah
                 // hence a move in column 0 1 or 2, which will all be of 5 seeds now
                 // so again TIMEOUT_BETWEEN_SEED ms to empty the second initial house

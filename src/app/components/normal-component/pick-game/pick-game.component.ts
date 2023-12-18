@@ -11,6 +11,8 @@ import { AwaleTutorial } from 'src/app/games/mancala/awale/AwaleTutorial';
 import { AbaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
 import { AbaloneRules } from 'src/app/games/abalone/AbaloneRules';
 
+import { BaAwaComponent } from 'src/app/games/mancala/ba-awa/ba-awa.component';
+import { BaAwaRules } from 'src/app/games/mancala/ba-awa/BaAwaRules';
 import { BrandhubComponent } from 'src/app/games/tafl/brandhub/brandhub.component';
 import { BrandhubTutorial } from 'src/app/games/tafl/brandhub/BrandhubTutorial';
 import { BrandhubRules } from 'src/app/games/tafl/brandhub/BrandhubRules';
@@ -134,6 +136,7 @@ import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/Tutoria
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { BaAwaTutorial } from 'src/app/games/mancala/ba-awa/BaAwaTutorial';
 
 class GameDescription {
 
@@ -142,6 +145,8 @@ class GameDescription {
     public static readonly APAGOS: Localized = () => $localize`Very simple game, but, will you be able to win everytime?`;
 
     public static readonly AWALE: Localized = () => $localize`The most widespread of the Mancalas.`;
+
+    public static readonly BA_AWA: Localized = () => $localize`The most widespread multiple-lap Mancala.`;
 
     public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
@@ -232,7 +237,7 @@ export class GameInfo {
             new GameInfo($localize`Quixo`,           'Quixo',         QuixoComponent,         new QuixoTutorial(),         QuixoRules.get(),         new Date('2020-10-15'), GameDescription.QUIXO()          ), // 13 days after Pylos         * Martin
             new GameInfo($localize`Dvonn`,           'Dvonn',         DvonnComponent,         new DvonnTutorial(),         DvonnRules.get(),         new Date('2020-10-21'), GameDescription.DVONN()          ), // 18 days after Kamisado      * Quentin
 
-            new GameInfo($localize`Epaminondas`,     'Epaminondas',   EpaminondasComponent,   new EpaminondasTutorial(),   EpaminondasRules.get(),   new Date('2021-01-16'), GameDescription.EPAMINONDAS()    ), // 22 days after Quixo
+            new GameInfo($localize`Epaminondas`,     'Epaminondas',   EpaminondasComponent,   new EpaminondasTutorial(),   EpaminondasRules.get(),   new Date('2021-01-16'), GameDescription.EPAMINONDAS()    ), // 22 days after Quixo         * Martin
             new GameInfo($localize`Gipf`,            'Gipf',          GipfComponent,          new GipfTutorial(),          GipfRules.get(),          new Date('2021-02-22'), GameDescription.GIPF()           ), // 4 months after Dvonn        * Quentin
             new GameInfo($localize`Coerceo`,         'Coerceo',       CoerceoComponent,       new CoerceoTutorial(),       CoerceoRules.get(),       new Date('2021-03-21'), GameDescription.COERCEO()        ), // 76 days after Epaminondas   * Martin
             new GameInfo($localize`Six`,             'Six',           SixComponent,           new SixTutorial(),           SixRules.get(),           new Date('2021-04-08'), GameDescription.SIX()            ), // 18 days after Coerceo       * Martin
@@ -256,7 +261,8 @@ export class GameInfo {
             new GameInfo($localize`Pente`,           'Pente',         PenteComponent,         new PenteTutorial(),         PenteRules.get(),         new Date('2023-05-20'), GameDescription.PENTE()          ), //                             * Quentin
             new GameInfo($localize`Teeko`,           'Teeko',         TeekoComponent,         new TeekoTutorial(),         TeekoRules.get(),         new Date('2023-07-30'), GameDescription.TEEKO()          ), //                             * Martin
             new GameInfo($localize`Kalah`,           'Kalah',         KalahComponent,         new KalahTutorial(),         KalahRules.get(),         new Date('2023-09-07'), GameDescription.KALAH()          ), //                             * Martin
-            new GameInfo($localize`Diaballik`,       'Diaballik',     DiaballikComponent,     new DiaballikTutorial(),     DiaballikRules.get(),     new Date('2023-11-18'), GameDescription.DIABALLIK()),
+            new GameInfo($localize`Diaballik`,       'Diaballik',     DiaballikComponent,     new DiaballikTutorial(),     DiaballikRules.get(),     new Date('2023-11-18'), GameDescription.DIABALLIK()      ), //                             * Quentin
+            new GameInfo($localize`Ba-awa`,          'BaAwa',         BaAwaComponent,         new BaAwaTutorial(),         BaAwaRules.get(),         new Date('2023-12-12'), GameDescription.BA_AWA()         ), //                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

@@ -86,10 +86,11 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
 
             // Then the move should be a success
-            const expectedState: MancalaState = new MancalaState([
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ], 11, [26, 22]);
+            const expectedState: MancalaState = new MancalaState(
+                TableUtils.create(6, 2, 0),
+                11,
+                [26, 22],
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
@@ -109,10 +110,11 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then the move should be a success
-            const expectedState: MancalaState = new MancalaState([
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ], 12, [25, 23]);
+            const expectedState: MancalaState = new MancalaState(
+                TableUtils.create(6, 2, 0),
+                12,
+                [25, 23],
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
