@@ -4,6 +4,7 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PenteAlignmentHeuristic } from '../PenteAlignmentHeuristic';
 import { PenteState } from '../PenteState';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -37,7 +38,7 @@ describe('PenteAlignmentHeuristic', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 0], 6);
+        ], PlayerMap.of(0, 0), 6);
         const strongerState: PenteState = new PenteState([
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -58,7 +59,7 @@ describe('PenteAlignmentHeuristic', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 0], 6);
+        ], PlayerMap.of(0, 0), 6);
         // When using the minimax
         // Then it should consider the better aligned state stronger
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

@@ -12,6 +12,7 @@ import { LodestoneFailure } from '../LodestoneFailure';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('LodestoneComponent', () => {
     let testUtils: ComponentTestUtils<LodestoneComponent>;
@@ -342,7 +343,7 @@ describe('LodestoneComponent', () => {
             // When displaying the state
             await testUtils.setupState(state);
             // Then the score should be the number of pieces captured
-            expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of([22, 20]));
+            expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of(PlayerMap.of(22, 20)));
         }));
     });
 });

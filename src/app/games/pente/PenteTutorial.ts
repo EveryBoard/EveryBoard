@@ -4,6 +4,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { PenteRules } from './PenteRules';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -46,7 +47,7 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], [0, 0], 3),
+            ], PlayerMap.of(0, 0), 3),
             [PenteMove.of(new Coord(9, 6))],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
@@ -74,7 +75,7 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], [0, 0], 4),
+            ], PlayerMap.of(0, 0), 4),
             [PenteMove.of(new Coord(9, 7))],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
@@ -102,7 +103,7 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], [8, 8], 7),
+            ], PlayerMap.of(8, 8), 7),
             [
                 PenteMove.of(new Coord(9, 6)),
                 PenteMove.of(new Coord(8, 9)),

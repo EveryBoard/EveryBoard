@@ -6,6 +6,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('PenteRules', () => {
 
@@ -46,7 +47,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 0], 1);
+        ], PlayerMap.of(0, 0), 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should forbid a drop on an occupied space', () => {
@@ -82,7 +83,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 0], 3);
+        ], PlayerMap.of(0, 0), 3);
 
         // When doing a drop to make a sandwich
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -108,7 +109,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 2], 4);
+        ], PlayerMap.of(0, 2), 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should support multiple captures', () => {
@@ -133,7 +134,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 0], 3);
+        ], PlayerMap.of(0, 0), 3);
 
         // When doing a drop to sandwich twice
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -159,7 +160,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 4], 4);
+        ], PlayerMap.of(0, 4), 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should be ongoing if there are still available spaces and no victory', () => {
@@ -191,7 +192,7 @@ describe('PenteRules', () => {
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
-        ], [8, 8], 1337);
+        ], PlayerMap.of(8, 8), 1337);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a draw
         RulesUtils.expectToBeDraw(rules, node);
@@ -218,7 +219,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [10, 0], 3);
+        ], PlayerMap.of(10, 0), 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for this player
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
@@ -245,7 +246,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 0], 3);
+        ], PlayerMap.of(0, 0), 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for zero
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);

@@ -29,6 +29,7 @@ import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class OnlineGameWrapperMessages {
 
@@ -425,7 +426,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
         }
     }
-    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<readonly [number, number]>)
+    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<PlayerMap<number>>)
     : Promise<void>
     {
         if (gameStatus.isEndGame) {
@@ -444,7 +445,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const player: Player = this.role as Player;
         await this.gameService.notifyTimeout(this.currentPartId, player, victoriousPlayer, loser);
     }
-    private async notifyVictory(winner: Player, scores: MGPOptional<readonly [number, number]>): Promise<void> {
+    private async notifyVictory(winner: Player, scores: MGPOptional<PlayerMap<number>>): Promise<void> {
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         const playerZero: MinimalUser = this.players[0].get();
         const playerOne: MinimalUser = this.players[1].get();

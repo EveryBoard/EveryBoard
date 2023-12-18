@@ -13,6 +13,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
 import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-new-game',
@@ -27,7 +28,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
         this.rules = PenteRules.get();
         this.node = this.rules.getInitialNode();
         this.encoder = PenteMove.encoder;

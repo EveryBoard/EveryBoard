@@ -1,6 +1,7 @@
 import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class ReversiState extends GameStateWithTable<PlayerOrNone> {
 
@@ -33,7 +34,7 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
         return result;
     }
 
-    public countScore(): [number, number] {
+    public countScore(): PlayerMap<number> {
         const scores: [number, number] = [0, 0];
         for (let y: number = 0; y < ReversiState.BOARD_HEIGHT; y++) {
             for (let x: number = 0; x < ReversiState.BOARD_WIDTH; x++) {
@@ -43,6 +44,6 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
                 }
             }
         }
-        return scores;
+        return PlayerMap.of(scores[0], scores[1]);
     }
 }

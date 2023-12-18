@@ -1,6 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -23,11 +24,12 @@ export class GoPiece implements ComparableObject {
 
     public static LIGHT_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
 
-    private constructor(readonly player: PlayerOrNone, readonly type: PieceType) {}
+    private constructor(readonly player: PlayerOrNone, public readonly type: PieceType) {}
 
     public equals(other: GoPiece): boolean {
         return other === this;
     }
+
     public toString(): string {
         switch (this) {
             case GoPiece.DARK:
@@ -47,32 +49,53 @@ export class GoPiece implements ComparableObject {
                 return 'GoPiece.LIGHT_TERRITORY';
         }
     }
+
     public static pieceBelongTo(piece: GoPiece, owner: Player): boolean {
         return owner === piece.player && piece.type !== 'territory';
     }
+
     public static ofPlayer(player: Player): GoPiece {
         if (player === Player.ZERO) return GoPiece.DARK;
         else return GoPiece.LIGHT;
     }
+
+    public static territoryOf(player: Player): GoPiece {
+        if (player === Player.ZERO) {
+            return GoPiece.DARK_TERRITORY;
+        } else {
+            return GoPiece.LIGHT_TERRITORY;
+        }
+    }
+
     public isOccupied(): boolean {
         return [GoPiece.DARK, GoPiece.LIGHT, GoPiece.DEAD_DARK, GoPiece.DEAD_LIGHT].includes(this);
     }
+
     public isEmpty(): boolean {
         return [GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY, GoPiece.EMPTY].includes(this);
     }
+
+    public isAlive(): boolean {
+        return this.type === 'alive'; // TODO GENERALISE THIS CLEAN PATTERN
+    }
+
     public isDead(): boolean {
         return [GoPiece.DEAD_DARK, GoPiece.DEAD_LIGHT].includes(this);
     }
+
     public isTerritory(): boolean {
         return [GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY].includes(this);
     }
+
     public getOwner(): PlayerOrNone {
         return this.player;
     }
+
     public nonTerritory(): GoPiece {
         assert(this.isEmpty(), 'Usually not false, if false, cover by test and return "this"');
         return GoPiece.EMPTY;
     }
+
 }
 export enum Phase {
     PLAYING = 'PLAYING',
@@ -89,12 +112,12 @@ export class GoState extends GameStateWithTable<GoPiece> {
 
     public readonly koCoord: MGPOptional<Coord>;
 
-    public readonly captured: ReadonlyArray<number>;
+    public readonly captured: PlayerMap<number>;
 
     public readonly phase: Phase;
 
     public constructor(board: Table<GoPiece>,
-                       captured: number[],
+                       captured: PlayerMap<number>,
                        turn: number,
                        koCoord: MGPOptional<Coord>,
                        phase: Phase)
@@ -104,8 +127,8 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.koCoord = koCoord;
         this.phase = phase;
     }
-    public getCapturedCopy(): [number, number] {
-        return [this.captured[0], this.captured[1]];
+    public getCapturedCopy(): PlayerMap<number> {
+        return PlayerMap.of(this.captured[0], this.captured[1]);
     }
     public static getStartingBoard(): Table<GoPiece> {
         return TableUtils.create(GoState.WIDTH, GoState.HEIGHT, GoPiece.EMPTY);

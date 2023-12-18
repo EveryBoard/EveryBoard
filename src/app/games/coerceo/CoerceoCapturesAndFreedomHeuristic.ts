@@ -11,8 +11,8 @@ export class CoerceoCapturesAndFreedomHeuristic extends PlayerMetricHeuristic<Co
         const state: CoerceoState = node.gameState;
         const piecesByFreedom: MGPMap<Player, number[]> = state.getPiecesByFreedom();
         const piecesScores: number[] = this.getPiecesScore(piecesByFreedom);
-        const scoreZero: number = (2 * state.captures[0]) + piecesScores[0];
-        const scoreOne: number = (2 * state.captures[1]) + piecesScores[1];
+        const scoreZero: number = (2 * state.captures.get(Player.ZERO).get()) + piecesScores[0];
+        const scoreOne: number = (2 * state.captures.get(Player.ONE).get()) + piecesScores[1];
         return [scoreZero, scoreOne];
     }
 

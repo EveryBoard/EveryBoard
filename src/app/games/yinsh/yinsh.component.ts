@@ -20,6 +20,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { YinshScoreHeuristic } from './YinshScoreHeuristic';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 interface SpaceInfo {
     coord: Coord,
@@ -97,7 +98,7 @@ export class YinshComponent
     };
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
         this.rules = YinshRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [

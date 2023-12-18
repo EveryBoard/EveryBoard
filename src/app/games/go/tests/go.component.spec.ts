@@ -7,6 +7,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('GoComponent', () => {
 
@@ -37,7 +38,7 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
+        const state: GoState = new GoState(board, PlayerMap.of(0, 0), 1, MGPOptional.empty(), Phase.PLAYING);
         await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
@@ -57,7 +58,7 @@ describe('GoComponent', () => {
             GoState.HEIGHT = 19;
             GoState.WIDTH = 19;
             const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
-            const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            const state: GoState = new GoState(board, PlayerMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
             await testUtils.setupState(state);
@@ -79,7 +80,7 @@ describe('GoComponent', () => {
             GoState.HEIGHT = 13;
             GoState.WIDTH = 13;
             const board: Table<GoPiece> = TableUtils.create(13, 13, GoPiece.EMPTY);
-            const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            const state: GoState = new GoState(board, PlayerMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
             await testUtils.setupState(state);
@@ -102,7 +103,7 @@ describe('GoComponent', () => {
             GoState.HEIGHT = 9;
             GoState.WIDTH = 9;
             const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
-            const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
+            const state: GoState = new GoState(board, PlayerMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
             await testUtils.setupState(state);

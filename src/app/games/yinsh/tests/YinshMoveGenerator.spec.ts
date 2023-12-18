@@ -5,6 +5,7 @@ import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { YinshMoveGenerator } from '../YinshMoveGenerator';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('YinshMoveGenerator', () => {
 
@@ -41,13 +42,13 @@ describe('YinshMoveGenerator', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 1);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 1);
 
             const node: YinshNode = new YinshNode(state);
             expect(moveGenerator.getListMoves(node).length).toBe(84);
         });
         it('should have no moves at the end of the game', () => {
-            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, [3, 2], 20);
+            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, PlayerMap.of(3, 2), 20);
             const node: YinshNode = new YinshNode(state);
             expect(moveGenerator.getListMoves(node).length).toBe(0);
         });
@@ -65,7 +66,7 @@ describe('YinshMoveGenerator', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
 
             const node: YinshNode = new YinshNode(state);
             expect(moveGenerator.getListMoves(node).length).toBe(18);
@@ -84,7 +85,7 @@ describe('YinshMoveGenerator', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
 
             const node: YinshNode = new YinshNode(state);
             expect(moveGenerator.getListMoves(node).length).toBe(11);
@@ -103,7 +104,7 @@ describe('YinshMoveGenerator', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
 
             const node: YinshNode = new YinshNode(state);
             expect(moveGenerator.getListMoves(node).length).toBe(10);
@@ -123,7 +124,7 @@ describe('YinshMoveGenerator', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
 
             const node: YinshNode = new YinshNode(state);
             expect(moveGenerator.getListMoves(node).length).toBe(11);
@@ -142,7 +143,7 @@ describe('YinshMoveGenerator', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
 
             const node: YinshNode = new YinshNode(state);
             for (const move of moveGenerator.getListMoves(node)) {

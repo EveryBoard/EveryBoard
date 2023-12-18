@@ -9,6 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { DoMancalaRulesTests } from '../../common/GenericMancalaRulesTest.spec';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('AwaleRules', () => {
 
@@ -28,7 +29,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 18],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
             // When performing a distribution
             const move: AwaleMove = AwaleMove.FIVE;
             // Then the distribution should be performed as expected, and leave 0 stones in the starting space
@@ -36,7 +37,7 @@ describe('AwaleRules', () => {
                 [2, 1, 1, 1, 1, 0],
                 [2, 2, 2, 2, 2, 2],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [0, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerMap.of(0, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow feeding move', () => {
@@ -45,7 +46,7 @@ describe('AwaleRules', () => {
                 [1, 0, 0, 0, 0, 1],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [23, 23]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(23, 23));
 
             // When performing a move that feeds the opponent
             const move: AwaleMove = AwaleMove.FIVE;
@@ -53,7 +54,7 @@ describe('AwaleRules', () => {
                 [1, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 1],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [23, 23]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerMap.of(23, 23));
 
             // Then the move should be legal
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
@@ -66,7 +67,7 @@ describe('AwaleRules', () => {
                 [1, 0, 0, 0, 0, 1],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [23, 23]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(23, 23));
 
             // When performing a move that does not feed the opponent
             const move: AwaleMove = AwaleMove.ZERO;
@@ -81,7 +82,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 1],
                 [0, 2, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
 
             // When current player player give its last stone
             const move: AwaleMove = AwaleMove.FIVE;
@@ -91,7 +92,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
                 [0, 2, 0, 0, 0, 1],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [0, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerMap.of(0, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should monsoon if next player will not be able to feed current player', () => {
@@ -100,7 +101,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 1],
                 [0, 1, 2, 3, 4, 4],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [10, 23]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(10, 23));
 
             // When player give its last stone
             const move: AwaleMove = AwaleMove.FIVE;
@@ -110,7 +111,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerMap.of(25, 23));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             const node: AwaleNode = new AwaleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
@@ -123,7 +124,7 @@ describe('AwaleRules', () => {
                 [1, 1, 0, 0, 0, 0],
                 [1, 1, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 2, [1, 2]);
+            const state: MancalaState = new MancalaState(board, 2, PlayerMap.of(1, 2));
 
             // When performing a move that will capture
             const move: AwaleMove = AwaleMove.ZERO;
@@ -133,7 +134,7 @@ describe('AwaleRules', () => {
                 [0, 1, 0, 0, 0, 0],
                 [0, 1, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [3, 2]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, PlayerMap.of(3, 2));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should capture for player one', () => {
@@ -142,7 +143,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 1, 1],
                 [0, 0, 0, 0, 1, 2],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [1, 2]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(1, 2));
 
             // When performing a move that will capture
             const move: AwaleMove = AwaleMove.FIVE;
@@ -152,7 +153,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 1, 0],
                 [0, 0, 0, 0, 1, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [1, 5]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerMap.of(1, 5));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should do multiple capture when possible', () => {
@@ -161,7 +162,7 @@ describe('AwaleRules', () => {
                 [1, 1, 0, 0, 0, 1],
                 [2, 1, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 2, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 2, PlayerMap.of(0, 0));
 
             // When performing a move that will capture
             const move: AwaleMove = AwaleMove.ZERO;
@@ -171,7 +172,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 1],
                 [0, 1, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [4, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, PlayerMap.of(4, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should stop multiple capture when crossing uncapturable house', () => {
@@ -180,7 +181,7 @@ describe('AwaleRules', () => {
                 [1, 3, 2, 1, 0, 0],
                 [4, 1, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 2, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 2, PlayerMap.of(0, 0));
 
             // When performing a move that will capture
             const move: AwaleMove = AwaleMove.ZERO;
@@ -190,7 +191,7 @@ describe('AwaleRules', () => {
                 [2, 4, 0, 0, 0, 0],
                 [0, 1, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [5, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, PlayerMap.of(5, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should distribute but not capture in case of would-starve move', () => {
@@ -199,7 +200,7 @@ describe('AwaleRules', () => {
                 [1, 0, 0, 0, 0, 2],
                 [0, 0, 0, 0, 1, 1],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
 
             // When the player does a would-starve move
             const move: AwaleMove = AwaleMove.FIVE;
@@ -209,7 +210,7 @@ describe('AwaleRules', () => {
                 [1, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 2, 2],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [0, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerMap.of(0, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should not capture in your own territory', () => {
@@ -218,7 +219,7 @@ describe('AwaleRules', () => {
                 [1, 1, 0, 0, 0, 0],
                 [1, 1, 0, 0, 1, 1],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 0, PlayerMap.of(0, 0));
 
             // When doing that move
             const move: AwaleMove = AwaleMove.FIVE;
@@ -228,7 +229,7 @@ describe('AwaleRules', () => {
                 [1, 1, 0, 0, 0, 0],
                 [1, 1, 0, 0, 2, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, PlayerMap.of(0, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
     });

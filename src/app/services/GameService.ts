@@ -14,6 +14,7 @@ import { MinimalUser } from '../domain/MinimalUser';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreTime } from '../domain/Time';
 import { GameEventService } from './GameEventService';
+import { PlayerMap } from '../jscaip/PlayerMap';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
@@ -35,9 +36,11 @@ export class GameService {
                        private readonly chatService: ChatService)
     {
     }
+
     private async update(id: string, update: Partial<Part>): Promise<void> {
         return this.partDAO.update(id, update);
     }
+
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: MGPOptional<Part> = await this.partDAO.read(partId);
         if (part.isAbsent()) {
@@ -49,6 +52,7 @@ export class GameService {
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
+
     private createUnstartedPart(typeGame: string): Promise<string> {
         const playerZero: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
 
@@ -60,15 +64,18 @@ export class GameService {
         };
         return this.partDAO.create(newPart);
     }
+
     private createChat(chatId: string): Promise<void> {
         return this.chatService.createNewChat(chatId);
     }
+
     public async createPartConfigRoomAndChat(typeGame: string): Promise<string> {
         const gameId: string = await this.createUnstartedPart(typeGame);
         await this.configRoomService.createInitialConfigRoom(gameId);
         await this.createChat(gameId);
         return gameId;
     }
+
     public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig {
         let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
         if (whoStarts === FirstPlayer.RANDOM) {
@@ -94,9 +101,11 @@ export class GameService {
             beginning: serverTimestamp(),
         };
     }
+
     public deletePart(partId: string): Promise<void> {
         return this.partDAO.delete(partId);
     }
+
     public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<void> {
         await this.configRoomService.acceptConfig(partId);
 
@@ -110,12 +119,15 @@ export class GameService {
         await this.partDAO.update(partId, update);
         await this.gameEventService.startGame(partId, accepter);
     }
+
     public getPart(partId: string): Promise<MGPOptional<Part>> {
         return this.partDAO.read(partId);
     }
+
     public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
         return this.partDAO.subscribeToChanges(partId, callback);
     }
+
     public async resign(partId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         const update: Partial<Part> = {
             winner,
@@ -125,6 +137,7 @@ export class GameService {
         await this.partDAO.update(partId, update);
         await this.gameEventService.addAction(partId, player, 'EndGame');
     }
+
     public async notifyTimeout(partId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         const update: Partial<Part> = {
             winner,
@@ -134,9 +147,11 @@ export class GameService {
         await this.partDAO.update(partId, update);
         await this.gameEventService.addAction(partId, player, 'EndGame');
     }
+
     public async proposeDraw(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addRequest(partId, player, 'Draw');
     }
+
     public async acceptDraw(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addReply(partId, player, 'Accept', 'Draw');
         const result: MGPResult = player === Player.ZERO ?
@@ -147,15 +162,19 @@ export class GameService {
         await this.partDAO.update(partId, update);
         await this.gameEventService.addAction(partId, player, 'EndGame');
     }
+
     public async refuseDraw(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addReply(partId, player, 'Reject', 'Draw');
     }
+
     public async proposeRematch(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addRequest(partId, player, 'Rematch');
     }
+
     public async rejectRematch(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addReply(partId, player, 'Reject', 'Rematch');
     }
+
     public async acceptRematch(partDocument: PartDocument, player: Player): Promise<void> {
         const part: Part = Utils.getNonNullable(partDocument.data);
 
@@ -191,9 +210,11 @@ export class GameService {
         await this.gameEventService.addReply(partDocument.id, player, 'Accept', 'Rematch', rematchId);
         await this.gameEventService.startGame(rematchId, player.getOpponent());
     }
+
     public async askTakeBack(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addRequest(partId, player, 'TakeBack');
     }
+
     public async acceptTakeBack(partId: string, currentTurn: number, player: Player): Promise<void> {
         let turn: number = currentTurn-1;
         if (Player.ofTurn(turn).equals(player)) {
@@ -206,17 +227,21 @@ export class GameService {
         await this.gameEventService.addReply(partId, player, 'Accept', 'TakeBack' );
         return await this.partDAO.update(partId, update);
     }
+
     public async refuseTakeBack(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addReply(partId, player, 'Reject', 'TakeBack');
     }
+
     public async addGlobalTime(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addAction(partId, player, 'AddGlobalTime');
     }
+
     public async addTurnTime(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addAction(partId, player, 'AddTurnTime');
     }
+
     private async preparePartUpdate(partId: string,
-                                    scores: MGPOptional<readonly [number, number]>)
+                                    scores: MGPOptional<PlayerMap<number>>)
     : Promise<Partial<Part>>
     {
         const part: Part = (await this.partDAO.read(partId)).get();
@@ -227,12 +252,14 @@ export class GameService {
         update = this.updateScore(update, scores);
         return update;
     }
-    public async updatePart(partId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
+
+    public async updatePart(partId: string, scores: MGPOptional<PlayerMap<number>>): Promise<void> {
         const update: Partial<Part> = await this.preparePartUpdate(partId, scores);
         await this.update(partId, update);
     }
+
     public async drawPart(partId: string, player: Player,
-                          scores: MGPOptional<readonly [number, number]>)
+                          scores: MGPOptional<PlayerMap<number>>)
     : Promise<void>
     {
         let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
@@ -243,11 +270,12 @@ export class GameService {
         await this.update(partId, update);
         await this.gameEventService.addAction(partId, player, 'EndGame');
     }
+
     public async endPartWithVictory(partId: string,
                                     player: Player,
                                     winner: MinimalUser,
                                     loser: MinimalUser,
-                                    scores: MGPOptional<readonly [number, number]>)
+                                    scores: MGPOptional<PlayerMap<number>>)
     : Promise<void>
     {
         let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
@@ -260,17 +288,20 @@ export class GameService {
         await this.update(partId, update);
         await this.gameEventService.addAction(partId, player, 'EndGame');
     }
+
     public async addMove(partId: string, player: Player, encodedMove: JSONValue): Promise<void> {
         await this.gameEventService.addMove(partId, player, encodedMove);
     }
-    private updateScore(update: Partial<Part>, scores: MGPOptional<readonly [number, number]>): Partial<Part> {
+
+    private updateScore(update: Partial<Part>, scores: MGPOptional<PlayerMap<number>>): Partial<Part> {
         if (scores.isPresent()) {
             return {
                 ...update,
-                scorePlayerZero: scores.get()[0],
-                scorePlayerOne: scores.get()[1],
+                scorePlayerZero: scores.get().get(Player.ZERO).get(),
+                scorePlayerOne: scores.get().get(Player.ONE).get(),
             };
         }
         return update;
     }
+
 }

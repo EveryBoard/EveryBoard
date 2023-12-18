@@ -7,8 +7,4 @@ export class RelativePlayer {
     public static readonly PLAYER: RelativePlayer = new RelativePlayer('PLAYER');
 
     private constructor(private readonly value: string) {}
-
-    public getValue(): string {
-        return this.value;
-    }
 }

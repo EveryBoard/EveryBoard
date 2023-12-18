@@ -3,13 +3,14 @@ import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { Player } from 'src/app/jscaip/Player';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { YinshPiece } from './YinshPiece';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class YinshState extends HexagonalGameState<YinshPiece> {
 
     public static SIZE: number = 11;
 
     public constructor(board: Table<YinshPiece>,
-                       public readonly sideRings: [number, number],
+                       public readonly sideRings: PlayerMap<number>, // TODO
                        turn: number)
     {
         super(turn, board, YinshState.SIZE, YinshState.SIZE, [6, 4, 3, 2, 1], YinshPiece.EMPTY);
@@ -19,9 +20,9 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
         return this.turn < 10;
     }
 
-    public countScores(): [number, number] {
+    public countScores(): PlayerMap<number> {
         if (this.turn < 10) {
-            return [0, 0];
+            return PlayerMap.of(0, 0);
         } else {
             return this.sideRings;
         }

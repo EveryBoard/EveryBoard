@@ -11,6 +11,7 @@ import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { YinshRules } from '../YinshRules';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('YinshComponent', () => {
 
@@ -52,7 +53,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [4, 5], 1);
+            const state: YinshState = new YinshState(board, PlayerMap.of(4, 5), 1);
             await testUtils.setupState(state);
             // When clicking on an occupied space
             // Then it should fail
@@ -85,7 +86,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             const component: YinshComponent = testUtils.getGameComponent();
             spyOn(component, 'isPlayerTurn').and.returnValue(true);
 
@@ -112,7 +113,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             const component: YinshComponent = testUtils.getGameComponent();
             spyOn(component, 'isPlayerTurn').and.returnValue(false);
 
@@ -132,7 +133,7 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // Then the score (0 - 0) should be displayed
-            const expectedScore: MGPOptional<[number, number]> = MGPOptional.of([0, 0]);
+            const expectedScore: MGPOptional<PlayerMap<number>> = MGPOptional.of(PlayerMap.of(0, 0));
             expect(testUtils.getGameComponent().scores).toEqual(expectedScore);
         }));
 
@@ -151,13 +152,13 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [2, 1], 20);
+            const state: YinshState = new YinshState(board, PlayerMap.of(2, 1), 20);
 
             // Then rendering it
             await testUtils.setupState(state);
 
             // Then score (2 - 1) should be displayed
-            const expectedScore: MGPOptional<[number, number]> = MGPOptional.of([2, 1]);
+            const expectedScore: MGPOptional<PlayerMap<number>> = MGPOptional.of(PlayerMap.of(2, 1));
             expect(testUtils.getGameComponent().scores).toEqual(expectedScore);
         }));
 
@@ -176,7 +177,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
             // When performing a simple move by clicking in the ring, then somewhere aligned
             const move: YinshMove = new YinshMove([],
@@ -202,7 +203,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
             // When performing a move that flips the markers
             const move: YinshMove = new YinshMove([],
@@ -233,7 +234,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
             // When performing a move that flips the markers
             const move: YinshMove = new YinshMove([],
@@ -264,7 +265,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
             testUtils.expectElementNotToExist('#marker_3_2');
             // When clicking on the ring
@@ -289,7 +290,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When clicking on the capture and then doing the rest of the move
@@ -320,7 +321,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
 
             // When rendering the board
             await testUtils.setupState(state);
@@ -348,7 +349,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             testUtils.expectElementNotToExist('#selected_3_3');
@@ -392,7 +393,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When clicking on both captures and performing a move
@@ -426,7 +427,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When trying to place a marker in a ring
@@ -436,7 +437,7 @@ describe('YinshComponent', () => {
 
         it('should show the number of rings of each player', fakeAsync(async() => {
             // Given the initial board
-            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, [2, 1], 10);
+            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, PlayerMap.of(2, 1), 10);
 
             // When rendering the board
             await testUtils.setupState(state);
@@ -469,7 +470,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
             testUtils.expectElementNotToExist('#player_0_sideRing_1');
 
@@ -504,7 +505,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             for (const coord of [[3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [4, 5], [5, 5], [6, 5], [7, 5], [8, 5]]) {
@@ -540,7 +541,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             testUtils.expectElementNotToExist('#ring_0');
@@ -570,7 +571,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When clicking on the intersecting coordinate
@@ -595,7 +596,7 @@ describe('YinshComponent', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
 
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_3_3');
             // When clicking somewhere else than on a ring
@@ -618,7 +619,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When moving on an occupied space
@@ -642,7 +643,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When creating the capture and selecting it
@@ -675,7 +676,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When creating the captures and selecting them
@@ -711,7 +712,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When creating the captures, selecting the ambiguous coord first
@@ -746,7 +747,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, a, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When capturing in two clicks
@@ -781,7 +782,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, a, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When trying to capture with two clicks, but clicking incorrectly
@@ -805,7 +806,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             const move: YinshMove =
@@ -848,7 +849,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
             // When clicking on the ring
@@ -875,7 +876,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_3_2');
 
@@ -903,7 +904,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_3_2');
 

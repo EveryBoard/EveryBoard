@@ -13,6 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export type ReversiLegalityInformation = Coord[];
 
@@ -54,8 +55,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         if (gameIsEnded === false) {
             return GameStatus.ONGOING;
         }
-        const scores: [number, number] = state.countScore();
-        const diff: number = scores[1] - scores[0];
+        const scores: PlayerMap<number> = state.countScore();
+        const diff: number = scores.get(Player.ONE).get() - scores.get(Player.ZERO).get();
         if (diff < 0) {
             return GameStatus.ZERO_WON;
         }

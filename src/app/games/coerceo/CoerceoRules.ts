@@ -11,6 +11,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { Player } from 'src/app/jscaip/Player';
 
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
@@ -43,7 +45,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
             [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
         ];
-        return new CoerceoState(board, 0, [0, 0], [0, 0]);
+        return new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
     }
 
     public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState {
@@ -53,14 +55,18 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             return this.applyLegalMovement(move, state);
         }
     }
+
     public applyLegalTileExchange(move: CoerceoTileExchangeMove, state: CoerceoState): CoerceoState {
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
         const captured: Coord = move.coord;
         newBoard[captured.y][captured.x] = FourStatePiece.EMPTY;
-        const newCaptures: [number, number] = [state.captures[0], state.captures[1]];
-        newCaptures[state.getCurrentPlayer().getValue()] += 1;
-        const newTiles: [number, number] = [state.tiles[0], state.tiles[1]];
-        newTiles[state.getCurrentPlayer().getValue()] -= 2;
+        const currentPlayer: Player = state.getCurrentPlayer();
+        const newCaptures: PlayerMap<number> = state.captures.getCopy();
+        const oldCurrentPlayerCaptures: number = newCaptures.get(currentPlayer).get();
+        newCaptures.put(currentPlayer, oldCurrentPlayerCaptures + 1);
+        const newTiles: PlayerMap<number> = state.tiles.getCopy();
+        const oldCurrentPlayerTiles: number = newTiles.get(currentPlayer).get();
+        newTiles.put(currentPlayer, oldCurrentPlayerTiles - 2);
         const afterCapture: CoerceoState = new CoerceoState(newBoard,
                                                             state.turn,
                                                             newTiles,
@@ -72,6 +78,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                                                               afterTileRemoval.captures);
         return resultingState;
     }
+
     public applyLegalMovement(move: CoerceoRegularMove, state: CoerceoState): CoerceoState {
         // Move the piece
         const afterMovement: CoerceoState = state.applyLegalMovement(move);
@@ -85,6 +92,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                                                               afterCaptures.captures);
         return resultingState;
     }
+
     public isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
         if (CoerceoMove.isTileExchange(move)) {
             return this.isLegalTileExchange(move, state);
@@ -92,8 +100,9 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             return this.isLegalMovement(move, state);
         }
     }
+
     public isLegalTileExchange(move: CoerceoTileExchangeMove, state: CoerceoState): MGPValidation {
-        if (state.tiles[state.getCurrentPlayer().getValue()] < 2) {
+        if (state.tiles.get(state.getCurrentPlayer()).get() < 2) {
             return MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
         }
         const captured: FourStatePiece = state.getPieceAt(move.coord);
@@ -107,6 +116,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     public isLegalMovement(move: CoerceoRegularMove, state: CoerceoState): MGPValidation {
         Utils.assert(state.getPieceAt(move.getStart()) !== FourStatePiece.UNREACHABLE,
                      'Cannot start with a coord outside the board ' + move.getStart().toString() + '.');
@@ -125,17 +135,20 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     public static getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;
-        if (state.captures[0] >= 18) {
+        if (state.captures.get(Player.ZERO).get() >= 18) {
             return GameStatus.ZERO_WON;
         }
-        if (state.captures[1] >= 18) {
+        if (state.captures.get(Player.ONE).get() >= 18) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;
-    }
+    } // TODO KILL
+
     public getGameStatus(node: CoerceoNode): GameStatus {
         return CoerceoRules.getGameStatus(node);
     }
+
 }

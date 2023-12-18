@@ -7,6 +7,7 @@ import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneCaptures } from './LodestoneMove';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 export class LodestonePressurePlate {
     public static POSITIONS: LodestonePressurePlatePosition[] = ['top', 'bottom', 'left', 'right'];
     public static EMPTY_5: LodestonePressurePlate = new LodestonePressurePlate(5, []);
@@ -103,9 +104,9 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         return playerPieces;
     }
 
-    public getScores(): [number, number] {
+    public getScores(): PlayerMap<number> {
         const remainingPieces: [number, number] = this.numberOfPieces();
-        return [24 - remainingPieces[1], 24 - remainingPieces[0]];
+        return PlayerMap.of(24 - remainingPieces[1], 24 - remainingPieces[0]);
     }
 
     public nextLodestoneDirection(): MGPOptional<LodestoneDirection> {

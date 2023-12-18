@@ -15,6 +15,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 import { KalahRules } from '../kalah/KalahRules';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;
 
@@ -225,7 +226,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                 [0, 4, 4, 4, 4, 4],
                 [4, 4, 4, 4, 4, 4],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When clicking on the empty house
@@ -239,7 +240,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R, M>,
                 [4, 4, 4, 4, 4, 4],
                 [4, 4, 4, 4, 4, 4],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 0, PlayerMap.of(0, 0));
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When clicking on a house of the opponent

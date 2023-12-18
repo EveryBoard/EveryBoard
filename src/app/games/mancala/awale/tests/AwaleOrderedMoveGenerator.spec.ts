@@ -4,6 +4,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleNode } from '../AwaleRules';
 import { AwaleOrderedMoveGenerator } from '../AwaleOrderedMoveGenerator';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('AwaleOrderedMoveGenerator', () => {
 
@@ -18,7 +19,7 @@ describe('AwaleOrderedMoveGenerator', () => {
             [0, 0, 0, 0, 1, 1],
             [0, 0, 0, 0, 0, 2],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
         const node: AwaleNode = new AwaleNode(state);
         // When listing the moves
         const moves: AwaleMove[] = moveGenerator.getListMoves(node);

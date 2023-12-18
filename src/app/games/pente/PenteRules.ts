@@ -12,6 +12,7 @@ import { Utils } from 'src/app/utils/utils';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
@@ -32,7 +33,7 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
     public getInitialState(): PenteState {
         const board: PlayerOrNone[][] = TableUtils.create(PenteState.SIZE, PenteState.SIZE, PlayerOrNone.NONE);
         board[9][9] = PlayerOrNone.ONE;
-        return new PenteState(board, [0, 0], 0);
+        return new PenteState(board, PlayerMap.of(0, 0), 0);
     }
 
     public isLegal(move: PenteMove, state: PenteState): MGPValidation {
@@ -50,7 +51,7 @@ export class PenteRules extends Rules<PenteMove, PenteState> {
         for (const captured of capturedPieces) {
             newBoard[captured.y][captured.x] = PlayerOrNone.NONE;
         }
-        const captures: [number, number] = [state.captures[0], state.captures[1]];
+        const captures: PlayerMap<number> = state.captures.getCopy();
         captures[player.getValue()] += capturedPieces.length;
         return new PenteState(newBoard, captures, state.turn+1);
     }

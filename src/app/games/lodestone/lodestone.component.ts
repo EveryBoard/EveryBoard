@@ -21,6 +21,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 interface LodestoneInfo {
     direction: LodestoneDirection,
@@ -144,7 +145,7 @@ export class LodestoneComponent
         this.TRIANGLE_OUT = `${radius80},0 ${radius30},${radius20} ${radius30},-${radius20}`;
         this.TRIANGLE_IN = `${radius30},0 ${radius80},${radius30} ${radius80},-${radius30}`;
         this.displayedState = this.getState();
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
     }
     public async selectCoord(coord: Coord): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#square_' + coord.x + '_' + coord.y);

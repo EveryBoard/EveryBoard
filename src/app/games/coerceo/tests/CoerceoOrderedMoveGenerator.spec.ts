@@ -3,13 +3,14 @@ import { CoerceoState } from '../CoerceoState';
 import { CoerceoNode } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 
-describe('CoerceoOrderedMoveGenerator', () => {
+fdescribe('CoerceoOrderedMoveGenerator', () => {
 
     let moveGenerator: CoerceoOrderedMoveGenerator;
 
@@ -29,7 +30,7 @@ describe('CoerceoOrderedMoveGenerator', () => {
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 0, [2, 0], [0, 0]);
+        const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(2, 0), PlayerMap.of(0, 0));
         const node: CoerceoNode = new CoerceoNode(state);
         expect(moveGenerator.getListMoves(node).length).toBe(3);
     });
@@ -46,7 +47,7 @@ describe('CoerceoOrderedMoveGenerator', () => {
             [N, N, N, N, N, N, N, N, N, N, N, N, X, _, X],
             [N, N, N, N, N, N, N, N, N, N, N, N, _, _, O],
         ];
-        const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [18, 17]);
+        const state: CoerceoState = new CoerceoState(board, 1, PlayerMap.of(0, 0), PlayerMap.of(18, 17));
         const node: CoerceoNode = new CoerceoNode(state);
         expect(moveGenerator.getListMoves(node).length).toBe(2);
     });

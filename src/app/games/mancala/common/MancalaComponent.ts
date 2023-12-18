@@ -16,6 +16,7 @@ import { Utils } from 'src/app/utils/utils';
 import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { MCTS } from 'src/app/jscaip/MCTS';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export abstract class MancalaComponent<R extends MancalaRules<M>, M extends MancalaMove>
     extends RectangularGameComponent<R, M, MancalaState, number>
@@ -49,8 +50,9 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     {
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
     }
+
     public override async showLastMove(move: M): Promise<void> {
         this.droppedInStore = [0, 0];
         const previousState: MancalaState = this.getPreviousState();
@@ -68,6 +70,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         }
         this.changeVisibleState(this.getState());
     }
+
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
@@ -89,6 +92,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.scores = MGPOptional.of(state.getScoresCopy());
         this.changeVisibleState(state);
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -105,6 +109,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             return result;
         }
     }
+
     public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
         if (y === this.getState().getCurrentPlayer().getValue()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
@@ -116,6 +121,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             return this.continueMoveConstruction(x);
         }
     }
+
     protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
         const distributionResult: MancalaDistributionResult =
             await this.showSimpleDistribution(MancalaDistribution.of(x));
@@ -132,6 +138,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             return this.chooseMove(this.currentMove.get());
         }
     }
+
     protected async showSimpleDistribution(distribution: MancalaDistribution): Promise<MancalaDistributionResult> {
         const state: MancalaState = this.constructedState;
         const playerY: number = state.getCurrentPlayerY();
@@ -142,13 +149,14 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             this.rules.distributeHouse(distribution.x, playerY, state);
         return distributionResult;
     }
+
     private async showSeedBySeed(coord: Coord, state: MancalaState): Promise<void> {
         const resultingBoard: number[][] = state.getCopiedBoard();
         const player: Player = state.getCurrentPlayer();
         const initial: Coord = coord; // to remember in order not to sow in the starting space if we make a full turn
         let seedsInHand: number = resultingBoard[coord.y][coord.x];
         let currentDropIsStore: boolean = false;
-        const scores: [number, number] = state.getScoresCopy();
+        const scores: PlayerMap<number> = state.getScoresCopy();
         resultingBoard[coord.y][coord.x] = 0;
         // Changing immediately the chosen house
         this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores));
@@ -174,6 +182,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
         }
     }
+
     public override hideLastMove(): void {
         this.captured = [
             [0, 0, 0, 0, 0, 0],
@@ -183,6 +192,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.lastDistributedHouses = [];
         this.changeVisibleState(this.getState());
     }
+
     public override cancelMoveAttempt(): void {
         this.currentMove = MGPOptional.empty();
         this.droppedInStore = [0, 0];
@@ -190,6 +200,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.lastDistributedHouses = [];
         this.changeVisibleState(this.getState());
     }
+
     public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const homeOwner: Player = this.getSpaceOwner(coord);
@@ -204,9 +215,11 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             return [homeColor];
         }
     }
+
     private getStoreOwner(coord: Coord): MGPOptional<MGPSet<Player>> {
         return MancalaRules.FAKE_STORE_COORD.reverse().get(coord);
     }
+
     private getSpaceOwner(coord: Coord): Player {
         const owner: MGPOptional<MGPSet<Player>> = this.getStoreOwner(coord);
         if (owner.isPresent()) {
@@ -215,18 +228,23 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             return Player.of((coord.y + 1) % 2);
         }
     }
+
     public getPieceCx(x: number): number {
         return 80 + 100 * (x + 1);
     }
+
     public getPieceCy(y: number): number {
         return 60 + 120 * y;
     }
+
     public getPieceTransform(x: number, y: number): string {
         return 'translate(' + this.getPieceCx(x) + ', ' + this.getPieceCy(y) + ')';
     }
+
     public getPieceRotation(): string {
         return 'rotate(' + this.getPointOfView().getValue() * 180 + ')';
     }
+
     public getHouseSecondaryContent(x: number, y: number): MGPOptional<string> {
         const previousContent: number = this.getPreviousStableState().getPieceAtXY(x, y);
         const currentContent: number = this.constructedState.getPieceAtXY(x, y);
@@ -241,9 +259,11 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             return MGPOptional.empty();
         }
     }
+
     public getStoreContent(owner: Player): number {
-        return this.scores.get()[owner.getValue()] + this.droppedInStore[owner.getValue()];
+        return this.scores.get().get(owner).get() + this.droppedInStore[owner.getValue()];
     }
+
     public getStoreSecondaryContent(owner: Player): MGPOptional<string> {
         const previousScore: number = this.getPreviousStableState().scores[owner.getValue()];
         const currentScore: number = this.constructedState.scores[owner.getValue()];
@@ -254,6 +274,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             return MGPOptional.empty();
         }
     }
+
     private getPreviousStableState(): MancalaState {
         if (this.opponentMoveIsBeingAnimated) {
             Utils.assert(this.getTurn() > 0, 'Kalah: Should not animate move at turn 0');
@@ -270,6 +291,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             }
         }
     }
+
     public async onStoreClick(owner: Player): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#store_player_' + owner.getValue());
         if (clickValidity.isFailure()) {
@@ -277,6 +299,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         }
         return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
     }
+
     private changeVisibleState(state: MancalaState): void {
         this.constructedState = state;
         this.board = this.constructedState.board;
@@ -299,4 +322,5 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     protected abstract updateOrCreateCurrentMove(x: number): void;
 
     public abstract generateMove(x: number): M;
+
 }

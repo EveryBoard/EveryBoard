@@ -7,6 +7,7 @@ import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('AwaleScoreMinimax', () => {
 
@@ -30,7 +31,7 @@ describe('AwaleScoreMinimax', () => {
             [4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 1],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = minimax.chooseNextMove(node, level1);
@@ -43,7 +44,7 @@ describe('AwaleScoreMinimax', () => {
             [0, 0, 0, 0, 3, 1],
             [0, 0, 0, 0, 1, 0],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = minimax.chooseNextMove(node, level2);
@@ -56,7 +57,7 @@ describe('AwaleScoreMinimax', () => {
             [1, 0, 0, 0, 0, 7],
             [0, 1, 0, 0, 0, 0],
         ];
-        const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+        const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
         const node: AwaleNode = new AwaleNode(state);
         // When getting the best move
         const bestMove: AwaleMove = minimax.chooseNextMove(node, level1);

@@ -5,6 +5,7 @@ import { MancalaDistribution } from '../common/MancalaMove';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 import { KalahRules } from './KalahRules';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class KalahTutorial extends Tutorial {
 
@@ -55,7 +56,7 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 4, 4, 4, 4, 4],
                 [0, 2, 0, 2, 4, 0],
-            ], 4, [0, 0]),
+            ], 4, PlayerMap.of(0, 0)),
             KalahMove.of(MancalaDistribution.ONE, [MancalaDistribution.ZERO, MancalaDistribution.THREE]),
             (_move: KalahMove, _state: MancalaState, resultingState: MancalaState) => {
                 if (resultingState.getPieceAtXY(1, 0) === 0) {
@@ -72,7 +73,7 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 0, 0, 0, 2, 0],
                 [2, 0, 0, 0, 0, 1],
-            ], 0, [19, 24]),
+            ], 0, PlayerMap.of(19, 24)),
             [
                 KalahMove.of(MancalaDistribution.FIVE),
             ],

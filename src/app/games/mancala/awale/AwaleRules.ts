@@ -8,6 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Utils } from 'src/app/utils/utils';
 import { GameNode } from 'src/app/jscaip/GameNode';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class AwaleNode extends GameNode<AwaleMove, MancalaState> {}
 
@@ -92,8 +93,10 @@ export class AwaleRules extends MancalaRules<AwaleMove> {
             x += direction;
             target = resultingBoard[y][x];
         } while ((x !== limit) && ((target === 2) || (target === 3)));
-        const captured: [number, number] = state.getScoresCopy();
-        captured[state.getCurrentPlayer().getValue()] += capturedSum;
+        const captured: PlayerMap<number> = state.getScoresCopy();
+        const currentPlayer: Player = state.getCurrentPlayer();
+        const oldValue: number = captured.get(currentPlayer).get();
+        captured.put(currentPlayer, oldValue + capturedSum);
         return {
             capturedSum,
             captureMap,

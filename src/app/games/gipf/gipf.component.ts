@@ -23,6 +23,7 @@ import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfScoreHeuristic } from './GipfScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-gipf',
@@ -65,7 +66,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
         this.rules = GipfRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [

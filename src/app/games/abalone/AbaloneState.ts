@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { AbaloneRules } from './AbaloneRules';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class AbaloneState extends GameStateWithTable<FourStatePiece> {
 
@@ -15,7 +16,7 @@ export class AbaloneState extends GameStateWithTable<FourStatePiece> {
         return piece.isPlayer();
     }
 
-    public getScores(): [number, number] {
+    public getScores(): PlayerMap<number> {
         const scores: [number, number] = [14, 14];
         for (let y: number = 0; y < 9; y++) {
             for (let x: number = 0; x < 9; x++) {
@@ -27,6 +28,6 @@ export class AbaloneState extends GameStateWithTable<FourStatePiece> {
                 }
             }
         }
-        return scores;
+        return PlayerMap.of(scores[0], scores[1]);
     }
 }

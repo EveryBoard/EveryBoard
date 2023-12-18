@@ -19,6 +19,7 @@ import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
 import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-coerceo',
@@ -32,7 +33,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 {
     private state: CoerceoState;
 
-    public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
+    public tiles: PlayerMap<number> = PlayerMap.of(0, 0);
 
     public NONE: FourStatePiece = FourStatePiece.UNREACHABLE;
     public INDICATOR_SIZE: number = 10;
@@ -45,7 +46,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
         this.rules = CoerceoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [
@@ -202,7 +203,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         if (this.node.parent.isAbsent()) {
             return false;
         }
-        const previousTiles: number = this.getPreviousState().tiles[player.getValue()];
+        const previousTiles: number = this.getPreviousState().tiles.get(player).get();
         return previousTiles > this.tiles[player.getValue()];
     }
     public getIndicatorY(coord: Coord): number {

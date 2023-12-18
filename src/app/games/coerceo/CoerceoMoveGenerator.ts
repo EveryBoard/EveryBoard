@@ -13,12 +13,13 @@ export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoStat
         moves = moves.concat(this.getListMovement(node));
         return moves;
     }
+
     public getListExchanges(node: CoerceoNode): CoerceoMove[] {
         const exchanges: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
-        const PLAYER: number = state.getCurrentPlayer().getValue();
+        const PLAYER: Player = state.getCurrentPlayer();
         const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
-        if (state.tiles[PLAYER] < 2) {
+        if (state.tiles.get(PLAYER).get() < 2) {
             return exchanges;
         }
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -29,6 +30,7 @@ export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoStat
         }
         return exchanges;
     }
+
     public getListMovement(node: CoerceoNode): CoerceoMove[] {
         const movements: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
@@ -45,4 +47,5 @@ export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoStat
         }
         return movements;
     }
+
 }

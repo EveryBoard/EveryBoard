@@ -10,6 +10,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { GameNode } from 'src/app/jscaip/GameNode';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export interface MancalaCaptureResult {
 
@@ -55,7 +56,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
 
     public getInitialState(): MancalaState {
         const board: number[][] = TableUtils.create(MancalaState.WIDTH, 2, 4);
-        return new MancalaState(board, 0, [0, 0]);
+        return new MancalaState(board, 0, PlayerMap.of(0, 0));
     }
 
     public abstract override isLegal(move: M, state: MancalaState): MGPFallible<void>;
@@ -210,7 +211,7 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
     public monsoon(mansooningPlayer: Player, postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
         const state: MancalaState = postCaptureResult.resultingState;
         const resultingBoard: number[][] = state.getCopiedBoard();
-        const captured: [number, number] = state.getScoresCopy();
+        const captured: PlayerMap<number> = state.getScoresCopy();
         let capturedSum: number = 0;
         const captureMap: number[][] = TableUtils.copy(postCaptureResult.captureMap);
         let x: number = 0;
@@ -221,7 +222,8 @@ export abstract class MancalaRules<M extends Move> extends Rules<M, MancalaState
             resultingBoard[mansoonedY][x] = 0;
             x++;
         }
-        captured[mansooningPlayer.getValue()] += capturedSum;
+        const oldValue: number = captured.get(mansooningPlayer).get();
+        captured.put(mansooningPlayer, oldValue + capturedSum);
         return {
             capturedSum,
             captureMap,

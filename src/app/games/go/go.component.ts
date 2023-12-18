@@ -15,6 +15,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-go',
@@ -39,7 +40,7 @@ export class GoComponent extends GobanGameComponent<GoRules, GoMove, GoState, Go
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
         this.rules = GoRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [

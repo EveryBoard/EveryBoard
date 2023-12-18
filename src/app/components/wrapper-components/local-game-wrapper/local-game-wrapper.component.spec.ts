@@ -32,6 +32,7 @@ import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('LocalGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -127,7 +128,7 @@ describe('LocalGameWrapperComponent', () => {
         testUtils.expectElementNotToExist('#scoreZero');
         testUtils.expectElementNotToExist('#scoreOne');
 
-        testUtils.getGameComponent().scores = MGPOptional.of([0, 0]);
+        testUtils.getGameComponent().scores = MGPOptional.of(PlayerMap.of(0, 0));
         testUtils.forceChangeDetection();
 
         testUtils.expectElementToExist('#scoreZero');

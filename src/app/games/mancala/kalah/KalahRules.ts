@@ -10,6 +10,8 @@ import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaFailure } from '../common/MancalaFailure';
 import { Utils } from 'src/app/utils/utils';
 import { GameNode } from 'src/app/jscaip/GameNode';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { Player } from 'src/app/jscaip/Player';
 
 export class KalahNode extends GameNode<KalahMove, MancalaState> {}
 
@@ -61,7 +63,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
         return MGPFallible.success(distributionResult.endsUpInKalah && isStarving === false);
     }
     public distributeMove(move: KalahMove, state: MancalaState): MancalaDistributionResult {
-        const playerValue: number = state.getCurrentPlayer().getValue();
+        const player: Player = state.getCurrentPlayer();
         const playerY: number = state.getCurrentPlayerY();
         const filledCoords: Coord[] = [];
         let passedByKalahNTimes: number = 0;
@@ -70,15 +72,17 @@ export class KalahRules extends MancalaRules<KalahMove> {
         for (const distributions of move) {
             const distributionResult: MancalaDistributionResult =
                 this.distributeHouse(distributions.x, playerY, postDistributionState);
-            const captures: [number, number] = postDistributionState.getScoresCopy();
-            captures[playerValue] += distributionResult.passedByKalahNTimes;
+            const captures: PlayerMap<number> = postDistributionState.getScoresCopy();
+            const oldValue: number = captures.get(player).get();
+            captures.put(player, oldValue + distributionResult.passedByKalahNTimes);
             postDistributionState = distributionResult.resultingState;
             filledCoords.push(...distributionResult.filledCoords);
             passedByKalahNTimes += distributionResult.passedByKalahNTimes;
             endUpInKalah = distributionResult.endsUpInKalah;
         }
-        const captured: [number, number] = postDistributionState.getScoresCopy();
-        captured[playerValue] += passedByKalahNTimes;
+        const captured: PlayerMap<number> = postDistributionState.getScoresCopy();
+        const oldValue: number = captured.get(player).get();
+        captured.put(player, oldValue + passedByKalahNTimes);
         const distributedState: MancalaState = new MancalaState(postDistributionState.getCopiedBoard(),
                                                                 postDistributionState.turn,
                                                                 captured);
@@ -113,7 +117,7 @@ export class KalahRules extends MancalaRules<KalahMove> {
                 captureMap[1][landingSpace.x] = board[1][landingSpace.x];
                 board[0][landingSpace.x] = 0;
                 board[1][landingSpace.x] = 0;
-                const captured: [number, number] = distributedState.getScoresCopy();
+                const captured: PlayerMap<number> = distributedState.getScoresCopy();
                 captured[distributedState.getCurrentPlayer().getValue()] += capturedSum;
                 const postCaptureState: MancalaState = new MancalaState(board,
                                                                         distributedState.turn,

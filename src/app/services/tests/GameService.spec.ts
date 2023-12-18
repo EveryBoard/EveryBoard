@@ -23,6 +23,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('GameService', () => {
 
@@ -313,7 +314,7 @@ describe('GameService', () => {
         });
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
-            const scores: [number, number] = [5, 0];
+            const scores: PlayerMap<number> = PlayerMap.of(5, 0);
             await gameService.updatePart('partId', MGPOptional.of(scores));
             // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {

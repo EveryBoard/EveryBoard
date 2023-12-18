@@ -5,6 +5,7 @@ import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { doMancalaComponentTests as doMancalaComponentTests } from '../../common/GenericMancalaComponentTest.spec';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { AwaleRules } from '../AwaleRules';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 describe('AwaleComponent', () => {
 
@@ -26,7 +27,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 4, 4, 4, 4, 4],
-            ], 1, [0, 0]),
+            ], 1, PlayerMap.of(0, 0)),
             move: AwaleMove.ONE,
             result: [
                 { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -40,7 +41,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 0, 0, 4],
-            ], 121, [0, 0]),
+            ], 121, PlayerMap.of(0, 0)),
             move: AwaleMove.FIVE,
             result: [{ x: 5, y: 1, content: { mainContent: ' -5 ' } }],
         },
@@ -48,7 +49,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [4, 1, 4, 4, 4, 4],
                 [2, 4, 4, 4, 4, 4],
-            ], 0, [0, 0]),
+            ], 0, PlayerMap.of(0, 0)),
             move: AwaleMove.ZERO,
             result: [{ x: 1, y: 0, content: { mainContent: ' -2 ' } }],
         },
@@ -56,7 +57,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [11, 4, 4, 4, 4, 0],
                 [17, 4, 4, 4, 4, 4],
-            ], 0, [0, 0]),
+            ], 0, PlayerMap.of(0, 0)),
             move: AwaleMove.ZERO,
             result: [{ x: 5, y: 0, content: { mainContent: ' -2 ' } }],
         },

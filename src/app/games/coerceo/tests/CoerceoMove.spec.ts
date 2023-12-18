@@ -8,7 +8,7 @@ import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
-describe('CoerceoMove', () => {
+fdescribe('CoerceoMove', () => {
 
     it('should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);

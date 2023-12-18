@@ -14,6 +14,7 @@ import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiMinimax } from './ReversiMinimax';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-reversi',
@@ -33,7 +34,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of([2, 2]);
+        this.scores = MGPOptional.of(PlayerMap.of(2, 2));
         this.rules = ReversiRules.get();
         this.node = this.rules.getInitialNode();
         this.availableAIs = [

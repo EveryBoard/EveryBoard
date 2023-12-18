@@ -14,6 +14,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
 import { Coord } from 'src/app/jscaip/Coord';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -72,7 +73,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public canPass: boolean = false;
 
-    public scores: MGPOptional<readonly [number, number]> = MGPOptional.empty();
+    public scores: MGPOptional<PlayerMap<number>> = MGPOptional.empty();
 
     public imagesLocation: string = 'assets/images/';
 

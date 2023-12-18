@@ -33,7 +33,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
                     scores[owner.getValue()] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
                 }
             }
-            scores[owner.getValue()] += state.tiles[owner.getValue()];
+            scores[owner.getValue()] += state.tiles.get(owner).get();
         }
         return scores;
     }
