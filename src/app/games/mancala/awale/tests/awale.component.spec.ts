@@ -13,7 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
-fdescribe('AwaleComponent', () => {
+describe('AwaleComponent', () => {
 
     doMancalaComponentTests({
         component: AwaleComponent,
@@ -49,7 +49,7 @@ fdescribe('AwaleComponent', () => {
                 [0, 0, 0, 0, 0, 4],
             ], 121, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(5)),
-            result: [{ x: 5, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -5 ' } }],
+            result: [{ x: 5, y: 1, content: { mainContent: ' -5 ' } }],
         },
         capture: {
             state: new MancalaState([
@@ -57,7 +57,7 @@ fdescribe('AwaleComponent', () => {
                 [2, 4, 4, 4, 4, 4],
             ], 0, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(0)),
-            result: [{ x: 1, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } }],
+            result: [{ x: 1, y: 0, content: { mainContent: ' -2 ' } }],
         },
         fillThenCapture: {
             state: new MancalaState([
@@ -65,7 +65,7 @@ fdescribe('AwaleComponent', () => {
                 [17, 4, 4, 4, 4, 4],
             ], 0, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(0)),
-            result: [{ x: 5, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } }],
+            result: [{ x: 5, y: 0, content: { mainContent: ' -2 ' } }],
         },
     });
 

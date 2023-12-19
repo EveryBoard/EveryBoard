@@ -9,7 +9,7 @@ import { MancalaNode } from '../../common/MancalaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KalahMoveGenerator } from '../../kalah/KalahMoveGenerator';
 
-fdescribe('AwaleMoveGenerator', () => {
+describe('AwaleMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
     const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();

@@ -1,7 +1,7 @@
 import { MancalaDistribution } from '../MancalaMove';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
-fdescribe('MancalaDistribution', () => {
+describe('MancalaDistribution', () => {
 
     describe('of', () => {
 

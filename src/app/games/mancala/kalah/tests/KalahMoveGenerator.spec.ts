@@ -7,7 +7,7 @@ import { MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-fdescribe('KalahMoveGenerator', () => {
+describe('KalahMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
     const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();

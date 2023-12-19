@@ -84,7 +84,7 @@ export class Player implements ComparableObject {
     }
 }
 
-export type PlayerOrNone = Player | PlayerNone;
+export type PlayerOrNone = Player | PlayerNone
 
 // eslint-disable-next-line no-redeclare, @typescript-eslint/no-redeclare
 export namespace PlayerOrNone {

@@ -41,11 +41,7 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
     : MancalaMove[]
     {
         const moves: MancalaMove[] = [];
-        // TODO LOL
-        const previousDistributionResult: MancalaDistributionResult =
-            MancalaRules.getEmptyDistributionResult(state);
-        const distributionResult: MancalaDistributionResult =
-            this.rules.distributeHouse(x, y, previousDistributionResult, config);
+        const distributionResult: MancalaDistributionResult = this.rules.distributeHouse(x, y, state, config);
         const stateAfterDistribution: MancalaState = distributionResult.resultingState;
         const isStarving: boolean =
             MancalaRules.isStarving(stateAfterDistribution.getCurrentPlayer(),

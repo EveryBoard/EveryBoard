@@ -8,12 +8,11 @@ const myMancalaConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
     mustFeed: true,
     passByPlayerStore: true,
     mustContinueDistributionAfterStore: true,
-    continueLapIfLastHouseIsFilled: false,
     seedsByHouse: 4,
     width: 6,
 });
 
-fdescribe('MancalaState', () => {
+describe('MancalaState', () => {
 
     it('should compare correctly', () => {
         // Given an initial state

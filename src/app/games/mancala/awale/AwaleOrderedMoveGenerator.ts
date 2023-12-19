@@ -35,7 +35,7 @@ export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
                     sameTerritoryValue = 10;
                 }
             } else {
-                captured = AwaleRules.get().captureIfLegal(endHouse.x, opponentY, node.gameState, config).capturedSum;
+                captured = AwaleRules.get().captureIfLegal(endHouse.x, opponentY, node.gameState).capturedSum;
             }
             // Prioritize captured, then moves in same territory, then tries to minimize number of pieces distributed
             return captured * 100 + sameTerritoryValue - toDistribute;

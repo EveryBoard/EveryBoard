@@ -5,13 +5,13 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { MancalaFailure } from '../../common/MancalaFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 
-fdescribe('AwaleRules', () => {
+describe('AwaleRules', () => {
 
     const rules: MancalaRules = AwaleRules.get();
     const defaultConfig: MGPOptional<MancalaConfig> = rules.getDefaultRulesConfig();
@@ -118,7 +118,10 @@ fdescribe('AwaleRules', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then, since the other player can't distribute, all its pieces should be mansooned
-            const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
+            const expectedBoard: Table<number> = [
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+            ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: MancalaNode =

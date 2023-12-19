@@ -17,16 +17,6 @@ export abstract class GameStateWithTable<P> extends GameState {
         }
     }
 
-    public setPieceAt(coord: Coord,
-                      value: P,
-                      map: (oldState: this, newBoard: Table<P>) => GameStateWithTable<P>)
-    : GameStateWithTable<P>
-    {
-        const newBoard: P[][] = this.getCopiedBoard();
-        newBoard[coord.y][coord.x] = value;
-        return map(this, newBoard);
-    }
-
     public tryToGetPieceAt(coord: Coord): MGPOptional<P> {
         if (this.isOnBoard(coord)) {
             return MGPOptional.of(this.board[coord.y][coord.x]);
@@ -43,15 +33,6 @@ export abstract class GameStateWithTable<P> extends GameState {
 
     public getPieceAtXY(x: number, y: number): P {
         return this.getPieceAt(new Coord(x, y));
-    }
-
-    public getOptionalPieceAtXY(x: number, y: number): MGPOptional<P> {
-        const coord: Coord = new Coord(x, y);
-        if (this.isOnBoard(coord)) {
-            return MGPOptional.of(this.getPieceAt(coord));
-        } else {
-            return MGPOptional.empty();
-        }
     }
 
     public forEachCoord(callback: (coord: Coord, content: P) => void): void {

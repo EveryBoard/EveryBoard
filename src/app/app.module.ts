@@ -42,7 +42,6 @@ import { TutorialGameCreationComponent }
 import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 
 import { AbaloneComponent } from './games/abalone/abalone.component';
-import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/mancala/awale/awale.component';
 
@@ -210,7 +209,6 @@ export class FirebaseProviders {
         DemoPageComponent,
 
         AbaloneComponent,
-        BaAwaComponent,
         ApagosComponent,
         AwaleComponent, NumberedCircleComponent,
         BrandhubComponent,

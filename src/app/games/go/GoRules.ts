@@ -67,6 +67,7 @@ export class GoRules extends ConfigurableRules<GoMove, GoState, GoConfig, GoLega
         const config: GoConfig = optionalConfig.get();
         const board: GoPiece[][] = GoState.getStartingBoard(config);
         let turn: number = 0;
+        // TODO FOR REVIEW: quoi la baise on fait de l'import de "GobanGameComponent" dans une rules
         const left: number = GobanUtils.getHorizontalLeft(config.width);
         const right: number = GobanUtils.getHorizontalRight(config.width);
         const up: number = GobanUtils.getVerticalUp(config.height);

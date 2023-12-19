@@ -106,30 +106,6 @@ export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 
 export class TableUtils {
 
-    public static sum(board: Table<number>): number {
-        let sum: number = 0;
-        for (const line of board) {
-            for (const element of line) {
-                sum += element;
-            }
-        }
-        return sum; // TODO: unit test and perhaps reuse
-    }
-
-    public static add(left: Table<number>, right: Table<number>): number[][] {
-        const width: number = left[0].length;
-        const height: number = left.length;
-        Utils.assert(height === right.length, 'Table should have same height');
-        Utils.assert(width === right[0].length, 'Table should have same width');
-        const sum: number[][] = TableUtils.create(width, height, 0);
-        for (let y: number = 0; y < height; y++) {
-            for (let x: number = 0; x < width; x++) {
-                sum[y][x] = left[y][x] + right[y][x];
-            }
-        }
-        return sum; // TODO: unit test and make more reusable
-    }
-
     public static create<T>(width: number, height: number, initValue: T): T[][] {
         const table: Array<Array<T>> = [];
         for (let y: number = 0; y < height; y++) {

@@ -53,9 +53,10 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
 
     public expectToBeCaptured(cells: MancalaHouseContents[]): void {
         for (const cell of cells) {
-            expect(cell.content.secondaryContent).withContext('captured cell should have secondary content').toBeDefined();
-            this.expectHouseToMatch(cell);
             const coordSuffix: string = cell.x + '_' + cell.y;
+            const content: DebugElement = this.testUtils.findElement('#secondary_message_' + coordSuffix);
+            expect(content).withContext('(' + cell.x + ', ' + cell.y + ') should have a secondary_message').toBeTruthy();
+            expect(content.nativeElement.innerHTML).toBe(cell.content.mainContent);
             this.testUtils.expectElementToHaveClasses('#circle_' + coordSuffix, ['base', 'moved-stroke', 'captured-fill']);
         }
     }
@@ -77,7 +78,9 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             const playerFill: string = 'player' + ((coordAndContent.coord.y + 1) % 2) + '-fill';
             if (optionalCell.isPresent()) { // Filled house
                 const cell: MancalaHouseContents = optionalCell.get();
-                this.expectHouseToMatch(cell);
+                this.expectHouseToContain(new Coord(cell.x, cell.y),
+                                          cell.content.mainContent,
+                                          cell.content.secondaryContent);
                 const classes: string[] = ['base', 'moved-stroke', playerFill];
                 this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
             } else {
@@ -92,12 +95,6 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                 }
             }
         }
-    }
-
-    public expectHouseToMatch(cell: MancalaHouseContents): void {
-        this.expectHouseToContain(new Coord(cell.x, cell.y),
-                                  cell.content.mainContent,
-                                  cell.content.secondaryContent);
     }
 
     public expectHouseToContain(coord: Coord, value: string, secondaryMessage?: string): void {
@@ -440,10 +437,10 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
             }));
 
-            fit('should make click impossible during player distribution animation', fakeAsync(async() => {
+            it('should make click impossible during player distribution animation', fakeAsync(async() => {
                 // Given a move where a first click has been done but is not finished
                 await mancalaTestUtils.testUtils.expectClickSuccess('#click_2_1');
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but not finished yet
+                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but bot finished yet
                 spyOn(mancalaTestUtils.testUtils.getGameComponent() as MancalaComponent<R>, 'onLegalClick').and.callThrough();
 
                 // When clicking again
