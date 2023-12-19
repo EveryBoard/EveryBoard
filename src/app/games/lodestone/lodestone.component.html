@@ -8,14 +8,15 @@
             <g id="square_{{ x }}_{{ y }}"
                [attr.transform]="getSVGTranslate(SPACE_SIZE * x, SPACE_SIZE * y)"
                (click)="selectCoord(square.coord)" >
-                <rect *ngIf="square.isCrumbled === false else crumbled"
-                      class="base"
+                <rect *ngIf="square.isCrumbled === false"
+                      class="base lodestone_square"
                       [ngClass]="square.squareClasses"
                       [attr.x]="0"
                       [attr.y]="0"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"/>
-                <ng-template #crumbled>
+                <g *ngIf="square.isCrumbled"
+                   class="lodestone_crumbled_square">
                     <polyline points="0,0     42,0    17,25    67,75    42,100   0,100   0,0"
                               [ngClass]="square.squareClasses"
                               class="base"
@@ -24,7 +25,7 @@
                               [ngClass]="square.squareClasses"
                               class="base"
                     />
-                </ng-template>
+                </g>
                 <circle *ngIf="square.hasPieceToDraw"
                         id="piece_{{ x }}_{{ y }}"
                         class="base"
