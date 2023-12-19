@@ -141,7 +141,7 @@ describe('KalahComponent', () => {
                 tick(4 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
 
                 // Then second turn start, 1000ms pause that this test is about
-                tick(MancalaComponent.TIMEOUT_BETWEEN_DISTRIBUTION);
+                tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 // and to optimise gain, AI will still play a move that pass through the Kalah
                 // hence a move in column 0 1 or 2, which will all be of 5 seeds now
                 // so again TIMEOUT_BETWEEN_SEED ms to empty the second initial house

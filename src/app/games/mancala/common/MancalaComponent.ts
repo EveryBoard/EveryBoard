@@ -97,7 +97,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 await this.showSimpleDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
                     // This prevent to wait 1sec at the end of the animation for nothing
-                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_DISTRIBUTION);
+                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
                 indexDistribution++;
             }
