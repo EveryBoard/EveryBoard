@@ -158,13 +158,6 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getPreviousState(): S {
         return this.node.parent.get().gameState;
     }
-    public getPreviousStateOr(state: S): S {
-        if (this.node.parent.isPresent()) {
-            return this.getPreviousState();
-        } else {
-            return state;
-        }
-    }
     public async showLastMove(move: M): Promise<void> {
         // Not needed by default
         return;

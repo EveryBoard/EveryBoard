@@ -216,8 +216,6 @@ export class SimpleComponentTestUtils<T> {
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
         const element: DebugElement = this.findElement(elementName);
-        console.clear()
-        console.log(element)
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
         const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();

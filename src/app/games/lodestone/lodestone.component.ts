@@ -191,7 +191,6 @@ export class LodestoneComponent
     }
 
     public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
-        console.log('select lodstone')
         const owner: string = this.getCurrentPlayer().toString();
         const clickedElement: string = '#lodestone_' + lodestone.direction + '_' + lodestone.orientation + '_' + owner;
         const clickValidity: MGPValidation = await this.canUserPlay(clickedElement);
@@ -327,7 +326,6 @@ export class LodestoneComponent
     }
 
     public override cancelMoveAttempt(): void {
-        console.log('cancelMoveAttempt')
         this.displayedState = this.getState();
         this.stateAfterPlacingLodestone = MGPOptional.empty();
         this.lastInfos = MGPOptional.empty();
