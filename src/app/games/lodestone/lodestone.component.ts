@@ -159,9 +159,9 @@ export class LodestoneComponent
 
     public getViewBox(): ViewBox {
         const left: number = - this.platesGroupSize;
-        const up: number = - (this.platesGroupSize + this.SPACE_SIZE);
+        const up: number = - (this.platesGroupSize + this.SPACE_SIZE + this.STROKE_WIDTH);
         const width: number = this.boardSize + (2 * this.platesGroupSize);
-        const height: number = this.boardSize + (2 * this.platesGroupSize) + (2 * this.SPACE_SIZE) + this.STROKE_WIDTH;
+        const height: number = width + (2 * (this.SPACE_SIZE + this.STROKE_WIDTH));
         return new ViewBox(left, up, width, height);
     }
 
@@ -177,8 +177,9 @@ export class LodestoneComponent
         if (targetValidity.isFailure()) {
             return this.cancelMove(targetValidity.getReason());
         }
+        this.hideLastMove();
         if (this.selectedCoord.equalsValue(coord)) {
-            this.cancelMoveAttempt();
+            await this.cancelMove();
             return MGPValidation.SUCCESS;
         }
         this.selectedCoord = MGPOptional.of(coord);

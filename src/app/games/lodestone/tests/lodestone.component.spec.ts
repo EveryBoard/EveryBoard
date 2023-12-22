@@ -66,7 +66,7 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
         }));
 
-        it('should hide last move', fakeAsync(async() => {
+        it('selecting lodestone should hide last move ', fakeAsync(async() => {
             // Given a board with last move including captures
             const previousBoard: Table<LodestonePiece> = [
                 [_, _, _, _, _, _, _, _],
@@ -104,11 +104,59 @@ describe('LodestoneComponent', () => {
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
             await testUtils.setupState(state, previousState, previousMove);
             testUtils.expectElementToHaveClass('#plateSquare_top_0_0', 'moved-fill'); // So moved are shown before first click
-
             testUtils.expectElementToHaveClass('#square_4_7 > .lodestone_square', 'captured-fill'); // So captures are shown before first click
 
             // When selecting your lodestone
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal_PLAYER_ONE');
+
+            // Then last-turn-captured square should no longer be shown
+            testUtils.expectElementNotToHaveClass('#plateSquare_top_0_0', 'moved-fill');
+            // And last-turn-filled lodestone should no longer be shown
+            testUtils.expectElementNotToHaveClass('#square_4_7 > .lodestone_square ', 'captured-fill');
+        }));
+
+        it('selecting coord should hide last move ', fakeAsync(async() => {
+            // Given a board with last move including captures
+            const previousBoard: Table<LodestonePiece> = [
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, O, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, X, _, _, _],
+            ];
+            const previousState: LodestoneState = new LodestoneState(previousBoard, 0, noLodestones, allPressurePlates);
+            const previousMove: LodestoneMove = new LodestoneMove(new Coord(4, 4),
+                                                                  'push',
+                                                                  'orthogonal',
+                                                                  { top: 1, bottom: 0, left: 0, right: 0 });
+            const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
+            const board: Table<LodestonePiece> = [
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, O, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, A, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+            ];
+            const pressurePlates: LodestonePressurePlates = {
+                ...allPressurePlates,
+                top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 1),
+            };
+            const expectedLodestones: LodestonePositions = new MGPMap([
+                { key: Player.ZERO, value: new Coord(4, 4) },
+            ]);
+            const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
+            await testUtils.setupState(state, previousState, previousMove);
+            testUtils.expectElementToHaveClass('#plateSquare_top_0_0', 'moved-fill'); // So moved are shown before first click
+            testUtils.expectElementToHaveClass('#square_4_7 > .lodestone_square', 'captured-fill'); // So captures are shown before first click
+
+            // When selecting your coord
+            await testUtils.expectClickSuccess('#square_0_0');
 
             // Then last-turn-captured square should no longer be shown
             testUtils.expectElementNotToHaveClass('#plateSquare_top_0_0', 'moved-fill');
@@ -178,7 +226,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#square_0_0');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#square_0_0');
+            await testUtils.expectClickFailure('#square_0_0');
 
             // Then it should no longer be selected
             testUtils.expectElementNotToExist('#selection_0_0');
@@ -239,6 +287,56 @@ describe('LodestoneComponent', () => {
 
             // When de-selecting your lodestone
             await testUtils.expectClickFailure('#lodestone_push_orthogonal_PLAYER_ONE');
+
+            // Then last-turn-captured square should again be shown
+            testUtils.expectElementToHaveClass('#plateSquare_top_0_0', 'moved-fill');
+            // And last-turn-filled lodestone should again be shown
+            testUtils.expectElementToHaveClass('#square_4_7 > .lodestone_square ', 'captured-fill');
+        }));
+
+        it('should show last move again when deselecting coord', fakeAsync(async() => {
+            // Given a board with last move including captures, and the coord selected
+            const previousBoard: Table<LodestonePiece> = [
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, O, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, X, _, _, _],
+            ];
+            const previousState: LodestoneState = new LodestoneState(previousBoard, 0, noLodestones, allPressurePlates);
+            const previousMove: LodestoneMove = new LodestoneMove(new Coord(4, 4),
+                                                                  'push',
+                                                                  'orthogonal',
+                                                                  { top: 1, bottom: 0, left: 0, right: 0 });
+            const A: LodestonePiece = LodestonePieceLodestone.ZERO_PUSH_ORTHOGONAL;
+            const board: Table<LodestonePiece> = [
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, O, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, A, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+            ];
+            const pressurePlates: LodestonePressurePlates = {
+                ...allPressurePlates,
+                top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 1),
+            };
+            const expectedLodestones: LodestonePositions = new MGPMap([
+                { key: Player.ZERO, value: new Coord(4, 4) },
+            ]);
+            const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
+            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.expectClickSuccess('#square_7_7');
+            testUtils.expectElementNotToHaveClass('#plateSquare_top_0_0', 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#square_4_7 > .lodestone_square ', 'captured-fill');
+
+            // When de-selecting your coord
+            await testUtils.expectClickFailure('#square_7_7');
 
             // Then last-turn-captured square should again be shown
             testUtils.expectElementToHaveClass('#plateSquare_top_0_0', 'moved-fill');
