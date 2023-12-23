@@ -186,8 +186,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
-        const gameName: string = this.getGameName();
-        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
+        const urlName: string = this.getGameName();
+        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(urlName);
         if (gameInfos.isPresent()) {
             const stateProvider: (config: MGPOptional<RulesConfig>) => GameState =
                 (config: MGPOptional<RulesConfig>) => {

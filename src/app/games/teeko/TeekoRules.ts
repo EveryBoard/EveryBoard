@@ -35,7 +35,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
             {
                 name: (): string => $localize`Standard Teeko`,
                 config: {
-                    teleport: new BooleanConfig(false, () => $localize`Can piece teleport`),
+                    teleport: new BooleanConfig(false, () => $localize`Piece can teleport`),
                 },
             }, [{
                 name: (): string => $localize`Teleport Teeko`,

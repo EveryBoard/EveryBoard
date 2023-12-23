@@ -30,7 +30,7 @@ describe('EncapsuleMoveGenerator', () => {
 
         it('should have 27 moves on first turn', () => {
             // Given an initial node
-            const node: EncapsuleNode = EncapsuleRules.get().getInitialNode(MGPOptional.empty());
+            const node: EncapsuleNode = EncapsuleRules.get().getInitialNode(defaultConfig);
 
             // When listing the moves
             const moves: EncapsuleMove[] = moveGenerator.getListMoves(node, defaultConfig);

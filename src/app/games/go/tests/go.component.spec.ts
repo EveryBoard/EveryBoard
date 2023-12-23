@@ -81,10 +81,8 @@ describe('GoComponent', () => {
 
         it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
-            // const board: Table<GoPiece> = TableUtils.create(13, 13, GoPiece.EMPTY);
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 13, width: 13 });
             const state: GoState = GoRules.get().getInitialState(customConfig);
-            // new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
             await testUtils.setupState(state, undefined, undefined, customConfig);
@@ -103,8 +101,6 @@ describe('GoComponent', () => {
 
         it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
-            // const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
-            // const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 9, width: 9 });
             const state: GoState = GoRules.get().getInitialState(customConfig);
 
@@ -125,8 +121,6 @@ describe('GoComponent', () => {
 
         it('should have a tengen when board has an odd width and height', fakeAsync(async() => {
             // Given a (odd x odd) board
-            // const board: Table<GoPiece> = TableUtils.create(9, 9, GoPiece.EMPTY);
-            // const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 9, width: 9 });
             const state: GoState = GoRules.get().getInitialState(customConfig);
 
@@ -139,8 +133,6 @@ describe('GoComponent', () => {
 
         it('should not have a tengen when board has an even width and height', fakeAsync(async() => {
             // Given a (even x even) board
-            // const board: Table<GoPiece> = TableUtils.create(10, 10, GoPiece.EMPTY);
-            // const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 10, width: 10 });
             const state: GoState = GoRules.get().getInitialState(customConfig);
 

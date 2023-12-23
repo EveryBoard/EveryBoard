@@ -36,7 +36,7 @@ describe('EncapsuleRules', () => {
 
     beforeEach(() => {
         rules = EncapsuleRules.get();
-        node = rules.getInitialNode(MGPOptional.empty());
+        node = rules.getInitialNode(defaultConfig);
     });
 
     it('should be created', () => {

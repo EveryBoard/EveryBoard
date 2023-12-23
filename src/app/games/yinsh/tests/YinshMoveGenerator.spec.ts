@@ -29,7 +29,7 @@ describe('YinshMoveGenerator', () => {
     describe('getListMoves', () => {
 
         it('should have 85 moves on first turn', () => {
-            const node: YinshNode = rules.getInitialNode(MGPOptional.empty());
+            const node: YinshNode = rules.getInitialNode(defaultConfig);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(85);
         });
 

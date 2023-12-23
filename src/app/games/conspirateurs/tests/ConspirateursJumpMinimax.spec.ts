@@ -21,7 +21,7 @@ describe('ConspirateursJumpMinimax', () => {
 
     it('should be able to finish when playing with itself', () => {
         // Given a component where AI plays against AI
-        let node: ConspirateursNode = rules.getInitialNode(MGPOptional.empty());
+        let node: ConspirateursNode = rules.getInitialNode(defaultConfig);
 
         // When playing 200 turns
         let turn: number = 0;

@@ -16,7 +16,7 @@ describe('DvonnOrderedMoveGenerator', () => {
     });
 
     it('should propose 41 moves at first turn', () => {
-        const node: DvonnNode = rules.getInitialNode(MGPOptional.empty());
+        const node: DvonnNode = rules.getInitialNode(defaultConfig);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(41);
     });
 

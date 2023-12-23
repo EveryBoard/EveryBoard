@@ -11,7 +11,7 @@ describe('SaharaMoveGenerator', () => {
 
     it('should generate 12 moves at first turn', () => {
         const moveGenerator: SaharaMoveGenerator = new SaharaMoveGenerator();
-        const node: SaharaNode = SaharaRules.get().getInitialNode(MGPOptional.empty());
+        const node: SaharaNode = SaharaRules.get().getInitialNode(defaultConfig);
         const moves: SaharaMove[] = moveGenerator.getListMoves(node, defaultConfig);
         expect(moves.length).toEqual(12);
     });

@@ -3,7 +3,8 @@ import { NewGameHeuristic } from '../NewGameHeuristic';
 import { NewGameState } from '../NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { NewGameConfig, NewGameRules } from '../NewGameRules';
+import { NewGameRules } from '../NewGameRules';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * These are the tests for the heuristic.
@@ -14,7 +15,7 @@ import { NewGameConfig, NewGameRules } from '../NewGameRules';
 describe('NewGameHeuristic', () => {
 
     let heuristic: NewGameHeuristic;
-    const defaultConfig: MGPOptional<NewGameConfig> = NewGameRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new NewGameHeuristic();

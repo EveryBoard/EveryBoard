@@ -45,7 +45,6 @@ describe('SiamRules', () => {
             const move: SiamMove = SiamMove.of(-1, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
 
             // Then it should fail
-            // TODO FOR REVIEW: euh, on les i18nises eux du coup x) ?
             const reason: string = 'SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP)';
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

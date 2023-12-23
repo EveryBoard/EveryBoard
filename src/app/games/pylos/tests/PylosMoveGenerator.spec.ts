@@ -24,7 +24,7 @@ describe('PylosMoveGenerator', () => {
     });
 
     it('should provide 16 drops at first turn', () => {
-        const node: PylosNode = rules.getInitialNode(MGPOptional.empty());
+        const node: PylosNode = rules.getInitialNode(defaultConfig);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(16);
     });
 

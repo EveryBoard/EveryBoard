@@ -222,7 +222,7 @@ describe('RulesConfigurationComponent', () => {
                         spyOn(component.updateCallback, 'emit').and.callThrough();
                         component.rulesConfigForm.get('nombre')?.setValue(0);
 
-                        // Then error reason should have been display
+                        // Then error reason should have been displayed
                         expect(testUtils.findElement('#nombre_number_config_error').nativeElement.innerHTML).toEqual('0 is too small, the minimum is 1');
                         // and the component should have emitted an empty optional
                         expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());

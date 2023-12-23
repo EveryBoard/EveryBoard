@@ -4232,8 +4232,8 @@
         <target>Teeko Standard</target>
       </trans-unit>
       <trans-unit id="5798173150884510214" datatype="html">
-        <source>Can piece teleport</source>
-        <target>Est-ce que les pièces se téléportent</target>
+        <source>Piece can teleport</source>
+        <target>Les pièces se téléportent</target>
       </trans-unit>
       <trans-unit id="560394398723321416" datatype="html">
         <source>Teleport Teeko</source>

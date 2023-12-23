@@ -19,7 +19,7 @@ describe('PylosOrderedMoveGenerator', () => {
     });
 
     it('should generate 16 moves at first turn', () => {
-        const initialNode: PylosNode = PylosRules.get().getInitialNode(MGPOptional.empty());
+        const initialNode: PylosNode = PylosRules.get().getInitialNode(defaultConfig);
         const moves: PylosMove[] = moveGenerator.getListMoves(initialNode, defaultConfig);
         expect(moves.length).toEqual(16);
     });

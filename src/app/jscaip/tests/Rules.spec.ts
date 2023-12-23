@@ -65,7 +65,7 @@ describe('Rules', () => {
 
     it('should create child to already calculated node which did not include this legal child yet', () => {
         // Given a node with children but not the one that will be calculated
-        const node: AbstractNode = rules.getInitialNode(MGPOptional.empty());
+        const node: AbstractNode = rules.getInitialNode(defaultConfig);
         spyOn(node, 'getChild').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
@@ -97,7 +97,7 @@ describe('Rules', () => {
 
         it('should return MGPOptional.empty() when the move was illegal', () => {
             // Given a node and a move that will be deemed illegal
-            const node: AbstractNode = rules.getInitialNode(MGPOptional.empty());
+            const node: AbstractNode = rules.getInitialNode(defaultConfig);
             const illegalMove: P4Move = P4Move.of(5);
             spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure('some reason'));
 

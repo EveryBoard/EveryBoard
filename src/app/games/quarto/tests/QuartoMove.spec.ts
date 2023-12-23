@@ -14,7 +14,7 @@ describe('QuartoMove', () => {
     it('should have a bijective encoder', () => {
         const rules: QuartoRules = QuartoRules.get();
         const moveGenerator: QuartoMoveGenerator = new QuartoMoveGenerator();
-        const node: QuartoNode = rules.getInitialNode(MGPOptional.empty());
+        const node: QuartoNode = rules.getInitialNode(defaultConfig);
         const firstTurnMoves: QuartoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(QuartoMove.encoder, move);

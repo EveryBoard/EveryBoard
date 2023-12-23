@@ -68,7 +68,7 @@ describe('TrexoMove', () => {
     it('should have a bijective encoder', () => {
         const rules: TrexoRules = TrexoRules.get();
         const moveGenerator: TrexoMoveGenerator = new TrexoMoveGenerator();
-        const node: TrexoNode = rules.getInitialNode(MGPOptional.empty());
+        const node: TrexoNode = rules.getInitialNode(defaultConfig);
         const firstTurnMoves: TrexoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(TrexoMove.encoder, move);

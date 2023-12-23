@@ -27,7 +27,7 @@ describe('GipfMoveGenerator', () => {
     describe('getListMoves', () => {
 
         it('should have 30 moves on the initial state', () => {
-            const node: GipfNode = rules.getInitialNode(MGPOptional.empty());
+            const node: GipfNode = rules.getInitialNode(defaultConfig);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(30);
         });
 

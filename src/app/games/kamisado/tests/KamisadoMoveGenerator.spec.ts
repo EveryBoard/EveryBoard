@@ -33,7 +33,7 @@ describe('KamisadoMoveGenerator', () => {
         // In total, that makes 102 possible moves
 
         // Given the initial board
-        const node: KamisadoNode = rules.getInitialNode(MGPOptional.empty());
+        const node: KamisadoNode = rules.getInitialNode(defaultConfig);
 
         // When listing the moves
         const firstTurnMoves: KamisadoMove[] = moveGenerator.getListMoves(node, defaultConfig);

@@ -122,7 +122,7 @@ describe('DemoCardComponent', () => {
         testUtils.expectElementToExist('.player0-fill');
     }));
 
-    it('should ne not onLegalUserMove', fakeAsync(async() => {
+    it('should not use onLegalUserMove', fakeAsync(async() => {
         spyOn(Utils, 'assert').and.callFake(() => {});
         // Given any demo node
         // When calling onLegalUserMove

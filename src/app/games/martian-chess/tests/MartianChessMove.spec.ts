@@ -64,7 +64,7 @@ describe('MartianChessMove', () => {
     it('should have a bijective encoder', () => {
         const rules: MartianChessRules = MartianChessRules.get();
         const moveGenerator: MartianChessMoveGenerator = new MartianChessMoveGenerator();
-        const node: MartianChessNode = rules.getInitialNode(MGPOptional.empty());
+        const node: MartianChessNode = rules.getInitialNode(defaultConfig);
         const firstTurnMoves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(MartianChessMove.encoder, move);

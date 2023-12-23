@@ -94,7 +94,7 @@ describe('AwaleComponent', () => {
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
-            // Given an awale state with where multiple so would be possible, and the first sowing is done
+            // Given an awale state where multiple so would be possible, and the first sowing is done
             const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,
