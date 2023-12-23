@@ -17,7 +17,7 @@ import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NoConfig } from '../RulesConfigUtil';
 
-fdescribe('MCTS', () => {
+describe('MCTS', () => {
 
     let mcts: MCTS<QuartoMove, QuartoState>;
     const mctsOptions: AITimeLimitOptions = { name: '200ms', maxSeconds: 0.2 };
