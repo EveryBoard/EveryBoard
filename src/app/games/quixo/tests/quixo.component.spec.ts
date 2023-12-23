@@ -7,15 +7,12 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { QuixoConfig, QuixoState } from 'src/app/games/quixo/QuixoState';
+import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoFailure } from 'src/app/games/quixo/QuixoFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { QuixoRules } from '../QuixoRules';
 
 describe('QuixoComponent', () => {
 
     let testUtils: ComponentTestUtils<QuixoComponent>;
-    const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -40,7 +37,7 @@ describe('QuixoComponent', () => {
                 [_, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 3);
-            await testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
@@ -54,7 +51,7 @@ describe('QuixoComponent', () => {
                 [_, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 3);
-            await testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK());
         }));
@@ -122,7 +119,7 @@ describe('QuixoComponent', () => {
                 [_, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 3);
-            await testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await testUtils.setupState(state);
 
             expect(testUtils.getGameComponent().getPieceClasses(0, 0)).toContain('victory-stroke');
             expect(testUtils.getGameComponent().getPieceClasses(1, 0)).toContain('victory-stroke');

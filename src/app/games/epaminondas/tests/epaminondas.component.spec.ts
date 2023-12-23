@@ -10,13 +10,10 @@ import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { EpaminondasConfig, EpaminondasRules } from '../EpaminondasRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('EpaminondasComponent', () => {
 
     let testUtils: ComponentTestUtils<EpaminondasComponent>;
-    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -72,7 +69,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When the user clicks on one of its pieces
         await testUtils.expectClickSuccess('#click_0_11');
@@ -126,7 +123,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When moving a single piece onto the opponent's group
         // Then it should fail
@@ -151,7 +148,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_0_11'); // select a piece
 
         // When clicking on the same piece again
@@ -180,7 +177,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_0_11');
         // When clicking on another piece that would create a line with holes
         // Then it should fail
@@ -204,7 +201,7 @@ describe('EpaminondasComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When clicking on the first and last soldier of the line
         await testUtils.expectClickSuccess('#click_0_7');
@@ -239,7 +236,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_11'); // select first piece
         await testUtils.expectClickSuccess('#click_0_10'); // select last piece neighbor
@@ -274,7 +271,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_11'); // select first piece
         await testUtils.expectClickSuccess('#click_0_9'); // select last piece neighbor
@@ -307,7 +304,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_11'); // select first piece
         await testUtils.expectClickSuccess('#click_0_10'); // select last piece neighbor
@@ -342,7 +339,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_11'); // select first piece
         await testUtils.expectClickSuccess('#click_0_8'); // select last piece neighbor
@@ -379,7 +376,7 @@ describe('EpaminondasComponent', () => {
                 [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
             const state: EpaminondasState = new EpaminondasState(board, 0);
-            await testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click_0_11');
             await testUtils.expectClickSuccess('#click_0_9');
@@ -453,7 +450,7 @@ describe('EpaminondasComponent', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When performing a capturing move
         await testUtils.expectClickSuccess('#click_0_11');

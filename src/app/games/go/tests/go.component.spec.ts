@@ -12,7 +12,6 @@ import { GoConfig, GoRules } from '../GoRules';
 describe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
-    const defaultConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 5, width: 5 });
 
     const _: GoPiece = GoPiece.EMPTY;
     const O: GoPiece = GoPiece.DARK;
@@ -43,7 +42,7 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
         ];
         const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
         await testUtils.expectMoveSuccess('#click_0_1', move);
@@ -66,7 +65,7 @@ describe('GoComponent', () => {
             const state: GoState = new GoState(board, [], 0, MGPOptional.empty(), Phase.PLAYING);
 
             // When displaying it
-            await testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await testUtils.setupState(state);
 
             // Then it should have hoshi in (3, 3) and (cx, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
@@ -125,7 +124,7 @@ describe('GoComponent', () => {
             const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // When displaying it
-            await testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await testUtils.setupState(state);
 
             // Then it should have a tengen in (4, 4)
             testUtils.expectElementToExist('#hoshi_4_4'); // middle middle
@@ -137,7 +136,7 @@ describe('GoComponent', () => {
             const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // When displaying it
-            await testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await testUtils.setupState(state);
 
             // Then it should not have a tengen
             testUtils.expectElementNotToExist('#hoshi_4_4'); // upper left potential tengen

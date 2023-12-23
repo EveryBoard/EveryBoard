@@ -12,7 +12,6 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DvonnRules', () => {
@@ -69,7 +68,7 @@ describe('DvonnRules', () => {
             expect(state.getPieceAt(coord).belongsTo(Player.ZERO)).toBeTrue();
         }
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get();
-        const state2: DvonnState = rules.applyLegalMove(move, state, MGPOptional.empty());
+        const state2: DvonnState = rules.applyLegalMove(move, state, defaultConfig);
         const movablePieces2: Coord[] = DvonnRules.getMovablePieces(state2);
         for (const coord of movablePieces2) {
             expect(state2.getPieceAt(coord).belongsTo(Player.ONE)).toBeTrue();
@@ -202,7 +201,7 @@ describe('DvonnRules', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        expect(rules.isLegal(DvonnMove.PASS, state).isSuccess()).toBeTrue();
+        expect(rules.isLegal(DvonnMove.PASS, state, defaultConfig).isSuccess()).toBeTrue();
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         const reason: string = RulesFailure.MUST_PASS();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);

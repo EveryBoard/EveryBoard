@@ -16,7 +16,6 @@ import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { TaflConfig } from '../TaflConfig';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 
 export class TaflTestEntries<C extends TaflComponent<R, M>,
                              R extends TaflRules<M>,
@@ -46,9 +45,6 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
     let testUtils: ComponentTestUtils<C>;
 
     describe(entries.gameName + ' component generic tests', () => {
-
-        const defaultConfig: MGPOptional<TaflConfig> =
-            GameInfo.getByUrlName(entries.gameName).get().rules.getDefaultRulesConfig() as MGPOptional<TaflConfig>;
 
         beforeEach(fakeAsync(async() => {
             testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);
@@ -126,7 +122,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
 
             it('should show captured piece and left spaces', fakeAsync(async() => {
                 // Given a board where a capture is ready to be made
-                await testUtils.setupState(entries.stateReadyForCapture, undefined, undefined, defaultConfig);
+                await testUtils.setupState(entries.stateReadyForCapture);
                 const firstCoord: Coord = entries.capture.getStart();
                 await testUtils.expectClickSuccess('#click_' + firstCoord.x + '_' + firstCoord.y);
 

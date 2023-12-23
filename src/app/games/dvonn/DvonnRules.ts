@@ -158,7 +158,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         }
     }
 
-    public override isLegal(move: DvonnMove, state: DvonnState): MGPValidation {
+    public override isLegal(move: DvonnMove, state: DvonnState, _config: NoConfig): MGPValidation {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself

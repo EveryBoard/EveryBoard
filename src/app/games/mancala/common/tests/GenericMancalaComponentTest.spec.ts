@@ -171,10 +171,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
         it('should allow basic move', fakeAsync(async() => {
             // Given any board where distribution are possible (so, any)
-            await mancalaTestUtils.testUtils.setupState(entries.distribution.state,
-                                                        undefined,
-                                                        undefined,
-                                                        defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(entries.distribution.state);
 
             // When doing single distribution move
             const move: MancalaMove = entries.distribution.move;
@@ -187,7 +184,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
         it('should display score of players on the board (after point are won)', fakeAsync(async() => {
             const initialState: MancalaState = entries.capture.state;
-            await mancalaTestUtils.testUtils.setupState(initialState, undefined, undefined, defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(initialState);
             const currentPlayer: Player = initialState.getCurrentPlayer();
             const initialScore: number = initialState.scores[currentPlayer.value];
             const move: MancalaMove = entries.capture.move;
@@ -248,7 +245,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 [4, 4, 4, 4, 4, 4],
             ];
             const state: MancalaState = new MancalaState(board, 1, [0, 0]);
-            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(state);
 
             // When clicking on the empty house
             // Then it should fail
@@ -263,7 +260,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 [4, 4, 4, 4, 4, 4],
             ];
             const state: MancalaState = new MancalaState(board, 0, [0, 0]);
-            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(state);
 
             // When clicking on a house of the opponent
             // Then it should fail
@@ -298,7 +295,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
         it('should display monsoon capture', fakeAsync(async() => {
             // Given a board where the player is about to give their last seed to the opponent
-            await mancalaTestUtils.testUtils.setupState(entries.monsoon.state, undefined, undefined, defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(entries.monsoon.state);
 
             // When doing the capturing move
             const suffix: string = mancalaTestUtils.getSuffix(entries.monsoon);
@@ -310,7 +307,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
         it('should display capture', fakeAsync(async() => {
             // Given a state where player zero can capture
-            await mancalaTestUtils.testUtils.setupState(entries.capture.state, undefined, undefined, defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(entries.capture.state);
 
             // When player zero clicks on a house to distribute
             const suffix: string = mancalaTestUtils.getSuffix(entries.capture);

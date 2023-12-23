@@ -134,7 +134,7 @@ describe('DiaballikMoveGenerator', () => {
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
         function applyMove(move: DiaballikMove): DiaballikState {
             const legalityInfo: MGPFallible<DiaballikState> = DiaballikRules.get().isLegal(move, node.gameState);
-            return DiaballikRules.get().applyLegalMove(move, node.gameState, MGPOptional.empty(), legalityInfo.get());
+            return DiaballikRules.get().applyLegalMove(move, node.gameState, defaultConfig, legalityInfo.get());
         }
         const states: DiaballikState[] = new MGPSet(moves.map(applyMove)).toList();
 
