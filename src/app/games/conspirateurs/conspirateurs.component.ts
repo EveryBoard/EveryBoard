@@ -30,7 +30,7 @@ interface SquareInfo {
     squareClasses: string[],
     shelterClasses: string[],
     pieceClasses: string[],
-    hasPiece: boolean,
+    hasPieceToDraw: boolean,
     isShelter: boolean,
     isOccupiedShelter: boolean,
 }
@@ -90,7 +90,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                     squareClasses: [],
                     shelterClasses: ['no-fill'],
                     pieceClasses: [this.getPlayerClass(piece)],
-                    hasPiece: piece.isPlayer(),
+                    hasPieceToDraw: piece.isPlayer(),
                     isShelter: false,
                     isOccupiedShelter: false,
                 };
@@ -107,10 +107,10 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const jump: ConspirateursMoveJump = this.jumpInConstruction.get();
                 const jumpStart: Coord = jump.getStartingCoord();
                 const jumpCurrent: Coord = jump.getEndingCoord();
-                this.viewInfo.boardInfo[jumpStart.y][jumpStart.x].hasPiece = false;
+                this.viewInfo.boardInfo[jumpStart.y][jumpStart.x].hasPieceToDraw = false;
                 this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].pieceClasses =
                     [this.getPlayerClass(this.getCurrentPlayer()), 'selected-stroke'];
-                this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].hasPiece = true;
+                this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].hasPieceToDraw = true;
                 for (const coord of jump.coords) {
                     this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 }

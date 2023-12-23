@@ -21,6 +21,7 @@ import { Coord } from 'src/app/jscaip/Coord';
  * by sub components which themselves are not GameComponent subclasses
  */
 export abstract class BaseGameComponent {
+
     // Make ArrayUtils available in game components
     public ArrayUtils: typeof ArrayUtils = ArrayUtils;
 
@@ -36,6 +37,16 @@ export abstract class BaseGameComponent {
                 return '';
         }
     }
+
+    public getSVGTranslate(x: number, y: number): string {
+        return 'translate(' + x + ', ' + y + ')';
+    }
+
+    public SPACE_SIZE: number = 100;
+
+    public readonly STROKE_WIDTH: number = 8;
+
+    public readonly SMALL_STROKE_WIDTH: number = 2;
 }
 
 /**
@@ -57,12 +68,6 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public encoder: Encoder<M>;
 
     public Player: typeof Player = Player;
-
-    public SPACE_SIZE: number = 100;
-
-    public readonly STROKE_WIDTH: number = 8;
-
-    public readonly SMALL_STROKE_WIDTH: number = 2;
 
     public rules: R;
 

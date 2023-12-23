@@ -25,6 +25,7 @@ describe('GameComponent', () => {
     beforeEach(fakeAsync(async() => {
         await TestUtils.configureTestingModuleForGame(activatedRouteStub);
     }));
+
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
         // Given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
@@ -47,114 +48,116 @@ describe('GameComponent', () => {
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
-    it('click methods should refuse when observer clicks', fakeAsync(async() => {
-        const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
-            Abalone: {
-                onPieceClick: [0, 0],
-                onSpaceClick: [0, 0],
-                chooseDirection: [Direction.UP],
-            },
-            Apagos: {
-                onSquareClick: [0],
-                onArrowClick: [0, Player.ONE],
-            },
-            Awale: { onClick: [0, 0] },
-            Brandhub: { onClick: [0, 0] },
-            Coerceo: { onClick: [0, 0] },
-            ConnectSix: { onClick: [0, 0] },
-            Conspirateurs: { onClick: [new Coord(0, 0)] },
-            Diaballik: {
-                onClick: [0, 0],
-                done: [],
-            },
-            Diam: {
-                onSpaceClick: [0],
-                onPieceInGameClick: [0, 0],
-                onRemainingPieceClick: [DiamPiece.ZERO_FIRST],
-            },
-            Dvonn: { onClick: [0, 0] },
-            Encapsule: {
-                onBoardClick: [0, 0],
-                onPieceClick: [0, EncapsulePiece.BIG_LIGHT, 0],
-            },
-            Epaminondas: { onClick: [0, 0] },
-            Gipf: { onClick: [0, 0] },
-            Go: { onClick: [0, 0] },
-            Hive: {
-                selectSpace: [new Coord(0, 0), 'space'],
-                selectRemaining: [new HivePiece(Player.ZERO, 'QueenBee')],
-            },
-            Hnefatafl: { onClick: [0, 0] },
-            Kalah: {
-                onClick: [0, 0],
-                onStoreClick: [0],
-            },
-            Kamisado: { onClick: [0, 0] },
-            Lasca: { onClick: [0, 0] },
-            LinesOfAction: { onClick: [0, 0] },
-            Lodestone: {
-                selectCoord: [new Coord(0, 0)],
-                selectLodestone: ['push', false],
-                selectPressurePlate: ['top', 1],
-                deselectPressurePlate: ['top', 1],
-            },
-            MartianChess: {
-                onClick: [0, 0],
-                onClockClick: [],
-            },
-            MinimaxTesting: {
-                chooseRight: [],
-                chooseDown: [],
-            },
-            P4: { onClick: [0, 0] },
-            Pentago: {
-                onClick: [0, 0],
-                rotate: [['not relevant', 0, true]],
-                skipRotation: [],
-            },
-            Pente: {
-                onClick: [0, 0],
-            },
-            Pylos: {
-                onPieceClick: [0, 0, 0],
-                onDrop: [0, 0, 0],
-                validateCapture: [],
-            },
-            Quarto: {
-                chooseCoord: [0, 0],
-                choosePiece: [0],
-                deselectDroppedPiece: [],
-            },
-            Quixo: {
-                onBoardClick: [0, 0],
-                chooseDirection: [0],
-            },
-            Reversi: { onClick: [0, 0] },
-            Sahara: { onClick: [0, 0] },
-            Siam: {
-                selectPieceForInsertion: [Player.ZERO, 0],
-                selectOrientation: [SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
-                clickSquare: [0, 0],
-                clickArrow: [{
-                    source: MGPOptional.empty(),
-                    target: new Coord(0, 0),
-                    direction: Orthogonal.DOWN,
-                    move: SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
-                }],
-            },
-            Six: {
-                onPieceClick: [0, 0],
-                onNeighborClick: [0, 0],
-            },
-            Tablut: { onClick: [0, 0] },
-            Teeko: { onClick: [0, 0] },
-            Trexo: {
-                onClick: [0, 0],
-            },
-            Yinsh: { onClick: [0, 0] },
-        };
-        const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
-        for (const gameInfo of GameInfo.ALL_GAMES()) {
+
+    const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
+        Abalone: {
+            onPieceClick: [0, 0],
+            onSpaceClick: [0, 0],
+            chooseDirection: [Direction.UP],
+        },
+        Apagos: {
+            onSquareClick: [0],
+            onArrowClick: [0, Player.ONE],
+        },
+        Awale: { onClick: [0, 0] },
+        Brandhub: { onClick: [0, 0] },
+        Coerceo: { onClick: [0, 0] },
+        ConnectSix: { onClick: [0, 0] },
+        Conspirateurs: { onClick: [new Coord(0, 0)] },
+        Diam: {
+            onSpaceClick: [0],
+            onPieceInGameClick: [0, 0],
+            onRemainingPieceClick: [DiamPiece.ZERO_FIRST],
+        },
+        Diaballik: {
+            onClick: [0, 0],
+            done: [],
+        },
+        Dvonn: { onClick: [0, 0] },
+        Encapsule: {
+            onBoardClick: [0, 0],
+            onPieceClick: [0, EncapsulePiece.BIG_LIGHT, 0],
+        },
+        Epaminondas: { onClick: [0, 0] },
+        Gipf: { onClick: [0, 0] },
+        Go: { onClick: [0, 0] },
+        Hive: {
+            selectSpace: [new Coord(0, 0), 'space'],
+            selectRemaining: [new HivePiece(Player.ZERO, 'QueenBee')],
+        },
+        Hnefatafl: { onClick: [0, 0] },
+        Kalah: {
+            onClick: [0, 0],
+            onStoreClick: [0],
+        },
+        Kamisado: { onClick: [0, 0] },
+        Lasca: { onClick: [0, 0] },
+        LinesOfAction: { onClick: [0, 0] },
+        Lodestone: {
+            selectCoord: [new Coord(0, 0)],
+            selectLodestone: ['push', false],
+            onTemporaryPressurePlateClick: ['top', 1, 1],
+            onPressurePlateClick: ['top', 1, 1],
+        },
+        MartianChess: {
+            onClick: [0, 0],
+            onClockClick: [],
+        },
+        MinimaxTesting: {
+            chooseRight: [],
+            chooseDown: [],
+        },
+        P4: { onClick: [0, 0] },
+        Pentago: {
+            onClick: [0, 0],
+            rotate: [['not relevant', 0, true]],
+            skipRotation: [],
+        },
+        Pente: {
+            onClick: [0, 0],
+        },
+        Pylos: {
+            onPieceClick: [0, 0, 0],
+            onDrop: [0, 0, 0],
+            validateCapture: [],
+        },
+        Quarto: {
+            chooseCoord: [0, 0],
+            choosePiece: [0],
+            deselectDroppedPiece: [],
+        },
+        Quixo: {
+            onBoardClick: [0, 0],
+            chooseDirection: [0],
+        },
+        Reversi: { onClick: [0, 0] },
+        Sahara: { onClick: [0, 0] },
+        Siam: {
+            selectPieceForInsertion: [Player.ZERO, 0],
+            selectOrientation: [SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
+            clickSquare: [0, 0],
+            clickArrow: [{
+                source: MGPOptional.empty(),
+                target: new Coord(0, 0),
+                direction: Orthogonal.DOWN,
+                move: SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
+            }],
+        },
+        Six: {
+            onPieceClick: [0, 0],
+            onNeighborClick: [0, 0],
+        },
+        Tablut: { onClick: [0, 0] },
+        Teeko: { onClick: [0, 0] },
+        Trexo: {
+            onClick: [0, 0],
+        },
+        Yinsh: { onClick: [0, 0] },
+    };
+
+    const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
+    for (const gameInfo of GameInfo.ALL_GAMES()) {
+        it(`clicks method should refuse when observer click (${ gameInfo.urlName })`, fakeAsync(async() => {
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {
                 throw new Error('Please define ' + gameInfo.urlName + ' clickable method in here to test them.');
@@ -174,10 +177,10 @@ describe('GameComponent', () => {
                     await testUtils.expectToDisplayGameMessage(refusal.getReason(), async() => {
                         return component[methodName](...game[methodName]);
                     });
-                expect(clickResult).toEqual(refusal);
+                expect(clickResult).withContext(methodName).toEqual(refusal);
             }
-        }
-    }));
+        }));
+    }
     it('should have an encoder, tutorial and AI for every game', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES()) {
             // Given a game

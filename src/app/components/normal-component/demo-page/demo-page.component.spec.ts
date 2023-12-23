@@ -9,12 +9,15 @@ describe('DemoPageComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(DemoPageComponent);
         testUtils.detectChanges();
     }));
+
     it('should create', () => {
         expect(testUtils.getComponent()).toBeTruthy();
     });
+
     it('should display demo nodes', () => {
         expect(testUtils.findElement('app-demo-card')).withContext('app-demo-card should be present').toBeTruthy();
     });
+
     it('should adapt the number of columns upon change', () => {
         // Given a demo page component
         // When changing the number of columns
@@ -24,4 +27,5 @@ describe('DemoPageComponent', () => {
         // Then the right number of columns should have been regenerated
         expect(testUtils.findElements('.column').length).toBe(newNumberOfColumns);
     });
+
 });

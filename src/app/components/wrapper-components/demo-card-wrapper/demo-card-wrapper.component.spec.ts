@@ -24,6 +24,7 @@ describe('DemoCardComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(DemoCardWrapperComponent);
     }));
+
     it('should display the game interactively from the point of view the current player', fakeAsync(async() => {
         // Given a demo component
         const board: Table<PlayerOrNone> = P4Rules.get().getInitialState().board; // dummy board
@@ -46,17 +47,19 @@ describe('DemoCardComponent', () => {
         expect(gameComponent['isInteractive']).toBeTrue();
 
     }));
+
     it('should simulate clicks', fakeAsync(async() => {
         // Given a demo component
         // When displaying it for a game that has intermediary clicks
         loadNode({
             name: 'Lodestone',
             node: new LodestoneNode(LodestoneRules.get().getInitialState()),
-            click: MGPOptional.of('#lodestone_push_orthogonal'),
+            click: MGPOptional.of('#lodestone_push_orthogonal_PLAYER_ZERO'),
         });
         // Then it should have performed a click
-        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
+        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
     }));
+
     it('should not allow moves', fakeAsync(async() => {
         // Given a demo component displayed for a game
         loadNode({
@@ -73,6 +76,7 @@ describe('DemoCardComponent', () => {
         // Then it should not call rules.choose
         expect(testUtils.getComponent().gameComponent.rules.choose).not.toHaveBeenCalled();
     }));
+
     it('should do nothing when you pass', fakeAsync(async() => {
         // Given any starting state of component
         // When passing
@@ -80,4 +84,5 @@ describe('DemoCardComponent', () => {
         // Then nothing should have happend (for coverage sake)
         expect(result).withContext('should be null').toBe();
     }));
+
 });

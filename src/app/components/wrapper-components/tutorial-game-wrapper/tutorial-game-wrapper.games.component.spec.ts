@@ -101,7 +101,9 @@ describe('TutorialGameWrapperComponent (games)', () => {
             }));
         }
     });
+
     describe('Tutorials', () => {
+
         it('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
@@ -329,6 +331,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                         const resultingState: GameState = rules.applyLegalMove(move, step.state, moveResult.get());
                         const validation: MGPValidation = stepExpectation[3];
                         expect(Utils.getNonNullable(step.predicate)(move, step.state, resultingState))
+                            .withContext(move.toString())
                             .toEqual(validation);
                     } else {
                         const context: string = 'Move should be legal to reach predicate but failed in "' + step.title+ '" because';
@@ -339,8 +342,9 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 }
             }
         }));
-        it('should make sure all solutionMove are legal', fakeAsync(async() => {
-            for (const gameInfo of GameInfo.ALL_GAMES()) {
+
+        for (const gameInfo of GameInfo.ALL_GAMES()) {
+            it(`should make sure all solutionMove are legal (${ gameInfo.name })`, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
                     TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
                 const rules: Rules<Move, GameState, unknown> = gameComponent.rules;
@@ -355,6 +359,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                                     const resultingState: GameState =
                                         rules.applyLegalMove(solution, step.state, moveResult.get());
                                     expect(Utils.getNonNullable(step.predicate)(solution, step.state, resultingState))
+                                        .withContext(step.title)
                                         .toEqual(MGPValidation.SUCCESS);
                                 }
                             } else {
@@ -364,7 +369,8 @@ describe('TutorialGameWrapperComponent (games)', () => {
                         }
                     }
                 }
-            }
-        }));
+            }));
+        }
     });
+
 });

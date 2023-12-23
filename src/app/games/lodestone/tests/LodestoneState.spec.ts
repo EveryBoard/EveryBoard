@@ -2,7 +2,9 @@ import { LodestoneRules } from '../LodestoneRules';
 import { LodestoneState } from '../LodestoneState';
 
 describe('LodestoneState', () => {
+
     describe('initial state', () => {
+
         it('should initially have 24 pieces for each player', () => {
             // Given the initial state
             const state: LodestoneState = LodestoneRules.get().getInitialState();
@@ -12,5 +14,7 @@ describe('LodestoneState', () => {
             expect(pieces[0]).toBe(24);
             expect(pieces[1]).toBe(24);
         });
+
     });
+
 });
