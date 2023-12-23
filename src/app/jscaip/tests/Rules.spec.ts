@@ -9,7 +9,7 @@ import { GameStatus } from '../GameStatus';
 import { JSONValue } from 'src/app/utils/utils';
 import { RulesUtils } from './RulesUtils.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { NoConfig, RulesConfig } from '../RulesConfigUtil';
 
 class AbstractState extends GameStateWithTable<number> {}
 
@@ -57,7 +57,7 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
 describe('Rules', () => {
 
     let rules: AbstractRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = AbstractRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = AbstractRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AbstractRules.get();

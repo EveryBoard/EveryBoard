@@ -15,7 +15,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
@@ -74,7 +74,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     public override applyLegalMove(move: SaharaMove,
                                    state: SaharaState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _config: NoConfig,
                                    _info: void)
     : SaharaState
     {

@@ -84,7 +84,6 @@ describe('CountDownComponent', () => {
             expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
         });
         it('should throw when pausing not started chrono', () => {
-            // TODO FOR REVIEW: ticketter la généralisation de TestUtils.expectToThrowAndLog ?
             spyOn(Utils, 'assert').and.callFake((b: boolean, s: string) => {throw new Error('prout');});
             const error: string = 'Should not pause not started chrono (undefined)';
 

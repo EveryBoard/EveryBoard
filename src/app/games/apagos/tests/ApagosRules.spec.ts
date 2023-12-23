@@ -6,13 +6,12 @@ import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosNode, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ApagosRules', () => {
 
     let rules: ApagosRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();
 
     let stateWithOneFullSquare: ApagosState;
 

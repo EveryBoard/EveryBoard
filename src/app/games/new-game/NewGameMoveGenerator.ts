@@ -2,8 +2,7 @@ import { MoveGenerator } from 'src/app/jscaip/AI';
 import { NewGameMove } from './NewGameMove';
 import { NewGameNode } from './NewGameRules';
 import { NewGameState } from './NewGameState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 // A move generator lists possible moves for a game
 export class NewGameMoveGenerator extends MoveGenerator<NewGameMove, NewGameState> {
@@ -16,7 +15,7 @@ export class NewGameMoveGenerator extends MoveGenerator<NewGameMove, NewGameStat
      *     - the can only lead to avoidable defeat
      * A move generator should never return an empty list in case there are possible moves.
      */
-    public getListMoves(_node: NewGameNode, _config: MGPOptional<EmptyRulesConfig>): NewGameMove[] {
+    public override getListMoves(_node: NewGameNode, _config: NoConfig): NewGameMove[] {
         return [new NewGameMove()];
     }
 }

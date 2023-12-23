@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
@@ -46,10 +46,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         ];
         return new CoerceoState(board, 0, [0, 0], [0, 0]);
     }
-    public override applyLegalMove(move: CoerceoMove,
-                                   state: CoerceoState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
+    public override applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: NoConfig, _info: void)
     : CoerceoState
     {
         if (CoerceoMove.isTileExchange(move)) {

@@ -3,8 +3,7 @@ import { Heuristic } from 'src/app/jscaip/Minimax';
 import { NewGameMove } from './NewGameMove';
 import { NewGameNode } from './NewGameRules';
 import { NewGameState } from './NewGameState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 // A heuristic assigns values to game states
 export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
@@ -20,7 +19,7 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
      * You may want to use `PlayerMetricHeuristic` to define a score for each player instead, which
      * is often what you want.
      */
-    public getBoardValue(node: NewGameNode, _config: MGPOptional<EmptyRulesConfig>): BoardValue {
+    public getBoardValue(node: NewGameNode, _config: NoConfig): BoardValue {
         return new BoardValue(node.gameState.turn);
     }
 

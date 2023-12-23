@@ -11,7 +11,7 @@ import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 import { Utils } from 'src/app/utils/utils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
@@ -38,7 +38,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 
     public override applyLegalMove(move: ApagosMove,
                                    state: ApagosState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _config: NoConfig,
                                    _info: void)
     : ApagosState
     {

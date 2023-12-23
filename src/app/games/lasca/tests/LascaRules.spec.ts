@@ -7,8 +7,7 @@ import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaFailure } from '../LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LascaRules', () => {
 
@@ -27,7 +26,7 @@ describe('LascaRules', () => {
     const ___: LascaStack = LascaStack.EMPTY;
 
     let rules: LascaRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = LascaRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = LascaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = LascaRules.get();

@@ -6,13 +6,13 @@ import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, Lo
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LodestoneRules } from '../LodestoneRules';
 
 describe('LodestoneScoreHeuristic', () => {
 
     let heuristic: LodestoneScoreHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = LodestoneRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = LodestoneRules.get().getDefaultRulesConfig();
 
     const _: LodestonePiece = LodestonePieceNone.EMPTY;
     const O: LodestonePiece = LodestonePiecePlayer.ZERO;

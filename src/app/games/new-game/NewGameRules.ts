@@ -5,7 +5,7 @@ import { NewGameState } from './NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Rules } from 'src/app/jscaip/Rules';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * This class is optional.
@@ -75,7 +75,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      */
     public override applyLegalMove(_move: NewGameMove,
                                    state: NewGameState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _config: NoConfig,
                                    _info: NewGameLegalityInfo)
     : NewGameState
     {
@@ -87,7 +87,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      * @param node the node for which we check the game status
      * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
      */
-    public getGameStatus(node: NewGameNode, _config: MGPOptional<EmptyRulesConfig>): GameStatus {
+    public getGameStatus(node: NewGameNode, _config: NoConfig): GameStatus {
         if (node.gameState.turn < 42) {
             return GameStatus.ONGOING;
         } else {

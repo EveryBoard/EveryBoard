@@ -1,8 +1,7 @@
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 function expectNoBackAndForth(move: DiaballikMove): void {
     const subMoves: DiaballikSubMove[] = move.getSubMoves();
@@ -28,7 +27,7 @@ function hasNSteps(n: number): (move: DiaballikMove) => boolean {
     };
 }
 
-const defaultConfig: MGPOptional<EmptyRulesConfig> = DiaballikRules.get().getDefaultRulesConfig();
+const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
 
 describe('DiaballikFilteredMoveGenerator of length 3', () => {
 

@@ -1,9 +1,8 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameMoveGenerator } from '../NewGameMoveGenerator';
 import { NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * These are the tests for the move generator.
@@ -13,7 +12,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 describe('NewGameMoveGenerator', () => {
 
     let moveGenerator: NewGameMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = NewGameRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new NewGameMoveGenerator();

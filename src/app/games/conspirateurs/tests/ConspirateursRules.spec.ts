@@ -7,8 +7,7 @@ import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -16,7 +15,7 @@ describe('ConspirateursRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ConspirateursRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = ConspirateursRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = ConspirateursRules.get();

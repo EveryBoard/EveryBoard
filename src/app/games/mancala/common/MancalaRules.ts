@@ -35,7 +35,7 @@ export type MancalaDistributionResult = {
     endsUpInStore: boolean;
 }
 
-export class MancalaNode extends GameNode<MancalaMove, MancalaState, MancalaConfig> {}
+export class MancalaNode extends GameNode<MancalaMove, MancalaState> {}
 
 export abstract class MancalaRules extends ConfigurableRules<MancalaMove, MancalaState, MancalaConfig> {
 
@@ -126,7 +126,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
 
     /**
      * Apply the distribution part of the move.
-     * Apply the capture that happend due to distribution (for example the passage in the store).
+     * Apply the capture that happen due to distribution (for example the passage in the store).
      * Should not increment the turn of the state.
      */
     public distributeMove(move: MancalaMove, state: MancalaState, config: MancalaConfig): MancalaDistributionResult {

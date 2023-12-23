@@ -22,6 +22,9 @@ export type RulesConfig = {
 
 export type EmptyRulesConfig = Record<string, never>;
 
+export type NoConfig = MGPOptional<EmptyRulesConfig>;
+
+
 export class RulesConfigUtils {
 
     public static getGameDefaultConfig<C extends RulesConfig>(gameName: string): MGPOptional<C> {

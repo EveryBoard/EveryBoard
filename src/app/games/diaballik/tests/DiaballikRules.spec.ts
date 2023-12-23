@@ -10,12 +10,12 @@ import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { CoordFailure } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiaballikRules', () => {
 
     let rules: DiaballikRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = DiaballikRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
 
     const O: DiaballikPiece = DiaballikPiece.ZERO;
     const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
@@ -145,7 +145,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()),
-                              MGPOptional.empty());
+                              empty);
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -167,8 +167,8 @@ describe('DiaballikRules', () => {
         // When doing a move containing zero translations and one pass
         const move: DiaballikMove =
             new DiaballikMove(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get(),
-                              MGPOptional.empty(),
-                              MGPOptional.empty());
+                              empty,
+                              empty);
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -191,7 +191,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get()),
-                              MGPOptional.empty());
+                              empty);
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([

@@ -3,12 +3,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { LascaControlHeuristic } from './LascaControlHeuristic';
 import { LascaNode } from './LascaRules';
 import { LascaStack, LascaState } from './LascaState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LascaControlAndDominationHeuristic extends LascaControlHeuristic {
 
-    public override getBoardValue(node: LascaNode, config: MGPOptional<EmptyRulesConfig>): BoardValue {
+    public override getBoardValue(node: LascaNode, config: NoConfig): BoardValue {
         const controlValue: number = super.getBoardValue(node, config).value * 12;
         let dominatingPiecesCount: number = 0;
         for (let y: number = 0; y < LascaState.SIZE; y++) {

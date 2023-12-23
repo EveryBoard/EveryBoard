@@ -15,7 +15,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 /**
@@ -198,12 +198,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return QuartoRules.isLegal(move, state);
     }
 
-    public override applyLegalMove(move: QuartoMove,
-                                   state: QuartoState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
-    : QuartoState
-    {
+    public override applyLegalMove(move: QuartoMove, state: QuartoState, _config: NoConfig, _info: void): QuartoState {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = state.pieceInHand;
         const resultingState: QuartoState = new QuartoState(newBoard, state.turn + 1, move.piece);

@@ -6,12 +6,11 @@ import { DvonnMove } from './DvonnMove';
 import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
 
-    public override getListMoves(node: DvonnNode, config: MGPOptional<EmptyRulesConfig>): DvonnMove[] {
+    public override getListMoves(node: DvonnNode, config: NoConfig): DvonnMove[] {
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = super.getListMoves(node, config);
 

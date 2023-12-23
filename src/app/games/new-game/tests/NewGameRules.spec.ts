@@ -2,8 +2,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * This is the test suite for the rules
@@ -11,7 +10,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 describe('NewGameRules', () => {
 
     let rules: NewGameRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = NewGameRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         // This is the rules instance that we will test

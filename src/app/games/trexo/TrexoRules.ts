@@ -10,7 +10,7 @@ import { MGPValidation } from '../../utils/MGPValidation';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
@@ -36,17 +36,13 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return new TrexoState(board, 0);
     }
 
-    public override applyLegalMove(move: TrexoMove,
-                                   state: TrexoState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
-    : TrexoState
-    {
+    public override applyLegalMove(move: TrexoMove, state: TrexoState, _config: NoConfig, _info: void): TrexoState {
         return state
             .drop(move.getZero(), Player.ZERO)
             .drop(move.getOne(), Player.ONE)
             .incrementTurn();
     }
+
     public override isLegal(move: TrexoMove, state: TrexoState): MGPValidation {
         if (this.isUnevenGround(move, state)) {
             return MGPValidation.failure(TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());

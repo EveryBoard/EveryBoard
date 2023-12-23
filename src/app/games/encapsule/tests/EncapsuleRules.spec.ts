@@ -10,12 +10,12 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = EncapsuleRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = EncapsuleRules.get().getDefaultRulesConfig();
 
     let node: EncapsuleNode;
 

@@ -23,7 +23,7 @@ export class SiamLegalityInformation {
     }
 }
 
-export class SiamNode extends GameNode<SiamMove, SiamState, SiamConfig> {}
+export class SiamNode extends GameNode<SiamMove, SiamState> {}
 
 type ClosestPusher = {
     distance: number,

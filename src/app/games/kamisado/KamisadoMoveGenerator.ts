@@ -7,12 +7,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { KamisadoBoard } from './KamisadoBoard';
 import { Utils } from 'src/app/utils/utils';
 import { MoveGenerator } from 'src/app/jscaip/AI';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class KamisadoMoveGenerator extends MoveGenerator<KamisadoMove, KamisadoState> {
 
-    public getListMoves(node: KamisadoNode, _config: MGPOptional<EmptyRulesConfig>): KamisadoMove[] {
+    public override getListMoves(node: KamisadoNode, _config: NoConfig): KamisadoMove[] {
         const state: KamisadoState = node.gameState;
         const movablePieces: Coord[] = KamisadoRules.getMovablePieces(state);
         if (movablePieces.length === 0) {

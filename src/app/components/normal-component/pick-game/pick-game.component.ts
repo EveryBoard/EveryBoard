@@ -134,6 +134,7 @@ import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/Tutoria
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Utils } from 'src/app/utils/utils';
 
 class GameDescription {
 
@@ -264,6 +265,7 @@ export class GameInfo {
 
     public static getByUrlName(urlName: string): MGPOptional<GameInfo> {
         const games: GameInfo[] = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === urlName);
+        Utils.assert(games.length <= 1, `There should only be one game matching $urlName!`);
         if (games.length === 0) {
             return MGPOptional.empty();
         } else {

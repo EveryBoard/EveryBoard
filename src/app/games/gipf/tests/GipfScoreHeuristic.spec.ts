@@ -6,7 +6,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GipfRules } from '../GipfRules';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -17,7 +17,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('GipfScoreHeuristic', () => {
 
     let heuristic: GipfScoreHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = GipfRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = GipfRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new GipfScoreHeuristic();

@@ -10,7 +10,7 @@ import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('YinshRules', () => {
 
@@ -22,7 +22,7 @@ describe('YinshRules', () => {
     const B: YinshPiece = YinshPiece.RING_ONE;
 
     let rules: YinshRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = YinshRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = YinshRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = YinshRules.get();

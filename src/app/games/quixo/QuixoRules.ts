@@ -18,7 +18,7 @@ import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
-export class QuixoNode extends GameNode<QuixoMove, QuixoState, QuixoConfig> {}
+export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
 export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoConfig> {
 

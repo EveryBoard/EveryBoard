@@ -95,7 +95,7 @@ describe('DemoCardComponent', () => {
         // Given any starting state of component
         // When passing
         const result: void = await testUtils.getComponent().onCancelMove('not even necessary');
-        // Then nothing should have happend (for coverage sake)
+        // Then nothing should have happen (for coverage sake)
         expect(result).withContext('should be null').toBe();
     }));
 

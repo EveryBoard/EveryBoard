@@ -14,7 +14,7 @@ import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestoneState, LodestonePositions, LodestonePressurePlates, LodestonePressurePlate, LodestonePressurePlatePosition } from './LodestoneState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
@@ -91,10 +91,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                                   });
     }
 
-    public override applyLegalMove(move: LodestoneMove,
-                                   state: LodestoneState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   infos: LodestoneInfos)
+    public override applyLegalMove(move: LodestoneMove, state: LodestoneState, _config: NoConfig, infos: LodestoneInfos)
     : LodestoneState
     {
         const currentPlayer: Player = state.getCurrentPlayer();

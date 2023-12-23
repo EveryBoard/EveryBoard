@@ -8,8 +8,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { DiamFailure } from '../DiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiamRules', () => {
 
@@ -20,7 +19,7 @@ describe('DiamRules', () => {
     const B2: DiamPiece = DiamPiece.ONE_SECOND;
 
     let rules: DiamRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = DiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = DiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = DiamRules.get();

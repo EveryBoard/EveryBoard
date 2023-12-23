@@ -6,7 +6,7 @@ import { GameStatus } from '../GameStatus';
 import { GameNode } from '../GameNode';
 import { Move } from '../Move';
 import { Rules } from '../Rules';
-import { EmptyRulesConfig } from '../RulesConfigUtil';
+import { NoConfig } from '../RulesConfigUtil';
 
 class GameStateMock extends GameState {
 
@@ -42,7 +42,7 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
 
     public override applyLegalMove(_move: MoveMock,
                                    _state: GameStateMock,
-                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _config: NoConfig,
                                    _info: void)
     : GameStateMock
     {

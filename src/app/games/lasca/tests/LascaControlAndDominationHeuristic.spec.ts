@@ -4,7 +4,7 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LascaControlAndDominationHeuristic } from '../LascaControlAndDominationHeuristic';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LascaRules } from '../LascaRules';
 
 describe('LascaControlAndDominationHeuristic', () => {
@@ -12,7 +12,7 @@ describe('LascaControlAndDominationHeuristic', () => {
     const O: LascaStack = new LascaStack([LascaPiece.ZERO]);
     const X: LascaStack = new LascaStack([LascaPiece.ONE]);
     const _: LascaStack = LascaStack.EMPTY;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = LascaRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = LascaRules.get().getDefaultRulesConfig();
 
     let heuristic: LascaControlAndDominationHeuristic;
 

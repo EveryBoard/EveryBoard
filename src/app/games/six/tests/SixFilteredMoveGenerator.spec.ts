@@ -6,8 +6,7 @@ import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
@@ -16,7 +15,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 describe('SixFilteredMoveGenerator', () => {
 
     let moveGenerator: SixFilteredMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new SixFilteredMoveGenerator();

@@ -1,15 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';
 import { PylosNode, PylosRules } from '../PylosRules';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('PylosOrderedMoveGenerator', () => {
 
     let moveGenerator: PylosOrderedMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = PylosRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = PylosRules.get().getDefaultRulesConfig();
     const coord0: PylosCoord = new PylosCoord(0, 0, 0);
     const coord1: PylosCoord = new PylosCoord(0, 0, 1);
     const coord2: PylosCoord = new PylosCoord(0, 0, 2);

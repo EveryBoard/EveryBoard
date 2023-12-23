@@ -15,13 +15,13 @@ import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { MancalaConfig } from 'src/app/games/mancala/common/MancalaConfig';
 import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from '../RulesConfigUtil';
+import { NoConfig } from '../RulesConfigUtil';
 
 describe('MCTS', () => {
 
     let mcts: MCTS<QuartoMove, QuartoState>;
     const mctsOptions: AITimeLimitOptions = { name: '200ms', maxSeconds: 0.2 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         mcts = new MCTS('MCTS', new QuartoMoveGenerator(), QuartoRules.get());

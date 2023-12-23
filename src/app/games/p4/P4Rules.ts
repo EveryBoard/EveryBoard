@@ -19,7 +19,7 @@ export type P4Config = {
     height: number;
 };
 
-export class P4Node extends GameNode<P4Move, P4State, P4Config> {}
+export class P4Node extends GameNode<P4Move, P4State> {}
 
 @Debug.log
 export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
@@ -104,17 +104,4 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
         return y - 1;
     }
 
-    public getListMoves(node: P4Node, _config: MGPOptional<P4Config>): P4Move[] {
-        // should be called only if the game is not over
-        const state: P4State = node.gameState;
-        const moves: P4Move[] = [];
-
-        for (let x: number = 0; x < state.getWidth(); x++) {
-            if (state.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
-                const move: P4Move = P4Move.of(x);
-                moves.push(move);
-            }
-        }
-        return moves;
-    }
 }

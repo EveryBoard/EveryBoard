@@ -3,8 +3,7 @@ import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConspirateursMoveGenerator } from '../ConspirateursMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -13,7 +12,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('ConspirateursMoveGenerator', () => {
 
     let moveGenerator: ConspirateursMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = ConspirateursRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new ConspirateursMoveGenerator();

@@ -14,7 +14,7 @@ import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Debug, JSONValue, Utils } from 'src/app/utils/utils';
-import { AbstractRules, ConfigurableRules } from 'src/app/jscaip/Rules';
+import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -278,7 +278,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async onReceivedMove(moveEvent: GameEventMove, isLastMoveOfBatch: boolean): Promise<void> {
-        const rules: ConfigurableRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
+        const rules: SuperRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const currentPartTurn: number = this.gameComponent.getTurn();
         const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
         const state: GameState = this.gameComponent.node.gameState;

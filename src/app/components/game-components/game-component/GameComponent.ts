@@ -1,5 +1,5 @@
 import { Move } from '../../../jscaip/Move';
-import { ConfigurableRules, SuperRules } from '../../../jscaip/Rules';
+import { SuperRules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -87,7 +87,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public rules: R;
 
-    public node: GameNode<M, S, C>;
+    public node: GameNode<M, S>;
 
     public config: MGPOptional<C> = MGPOptional.empty();
 
@@ -231,10 +231,10 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
 }
 
-export abstract class AbstractGameComponent extends GameComponent<ConfigurableRules<Move,
-                                                                                    GameState,
-                                                                                    RulesConfig,
-                                                                                    unknown>,
+export abstract class AbstractGameComponent extends GameComponent<SuperRules<Move,
+                                                                             GameState,
+                                                                             RulesConfig,
+                                                                             unknown>,
                                                                   Move,
                                                                   GameState,
                                                                   RulesConfig,

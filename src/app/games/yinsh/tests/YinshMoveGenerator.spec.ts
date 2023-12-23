@@ -5,8 +5,7 @@ import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { YinshMoveGenerator } from '../YinshMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('YinshMoveGenerator', () => {
 
@@ -19,7 +18,7 @@ describe('YinshMoveGenerator', () => {
     let rules: YinshRules;
 
     let moveGenerator: YinshMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = YinshRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = YinshRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = YinshRules.get();

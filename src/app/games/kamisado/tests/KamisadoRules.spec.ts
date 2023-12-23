@@ -11,12 +11,12 @@ import { KamisadoFailure } from '../KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('KamisadoRules', () => {
 
     let rules: KamisadoRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = KamisadoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = KamisadoRules.get().getDefaultRulesConfig();
 
     const _: KamisadoPiece = KamisadoPiece.EMPTY;
     const R: KamisadoPiece = KamisadoPiece.ZERO.RED;

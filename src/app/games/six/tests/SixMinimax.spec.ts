@@ -8,8 +8,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
 import { SixMinimax } from '../SixMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig, NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
@@ -19,7 +18,7 @@ describe('SixMinimax', () => {
 
     let minimax: Minimax<SixMove, SixState, EmptyRulesConfig, SixLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new SixMinimax();

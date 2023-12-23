@@ -14,7 +14,7 @@ import { YinshPiece } from './YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type YinshLegalityInformation = YinshState;
 
@@ -50,10 +50,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return new YinshState(board, [5, 5], 0);
     }
 
-    public override applyLegalMove(_move: YinshMove,
-                                   _state: YinshState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   info: YinshState)
+    public override applyLegalMove(_move: YinshMove, _state: YinshState, _config: NoConfig, info: YinshState)
     : YinshState
     {
         const stateWithoutTurn: YinshState = info;

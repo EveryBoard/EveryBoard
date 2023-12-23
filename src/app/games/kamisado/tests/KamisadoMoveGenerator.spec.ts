@@ -8,7 +8,7 @@ import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: KamisadoPiece = KamisadoPiece.EMPTY;
 const R: KamisadoPiece = KamisadoPiece.ZERO.RED;
@@ -20,7 +20,7 @@ describe('KamisadoMoveGenerator', () => {
 
     let rules: KamisadoRules;
     let moveGenerator: KamisadoMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = KamisadoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = KamisadoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = KamisadoRules.get();

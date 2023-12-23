@@ -14,7 +14,7 @@ import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}
 
@@ -141,12 +141,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return newState;
     }
 
-    public override applyLegalMove(move: DvonnMove,
-                                   state: DvonnState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
-    : DvonnState
-    {
+    public override applyLegalMove(move: DvonnMove, state: DvonnState, _config: NoConfig, _info: void): DvonnState {
         if (move === DvonnMove.PASS) {
             return new DvonnState(state.board, state.turn + 1, true);
         } else {

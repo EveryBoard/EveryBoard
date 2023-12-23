@@ -4,8 +4,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
 import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { AbaloneState } from '../AbaloneState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -15,7 +14,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('AbaloneMoveGenerator', () => {
 
     let moveGenerator: AbaloneMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = AbaloneRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new AbaloneMoveGenerator();

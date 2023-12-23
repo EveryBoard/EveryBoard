@@ -7,7 +7,7 @@ import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiaballikMoveInConstruction', () => {
 
@@ -82,7 +82,7 @@ describe('DiaballikMoveInConstruction', () => {
 function numberOfSubMovesIs(n: number): (move: DiaballikMove) => boolean {
     return (move: DiaballikMove): boolean => move.getSubMoves().length === n;
 }
-const defaultConfig: MGPOptional<EmptyRulesConfig> = DiaballikRules.get().getDefaultRulesConfig();
+const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
 
 describe('DiaballikMoveGenerator', () => {
 

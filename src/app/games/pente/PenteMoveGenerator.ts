@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class PenteMoveGenerator extends MoveGenerator<PenteMove, PenteState, GobanConfig> {
 
-    public getListMoves(node: PenteNode, _config: MGPOptional<GobanConfig>): PenteMove[] {
+    public override getListMoves(node: PenteNode, _config: MGPOptional<GobanConfig>): PenteMove[] {
         const state: PenteState = node.gameState;
         const moves: PenteMove[] = [];
         state.forEachCoord((coord: Coord, content: PlayerOrNone): void => {

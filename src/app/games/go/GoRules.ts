@@ -25,7 +25,7 @@ export type GoConfig = GobanConfig & {
     handicap: number;
 };
 
-export class GoNode extends GameNode<GoMove, GoState, GoConfig> {}
+export class GoNode extends GameNode<GoMove, GoState> {}
 
 @Debug.log
 export class GoRules extends ConfigurableRules<GoMove, GoState, GoConfig, GoLegalityInformation> {

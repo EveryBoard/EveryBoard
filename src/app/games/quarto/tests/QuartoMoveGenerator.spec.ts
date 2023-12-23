@@ -5,13 +5,12 @@ import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoState } from '../QuartoState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('QuartoMoveGenerator', () => {
 
     let moveGenerator: QuartoMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new QuartoMoveGenerator();

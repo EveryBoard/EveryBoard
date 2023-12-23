@@ -4,13 +4,13 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ApagosHeuristic } from '../ApagosHeuristic';
 import { ApagosState } from '../ApagosState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ApagosRules } from '../ApagosRules';
 
 describe('ApagosDummyHeuristic', () => {
 
     let heuristic: ApagosHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new ApagosHeuristic();

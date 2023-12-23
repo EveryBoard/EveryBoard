@@ -5,13 +5,13 @@ import { SaharaState } from '../SaharaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { SaharaHeuristic } from '../SaharaHeuristic';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { SaharaRules } from '../SaharaRules';
 
 describe('SaharaHeuristic', () => {
 
     let heuristic: SaharaHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = SaharaRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = SaharaRules.get().getDefaultRulesConfig();
 
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;

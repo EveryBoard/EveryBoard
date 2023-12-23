@@ -8,12 +8,11 @@ import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('TrexoMove', () => {
 
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = TrexoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = TrexoRules.get().getDefaultRulesConfig();
 
     it('should refuse to create out of board move (player.zero piece)', () => {
         const error: string = '(-1, 0) is out of the TrexoBoard!';

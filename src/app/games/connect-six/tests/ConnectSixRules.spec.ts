@@ -83,7 +83,7 @@ describe('ConnectSixRules', () => {
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'Instance of ConnectSixDrops should only happend after first move');
+            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'ConnectSixDrops should only be used after first move');
         });
 
     });
@@ -301,7 +301,7 @@ describe('ConnectSixRules', () => {
             function trySingleDropAfterFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'Instance of ConnectSixFirstMove should only happend at first move');
+            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'ConnectSixFirstMove should only be used at first move');
         });
 
         it('should notify victory when aligning 6 stones of your color', () => {

@@ -4,8 +4,7 @@ import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { EncapsuleMove } from '../EncapsuleMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const ___: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 const X__: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
@@ -20,7 +19,7 @@ const X2: EncapsulePiece = EncapsulePiece.BIG_LIGHT;
 describe('EncapsuleMoveGenerator', () => {
 
     let moveGenerator: EncapsuleMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = EncapsuleRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = EncapsuleRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new EncapsuleMoveGenerator();

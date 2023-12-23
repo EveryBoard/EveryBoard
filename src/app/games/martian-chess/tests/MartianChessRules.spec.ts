@@ -13,7 +13,7 @@ import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessFailure } from '../MartianChessFailure';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessRules', () => {
 
@@ -26,7 +26,7 @@ describe('MartianChessRules', () => {
     const noCapture: MartianChessCapture = MartianChessCapture.of([]);
 
     let rules: MartianChessRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     const boardWhereCaptureCanBeDone: Table<MartianChessPiece> = [
         [A, _, _, _],

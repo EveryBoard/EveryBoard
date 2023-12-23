@@ -9,12 +9,12 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { QuartoFailure } from '../QuartoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('QuartoRules', () => {
 
     let rules: QuartoRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = QuartoRules.get();

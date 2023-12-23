@@ -12,7 +12,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('GipfRules', () => {
 
@@ -25,7 +25,7 @@ describe('GipfRules', () => {
     const P1Turn: number = P0Turn + 1;
 
     let rules: GipfRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = GipfRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = GipfRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = GipfRules.get();

@@ -8,7 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamConfig> {
 
-    public getListMoves(node: SiamNode, config: MGPOptional<SiamConfig>): SiamMove[] {
+    public override getListMoves(node: SiamNode, config: MGPOptional<SiamConfig>): SiamMove[] {
         let moves: SiamMove[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         for (const coordAndContent of node.gameState.getCoordsAndContents()) {

@@ -9,12 +9,12 @@ import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneP
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 import { LodestoneMove } from '../LodestoneMove';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LodestoneMoveGenerator', () => {
 
     let moveGenerator: LodestoneMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = LodestoneRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = LodestoneRules.get().getDefaultRulesConfig();
 
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
     const _: LodestonePiece = LodestonePieceNone.EMPTY;

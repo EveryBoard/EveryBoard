@@ -9,7 +9,7 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { GameState } from 'src/app/jscaip/GameState';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { SuperRules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -201,7 +201,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
         // called only when it's AI's Turn
-        const ruler: ConfigurableRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
+        const ruler: SuperRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node, config);
         Utils.assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
