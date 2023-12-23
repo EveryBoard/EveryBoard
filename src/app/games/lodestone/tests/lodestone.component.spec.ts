@@ -66,7 +66,7 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
         }));
 
-        it('selecting lodestone should hide last move ', fakeAsync(async() => {
+        it('should hide last move when selecting lodestone', fakeAsync(async() => {
             // Given a board with last move including captures
             const previousBoard: Table<LodestonePiece> = [
                 [_, _, _, _, _, _, _, _],
@@ -115,7 +115,7 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementNotToHaveClass('#square_4_7 > .lodestone_square ', 'captured-fill');
         }));
 
-        it('selecting coord should hide last move ', fakeAsync(async() => {
+        it('should hide last move when selecting coord', fakeAsync(async() => {
             // Given a board with last move including captures
             const previousBoard: Table<LodestonePiece> = [
                 [_, _, _, _, _, _, _, _],
@@ -412,10 +412,10 @@ describe('LodestoneComponent', () => {
 
             // Then removed squares should be hidden
             testUtils.expectElementNotToExist('#square_7_7 > .lodestone_square');
-            // And their polyline should show them as crumbled
+            // And their polygon should show them as crumbled
             // Captured for the piece, moved for the lodestone
-            testUtils.expectElementToHaveClass('#square_7_7 > .lodestone_crumbled_square > polyline', 'moved-fill');
-            testUtils.expectElementToHaveClass('#square_7_0 > .lodestone_crumbled_square > polyline', 'captured-fill');
+            testUtils.expectElementToHaveClass('#square_7_7 > .lodestone_crumbled_square > polygon', 'moved-fill');
+            testUtils.expectElementToHaveClass('#square_7_0 > .lodestone_crumbled_square > polygon', 'captured-fill');
             // And the plate should be full
             testUtils.expectElementToExist('#platePiece_right_0_0');
             testUtils.expectElementToExist('#platePiece_right_0_1');
@@ -516,7 +516,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal_PLAYER_ZERO');
             await testUtils.expectClickSuccess('#plate_top_0_4');
 
-            // Then removed squares should be shown as crumbled (via the polyline)
+            // Then removed squares should be shown as crumbled (via the polygon)
             testUtils.expectElementToExist('#square_0_0 > .lodestone_crumbled_square');
             // And the full pressure plate should still be there
             testUtils.expectElementToExist('#plate_top_0_0');
