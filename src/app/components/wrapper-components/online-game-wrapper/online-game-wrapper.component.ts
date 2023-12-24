@@ -183,6 +183,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.timeManager.setClocks([this.chronoZeroTurn, this.chronoOneTurn],
                                        [this.chronoZeroGlobal, this.chronoOneGlobal]);
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
+            Utils.assert(this.gameComponent !== null, 'Game component should exist');
+            this.gameComponent.config = MGPOptional.of(configRoom.rulesConfig);
             await this.startPart();
         }, 2);
     }
@@ -617,9 +619,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
         const rulesConfig: RulesConfig = this.configRoom.rulesConfig;
-        if (this.gameComponent != null) {
-            this.gameComponent.config = MGPOptional.of(rulesConfig);
-        }
         return MGPOptional.of(rulesConfig);
     }
 
