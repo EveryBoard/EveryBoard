@@ -75,7 +75,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     public async onLegalUserMove(_move: Move, _scores?: [number, number] | undefined): Promise<void> {
-        Utils.assert(false, 'DemoCardWrapper should not call applyLegalMove, has it does no move');
+        Utils.assert(false, 'DemoCardWrapper should not call applyLegalMove, as it does no move');
     }
 
     public override getPlayer(): string {

@@ -51,7 +51,6 @@ describe('DemoCardComponent', () => {
         expect(game).withContext('game component should be displayed').toBeTruthy();
         // from the point of view of the current player, with interactivity off
         const gameComponent: AbstractGameComponent = testUtils.getComponent().gameComponent;
-        // TODO FOR REVIEW: on fait quoi là, le point de vue doit être zero si c'est personne mais que ferions nous proporement pour dire "inactif mais pour un?"
         expect(gameComponent.getPointOfView()).toBe(Player.ZERO);
         expect(gameComponent.isPlayerTurn()).withContext('Player should not be a player but an observer').toBeFalse();
         expect(gameComponent.isInteractive()).withContext('Interactivity should still be turned on').toBeTrue();
@@ -126,7 +125,7 @@ describe('DemoCardComponent', () => {
         spyOn(Utils, 'assert').and.callFake(() => {});
         // Given any demo node
         // When calling onLegalUserMove
-        const reason: string = 'DemoCardWrapper should not call applyLegalMove, has it does no move';
+        const reason: string = 'DemoCardWrapper should not call applyLegalMove, as it does no move';
         await testUtils.getComponent().onLegalUserMove(null as unknown as P4Move);
         // Then it should throw
         expect(Utils.assert).toHaveBeenCalledOnceWith(false, reason);

@@ -282,7 +282,7 @@ describe('DiaballikRules', () => {
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig); // TODO FOR REVIEW: je maintient qu'on aurais du faire comme ça direct, ceux ou j'ai accepté que reason soient pas envariablés ont juste été une source de perte de temps :D
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid passing from an empty piece', () => {

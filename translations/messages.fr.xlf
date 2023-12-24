@@ -3839,26 +3839,6 @@
         <source>SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: <x id="PH" equiv-text="move.toString()"/></source>
         <target>Les SiamMove doivent avoir moveDirection et landingOrientation identique quand une pièce sort du plateau: <x id="PH" equiv-text="move.toString()"/></target>
       </trans-unit>
-      <trans-unit id="3753696680821191929" datatype="html">
-        <source>The goal at Siam is to be the first to push a mountain out of the board.
-        The initial board contains three mountains, and no pieces are initially on the board.
-        During its turn, a player can do one of the following actions:
-        &lt;ol&gt;
-            &lt;li&gt;Put a new piece on the board.&lt;/li&gt;
-            &lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;
-            &lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;
-            &lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;
-        &lt;/ol&gt;</source>
-        <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau.
-        Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau.
-        Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :
-        &lt;ol&gt;
-            &lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;
-            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;
-            &lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;
-            &lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;
-        &lt;/ol&gt;</target>
-      </trans-unit>
       <trans-unit id="1043275525655591688" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions: &lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
         <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau. Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau. Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :&lt;ol&gt;&lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;&lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;&lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;&lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;&lt;/ol&gt;</target>
