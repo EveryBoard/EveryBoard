@@ -51,7 +51,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse move starting by opponent piece', () => {
@@ -98,7 +98,7 @@ describe('AbaloneRules', () => {
             [_, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse moving group of piece greater than 3', () => {
@@ -224,7 +224,7 @@ describe('AbaloneRules', () => {
             [_, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should declare player zero winner when he push a 6th opponent piece out of the board', () => {
@@ -281,7 +281,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse blocked translation', () => {
@@ -350,7 +350,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, _, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should do sidestep landing on UNREACHABLE the same way as outside the array board', () => {
@@ -384,7 +384,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should do sidestep landing outside the board correctly', () => {
@@ -418,7 +418,7 @@ describe('AbaloneRules', () => {
             [_, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
 });

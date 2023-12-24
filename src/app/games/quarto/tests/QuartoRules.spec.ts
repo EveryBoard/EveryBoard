@@ -58,7 +58,7 @@ describe('QuartoRules', () => {
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.EMPTY);
         const node: QuartoNode = new QuartoNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
 
@@ -125,7 +125,7 @@ describe('QuartoRules', () => {
             [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 1, QuartoPiece.AAAB);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should consider Player.ZERO winner when doing a full line', () => {
@@ -151,7 +151,7 @@ describe('QuartoRules', () => {
         const expectedState: QuartoState = new QuartoState(expectedBoard, 5, QuartoPiece.AAAB);
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -178,7 +178,7 @@ describe('QuartoRules', () => {
         const expectedState: QuartoState = new QuartoState(expectedBoard, 10, QuartoPiece.AABA);
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 

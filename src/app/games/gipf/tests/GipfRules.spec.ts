@@ -84,7 +84,7 @@ describe('GipfRules', () => {
                 [B, _, _, A, N, N, N],
             ], state.turn + 1, [11, 12], state.capturedPieces);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow simple moves without captures when possible', () => {
@@ -115,7 +115,7 @@ describe('GipfRules', () => {
             ];
             const expectedState: GipfState = new GipfState(expectedBoard, P1Turn, [4, 5], [0, 0]);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should not allow placements on blocked lines', () => {
@@ -198,7 +198,7 @@ describe('GipfRules', () => {
                                                                P1Turn + 1,
                                                                [5, 4 + capturedSelf],
                                                                [0, capturedOpponent]);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             }
         });
 
@@ -416,7 +416,7 @@ describe('GipfRules', () => {
             ];
             const expectedState: GipfState = new GipfState(expectedBoard, P1Turn, [4, 5], [0, 0]);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });

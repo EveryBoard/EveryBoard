@@ -138,7 +138,7 @@ describe('DvonnRules', () => {
         const state: DvonnState = DvonnRules.get().getInitialState();
         const move: DvonnMove = DvonnMove.from(new Coord(0, 3), new Coord(0, 2)).get();
         const expectedState: DvonnState = new DvonnState(expectedBoard, 1, false);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const stack: DvonnPieceStack = expectedState.getPieceAtXY(0, 2);
         expect(stack.belongsTo(Player.ZERO)).toBeTrue();
     });
@@ -225,7 +225,7 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(3, 1), new Coord(2, 1)).get();
         const expectedState: DvonnState = new DvonnState(expectedBoard, 1, false);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     describe('endgames', () => {

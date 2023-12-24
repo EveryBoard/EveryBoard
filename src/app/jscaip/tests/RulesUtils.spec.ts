@@ -21,7 +21,7 @@ export class RulesUtils {
                                                            state: S,
                                                            move: M,
                                                            expectedState: S,
-                                                           config: MGPOptional<C> = MGPOptional.empty())
+                                                           config: MGPOptional<C>)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state, config);

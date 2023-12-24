@@ -34,7 +34,8 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 [4, 5, 5, 5, 5, 0],
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
-            RulesUtils.expectMoveSuccess(rules, state, entries.simpleMove, expectedState, defaultConfig);
+            const move: MancalaMove = entries.simpleMove;
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should refuse distributing empty space', () => {

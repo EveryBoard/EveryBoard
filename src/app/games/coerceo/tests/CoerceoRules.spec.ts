@@ -158,7 +158,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
             const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should remove emptied tiles', () => {
@@ -189,7 +189,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
             const move: CoerceoMove = movement(new Coord(7, 5), CoerceoStep.DOWN_RIGHT);
             const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 1], [0, 0]);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should capture piece killed by tiles removal', () => {
@@ -220,7 +220,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
             const move: CoerceoMove = movement(new Coord(8, 6), CoerceoStep.DOWN_RIGHT);
             const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 1], [0, 1]);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });
@@ -331,7 +331,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(10, 7)) as CoerceoMove;
             const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });
@@ -364,7 +364,7 @@ describe('CoerceoRules', () => {
         const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
         const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(10, 7)) as CoerceoMove;
         const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     describe('GetBoardValue', () => {

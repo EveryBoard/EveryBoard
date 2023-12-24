@@ -6,7 +6,7 @@ import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
-import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ConnectSixMoveGenerator', () => {
@@ -16,7 +16,7 @@ describe('ConnectSixMoveGenerator', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
 
-    const defaultConfig: MGPOptional<GobanConfig> = defaultGobanConfig;
+    const defaultConfig: MGPOptional<GobanConfig> = ConnectSixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new ConnectSixMoveGenerator();
@@ -26,7 +26,7 @@ describe('ConnectSixMoveGenerator', () => {
         // Given the initial node
         const width: number = defaultConfig.get().width;
         const height: number = defaultConfig.get().height;
-        const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultGobanConfig);
+        const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
         const node: ConnectSixNode = new ConnectSixNode(state);
 
         // When listing the moves

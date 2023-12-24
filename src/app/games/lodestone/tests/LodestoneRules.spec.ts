@@ -120,7 +120,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should remove the lodestone from its previous square', () => {
@@ -161,7 +161,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow choosing freely the side of the lodestone when it is in the hands', () => {
@@ -265,7 +265,7 @@ describe('LodestoneRules', () => {
                                    left: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
                                    right: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
                                });
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should support pulling in a diagonal direction', () => {
@@ -301,7 +301,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should forbid placing more pieces than there have been captures', () => {
@@ -350,7 +350,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should push the opponent pieces when making a push move', () => {
@@ -386,7 +386,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should support pushing in a diagonal direction', () => {
@@ -422,7 +422,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should capture an opponent piece when pushing it over the board', () => {
@@ -464,7 +464,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, pressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should block when arriving on one of the player pieces or on a lodestone (push)', () => {
@@ -506,7 +506,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, allPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should forbid placing a lodestone on a crumbled floor', () => {
@@ -579,7 +579,7 @@ describe('LodestoneRules', () => {
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should crumble the floor when the first pressure plate is full', () => {
@@ -626,7 +626,7 @@ describe('LodestoneRules', () => {
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should crumble the floor when the second pressure plate is full', () => {
@@ -673,7 +673,7 @@ describe('LodestoneRules', () => {
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should accept more pieces than the pressure plate can accept if they can fit on the next one', () => {
@@ -721,7 +721,7 @@ describe('LodestoneRules', () => {
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should forbid placing more pieces on a pressure plate than the max it can afford even after crumbling once', () => {
@@ -795,7 +795,7 @@ describe('LodestoneRules', () => {
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should crumble the floor under a lodestone when needed', () => {
@@ -847,7 +847,7 @@ describe('LodestoneRules', () => {
         };
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, expectedPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should not block piece at the previous lodestone position', () => {
@@ -903,7 +903,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, pressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should not consider pieces fallen when there is no more pressure plate as capture', () => {
@@ -945,7 +945,7 @@ describe('LodestoneRules', () => {
         ]);
         const expectedState: LodestoneState =
             new LodestoneState(expectedBoard, 1, expectedLodestones, noPressurePlates);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should not consider victory if there are pieces left', () => {

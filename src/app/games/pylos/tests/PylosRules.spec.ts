@@ -351,7 +351,7 @@ describe('PylosRules', () => {
         ];
 
         const expectedState: PylosState = new PylosState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
@@ -395,7 +395,7 @@ describe('PylosRules', () => {
             ],
         ];
         const expectedState: PylosState = new PylosState(expectedBoard, 2);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });

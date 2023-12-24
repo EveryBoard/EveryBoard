@@ -55,7 +55,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going up', () => {
@@ -72,7 +72,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 7), new Coord(2, 5)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should move a piece by exactly as many spaces as there are pieces on the same line, horizontally', () => {
@@ -99,7 +99,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 2), new Coord(5, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should move a piece by exactly as many spaces as there are pieces on the same line, diagonally', () => {
@@ -116,7 +116,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(1, 0), new Coord(3, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should move a piece by exactly as many spaces as there are pieces on the same line, diagonally from the bottom row', () => {
@@ -133,7 +133,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(1, 7), new Coord(3, 5)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should move a piece by exactly as many spaces as there are pieces on the same line, variant', () => {
@@ -160,7 +160,7 @@ describe('LinesOfActionRules', () => {
         ];
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(0, 2), new Coord(3, 5)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 2);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should forbid to move a piece by a different number of spaces than the number of pieces on the same line', () => {
@@ -218,7 +218,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(1, 0), new Coord(7, 0)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should capture when landing on an opponent', () => {
@@ -245,7 +245,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 2), new Coord(4, 2)).get();
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should not detect win when there still are multiple groups', () => {
@@ -319,7 +319,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const expectedState: LinesOfActionState = new LinesOfActionState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: LinesOfActionNode = new LinesOfActionNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         expect(LinesOfActionRules.getVictory(expectedState)).toEqual(MGPOptional.of(PlayerOrNone.NONE));

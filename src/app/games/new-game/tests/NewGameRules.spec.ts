@@ -28,7 +28,7 @@ describe('NewGameRules', () => {
 
         // Then it should succeed (or fail)
         const expectedState: NewGameState = new NewGameState(1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should be a draw', () => {

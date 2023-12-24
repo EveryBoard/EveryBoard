@@ -111,7 +111,7 @@ describe('DiaballikRules', () => {
             [_, _, _, _, _, _, _],
             [O, _, O, O, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with two translations of different pieces', () => {
@@ -134,7 +134,7 @@ describe('DiaballikRules', () => {
             [O, O, _, _, _, _, _],
             [_, _, Ȯ, O, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with one translation and one pass', () => {
@@ -157,7 +157,7 @@ describe('DiaballikRules', () => {
             [O, _, _, _, _, _, _],
             [_, O, Ȯ, O, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with no translation and one pass', () => {
@@ -180,7 +180,7 @@ describe('DiaballikRules', () => {
             [_, _, _, _, _, _, _],
             [O, O, Ȯ, O, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with two translations and no pass', () => {
@@ -203,7 +203,7 @@ describe('DiaballikRules', () => {
             [O, O, _, _, _, _, _],
             [_, _, O, Ȯ, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with one translation and no pass', () => {
@@ -223,7 +223,7 @@ describe('DiaballikRules', () => {
             [_, O, _, _, _, _, _],
             [O, _, O, Ȯ, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow passing between moves', () => {
@@ -246,7 +246,7 @@ describe('DiaballikRules', () => {
             [_, _, Ȯ, O, _, _, _],
             [O, O, _, _, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should forbid moving with the ball', () => {

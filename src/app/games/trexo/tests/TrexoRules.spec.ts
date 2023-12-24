@@ -56,7 +56,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse to drop piece on top of only one other piece', () => {
@@ -123,7 +123,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 3);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse dropping piece when both landing square are not on the same level', () => {
@@ -181,7 +181,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
         const node: TrexoNode = new TrexoNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
@@ -219,7 +219,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 4);
         const node: TrexoNode = new TrexoNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -255,7 +255,7 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
         const node: TrexoNode = new TrexoNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);

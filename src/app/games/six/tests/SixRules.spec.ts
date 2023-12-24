@@ -95,7 +95,7 @@ describe('SixRules', () => {
                 [O, X],
             ];
             const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 1, new Vector(-1, 0));
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid dropping coord to be not connected to any piece', () => {
@@ -214,7 +214,7 @@ describe('SixRules', () => {
                 [_, X, O, _],
             ];
             const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 43);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should refuse deconnection of same sized group when no group is mentionned in move', () => {
@@ -325,7 +325,7 @@ describe('SixRules', () => {
                 ];
                 const expectedState: SixState =
                     SixState.ofRepresentation(expectedBoard, 11);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
             });
@@ -355,7 +355,7 @@ describe('SixRules', () => {
                     [O, O, _, _, _, _],
                 ];
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 11);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
             });
@@ -385,7 +385,7 @@ describe('SixRules', () => {
                     [_, _, O, X, _],
                 ];
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 10);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
@@ -413,7 +413,7 @@ describe('SixRules', () => {
                     [O, O, _, X, _],
                 ];
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 12);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
@@ -441,7 +441,7 @@ describe('SixRules', () => {
                     [X, O, _, _, _],
                 ];
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 12);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
@@ -469,7 +469,7 @@ describe('SixRules', () => {
                     [_, _, O, X, _],
                 ];
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 10);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
@@ -501,7 +501,7 @@ describe('SixRules', () => {
                     [_, _, X, _],
                 ];
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 44);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
@@ -529,7 +529,7 @@ describe('SixRules', () => {
                     [_, _, O, _],
                 ];
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 43);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
             });
@@ -552,7 +552,7 @@ describe('SixRules', () => {
                     [O, O, O, O, O],
                 ];
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 41, new Vector(-1, 1));
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
             });
@@ -576,7 +576,7 @@ describe('SixRules', () => {
                     [X, _, _, _],
                 ];
                 const expectedState: SixState = SixState.ofRepresentation(expectedBoard, 43, new Vector(0, 1));
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: SixNode = new SixNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });

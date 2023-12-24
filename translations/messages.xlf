@@ -2734,6 +2734,15 @@
       <trans-unit id="6496295523512347479" datatype="html">
         <source>Number of bonus mountains</source>
       </trans-unit>
+      <trans-unit id="5290831626966707862" datatype="html">
+        <source>Cannot rotate piece outside the board: <x id="PH" equiv-text="move.toString()"/></source>
+      </trans-unit>
+      <trans-unit id="3925814099582230333" datatype="html">
+        <source>SiamMove should end or start on the board: <x id="PH" equiv-text="move.toString()"/></source>
+      </trans-unit>
+      <trans-unit id="5519545750670700019" datatype="html">
+        <source>SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: <x id="PH" equiv-text="move.toString()"/></source>
+      </trans-unit>
       <trans-unit id="3753696680821191929" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.
