@@ -3859,51 +3859,21 @@
             &lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
+      <trans-unit id="1043275525655591688" datatype="html">
+        <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions: &lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
+        <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau. Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau. Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :&lt;ol&gt;&lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;&lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;&lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;&lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;&lt;/ol&gt;</target>
+      </trans-unit>
       <trans-unit id="4040000701091542987" datatype="html">
         <source>Inserting a piece</source>
         <target>Insérer une pièce</target>
       </trans-unit>
-      <trans-unit id="1688278147418935793" datatype="html">
-        <source>Each player has 5 pieces in total.
-        As long as you have remaining pieces next to the board, you can insert new pieces. To do so:
-        &lt;ol&gt;
-            &lt;li&gt;Click on one of your pieces from your reserve, next to board.&lt;/li&gt;
-            &lt;li&gt;Click on one of the highlighted squares to select a landing for your piece.&lt;/li&gt;
-            &lt;li&gt;Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        You&apos;re playing Dark, insert a piece on the board.</source>
-        <target>Chaque joueur a en tout 5 pièces.
-        Tant qu&apos;il vous reste des pièces de réserves sur le côté du plateau, vous pouvez en insérer une. Pour ce faire :
-        &lt;ol&gt;
-            &lt;li&gt;Sélectionnez une pièces depuis votre réserve, située à côté du plateau.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur une des cases mises en avant pour sélectionner une case de destination pour votre pièce.&lt;/li&gt;
-            &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        Vous jouez Flair, insérez une pièce sur le plateau.</target>
+      <trans-unit id="4877870999512279099" datatype="html">
+        <source>Each player has 5 pieces in total. As long as you have remaining pieces next to the board, you can insert new pieces. To do so:&lt;ol&gt;&lt;li&gt;Click on one of your pieces from your reserve, next to board.&lt;/li&gt;&lt;li&gt;Click on one of the highlighted squares to select a landing for your piece.&lt;/li&gt;&lt;li&gt;Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, insert a piece on the board.</source>
+        <target>Chaque joueur a en tout 5 pièces. Tant qu&apos;il vous reste des pièces de réserves sur le côté du plateau, vous pouvez en insérer une. Pour ce faire :&lt;ol&gt;&lt;li&gt;Sélectionnez une pièces depuis votre réserve, située à côté du plateau.&lt;/li&gt;&lt;li&gt;Cliquez sur une des cases mises en avant pour sélectionner une case de destination pour votre pièce.&lt;/li&gt;&lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;Vous jouez Foncé, insérez une pièce sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="7782687335751701597" datatype="html">
-        <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;.
-        A move is made from a piece&apos;s square to an empty neighboring square, horizontally or vertically.
-        You can also move a piece out of the board.
-        To move a piece:
-        &lt;ol&gt;
-            &lt;li&gt;Click on it.&lt;/li&gt;
-            &lt;li&gt;Click on the square on which you want the piece to move.
-                You can also click a second time on your piece to change its orientation without moving it.&lt;/li&gt;
-            &lt;li&gt;Select the orientation of your piece by clicking one one of the arrows that appear on top of the board.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        You&apos;re playing Dark. Try to move your piece that is already on the board one square upwards and to orient it to the left.</source>
-        <target>Nous distinguerons ici &quot;déplacer&quot; et &quot;pousser&quot;.
-        Un déplacement de pièce se fait de sa case de départ à une case vide voisine horizontalement ou verticalement.
-        Il est également possible de faire sortir une pièce du plateau.
-        Pour déplacer une pièce :
-        &lt;ol&gt;
-            &lt;li&gt;Cliquez dessus.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur la destination voulue de la pièce.
-              Vous pouvez aussi cliquer une seconde fois sur votre pièce pour changer son orientation sans la déplacer.&lt;/li&gt;
-            &lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        Vous jouez Foncé. Essayez de déplacer votre pièce se trouvant déjà sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers la gauche.</target>
+      <trans-unit id="4137959840028416520" datatype="html">
+        <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;. A move is made from a piece&apos;s square to an empty neighboring square, horizontally or vertically. You can also move a piece out of the board. To move a piece:&lt;ol&gt;&lt;li&gt;Click on it.&lt;/li&gt;&lt;li&gt;Click on the square on which you want the piece to move. You can also click a second time on your piece to change its orientation without moving it.&lt;/li&gt;&lt;li&gt;Select the orientation of your piece by clicking one one of the arrows that appear on top of the board.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark. Try to move your piece that is already on the board one square upwards and to orient it to the left.</source>
+        <target>Nous distinguerons ici &quot;déplacer&quot; et &quot;pousser&quot;.Un déplacement de pièce se fait de sa case de départ à une case vide voisine horizontalement ou verticalement. Il est également possible de faire sortir une pièce du plateau. Pour déplacer une pièce :&lt;ol&gt;&lt;li&gt;Cliquez dessus.&lt;/li&gt;&lt;li&gt;Cliquez sur la destination voulue de la pièce. Vous pouvez aussi cliquer une seconde fois sur votre pièce pour changer son orientation sans la déplacer.&lt;/li&gt;&lt;li&gt;Sélectionnez une orientation pour votre pièce en cliquant sur une des flèches apparues sur le plateau.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;Vous jouez Foncé. Essayez de déplacer votre pièce se trouvant déjà sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers la gauche.</target>
       </trans-unit>
       <trans-unit id="1302903286060317619" datatype="html">
         <source>Congratulations, you made a side-slip!</source>
@@ -3913,11 +3883,9 @@
         <source>Moving a piece out of the board</source>
         <target>Sortir une pièce</target>
       </trans-unit>
-      <trans-unit id="5828269978064614633" datatype="html">
-        <source>To move a piece out of the board, you do not have to pick an orientation after the move.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, get that piece out of the board!</source>
-        <target>Sortir une pièce du plateau est plus simple, préciser son orientation d&apos;arrivée n&apos;est pas nécessaire.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, sortez cette pièce du plateau !</target>
+      <trans-unit id="5868523312663011403" datatype="html">
+        <source>To move a piece out of the board, you do not have to pick an orientation after the move.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark, get that piece out of the board!</source>
+        <target>Sortir une pièce du plateau est plus simple, préciser son orientation d&apos;arrivée n&apos;est pas nécessaire.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, sortez cette pièce du plateau !</target>
       </trans-unit>
       <trans-unit id="423861981305705638" datatype="html">
         <source>Congratulations, even if in this context it was not a useful move.</source>
@@ -3931,59 +3899,25 @@
         <source>Pushing (1/2)</source>
         <target>Pousser (1/2)</target>
       </trans-unit>
-      <trans-unit id="4878801304019441011" datatype="html">
-        <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
-        In order to push player pieces, the following conditions must hold:
-        &lt;ol&gt;
-            &lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;
-            &lt;li&gt;Along the line that you are pushing, the number of pieces (yours or your opponent&apos;s) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.&lt;/li&gt;
-        &lt;/ol&gt;
-        Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction.
-        On the second row, you can push because there are two pieces against one.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
-        <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
-        Pour pousser des pièces d'un joueur, plusieurs critères doivent être vérifiés :
-        &lt;ol&gt;
-            &lt;li&gt;Votre pièce doit déjà être orientée dans le sens de la poussée.&lt;/li&gt;
-            &lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face.&lt;/li&gt;
-        &lt;/ol&gt;
-        Regardez attentivement le plateau. Sur la première ligne, vous ne pouvez pas pousser car il y a exactement une pièce dans la direction opposée.
-        Sur la deuxième ligne, vous pouvez pousser car il y a deux pièces contre une.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé. Verticalement, vous pouvez pousser avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
+      <trans-unit id="1863585492531844895" datatype="html">
+        <source>When the landing square of your move is occupied, we use the term &quot;push&quot;. In order to push player pieces, the following conditions must hold:&lt;ol&gt;&lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;&lt;li&gt;Along the line that you are pushing, the number of pieces (yours or your opponent&apos;s) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.&lt;/li&gt;&lt;/ol&gt;Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction. On the second row, you can push because there are two pieces against one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
+        <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;. Pour pousser des pièces d'un joueur, plusieurs critères doivent être vérifiés :&lt;ol&gt;&lt;li&gt;Votre pièce doit déjà être orientée dans le sens de la poussée.&lt;/li&gt;&lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face.&lt;/li&gt;&lt;/ol&gt;Regardez attentivement le plateau. Sur la première ligne, vous ne pouvez pas pousser car il y a exactement une pièce dans la direction opposée. Sur la deuxième ligne, vous pouvez pousser car il y a deux pièces contre une.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Verticalement, vous pouvez pousser avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
       </trans-unit>
       <trans-unit id="6284799875777459303" datatype="html">
         <source>Pushing (2/2)</source>
         <target>Pousser (2/2)</target>
       </trans-unit>
-      <trans-unit id="2275010489466223556" datatype="html">
-        <source>To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher.
-        In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains.
-        On the following board, as Dark, you can push the mountain on the first row.
-        On the second and third row, because of the resisting forces, you cannot push.
-        On the fourth row, you can push as there is one more pusher than resistant pieces.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, push on the fourth row it.</source>
-        <target>Pour pousser une montane, vous avez besoin d'un pièce pousseuse par montagne. Chaque résistant (pièce dans la direction opposée) annule la force d'une pousseuse.
-        En résumé, s'il n'y a pas de montagne vous devez avoir strictement plus de pousseurs que de résistants. S'il y a une montagne, vous devez avoir autant de pousseurs qu'il y a de résistants et montagnes.
-        Sur le plateau, vous pouvez, en tant que Foncé, pousser la montagne de la première ligne.
-        Sur la deuxième et troisième, vous ne pouvez pas pousser à cause des pièces et montagnes résistantes.
-        Sur la quatrième ligne, vous pouvez pousser car il y a une pousseuse de plus que de pièces résistantes.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, poussez sur la quatrième ligne.</target>
+      <trans-unit id="1762973675800865905" datatype="html">
+        <source>To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher. In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains. On the following board, as Dark, you can push the mountain on the first row. On the second and third row, because of the resisting forces, you cannot push. On the fourth row, you can push as there is one more pusher than resistant pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, push on the fourth row it.</source>
+        <target>Pour pousser une montane, vous avez besoin d'un pièce pousseuse par montagne. Chaque résistant (pièce dans la direction opposée) annule la force d'une pousseuse. En résumé, s'il n'y a pas de montagne vous devez avoir strictement plus de pousseurs que de résistants. S'il y a une montagne, vous devez avoir autant de pousseurs qu'il y a de résistants et montagnes. Sur le plateau, vous pouvez, en tant que Foncé, pousser la montagne de la première ligne. Sur la deuxième et troisième, vous ne pouvez pas pousser à cause des pièces et montagnes résistantes. Sur la quatrième ligne, vous pouvez pousser car il y a une pousseuse de plus que de pièces résistantes.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, poussez sur la quatrième ligne.</target>
       </trans-unit>
       <trans-unit id="709861006710076010" datatype="html">
         <source>Congratulations! Note that this move made you lose the game, you will see why in the next step.</source>
         <target>Bravo ! Notez que ce mouvement vous fait perdre, comme vous allez le voir dans l'étape suivante.</target>
       </trans-unit>
-      <trans-unit id="335102281625337037" datatype="html">
-        <source>The game ends when a mountain is pushed out of the board.
-        If you pushed it and nobody is in front of you, you&apos;re the winner.
-        However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
-        However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.&lt;br/&gt;&lt;br/&gt;
-        Here, playing Dark, you can push a mountain off the board and either win, or lose. Choose correctly!</source>
-        <target>Pour rappel, la partie se termine quand une montagne est poussée hors du plateau.
-        Si vous l&apos;avez poussé et que personne ne vous barre la route, vous êtes le vainqueur.
-        Cependant, si vous poussez un adversaire orienté dans la même direction que vous, il sera considéré vainqueur.
-        En revanche, si un adversaire est plus proche de la montagne, mais mal orienté, la victoire sera vôtre.&lt;br/&gt;&lt;br/&gt;
-        Ici, en jouant Foncé, vous pouvez pousser une montagne hors du plateau et soit gagner, soit perdre. Choisissez consciencieusement !</target>
+      <trans-unit id="5917097999963707548" datatype="html">
+        <source>The game ends when a mountain is pushed out of the board. If you pushed it and nobody is in front of you, you&apos;re the winner. However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain. However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.&lt;br/&gt;&lt;br/&gt;Here, playing Dark, you can push a mountain off the board and either win, or lose. Choose correctly!</source>
+        <target>Pour rappel, la partie se termine quand une montagne est poussée hors du plateau. Si vous l&apos;avez poussé et que personne ne vous barre la route, vous êtes le vainqueur. Cependant, si vous poussez un adversaire orienté dans la même direction que vous, il sera considéré vainqueur. En revanche, si un adversaire est plus proche de la montagne, mais mal orienté, la victoire sera vôtre.&lt;br/&gt;&lt;br/&gt;Ici, en jouant Foncé, vous pouvez pousser une montagne hors du plateau et soit gagner, soit perdre. Choisissez consciencieusement !</target>
       </trans-unit>
       <trans-unit id="8309748811457759789" datatype="html">
         <source>Failed, you lost.</source>

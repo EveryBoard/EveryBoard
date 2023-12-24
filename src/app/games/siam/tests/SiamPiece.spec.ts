@@ -39,16 +39,16 @@ describe('SiamPiece', () => {
     it('should consider moutains as belonging to no player and pieces to their respective players', () => {
         expect(SiamPiece.MOUNTAIN.belongsTo(Player.ONE)).toBeFalse();
         expect(SiamPiece.MOUNTAIN.belongsTo(Player.ZERO)).toBeFalse();
-        expect(SiamPiece.DARK_DOWN.belongsTo(Player.ZERO)).toBeFalse();
-        expect(SiamPiece.DARK_DOWN.belongsTo(Player.ONE)).toBeTrue();
-        expect(SiamPiece.LIGHT_RIGHT.belongsTo(Player.ZERO)).toBeTrue();
-        expect(SiamPiece.LIGHT_RIGHT.belongsTo(Player.ONE)).toBeFalse();
+        expect(SiamPiece.DARK_DOWN.belongsTo(Player.ZERO)).toBeTrue();
+        expect(SiamPiece.DARK_DOWN.belongsTo(Player.ONE)).toBeFalse();
+        expect(SiamPiece.LIGHT_RIGHT.belongsTo(Player.ZERO)).toBeFalse();
+        expect(SiamPiece.LIGHT_RIGHT.belongsTo(Player.ONE)).toBeTrue();
     });
 
     it('should give the owner of each piece with getOwner', () => {
         expect(SiamPiece.MOUNTAIN.getOwner()).toBe(PlayerOrNone.NONE);
-        expect(SiamPiece.DARK_DOWN.getOwner()).toBe(Player.ONE);
-        expect(SiamPiece.LIGHT_RIGHT.getOwner()).toBe(Player.ZERO);
+        expect(SiamPiece.DARK_DOWN.getOwner()).toBe(Player.ZERO);
+        expect(SiamPiece.LIGHT_RIGHT.getOwner()).toBe(Player.ONE);
     });
 
 });

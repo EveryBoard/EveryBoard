@@ -46,7 +46,7 @@ describe('SiamMoveGenerator', () => {
             [_, _, _, U, _],
             [_, _, _, U, _],
         ];
-        const state: SiamState = new SiamState(board, 0);
+        const state: SiamState = new SiamState(board, 1);
         const node: SiamNode = new SiamNode(state);
 
         // When listing the moves
@@ -84,7 +84,7 @@ describe('SiamMoveGenerator', () => {
             [d, _, _, U, _],
             [_, _, _, M, _],
         ];
-        const state: SiamState = new SiamState(board, 1);
+        const state: SiamState = new SiamState(board, 2);
         const node: SiamNode = new SiamNode(state);
 
         // When listing the moves

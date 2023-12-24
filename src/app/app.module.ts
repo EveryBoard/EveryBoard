@@ -5,14 +5,20 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Route } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import * as Firebase from '@angular/fire/app';
+import * as Firestore from '@angular/fire/firestore';
+import * as Auth from '@angular/fire/auth';
 import localeFr from '@angular/common/locales/fr';
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { ChatService } from './services/ChatService';
 import { UserService } from './services/UserService';
 import { ConnectedUserService } from './services/ConnectedUserService';
 import { GameService } from './services/GameService';
 import { ConfigRoomService } from './services/ConfigRoomService';
+import { GameEventService } from './services/GameEventService';
+import { ThemeService } from './services/ThemeService';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
@@ -39,7 +45,12 @@ import { OnlineGameSelectionComponent }
     from './components/normal-component/online-game-selection/online-game-selection.component';
 import { TutorialGameCreationComponent }
     from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
+import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
+import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
+import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
+import { SettingsComponent } from './components/normal-component/settings/settings.component';
+import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
@@ -71,7 +82,7 @@ import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LascaComponent } from './games/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
-
+import { LodestoneLodestoneComponent } from './games/lodestone/lodestone-lodestone.component';
 import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
 import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
 import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
@@ -109,23 +120,12 @@ import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
 
-import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
-import { SettingsComponent } from './components/normal-component/settings/settings.component';
-import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
-import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
-
-import * as Firebase from '@angular/fire/app';
-import * as Firestore from '@angular/fire/firestore';
-import * as Auth from '@angular/fire/auth';
-import { ThemeService } from './services/ThemeService';
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
-import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
-import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
-import { GameEventService } from './services/GameEventService';
+
+import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
+import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 
 registerLocaleData(localeFr);
 
@@ -228,7 +228,7 @@ export class FirebaseProviders {
         KamisadoComponent,
         LascaComponent,
         LinesOfActionComponent,
-        LodestoneComponent,
+        LodestoneComponent, LodestoneLodestoneComponent,
         MartianChessComponent, MartianChessQueenComponent, MartianChessDroneComponent, MartianChessPawnComponent,
         P4Component,
         PentagoComponent,
@@ -250,7 +250,6 @@ export class FirebaseProviders {
         AutofocusDirective,
         ToggleVisibilityDirective,
         RulesConfigurationComponent,
-        SiamOrientationArrowComponent,
     ],
     imports: [
         FirebaseProviders.app(),

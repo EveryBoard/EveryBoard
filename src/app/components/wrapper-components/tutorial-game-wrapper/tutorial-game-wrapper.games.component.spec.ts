@@ -102,7 +102,9 @@ describe('TutorialGameWrapperComponent (games)', () => {
             }));
         }
     });
+
     describe('Tutorials', () => {
+
         it('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
@@ -332,6 +334,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                             rules.applyLegalMove(move, step.state, config, moveResult.get());
                         const validation: MGPValidation = stepExpectation[3];
                         expect(Utils.getNonNullable(step.predicate)(move, step.state, resultingState))
+                            .withContext(move.toString())
                             .toEqual(validation);
                     } else {
                         const context: string = 'Move should be legal to reach predicate but failed in "' + step.title+ '" because';
@@ -342,6 +345,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 }
             }
         }));
+
         for (const gameInfo of GameInfo.ALL_GAMES()) {
             it('should make sure all solutionMove are legal for ' + gameInfo.name, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
@@ -362,7 +366,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                                         rules.applyLegalMove(solution, step.state, config, moveResult.get());
                                     const predicate: TutorialPredicate = Utils.getNonNullable(step.predicate);
                                     const result: MGPValidation = predicate(solution, step.state, resultingState);
-                                    expect(result).toEqual(MGPValidation.SUCCESS);
+                                    expect(result).withContext(step.title).toEqual(MGPValidation.SUCCESS);
                                 }
                             } else {
                                 const context: string = 'Solution move should be legal but failed in "' + gameInfo.name + ': '+ step.title + '"';
@@ -374,4 +378,5 @@ describe('TutorialGameWrapperComponent (games)', () => {
             }));
         }
     });
+
 });

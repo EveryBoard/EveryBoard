@@ -90,7 +90,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, u],
+            [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
         await testUtils.setupState(state);
@@ -103,7 +103,7 @@ describe('SiamComponent', () => {
     it('should allow rotation', fakeAsync(async() => {
         // Given a state with one piece
         const board: Table<SiamPiece> = [
-            [U, _, _, _, _],
+            [u, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
@@ -125,7 +125,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
         await testUtils.setupState(state);
@@ -143,7 +143,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
         await testUtils.setupState(state);
@@ -165,7 +165,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
         await testUtils.setupState(state);
@@ -219,7 +219,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
-            [_, _, _, U, _],
+            [_, _, _, u, _],
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
@@ -229,7 +229,7 @@ describe('SiamComponent', () => {
         // When the player clicks on the piece on the board
         await testUtils.expectClickSuccess('#square_3_3');
 
-        // Then a new move should be in creation and the player can finish the move
+        // Then a new move should be in creation and the player should be able to finish the move
         await testUtils.expectClickSuccess('#square_3_4');
         const move: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await testUtils.expectMoveSuccess('#orientation_DOWN', move);
@@ -242,7 +242,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
         await testUtils.setupState(state);
@@ -263,7 +263,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
         await testUtils.setupState(state);
@@ -281,7 +281,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
         await testUtils.setupState(state);
