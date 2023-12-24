@@ -126,7 +126,7 @@ describe('DemoCardComponent', () => {
         spyOn(Utils, 'assert').and.callFake(() => {});
         // Given any demo node
         // When calling onLegalUserMove
-        const reason: string = 'this should not be usefull, right ?';
+        const reason: string = 'DemoCardWrapper should not call applyLegalMove, has it does no move';
         await testUtils.getComponent().onLegalUserMove(null as unknown as P4Move);
         // Then it should throw
         expect(Utils.assert).toHaveBeenCalledOnceWith(false, reason);

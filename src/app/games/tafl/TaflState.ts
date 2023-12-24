@@ -11,7 +11,7 @@ export class TaflState extends GameStateWithTable<TaflPawn> {
     }
 
     public getCentralThrone(): Coord {
-        const center: number = (this.getHeight() - 1) / 2;
+        const center: number = (this.getSize() - 1) / 2;
         return new Coord(center, center);
     }
 
