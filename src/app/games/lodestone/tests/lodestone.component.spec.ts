@@ -102,7 +102,7 @@ describe('LodestoneComponent', () => {
                 { key: Player.ZERO, value: new Coord(4, 4) },
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
             testUtils.expectElementToHaveClass('#plateSquare_top_0_0', 'moved-fill'); // So moved are shown before first click
             testUtils.expectElementToHaveClass('#square_4_7 > .lodestone_square', 'captured-fill'); // So captures are shown before first click
 
@@ -151,7 +151,7 @@ describe('LodestoneComponent', () => {
                 { key: Player.ZERO, value: new Coord(4, 4) },
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
             testUtils.expectElementToHaveClass('#plateSquare_top_0_0', 'moved-fill'); // So moved are shown before first click
             testUtils.expectElementToHaveClass('#square_4_7 > .lodestone_square', 'captured-fill'); // So captures are shown before first click
 
@@ -279,7 +279,7 @@ describe('LodestoneComponent', () => {
                 { key: Player.ZERO, value: new Coord(4, 4) },
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal_PLAYER_ONE');
             testUtils.expectElementNotToHaveClass('#plateSquare_top_0_0', 'moved-fill');
             testUtils.expectElementNotToHaveClass('#square_4_7 > .lodestone_square ', 'captured-fill');
@@ -330,7 +330,7 @@ describe('LodestoneComponent', () => {
                 { key: Player.ZERO, value: new Coord(4, 4) },
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
             await testUtils.expectClickSuccess('#square_7_7');
             testUtils.expectElementNotToHaveClass('#plateSquare_top_0_0', 'moved-fill');
             testUtils.expectElementNotToHaveClass('#square_4_7 > .lodestone_square ', 'captured-fill');

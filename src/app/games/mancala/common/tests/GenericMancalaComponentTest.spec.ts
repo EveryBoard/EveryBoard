@@ -202,10 +202,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
         it('should allow two move in a row', fakeAsync(async() => {
             // Given a board where a first move has been done
-            await mancalaTestUtils.testUtils.setupState(entries.distribution.state,
-                                                        undefined,
-                                                        undefined,
-                                                        defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(entries.distribution.state);
             let move: MancalaMove = entries.distribution.move;
             let suffix: string = mancalaTestUtils.getSuffix(entries.distribution);
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move);
@@ -322,10 +319,8 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
         it('should display filled-then-captured capture', fakeAsync(async() => {
             // Given a board where some empty space could filled then captured
-            await mancalaTestUtils.testUtils.setupState(entries.fillThenCapture.state,
-                                                        undefined,
-                                                        undefined,
-                                                        defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(entries.fillThenCapture.state);
+
             // When doing the capturing move
             const suffix: string = mancalaTestUtils.getSuffix(entries.fillThenCapture);
             await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, entries.fillThenCapture.move);

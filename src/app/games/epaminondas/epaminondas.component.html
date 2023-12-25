@@ -4,11 +4,12 @@
      [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let c of line; index as x">
+        <g *ngFor="let c of line; index as x"
+           [attr.transform]="getTranslationXY(x, y)">
             <rect id="click_{{ x }}_{{ y }}"
                   (click)="onClick(x, y)"
-                  [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
-                  [attr.y]="(SPACE_SIZE * y) + STROKE_WIDTH"
+                  x="0"
+                  y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
                   [ngClass]="getRectClasses(x, y)"
@@ -16,8 +17,8 @@
             />
             <circle *ngIf="board[y][x] !== NONE"
                     (click)="onClick(x, y)"
-                    [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
-                    [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                    [attr.cx]="SPACE_SIZE / 2"
+                    [attr.cy]="SPACE_SIZE / 2"
                     [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                     [ngClass]="getPieceClasses(x, y)"
                     class="base"
@@ -26,8 +27,8 @@
     </g>
     <g *ngFor="let coord of getHighlightedCoords()">
         <rect (click)="onClick(coord.x, coord.y)"
-              [attr.x] = "(SPACE_SIZE * coord.x) + STROKE_WIDTH"
-              [attr.y] = "(SPACE_SIZE * coord.y) + STROKE_WIDTH"
+              [attr.x] = "SPACE_SIZE * coord.x"
+              [attr.y] = "SPACE_SIZE * coord.y"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
               class="no-fill mid-stroke clickable-stroke"

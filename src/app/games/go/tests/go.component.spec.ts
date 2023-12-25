@@ -84,7 +84,7 @@ describe('GoComponent', () => {
             const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // When displaying it
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
 
             // Then it should have hoshi in (3, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
@@ -104,7 +104,7 @@ describe('GoComponent', () => {
             const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // When displaying it
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
 
             // Then it should have hoshi in (2, 2) and (cx, 2) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi_2_2'); // Left Up

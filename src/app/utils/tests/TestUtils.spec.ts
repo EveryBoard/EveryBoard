@@ -358,14 +358,13 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     }
 
     public async setupState(state: GameState,
-                            previousState?: GameState,
-                            previousMove?: Move,
-                            config: MGPOptional<RulesConfig> = MGPOptional.empty())
+                            params: { previousState?: GameState,
+                                      previousMove?: Move,
+                                      config?: MGPOptional<RulesConfig>
+                            } = {})
     : Promise<void>
     {
-        if (config.isAbsent()) {
-            config = this.gameComponent.rules.getDefaultRulesConfig();
-        }
+        const config: MGPOptional<RulesConfig> = this.getConfigFrom(params.config);
         if (config.isPresent()) {
             const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
             wrapper.updateConfig(config);
@@ -375,15 +374,23 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }
         this.gameComponent.node = new GameNode(
             state,
-            MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
+            MGPOptional.ofNullable(params.previousState).map((previousState: GameState) =>
                 new GameNode(previousState)),
-            MGPOptional.ofNullable(previousMove),
+            MGPOptional.ofNullable(params.previousMove),
         );
         await this.gameComponent.updateBoard(false);
-        if (previousMove !== undefined) {
-            await this.gameComponent.showLastMove(previousMove, config);
+        if (params.previousMove !== undefined) {
+            await this.gameComponent.showLastMove(params.previousMove, config);
         }
         this.forceChangeDetection();
+    }
+
+    private getConfigFrom(config?: MGPOptional<RulesConfig>): MGPOptional<RulesConfig> {
+        if (config === undefined) {
+            return this.gameComponent.rules.getDefaultRulesConfig();
+        } else {
+            return config;
+        }
     }
 
     public getWrapper(): GameWrapper<P> {

@@ -84,7 +84,7 @@ describe('AwaleComponent', () => {
                 passByPlayerStore: true,
             });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
 
             // When doing simple distribution ending in store
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
@@ -101,7 +101,7 @@ describe('AwaleComponent', () => {
                 mustContinueDistributionAfterStore: true,
             });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
             await testUtils.expectClickSuccess('#click_3_1');
             tick(1400);
 

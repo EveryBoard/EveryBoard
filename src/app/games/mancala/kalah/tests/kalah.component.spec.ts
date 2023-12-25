@@ -280,8 +280,8 @@ describe('KalahComponent', () => {
                 [0, 0, 1, 0, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 5, [5, 0]);
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
-            await mancalaTestUtils.testUtils.setupState(state, previousState, move);
+            const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            await mancalaTestUtils.testUtils.setupState(state, { previousState, previousMove });
 
             // When starting a multiple-capture move
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(2, 0));

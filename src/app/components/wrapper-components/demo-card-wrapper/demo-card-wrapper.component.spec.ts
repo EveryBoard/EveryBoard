@@ -24,8 +24,9 @@ describe('DemoCardComponent', () => {
 
     const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
-    function loadNode(nodeInfo: DemoNodeInfo): void {
+    async function loadNode(nodeInfo: DemoNodeInfo): Promise<void> {
         testUtils.getComponent().demoNodeInfo = nodeInfo;
+        await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
         testUtils.detectChanges();
         tick(1); // Need at least 1ms because of the setTimeout in ngAfterViewInit
     }
@@ -39,7 +40,7 @@ describe('DemoCardComponent', () => {
         const board: Table<PlayerOrNone> = P4Rules.get().getInitialState(defaultConfig).board; // dummy board
 
         // When displaying it for a given game
-        loadNode({
+        await loadNode({
             name: 'P4',
             // Current player is player 1
             node: new P4Node(new P4State(board, 1)),
@@ -59,7 +60,7 @@ describe('DemoCardComponent', () => {
     it('should simulate clicks', fakeAsync(async() => {
         // Given a demo component
         // When displaying it for a game that has intermediary clicks
-        loadNode({
+        await loadNode({
             name: 'Lodestone',
             node: new LodestoneNode(LodestoneRules.get().getInitialState()),
             click: MGPOptional.of('#lodestone_push_orthogonal_PLAYER_ZERO'),
@@ -70,7 +71,7 @@ describe('DemoCardComponent', () => {
 
     it('should not allow moves', fakeAsync(async() => {
         // Given a demo component displayed for a game
-        loadNode({
+        await loadNode({
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
@@ -100,7 +101,7 @@ describe('DemoCardComponent', () => {
 
     it('should reload node when inputs are updated by parents', fakeAsync(async() => {
         // Given a component already initialized with one given set of infos
-        loadNode({
+        await loadNode({
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
@@ -110,7 +111,7 @@ describe('DemoCardComponent', () => {
         // When loading another component, which triggers ngOnChanges
         const boardWithPiece: Table<PlayerOrNone> = TableUtils.create(7, 6, PlayerOrNone.ZERO);
         const stateWithPieces: P4State = new P4State(boardWithPiece, 42);
-        loadNode({
+        await loadNode({
             name: 'P4',
             node: new GameNode(stateWithPieces),
             click: MGPOptional.empty(),
@@ -138,7 +139,7 @@ describe('DemoCardComponent', () => {
             const defaultRulesConfig: MGPOptional<RulesConfig> = MGPOptional.of({
                 mais_quelles_belles_chaussettes: 42,
             });
-            loadNode({
+            await loadNode({
                 name: 'P4',
                 node: new P4Node(P4Rules.get().getInitialState(defaultConfig)),
                 click: MGPOptional.empty(),
