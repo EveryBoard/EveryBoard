@@ -203,7 +203,7 @@ def can_play_local_2_players(driver):
     click_menu_button(driver, "#playOffline", "#playLocally")
     select(driver, "#gameType", "Four in a Row")
     click_button(driver, "#launchGame")
-    use_default_config()
+    use_default_config(driver)
 
     # Stupid game between player 0 and 1, where 0 wins
     click_button(driver, "#click_3 > rect")
@@ -231,7 +231,7 @@ def can_play_local_vs_ai(driver):
     click_menu_button(driver, "#playOffline", "#playLocally")
     select(driver, "#gameType", "Four in a Row")
     click_button(driver, "#launchGame")
-    use_default_config()
+    use_default_config(driver)
 
     # Select the AI as second player
     select(driver, "#playerOneSelect", "Minimax")
