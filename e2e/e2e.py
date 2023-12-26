@@ -121,6 +121,15 @@ def login(driver, email, password):
     # Log in
     click_button(driver, "#loginButton")
 
+def use_default_config(driver):
+    try:
+        # Click on "accept config" for configurable games
+        accept_config_button = driver.find_element(By.ID, "startGameWithConfig")
+        accept_config_button.click()
+    except:
+        # Games that do not have startGameWithConfig, not configuirable so we already use the default config
+        pass
+
 def scenario(kind):
     def decorator(func):
         scenarios[kind] = [func] + scenarios[kind]
@@ -194,6 +203,7 @@ def can_play_local_2_players(driver):
     click_menu_button(driver, "#playOffline", "#playLocally")
     select(driver, "#gameType", "Four in a Row")
     click_button(driver, "#launchGame")
+    use_default_config()
 
     # Stupid game between player 0 and 1, where 0 wins
     click_button(driver, "#click_3 > rect")
@@ -221,6 +231,7 @@ def can_play_local_vs_ai(driver):
     click_menu_button(driver, "#playOffline", "#playLocally")
     select(driver, "#gameType", "Four in a Row")
     click_button(driver, "#launchGame")
+    use_default_config()
 
     # Select the AI as second player
     select(driver, "#playerOneSelect", "Minimax")
