@@ -6,12 +6,12 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { HivePiece } from '../HivePiece';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('HiveHeuristic', () => {
 
     let heuristic: HiveHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = HiveRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = HiveRules.get().getDefaultRulesConfig();
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
     const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');

@@ -23,7 +23,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
 {
     public static readonly TIMEOUT_BETWEEN_SEED: number = 200;
 
-    public static readonly TIMEOUT_BETWEEN_DISTRIBUTION: number = 1000;
+    // The awaited time between two laps or distributions
+    public static readonly TIMEOUT_BETWEEN_LAPS: number = 1000;
 
     public MGPOptional: typeof MGPOptional = MGPOptional;
 
@@ -96,7 +97,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 await this.showSimpleDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
                     // This prevent to wait 1sec at the end of the animation for nothing
-                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_DISTRIBUTION);
+                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
                 indexDistribution++;
             }

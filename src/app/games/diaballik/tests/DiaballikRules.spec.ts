@@ -10,12 +10,12 @@ import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { CoordFailure } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiaballikRules', () => {
 
     let rules: DiaballikRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = DiaballikRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
 
     const O: DiaballikPiece = DiaballikPiece.ZERO;
     const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
@@ -111,7 +111,7 @@ describe('DiaballikRules', () => {
             [_, _, _, _, _, _, _],
             [O, _, O, O, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with two translations of different pieces', () => {
@@ -134,7 +134,7 @@ describe('DiaballikRules', () => {
             [O, O, _, _, _, _, _],
             [_, _, Ȯ, O, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with one translation and one pass', () => {
@@ -145,7 +145,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()),
-                              MGPOptional.empty());
+                              empty);
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -157,7 +157,7 @@ describe('DiaballikRules', () => {
             [O, _, _, _, _, _, _],
             [_, O, Ȯ, O, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with no translation and one pass', () => {
@@ -167,8 +167,8 @@ describe('DiaballikRules', () => {
         // When doing a move containing zero translations and one pass
         const move: DiaballikMove =
             new DiaballikMove(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get(),
-                              MGPOptional.empty(),
-                              MGPOptional.empty());
+                              empty,
+                              empty);
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -180,7 +180,7 @@ describe('DiaballikRules', () => {
             [_, _, _, _, _, _, _],
             [O, O, Ȯ, O, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with two translations and no pass', () => {
@@ -191,7 +191,7 @@ describe('DiaballikRules', () => {
         const move: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get()),
-                              MGPOptional.empty());
+                              empty);
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -203,7 +203,7 @@ describe('DiaballikRules', () => {
             [O, O, _, _, _, _, _],
             [_, _, O, Ȯ, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow move with one translation and no pass', () => {
@@ -223,7 +223,7 @@ describe('DiaballikRules', () => {
             [_, O, _, _, _, _, _],
             [O, _, O, Ȯ, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow passing between moves', () => {
@@ -246,7 +246,7 @@ describe('DiaballikRules', () => {
             [_, _, Ȯ, O, _, _, _],
             [O, O, _, _, O, O, O],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should forbid moving with the ball', () => {
@@ -282,7 +282,7 @@ describe('DiaballikRules', () => {
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig); // TODO FOR REVIEW: je maintient qu'on aurais du faire comme ça direct, ceux ou j'ai accepté que reason soient pas envariablés ont juste été une source de perte de temps :D
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
     it('should forbid passing from an empty piece', () => {

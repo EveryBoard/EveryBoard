@@ -17,7 +17,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Localized } from 'src/app/utils/LocaleUtils';
 
-export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState, TaflConfig> {}
+export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState> {}
 
 export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M, TaflState, TaflConfig> {
 

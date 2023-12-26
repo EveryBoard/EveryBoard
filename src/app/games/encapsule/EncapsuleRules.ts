@@ -12,7 +12,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Debug } from 'src/app/utils/utils';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 
@@ -122,7 +122,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
 
     public override applyLegalMove(move: EncapsuleMove,
                                    state: EncapsuleState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _config: NoConfig,
                                    newLandingSpace: EncapsuleLegalityInformation)
     : EncapsuleState
     {

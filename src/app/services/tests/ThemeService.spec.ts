@@ -54,6 +54,7 @@ xdescribe('ThemeService', () => {
         testUtils.detectChanges();
         // Then the dark theme has been loaded
         expect(getThemeElement().href).toMatch('/dark.css$');
+        localStorage.clear();
     }));
     it('should fall back to default if the stored theme is invalid', fakeAsync(async() => {
         const realMatchMedia: (query: string) => MediaQueryList = window.matchMedia;
@@ -69,6 +70,7 @@ xdescribe('ThemeService', () => {
         testUtils.detectChanges();
         // Then the (default) dark theme has been loaded
         expect(getThemeElement().href).toMatch('/dark.css$');
+        localStorage.clear();
     }));
     it('should use the preferred color scheme if there is one and no theme has been chosen (dark)', fakeAsync(async() => {
         const realMatchMedia: (query: string) => MediaQueryList = window.matchMedia;

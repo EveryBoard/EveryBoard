@@ -13,12 +13,12 @@ import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('HiveRules', () => {
 
     let rules: HiveRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = HiveRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = HiveRules.get().getDefaultRulesConfig();
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
     const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');
@@ -50,7 +50,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 1);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow second player to drop a piece next to the first piece', () => {
@@ -69,7 +69,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 2);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid second player to drop a piece somewhere else than next to the first piece', () => {
@@ -104,7 +104,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 3);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid dropping a piece adjacent to a piece of the opponent', () => {
@@ -137,7 +137,7 @@ describe('HiveRules', () => {
                 [[B], [B, b], [A]],
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow dropping the queen bee at the fourth turn of a player', () => {
@@ -156,7 +156,7 @@ describe('HiveRules', () => {
                 [[Q], [], [], [], [], []],
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 7);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should force dropping the queen bee at turn 6 for Player.ZERO', () => {
@@ -380,7 +380,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 3);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid moving queen bee by more than one space', () => {
@@ -415,7 +415,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 5);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid moving beetle by more than one space', () => {
@@ -449,7 +449,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 5);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow moving the beetle when it is on top of another piece', () => {
@@ -468,7 +468,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 5);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should support having the 4 beetles on top of a piece', () => {
@@ -487,7 +487,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 4);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow the grasshopper to jump above other adjacent pieces', () => {
@@ -509,7 +509,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 5);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid the grasshopper to move without jumping', () => {
@@ -546,7 +546,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 5);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid the grasshopper to jump if there are empty spaces before the piece jumped above', () => {
@@ -653,7 +653,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 5);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid the spider to move through non-consecutive spaces', () => {
@@ -762,7 +762,7 @@ describe('HiveRules', () => {
             ];
             const expectedState: HiveState = HiveState.fromRepresentation(expectedBoard, 5);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });
@@ -927,7 +927,7 @@ describe('HiveRules', () => {
 
         // Then the move should succeed
         const expectedState: HiveState = HiveState.fromRepresentation(board, 6);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should forbid passing if a player can perform any action', () => {

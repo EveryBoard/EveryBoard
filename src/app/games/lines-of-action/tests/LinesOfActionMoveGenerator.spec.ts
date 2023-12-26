@@ -4,13 +4,12 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LinesOfActionMoveGenerator', () => {
 
     let moveGenerator: LinesOfActionMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = LinesOfActionRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = LinesOfActionRules.get().getDefaultRulesConfig();
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;

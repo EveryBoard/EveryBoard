@@ -6,13 +6,10 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { ReversiConfig, ReversiRules } from '../ReversiRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ReversiComponent>;
-    const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -71,7 +68,7 @@ describe('ReversiComponent', () => {
         ], 1);
 
         // When displaying the board
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // Then the player can pass
         await testUtils.expectPassSuccess(ReversiMove.PASS);

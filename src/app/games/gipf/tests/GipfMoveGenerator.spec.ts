@@ -4,8 +4,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfNode, GipfRules } from '../GipfRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GipfMoveGenerator } from '../GipfMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -17,7 +16,7 @@ describe('GipfMoveGenerator', () => {
     let rules: GipfRules;
 
     let moveGenerator: GipfMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = GipfRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = GipfRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = GipfRules.get();
@@ -27,7 +26,7 @@ describe('GipfMoveGenerator', () => {
     describe('getListMoves', () => {
 
         it('should have 30 moves on the initial state', () => {
-            const node: GipfNode = rules.getInitialNode(MGPOptional.empty());
+            const node: GipfNode = rules.getInitialNode(defaultConfig);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(30);
         });
 

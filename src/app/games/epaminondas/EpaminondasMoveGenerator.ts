@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState, EpaminondasConfig> {
 
-    public getListMoves(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): EpaminondasMove[] {
+    public override getListMoves(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): EpaminondasMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const opponent: Player = node.gameState.getCurrentOpponent();
         const empty: PlayerOrNone = PlayerOrNone.NONE;

@@ -13,7 +13,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Table, TableUtils, ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 
-export class TeekoNode extends GameNode<TeekoMove, TeekoState, TeekoConfig> {}
+export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
 
 export type TeekoConfig = {
     teleport: boolean;
@@ -35,7 +35,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
             {
                 name: (): string => $localize`Standard Teeko`,
                 config: {
-                    teleport: new BooleanConfig(false, () => $localize`Can piece teleport`),
+                    teleport: new BooleanConfig(false, () => $localize`Piece can teleport`),
                 },
             }, [{
                 name: (): string => $localize`Teleport Teeko`,

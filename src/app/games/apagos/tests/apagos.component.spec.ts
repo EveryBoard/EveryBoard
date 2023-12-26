@@ -58,7 +58,7 @@ describe('ApagosComponent', () => {
             ], 6, 5);
 
             // When rendering the board
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
 
             // Then the switch square should be shown as last move
             testUtils.expectElementToHaveClass('#square_1', 'last-move-stroke');
@@ -80,7 +80,7 @@ describe('ApagosComponent', () => {
             ], 6, 5);
 
             // When rendering the board
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
 
             // Then piece 2 should be "captured" as a left piece, belonging to no one
             testUtils.expectElementNotToHaveClass('#square_3_piece_2_out_of_5', 'player0-fill');
@@ -105,7 +105,7 @@ describe('ApagosComponent', () => {
             ], 6, 5);
 
             // When rendering the board
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
 
             // Then piece 1 should be "captured" as a left piece, belonging to no one
             testUtils.expectElementNotToHaveClass('#square_3_piece_3_out_of_5', 'player0-fill');
@@ -124,7 +124,7 @@ describe('ApagosComponent', () => {
             ], 9, 10);
 
             // When rendering the board
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
 
             // Then the third square should be filled on top by Player.ZERO
             testUtils.expectElementToHaveClass('#square_3_piece_0_out_of_1', 'player0-fill');
@@ -141,7 +141,7 @@ describe('ApagosComponent', () => {
             ], 9, 10);
 
             // When rendering the board
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
 
             // Then the third square should be filled on top by Player.ZERO
             testUtils.expectElementToHaveClass('#square_3_piece_0_out_of_1', 'player0-fill');
@@ -162,7 +162,7 @@ describe('ApagosComponent', () => {
             ], 9, 10);
 
             // When rendering the board
-            await testUtils.setupState(state, previousState, previousMove);
+            await testUtils.setupState(state, { previousState, previousMove });
 
             // Then the second square should be filled on last emplacement by Player.ONE
             testUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'player1-fill');

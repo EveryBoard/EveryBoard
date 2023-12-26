@@ -10,8 +10,7 @@ import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('AbaloneRules', () => {
 
@@ -20,7 +19,7 @@ describe('AbaloneRules', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     let rules: AbaloneRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = AbaloneRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AbaloneRules.get();
@@ -52,7 +51,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse move starting by opponent piece', () => {
@@ -99,7 +98,7 @@ describe('AbaloneRules', () => {
             [_, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse moving group of piece greater than 3', () => {
@@ -225,7 +224,7 @@ describe('AbaloneRules', () => {
             [_, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should declare player zero winner when he push a 6th opponent piece out of the board', () => {
@@ -282,7 +281,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse blocked translation', () => {
@@ -351,7 +350,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, _, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should do sidestep landing on UNREACHABLE the same way as outside the array board', () => {
@@ -385,7 +384,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should do sidestep landing outside the board correctly', () => {
@@ -419,7 +418,7 @@ describe('AbaloneRules', () => {
             [_, O, O, O, O, N, N, N, N],
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
 });

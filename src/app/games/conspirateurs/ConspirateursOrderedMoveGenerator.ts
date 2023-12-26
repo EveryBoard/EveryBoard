@@ -1,12 +1,11 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursNode } from './ConspirateursRules';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursOrderedMoveGenerator extends ConspirateursMoveGenerator {
 
-    public override getListMoves(node: ConspirateursNode, config: MGPOptional<EmptyRulesConfig>): ConspirateursMove[] {
+    public override getListMoves(node: ConspirateursNode, config: NoConfig): ConspirateursMove[] {
         return this.sortByNumberOfJumps(super.getListMoves(node, config));
     }
 

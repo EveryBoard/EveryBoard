@@ -13,7 +13,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SiamFailure } from '../SiamFailure';
 import { DebugElement } from '@angular/core';
-import { SiamConfig, SiamRules } from '../SiamRules';
+import { SiamRules } from '../SiamRules';
 
 describe('SiamComponent', () => {
 
@@ -24,7 +24,6 @@ describe('SiamComponent', () => {
     const U: SiamPiece = SiamPiece.LIGHT_UP;
     const u: SiamPiece = SiamPiece.DARK_UP;
     const rules: SiamRules = SiamRules.get();
-    const defaultConfig: MGPOptional<SiamConfig> = rules.getDefaultRulesConfig();
 
     async function expectMoveToBeLegal(player: Player, move: SiamMove, state: SiamState): Promise<void> {
         if (rules.isInsertion(move, state)) {
@@ -91,10 +90,10 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, u],
+            [_, _, _, _, U],
         ];
         const state: SiamState = new SiamState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When trying to select the opponent's piece
         // Then it should fail
@@ -104,14 +103,14 @@ describe('SiamComponent', () => {
     it('should allow rotation', fakeAsync(async() => {
         // Given a state with one piece
         const board: Table<SiamPiece> = [
-            [U, _, _, _, _],
+            [u, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When performing a rotation
         // Then it should succeed
@@ -126,10 +125,10 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When moving forward
         // Then it should succeed
@@ -144,10 +143,10 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When performing a move
         const move: SiamMove = SiamMove.of(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
@@ -166,10 +165,10 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When making the piece exit the board
         // Then the orientation of the piece does not have to be chosen
@@ -220,17 +219,17 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
-            [_, _, _, U, _],
+            [_, _, _, u, _],
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#remainingPieces_0');
 
         // When the player clicks on the piece on the board
         await testUtils.expectClickSuccess('#square_3_3');
 
-        // Then a new move should be in creation and the player can finish the move
+        // Then a new move should be in creation and the player should be able to finish the move
         await testUtils.expectClickSuccess('#square_3_4');
         const move: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await testUtils.expectMoveSuccess('#orientation_DOWN', move);
@@ -243,10 +242,10 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
         await testUtils.expectClickSuccess('#square_4_3');
 
@@ -264,10 +263,10 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
 
         // When the player clicks on a mountain
@@ -282,10 +281,10 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, U],
+            [_, _, _, _, u],
         ];
         const state: SiamState = new SiamState(board, 0);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
 
         // When the player inserts a piece in the same corner by selecting an arrow
         await testUtils.expectClickSuccess('#remainingPieces_0');
@@ -315,7 +314,7 @@ describe('SiamComponent', () => {
         const state: SiamState = new SiamState(board, 1);
 
         // When the game is displayed from the point of view of Player.ONE
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
         testUtils.getGameComponent().setPointOfView(Player.ONE);
 
         // Then Player.ONE's pieces should be on the bottom
@@ -335,7 +334,7 @@ describe('SiamComponent', () => {
         const state: SiamState = new SiamState(board, 0);
 
         // When the game is displayed for an observer
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state);
         await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
 
         // Then player 0's pieces should be on the bottom

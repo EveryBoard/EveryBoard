@@ -7,7 +7,7 @@ import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessMoveGenerator', () => {
 
@@ -17,7 +17,7 @@ describe('MartianChessMoveGenerator', () => {
     const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
     let moveGenerator: MartianChessMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     function isPawnMove(move: MartianChessMove, state: MartianChessState): boolean {
         return state.getPieceAt(move.getStart()) === MartianChessPiece.PAWN;

@@ -7,8 +7,7 @@ import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -16,7 +15,7 @@ describe('ConspirateursRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ConspirateursRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = ConspirateursRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = ConspirateursRules.get();
@@ -58,7 +57,7 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid drops out of the center zone', () => {
@@ -174,7 +173,7 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 43);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid simple moves from a square occupied by the opponent', () => {
@@ -336,7 +335,7 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 43);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow multiple jumps', () => {
@@ -382,7 +381,7 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 43);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid jumps from a square occupied by the opponent', () => {

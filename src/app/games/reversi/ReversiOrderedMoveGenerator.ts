@@ -17,7 +17,7 @@ export class ReversiOrderedMoveGenerator extends MoveGenerator<ReversiMove, Reve
         ];
     }
 
-    public getListMoves(node: ReversiNode, optionalConfig: MGPOptional<ReversiConfig>): ReversiMove[] {
+    public override getListMoves(node: ReversiNode, optionalConfig: MGPOptional<ReversiConfig>): ReversiMove[] {
         const moves: ReversiMoveWithSwitched[] = ReversiRules.get().getListMoves(node.gameState, optionalConfig);
         // Best moves are on the corner, otherwise moves are sorted by number of pieces switched
         const config: ReversiConfig = optionalConfig.get();

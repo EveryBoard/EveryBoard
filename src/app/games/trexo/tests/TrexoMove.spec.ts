@@ -8,12 +8,11 @@ import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('TrexoMove', () => {
 
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = TrexoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = TrexoRules.get().getDefaultRulesConfig();
 
     it('should refuse to create out of board move (player.zero piece)', () => {
         const error: string = '(-1, 0) is out of the TrexoBoard!';
@@ -68,7 +67,7 @@ describe('TrexoMove', () => {
     it('should have a bijective encoder', () => {
         const rules: TrexoRules = TrexoRules.get();
         const moveGenerator: TrexoMoveGenerator = new TrexoMoveGenerator();
-        const node: TrexoNode = rules.getInitialNode(MGPOptional.empty());
+        const node: TrexoNode = rules.getInitialNode(defaultConfig);
         const firstTurnMoves: TrexoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(TrexoMove.encoder, move);

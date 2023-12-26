@@ -11,7 +11,7 @@ import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
@@ -33,10 +33,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         return new ConspirateursState(board, 0);
     }
 
-    public override applyLegalMove(move: ConspirateursMove,
-                                   state: ConspirateursState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
+    public override applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _config: NoConfig, _info: void)
     : ConspirateursState
     {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();

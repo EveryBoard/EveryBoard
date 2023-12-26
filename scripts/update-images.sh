@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Get the list of games
-grep "new GameInfo" src/app/components/normal-component/pick-game/pick-game.component.ts | sed "s/.*new GameInfo([^,]*, '\([^']*\)'.*/\1/" > scripts/games.txt
+grep "new GameInfo" src/app/components/normal-component/pick-game/pick-game.component.ts | sed -E "s/.*new GameInfo\([^,]+, +'([^']+)'.*/\1/" > scripts/games.txt
 
 # Make backups of themes
 cp src/sass/light.scss src/sass/light.scss.tmp

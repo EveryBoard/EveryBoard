@@ -22,9 +22,9 @@ export class HeuristicUtils {
         config: MGPOptional<C>)
     : void
     {
-        const weakNode: GameNode<M, S, C> = new GameNode(weakState, undefined, weakMove);
+        const weakNode: GameNode<M, S> = new GameNode(weakState, undefined, weakMove);
         const weakValue: readonly number[] = heuristic.getBoardValue(weakNode, config).value;
-        const strongNode: GameNode<M, S, C> = new GameNode(strongState, undefined, strongMove);
+        const strongNode: GameNode<M, S> = new GameNode(strongState, undefined, strongMove);
         const strongValue: readonly number[] = heuristic.getBoardValue(strongNode, config).value;
         if (player === Player.ZERO) {
             expect(ArrayUtils.isInferior(strongValue, weakValue)).toBeTrue();
@@ -42,7 +42,7 @@ export class HeuristicUtils {
     : void
     {
         for (const heuristic of heuristics) {
-            const node: GameNode<M, S, C> = new GameNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
+            const node: GameNode<M, S> = new GameNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
             for (const boardSubValue of heuristic.getBoardValue(node, config).value) {
                 const expectedValue: number = player.getPreVictory();
                 expect(BoardValue.isPreVictory(boardSubValue)).toBeTrue();
@@ -57,9 +57,9 @@ export class HeuristicUtils {
         rightState: S,
         config: MGPOptional<C>)
     : void {
-        const leftNode: GameNode<M, S, C> = new GameNode(leftState);
+        const leftNode: GameNode<M, S> = new GameNode(leftState);
         const leftValue: readonly number[] = heuristic.getBoardValue(leftNode, config).value;
-        const rightNode: GameNode<M, S, C> = new GameNode(rightState);
+        const rightNode: GameNode<M, S> = new GameNode(rightState);
         const rightValue: readonly number[] = heuristic.getBoardValue(rightNode, config).value;
         expect(leftValue).withContext('both value should be equal').toEqual(rightValue);
     }

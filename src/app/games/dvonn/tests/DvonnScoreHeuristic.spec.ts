@@ -5,8 +5,7 @@ import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnScoreHeuristic } from '../DvonnScoreHeuristic';
 import { DvonnState } from '../DvonnState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
@@ -17,7 +16,7 @@ const X2: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 describe('DvonnScoreHeuristic', () => {
 
     let heuristic: DvonnScoreHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new DvonnScoreHeuristic();

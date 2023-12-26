@@ -8,8 +8,6 @@ import { TeekoState } from '../TeekoState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TeekoConfig, TeekoRules } from '../TeekoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TeekoComponent', () => {
 
@@ -18,7 +16,6 @@ describe('TeekoComponent', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let testUtils: ComponentTestUtils<TeekoComponent>;
-    const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<TeekoComponent>('Teeko');
@@ -40,7 +37,7 @@ describe('TeekoComponent', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 1);
-            await testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await testUtils.setupState(state);
 
             // When clicking on the occupied space
             const move: TeekoDropMove = TeekoDropMove.from(new Coord(2, 2)).get();
@@ -82,7 +79,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                await testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await testUtils.setupState(state);
 
                 // When clicking on empty space
                 // Then it should fail
@@ -100,7 +97,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                await testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await testUtils.setupState(state);
 
                 // When clicking on opponent piece
                 // Then it should fail
@@ -118,7 +115,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                await testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await testUtils.setupState(state);
 
                 // When selecting a valid piece
                 await testUtils.expectClickSuccess('#click_0_0');
@@ -140,7 +137,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                await testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#click_0_0');
 
                 // When clicking on it again
@@ -160,7 +157,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                await testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#click_1_1');
 
                 // When clicking on legal landing space
@@ -180,7 +177,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                await testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#click_0_0');
 
                 // When clicking on an invalid landing space
@@ -200,7 +197,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                await testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#click_1_1');
 
                 // When finishing the move legally
@@ -224,7 +221,7 @@ describe('TeekoComponent', () => {
                     [_, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                await testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await testUtils.setupState(state);
 
                 // When translating piece into victory
                 const move: TeekoMove = TeekoTranslationMove.from(new Coord(2, 3), new Coord(3, 3)).get();
@@ -248,7 +245,7 @@ describe('TeekoComponent', () => {
                     [X, _, _, _, _],
                 ];
                 const state: TeekoState = new TeekoState(board, 8);
-                await testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await testUtils.setupState(state);
 
                 // When translating piece into victory
                 const move: TeekoMove = TeekoTranslationMove.from(new Coord(2, 2), new Coord(1, 1)).get();

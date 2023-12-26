@@ -22,7 +22,7 @@ export type EpaminondasConfig = {
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
-export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState, EpaminondasConfig> {}
+export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState> {}
 
 export class EpaminondasRules
     extends ConfigurableRules<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>

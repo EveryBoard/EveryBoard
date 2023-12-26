@@ -9,7 +9,7 @@ import { GameStatus } from '../GameStatus';
 import { JSONValue } from 'src/app/utils/utils';
 import { RulesUtils } from './RulesUtils.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { NoConfig, RulesConfig } from '../RulesConfigUtil';
 
 class AbstractState extends GameStateWithTable<number> {}
 
@@ -57,7 +57,7 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
 describe('Rules', () => {
 
     let rules: AbstractRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = AbstractRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = AbstractRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AbstractRules.get();
@@ -65,7 +65,7 @@ describe('Rules', () => {
 
     it('should create child to already calculated node which did not include this legal child yet', () => {
         // Given a node with children but not the one that will be calculated
-        const node: AbstractNode = rules.getInitialNode(MGPOptional.empty());
+        const node: AbstractNode = rules.getInitialNode(defaultConfig);
         spyOn(node, 'getChild').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
@@ -97,7 +97,7 @@ describe('Rules', () => {
 
         it('should return MGPOptional.empty() when the move was illegal', () => {
             // Given a node and a move that will be deemed illegal
-            const node: AbstractNode = rules.getInitialNode(MGPOptional.empty());
+            const node: AbstractNode = rules.getInitialNode(defaultConfig);
             const illegalMove: P4Move = P4Move.of(5);
             spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure('some reason'));
 

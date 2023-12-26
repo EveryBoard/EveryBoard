@@ -8,7 +8,7 @@ import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnState } from '../DvonnState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
 const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
@@ -30,7 +30,7 @@ describe('DvonnMoveGenerator', () => {
 
     let rules: DvonnRules;
     let moveGenerator: DvonnMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = DvonnRules.get();
@@ -38,7 +38,7 @@ describe('DvonnMoveGenerator', () => {
     });
 
     it('should propose 41 moves at first turn on the balanced board', () => {
-        const node: DvonnNode = rules.getInitialNode(MGPOptional.empty());
+        const node: DvonnNode = rules.getInitialNode(defaultConfig);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(41);
     });
 

@@ -4,7 +4,7 @@ import { GameState } from '../GameState';
 import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { MoveGenerator } from '../AI/AI';
-import { ConfigurableRules } from '../Rules';
+import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -14,7 +14,7 @@ export class MoveTestUtils {
                                                 S extends GameState,
                                                 L,
                                                 C extends RulesConfig = EmptyRulesConfig>(
-        rules: ConfigurableRules<M, S, C, L>,
+        rules: SuperRules<M, S, C, L>,
         generator: MoveGenerator<M, S, C>,
         encoder: Encoder<M>,
         nullableConfig?: MGPOptional<C>,
@@ -24,7 +24,7 @@ export class MoveTestUtils {
         if (nullableConfig !== undefined) {
             config = nullableConfig;
         }
-        const node: GameNode<M, S, C> = rules.getInitialNode(config);
+        const node: GameNode<M, S> = rules.getInitialNode(config);
         const moves: M[] = generator.getListMoves(node, config);
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(encoder, move);

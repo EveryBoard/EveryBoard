@@ -74,16 +74,20 @@ export class ArrayUtils {
         return array[randomIndex];
     }
 
+
     /**
      * Gets the maximum elements of an array, according to a given metric.
      * Returns an array containing all the maximal values
      */
     public static maximumsBy<T>(array: T[], metric: (value: T) => number): T[] {
-        const maximums: T[] = [];
-        let maxMetricValue: number = Number.MIN_SAFE_INTEGER;
+        let maximums: T[] = [];
+        let maxMetricValue: number = -Infinity;
         for (const element of array) {
             const currentMetricValue: number = metric(element);
-            if (currentMetricValue > maxMetricValue) {
+            if (currentMetricValue >= maxMetricValue) {
+                if (currentMetricValue > maxMetricValue) {
+                    maximums = [];
+                }
                 maxMetricValue = currentMetricValue;
                 maximums.push(element);
             }

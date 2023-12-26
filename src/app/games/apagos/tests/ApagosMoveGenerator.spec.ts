@@ -1,15 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
 import { ApagosNode, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ApagosMoveGenerator', () => {
 
     let moveGenerator: ApagosMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new ApagosMoveGenerator();

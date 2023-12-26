@@ -1,9 +1,9 @@
 import { NewGameState } from '../NewGameState';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { NewGameMove } from '../NewGameMove';
-import { NewGameConfig, NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
+import { NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameMinimax } from '../NewGameMinimax';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig, NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * These are the tests for the minimax.
@@ -11,8 +11,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
  */
 describe('NewGameMinimax', () => {
 
-    let minimax: Minimax<NewGameMove, NewGameState, NewGameConfig, NewGameLegalityInfo>;
-    const defaultConfig: MGPOptional<NewGameConfig> = NewGameRules.get().getDefaultRulesConfig();
+    let minimax: Minimax<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo>;
+    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new NewGameMinimax();

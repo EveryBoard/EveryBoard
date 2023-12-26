@@ -12,7 +12,7 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
         super();
     }
 
-    public getListMoves(node: MancalaNode, config: MGPOptional<MancalaConfig>): MancalaMove[] {
+    public override getListMoves(node: MancalaNode, config: MGPOptional<MancalaConfig>): MancalaMove[] {
         const moves: MancalaMove[] = [];
         const state: MancalaState = node.gameState;
         const playerY: number = state.getCurrentPlayerY();

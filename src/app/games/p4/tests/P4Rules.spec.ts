@@ -42,7 +42,7 @@ describe('P4Rules', () => {
             [_, _, _, O, _, _, _],
         ];
         const expectedState: P4State = new P4State(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     describe('end game', () => {
@@ -72,7 +72,7 @@ describe('P4Rules', () => {
                 [_, _, X, O, X, _, X],
             ];
             const expectedState: P4State = new P4State(expectedBoard, 7);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: P4Node = new P4Node(expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -102,7 +102,7 @@ describe('P4Rules', () => {
                 [_, O, O, X, O, O, _],
             ];
             const expectedState: P4State = new P4State(expectedBoard, 8);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: P4Node = new P4Node(expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
@@ -132,7 +132,7 @@ describe('P4Rules', () => {
                 [X, X, X, O, X, X, X],
             ];
             const expectedState: P4State = new P4State(expectedBoard, 42);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: P4Node = new P4Node(expectedState);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
@@ -153,7 +153,7 @@ describe('P4Rules', () => {
             expectedBoard[height - 1][move.x] = Player.ofTurn(turn);
             const finalTurn: number = width * height;
             const expectedState: P4State = new P4State(expectedBoard, finalTurn);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: P4Node = new P4Node(expectedState);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
@@ -174,7 +174,7 @@ describe('P4Rules', () => {
             expectedBoard[height - 1][move.x] = Player.ofTurn(turn);
             const finalTurn: number = width * height;
             const expectedState: P4State = new P4State(expectedBoard, finalTurn);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: P4Node = new P4Node(expectedState);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });

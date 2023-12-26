@@ -231,7 +231,8 @@ describe('ConnectSixComponent', () => {
             ], 1);
 
             // When displaying it
-            await testUtils.setupState(state, undefined, ConnectSixFirstMove.of(new Coord(9, 9)));
+            const previousMove: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
+            await testUtils.setupState(state, { previousMove });
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece_9_9', 'last-move-stroke');
@@ -260,10 +261,10 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const lastMove: ConnectSixMove = ConnectSixDrops.of(new Coord(10, 9), new Coord(11, 9));
+            const previousMove: ConnectSixMove = ConnectSixDrops.of(new Coord(10, 9), new Coord(11, 9));
 
             // When displaying it
-            await testUtils.setupState(state, undefined, lastMove);
+            await testUtils.setupState(state, { previousMove });
 
             // Then last piece should have the highlight
             testUtils.expectElementToHaveClass('#piece_10_9', 'last-move-stroke');

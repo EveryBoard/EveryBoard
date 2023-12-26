@@ -15,7 +15,7 @@ import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 
-export class PenteNode extends GameNode<PenteMove, PenteState, GobanConfig> {}
+export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
 export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanConfig> {
 

@@ -5,8 +5,7 @@ import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
 import { PylosMoveGenerator } from '../PylosMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -16,7 +15,7 @@ describe('PylosMoveGenerator', () => {
 
     let rules: PylosRules;
     let moveGenerator: PylosMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = PylosRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = PylosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = PylosRules.get();
@@ -24,7 +23,7 @@ describe('PylosMoveGenerator', () => {
     });
 
     it('should provide 16 drops at first turn', () => {
-        const node: PylosNode = rules.getInitialNode(MGPOptional.empty());
+        const node: PylosNode = rules.getInitialNode(defaultConfig);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(16);
     });
 

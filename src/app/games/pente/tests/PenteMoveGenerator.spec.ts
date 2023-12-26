@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { PenteMove } from '../PenteMove';
 import { PenteMoveGenerator } from '../PenteMoveGenerator';
 import { PenteNode, PenteRules } from '../PenteRules';
@@ -16,7 +16,7 @@ describe('PenteMoveGenerator', () => {
 
     it('should propose exactly 360 moves at first turn', () => {
         // Given the initial state
-        const node: PenteNode = new PenteNode(PenteRules.get().getInitialState(defaultGobanConfig));
+        const node: PenteNode = new PenteNode(PenteRules.get().getInitialState(defaultConfig));
 
         // When listing the moves
         const moves: PenteMove[] = moveGenerator.getListMoves(node, defaultConfig);

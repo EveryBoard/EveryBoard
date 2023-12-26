@@ -6,13 +6,13 @@ import { PentagoMove } from '../PentagoMove';
 import { PentagoMoveGenerator } from '../PentagoMoveGenerator';
 import { PentagoNode, PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('PentagoMoveGenerator', () => {
 
     let rules: PentagoRules;
     let moveGenerator: PentagoMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = PentagoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = PentagoRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -24,7 +24,7 @@ describe('PentagoMoveGenerator', () => {
     });
 
     it('should propose 6 moves at first turn', () => {
-        const node: PentagoNode = rules.getInitialNode(MGPOptional.empty());
+        const node: PentagoNode = rules.getInitialNode(defaultConfig);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(6);
     });
 
@@ -40,7 +40,7 @@ describe('PentagoMoveGenerator', () => {
         ];
         const state: PentagoState = new PentagoState(board, 1);
         const node: PentagoNode = new PentagoNode(state,
-                                                  MGPOptional.of(rules.getInitialNode(MGPOptional.empty())),
+                                                  MGPOptional.of(rules.getInitialNode(defaultConfig)),
                                                   MGPOptional.of(PentagoMove.rotationless(0, 0)));
         /*
          * when calculating the list of moves, then there should be 105
@@ -67,8 +67,7 @@ describe('PentagoMoveGenerator', () => {
         ];
         const state: PentagoState = new PentagoState(board, 8);
         const node: PentagoNode = new PentagoNode(state,
-                                                  MGPOptional.of(rules.getInitialNode(MGPOptional.empty())),
-                                                  MGPOptional.empty());
+                                                  MGPOptional.of(rules.getInitialNode(defaultConfig)));
         /*
          * when calculating the list of moves
          * there should be 28 drop tilmes 8 rotations
@@ -92,8 +91,7 @@ describe('PentagoMoveGenerator', () => {
         ];
         const state: PentagoState = new PentagoState(board, 4);
         const node: PentagoNode = new PentagoNode(state,
-                                                  MGPOptional.of(rules.getInitialNode(MGPOptional.empty())),
-                                                  MGPOptional.empty());
+                                                  MGPOptional.of(rules.getInitialNode(defaultConfig)));
 
         /*
          * when calculating the list of moves

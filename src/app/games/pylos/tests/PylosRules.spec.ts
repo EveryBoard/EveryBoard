@@ -9,12 +9,12 @@ import { PylosFailure } from '../PylosFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('PylosRules', () => {
 
     let rules: PylosRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = PylosRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = PylosRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -351,7 +351,7 @@ describe('PylosRules', () => {
         ];
 
         const expectedState: PylosState = new PylosState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
@@ -395,7 +395,7 @@ describe('PylosRules', () => {
             ],
         ];
         const expectedState: PylosState = new PylosState(expectedBoard, 2);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });

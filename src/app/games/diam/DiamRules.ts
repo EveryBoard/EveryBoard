@@ -12,7 +12,7 @@ import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Utils } from 'src/app/utils/utils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiamNode extends GameNode<DiamMove, DiamState> {}
 
@@ -38,12 +38,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         return new DiamState(board, [4, 4, 4, 4], 0);
     }
 
-    public override applyLegalMove(move: DiamMove,
-                                   state: DiamState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
-    : DiamState
-    {
+    public override applyLegalMove(move: DiamMove, state: DiamState, _config: NoConfig, _info: void): DiamState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {

@@ -25,7 +25,7 @@ export class ReversiMoveWithSwitched {
     }
 }
 
-export class ReversiNode extends GameNode<ReversiMove, ReversiState, ReversiConfig> {}
+export class ReversiNode extends GameNode<ReversiMove, ReversiState> {}
 
 export type ReversiConfig = {
     width: 8,

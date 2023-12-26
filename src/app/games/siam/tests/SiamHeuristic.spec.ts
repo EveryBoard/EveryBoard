@@ -9,6 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { SiamHeuristic } from '../SiamHeuristic';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -38,17 +39,19 @@ describe('SiamHeuristic', () => {
             const board: Table<SiamPiece> = [
                 [_, _, _, _, _],
                 [_, _, _, M, _],
-                [_, M, M, U, _],
-                [_, _, u, _, _],
+                [_, M, M, u, _],
+                [_, _, U, _, _],
                 [_, _, _, _, _],
             ];
-            const state: SiamState = new SiamState(board, 0);
+            const stateForPlayerZero: SiamState = new SiamState(board, 0);
             const move: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+
             // When computing the value of the board
+            const node: SiamNode = new SiamNode(stateForPlayerZero, MGPOptional.empty(), MGPOptional.of(move));
+            const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
+
             // Then it should consider player zero as closer to victory
-            const node: SiamNode =
-                new SiamNode(state, undefined, MGPOptional.of(move));
-            expect(heuristic.getBoardValue(node, defaultConfig).value)
+            expect(boardValue.value)
                 .withContext('First player should be considered as closer to victory')
                 .toBeLessThan(0);
         });
@@ -60,7 +63,7 @@ describe('SiamHeuristic', () => {
                 [_, _, _, _, _],
                 [_, M, M, M, _],
                 [_, _, _, _, _],
-                [_, _, U, _, _],
+                [_, _, u, _, _],
             ];
             const state: SiamState = new SiamState(board, 0);
             const move: SiamMove = SiamMove.of(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);

@@ -3,13 +3,13 @@ import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Player } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { DiaballikRules } from '../DiaballikRules';
 
 describe('DiaballikDistanceHeuristic', () => {
 
     let heuristic: DiaballikDistanceHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = DiaballikRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
 
     const O: DiaballikPiece = DiaballikPiece.ZERO;
     const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;

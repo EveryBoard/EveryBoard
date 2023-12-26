@@ -130,8 +130,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return this.chooseMove(move);
     }
 
-    public async clickSquare(x: number, y: number, internalCall: boolean = false): Promise<MGPValidation> {
-        if (internalCall === false) {
+    public async clickSquare(x: number, y: number, externalCall: boolean = true): Promise<MGPValidation> {
+        if (externalCall) {
             const clickValidity: MGPValidation = await this.canUserPlay('#square_' + x + '_' + y);
             if (clickValidity.isFailure()) {
                 return this.cancelMove(clickValidity.getReason());
@@ -196,7 +196,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const piece: SiamPiece = this.getState().getPieceAt(clickedCoord);
         if (piece.getOwner() === this.getCurrentPlayer()) {
             // The click was made on another piece of the player, likely to select it
-            return this.clickSquare(clickedCoord.x, clickedCoord.y, true);
+            return this.clickSquare(clickedCoord.x, clickedCoord.y, false);
         } else {
             // The click was made on an invalid destination
             return this.cancelMove(SiamFailure.MUST_SELECT_VALID_DESTINATION());

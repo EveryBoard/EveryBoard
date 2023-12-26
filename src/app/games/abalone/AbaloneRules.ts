@@ -12,7 +12,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
@@ -89,7 +89,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
 
     public override applyLegalMove(_move: AbaloneMove,
                                    state: AbaloneState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _config: NoConfig,
                                    newBoard: AbaloneLegalityInformation)
     : AbaloneState
     {

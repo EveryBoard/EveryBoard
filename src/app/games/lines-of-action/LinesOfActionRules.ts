@@ -12,7 +12,7 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
@@ -80,10 +80,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             }
         }
     }
-    public override applyLegalMove(move: LinesOfActionMove,
-                                   state: LinesOfActionState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
+    public override applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _config: NoConfig, _info: void)
     : LinesOfActionState
     {
         const board: PlayerOrNone[][] = state.getCopiedBoard();

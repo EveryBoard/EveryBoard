@@ -16,7 +16,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type GipfLegalityInformation = GipfState
 
@@ -52,7 +52,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
 
     public override applyLegalMove(_move: GipfMove,
                                    _state: GipfState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _config: NoConfig,
                                    computedState: GipfLegalityInformation)
     : GipfState
     {

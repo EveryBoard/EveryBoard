@@ -13,7 +13,7 @@ import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessFailure } from '../MartianChessFailure';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessRules', () => {
 
@@ -26,7 +26,7 @@ describe('MartianChessRules', () => {
     const noCapture: MartianChessCapture = MartianChessCapture.of([]);
 
     let rules: MartianChessRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     const boardWhereCaptureCanBeDone: Table<MartianChessPiece> = [
         [A, _, _, _],
@@ -156,7 +156,7 @@ describe('MartianChessRules', () => {
             [_, B, C, C],
         ];
         const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should be legal to move a drone of one orthogonal steps', () => {
@@ -178,7 +178,7 @@ describe('MartianChessRules', () => {
             [B, _, C, C],
         ];
         const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should be legal to move a drone of two orthogonals steps', () => {
@@ -210,7 +210,7 @@ describe('MartianChessRules', () => {
             [_, _, C, C],
         ];
         const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should be legal to move a drone of one diagonal step', () => {
@@ -242,7 +242,7 @@ describe('MartianChessRules', () => {
             [_, _, _, _],
         ];
         const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should be legal to move a drone of two diagonal steps', () => {
@@ -264,7 +264,7 @@ describe('MartianChessRules', () => {
             [_, B, C, C],
         ];
         const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should be legal to move a queen as far as you want linearly', () => {
@@ -296,7 +296,7 @@ describe('MartianChessRules', () => {
             [C, B, C, C],
         ];
         const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should add score when capturing first time', () => {
@@ -315,7 +315,7 @@ describe('MartianChessRules', () => {
                                                                        MGPOptional.of(move),
                                                                        MGPOptional.empty(),
                                                                        captured);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should add score when capturing again', () => {
@@ -341,7 +341,7 @@ describe('MartianChessRules', () => {
                                                                        MGPOptional.of(move),
                                                                        MGPOptional.empty(),
                                                                        captured);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     describe('Undo last move', () => {
@@ -365,7 +365,7 @@ describe('MartianChessRules', () => {
                 [_, B, C, C],
             ];
             const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid to put the last moved piece right where it was', () => {
@@ -433,7 +433,7 @@ describe('MartianChessRules', () => {
                 [_, _, _, _],
             ];
             const expectedState: MartianChessState = new MartianChessState(expectedBoard, 3, MGPOptional.of(move));
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should be legal to merge two pawns in drone when no drone present', () => {
@@ -465,7 +465,7 @@ describe('MartianChessRules', () => {
                 [_, _, _, _],
             ];
             const expectedState: MartianChessState = new MartianChessState(expectedBoard, 3, MGPOptional.of(move));
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should be illegal to merge one pawn and one drone in one queen when a queen is present', () => {
@@ -559,7 +559,7 @@ describe('MartianChessRules', () => {
                                                                                MGPOptional.of(move),
                                                                                MGPOptional.empty(),
                                                                                captured);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
@@ -603,7 +603,7 @@ describe('MartianChessRules', () => {
                                                                                MGPOptional.of(move),
                                                                                MGPOptional.empty(),
                                                                                captured);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
             });
@@ -637,7 +637,7 @@ describe('MartianChessRules', () => {
                     [_, _, _, C],
                 ];
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard, 2, MGPOptional.of(move));
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
@@ -668,7 +668,7 @@ describe('MartianChessRules', () => {
                                                                                1,
                                                                                MGPOptional.of(move),
                                                                                MartianChessRules.STARTING_COUNT_DOWN);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
             it('should be "asked to dev" not to call it again on a clock-started state', () => {
@@ -697,7 +697,7 @@ describe('MartianChessRules', () => {
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
                 const component: string = 'Assertion failure';
                 const error: string = 'Should not call the clock twice';
-                expect(() => RulesUtils.expectMoveSuccess(rules, state, move, expectedState)).toThrowError(component + ': ' + error);
+                expect(() => RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig)).toThrowError(component + ': ' + error);
                 expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith(component, error);
             });
 
@@ -727,7 +727,7 @@ describe('MartianChessRules', () => {
                                                                                2,
                                                                                MGPOptional.of(move),
                                                                                MGPOptional.of(6));
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
             it('should reset clock countdown when a capture occurs', () => {
@@ -768,7 +768,7 @@ describe('MartianChessRules', () => {
                                                                                MGPOptional.of(move),
                                                                                MartianChessRules.STARTING_COUNT_DOWN,
                                                                                captured);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
             it('should end the game when 7 moves passed since clock called, and declare biggest score winner (zero)', () => {
@@ -802,7 +802,7 @@ describe('MartianChessRules', () => {
                                                                                MGPOptional.of(move),
                                                                                MGPOptional.of(0),
                                                                                captured);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
             });
@@ -838,7 +838,7 @@ describe('MartianChessRules', () => {
                                                                                MGPOptional.of(move),
                                                                                MGPOptional.of(0),
                                                                                captured);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
@@ -870,7 +870,7 @@ describe('MartianChessRules', () => {
                                                                                2,
                                                                                MGPOptional.of(move),
                                                                                MGPOptional.of(0));
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
                 const node: MartianChessNode = new MartianChessNode(expectedState);
                 RulesUtils.expectToBeDraw(rules, node, defaultConfig);
             });

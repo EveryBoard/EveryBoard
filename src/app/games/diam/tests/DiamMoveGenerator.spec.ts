@@ -1,16 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DiamMoveGenerator } from '../DiamMoveGenerator';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { DiaballikRules } from '../../diaballik/DiaballikRules';
 
 describe('DiamMoveGenerator', () => {
 
     let moveGenerator: DiamMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = DiaballikRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
 
     const __: DiamPiece = DiamPiece.EMPTY;
     const A1: DiamPiece = DiamPiece.ZERO_FIRST;

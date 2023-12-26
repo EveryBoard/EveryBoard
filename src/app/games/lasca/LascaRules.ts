@@ -12,7 +12,7 @@ import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LascaNode extends GameNode<LascaMove, LascaState> {}
 
@@ -129,12 +129,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         return pieceMoves;
     }
 
-    public override applyLegalMove(move: LascaMove,
-                                   state: LascaState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
-    : LascaState
-    {
+    public override applyLegalMove(move: LascaMove, state: LascaState, _config: NoConfig, _info: void): LascaState {
         const moveStart: Coord = move.getStartingCoord();
         const moveEnd: Coord = move.getEndingCoord();
         let movingStack: LascaStack = state.getPieceAt(moveStart);

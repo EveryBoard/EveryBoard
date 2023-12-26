@@ -9,8 +9,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaFailure } from '../SaharaFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('SaharaHeuristic', () => {
 
@@ -20,7 +19,7 @@ describe('SaharaHeuristic', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     let rules: SaharaRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = SaharaRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = SaharaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = SaharaRules.get();

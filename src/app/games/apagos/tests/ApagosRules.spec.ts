@@ -6,13 +6,12 @@ import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosNode, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ApagosRules', () => {
 
     let rules: ApagosRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();
 
     let stateWithOneFullSquare: ApagosState;
 
@@ -72,7 +71,7 @@ describe('ApagosRules', () => {
             [0, 1, 0, 0],
             [7, 5, 3, 1],
         ], ApagosRules.PIECES_PER_PLAYER - 2, ApagosRules.PIECES_PER_PLAYER - 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse to drop when there is no longer enough pieces', () => {
@@ -100,7 +99,7 @@ describe('ApagosRules', () => {
             [0, 0, 0, 0],
             [7, 3, 5, 1],
         ], ApagosRules.PIECES_PER_PLAYER - 1, ApagosRules.PIECES_PER_PLAYER);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should drop piece when on higher square', () => {
@@ -114,7 +113,7 @@ describe('ApagosRules', () => {
             [0, 0, 0, 0],
             [7, 5, 3, 1],
         ], ApagosRules.PIECES_PER_PLAYER - 1, ApagosRules.PIECES_PER_PLAYER);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should know who is winning (Player.ZERO)', () => {

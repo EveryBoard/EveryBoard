@@ -6,7 +6,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedomHeuristic';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { CoerceoRules } from '../CoerceoRules';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -17,7 +17,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('CoerceoCapturesAndFreedomHeuristic', () => {
 
     let heuristic: CoerceoCapturesAndFreedomHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new CoerceoCapturesAndFreedomHeuristic();

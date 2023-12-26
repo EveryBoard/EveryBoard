@@ -492,7 +492,7 @@ describe('HiveComponent', () => {
         const state: HiveState = HiveState.fromRepresentation([
             [[Q], [q]],
         ], 2);
-        await testUtils.setupState(state, previousState, previousMove);
+        await testUtils.setupState(state, { previousState, previousMove });
 
         // When starting and then canceling a move
         await testUtils.expectClickSuccess('#piece_0_0');

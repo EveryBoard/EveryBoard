@@ -84,7 +84,7 @@ describe('AwaleComponent', () => {
                 passByPlayerStore: true,
             });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
 
             // When doing simple distribution ending in store
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
@@ -94,14 +94,14 @@ describe('AwaleComponent', () => {
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
-            // Given an awale state with where multiple so would be possible, and the first sowing is done
+            // Given an awale state where multiple so would be possible, and the first sowing is done
             const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
             await testUtils.expectClickSuccess('#click_3_1');
             tick(1400);
 

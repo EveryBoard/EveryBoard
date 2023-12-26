@@ -7,7 +7,7 @@ import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { KamisadoHeuristic } from '../KamisadoHeuristic';
 import { KamisadoColor } from '../KamisadoColor';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: KamisadoPiece = KamisadoPiece.EMPTY;
 const R: KamisadoPiece = KamisadoPiece.ZERO.RED;
@@ -16,7 +16,7 @@ const b: KamisadoPiece = KamisadoPiece.ONE.BROWN;
 describe('KamisadoHeuristic', () => {
 
     let heuristic: KamisadoHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = KamisadoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = KamisadoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new KamisadoHeuristic();

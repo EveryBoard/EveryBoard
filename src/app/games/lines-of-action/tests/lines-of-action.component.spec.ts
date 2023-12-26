@@ -147,8 +147,9 @@ describe('LinesOfActionComponent', () => {
             [_, O, O, O, O, O, O, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
-        const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
-        await testUtils.setupState(state, LinesOfActionRules.get().getInitialState(), move);
+        const previousMove: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
+        const previousState: LinesOfActionState = LinesOfActionRules.get().getInitialState();
+        await testUtils.setupState(state, { previousState, previousMove });
 
         // When taking it back
         await testUtils.expectInterfaceClickSuccess('#takeBack');

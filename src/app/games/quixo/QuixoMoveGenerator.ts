@@ -8,7 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class QuixoMoveGenerator extends MoveGenerator<QuixoMove, QuixoState, QuixoConfig> {
 
-    public getListMoves(node: QuixoNode, _config: MGPOptional<QuixoConfig>): QuixoMove[] {
+    public override getListMoves(node: QuixoNode, _config: MGPOptional<QuixoConfig>): QuixoMove[] {
         const state: QuixoState = node.gameState;
         const moves: QuixoMove[] = [];
         const verticalCoords: Coord[] = QuixoRules.getVerticalCoords(node);

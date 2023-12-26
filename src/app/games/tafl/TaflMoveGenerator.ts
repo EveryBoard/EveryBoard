@@ -16,7 +16,7 @@ export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, Tafl
         super();
     }
 
-    public getListMoves(node: TaflNode<M>, config: MGPOptional<TaflConfig>): M[] {
+    public override getListMoves(node: TaflNode<M>, config: MGPOptional<TaflConfig>): M[] {
         const state: TaflState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state, config.get());

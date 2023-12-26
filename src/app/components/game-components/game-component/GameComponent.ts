@@ -1,7 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 
 import { Move } from '../../../jscaip/Move';
-import { ConfigurableRules, SuperRules } from '../../../jscaip/Rules';
+import { SuperRules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -45,8 +45,16 @@ export abstract class BaseGameComponent extends BaseComponent {
 
     public SPACE_SIZE: number = 100;
 
+    public readonly STROKE_WIDTH: number = 8;
+
+    public readonly SMALL_STROKE_WIDTH: number = 2;
+
     // Make ArrayUtils available in game components
     public ArrayUtils: typeof ArrayUtils = ArrayUtils;
+
+    public getSVGTranslate(x: number, y: number): string {
+        return 'translate(' + x + ', ' + y + ')';
+    }
 }
 
 export abstract class BaseWrapperComponent extends BaseComponent {
@@ -82,13 +90,9 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public Player: typeof Player = Player;
 
-    public readonly STROKE_WIDTH: number = 8;
-
-    public readonly SMALL_STROKE_WIDTH: number = 2;
-
     public rules: R;
 
-    public node: GameNode<M, S, C>;
+    public node: GameNode<M, S>;
 
     public config: MGPOptional<C> = MGPOptional.empty();
 
@@ -232,10 +236,10 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
 }
 
-export abstract class AbstractGameComponent extends GameComponent<ConfigurableRules<Move,
-                                                                                    GameState,
-                                                                                    RulesConfig,
-                                                                                    unknown>,
+export abstract class AbstractGameComponent extends GameComponent<SuperRules<Move,
+                                                                             GameState,
+                                                                             RulesConfig,
+                                                                             unknown>,
                                                                   Move,
                                                                   GameState,
                                                                   RulesConfig,

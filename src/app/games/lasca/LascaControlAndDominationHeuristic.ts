@@ -3,12 +3,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { LascaControlHeuristic } from './LascaControlHeuristic';
 import { LascaNode } from './LascaRules';
 import { LascaStack, LascaState } from './LascaState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LascaControlPlusDominationHeuristic extends LascaControlHeuristic {
 
-    public override getBoardValue(node: LascaNode, config: MGPOptional<EmptyRulesConfig>): BoardValue {
+    public override getBoardValue(node: LascaNode, config: NoConfig): BoardValue {
         const controlValue: number = this.getControlScore(node, config);
         const dominatingPiecesCount: number = this.getDominatedPieceScore(node, config);
         return BoardValue.multiMetric([
@@ -17,7 +16,7 @@ export class LascaControlPlusDominationHeuristic extends LascaControlHeuristic {
         ]);
     }
 
-    private getDominatedPieceScore(node: LascaNode, _config: MGPOptional<EmptyRulesConfig>): number {
+    private getDominatedPieceScore(node: LascaNode, _config: NoConfig): number {
         let dominatingPiecesCount: number = 0;
         for (let y: number = 0; y < LascaState.SIZE; y++) {
             for (let x: number = 0; x < LascaState.SIZE; x++) {

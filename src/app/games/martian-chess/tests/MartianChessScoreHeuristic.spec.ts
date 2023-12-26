@@ -8,12 +8,12 @@ import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessRules } from '../MartianChessRules';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessScoreHeuristic', () => {
 
     let heuristic: MartianChessScoreHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new MartianChessScoreHeuristic();

@@ -8,12 +8,11 @@ import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, EncapsuleState> {
 
-    public getListMoves(node: EncapsuleNode, _config: MGPOptional<EmptyRulesConfig>): EncapsuleMove[] {
+    public override getListMoves(node: EncapsuleNode, _config: NoConfig): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];
         const state: EncapsuleState = node.gameState;
         const board: Table<EncapsuleSpace> = state.getCopiedBoard();

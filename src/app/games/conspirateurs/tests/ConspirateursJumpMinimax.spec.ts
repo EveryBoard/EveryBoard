@@ -4,15 +4,14 @@ import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursJumpMinimax } from '../ConspirateursJumpMinimax';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ConspirateursJumpMinimax', () => {
 
     let rules: ConspirateursRules;
     let minimax: Minimax<ConspirateursMove, ConspirateursState>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = ConspirateursRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = ConspirateursRules.get();
@@ -21,7 +20,7 @@ describe('ConspirateursJumpMinimax', () => {
 
     it('should be able to finish when playing with itself', () => {
         // Given a component where AI plays against AI
-        let node: ConspirateursNode = rules.getInitialNode(MGPOptional.empty());
+        let node: ConspirateursNode = rules.getInitialNode(defaultConfig);
 
         // When playing 200 turns
         let turn: number = 0;

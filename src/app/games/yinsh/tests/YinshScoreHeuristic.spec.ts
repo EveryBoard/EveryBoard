@@ -3,13 +3,12 @@ import { Player } from 'src/app/jscaip/Player';
 import { YinshState } from '../YinshState';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { YinshScoreHeuristic } from '../YinshScoreHeuristic';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('YinshScoreHeuristic', () => {
 
     let heuristic: YinshScoreHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = YinshRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = YinshRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new YinshScoreHeuristic();

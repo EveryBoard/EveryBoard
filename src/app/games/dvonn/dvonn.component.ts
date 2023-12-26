@@ -137,7 +137,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             }
         } else {
             // The only way to know whether we can select the other piece is to check the move legality
-            const legality: MGPValidation = this.rules.isLegal(move.get(), state);
+            const legality: MGPValidation = this.rules.isLegal(move.get(), state, this.config);
             if (legality.isFailure() && this.rules.isMovablePiece(state, chosenDestination).isSuccess()) {
                 return this.choosePiece(x, y);
             } else {

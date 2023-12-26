@@ -3,8 +3,7 @@ import { CoerceoState } from '../CoerceoState';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -14,7 +13,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('CoerceoOrderedMoveGenerator', () => {
 
     let moveGenerator: CoerceoOrderedMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new CoerceoOrderedMoveGenerator();

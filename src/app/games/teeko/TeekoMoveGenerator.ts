@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, TeekoConfig> {
 
-    public getListMoves(node: TeekoNode, config: MGPOptional<TeekoConfig>): TeekoMove[] {
+    public override getListMoves(node: TeekoNode, config: MGPOptional<TeekoConfig>): TeekoMove[] {
         if (node.gameState.isInDropPhase()) {
             return this.getListDrops(node.gameState);
         } else {
