@@ -104,7 +104,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      */
     private winRatio(node: GameNode<M, S>): number {
         const simulations: number = this.simulations(node);
-        if (this.simulations(node) === 0) return 1;
+        if (this.simulations(node) === 0) { console.log('no simulations done for node'); return 1; }
         return this.wins(node) / simulations;
     }
 
@@ -132,6 +132,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * @returns the selected node
      */
     private select(nodeAndPath: NodeAndPath<M, S>): NodeAndPath<M, S> {
+        Debug.enableLog([true, true], 'MCTS');
         const node: GameNode<M, S> = nodeAndPath.node;
         Debug.display('MCTS', 'select', 'Exploring node: ' + node.id);
         if (node.hasChildren()) {
