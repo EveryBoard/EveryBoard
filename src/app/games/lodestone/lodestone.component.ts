@@ -383,7 +383,7 @@ export class LodestoneComponent
             coord,
             squareClasses: [],
             isCrumbled: this.isCrumbled(coord),
-            hasPieceToDraw: false,
+            hasPieceToDraw: lodestoneInfo !== undefined,
             pieceClasses: [],
             lodestone: lodestoneInfo,
         };
