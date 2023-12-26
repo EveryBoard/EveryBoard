@@ -12,10 +12,20 @@ export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
         return coord.isInRange(EpaminondasState.WIDTH, EpaminondasState.HEIGHT);
     }
 
-    public count(piece: Player, row: number): number {
+    public countRow(player: Player, row: number): number {
         let result: number = 0;
         for (let x: number = 0; x < 14; x++) {
-            if (this.board[row][x] === piece) {
+            if (this.board[row][x] === player) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public count(player: Player): number {
+        let result: number = 0;
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            if (coordAndContent.content === player) {
                 result++;
             }
         }
