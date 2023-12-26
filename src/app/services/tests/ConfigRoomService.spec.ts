@@ -16,6 +16,7 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ConfigRoomService', () => {
 
@@ -45,7 +46,7 @@ describe('ConfigRoomService', () => {
     }));
     it('read should be delegated to ConfigRoomDAO', fakeAsync(async() => {
         // Given a ConfigRoomService
-        spyOn(configRoomDAO, 'read').and.resolveTo(MGPOptional.of(ConfigRoomMocks.INITIAL));
+        spyOn(configRoomDAO, 'read').and.resolveTo(MGPOptional.of(ConfigRoomMocks.getInitial(MGPOptional.empty())));
         // When reading a config Room
         await configRoomService.readConfigRoomById('myConfigRoomId');
         // Then it should delegate to the DAO
@@ -55,25 +56,45 @@ describe('ConfigRoomService', () => {
         // Given a ConfigRoomService
         spyOn(configRoomDAO, 'set').and.resolveTo();
         // When setting the configRoom
-        await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+        await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
         // Then it should delegate to the DAO
-        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('configRoomId', ConfigRoomMocks.INITIAL);
+        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
     }));
-    it('createInitialConfigRoom should delegate to the DAO set method', fakeAsync(async() => {
-        // Given a ConfigRoomService
-        spyOn(configRoomDAO, 'set').and.resolveTo();
-        TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+    describe('createInitialConfigRoom', () => {
+        it('should delegate to the DAO set method', fakeAsync(async() => {
+            // Given a ConfigRoomService
+            spyOn(configRoomDAO, 'set').and.resolveTo();
+            TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
 
-        // When creating the initial configRoom
-        await configRoomService.createInitialConfigRoom('id');
+            // When creating the initial configRoom
+            await configRoomService.createInitialConfigRoom('id', 'Quarto');
 
-        // Then it should delegate to the DAO and create the initial configRoom
-        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.INITIAL_RANDOM);
-    }));
+            // Then it should delegate to the DAO and create the initial configRoom
+            expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', ConfigRoomMocks.getInitialRandom(MGPOptional.empty()));
+        }));
+        it('should create the config room with the default rules config', fakeAsync(async() => {
+            // Given a game that is configurable
+            spyOn(configRoomDAO, 'set').and.resolveTo();
+            TestBed.inject(ConnectedUserService).user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
+            const configurableGame: string = 'P4'; // Amongst others
+            const defaultConfig: MGPOptional<RulesConfig> = MGPOptional.of({ mais_quelles_belles_chaussettes: 88 });
+            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultConfig);
+
+            // When creating part of this type
+            await configRoomService.createInitialConfigRoom('id', configurableGame);
+
+            // Then it should be created with the initial config rules
+            const roomConfig: ConfigRoom = {
+                ...ConfigRoomMocks.getInitialRandom(MGPOptional.empty()),
+                rulesConfig: defaultConfig.get(),
+            };
+            expect(configRoomDAO.set).toHaveBeenCalledOnceWith('id', roomConfig);
+        }));
+    });
     describe('joinGame', () => {
         it('should call configRoomService.addCandidate even when called while already in the game', fakeAsync(async() => {
             // Given a configRoom and a connected user that is candidate in the room
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
 
@@ -88,7 +109,7 @@ describe('ConfigRoomService', () => {
         it('should not update configRoom when called by the creator', fakeAsync(async() => {
             // Given a configRoom where we are the creator
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             spyOn(configRoomDAO, 'update').and.callThrough();
             expect(configRoomDAO.update).not.toHaveBeenCalled();
 
@@ -98,12 +119,12 @@ describe('ConfigRoomService', () => {
             // Then it should not update the configRoom, and the configRoom is still the initial one
             expect(configRoomDAO.update).not.toHaveBeenCalled();
             const resultingConfigRoom: ConfigRoom = (await configRoomDAO.read('configRoomId')).get();
-            expect(resultingConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+            expect(resultingConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
         }));
         it('should call addCandidate', fakeAsync(async() => {
             // Given a configRoom
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             spyOn(configRoomService, 'addCandidate').and.callThrough();
 
             // When joining it
@@ -125,7 +146,7 @@ describe('ConfigRoomService', () => {
         it('should call removeCandidate', fakeAsync(async() => {
             // Given a configRoom that we are observing and that we joined
             ConnectedUserServiceMock.setUser(UserMocks.CANDIDATE_AUTH_USER);
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
             await configRoomService.joinGame('configRoomId');
 
@@ -140,7 +161,7 @@ describe('ConfigRoomService', () => {
         it('should start as new when chosen opponent leaves', fakeAsync(async() => {
             // Given a configRoom that we are observing, with a chosen opponent
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
             await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
@@ -149,13 +170,13 @@ describe('ConfigRoomService', () => {
 
             // Then the configRoom is back to the initial one
             const currentConfigRoom: MGPOptional<ConfigRoom> = await configRoomDAO.read('configRoomId');
-            expect(currentConfigRoom.get()).withContext('should be as new').toEqual(ConfigRoomMocks.INITIAL);
+            expect(currentConfigRoom.get()).withContext('should be as new').toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
         }));
         it('should remove yourself when leaving the room', fakeAsync(async() => {
             // Given a configRoom that we are observing as a candidate
             await configRoomService.addCandidate('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
             await configRoomService.addCandidate('configRoomId', UserMocks.OTHER_OPPONENT_MINIMAL_USER);
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
             ConnectedUserServiceMock.setUser(UserMocks.OTHER_OPPONENT_AUTH_USER);
 
@@ -167,12 +188,12 @@ describe('ConfigRoomService', () => {
             const otherOpponentDoc: MGPOptional<unknown> =
                 await configRoomDAO.subCollectionDAO('configRoomId', 'candidates').read(UserMocks.OTHER_OPPONENT_AUTH_USER.id);
             expect(otherOpponentDoc.isAbsent()).toBeTrue();
-            expect(currentConfigRoom.get()).withContext('should be as new').toEqual(ConfigRoomMocks.INITIAL);
+            expect(currentConfigRoom.get()).withContext('should be as new').toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
         }));
         it('should throw when called by creator', fakeAsync(async() => {
             // Given a config room that we are observing but that we are creating
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
             await configRoomService.joinGame('configRoomId');
@@ -186,7 +207,7 @@ describe('ConfigRoomService', () => {
         it('should throw when called by user absent from the room', fakeAsync(async() => {
             // Given a config room that we are not observing or creating and that we did not joined
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             ConnectedUserServiceMock.setUser(UserMocks.OTHER_OPPONENT_AUTH_USER);
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
@@ -200,7 +221,7 @@ describe('ConfigRoomService', () => {
     describe('deleteConfigRoom', () => {
         it('should delegate deletion to CONFIGROOMDAO', fakeAsync(async() => {
             // Given a configRoom that we are observing
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             spyOn(configRoomDAO, 'delete').and.resolveTo();
@@ -213,7 +234,7 @@ describe('ConfigRoomService', () => {
         }));
         it('should delete candidates as well', fakeAsync(async() => {
             // Given a configRoom that we are observing, which has candidates
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
             await configRoomService.addCandidate('configRoomId', UserMocks.CANDIDATE_MINIMAL_USER);
 
@@ -229,7 +250,7 @@ describe('ConfigRoomService', () => {
     describe('reviewConfig', () => {
         it('should change part status with DAO', fakeAsync(async() => {
             // Given a configRoom that we are observing
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             spyOn(configRoomDAO, 'update').and.resolveTo();
@@ -246,7 +267,7 @@ describe('ConfigRoomService', () => {
     describe('reviewConfigAndRemoveChosenOpponent', () => {
         it('should change part status and chosen opponent with DAO', fakeAsync(async() => {
             // Given a configRoom that we are observing
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             spyOn(configRoomDAO, 'update').and.resolveTo();
@@ -264,7 +285,7 @@ describe('ConfigRoomService', () => {
     describe('acceptConfig', () => {
         it('should change part status with DAO to start it', fakeAsync(async() => {
             // Given a configRoom that we are observing
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             configRoomService.subscribeToChanges('configRoomId', (doc: MGPOptional<ConfigRoom>): void => {});
 
             spyOn(configRoomDAO, 'update').and.resolveTo();
@@ -282,7 +303,7 @@ describe('ConfigRoomService', () => {
         let candidates: MinimalUser[] = [];
         beforeEach(fakeAsync(async() => {
             // Given a configRoom for which we are observing the candidates
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
             configRoomService.subscribeToChanges('configRoomId', () => {});
             configRoomService.subscribeToCandidates('configRoomId', (newCandidates: MinimalUser[]) => {
                 candidates = newCandidates;

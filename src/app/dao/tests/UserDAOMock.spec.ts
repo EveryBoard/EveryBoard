@@ -5,7 +5,7 @@ import { Debug } from 'src/app/utils/utils';
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-type UserOS = ObservableSubject<MGPOptional<UserDocument>>
+type UserOS = ObservableSubject<MGPOptional<UserDocument>>;
 
 @Debug.log
 export class UserDAOMock extends FirestoreDAOMock<User> {

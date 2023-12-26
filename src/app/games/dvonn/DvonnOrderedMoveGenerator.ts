@@ -6,12 +6,13 @@ import { DvonnMove } from './DvonnMove';
 import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
 
-    public override getListMoves(node: DvonnNode): DvonnMove[] {
+    public override getListMoves(node: DvonnNode, config: NoConfig): DvonnMove[] {
         const state: DvonnState = node.gameState;
-        const moves: DvonnMove[] = super.getListMoves(node);
+        const moves: DvonnMove[] = super.getListMoves(node, config);
 
         // Sort the moves by the size of pieces that they add to the player
         const opponent: Player = state.getCurrentOpponent();

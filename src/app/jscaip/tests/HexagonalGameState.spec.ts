@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { NumberTable, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
 import { HexaLine } from '../HexaLine';
@@ -29,7 +29,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
         return new TestingHexagonalState(0, newBoard, width, height, excludedSpaces, empty);
     }
     public static fromTable(turn: number,
-                            table: NumberTable,
+                            table: Table<number>,
                             excludedSpaces: ReadonlyArray<number>,
                             empty: number)
     : TestingHexagonalState
@@ -42,14 +42,14 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
         return new TestingHexagonalState(turn, table, width, height, excludedSpaces, empty);
     }
     public constructor(turn: number,
-                       board: NumberTable,
+                       board: Table<number>,
                        width: number,
                        height: number,
                        excludedSpaces: ReadonlyArray<number>,
                        empty: number)
     {
         super(turn, board, width, height, excludedSpaces, empty);
-        if (this.excludedSpaces.length >= (this.height / 2) + 1) {
+        if ((this.height / 2) + 1 <= this.excludedSpaces.length) {
             throw new Error('Invalid excluded spaces specification for HexaBoard.');
         }
     }

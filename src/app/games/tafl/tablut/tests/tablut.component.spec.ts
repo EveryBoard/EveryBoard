@@ -5,12 +5,16 @@ import { TablutRules } from '../TablutRules';
 import { TaflPawn } from '../../TaflPawn';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { TablutComponent } from '../tablut.component';
+import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
-const x: TaflPawn = TaflPawn.INVADERS;
-const i: TaflPawn = TaflPawn.DEFENDERS;
+const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+
+const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
 
 const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove> = {
     component: TablutComponent,
@@ -34,7 +38,7 @@ const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove> =
     capture: TablutMove.from(new Coord(1, 0), new Coord(2, 0)).get(),
     firstCaptured: new Coord(2, 1),
     otherPlayerPiece: new Coord(5, 0),
-    stateReadyForJumpOver: TablutRules.get().getInitialState(),
+    stateReadyForJumpOver: TablutRules.get().getInitialState(defaultConfig),
     jumpOver: TablutMove.from(new Coord(5, 0), new Coord(5, 5)).get(),
 };
 DoTaflTests(tablutEntries);

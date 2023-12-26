@@ -3,6 +3,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DemoPageComponent } from './demo-page.component';
 
 describe('DemoPageComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<DemoPageComponent>;
 
     beforeEach(fakeAsync(async() => {

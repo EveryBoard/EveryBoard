@@ -250,4 +250,5 @@ describe('TrexoHalfSquareComponent', () => {
         // Then all lines should be displayed
         expectAllLinesToBeDisplayed();
     });
+
 });

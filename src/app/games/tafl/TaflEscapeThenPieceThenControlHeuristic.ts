@@ -9,12 +9,13 @@ import { TaflMove } from './TaflMove';
 import { Utils } from 'src/app/utils/utils';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlHeuristicMetrics } from './TaflPieceAndControlHeuristic';
 import { TaflNode } from './TaflRules';
+import { TaflConfig } from './TaflConfig';
 
 export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends TaflPieceAndControlHeuristic<M> {
 
-    public override getBoardValue(node: TaflNode<M>): BoardValue {
+    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
         const state: TaflState = node.gameState;
-        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(state);
+        const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node, config);
         const defender: Player = state.getPieceAt(this.rules.getKingCoord(state).get()).getOwner() as Player;
         const stepForEscape: number = this.getStepForEscape(state) * defender.getScoreModifier();
         if (stepForEscape === -1) {
@@ -29,10 +30,12 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
                               (metrics.threatenedScore * (maxControl + 1)) +
                               metrics.controlScore);
     }
+
     private getStepForEscape(state: TaflState): number {
         const king: Coord = this.rules.getKingCoord(state).get();
         return this._getStepForEscape(state, 1, [king], []).getOrElse(-1);
     }
+
     private _getStepForEscape(state: TaflState,
                               step: number,
                               previousGen: Coord[],
@@ -45,7 +48,7 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
             // not found:
             return MGPOptional.empty();
         }
-        if (nextGen.some((coord: Coord) => this.rules.isExternalThrone(coord))) {
+        if (nextGen.some((coord: Coord) => this.rules.isExternalThrone(state, coord))) {
             return MGPOptional.of(step);
         } else {
             step++;
@@ -53,14 +56,13 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
             return this._getStepForEscape(state, step, nextGen, handledCoords);
         }
     }
+
     private getNextGen(state: TaflState, previousGen: Coord[], handledCoords: Coord[]): Coord[] {
         const newGen: Coord[] = [];
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {
                 let landing: Coord = piece.getNext(dir, 1);
-                while (landing.isInRange(this.width, this.width) &&
-                       state.getPieceAt(landing) === TaflPawn.UNOCCUPIED)
-                {
+                while (state.isOnBoard(landing) && state.getPieceAt(landing) === TaflPawn.UNOCCUPIED) {
                     if (handledCoords.every((coord: Coord) => coord.equals(landing) === false)) {
                         // coord is new
                         newGen.push(landing);
@@ -71,4 +73,5 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
         }
         return newGen;
     }
+
 }

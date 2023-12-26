@@ -2,41 +2,39 @@
 import { Direction } from 'src/app/jscaip/Direction';
 import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('EpaminondasMove: ', () => {
 
-    it('should forbid out of range coords', () => {
-        function createLeftOfBoardCoord(): void {
-            new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT);
-        }
-        TestUtils.expectToThrowAndLog(createLeftOfBoardCoord, 'Illegal coord outside of board (-1, 0).');
-    });
     it('should forbid creation of a move that moves too much', () => {
         function movingAPhalanxTooMuch(): void {
             new EpaminondasMove(0, 0, 2, 3, Direction.UP);
         }
         TestUtils.expectToThrowAndLog(movingAPhalanxTooMuch, 'Cannot move a phalanx further than its size (got step size 3 for 2 pieces).');
     });
+
     it('should forbid creation of a move with with negative or null number of selected piece', () => {
         function selectingNegativeNumberOfPiece(): void {
             new EpaminondasMove(0, 0, -1, 0, Direction.UP);
         }
         TestUtils.expectToThrowAndLog(selectingNegativeNumberOfPiece, 'Must select minimum one piece (got -1).');
     });
+
     it('should forbid creation of move of null step', () => {
         function movingOfZeroStep(): void {
             new EpaminondasMove(2, 2, 1, 0, Direction.UP);
         }
         TestUtils.expectToThrowAndLog(movingOfZeroStep, 'Step size must be minimum one (got 0).');
     });
+
     it('should have a bijective encoder', () => {
         const rules: EpaminondasRules = EpaminondasRules.get();
         const moveGenerator: EpaminondasMoveGenerator = new EpaminondasMoveGenerator();
         MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, EpaminondasMove.encoder);
     });
+
     it('should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);
         const neighbor: EpaminondasMove = new EpaminondasMove(0, 0, 2, 1, Direction.UP);
@@ -52,4 +50,5 @@ describe('EpaminondasMove: ', () => {
         expect(move.equals(twin)).toBeTrue();
         expect(move.toString()).toBe('EpaminondasMove((4, 3), m:2, s:1, UP)');
     });
+
 });

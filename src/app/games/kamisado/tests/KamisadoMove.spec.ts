@@ -12,18 +12,21 @@ describe('KamisadoMove', () => {
         expect(KamisadoMove.of(new Coord(0, 0), new Coord(1, 5)).toString()).toEqual('KamisadoMove((0, 0)->(1, 5))');
         expect(KamisadoMove.PASS.toString()).toEqual('KamisadoMove(PASS)');
     });
+
     it('should have a bijective encoder', () => {
         const rules: KamisadoRules = KamisadoRules.get();
         const moveGenerator: KamisadoMoveGenerator = new KamisadoMoveGenerator();
         MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, KamisadoMove.encoder);
         EncoderTestUtils.expectToBeBijective(KamisadoMove.encoder, KamisadoMove.PASS);
     });
+
     it('should force move to start and end inside the board', () => {
         expect(() => KamisadoMove.of(new Coord(-1, 2), new Coord(2, 2))).toThrowError();
         expect(() => KamisadoMove.of(new Coord(0, 0), new Coord(-1, -1))).toThrowError();
         expect(() => KamisadoMove.of(new Coord(0, 0), new Coord(9, 9))).toThrowError();
         expect(() => KamisadoMove.of(new Coord(8, 5), new Coord(5, 5))).toThrowError();
     });
+
     it('should override equals correctly', () => {
         const move: KamisadoMove = KamisadoMove.of(new Coord(2, 2), new Coord(3, 3));
         const sameMove: KamisadoMove = KamisadoMove.of(new Coord(2, 2), new Coord(3, 3));
@@ -37,7 +40,9 @@ describe('KamisadoMove', () => {
         expect(move.equals(pass)).toBeFalse();
         expect(pass.equals(move)).toBeFalse();
     });
+
     it('should assign a length of 0 to PASS moves', () => {
         expect(KamisadoMove.PASS.length()).toBe(0);
     });
+
 });

@@ -6,7 +6,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { Debug } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-type PartOS = ObservableSubject<MGPOptional<PartDocument>>
+type PartOS = ObservableSubject<MGPOptional<PartDocument>>;
 
 @Debug.log
 export class PartDAOMock extends FirestoreDAOMock<Part> {

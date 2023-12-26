@@ -1,10 +1,10 @@
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { JSONObject } from '../utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MinimalUser } from './MinimalUser';
+import { RulesConfig } from '../jscaip/RulesConfigUtil';
 
 // On top of these fields, a config room has a subcollection of candidates, which are MinimalUsers
-export interface ConfigRoom extends JSONObject {
+export type ConfigRoom = {
     readonly creator: MinimalUser;
     readonly chosenOpponent: MinimalUser | null;
     readonly partStatus: IPartStatus;
@@ -13,9 +13,10 @@ export interface ConfigRoom extends JSONObject {
     readonly partType: IPartType
     readonly maximalMoveDuration: number;
     readonly totalPartDuration: number;
-}
+    readonly rulesConfig: RulesConfig; // It is in the ConfigRoom in PartCreationComponent that this is set
+};
 
-export type ConfigRoomDocument = FirestoreDocument<ConfigRoom>
+export type ConfigRoomDocument = FirestoreDocument<ConfigRoom>;
 
 export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';
 
@@ -66,6 +67,7 @@ export class PartType {
 }
 
 export type IPartStatus = number;
+
 export class PartStatus {
     private constructor(public value: IPartStatus) {}
     // part created, no ChosenOpponent => waiting for acceptable candidate

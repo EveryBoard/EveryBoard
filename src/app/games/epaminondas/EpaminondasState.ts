@@ -1,20 +1,12 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Coord } from 'src/app/jscaip/Coord';
 
 export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
-    public static readonly WIDTH: number = 14;
-
-    public static readonly HEIGHT: number = 12;
-
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(EpaminondasState.WIDTH, EpaminondasState.HEIGHT);
-    }
-
     public count(piece: Player, row: number): number {
         let result: number = 0;
-        for (let x: number = 0; x < 14; x++) {
+        const width: number = this.getWidth();
+        for (let x: number = 0; x < width; x++) {
             if (this.board[row][x] === piece) {
                 result++;
             }

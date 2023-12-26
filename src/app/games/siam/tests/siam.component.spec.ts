@@ -13,6 +13,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SiamFailure } from '../SiamFailure';
 import { DebugElement } from '@angular/core';
+import { SiamRules } from '../SiamRules';
 
 describe('SiamComponent', () => {
 
@@ -22,9 +23,10 @@ describe('SiamComponent', () => {
     const M: SiamPiece = SiamPiece.MOUNTAIN;
     const U: SiamPiece = SiamPiece.LIGHT_UP;
     const u: SiamPiece = SiamPiece.DARK_UP;
+    const rules: SiamRules = SiamRules.get();
 
-    async function expectMoveToBeLegal(player: Player, move: SiamMove): Promise<void> {
-        if (move.isInsertion()) {
+    async function expectMoveToBeLegal(player: Player, move: SiamMove, state: SiamState): Promise<void> {
+        if (rules.isInsertion(move, state)) {
             await testUtils.expectClickSuccess('#remainingPieces_' + player.value);
             const target: Coord = move.coord.getNext(move.direction.get());
             await testUtils.expectClickSuccess('#square_' + target.x + '_' + target.y);
@@ -52,7 +54,7 @@ describe('SiamComponent', () => {
         // When inserting a piece
         await testUtils.expectClickSuccess('#remainingPieces_0');
         await testUtils.expectClickSuccess('#square_2_0');
-        const move: SiamMove = SiamMove.from(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
+        const move: SiamMove = SiamMove.of(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         // Then it should succeed
         await testUtils.expectMoveSuccess('#orientation_DOWN', move);
     }));
@@ -112,8 +114,8 @@ describe('SiamComponent', () => {
 
         // When performing a rotation
         // Then it should succeed
-        const move: SiamMove = SiamMove.from(0, 0, MGPOptional.empty(), Orthogonal.DOWN).get();
-        await expectMoveToBeLegal(Player.ZERO, move);
+        const move: SiamMove = SiamMove.of(0, 0, MGPOptional.empty(), Orthogonal.DOWN);
+        await expectMoveToBeLegal(Player.ZERO, move, state);
     }));
 
     it('should allow normal move', fakeAsync(async() => {
@@ -130,8 +132,8 @@ describe('SiamComponent', () => {
 
         // When moving forward
         // Then it should succeed
-        const move: SiamMove = SiamMove.from(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
-        await expectMoveToBeLegal(Player.ZERO, move);
+        const move: SiamMove = SiamMove.of(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
+        await expectMoveToBeLegal(Player.ZERO, move, state);
     }));
 
     it('should highlight all moved pieces upon move', fakeAsync(async() => {
@@ -147,8 +149,8 @@ describe('SiamComponent', () => {
         await testUtils.setupState(state);
 
         // When performing a move
-        const move: SiamMove = SiamMove.from(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
-        await expectMoveToBeLegal(Player.ZERO, move);
+        const move: SiamMove = SiamMove.of(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
+        await expectMoveToBeLegal(Player.ZERO, move, state);
 
         // Then the moved piece and departed square should be shown as moved
         testUtils.expectElementToHaveClasses('#square_4_4', ['base', 'moved-fill']);
@@ -171,7 +173,7 @@ describe('SiamComponent', () => {
         // When making the piece exit the board
         // Then the orientation of the piece does not have to be chosen
         await testUtils.expectClickSuccess('#square_4_4');
-        const move: SiamMove = SiamMove.from(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
+        const move: SiamMove = SiamMove.of(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await testUtils.expectMoveSuccess('#square_4_5', move);
     }));
 
@@ -229,7 +231,7 @@ describe('SiamComponent', () => {
 
         // Then a new move should be in creation and the player should be able to finish the move
         await testUtils.expectClickSuccess('#square_3_4');
-        const move: SiamMove = SiamMove.from(3, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get();
+        const move: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await testUtils.expectMoveSuccess('#orientation_DOWN', move);
     }));
 
@@ -288,7 +290,7 @@ describe('SiamComponent', () => {
         await testUtils.expectClickSuccess('#remainingPieces_0');
 
         // Then the corresponding move should be done directly
-        const move: SiamMove = SiamMove.from(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get();
+        const move: SiamMove = SiamMove.of(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         await testUtils.expectMoveSuccess('#indicator_4_4_LEFT', move);
     }));
 
@@ -317,7 +319,7 @@ describe('SiamComponent', () => {
 
         // Then Player.ONE's pieces should be on the bottom
         expectTranslationYToBe('#remainingPieces_0_0', -100);
-        expectTranslationYToBe('#remainingPieces_1_0', 700);
+        expectTranslationYToBe('#remainingPieces_1_0', 500);
     }));
 
     it('should display player zero pieces on the bottom (observer)', fakeAsync(async() => {
@@ -336,7 +338,7 @@ describe('SiamComponent', () => {
         await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
 
         // Then player 0's pieces should be on the bottom
-        expectTranslationYToBe('#remainingPieces_0_0', 700);
+        expectTranslationYToBe('#remainingPieces_0_0', 500);
         expectTranslationYToBe('#remainingPieces_1_0', -100);
     }));
 

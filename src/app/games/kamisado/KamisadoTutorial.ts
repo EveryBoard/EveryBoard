@@ -25,7 +25,6 @@ const Gr: KamisadoPiece = KamisadoPiece.ONE.GREEN;
 const br: KamisadoPiece = KamisadoPiece.ZERO.BROWN;
 const Br: KamisadoPiece = KamisadoPiece.ONE.BROWN;
 
-
 export class KamisadoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [

@@ -4,11 +4,12 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
-import { SixNode } from '../SixRules';
+import { SixNode, SixRules } from '../SixRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { SixHeuristic } from '../SixHeuristic';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
@@ -17,11 +18,14 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 describe('SixHeuristic', () => {
 
     let heuristic: SixHeuristic;
+    const defaultConfig: NoConfig = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new SixHeuristic();
     });
+
     describe('pre-victories', () => {
+
         it('should only count one preVictory when one coord is a forcing move for two lines', () => {
             // Given a node with two pre-victories
             const board: Table<PlayerOrNone> = [
@@ -37,18 +41,20 @@ describe('SixHeuristic', () => {
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
 
             // When evaluation its value
-            const boardValue: BoardValue = heuristic.getBoardValue(node);
+            const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
 
             // Then that value should be a pre-victory
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
+
         it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
             const state: SixState = SixState.ofRepresentation([
                 [X, X, X, X, X],
             ], 2);
             const previousMove: SixMove = SixMove.ofDrop(new Coord(0, 0));
-            HeuristicUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic]);
+            HeuristicUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic], defaultConfig);
         });
+
         it('should know that full-bowtie aligned with two empty extension mean PRE_VICTORY', () => {
             const state: SixState = SixState.ofRepresentation([
                 [_, O, O, O],
@@ -58,10 +64,13 @@ describe('SixHeuristic', () => {
 
             ], 2);
             const previousMove: SixMove = SixMove.ofDrop(new Coord(2, 2));
-            HeuristicUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic]);
+            HeuristicUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [heuristic], defaultConfig);
         });
+
     });
+
     describe('4 pieces aligned is better than 3 pieces aligned', () => {
+
         it('should be true with lines', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
             const weakerState: SixState = SixState.ofRepresentation([
@@ -77,8 +86,10 @@ describe('SixHeuristic', () => {
             HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                    weakerState, MGPOptional.of(move),
                                                                    strongerState, MGPOptional.of(move),
-                                                                   Player.ONE);
+                                                                   Player.ONE,
+                                                                   defaultConfig);
         });
+
         it('should be true with triangle', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(1, 3));
             const weakerState: SixState = SixState.ofRepresentation([
@@ -96,8 +107,10 @@ describe('SixHeuristic', () => {
             HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                    weakerState, MGPOptional.of(move),
                                                                    strongerState, MGPOptional.of(move),
-                                                                   Player.ONE);
+                                                                   Player.ONE,
+                                                                   defaultConfig);
         });
+
         it('should be true with circle', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(2, 1));
             const weakerState: SixState = SixState.ofRepresentation([
@@ -113,10 +126,14 @@ describe('SixHeuristic', () => {
             HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                    weakerState, MGPOptional.of(move),
                                                                    strongerState, MGPOptional.of(move),
-                                                                   Player.ONE);
+                                                                   Player.ONE,
+                                                                   defaultConfig);
         });
+
     });
+
     describe('4 pieces aligned with two spaces should be better than 4 aligned with two opponents', () => {
+
         it('should be true with lines', () => {
             const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
             const weakerState: SixState = SixState.ofRepresentation([
@@ -132,9 +149,12 @@ describe('SixHeuristic', () => {
             HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                    weakerState, MGPOptional.of(move),
                                                                    strongerState, MGPOptional.of(move),
-                                                                   Player.ONE);
+                                                                   Player.ONE,
+                                                                   defaultConfig);
         });
+
     });
+
     it('Score after 40th turn should be a subtraction of the number of piece', () => {
         const state: SixState = SixState.ofRepresentation([
             [X, X, X, X, O, O, O, O, O],
@@ -142,6 +162,7 @@ describe('SixHeuristic', () => {
         ], 40);
         const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
         const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        expect(heuristic.getBoardValue(node).value).toBe(2);
+        expect(heuristic.getBoardValue(node, defaultConfig).value).toBe(2);
     });
+
 });
