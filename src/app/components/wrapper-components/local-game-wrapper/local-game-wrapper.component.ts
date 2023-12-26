@@ -274,8 +274,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
-        // Linter seem to think that the unsubscription line can be reached before the subscription
-        // yet this is false, so this explain the weird instanciation
         let subcription: MGPOptional<Subscription> = MGPOptional.empty();
         const rulesConfigPromise: Promise<RulesConfig> =
             new Promise((resolve: (value: RulesConfig) => void) => {
@@ -288,6 +286,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 );
             });
         const rulesConfig: RulesConfig = await rulesConfigPromise;
+        // Subscription will never be empty at this point
+        // but this is needed to prevent linter from complaining that:
+        // "subscription is used before it is set"
         subcription.get().unsubscribe();
         return MGPOptional.of(rulesConfig);
     }
