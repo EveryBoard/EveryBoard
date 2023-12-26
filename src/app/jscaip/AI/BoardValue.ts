@@ -14,7 +14,7 @@ export class BoardValue {
     }
 
     /**
-     * Returns the board value link to those player's scores
+     * return the board value corresponding to the players' scores
      * @param playerZeroScore the positive score of player zero
      * @param playerOneScore the positive score of player one
      */
@@ -23,14 +23,13 @@ export class BoardValue {
     }
 
     /**
-     * Returns the board value link to those player's scores
+     * return the board value corresponding to the players' scores
      * @param playerZeroScores the positive score list of player zero
      * @param playerOneScores the positive score list of player one
      */
     public static ofMultiple(playerZeroScores: ReadonlyArray<number>, playerOneScores: ReadonlyArray<number>)
     : BoardValue
     {
-        // TODO FOR REVIEW: non je voulais dire, si zero a [1, 2] mais un a [1], je considère que 1 a [1, 0] ???
         Utils.assert(playerZeroScores.length === playerOneScores.length, 'both player should have the same number of metric');
         Utils.assert(playerZeroScores.length >= 1, 'scores list should be filled');
         const subValues: number[] = [];
