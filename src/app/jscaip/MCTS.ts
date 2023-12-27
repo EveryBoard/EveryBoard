@@ -134,7 +134,6 @@ implements AI<M, S, AITimeLimitOptions, C>
      * @returns the selected node
      */
     private select(nodeAndPath: NodeAndPath<M, S>): NodeAndPath<M, S> {
-        Debug.enableLog([true, true], 'MCTS');
         const node: GameNode<M, S> = nodeAndPath.node;
         Debug.display('MCTS', 'select', 'Exploring node: ' + node.id);
         if (node.hasChildren()) {
