@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
-import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
+import { KamisadoNode } from '../KamisadoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { KamisadoHeuristic } from '../KamisadoHeuristic';
 import { KamisadoColor } from '../KamisadoColor';
