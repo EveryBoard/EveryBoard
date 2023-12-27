@@ -104,7 +104,9 @@ implements AI<M, S, AITimeLimitOptions, C>
      */
     private winRatio(node: GameNode<M, S>): number {
         const simulations: number = this.simulations(node);
-        if (this.simulations(node) === 0) { console.log('no simulations done for node'); return 1; }
+        if (this.simulations(node) === 0) {
+            return 1;
+        }
         return this.wins(node) / simulations;
     }
 
