@@ -82,4 +82,16 @@ describe('MCTS', () => {
         expect(Date.now() - beforeSearch).toBeLessThan(1000 * (mctsOptions.maxSeconds + 0.1));
     });
 
+    it('should choose a move even with very little time', () => {
+        // This test is there for coverage as well, to check that having unexplored moves does not break MCTS
+        // Given no time allowed for MCTS
+        const noTimeOptions: AITimeLimitOptions = { name: '1ms', maxSeconds: 0.001 };
+        // When searching for a move
+        const node: QuartoNode = QuartoRules.get().getInitialNode(defaultConfig);
+        const move: QuartoMove = mcts.chooseNextMove(node, noTimeOptions, defaultConfig);
+        // Then it should have selected a move
+        expect(move).toBeTruthy();
+    });
+
+
 });
