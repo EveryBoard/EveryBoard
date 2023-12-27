@@ -28,7 +28,6 @@ describe('MCTS', () => {
     });
 
     fit('should choose possible victory over definite defeat', () => {
-        console.log('1')
         // Given a board that could be a win for opponent in their next moves
         const board: Table<QuartoPiece> = [
             [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABB, QuartoPiece.EMPTY],
