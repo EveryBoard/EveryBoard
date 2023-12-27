@@ -84,7 +84,7 @@ describe('MCTS', () => {
 
     it('should choose a move even with very little time', () => {
         // This test is there for coverage as well, to check that having unexplored moves does not break MCTS
-        // Given no time allowed for MCTS
+        // Given 1ms allowed for MCTS
         const noTimeOptions: AITimeLimitOptions = { name: '1ms', maxSeconds: 0.001 };
         // When searching for a move
         const node: QuartoNode = QuartoRules.get().getInitialNode(defaultConfig);
